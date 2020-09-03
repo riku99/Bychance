@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
+import LineLogin from '@xmartlabs/react-native-line';
 
 const App: () => React.ReactNode = () => {
   return (

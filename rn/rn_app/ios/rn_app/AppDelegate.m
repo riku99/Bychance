@@ -1,4 +1,5 @@
 #import "AppDelegate.h"
+#import "RNLine-Swift.h"
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -43,6 +44,7 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [LineLogin setupWithChannelID:@"1654890866" universalLinkURL:nil];
   return YES;
 }
 
@@ -53,6 +55,17 @@ static void InitializeFlipper(UIApplication *application) {
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [LineLogin application:app open:url options:options];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+{
+  BOOL handledLine = [LineLogin application:application continue:userActivity restorationHandler:restorationHandler];
+  return handledLine;
 }
 
 @end
