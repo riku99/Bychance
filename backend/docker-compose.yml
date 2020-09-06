@@ -1,0 +1,45 @@
+version: "3.7"
+services:
+  message_db:
+    image: mysql:5.7.31
+    container_name: message_db
+    restart: unless-stopped
+    networks:
+      - message_net
+    volumes:
+      - message_app_volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: message_mysql
+
+  message_nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: message_nginx
+    networks:
+      - message_net
+    ports:
+      - 80:80
+    depends_on:
+      - message_rails_api
+
+  message_rails_api:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: messeage_rails_api
+    networks:
+      - message_net
+    volumes:
+      - ./app/rails_api:/app
+    ports:
+      - 3030:3030
+    depends_on:
+      - message_db
+
+networks:
+  message_net:
+    driver: bridge
+volumes:
+  message_app_volume:
+    driver: local
