@@ -10,10 +10,15 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.4.0",
+    "@types/react-redux": "^7.1.9",
     "@xmartlabs/react-native-line": "^2.1.0",
     "axios": "^0.20.0",
     "react": "16.13.1",
-    "react-native": "0.63.2"
+    "react-native": "0.63.2",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5",
+    "redux-saga": "^1.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.11.5",
