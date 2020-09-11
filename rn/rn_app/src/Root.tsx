@@ -1,14 +1,30 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, FC} from 'react';
 import {View, Text} from 'react-native';
-import LineLogin from '@xmartlabs/react-native-line';
 import {useDispatch} from 'react-redux';
-import {postJWT} from './redux/user';
+import {firstLoginAction, subsequentLoginAction} from './redux/user';
+import * as Keychain from 'react-native-keychain';
 
-const Root: React.FC = () => {
+const Root: FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(postJWT({name: 'riku'}));
-  });
+    const checkAccessToken: () => Promise<string | void> = async () => {
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials && credentials.password) {
+        return credentials.password;
+      }
+    };
+
+    const login = async () => {
+      const result = await checkAccessToken();
+      if (result) {
+        dispatch(subsequentLoginAction({keychainToken: result}));
+      } else {
+        dispatch(firstLoginAction({}));
+      }
+    };
+    login();
+  }, [dispatch]);
+
   return (
     <>
       <View>

@@ -13,5 +13,3 @@ const App: () => React.ReactNode = () => {
 };
 
 export default App;
-
-//riku09161@i.softbank.jp
