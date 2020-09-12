@@ -1,37 +1,34 @@
-import React, {useEffect, FC} from 'react';
-import {View, Text} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {firstLoginAction, subsequentLoginAction} from './redux/user';
-import * as Keychain from 'react-native-keychain';
+import React, {FC} from 'react';
+import {View, StyleSheet} from 'react-native';
+
+import {useLogin} from './hooks/useLogin';
+import {Header} from './components/Header';
+import {Hooter} from './components/Hooter';
 
 const Root: FC = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const checkAccessToken: () => Promise<string | void> = async () => {
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials && credentials.password) {
-        return credentials.password;
-      }
-    };
-
-    const login = async () => {
-      const result = await checkAccessToken();
-      if (result) {
-        dispatch(subsequentLoginAction({keychainToken: result}));
-      } else {
-        dispatch(firstLoginAction({}));
-      }
-    };
-    login();
-  }, [dispatch]);
-
+  useLogin();
   return (
     <>
-      <View>
-        <Text>ok</Text>
+      <View style={styles.container}>
+        <Header />
+        <View style={styles.hooter}>
+          <Hooter />
+        </View>
       </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  hooter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+});
 
 export default Root;

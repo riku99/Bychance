@@ -36,10 +36,10 @@ class Api::V1::UsersController < ApplicationController
             user_image = parsed_response["picture"]
             uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
             unless (User.find_by(uid: uid_hash))
-                user = User.new(name: user_name, uid: uid_hash, image: user_image)
+                user = User.new(name: user_name, uid: uid_hash, image: user_image, display: false)
                 user.save
             end
-            render json: {user: {name: user_name, image: user_image}}
+            render json: {name: user_name, image: user_image, intoduce: nil, message: nil, display: false}
         end
         nonce.destroy
     end
@@ -70,7 +70,7 @@ class Api::V1::UsersController < ApplicationController
         uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
         user = User.find_by(uid: uid_hash)
         if user
-            render json: {user: {name: user.name, image: user.image}}
+            render json: {name: user.name, image: user.image, intoduce: nil, message: nil, display: false}
         end
     end
 
