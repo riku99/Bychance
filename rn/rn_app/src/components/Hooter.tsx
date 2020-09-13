@@ -11,6 +11,10 @@ export const Hooter = () => {
         buttonStyle={styles.button}
       />
       <Button
+        icon={{name: 'add-photo-alternate', size: 25}}
+        buttonStyle={styles.button}
+      />
+      <Button
         icon={{name: 'person-outline', size: 25}}
         buttonStyle={styles.button}
       />
