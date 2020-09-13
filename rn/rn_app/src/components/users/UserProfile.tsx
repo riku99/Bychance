@@ -2,19 +2,25 @@ import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
 
-export const UserProfile = () => {
+type props = {name: string; image: string | null; introduce: string | null};
+
+export const UserProfile = ({name, image, introduce}: props) => {
   return (
     <View style={styles.profile}>
       <View style={styles.main}>
         <View style={styles.image}>
-          <Avatar
-            rounded
-            source={require('../../assets/ojisan.jpg')}
-            size="large"
-          />
+          {image ? (
+            <Avatar rounded source={{uri: image}} size="large" />
+          ) : (
+            <Avatar
+              rounded
+              source={require('../../assets/ojisan.jpg')}
+              size="large"
+            />
+          )}
         </View>
         <View style={styles.name_box}>
-          <Text style={styles.name}>Riku</Text>
+          <Text style={styles.name}>{name}</Text>
         </View>
       </View>
       <View style={styles.edit}>
@@ -25,8 +31,14 @@ export const UserProfile = () => {
         />
       </View>
       <View style={styles.introduce}>
-        <Text style={styles.introduce_text}>Hello</Text>
-        <Text style={styles.introduce_text}>My name is riku</Text>
+        {introduce ? (
+          <Text>{introduce}</Text>
+        ) : (
+          <View>
+            <Text>Hello!</Text>
+            <Text>My name is {name}</Text>
+          </View>
+        )}
       </View>
     </View>
   );

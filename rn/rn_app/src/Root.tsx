@@ -2,9 +2,9 @@ import React, {FC} from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import {useLogin} from './hooks/useLogin';
-import {CustomHeader} from './components/Header';
-import {Hooter} from './components/Hooter';
-import {UserProfileTable} from './components/UserProfileTable';
+import {CustomHeader} from './displays/Header';
+import {Hooter} from './displays/Hooter';
+import {UserProfileTable} from './displays/UserProfileTable';
 
 const Root: FC = () => {
   useLogin();

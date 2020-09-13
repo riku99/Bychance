@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
+import {View, StyleSheet, Dimensions, Image} from 'react-native';
 const oji = require('../../assets/ojisan.jpg');
 const sunny = require('../../assets/suny.jpg');
 const buta = require('../../assets/buta.jpg');
