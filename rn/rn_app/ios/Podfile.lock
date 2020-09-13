@@ -253,6 +253,8 @@ PODS:
   - RNLine (2.1.0):
     - LineSDKSwift (~> 5.0)
     - React
+  - RNVectorIcons (7.1.0):
+    - React
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -285,6 +287,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - "RNLine (from `../node_modules/@xmartlabs/react-native-line`)"
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -347,6 +350,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keychain"
   RNLine:
     :path: "../node_modules/@xmartlabs/react-native-line"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -380,8 +385,9 @@ SPEC CHECKSUMS:
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
   RNLine: b9b67a03a9228832b3ba6c40f5015169fdb264a5
+  RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
 
-PODFILE CHECKSUM: 118bddffacc2f0be56d6b33de3541d6f25f5f529
+PODFILE CHECKSUM: d51b8ee1cecf684bda995a7c18b265cedfe50b87
 
 COCOAPODS: 1.9.3

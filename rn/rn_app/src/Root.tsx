@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import {useLogin} from './hooks/useLogin';
-import {Header} from './components/Header';
+import {CustomHeader} from './components/Header';
 import {Hooter} from './components/Hooter';
 
 const Root: FC = () => {
@@ -10,7 +10,7 @@ const Root: FC = () => {
   return (
     <>
       <View style={styles.container}>
-        <Header />
+        <CustomHeader />
         <View style={styles.hooter}>
           <Hooter />
         </View>

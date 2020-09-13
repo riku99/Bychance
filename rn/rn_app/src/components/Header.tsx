@@ -1,27 +1,29 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {Header, Button} from 'react-native-elements';
 
-export const Header = () => {
+export const CustomHeader = () => {
   return (
-    <View style={styles.header}>
-      <Text style={styles.headerTitle}>MyApp</Text>
-    </View>
+    <Header
+      centerComponent={{text: 'MyApp', style: {color: '#64a0d9'}}}
+      rightComponent={
+        <Button
+          icon={{name: 'menu', color: '#64a0d9'}}
+          buttonStyle={styles.button}
+        />
+      }
+      containerStyle={styles.header}
+    />
   );
 };
 
-let {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: width,
-    height: 70,
-    borderBottomColor: '#f0f0f0',
+    backgroundColor: 'white',
+    borderBottomColor: '#e8e8e8',
     borderBottomWidth: 1,
   },
-  headerTitle: {
-    color: '#9ccbf7',
-    fontSize: 20,
-    marginTop: 30,
+  button: {
+    backgroundColor: 'white',
   },
 });
