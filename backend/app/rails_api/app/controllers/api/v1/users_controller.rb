@@ -59,7 +59,6 @@ class Api::V1::UsersController < ApplicationController
         request = Net::HTTP::Get.new(uri.path)
         request.initialize_http_header(headers)
         response = http.request(request)
-
         unless response.code == "200"
             render json: {error: "ログインできません。ログインをやり直してください"}
             return

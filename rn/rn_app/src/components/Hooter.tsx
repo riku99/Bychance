@@ -10,7 +10,10 @@ export const Hooter = () => {
         icon={{name: 'chat-bubble-outline', size: 25}}
         buttonStyle={styles.button}
       />
-      <Button icon={{name: 'person', size: 25}} buttonStyle={styles.button} />
+      <Button
+        icon={{name: 'person-outline', size: 25}}
+        buttonStyle={styles.button}
+      />
     </View>
   );
 };
@@ -21,6 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     height: 50,
+    backgroundColor: 'white',
     borderTopColor: '#e8e8e8',
     borderTopWidth: 1,
   },

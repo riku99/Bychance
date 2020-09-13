@@ -7,6 +7,7 @@ type initialStateType = {
   login: boolean;
   login_error?: string;
   user?: {
+    id: number;
     name: string;
     image: null | string;
     introduce: null | string;
@@ -29,6 +30,7 @@ const userSlice = createSlice({
       ...state,
       login: true,
       user: {
+        id: action.payload!.id,
         name: action.payload!.name,
         image: action.payload!.image,
         introduce: action.payload!.introduce,
@@ -46,6 +48,7 @@ const userSlice = createSlice({
         ...state,
         login: true,
         user: {
+          id: action.payload!.id,
           name: action.payload!.name,
           image: action.payload!.image,
           introduce: action.payload!.introduce,
@@ -59,6 +62,7 @@ const userSlice = createSlice({
         ...state,
         login: false,
         login_error: action.payload,
+        user: undefined,
       };
     },
     [subsequentLoginAction.fulfilled.type]: (
@@ -69,6 +73,7 @@ const userSlice = createSlice({
         ...state,
         login: true,
         user: {
+          id: action.payload!.id,
           name: action.payload!.name,
           image: action.payload!.image,
           introduce: action.payload!.introduce,
