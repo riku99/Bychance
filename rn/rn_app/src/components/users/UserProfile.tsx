@@ -4,7 +4,7 @@ import {Avatar, Button} from 'react-native-elements';
 
 type props = {name: string; image: string | null; introduce: string | null};
 
-export const UserProfile = ({name, image, introduce}: props) => {
+export const UserProfile = ({name, image, introduce, navigation}: any) => {
   return (
     <View style={styles.profile}>
       <View style={styles.main}>
@@ -28,6 +28,7 @@ export const UserProfile = ({name, image, introduce}: props) => {
           title="プロフィールを編集"
           titleStyle={styles.title_style}
           buttonStyle={styles.edit_button}
+          onPress={navigation.goToEditPage}
         />
       </View>
       <View style={styles.introduce}>
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   edit_button: {
     backgroundColor: 'white',
   },
-  title_style: {color: 'blue'},
+  title_style: {color: '#4fa9ff'},
   introduce: {
     height: '47%',
     paddingLeft: 25,
