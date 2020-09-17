@@ -1,10 +1,8 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Button} from 'react-native-elements';
 
 import {useLogin} from '../hooks/useLogin';
-import {CustomHeader} from '../components/Header';
 import {Hooter} from '../components/Hooter';
 import {UserProfileTable} from './UserProfileTable';
 import {UserEditTable} from './UserEditTable';

@@ -1,10 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+
+import {UserEdit} from '../components/users/UserEdit';
 
 export const UserEditTable = () => {
-  return (
-    <View>
-      <Text>ok</Text>
-    </View>
-  );
+  return <UserEdit />;
 };
