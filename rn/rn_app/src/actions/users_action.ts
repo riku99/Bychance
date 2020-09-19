@@ -40,7 +40,7 @@ export const firstLoginAction = createAsyncThunk(
       setTimeout(() => {
         thunkAPI.dispatch(firstLoginAction({}));
       }, 3000);
-      return thunkAPI.rejectWithValue(e.message);
+      thunkAPI.dispatch(loginError(e.message));
     }
   },
 );
@@ -56,7 +56,7 @@ export const subsequentLoginAction = createAsyncThunk<
     setTimeout(() => {
       thunkAPI.dispatch(firstLoginAction({}));
     }, 3000);
-    return thunkAPI.rejectWithValue(e.message);
+    thunkAPI.dispatch(loginError(e.message));
   }
 });
 
@@ -82,4 +82,3 @@ export const editProfileAction = createAsyncThunk(
     }
   },
 );
-export type editProfileActionType = ReturnType<typeof editProfileAction>;

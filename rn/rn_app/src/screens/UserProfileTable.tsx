@@ -7,7 +7,7 @@ import {UserPosts} from '../components/users/UserPosts';
 export const UserProfileTable = ({navigation}: any) => {
   return (
     <ScrollView>
-      <UserProfile navigation={navigation} />
+      <UserProfile />
       <UserPosts />
     </ScrollView>
   );

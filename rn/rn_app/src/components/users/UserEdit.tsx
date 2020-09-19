@@ -6,12 +6,11 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {RootStackParamList} from '../../screens/Root';
-import {editProfileActionType} from '../../actions/users_action';
 
 type Props = {
   user: {name: string; introduce: string | null; image: string | null};
 } & {redirect?: boolean} & {
-  editProfile: (name: string, introduce: string) => editProfileActionType;
+  editProfile: (name: string, introduce: string) => void;
 } & {falseRedirect: () => void};
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEditTable'>;

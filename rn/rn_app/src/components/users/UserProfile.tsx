@@ -1,10 +1,20 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-type props = {name: string; image: string | null; introduce: string | null};
+import {RootStackParamList} from '../../screens/Root';
 
-export const UserProfile = ({name, image, introduce, navigation}: any) => {
+type Props = {name: string; image: string | null; introduce: string | null};
+
+type NavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'UserProfileTable'
+>;
+
+export const UserProfile = ({name, image, introduce}: Props) => {
+  const navigation = useNavigation<NavigationProp>();
   return (
     <View style={styles.profile}>
       <View style={styles.main}>
@@ -28,7 +38,9 @@ export const UserProfile = ({name, image, introduce, navigation}: any) => {
           title="プロフィールを編集"
           titleStyle={styles.title_style}
           buttonStyle={styles.edit_button}
-          onPress={navigation.goToEditPage}
+          onPress={() => {
+            navigation.push('UserEditTable');
+          }}
         />
       </View>
       <View style={styles.introduce}>

@@ -26,7 +26,7 @@ const Container = () => {
       // てことはこれをPromiseを返す関数であることをtsで定義したい
       // connectのときはReturntypeでできた
       editProfile={(name: string, introduce: string) => {
-        return dispatch(editProfileAction({name, introduce}));
+        dispatch(editProfileAction({name, introduce}));
       }}
       falseRedirect={() => {
         dispatch(falseRedirect());

@@ -60,14 +60,6 @@ const userSlice = createSlice({
         },
       };
     },
-    [firstLoginAction.rejected.type]: (state, action) => {
-      return {
-        ...state,
-        login: false,
-        login_error: action.payload,
-        user: undefined,
-      };
-    },
     [subsequentLoginAction.fulfilled.type]: (
       state,
       action: PayloadAction<userType>,
@@ -83,17 +75,6 @@ const userSlice = createSlice({
           message: action.payload.message,
           display: action.payload.display,
         },
-      };
-    },
-    [subsequentLoginAction.rejected.type]: (
-      state,
-      action: PayloadAction<string>,
-    ) => {
-      return {
-        ...state,
-        login: false,
-        user: undefined,
-        login_error: action.payload,
       };
     },
     [editProfileAction.fulfilled.type]: (

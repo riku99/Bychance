@@ -10,21 +10,16 @@ type NavigationProp = StackNavigationProp<
   RootStackParamList,
   'UserProfileTable'
 >;
-type props = {navigation: NavigationProp};
 
-const Container = ({navigation}: props) => {
+const Container = () => {
   const userProps = useSelector((state: RootState) => {
     return state.userReducer.user!;
   });
-  const goToEditPage = () => {
-    navigation.push('UserEditTable');
-  };
   return (
     <UserProfile
       name={userProps.name}
       image={userProps.image}
       introduce={userProps.introduce}
-      navigation={{goToEditPage: goToEditPage}}
     />
   );
 };
