@@ -6,7 +6,10 @@ import {UserProfile} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
 import {RootStackParamList} from '../../screens/Root';
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'UserProfile'>;
+type NavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'UserProfileTable'
+>;
 type props = {navigation: NavigationProp};
 
 const Container = ({navigation}: props) => {
@@ -14,7 +17,7 @@ const Container = ({navigation}: props) => {
     return state.userReducer.user!;
   });
   const goToEditPage = () => {
-    navigation.push('UserEdit');
+    navigation.push('UserEditTable');
   };
   return (
     <UserProfile

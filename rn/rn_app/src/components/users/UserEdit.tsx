@@ -1,18 +1,52 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Avatar, Button} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-export const UserEdit = () => {
-  const [name, setName] = useState('name'); // propsでname受け取る
-  const [introduce, setIntroduce] = useState('intro'); // propsでintro受け取る
+import {RootStackParamList} from '../../screens/Root';
+import {editProfileActionType} from '../../actions/users_action';
+
+type Props = {
+  user: {name: string; introduce: string | null; image: string | null};
+} & {redirect?: boolean} & {
+  editProfile: (name: string, introduce: string) => editProfileActionType;
+} & {falseRedirect: () => void};
+
+type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEditTable'>;
+
+export const UserEdit = ({
+  user,
+  redirect,
+  editProfile,
+  falseRedirect,
+}: Props) => {
+  const [name, setName] = useState(user.name);
+  const [introduce, setIntroduce] = useState(
+    user.introduce ? user.introduce : '',
+  );
+  const [loading, setLoding] = useState(false);
+  const navigation = useNavigation<NavigationProp>();
+
+  useEffect(() => {
+    if (redirect) {
+      navigation.push('UserProfileTable');
+      falseRedirect();
+      setLoding(false);
+    }
+  }, [redirect, navigation, falseRedirect]);
   return (
     <View style={styles.container}>
       <View style={styles.edit}>
         <View style={styles.image}>
           <Avatar
             rounded
-            source={require('../../assets/ojisan.jpg')}
+            source={
+              user.image
+                ? {uri: user.image}
+                : require('../../assets/ojisan.jpg')
+            }
             size="large"
           />
           <Button
@@ -26,8 +60,15 @@ export const UserEdit = () => {
           {name.length > 20 && (
             <Text style={{color: 'red'}}>20文字以下にしてください</Text>
           )}
+          {name.length === 0 && (
+            <Text style={{color: 'red'}}>名前を入力してください</Text>
+          )}
           <TextInput
-            style={name.length <= 20 ? styles.nameInput : styles.nameInputAlert}
+            style={
+              name.length <= 20 && name.length !== 0
+                ? styles.nameInput
+                : styles.nameInputAlert
+            }
             onChangeText={(text) => {
               setName(text);
             }}>
@@ -52,13 +93,30 @@ export const UserEdit = () => {
             {introduce}
           </TextInput>
         </View>
-        <Button
-          title={'完了'}
-          titleStyle={styles.completeTitle}
-          buttonStyle={styles.completeButton}
-          disabledStyle={{backgroundColor: 'transparent'}}
-          disabled={(name.length > 20 || introduce.length > 100) && true}
-        />
+        {loading ? (
+          <Button
+            loading
+            loadingProps={{color: '#5c94c8'}}
+            buttonStyle={styles.completeButton}
+          />
+        ) : (
+          <Button
+            title={'完了'}
+            titleStyle={styles.completeTitle}
+            buttonStyle={styles.completeButton}
+            disabledStyle={{backgroundColor: 'transparent'}}
+            disabled={
+              (name.length > 20 ||
+                name.length === 0 ||
+                introduce.length > 100) &&
+              true
+            }
+            onPress={async () => {
+              setLoding(true);
+              editProfile(name, introduce);
+            }}
+          />
+        )}
       </View>
     </View>
   );
@@ -87,6 +145,7 @@ const styles = StyleSheet.create({
   },
   imageButtonTitle: {
     color: '#4fa9ff',
+    fontWeight: 'bold',
     fontSize: 15,
   },
   name: {
@@ -136,5 +195,6 @@ const styles = StyleSheet.create({
   },
   completeTitle: {
     color: '#4fa9ff',
+    fontWeight: 'bold',
   },
 });

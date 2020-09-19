@@ -24,13 +24,3 @@ export const useLogin = () => {
     login();
   }, [dispatch]);
 };
-
-type h = {
-  <o extends object, b extends keyof o>(o: o, b: b): void;
-};
-
-let get: h = (object, key) => {
-  console.log(object, key);
-};
-
-get({name: 'riku'}, 'name');

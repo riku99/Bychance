@@ -2,9 +2,24 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
 
-import {sendIDtoken, sendAccessToken, sendNonce} from '../api/users_api';
+import {
+  sendIDtoken,
+  sendAccessToken,
+  sendNonce,
+  sendEditedProfile,
+} from '../api/users_api';
 
-// キーチェーンにアクセストークンがない場合のアクション
+import {loginError} from '../redux/user';
+
+const checkKeychain = async () => {
+  const credentials = await Keychain.getGenericPassword();
+  if (!credentials || !credentials.password) {
+    throw new Error('ログインできません。ログインしなおしてください');
+  }
+  const token = credentials.password;
+  return token;
+};
+
 export const firstLoginAction = createAsyncThunk(
   'users/firstLogin',
   async ({}: Object, thunkAPI) => {
@@ -30,7 +45,6 @@ export const firstLoginAction = createAsyncThunk(
   },
 );
 
-// キーチェーンにトークンがある場合のアクション
 export const subsequentLoginAction = createAsyncThunk<
   Object,
   {keychainToken: string}
@@ -45,3 +59,27 @@ export const subsequentLoginAction = createAsyncThunk<
     return thunkAPI.rejectWithValue(e.message);
   }
 });
+
+export const editProfileAction = createAsyncThunk(
+  'users/editUser',
+  async ({name, introduce}: {name: string; introduce: string}, thunkAPI) => {
+    try {
+      const token = await checkKeychain();
+      const response = await sendEditedProfile({
+        name: name,
+        introduce: introduce,
+        token: token,
+      });
+      if (response.type === 'invalid') {
+        return thunkAPI.rejectWithValue(response.invalid);
+      }
+      return response as any;
+    } catch (e) {
+      setTimeout(() => {
+        thunkAPI.dispatch(firstLoginAction({}));
+      }, 2000);
+      thunkAPI.dispatch(loginError(e.message));
+    }
+  },
+);
+export type editProfileActionType = ReturnType<typeof editProfileAction>;

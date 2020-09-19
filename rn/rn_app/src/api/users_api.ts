@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import {userType} from '../redux/user';
+
 const origin = 'http://localhost:80/api/v1';
 
 export const sendIDtoken = async (token: string) => {
@@ -37,4 +39,32 @@ export const sendNonce: (
   if (response.data.nonce) {
     return response.data.nonce;
   }
+};
+
+export const sendEditedProfile = async ({
+  name,
+  introduce,
+  token,
+}: {
+  name: string;
+  introduce: string;
+  token: string;
+}): Promise<
+  ({type: 'user'} & userType) | {type: 'invalid'; invalid: string}
+> => {
+  const response = await axios.patch(`${origin}/user`, {
+    name: name,
+    introduce: introduce,
+    token: token,
+  });
+
+  if (response.data.error) {
+    throw new Error(response.data.error);
+  }
+
+  if (response.data.invalid) {
+    return {type: 'invalid', ...response.data};
+  }
+
+  return response.data;
 };

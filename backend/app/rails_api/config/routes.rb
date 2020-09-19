@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       post '/firstLogin', to: 'users#firstLogin'
       post '/subsequentLogin', to: 'users#subsequentLogin'
       post '/nonce', to: 'users#createNonce'
+      patch '/user', to: 'users#edit'
     end
   end
 end

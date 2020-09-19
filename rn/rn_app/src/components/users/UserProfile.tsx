@@ -62,9 +62,12 @@ const styles = StyleSheet.create({
     height: '12%',
   },
   edit_button: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
   },
-  title_style: {color: '#4fa9ff'},
+  title_style: {
+    color: '#4fa9ff',
+    fontWeight: 'bold',
+  },
   introduce: {
     height: '47%',
     paddingLeft: 25,

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {useLogin} from '../hooks/useLogin';
@@ -7,31 +8,44 @@ import {Hooter} from '../components/Hooter';
 import {UserProfileTable} from './UserProfileTable';
 import {UserEditTable} from './UserEditTable';
 import {MenuBar} from '../components/MenuBar';
+import {RootState} from '../redux/index';
 
 export type RootStackParamList = {
-  UserProfile: undefined;
-  UserEdit: undefined;
+  UserProfileTable: undefined;
+  UserEditTable: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Root = () => {
+  const login = useSelector((state: RootState) => {
+    return state.userReducer.login;
+  });
   useLogin();
+  if (!login) {
+    return null;
+  }
   return (
     <>
       <View style={styles.container}>
-        <Stack.Navigator initialRouteName="UserProfile">
+        <Stack.Navigator initialRouteName="UserProfileTable">
           <Stack.Screen
-            name="UserProfile"
+            name="UserProfileTable"
             component={UserProfileTable}
-            options={{title: 'MyPage', headerRight: () => <MenuBar />}}
+            options={{
+              title: 'マイページ',
+              animationEnabled: false,
+              headerBackTitleVisible: false,
+              headerRight: () => <MenuBar />,
+              headerLeft: () => null,
+            }}
           />
           <Stack.Screen
-            name="UserEdit"
+            name="UserEditTable"
             component={UserEditTable}
             options={{
               title: 'プロフィール編集',
-              animationEnabled: false,
+              //animationEnabled: false,
               headerRight: () => <MenuBar />,
             }}
           />
