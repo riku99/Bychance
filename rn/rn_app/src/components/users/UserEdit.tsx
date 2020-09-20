@@ -1,19 +1,36 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Avatar, Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import ImagePicker from 'react-native-image-picker';
 
 import {RootStackParamList} from '../../screens/Root';
 
 type Props = {
   user: {name: string; introduce: string | null; image: string | null};
 } & {redirect?: boolean} & {
-  editProfile: (name: string, introduce: string) => void;
+  editProfile: (
+    name: string,
+    introduce: string,
+    image: string | undefined,
+  ) => void;
 } & {falseRedirect: () => void};
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEditTable'>;
+
+const options = {
+  title: 'プロフィール画像を変更',
+  cancelButtonTitle: 'キャンセル',
+  takePhotoButtonTitle: '写真をとる',
+  chooseFromLibraryButtonTitle: 'ライブラリから選択',
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+  allowsEditing: true,
+};
 
 export const UserEdit = ({
   user,
@@ -26,6 +43,9 @@ export const UserEdit = ({
     user.introduce ? user.introduce : '',
   );
   const [loading, setLoding] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(
+    undefined,
+  );
   const navigation = useNavigation<NavigationProp>();
 
   useEffect(() => {
@@ -35,6 +55,16 @@ export const UserEdit = ({
       setLoding(false);
     }
   }, [redirect, navigation, falseRedirect]);
+
+  const pickImage = useCallback(() => {
+    ImagePicker.showImagePicker(options, async (response) => {
+      if (response.uri) {
+        const source = 'data:image/jpeg;base64,' + response.data;
+        setSelectedImage(source);
+      }
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.edit}>
@@ -42,16 +72,22 @@ export const UserEdit = ({
           <Avatar
             rounded
             source={
-              user.image
+              selectedImage
+                ? {uri: selectedImage}
+                : user.image
                 ? {uri: user.image}
                 : require('../../assets/ojisan.jpg')
             }
             size="large"
+            placeholderStyle={{backgroundColor: 'transeparent'}}
           />
           <Button
             title="プロフィール画像を変更"
             titleStyle={styles.imageButtonTitle}
             buttonStyle={styles.imageButton}
+            onPress={() => {
+              pickImage();
+            }}
           />
         </View>
         <View style={styles.name}>
@@ -112,7 +148,7 @@ export const UserEdit = ({
             }
             onPress={async () => {
               setLoding(true);
-              editProfile(name, introduce);
+              editProfile(name, introduce, selectedImage);
             }}
           />
         )}

@@ -62,12 +62,20 @@ export const subsequentLoginAction = createAsyncThunk<
 
 export const editProfileAction = createAsyncThunk(
   'users/editUser',
-  async ({name, introduce}: {name: string; introduce: string}, thunkAPI) => {
+  async (
+    {
+      name,
+      introduce,
+      image,
+    }: {name: string; introduce: string; image: string | undefined},
+    thunkAPI,
+  ) => {
     try {
       const token = await checkKeychain();
       const response = await sendEditedProfile({
         name: name,
         introduce: introduce,
+        image: image,
         token: token,
       });
       if (response.type === 'invalid') {
@@ -75,6 +83,7 @@ export const editProfileAction = createAsyncThunk(
       }
       return response as any;
     } catch (e) {
+      console.log(e.message);
       setTimeout(() => {
         thunkAPI.dispatch(firstLoginAction({}));
       }, 2000);

@@ -4,7 +4,7 @@ import {ScrollView} from 'react-native';
 import UserProfile from '../containers/users/UserProfile';
 import {UserPosts} from '../components/users/UserPosts';
 
-export const UserProfileTable = ({navigation}: any) => {
+export const UserProfileTable = () => {
   return (
     <ScrollView>
       <UserProfile />

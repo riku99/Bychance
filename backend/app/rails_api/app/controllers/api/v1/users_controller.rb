@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-    require "net/http" # ruby標準ライブラリ
+    require "net/http"
 
     def createNonce
         nonce = params["nonce"]
@@ -80,6 +80,7 @@ class Api::V1::UsersController < ApplicationController
         end
         name = params["name"]
         introduce = params["introduce"]
+        
         unless user.update(name: name, introduce: introduce, image: user.image, display: user.display, message: user.message)
             render json: {invalid: user.errors.full_messages[0]}
             return

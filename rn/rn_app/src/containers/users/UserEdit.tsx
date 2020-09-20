@@ -22,11 +22,12 @@ const Container = () => {
     <UserEdit
       user={userProps}
       redirect={redirect}
-      // これを実行するとPromiseを返す
-      // てことはこれをPromiseを返す関数であることをtsで定義したい
-      // connectのときはReturntypeでできた
-      editProfile={(name: string, introduce: string) => {
-        dispatch(editProfileAction({name, introduce}));
+      editProfile={(
+        name: string,
+        introduce: string,
+        image: string | undefined,
+      ) => {
+        dispatch(editProfileAction({name, introduce, image}));
       }}
       falseRedirect={() => {
         dispatch(falseRedirect());

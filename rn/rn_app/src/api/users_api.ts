@@ -44,18 +44,21 @@ export const sendNonce: (
 export const sendEditedProfile = async ({
   name,
   introduce,
+  image,
   token,
 }: {
   name: string;
   introduce: string;
+  image: string | undefined;
   token: string;
 }): Promise<
   ({type: 'user'} & userType) | {type: 'invalid'; invalid: string}
 > => {
-  const response = await axios.patch(`${origin}/user`, {
+  const response = await axios.put(`${origin}/user`, {
     name: name,
     introduce: introduce,
     token: token,
+    image: image,
   });
 
   if (response.data.error) {

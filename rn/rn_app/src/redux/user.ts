@@ -33,7 +33,6 @@ const userSlice = createSlice({
     loginError: (state, actions: PayloadAction<string>) => ({
       ...state,
       login: false,
-      loading: false,
       errors: {login_error: actions.payload},
       user: undefined,
     }),
