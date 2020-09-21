@@ -1,5 +1,7 @@
 class Api::V1::UsersController < ApplicationController
+    require "date"
     require "net/http"
+    require "aws-sdk"
 
     def createNonce
         nonce = params["nonce"]
@@ -69,19 +71,22 @@ class Api::V1::UsersController < ApplicationController
         uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
         user = User.find_by(uid: uid_hash)
         if user
-            render json: {name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false}
+            render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false}
         end
     end
 
     def edit
-        token = params["token"]
-        unless user = checkAccessToken(token)
-            return 
+        unless user = authorizationProcess(request.headers)
+            return {error: "ログインできません。ログインをやり直してください"}
         end
-        name = params["name"]
-        introduce = params["introduce"]
-        
-        unless user.update(name: name, introduce: introduce, image: user.image, display: user.display, message: user.message)
+        name = user_params["name"]
+        introduce = user_params["introduce"]
+        if image = user_params["image"]
+            url = createImagePath(image, "user/#{user.id}/#{Date.today.strftime("%Y%m%d%H%M")}.jpeg")
+            else
+                url = user.image
+        end
+        unless user.update(name: name, introduce: introduce, image: url, display: user.display, message: user.message)
             render json: {invalid: user.errors.full_messages[0]}
             return
         end
@@ -112,5 +117,31 @@ class Api::V1::UsersController < ApplicationController
         uid = response_body["userId"]
         uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
         user = User.find_by(uid: uid_hash)
+    end
+
+    def getAccessToken(headers)
+        headers["Authorization"].sub("Bearer ", '')
+    end
+
+    def authorizationProcess(arg)
+        token = getAccessToken(arg)
+        checkAccessToken(token)
+    end
+
+    def createImagePath(image, file_name)
+        base_data = image.sub %r/data:((image|application)\/.{3,}),/, ''
+        decoded_data = Base64.decode64(base_data)
+        s3 = Aws::S3::Resource.new({
+            :region => 'ap-northeast-1',
+            credentials: Aws::Credentials.new( Rails.application.credentials.aws[:access_key_id], Rails.application.credentials.aws[:secret_access_key])
+        })
+        bucket = s3.bucket("r-message-app")
+        obj = bucket.object(file_name)
+        obj.put(body: decoded_data)
+        obj.public_url
+    end
+
+    def user_params
+        params.require(:user).permit(:name, :introduce, :image)
     end
 end

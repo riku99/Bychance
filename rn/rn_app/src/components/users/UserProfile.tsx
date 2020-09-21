@@ -26,6 +26,7 @@ export const UserProfile = ({name, image, introduce}: Props) => {
               rounded
               source={require('../../assets/ojisan.jpg')}
               size="large"
+              placeholderStyle={{backgroundColor: 'transeparent'}}
             />
           )}
         </View>

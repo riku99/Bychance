@@ -8,7 +8,7 @@ import {
 
 type initialStateType = {
   login: boolean;
-  errors?: {login_error?: string; invalid_error?: string};
+  errors?: {someError?: string; invalidError?: string};
   redirect?: boolean;
   user?: {
     id: number;
@@ -30,10 +30,9 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
-    loginError: (state, actions: PayloadAction<string>) => ({
+    loginError: (state) => ({
       ...state,
       login: false,
-      errors: {login_error: actions.payload},
       user: undefined,
     }),
     falseRedirect: (state) => ({
@@ -86,6 +85,7 @@ const userSlice = createSlice({
         ...state.user!,
         name: actions.payload.name,
         introduce: actions.payload.introduce,
+        image: actions.payload.image,
       },
     }),
     [editProfileAction.rejected.type]: (
@@ -93,7 +93,7 @@ const userSlice = createSlice({
       actions: PayloadAction<string>,
     ) => ({
       ...state,
-      errors: {invalid_error: actions.payload},
+      errors: {invalidError: actions.payload},
     }),
   },
 });

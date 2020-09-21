@@ -1,6 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
+import {Alert} from 'react-native';
 
 import {
   sendIDtoken,
@@ -53,10 +54,11 @@ export const subsequentLoginAction = createAsyncThunk<
     const data = await sendAccessToken(keychainToken);
     return data;
   } catch (e) {
+    console.log(e.message);
     setTimeout(() => {
       thunkAPI.dispatch(firstLoginAction({}));
     }, 3000);
-    thunkAPI.dispatch(loginError(e.message));
+    thunkAPI.dispatch(loginError());
   }
 });
 
@@ -78,16 +80,54 @@ export const editProfileAction = createAsyncThunk(
         image: image,
         token: token,
       });
+
+      if (response.type === 'loginError') {
+        const callback = () => {
+          thunkAPI.dispatch(loginError());
+          thunkAPI.dispatch(firstLoginAction({}));
+        };
+        requestLogin(callback);
+      }
       if (response.type === 'invalid') {
         return thunkAPI.rejectWithValue(response.invalid);
       }
-      return response as any;
+      return response;
     } catch (e) {
       console.log(e.message);
-      setTimeout(() => {
-        thunkAPI.dispatch(firstLoginAction({}));
-      }, 2000);
-      thunkAPI.dispatch(loginError(e.message));
+      alertSomeError();
     }
   },
 );
+
+// helpers作っていれる
+const requestLogin = (callback: () => void) => {
+  Alert.alert(
+    'ログインが無効です',
+    'ログインできません。ログインしなおしてください',
+    [
+      {
+        text: 'OK',
+        onPress: () => {
+          callback();
+          return;
+        },
+      },
+    ],
+  );
+};
+
+// これもヘルパー
+const alertSomeError = () => {
+  Alert.alert(
+    '何かしらのエラーが発生しました',
+    'インターネットが繋がっている状態で試してみてください',
+    [
+      {
+        text: 'OK',
+        onPress: () => {
+          return;
+        },
+      },
+    ],
+  );
+};

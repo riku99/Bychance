@@ -52,17 +52,26 @@ export const sendEditedProfile = async ({
   image: string | undefined;
   token: string;
 }): Promise<
-  ({type: 'user'} & userType) | {type: 'invalid'; invalid: string}
+  | ({type: 'user'} & userType)
+  | {type: 'invalid'; invalid: string}
+  | {type: 'loginError'; error: string}
 > => {
-  const response = await axios.put(`${origin}/user`, {
-    name: name,
-    introduce: introduce,
-    token: token,
-    image: image,
-  });
+  const response = await axios.put(
+    `${origin}/user`,
+    {
+      name: name,
+      introduce: introduce,
+      image: image,
+    },
+    {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    },
+  );
 
   if (response.data.error) {
-    throw new Error(response.data.error);
+    return {type: 'loginError', ...response.data};
   }
 
   if (response.data.invalid) {
