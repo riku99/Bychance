@@ -4,30 +4,6 @@ import {userType} from '../redux/user';
 
 const origin = 'http://localhost:80/api/v1';
 
-export const sendIDtoken = async (token: string) => {
-  const response = await axios.post(`${origin}/firstLogin`, {token: token});
-
-  if (response.data.error) {
-    throw new Error(response.data.error);
-  } else {
-    return response.data;
-  }
-};
-
-export const sendAccessToken: (
-  accessToken: string,
-) => Promise<Object> | void = async (accessToken) => {
-  const response = await axios.post(`${origin}/subsequentLogin`, {
-    token: accessToken,
-  });
-
-  if (response.data.error) {
-    throw new Error(response.data.error);
-  } else {
-    return response.data;
-  }
-};
-
 export const sendNonce: (
   nonce: string,
 ) => Promise<boolean | undefined> = async (nonce) => {
@@ -38,6 +14,42 @@ export const sendNonce: (
 
   if (response.data.nonce) {
     return response.data.nonce;
+  }
+};
+
+export const sendIDtoken: (
+  token: string,
+) => Promise<{type: 'user' & userType} | {type: 'loginError'}> = async (
+  token,
+) => {
+  const response = await axios.post(`${origin}/firstLogin`, {token: token});
+
+  if (response.data.error) {
+    return {type: 'loginError'};
+  } else {
+    return response.data;
+  }
+};
+
+export const sendAccessToken: (
+  accessToken: string,
+) => Promise<{type: 'user' & userType} | {type: 'loginError'}> = async (
+  token,
+) => {
+  const response = await axios.post(
+    `${origin}/subsequentLogin`,
+    {},
+    {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    },
+  );
+
+  if (response.data.error) {
+    return {type: 'loginError'};
+  } else {
+    return response.data;
   }
 };
 

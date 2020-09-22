@@ -1,7 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
-import {Alert} from 'react-native';
 
 import {
   sendIDtoken,
@@ -9,39 +8,38 @@ import {
   sendNonce,
   sendEditedProfile,
 } from '../api/users_api';
-
 import {loginError} from '../redux/user';
-
-const checkKeychain = async () => {
-  const credentials = await Keychain.getGenericPassword();
-  if (!credentials || !credentials.password) {
-    throw new Error('ログインできません。ログインしなおしてください');
-  }
-  const token = credentials.password;
-  return token;
-};
+import {checkKeychain} from '../helpers/keychain';
+import {requestLogin} from '../helpers/login';
+import {alertSomeError} from '../helpers/error';
 
 export const firstLoginAction = createAsyncThunk(
   'users/firstLogin',
-  async ({}: Object, thunkAPI) => {
+  async ({}, thunkAPI) => {
     try {
       const loginResult = await LineLogin.login({
         // @ts-ignore ドキュメント通りにやっても直らなかったのでignore
         scopes: ['openid', 'profile'],
       });
-      const id_token = loginResult.accessToken.id_token;
-      const access_token = loginResult.accessToken.access_token;
+      const idToken = loginResult.accessToken.id_token;
+      const accessToken = loginResult.accessToken.access_token;
       const nonce = loginResult.IDTokenNonce;
       await sendNonce(nonce as string);
-      const data = await sendIDtoken(id_token as string);
+      const response = await sendIDtoken(idToken as string);
+      if ((response.type = 'loginError')) {
+        const callback = () => {
+          thunkAPI.dispatch(loginError());
+          thunkAPI.dispatch(firstLoginAction());
+        };
+        requestLogin(callback);
+        return;
+      }
       await Keychain.resetGenericPassword();
-      await Keychain.setGenericPassword('session', access_token as string);
-      return data;
+      await Keychain.setGenericPassword('session', accessToken as string);
+      return response;
     } catch (e) {
-      setTimeout(() => {
-        thunkAPI.dispatch(firstLoginAction({}));
-      }, 3000);
-      thunkAPI.dispatch(loginError(e.message));
+      console.log(e.message);
+      alertSomeError();
     }
   },
 );
@@ -51,14 +49,19 @@ export const subsequentLoginAction = createAsyncThunk<
   {keychainToken: string}
 >('users/subsequentLogin', async ({keychainToken}, thunkAPI) => {
   try {
-    const data = await sendAccessToken(keychainToken);
-    return data;
+    const response = await sendAccessToken(keychainToken);
+    if (response.type === 'loginError') {
+      const callback = () => {
+        thunkAPI.dispatch(loginError());
+        thunkAPI.dispatch(firstLoginAction());
+      };
+      requestLogin(callback);
+      return;
+    }
+    return response;
   } catch (e) {
     console.log(e.message);
-    setTimeout(() => {
-      thunkAPI.dispatch(firstLoginAction({}));
-    }, 3000);
-    thunkAPI.dispatch(loginError());
+    alertSomeError();
   }
 });
 
@@ -84,9 +87,10 @@ export const editProfileAction = createAsyncThunk(
       if (response.type === 'loginError') {
         const callback = () => {
           thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction({}));
+          thunkAPI.dispatch(firstLoginAction());
         };
         requestLogin(callback);
+        return;
       }
       if (response.type === 'invalid') {
         return thunkAPI.rejectWithValue(response.invalid);
@@ -98,36 +102,3 @@ export const editProfileAction = createAsyncThunk(
     }
   },
 );
-
-// helpers作っていれる
-const requestLogin = (callback: () => void) => {
-  Alert.alert(
-    'ログインが無効です',
-    'ログインできません。ログインしなおしてください',
-    [
-      {
-        text: 'OK',
-        onPress: () => {
-          callback();
-          return;
-        },
-      },
-    ],
-  );
-};
-
-// これもヘルパー
-const alertSomeError = () => {
-  Alert.alert(
-    '何かしらのエラーが発生しました',
-    'インターネットが繋がっている状態で試してみてください',
-    [
-      {
-        text: 'OK',
-        onPress: () => {
-          return;
-        },
-      },
-    ],
-  );
-};

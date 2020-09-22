@@ -18,7 +18,7 @@ export const useLogin = () => {
       if (result) {
         dispatch(subsequentLoginAction({keychainToken: result}));
       } else {
-        dispatch(firstLoginAction({}));
+        dispatch(firstLoginAction());
       }
     };
     login();

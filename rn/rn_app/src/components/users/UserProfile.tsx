@@ -19,16 +19,12 @@ export const UserProfile = ({name, image, introduce}: Props) => {
     <View style={styles.profile}>
       <View style={styles.main}>
         <View style={styles.image}>
-          {image ? (
-            <Avatar rounded source={{uri: image}} size="large" />
-          ) : (
-            <Avatar
-              rounded
-              source={require('../../assets/ojisan.jpg')}
-              size="large"
-              placeholderStyle={{backgroundColor: 'transeparent'}}
-            />
-          )}
+          <Avatar
+            rounded
+            source={image ? {uri: image} : require('../../assets/ojisan.jpg')}
+            size="large"
+            placeholderStyle={{backgroundColor: 'transeparent'}}
+          />
         </View>
         <View style={styles.name_box}>
           <Text style={styles.name}>{name}</Text>
