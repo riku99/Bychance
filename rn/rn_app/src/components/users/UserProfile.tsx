@@ -4,7 +4,7 @@ import {Avatar, Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {UserStackParamList} from '../../screens/user';
+import {UserStackParamList} from '../../screens/User';
 
 type Props = {name: string; image: string | null; introduce: string | null};
 

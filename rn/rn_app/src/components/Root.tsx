@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 
 import {useLogin} from '../hooks/useLogin';
 import {RootState} from '../redux/index';
-import {UserStackScreen} from '../screens/user';
+import {UserStackScreen} from '../screens/User';
 
 const Root = () => {
   const login = useSelector((state: RootState) => {

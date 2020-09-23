@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-picker';
 
-import {UserStackParamList} from '../../screens/user';
+import {UserStackParamList} from '../../screens/User';
 
 type Props = {
   user: {name: string; introduce: string | null; image: string | null};
