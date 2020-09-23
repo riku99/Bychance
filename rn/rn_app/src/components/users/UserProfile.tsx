@@ -4,12 +4,12 @@ import {Avatar, Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {RootStackParamList} from '../../screens/Root';
+import {UserStackParamList} from '../../screens/user';
 
 type Props = {name: string; image: string | null; introduce: string | null};
 
 type NavigationProp = StackNavigationProp<
-  RootStackParamList,
+  UserStackParamList,
   'UserProfileTable'
 >;
 

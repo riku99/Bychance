@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {store} from './redux/index';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 
-import Root from './screens/Root';
+import Root from './components/Root';
 
 const App: () => React.ReactNode = () => {
   return (

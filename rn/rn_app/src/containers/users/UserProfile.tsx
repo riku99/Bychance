@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {UserProfile} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
-import {RootStackParamList} from '../../screens/Root';
+import {RootStackParamList} from '../../components/Root';
 
 type NavigationProp = StackNavigationProp<
   RootStackParamList,
