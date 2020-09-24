@@ -5,6 +5,8 @@ Rails.application.routes.draw do
       post '/subsequentLogin', to: 'users#subsequentLogin'
       post '/nonce', to: 'users#createNonce'
       put '/user', to: 'users#edit'
+
+      post'/post', to: 'posts#create'
     end
   end
 end

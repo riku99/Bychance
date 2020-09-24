@@ -10,6 +10,7 @@ import {
 import {useIsFocused} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import {TextInput} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 
 export const Post = () => {
   const isFocused = useIsFocused();
@@ -18,9 +19,14 @@ export const Post = () => {
   );
   const [text, setText] = useState('');
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     if (isFocused) {
       ImagePicker.launchImageLibrary({}, (response) => {
+        if (response.didCancel) {
+          navigation.goBack();
+        }
         if (response.uri) {
           const source = 'data:image/jpeg;base64,' + response.data;
           setSelectedImage(source);
@@ -29,12 +35,12 @@ export const Post = () => {
     } else {
       setSelectedImage(undefined);
     }
-  }, [isFocused]);
+  }, [isFocused, navigation]);
 
   if (!selectedImage) {
     return (
       <View style={{...styles.container, justifyContent: 'center'}}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="small" />
       </View>
     );
   }

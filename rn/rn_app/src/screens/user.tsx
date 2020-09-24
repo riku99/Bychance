@@ -14,8 +14,15 @@ export type UserStackParamList = {
   UserEditTable: undefined;
 };
 
+export type TabList = {
+  Profile: undefined;
+  Post: undefined;
+  Chat: undefined;
+  Search: undefined;
+};
+
 const Stack = createStackNavigator<UserStackParamList>();
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<TabList>();
 
 export const Tabs = () => {
   return (
