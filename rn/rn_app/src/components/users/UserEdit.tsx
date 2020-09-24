@@ -57,7 +57,7 @@ export const UserEdit = ({
   }, [redirect, navigation, falseRedirect]);
 
   const pickImage = useCallback(() => {
-    ImagePicker.showImagePicker(options, async (response) => {
+    ImagePicker.showImagePicker(options, (response) => {
       if (response.uri) {
         const source = 'data:image/jpeg;base64,' + response.data;
         setSelectedImage(source);

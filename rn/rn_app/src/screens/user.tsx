@@ -23,6 +23,24 @@ export const Tabs = () => {
       initialRouteName="Profile"
       tabBarOptions={{showLabel: false, activeTintColor: '#5c94c8'}}>
       <Tab.Screen
+        name="Search"
+        component={PostStackScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="search" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={PostStackScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="comment-o" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Post"
         component={PostStackScreen}
         options={{
@@ -52,6 +70,10 @@ const getHeaderTitle = (route: any) => {
       return 'マイページ';
     case 'Post':
       return '写真の投稿';
+    case 'Chat':
+      return 'メッセージ';
+    case 'Search':
+      return 'ユーザーを探す';
   }
 };
 
