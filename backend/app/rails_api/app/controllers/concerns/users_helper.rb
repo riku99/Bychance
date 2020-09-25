@@ -35,7 +35,7 @@ module UsersHelper
         checkAccessToken(token)
     end
     
-    def createImagePath(image)
+    def createImagePath(image, model, id)
         base_data = image.sub %r/data:((image|application)\/.{3,}),/, ''
         decoded_data = Base64.decode64(base_data)
         s3 = Aws::S3::Resource.new({
@@ -44,7 +44,7 @@ module UsersHelper
         })
         bucket = s3.bucket("r-message-app")
         file_name = Time.new.strftime("%Y%m%d%H%M%S")
-        obj = bucket.object(file_name)
+        obj = bucket.object("#{model}/#{id}/#{file_name}")
         obj.put(body: decoded_data)
         obj.public_url
     end

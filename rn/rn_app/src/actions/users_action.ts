@@ -7,7 +7,7 @@ import {
   sendAccessToken,
   sendNonce,
   sendEditedProfile,
-} from '../api/users_api';
+} from '../apis/users_api';
 import {loginError} from '../redux/user';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
@@ -77,6 +77,14 @@ export const editProfileAction = createAsyncThunk(
   ) => {
     try {
       const token = await checkKeychain();
+      if (!token) {
+        const callback = () => {
+          thunkAPI.dispatch(loginError());
+          thunkAPI.dispatch(firstLoginAction());
+        };
+        requestLogin(callback);
+        return;
+      }
       const response = await sendEditedProfile({
         name: name,
         introduce: introduce,

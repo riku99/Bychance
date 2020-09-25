@@ -58,7 +58,7 @@ class Api::V1::UsersController < ApplicationController
         name = user_params["name"]
         introduce = user_params["introduce"]
         if image = user_params["image"]
-            url = createImagePath(image)
+            url = createImagePath(image, "user", `#{user.id}`)
             else
                 url = user.image
         end

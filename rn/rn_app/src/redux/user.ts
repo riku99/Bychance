@@ -8,7 +8,7 @@ import {
 
 type initialStateType = {
   login: boolean;
-  errors?: {someError?: string; invalidError?: string};
+  errors?: {invalidError?: string};
   redirect?: boolean;
   user?: {
     id: number;

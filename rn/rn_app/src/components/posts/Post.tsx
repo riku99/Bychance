@@ -12,7 +12,19 @@ import ImagePicker from 'react-native-image-picker';
 import {TextInput} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 
-export const Post = () => {
+type Props = {
+  createPost: ({
+    text,
+    image,
+    id,
+  }: {
+    text: string;
+    image: string;
+    id: number;
+  }) => void;
+};
+
+export const Post = ({createPost}: Props) => {
   const isFocused = useIsFocused();
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
     undefined,
@@ -60,7 +72,7 @@ export const Post = () => {
       <Text
         style={styles.postButton}
         onPress={() => {
-          console.log(text);
+          createPost({text: text, image: selectedImage});
         }}>
         投稿する
       </Text>
