@@ -5,7 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Container} from '../containers/posts/CreatePost';
 
 export type PostStackParamList = {
-  PostTable: undefined;
+  CreatePostTable: undefined;
 };
 
 const Stack = createStackNavigator<PostStackParamList>();
@@ -14,7 +14,7 @@ const Tab = createBottomTabNavigator();
 export const Tabs = () => {
   return (
     <Tab.Navigator initialRouteName="Post">
-      <Tab.Screen name="Post" component={Container} />
+      <Tab.Screen name="CreatePost" component={Container} />
     </Tab.Navigator>
   );
 };
@@ -23,7 +23,7 @@ export const PostStackScreen = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="PostTable"
+        name="CreatePostTable"
         component={Container}
         options={{
           title: '写真の投稿',

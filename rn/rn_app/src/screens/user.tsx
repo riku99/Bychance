@@ -8,15 +8,17 @@ import {UserProfileTable} from '../components/users/UserProfileTable';
 import {UserEditTable} from '../components/users/UserEditTable';
 import {MenuBar} from '../components/utils/MenuBar';
 import {PostStackScreen} from './Post';
+import {Post} from '../components/posts/Post';
 
 export type UserStackParamList = {
   UserProfileTable: undefined;
   UserEditTable: undefined;
+  Post: undefined;
 };
 
 export type TabList = {
   Profile: undefined;
-  Post: undefined;
+  CreatePost: undefined;
   Chat: undefined;
   Search: undefined;
 };
@@ -48,7 +50,7 @@ export const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Post"
+        name="CreatePost"
         component={PostStackScreen}
         options={{
           tabBarIcon: ({color}) => (
@@ -75,7 +77,7 @@ const getHeaderTitle = (route: any) => {
   switch (routeName) {
     case 'Profile':
       return 'マイページ';
-    case 'Post':
+    case 'CreatePost':
       return '写真の投稿';
     case 'Chat':
       return 'メッセージ';
@@ -107,6 +109,11 @@ export const UserStackScreen = () => {
           animationEnabled: false,
           headerRight: () => <MenuBar />,
         }}
+      />
+      <Stack.Screen
+        component={Post}
+        name="Post"
+        options={{title: '投稿', headerRight: () => <MenuBar />}}
       />
     </Stack.Navigator>
   );

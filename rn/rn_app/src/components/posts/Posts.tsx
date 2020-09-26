@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 import {PostType} from '../../redux/post';
 
@@ -11,10 +18,20 @@ import {PostType} from '../../redux/post';
 type PropsType = {posts: PostType[]};
 
 export const Posts = ({posts}: PropsType) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.posts}>
       {posts.map((p, i) => {
-        return <Image source={{uri: p.image}} style={styles.post} key={i} />;
+        return (
+          <TouchableOpacity
+            key={p.id}
+            activeOpacity={1}
+            onPress={() => {
+              navigation.navigate('Post');
+            }}>
+            <Image source={{uri: p.image}} style={styles.post} key={i} />
+          </TouchableOpacity>
+        );
       })}
     </View>
   );
