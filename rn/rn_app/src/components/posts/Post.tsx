@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Image,
   Dimensions,
   ActivityIndicator,
@@ -11,25 +10,21 @@ import {useIsFocused} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import {TextInput} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import {Button} from 'react-native-elements';
 
 type Props = {
-  createPost: ({
-    text,
-    image,
-    id,
-  }: {
-    text: string;
-    image: string;
-    id: number;
-  }) => void;
+  redirect?: boolean;
+  createPost: ({text, image}: {text: string; image: string}) => void;
+  falseRedirect: () => void;
 };
 
-export const Post = ({createPost}: Props) => {
+export const Post = ({createPost, redirect, falseRedirect}: Props) => {
   const isFocused = useIsFocused();
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
     undefined,
   );
   const [text, setText] = useState('');
+  const [loading, setLoding] = useState(false);
 
   const navigation = useNavigation();
 
@@ -45,21 +40,28 @@ export const Post = ({createPost}: Props) => {
         }
       });
     } else {
+      setText('');
       setSelectedImage(undefined);
+      setLoding(false);
     }
   }, [isFocused, navigation]);
 
-  if (!selectedImage) {
-    return (
-      <View style={{...styles.container, justifyContent: 'center'}}>
-        <ActivityIndicator size="small" />
-      </View>
-    );
-  }
+  useEffect(() => {
+    if (redirect) {
+      navigation.goBack();
+      falseRedirect();
+    }
+  }, [redirect, falseRedirect, navigation]);
 
   return (
     <View style={styles.container}>
-      <Image source={{uri: selectedImage}} style={styles.image} />
+      {selectedImage ? (
+        <Image source={{uri: selectedImage}} style={styles.image} />
+      ) : (
+        <View style={{...styles.image, justifyContent: 'center'}}>
+          <ActivityIndicator size="small" />
+        </View>
+      )}
       <TextInput
         style={styles.textArea}
         multiline={true}
@@ -67,15 +69,25 @@ export const Post = ({createPost}: Props) => {
         onChangeText={(t) => {
           setText(t);
         }}>
-        {null}
+        {text}
       </TextInput>
-      <Text
-        style={styles.postButton}
-        onPress={() => {
-          createPost({text: text, image: selectedImage});
-        }}>
-        投稿する
-      </Text>
+      {loading ? (
+        <Button
+          loading
+          loadingProps={{color: '#5c94c8'}}
+          buttonStyle={styles.postButton}
+        />
+      ) : (
+        <Button
+          title={'投稿する'}
+          buttonStyle={styles.postButton}
+          titleStyle={styles.postButtonTitle}
+          onPress={() => {
+            setLoding(true);
+            createPost({text: text, image: selectedImage!});
+          }}
+        />
+      )}
     </View>
   );
 };
@@ -101,8 +113,8 @@ const styles = StyleSheet.create({
   },
   postButton: {
     marginTop: 40,
-    color: '#4fa9ff',
-    fontWeight: 'bold',
     fontSize: 17,
+    backgroundColor: 'transparent',
   },
+  postButtonTitle: {color: '#4fa9ff', fontWeight: 'bold'},
 });

@@ -42,7 +42,11 @@ export const createPostAction = createAsyncThunk(
         throw new Error('不明なエラー');
       }
 
-      return {id: response.id, text: response.text, image: response.image};
+      return {
+        id: response.id,
+        text: response.text,
+        image: response.image,
+      };
     } catch (e) {
       console.log(e.message);
       alertSomeError();
