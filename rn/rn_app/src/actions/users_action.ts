@@ -12,6 +12,7 @@ import {loginError} from '../redux/user';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
+import {setPostsAction} from '../redux/post';
 
 export const firstLoginAction = createAsyncThunk(
   'users/firstLogin',
@@ -26,7 +27,8 @@ export const firstLoginAction = createAsyncThunk(
       const nonce = loginResult.IDTokenNonce;
       await sendNonce(nonce as string);
       const response = await sendIDtoken(idToken as string);
-      if ((response.type = 'loginError')) {
+
+      if (response.type === 'loginError') {
         const callback = () => {
           thunkAPI.dispatch(loginError());
           thunkAPI.dispatch(firstLoginAction());
@@ -36,6 +38,8 @@ export const firstLoginAction = createAsyncThunk(
       }
       await Keychain.resetGenericPassword();
       await Keychain.setGenericPassword('session', accessToken as string);
+
+      thunkAPI.dispatch(setPostsAction(response.posts));
       return response;
     } catch (e) {
       console.log(e.message);
@@ -58,6 +62,7 @@ export const subsequentLoginAction = createAsyncThunk<
       requestLogin(callback);
       return;
     }
+    thunkAPI.dispatch(setPostsAction(response.posts));
     return response;
   } catch (e) {
     console.log(e.message);

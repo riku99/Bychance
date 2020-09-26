@@ -25,11 +25,15 @@ export const Post = ({createPost, redirect, falseRedirect}: Props) => {
   );
   const [text, setText] = useState('');
   const [loading, setLoding] = useState(false);
+  const [page, setPage] = useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
     if (isFocused) {
+      setTimeout(() => {
+        setPage(true);
+      }, 1000);
       ImagePicker.launchImageLibrary({}, (response) => {
         if (response.didCancel) {
           navigation.goBack();
@@ -41,6 +45,7 @@ export const Post = ({createPost, redirect, falseRedirect}: Props) => {
       });
     } else {
       setText('');
+      setPage(false);
       setSelectedImage(undefined);
       setLoding(false);
     }
@@ -52,6 +57,10 @@ export const Post = ({createPost, redirect, falseRedirect}: Props) => {
       falseRedirect();
     }
   }, [redirect, falseRedirect, navigation]);
+
+  if (!page) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>

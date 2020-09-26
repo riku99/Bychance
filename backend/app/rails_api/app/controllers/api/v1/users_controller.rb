@@ -22,12 +22,12 @@ class Api::V1::UsersController < ApplicationController
         parsed_response = JSON.parse(response.body)
 
         if parsed_response["error"]
-            render json: {error: "ログインエラー"}
+            render json: {error: true}
             return
         end
 
         unless nonce = Nonce.find_by(nonce: parsed_response["nonce"])
-            render json: {error: "ログインエラー"}
+            render json: {error: true}
             return
         end
 
@@ -35,20 +35,22 @@ class Api::V1::UsersController < ApplicationController
             user_name = parsed_response["name"]
             user_image = parsed_response["picture"]
             uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
-            unless (User.find_by(uid: uid_hash))
+            unless user = User.find_by(uid: uid_hash)
                 user = User.new(name: user_name, uid: uid_hash, image: user_image, display: false)
                 user.save
             end
-            render json: {name: user_name, image: user_image, introduce: "", message: nil, display: false}
+            posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
+            render json: {id: user.id, name: user_name, image: user_image, introduce: "", message: nil, display: false, posts: posts}
         end
         nonce.destroy
     end
 
     def subsequentLogin
         unless user = authorizationProcess(request.headers)
-            return {error: "ログインエラー"}
+            return {error: true}
         end
-        render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false}
+        posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
+        render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false, posts: posts}
     end
 
     def edit

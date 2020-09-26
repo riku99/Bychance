@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-import {userType} from '../redux/user';
+import {UserType} from '../redux/user';
+import {PostType} from '../redux/post';
 
 const origin = 'http://localhost:80/api/v1';
 
@@ -19,9 +20,9 @@ export const sendNonce: (
 
 export const sendIDtoken: (
   token: string,
-) => Promise<{type: 'user' & userType} | {type: 'loginError'}> = async (
-  token,
-) => {
+) => Promise<
+  ({type: 'user'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
+> = async (token) => {
   const response = await axios.post(`${origin}/firstLogin`, {token: token});
 
   if (response.data.error) {
@@ -33,9 +34,9 @@ export const sendIDtoken: (
 
 export const sendAccessToken: (
   accessToken: string,
-) => Promise<{type: 'user' & userType} | {type: 'loginError'}> = async (
-  token,
-) => {
+) => Promise<
+  ({type: 'user'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
+> = async (token) => {
   const response = await axios.post(
     `${origin}/subsequentLogin`,
     {},

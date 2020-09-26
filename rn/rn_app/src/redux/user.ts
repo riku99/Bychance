@@ -20,7 +20,7 @@ type initialStateType = {
   };
 };
 
-export type userType = NonNullable<initialStateType['user']>;
+export type UserType = NonNullable<initialStateType['user']>;
 
 const initialState: initialStateType = {
   login: false,
@@ -43,7 +43,7 @@ const userSlice = createSlice({
   extraReducers: {
     [firstLoginAction.fulfilled.type]: (
       state,
-      action: PayloadAction<userType>,
+      action: PayloadAction<UserType>,
     ) => {
       return {
         ...state,
@@ -60,7 +60,7 @@ const userSlice = createSlice({
     },
     [subsequentLoginAction.fulfilled.type]: (
       state,
-      action: PayloadAction<userType>,
+      action: PayloadAction<UserType>,
     ) => {
       return {
         ...state,
@@ -77,7 +77,7 @@ const userSlice = createSlice({
     },
     [editProfileAction.fulfilled.type]: (
       state,
-      actions: PayloadAction<userType>,
+      actions: PayloadAction<UserType>,
     ) => ({
       ...state,
       redirect: true,

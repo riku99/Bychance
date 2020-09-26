@@ -2,7 +2,7 @@ import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '../../redux/index';
-import {Post} from '../../components/posts/Post';
+import {Post} from '../../components/posts/CreatePost';
 import {createPostAction, createPostType} from '../../actions/posts_action';
 import {falseRedirectAction} from '../../redux/post';
 

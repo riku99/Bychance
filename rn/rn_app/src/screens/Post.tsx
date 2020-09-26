@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {Container} from '../containers/posts/Post';
+import {Container} from '../containers/posts/CreatePost';
 
 export type PostStackParamList = {
   PostTable: undefined;

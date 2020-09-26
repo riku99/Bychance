@@ -19,6 +19,10 @@ const postSlice = createSlice({
   name: 'post',
   initialState: initialState,
   reducers: {
+    setPostsAction: (state, actions: PayloadAction<PostType[]>) => ({
+      ...state,
+      posts: actions.payload,
+    }),
     falseRedirectAction: (state) => ({
       ...state,
       redirect: false,
@@ -55,6 +59,10 @@ const postSlice = createSlice({
   },
 });
 
-export const {falseRedirectAction, deleteInfoAction} = postSlice.actions;
+export const {
+  falseRedirectAction,
+  deleteInfoAction,
+  setPostsAction,
+} = postSlice.actions;
 
 export default postSlice.reducer;
