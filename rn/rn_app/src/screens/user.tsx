@@ -8,12 +8,12 @@ import {UserProfileTable} from '../components/users/UserProfileTable';
 import {UserEditTable} from '../components/users/UserEditTable';
 import {MenuBar} from '../components/utils/MenuBar';
 import {PostStackScreen} from './Post';
-import {Post} from '../components/posts/Post';
+import {PostTable} from '../components/posts/PostTable';
 
 export type UserStackParamList = {
   UserProfileTable: undefined;
   UserEditTable: undefined;
-  Post: undefined;
+  PostTable: {id: number; text: string; image: string};
 };
 
 export type TabList = {
@@ -111,8 +111,8 @@ export const UserStackScreen = () => {
         }}
       />
       <Stack.Screen
-        component={Post}
-        name="Post"
+        component={PostTable}
+        name="PostTable"
         options={{title: '投稿', headerRight: () => <MenuBar />}}
       />
     </Stack.Navigator>

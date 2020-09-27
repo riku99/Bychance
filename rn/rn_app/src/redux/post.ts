@@ -3,13 +3,14 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {createPostAction} from '../actions/posts_action';
 
 type initialStateType = {
+  post?: {id: number; text: string; image: string};
   posts: {id: number; text: string; image: string}[];
   info?: string;
   errors?: {invalidError: string};
   redirect?: boolean;
 };
 
-export type PostType = initialStateType['posts'][number];
+export type PostType = NonNullable<initialStateType['post']>;
 
 const initialState: initialStateType = {
   posts: [],
@@ -19,6 +20,10 @@ const postSlice = createSlice({
   name: 'post',
   initialState: initialState,
   reducers: {
+    setPostAction: (state, actions: PayloadAction<PostType>) => ({
+      ...state,
+      post: actions.payload,
+    }),
     setPostsAction: (state, actions: PayloadAction<PostType[]>) => ({
       ...state,
       posts: actions.payload,
@@ -39,12 +44,12 @@ const postSlice = createSlice({
     ) => ({
       ...state,
       posts: [
-        ...state.posts,
         {
           id: actions.payload.id,
           text: actions.payload.text,
           image: actions.payload.image,
         },
+        ...state.posts,
       ],
       info: '投稿しました',
       redirect: true,
@@ -60,9 +65,10 @@ const postSlice = createSlice({
 });
 
 export const {
+  setPostAction,
+  setPostsAction,
   falseRedirectAction,
   deleteInfoAction,
-  setPostsAction,
 } = postSlice.actions;
 
 export default postSlice.reducer;

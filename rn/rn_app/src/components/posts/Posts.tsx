@@ -10,14 +10,9 @@ import {useNavigation} from '@react-navigation/native';
 
 import {PostType} from '../../redux/post';
 
-//const oji = require('../../assets/ojisan.jpg');
-//const sunny = require('../../assets/suny.jpg');
-//const buta = require('../../assets/buta.jpg');
-//const pic = [oji, sunny, buta];
+type PropsType = {posts: PostType[]} & {setPost: (post: PostType) => void};
 
-type PropsType = {posts: PostType[]};
-
-export const Posts = ({posts}: PropsType) => {
+export const Posts = ({posts, setPost}: PropsType) => {
   const navigation = useNavigation();
   return (
     <View style={styles.posts}>
@@ -27,7 +22,8 @@ export const Posts = ({posts}: PropsType) => {
             key={p.id}
             activeOpacity={1}
             onPress={() => {
-              navigation.navigate('Post');
+              setPost({id: p.id, text: p.text, image: p.image});
+              navigation.navigate('PostTable');
             }}>
             <Image source={{uri: p.image}} style={styles.post} key={i} />
           </TouchableOpacity>

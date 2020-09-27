@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
 
-const sunny = require('../../assets/suny.jpg');
+import {PostType} from '../../redux/post';
 
-export const Post = () => {
+type PropsType = PostType;
+
+export const Post = ({id, text, image}: PropsType) => {
   return (
     <View style={styles.container}>
-      <Image source={sunny} style={styles.image} />
-      <Text style={styles.text}>sunny</Text>
+      <Image source={{uri: image}} style={styles.image} />
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 };
