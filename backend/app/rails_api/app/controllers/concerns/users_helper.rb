@@ -22,6 +22,7 @@ module UsersHelper
         end
         response_body = JSON.parse(response.body)
         uid = response_body["userId"]
+        puts uid
         uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
         user = User.find_by(uid: uid_hash)
     end

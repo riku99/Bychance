@@ -21,9 +21,12 @@ export const Posts = ({posts, setPost}: PropsType) => {
           <TouchableOpacity
             key={p.id}
             activeOpacity={1}
-            onPress={() => {
-              setPost({id: p.id, text: p.text, image: p.image});
-              navigation.navigate('PostTable');
+            onPress={async () => {
+              RNFS.readFile(p.image, 'base64').then((res) => {
+                console.log(res);
+              });
+              //setPost({id: p.id, text: p.text, image: p.image});
+              //navigation.navigate('PostTable');
             }}>
             <Image source={{uri: p.image}} style={styles.post} key={i} />
           </TouchableOpacity>

@@ -65,7 +65,7 @@ export const sendEditedProfile = async ({
   image: string | undefined;
   token: string;
 }): Promise<
-  | ({type: 'user'} & userType)
+  | ({type: 'user'} & UserType)
   | {type: 'invalid'; invalid: string}
   | {type: 'loginError'; error: string}
 > => {
