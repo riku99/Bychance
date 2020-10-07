@@ -15,19 +15,15 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def firstLogin
-        token = params["token"]
-        body = {id_token: token, client_id: "1654890866"} # credentialsに変更
+        token = getToken(request.headers)
+        body = {id_token: token, client_id: Rails.application.credentials.line[:client_id]} # credentialsに変更
         uri = URI.parse("https://api.line.me/oauth2/v2.1/verify")
         response = Net::HTTP.post_form(uri, body)
         parsed_response = JSON.parse(response.body)
 
-        if parsed_response["error"]
-            render json: {error: true}
-            return
-        end
-
         unless nonce = Nonce.find_by(nonce: parsed_response["nonce"])
-            render json: {error: true}
+            render json: {loginError: true}
+            nonce.destroy
             return
         end
 
@@ -35,45 +31,59 @@ class Api::V1::UsersController < ApplicationController
             user_name = parsed_response["name"]
             user_image = parsed_response["picture"]
             uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
-            unless user = User.find_by(uid: uid_hash)
-                user = User.new(name: user_name, uid: uid_hash, image: user_image, display: false)
-                user.save
+            token = User.new_token
+            token_hash = token.crypt(Rails.application.credentials.salt[:salt_key])
+            if user = User.find_by(uid: uid_hash)
+                user.update_attribute(:token, token_hash)
+                posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
+                render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display, token: token, posts: posts} # N+1問題(?)なので改善する
+            else
+                user = User.create(name: user_name, uid: uid_hash, token: token_hash, image: user_image, display: false)
+                render json: {id: user.id, name: user_name, image: user_image, introduce: "", message: nil, display: false, token: token, posts: []}
             end
-            posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
-            render json: {id: user.id, name: user_name, image: user_image, introduce: "", message: nil, display: false, posts: posts}
+            nonce.destroy
+            return
         end
-        nonce.destroy
+
+        if parsed_response["error"]
+            render json: {loginError: true}
+            nonce.destroy
+            return
+        end
     end
 
     def subsequentLogin
-        unless user = authorizationProcess(request.headers)
-            return {error: true}
+        if user = checkAccessToken(params["id"] ,request.headers)
+            posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
+            render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false, posts: posts}
+        else
+            render json: {loginError: true}
         end
-        posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
-        render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false, posts: posts}
+        
     end
 
     def edit
-        unless user = authorizationProcess(request.headers)
-            return {error: "ログインできません。ログインをやり直してください"}
+        unless user = checkAccessToken(user_params["id"] ,request.headers)
+            render json: {loginError: true}
         end
         name = user_params["name"]
         introduce = user_params["introduce"]
         if image = user_params["image"]
             url = createImagePath(image, "user", `#{user.id}`)
-            else
-                url = user.image
+        else
+            url = user.image
         end
-        unless user.update(name: name, introduce: introduce, image: url, display: user.display, message: user.message)
-            render json: {invalid: user.errors.full_messages[0]}
+        if user.update(name: name, introduce: introduce, image: url, display: user.display, message: user.message)
+            render json: {success: {name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display} }
             return
+        else
+            render json: {invalid: user.errors.full_messages[0]}
         end
-        render json: {name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display}
     end
 
     private
 
     def user_params
-        params.require(:user).permit(:name, :introduce, :image)
+        params.require(:user).permit(:id, :name, :introduce, :image)
     end
 end

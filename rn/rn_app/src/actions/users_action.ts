@@ -16,14 +16,14 @@ import {setPostsAction} from '../redux/post';
 
 export const firstLoginAction = createAsyncThunk(
   'users/firstLogin',
-  async ({}, thunkAPI) => {
+  async (dummy: undefined, thunkAPI) => {
     try {
       const loginResult = await LineLogin.login({
         // @ts-ignore ドキュメント通りにやっても直らなかったのでignore
         scopes: ['openid', 'profile'],
       });
       const idToken = loginResult.accessToken.id_token;
-      const accessToken = loginResult.accessToken.access_token;
+      //const accessToken = loginResult.accessToken.access_token;
       const nonce = loginResult.IDTokenNonce;
       await sendNonce(nonce as string);
       const response = await sendIDtoken(idToken as string);
@@ -36,9 +36,36 @@ export const firstLoginAction = createAsyncThunk(
         requestLogin(callback);
         return;
       }
-      await Keychain.resetGenericPassword();
-      await Keychain.setGenericPassword('session', accessToken as string);
+      if ((response.type = 'success')) {
+        await Keychain.resetGenericPassword();
+        await Keychain.setGenericPassword(String(response.id), response.token);
+        thunkAPI.dispatch(setPostsAction(response.posts));
+        return response;
+      }
+    } catch (e) {
+      if (e.message === 'User cancelled or interrupted the login process.') {
+        return;
+      }
+      console.log(e.name);
+      console.log(e.message);
+      alertSomeError();
+    }
+  },
+);
 
+export const subsequentLoginAction = createAsyncThunk(
+  'users/subsequentLogin',
+  async ({id, token}: {id: string; token: string}, thunkAPI) => {
+    try {
+      const response = await sendAccessToken({id: Number(id), token: token});
+      if (response.type === 'loginError') {
+        const callback = () => {
+          thunkAPI.dispatch(loginError());
+          thunkAPI.dispatch(firstLoginAction());
+        };
+        requestLogin(callback);
+        return;
+      }
       thunkAPI.dispatch(setPostsAction(response.posts));
       return response;
     } catch (e) {
@@ -47,28 +74,6 @@ export const firstLoginAction = createAsyncThunk(
     }
   },
 );
-
-export const subsequentLoginAction = createAsyncThunk<
-  Object,
-  {keychainToken: string}
->('users/subsequentLogin', async ({keychainToken}, thunkAPI) => {
-  try {
-    const response = await sendAccessToken(keychainToken);
-    if (response.type === 'loginError') {
-      const callback = () => {
-        thunkAPI.dispatch(loginError());
-        thunkAPI.dispatch(firstLoginAction());
-      };
-      requestLogin(callback);
-      return;
-    }
-    thunkAPI.dispatch(setPostsAction(response.posts));
-    return response;
-  } catch (e) {
-    console.log(e.message);
-    alertSomeError();
-  }
-});
 
 export const editProfileAction = createAsyncThunk(
   'users/editUser',
@@ -81,34 +86,29 @@ export const editProfileAction = createAsyncThunk(
     thunkAPI,
   ) => {
     try {
-      const token = await checkKeychain();
-      if (!token) {
-        const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction());
-        };
-        requestLogin(callback);
-        return;
+      const keychain = await checkKeychain();
+      if (keychain) {
+        const response = await sendEditedProfile({
+          name: name,
+          introduce: introduce,
+          image: image,
+          id: keychain.id,
+          token: keychain.token,
+        });
+        if (response.type === 'user') {
+          return response;
+        }
+        if (response.type === 'loginError') {
+          const callback = () => {
+            thunkAPI.dispatch(loginError());
+            thunkAPI.dispatch(firstLoginAction());
+          };
+          requestLogin(callback);
+        }
+        if (response.type === 'invalid') {
+          thunkAPI.rejectWithValue(response.invalid);
+        }
       }
-      const response = await sendEditedProfile({
-        name: name,
-        introduce: introduce,
-        image: image,
-        token: token,
-      });
-
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction());
-        };
-        requestLogin(callback);
-        return;
-      }
-      if (response.type === 'invalid') {
-        return thunkAPI.rejectWithValue(response.invalid);
-      }
-      return response;
     } catch (e) {
       console.log(e.message);
       alertSomeError();

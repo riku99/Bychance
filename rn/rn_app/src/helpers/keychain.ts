@@ -2,9 +2,11 @@ import * as Keychain from 'react-native-keychain';
 
 export const checkKeychain = async () => {
   const credentials = await Keychain.getGenericPassword();
-  if (!credentials || !credentials.password) {
+  const id = credentials && credentials.username;
+  const token = credentials && credentials.password;
+  if (id && token) {
+    return {id: Number(id), token};
+  } else {
     return;
   }
-  const token = credentials.password;
-  return token;
 };

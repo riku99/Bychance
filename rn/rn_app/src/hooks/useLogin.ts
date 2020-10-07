@@ -3,20 +3,15 @@ import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
 import {firstLoginAction, subsequentLoginAction} from '../actions/users_action';
 
-export const useLogin = () => {
+export const useLogin = async () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const checkAccessToken: () => Promise<string | void> = async () => {
+    const login: () => Promise<void> = async () => {
       const credentials = await Keychain.getGenericPassword();
-      if (credentials && credentials.password) {
-        return credentials.password;
-      }
-    };
-
-    const login = async () => {
-      const result = await checkAccessToken();
-      if (result) {
-        dispatch(subsequentLoginAction({keychainToken: result}));
+      const id = credentials && credentials.username;
+      const token = credentials && credentials.password;
+      if (id && token) {
+        dispatch(subsequentLoginAction({id: id, token: token}));
       } else {
         dispatch(firstLoginAction());
       }

@@ -2,7 +2,7 @@ require "net/http"
 require "aws-sdk"
 
 module UsersHelper
-    def checkAccessToken(token)
+    def previouscheckAccessToken(token)
         uri = URI.parse("https://api.line.me/oauth2/v2.1/verify?access_token=#{token}")
         response = Net::HTTP.get_response(uri)
         unless response.code == "200"
@@ -22,18 +22,19 @@ module UsersHelper
         end
         response_body = JSON.parse(response.body)
         uid = response_body["userId"]
-        puts uid
         uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
         user = User.find_by(uid: uid_hash)
     end
     
-    def getAccessToken(headers)
+    def getToken(headers)
         headers["Authorization"].sub("Bearer ", '')
     end
-    
-    def authorizationProcess(arg)
-        token = getAccessToken(arg)
-        checkAccessToken(token)
+
+    def checkAccessToken(id, headers)
+        if user = User.find_by(id: id)
+            token = getToken(headers)
+            return user if user.token == User.digest(token)
+        end
     end
     
     def createImagePath(image, model, id)

@@ -1,9 +1,8 @@
 import axios from 'axios';
 
+import {origin} from '../constants/origin';
 import {UserType} from '../redux/user';
 import {PostType} from '../redux/post';
-
-const origin = 'http://localhost:80/api/v1';
 
 export const sendNonce: (
   nonce: string,
@@ -21,24 +20,11 @@ export const sendNonce: (
 export const sendIDtoken: (
   token: string,
 ) => Promise<
-  ({type: 'user'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
-> = async (token) => {
-  const response = await axios.post(`${origin}/firstLogin`, {token: token});
-
-  if (response.data.error) {
-    return {type: 'loginError'};
-  } else {
-    return response.data;
-  }
-};
-
-export const sendAccessToken: (
-  accessToken: string,
-) => Promise<
-  ({type: 'user'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
+  | ({type: 'success'} & UserType & {token: string} & {posts: PostType[]})
+  | {type: 'loginError'}
 > = async (token) => {
   const response = await axios.post(
-    `${origin}/subsequentLogin`,
+    `${origin}/firstLogin`,
     {},
     {
       headers: {
@@ -47,31 +33,60 @@ export const sendAccessToken: (
     },
   );
 
-  if (response.data.error) {
+  if (response.data.loginError) {
+    return {type: 'loginError'};
+  } else {
+    return {type: 'success', ...response.data};
+  }
+};
+
+export const sendAccessToken: ({
+  id,
+  token,
+}: {
+  id: number;
+  token: string;
+}) => Promise<
+  ({type: 'user'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
+> = async ({id, token}) => {
+  const response = await axios.post(
+    `${origin}/subsequentLogin`,
+    {id: id},
+    {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    },
+  );
+
+  if (response.data.loginError) {
     return {type: 'loginError'};
   } else {
     return response.data;
   }
 };
 
-export const sendEditedProfile = async ({
+export const sendEditedProfile: ({
   name,
   introduce,
   image,
+  id,
   token,
 }: {
   name: string;
   introduce: string;
   image: string | undefined;
+  id: number;
   token: string;
-}): Promise<
-  | ({type: 'user'} & UserType)
+}) => Promise<
+  | {type: 'user' & UserType}
   | {type: 'invalid'; invalid: string}
-  | {type: 'loginError'; error: string}
-> => {
+  | {type: 'loginError'}
+> = async ({name, introduce, image, id, token}) => {
   const response = await axios.put(
     `${origin}/user`,
     {
+      id: id,
       name: name,
       introduce: introduce,
       image: image,
@@ -83,13 +98,15 @@ export const sendEditedProfile = async ({
     },
   );
 
-  if (response.data.error) {
-    return {type: 'loginError', ...response.data};
+  if (response.data.success) {
+    return {type: 'user', ...response.data.success};
+  }
+
+  if (response.data.loginError) {
+    return {type: 'loginError'};
   }
 
   if (response.data.invalid) {
     return {type: 'invalid', ...response.data};
   }
-
-  return response.data;
 };
