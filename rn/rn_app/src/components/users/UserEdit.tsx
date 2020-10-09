@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   edit: {
+    height: '85%',
     display: 'flex',
     alignItems: 'center',
     width: '80%',

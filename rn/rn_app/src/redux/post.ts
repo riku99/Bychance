@@ -8,6 +8,7 @@ type initialStateType = {
   info?: string;
   errors?: {invalidError: string};
   redirect?: boolean;
+  process?: boolean;
 };
 
 export type PostType = NonNullable<initialStateType['post']>;
@@ -36,6 +37,10 @@ const postSlice = createSlice({
       ...state,
       info: undefined,
     }),
+    setProcessAction: (state) => ({
+      ...state,
+      process: true,
+    }),
   },
   extraReducers: {
     [createPostAction.fulfilled.type]: (
@@ -52,7 +57,7 @@ const postSlice = createSlice({
         ...state.posts,
       ],
       info: '投稿しました',
-      redirect: true,
+      process: false,
     }),
     [createPostAction.rejected.type]: (
       state,
@@ -69,6 +74,7 @@ export const {
   setPostsAction,
   falseRedirectAction,
   deleteInfoAction,
+  setProcessAction,
 } = postSlice.actions;
 
 export default postSlice.reducer;

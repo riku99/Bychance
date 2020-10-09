@@ -15,11 +15,15 @@ const Container = () => {
   const userProps = useSelector((state: RootState) => {
     return state.userReducer.user!;
   });
+  const process = useSelector((state: RootState) => {
+    return state.postReducer.process;
+  });
   return (
     <UserProfile
       name={userProps.name}
       image={userProps.image}
       introduce={userProps.introduce}
+      postProcess={process}
     />
   );
 };

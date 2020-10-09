@@ -22,9 +22,6 @@ export const Posts = ({posts, setPost}: PropsType) => {
             key={p.id}
             activeOpacity={1}
             onPress={async () => {
-              RNFS.readFile(p.image, 'base64').then((res) => {
-                console.log(res);
-              });
               //setPost({id: p.id, text: p.text, image: p.image});
               //navigation.navigate('PostTable');
             }}>

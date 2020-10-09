@@ -7,46 +7,44 @@ import {alertSomeError} from '../helpers/error';
 import {loginError} from '../redux/user';
 import {firstLoginAction} from './users_action';
 
-export type createPostType = {text: string; image: string};
 export const createPostAction = createAsyncThunk(
   'posts/createPost',
-  async (data: createPostType, thunkAPI) => {
+  async ({text, image}: {text: string; image: string}, thunkAPI) => {
     try {
-      const token = await checkKeychain();
+      const keychain = await checkKeychain();
 
-      if (!token) {
+      if (keychain) {
+        const response = await sendPost({
+          text,
+          image,
+          id: keychain.id,
+          token: keychain.token,
+        });
+        if (response.type === 'success') {
+          return {
+            id: response.id,
+            text: response.text,
+            image: response.image,
+          };
+        }
+        if (response.type === 'loginError') {
+          const callback = () => {
+            thunkAPI.dispatch(loginError());
+            thunkAPI.dispatch(firstLoginAction());
+          };
+          requestLogin(callback);
+        }
+
+        if (response.type === 'invalid') {
+          thunkAPI.rejectWithValue(response.invalid);
+        }
+      } else {
         const callback = () => {
           thunkAPI.dispatch(loginError());
           thunkAPI.dispatch(firstLoginAction());
         };
         requestLogin(callback);
-        return;
       }
-
-      const response = await sendPost(data, token);
-
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction());
-        };
-        requestLogin(callback);
-        return;
-      }
-
-      if (response.type === 'invalid') {
-        return thunkAPI.rejectWithValue(response.invalid);
-      }
-
-      if (response.type === 'someError') {
-        throw new Error('不明なエラー');
-      }
-
-      return {
-        id: response.id,
-        text: response.text,
-        image: response.image,
-      };
     } catch (e) {
       console.log(e.message);
       alertSomeError();

@@ -1,34 +1,45 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {UserStackParamList} from '../../screens/User';
+import {ScrollView} from 'react-native-gesture-handler';
+import {Container} from '../../containers/posts/Posts';
 
-type Props = {name: string; image: string | null; introduce: string | null};
+type Props = {
+  name: string;
+  image: string | null;
+  introduce: string | null;
+  postProcess: boolean | undefined;
+};
 
 type NavigationProp = StackNavigationProp<
   UserStackParamList,
   'UserProfileTable'
 >;
 
-export const UserProfile = ({name, image, introduce}: Props) => {
+export const UserProfile = ({name, image, introduce, postProcess}: Props) => {
   const navigation = useNavigation<NavigationProp>();
   return (
-    <View style={styles.profile}>
-      <View style={styles.main}>
-        <View style={styles.image}>
-          <Avatar
-            rounded
-            source={image ? {uri: image} : require('../../assets/ojisan.jpg')}
-            size="large"
-            placeholderStyle={{backgroundColor: 'transeparent'}}
-          />
-        </View>
-        <View style={styles.name_box}>
-          <Text style={styles.name}>{name}</Text>
-        </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.image}>
+        <Avatar
+          rounded
+          source={image ? {uri: image} : require('../../assets/ojisan.jpg')}
+          size="large"
+          placeholderStyle={{backgroundColor: 'transeparent'}}
+        />
+      </View>
+      <View style={styles.name_box}>
+        <Text style={styles.name}>{name}</Text>
       </View>
       <View style={styles.edit}>
         <Button
@@ -50,25 +61,39 @@ export const UserProfile = ({name, image, introduce}: Props) => {
           </View>
         )}
       </View>
-    </View>
+      {postProcess && (
+        <View style={styles.postProcess}>
+          <ActivityIndicator size="small" />
+          <Text style={{marginLeft: 10, color: '#999999'}}>投稿中です</Text>
+        </View>
+      )}
+      <Container />
+      <View style={styles.dummy}></View>
+    </ScrollView>
   );
 };
 
+const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
-  profile: {
-    height: 350,
+  container: {
+    flex: 1,
   },
-  main: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+  image: {
+    justifyContent: 'center',
     alignItems: 'center',
-    height: '41%',
-    paddingLeft: 50,
-    paddingRight: 50,
+    marginTop: '8%',
+  },
+  name_box: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '3%',
+  },
+  name: {
+    fontSize: 20,
   },
   edit: {
     alignItems: 'center',
-    height: '12%',
+    marginTop: '3%',
   },
   edit_button: {
     backgroundColor: 'transparent',
@@ -78,28 +103,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   introduce: {
-    height: '47%',
+    minHeight: '10%',
     paddingLeft: 25,
     paddingRight: 25,
-    borderBottomColor: '#e8e8e8',
-    borderBottomWidth: 1,
+    //borderBottomColor: '#e8e8e8',
+    //borderBottomWidth: 1,
+    marginTop: '3%',
   },
   introduce_text: {
     fontSize: 16,
   },
-  image: {
-    justifyContent: 'center',
+  postProcess: {
+    flexDirection: 'row',
     alignItems: 'center',
-    width: 100,
-    height: 100,
-  },
-  name_box: {
     justifyContent: 'center',
-    alignItems: 'center',
-    width: 180,
-    height: 100,
+    height: 35,
+    marginBottom: 5,
   },
-  name: {
-    fontSize: 25,
+  dummy: {
+    height: width / 3,
   },
 });

@@ -2,13 +2,8 @@ import React from 'react';
 import {ScrollView} from 'react-native';
 
 import UserProfile from '../../containers/users/UserProfile';
-import {Container} from '../../containers/posts/Posts'; // containerからimportする
+import {Container} from '../../containers/posts/Posts';
 
 export const UserProfileTable = () => {
-  return (
-    <ScrollView>
-      <UserProfile />
-      <Container />
-    </ScrollView>
-  );
+  return <UserProfile />;
 };
