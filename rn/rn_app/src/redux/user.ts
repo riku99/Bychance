@@ -39,6 +39,10 @@ const userSlice = createSlice({
       ...state,
       redirect: false,
     }),
+    deleteInvalidAction: (state) => ({
+      ...state,
+      errors: {invalidError: undefined},
+    }),
   },
   extraReducers: {
     [firstLoginAction.fulfilled.type]: (
@@ -98,6 +102,10 @@ const userSlice = createSlice({
   },
 });
 
-export const {loginError, falseRedirect} = userSlice.actions;
+export const {
+  loginError,
+  falseRedirect,
+  deleteInvalidAction,
+} = userSlice.actions;
 
 export default userSlice.reducer;

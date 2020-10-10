@@ -5,7 +5,7 @@ class Api::V1::UsersController < ApplicationController
     def createNonce
         nonce = params["nonce"]
         unless nonce
-            render json: {error: "ログインできません。ログインをやり直してください"}
+            render json: {error: true}
             return
         end
         new_nonce = Nonce.new(nonce: nonce)
@@ -16,7 +16,7 @@ class Api::V1::UsersController < ApplicationController
 
     def firstLogin
         token = getToken(request.headers)
-        body = {id_token: token, client_id: Rails.application.credentials.line[:client_id]} # credentialsに変更
+        body = {id_token: token, client_id: Rails.application.credentials.line[:client_id]}
         uri = URI.parse("https://api.line.me/oauth2/v2.1/verify")
         response = Net::HTTP.post_form(uri, body)
         parsed_response = JSON.parse(response.body)
@@ -35,7 +35,7 @@ class Api::V1::UsersController < ApplicationController
             token_hash = token.crypt(Rails.application.credentials.salt[:salt_key])
             if user = User.find_by(uid: uid_hash)
                 user.update_attribute(:token, token_hash)
-                posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
+                posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), user: p.user.id} }
                 render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display, token: token, posts: posts} # N+1問題(?)なので改善する
             else
                 user = User.create(name: user_name, uid: uid_hash, token: token_hash, image: user_image, display: false)
@@ -54,8 +54,8 @@ class Api::V1::UsersController < ApplicationController
 
     def subsequentLogin
         if user = checkAccessToken(params["id"], request.headers)
-            posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: p.created_at} }
-            render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false, posts: posts}
+            posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), user: p.user.id} }
+            render json: {success: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false, posts: posts} }
         else
             render json: {loginError: true}
         end

@@ -22,8 +22,8 @@ export const Posts = ({posts, setPost}: PropsType) => {
             key={p.id}
             activeOpacity={1}
             onPress={async () => {
-              //setPost({id: p.id, text: p.text, image: p.image});
-              //navigation.navigate('PostTable');
+              setPost({id: p.id, text: p.text, image: p.image, date: p.date});
+              navigation.navigate('PostTable');
             }}>
             <Image source={{uri: p.image}} style={styles.post} key={i} />
           </TouchableOpacity>

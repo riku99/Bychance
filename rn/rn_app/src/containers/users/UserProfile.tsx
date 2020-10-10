@@ -4,10 +4,10 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {UserProfile} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
-import {RootStackParamList} from '../../components/Root';
+import {UserStackParamList} from '../../screens/User';
 
 type NavigationProp = StackNavigationProp<
-  RootStackParamList,
+  UserStackParamList,
   'UserProfileTable'
 >;
 

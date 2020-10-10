@@ -10,16 +10,16 @@ export const sendPost: ({
 }: {
   text: string;
   image: string;
-  id: number;
+  user: number;
   token: string;
 }) => Promise<
   | ({type: 'success'} & PostType)
   | {type: 'invalid'; invalid: string}
   | {type: 'loginError'}
-> = async ({text, image, id, token}) => {
+> = async ({text, image, user, token}) => {
   const response = await axios.post(
     `${origin}/post`,
-    {text, image, id},
+    {post: {text, image, user}},
     headers(token),
   );
 
@@ -34,4 +34,37 @@ export const sendPost: ({
   if (response.data.invalid) {
     return {type: 'invalid', invalid: response.data.invalid};
   }
+};
+
+export const deletePost: ({
+  id,
+  user,
+  token,
+}: {
+  id: number;
+  user: number;
+  token: string;
+}) => Promise<
+  {type: 'success'} | {type: 'loginError'} | {type: 'invalid'; invalid: string}
+> = async ({id, user, token}) => {
+  const response = await axios.request({
+    method: 'delete',
+    url: `${origin}/post`,
+    data: {post: {id, user}},
+    ...headers(token),
+  });
+
+  if (response.data.success) {
+    return {type: 'success'};
+  }
+
+  if (response.data.loginError) {
+    return {type: 'loginError'};
+  }
+
+  if (response.data.invalid) {
+    return {type: 'invalid', invalid: response.data.invalid};
+  }
+
+  throw new Error();
 };

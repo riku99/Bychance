@@ -1,12 +1,24 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {createPostAction} from '../actions/posts_action';
+import {createPostAction, deletePostAsync} from '../actions/posts_action';
 
 type initialStateType = {
-  post?: {id: number; text: string; image: string};
-  posts: {id: number; text: string; image: string}[];
+  post?: {
+    id: number;
+    text: string;
+    image: string;
+    date: string;
+    userID: string;
+  };
+  posts: {
+    id: number;
+    text: string;
+    image: string;
+    date: string;
+    userID: string;
+  }[];
   info?: string;
-  errors?: {invalidError: string};
+  errors?: {invalidError?: string};
   redirect?: boolean;
   process?: boolean;
 };
@@ -37,6 +49,10 @@ const postSlice = createSlice({
       ...state,
       info: undefined,
     }),
+    deleteInvalidAction: (state) => ({
+      ...state,
+      errors: {invalidError: undefined},
+    }),
     setProcessAction: (state) => ({
       ...state,
       process: true,
@@ -53,6 +69,8 @@ const postSlice = createSlice({
           id: actions.payload.id,
           text: actions.payload.text,
           image: actions.payload.image,
+          date: actions.payload.date,
+          userID: actions.payload.date,
         },
         ...state.posts,
       ],
@@ -60,6 +78,28 @@ const postSlice = createSlice({
       process: false,
     }),
     [createPostAction.rejected.type]: (
+      state,
+      actions: PayloadAction<string>,
+    ) => ({
+      ...state,
+      errors: {invalidError: actions.payload},
+    }),
+    [deletePostAsync.fulfilled.type]: (
+      state,
+      actions: PayloadAction<number>,
+    ) => {
+      let array = state.posts.filter((v) => {
+        if (v.id !== actions.payload) {
+          return v;
+        }
+      });
+      return {
+        ...state,
+        posts: array,
+        info: '削除しました',
+      };
+    },
+    [deletePostAsync.rejected.type]: (
       state,
       actions: PayloadAction<string>,
     ) => ({
@@ -74,6 +114,7 @@ export const {
   setPostsAction,
   falseRedirectAction,
   deleteInfoAction,
+  deleteInvalidAction,
   setProcessAction,
 } = postSlice.actions;
 

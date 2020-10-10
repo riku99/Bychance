@@ -6,7 +6,8 @@ Rails.application.routes.draw do
       post '/nonce', to: 'users#createNonce'
       put '/user', to: 'users#edit'
 
-      post'/post', to: 'posts#create'
+      post '/post', to: 'posts#create'
+      delete '/post', to: 'posts#destroy'
     end
   end
 end

@@ -68,12 +68,11 @@ export const UserProfile = ({name, image, introduce, postProcess}: Props) => {
         </View>
       )}
       <Container />
-      <View style={styles.dummy}></View>
     </ScrollView>
   );
 };
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   introduce: {
-    minHeight: '10%',
+    minHeight: height / 5,
     paddingLeft: 25,
     paddingRight: 25,
     //borderBottomColor: '#e8e8e8',

@@ -1,31 +1,65 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Image} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, Text, Image, Dimensions, Alert} from 'react-native';
+import {Button} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 
 import {PostType} from '../../redux/post';
 
-type PropsType = PostType;
+type PropsType = {post: PostType; deletePost: (id: number) => void};
 
-export const Post = ({id, text, image}: PropsType) => {
+export const Post = ({post, deletePost}: PropsType) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Image source={{uri: image}} style={styles.image} />
-      <Text style={styles.text}>{text}</Text>
+      <Image source={{uri: post.image}} style={styles.image} />
+      <View style={styles.upper_box}>
+        <Text style={styles.date}>{post.date}</Text>
+        <Button
+          icon={<Icon name="delete-outline" color="#999999" />}
+          buttonStyle={{backgroundColor: 'transparent'}}
+          onPress={() => {
+            Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
+              {
+                text: 'はい',
+                onPress: () => {
+                  deletePost(post.id);
+                  navigation.goBack();
+                },
+              },
+              {text: 'いいえ'},
+            ]);
+          }}
+        />
+      </View>
+      <Text style={styles.text}>{post.text}</Text>
     </View>
   );
 };
 
+const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
   },
   image: {
-    width: '100%',
-    height: 450,
+    width: width,
+    height: 400,
+  },
+  upper_box: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '95%',
+    height: 40,
+  },
+  date: {
+    color: '#999999',
   },
   text: {
     width: '95%',
-    marginTop: 20,
+    marginTop: 10,
     fontSize: 16,
   },
 });

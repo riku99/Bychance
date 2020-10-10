@@ -47,7 +47,7 @@ export const sendAccessToken: ({
   id: number;
   token: string;
 }) => Promise<
-  ({type: 'user'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
+  ({type: 'success'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
 > = async ({id, token}) => {
   const response = await axios.post(
     `${origin}/subsequentLogin`,
@@ -59,10 +59,12 @@ export const sendAccessToken: ({
     },
   );
 
+  if (response.data.success) {
+    return {type: 'success', ...response.data.success};
+  }
+
   if (response.data.loginError) {
     return {type: 'loginError'};
-  } else {
-    return response.data;
   }
 };
 

@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-import {sendPost} from '../apis/posts_api';
+import {sendPost, deletePost} from '../apis/posts_api';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
@@ -17,7 +17,7 @@ export const createPostAction = createAsyncThunk(
         const response = await sendPost({
           text,
           image,
-          id: keychain.id,
+          user: keychain.id,
           token: keychain.token,
         });
         if (response.type === 'success') {
@@ -36,7 +36,48 @@ export const createPostAction = createAsyncThunk(
         }
 
         if (response.type === 'invalid') {
-          thunkAPI.rejectWithValue(response.invalid);
+          return thunkAPI.rejectWithValue(response.invalid);
+        }
+      } else {
+        const callback = () => {
+          thunkAPI.dispatch(loginError());
+          thunkAPI.dispatch(firstLoginAction());
+        };
+        requestLogin(callback);
+      }
+    } catch (e) {
+      console.log(e.message);
+      alertSomeError();
+    }
+  },
+);
+
+export const deletePostAsync = createAsyncThunk(
+  'post/deletePost',
+  async (id: number, thunkAPI) => {
+    try {
+      const keychain = await checkKeychain();
+      if (keychain) {
+        const response = await deletePost({
+          id,
+          user: keychain.id,
+          token: keychain.token,
+        });
+
+        if (response.type === 'success') {
+          return id;
+        }
+
+        if (response.type === 'loginError') {
+          const callback = () => {
+            thunkAPI.dispatch(loginError());
+            thunkAPI.dispatch(firstLoginAction());
+          };
+          requestLogin(callback);
+        }
+
+        if (response.type === 'invalid') {
+          return thunkAPI.rejectWithValue(response.invalid);
         }
       } else {
         const callback = () => {

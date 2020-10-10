@@ -1,12 +1,15 @@
 import React, {useEffect} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import * as Keychain from 'react-native-keychain';
 
 import {useLogin} from '../hooks/useLogin';
 import {RootState} from '../redux/index';
 import {UserStackScreen} from '../screens/User';
-import {deleteInfoAction} from '../redux/post';
+import {
+  deleteInfoAction,
+  deleteInvalidAction as deletePostInvalid,
+} from '../redux/post';
+import {deleteInvalidAction as deleteUserInvalid} from '../redux/user';
 
 const Root = () => {
   const login = useSelector((state: RootState) => {
@@ -14,6 +17,12 @@ const Root = () => {
   });
   const info = useSelector((state: RootState) => {
     return state.postReducer.info;
+  });
+  const userInvalid = useSelector((state: RootState) => {
+    return state.userReducer.errors && state.userReducer.errors.invalidError;
+  });
+  const postInvalid = useSelector((state: RootState) => {
+    return state.postReducer.errors && state.postReducer.errors.invalidError;
   });
 
   const dispatch = useDispatch();
@@ -28,6 +37,15 @@ const Root = () => {
     }
   });
 
+  useEffect(() => {
+    if (postInvalid || userInvalid) {
+      setTimeout(() => {
+        dispatch(deleteUserInvalid());
+        dispatch(deletePostInvalid());
+      }, 3000);
+    }
+  });
+
   useLogin();
 
   if (!login) {
@@ -36,6 +54,16 @@ const Root = () => {
 
   return (
     <>
+      {!userInvalid && (
+        <View style={styles.invalid}>
+          <Text style={styles.invalidText}>{userInvalid}</Text>
+        </View>
+      )}
+      {postInvalid && (
+        <View style={styles.invalid}>
+          <Text style={styles.invalidText}>{postInvalid}</Text>
+        </View>
+      )}
       <View style={styles.container}>
         <UserStackScreen />
       </View>
@@ -68,6 +96,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: 'white',
+  },
+  invalid: {
+    position: 'absolute',
+    top: 80,
+    zIndex: 10,
+    alignSelf: 'center',
+  },
+  invalidText: {
+    color: 'red',
   },
 });
 

@@ -58,6 +58,11 @@ export const subsequentLoginAction = createAsyncThunk(
   async ({id, token}: {id: string; token: string}, thunkAPI) => {
     try {
       const response = await sendAccessToken({id: Number(id), token: token});
+
+      if (response.type === 'success') {
+        thunkAPI.dispatch(setPostsAction(response.posts));
+        return response;
+      }
       if (response.type === 'loginError') {
         const callback = () => {
           thunkAPI.dispatch(loginError());
@@ -66,8 +71,6 @@ export const subsequentLoginAction = createAsyncThunk(
         requestLogin(callback);
         return;
       }
-      thunkAPI.dispatch(setPostsAction(response.posts));
-      return response;
     } catch (e) {
       console.log(e.message);
       alertSomeError();
@@ -106,7 +109,7 @@ export const editProfileAction = createAsyncThunk(
           requestLogin(callback);
         }
         if (response.type === 'invalid') {
-          thunkAPI.rejectWithValue(response.invalid);
+          return thunkAPI.rejectWithValue(response.invalid);
         }
       }
     } catch (e) {
