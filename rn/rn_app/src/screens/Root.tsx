@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {PostStackScreen} from './Post';
-import {ProfileStackScreen} from './User';
+import {ProfileStackScreen} from './Profile';
 import {Container as UserEdit} from '../containers/users/UserEdit';
 
 export type RootStackParamList = {
@@ -82,7 +82,6 @@ export const RootStackScreen = () => {
         component={UserEdit}
         options={{
           title: 'プロフィール編集',
-          animationEnabled: false,
         }}
       />
     </RootStack.Navigator>

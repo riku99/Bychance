@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {PostType} from '../../redux/post';
-import {UserStackParamList} from '../../screens/User';
+import {UserStackParamList} from '../../screens/Profile';
 
 type PropsType = {posts: PostType[]} & {setPost: (post: PostType) => void};
 
