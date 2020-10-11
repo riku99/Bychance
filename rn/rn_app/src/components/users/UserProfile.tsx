@@ -10,9 +10,9 @@ import {Avatar, Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {UserStackParamList} from '../../screens/User';
+import {RootStackParamList} from '../../screens/Root';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Container} from '../../containers/posts/Posts';
+import {Container as Posts} from '../../containers/posts/Posts';
 import {checkKeychain} from '../../helpers/keychain';
 
 type Props = {
@@ -23,10 +23,7 @@ type Props = {
   postProcess: boolean | undefined;
 };
 
-type NavigationProp = StackNavigationProp<
-  UserStackParamList,
-  'UserProfileTable'
->;
+type NavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 export const UserProfile = ({
   id,
@@ -68,7 +65,7 @@ export const UserProfile = ({
             titleStyle={styles.title_style}
             buttonStyle={styles.edit_button}
             onPress={() => {
-              navigation.push('UserEditTable');
+              navigation.push('UserEdit');
             }}
           />
         )}
@@ -82,7 +79,7 @@ export const UserProfile = ({
           <Text style={{marginLeft: 10, color: '#999999'}}>投稿中です</Text>
         </View>
       )}
-      <Container />
+      <Posts />
     </ScrollView>
   );
 };
@@ -120,8 +117,6 @@ const styles = StyleSheet.create({
     minHeight: height / 5,
     paddingLeft: 25,
     paddingRight: 25,
-    //borderBottomColor: '#e8e8e8',
-    //borderBottomWidth: 1,
     marginTop: '3%',
   },
   introduce_text: {

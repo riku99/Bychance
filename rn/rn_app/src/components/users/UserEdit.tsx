@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-picker';
 
-import {UserStackParamList} from '../../screens/User';
+import {RootStackParamList} from '../../screens/Root';
 
 type Props = {
   user: {
@@ -23,7 +23,7 @@ type Props = {
   ) => void;
 } & {falseRedirect: () => void};
 
-type NavigationProp = StackNavigationProp<UserStackParamList, 'UserEditTable'>;
+type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEdit'>;
 
 const options = {
   title: 'プロフィール画像を変更',
@@ -56,7 +56,7 @@ export const UserEdit = ({
 
   useEffect(() => {
     if (redirect) {
-      navigation.push('UserProfileTable');
+      navigation.goBack();
       falseRedirect();
       setLoding(false);
     }

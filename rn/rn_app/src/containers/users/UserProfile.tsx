@@ -1,18 +1,11 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {StackNavigationProp} from '@react-navigation/stack';
 
 import {UserProfile} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
-import {UserStackParamList} from '../../screens/User';
 
-type NavigationProp = StackNavigationProp<
-  UserStackParamList,
-  'UserProfileTable'
->;
-
-const Container = () => {
-  const userProps = useSelector((state: RootState) => {
+export const Container = () => {
+  const user = useSelector((state: RootState) => {
     return state.userReducer.user!;
   });
   const process = useSelector((state: RootState) => {
@@ -20,10 +13,10 @@ const Container = () => {
   });
   return (
     <UserProfile
-      id={userProps.id}
-      name={userProps.name}
-      image={userProps.image}
-      introduce={userProps.introduce}
+      id={user.id}
+      name={user.name}
+      image={user.image}
+      introduce={user.introduce}
       postProcess={process}
     />
   );

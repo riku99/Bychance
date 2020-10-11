@@ -7,13 +7,17 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import {PostType} from '../../redux/post';
+import {UserStackParamList} from '../../screens/User';
 
 type PropsType = {posts: PostType[]} & {setPost: (post: PostType) => void};
 
+type NavigationProp = StackNavigationProp<UserStackParamList, 'Post'>;
+
 export const Posts = ({posts, setPost}: PropsType) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   return (
     <View style={styles.posts}>
       {posts.map((p, i) => {
@@ -29,7 +33,7 @@ export const Posts = ({posts, setPost}: PropsType) => {
                 date: p.date,
                 userID: p.userID,
               });
-              navigation.navigate('PostTable');
+              navigation.push('Post');
             }}>
             <Image source={{uri: p.image}} style={styles.post} key={i} />
           </TouchableOpacity>

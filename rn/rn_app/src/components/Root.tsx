@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import {useLogin} from '../hooks/useLogin';
 import {RootState} from '../redux/index';
-import {UserStackScreen} from '../screens/User';
+import {RootStackScreen} from '../screens/Root';
 import {
   deleteInfoAction,
   deleteInvalidAction as deletePostInvalid,
@@ -65,7 +65,7 @@ const Root = () => {
         </View>
       )}
       <View style={styles.container}>
-        <UserStackScreen />
+        <RootStackScreen />
       </View>
       {info && (
         <View style={styles.info}>

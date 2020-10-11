@@ -6,7 +6,7 @@ import {UserEdit} from '../../components/users/UserEdit';
 import {editProfileAction} from '../../actions/users_action';
 import {falseRedirect} from '../../redux/user';
 
-const Container = () => {
+export const Container = () => {
   const userProps = useSelector((state: RootState) => {
     return {
       id: state.userReducer.user!.id,
@@ -36,5 +36,3 @@ const Container = () => {
     />
   );
 };
-
-export default Container;
