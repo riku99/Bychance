@@ -25,8 +25,8 @@ export const ProfileStackScreen = () => {
         component={UserProfile}
         options={{
           headerTitle: 'マイページ',
-          //animationEnabled: false,
-          headerBackTitleVisible: false,
+          animationEnabled: false,
+          //headerBackTitleVisible: false,
           headerLeft: () => null,
         }}
       />
