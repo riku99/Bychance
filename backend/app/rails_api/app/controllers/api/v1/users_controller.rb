@@ -35,8 +35,8 @@ class Api::V1::UsersController < ApplicationController
             token_hash = token.crypt(Rails.application.credentials.salt[:salt_key])
             if user = User.find_by(uid: uid_hash)
                 user.update_attribute(:token, token_hash)
-                posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), user: p.user.id} }
-                render json: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display, token: token, posts: posts} # N+1問題(?)なので改善する
+                posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), userID: p.user.id} }
+                render json: {user: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display}, token: token, posts: posts} # N+1問題(?)なので改善する
             else
                 user = User.create(name: user_name, uid: uid_hash, token: token_hash, image: user_image, display: false)
                 render json: {id: user.id, name: user_name, image: user_image, introduce: "", message: nil, display: false, token: token, posts: []}
@@ -54,7 +54,7 @@ class Api::V1::UsersController < ApplicationController
 
     def subsequentLogin
         if user = checkAccessToken(params["id"], request.headers)
-            posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), user: p.user.id} }
+            posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), userID: p.user.id} }
             render json: {success: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false, posts: posts} }
         else
             render json: {loginError: true}

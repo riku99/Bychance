@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,8 +13,10 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {UserStackParamList} from '../../screens/User';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Container} from '../../containers/posts/Posts';
+import {checkKeychain} from '../../helpers/keychain';
 
 type Props = {
+  id: number;
   name: string;
   image: string | null;
   introduce: string | null;
@@ -26,8 +28,26 @@ type NavigationProp = StackNavigationProp<
   'UserProfileTable'
 >;
 
-export const UserProfile = ({name, image, introduce, postProcess}: Props) => {
+export const UserProfile = ({
+  id,
+  name,
+  image,
+  introduce,
+  postProcess,
+}: Props) => {
+  const [keychainID, setKeychainID] = useState<null | number>(null);
   const navigation = useNavigation<NavigationProp>();
+
+  useEffect(() => {
+    const confirmUser = async () => {
+      const keychain = await checkKeychain();
+      if (keychain && keychain.id === id) {
+        setKeychainID(keychain.id);
+      }
+    };
+    confirmUser();
+  }, [id]);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.image}>
@@ -42,24 +62,19 @@ export const UserProfile = ({name, image, introduce, postProcess}: Props) => {
         <Text style={styles.name}>{name}</Text>
       </View>
       <View style={styles.edit}>
-        <Button
-          title="プロフィールを編集"
-          titleStyle={styles.title_style}
-          buttonStyle={styles.edit_button}
-          onPress={() => {
-            navigation.push('UserEditTable');
-          }}
-        />
+        {keychainID === id && (
+          <Button
+            title="プロフィールを編集"
+            titleStyle={styles.title_style}
+            buttonStyle={styles.edit_button}
+            onPress={() => {
+              navigation.push('UserEditTable');
+            }}
+          />
+        )}
       </View>
       <View style={styles.introduce}>
-        {introduce ? (
-          <Text>{introduce}</Text>
-        ) : (
-          <View>
-            <Text>Hello!</Text>
-            <Text>My name is {name}</Text>
-          </View>
-        )}
+        {introduce && <Text>{introduce}</Text>}
       </View>
       {postProcess && (
         <View style={styles.postProcess}>

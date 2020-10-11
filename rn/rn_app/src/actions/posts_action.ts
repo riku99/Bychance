@@ -25,6 +25,8 @@ export const createPostAction = createAsyncThunk(
             id: response.id,
             text: response.text,
             image: response.image,
+            date: response.date,
+            userID: response.userID,
           };
         }
         if (response.type === 'loginError') {

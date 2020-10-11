@@ -20,6 +20,7 @@ const Container = () => {
   });
   return (
     <UserProfile
+      id={userProps.id}
       name={userProps.name}
       image={userProps.image}
       introduce={userProps.introduce}

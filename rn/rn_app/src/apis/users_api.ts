@@ -3,6 +3,7 @@ import axios from 'axios';
 import {origin} from '../constants/origin';
 import {UserType} from '../redux/user';
 import {PostType} from '../redux/post';
+import {headers} from '../helpers/headers';
 
 export const sendNonce: (
   nonce: string,
@@ -20,18 +21,15 @@ export const sendNonce: (
 export const sendIDtoken: (
   token: string,
 ) => Promise<
-  | ({type: 'success'} & UserType & {token: string} & {posts: PostType[]})
+  | {
+      type: 'success';
+      user: UserType;
+      token: string;
+      posts: PostType[];
+    }
   | {type: 'loginError'}
 > = async (token) => {
-  const response = await axios.post(
-    `${origin}/firstLogin`,
-    {},
-    {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    },
-  );
+  const response = await axios.post(`${origin}/firstLogin`, {}, headers(token));
 
   if (response.data.loginError) {
     return {type: 'loginError'};

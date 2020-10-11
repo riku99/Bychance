@@ -23,10 +23,19 @@ export const firstLoginAction = createAsyncThunk(
         scopes: ['openid', 'profile'],
       });
       const idToken = loginResult.accessToken.id_token;
-      //const accessToken = loginResult.accessToken.access_token;
       const nonce = loginResult.IDTokenNonce;
       await sendNonce(nonce as string);
       const response = await sendIDtoken(idToken as string);
+
+      if (response.type === 'success') {
+        await Keychain.resetGenericPassword();
+        await Keychain.setGenericPassword(
+          String(response.user.id),
+          response.token,
+        );
+        thunkAPI.dispatch(setPostsAction(response.posts));
+        return response.user;
+      }
 
       if (response.type === 'loginError') {
         const callback = () => {
@@ -35,12 +44,6 @@ export const firstLoginAction = createAsyncThunk(
         };
         requestLogin(callback);
         return;
-      }
-      if ((response.type = 'success')) {
-        await Keychain.resetGenericPassword();
-        await Keychain.setGenericPassword(String(response.id), response.token);
-        thunkAPI.dispatch(setPostsAction(response.posts));
-        return response;
       }
     } catch (e) {
       if (e.message === 'User cancelled or interrupted the login process.') {

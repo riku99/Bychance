@@ -8,14 +8,14 @@ type initialStateType = {
     text: string;
     image: string;
     date: string;
-    userID: string;
+    userID: number;
   };
   posts: {
     id: number;
     text: string;
     image: string;
     date: string;
-    userID: string;
+    userID: number;
   }[];
   info?: string;
   errors?: {invalidError?: string};
@@ -70,7 +70,7 @@ const postSlice = createSlice({
           text: actions.payload.text,
           image: actions.payload.image,
           date: actions.payload.date,
-          userID: actions.payload.date,
+          userID: actions.payload.userID,
         },
         ...state.posts,
       ],

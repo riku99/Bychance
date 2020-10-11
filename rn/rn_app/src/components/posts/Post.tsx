@@ -6,31 +6,37 @@ import {useNavigation} from '@react-navigation/native';
 
 import {PostType} from '../../redux/post';
 
-type PropsType = {post: PostType; deletePost: (id: number) => void};
+type PropsType = {
+  post: PostType;
+  user: number;
+  deletePost: (id: number) => void;
+};
 
-export const Post = ({post, deletePost}: PropsType) => {
+export const Post = ({post, user, deletePost}: PropsType) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Image source={{uri: post.image}} style={styles.image} />
       <View style={styles.upper_box}>
         <Text style={styles.date}>{post.date}</Text>
-        <Button
-          icon={<Icon name="delete-outline" color="#999999" />}
-          buttonStyle={{backgroundColor: 'transparent'}}
-          onPress={() => {
-            Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
-              {
-                text: 'はい',
-                onPress: () => {
-                  deletePost(post.id);
-                  navigation.goBack();
+        {user === post.userID && (
+          <Button
+            icon={<Icon name="delete-outline" color="#999999" />}
+            buttonStyle={{backgroundColor: 'transparent'}}
+            onPress={() => {
+              Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
+                {
+                  text: 'はい',
+                  onPress: () => {
+                    deletePost(post.id);
+                    navigation.goBack();
+                  },
                 },
-              },
-              {text: 'いいえ'},
-            ]);
-          }}
-        />
+                {text: 'いいえ'},
+              ]);
+            }}
+          />
+        )}
       </View>
       <Text style={styles.text}>{post.text}</Text>
     </View>

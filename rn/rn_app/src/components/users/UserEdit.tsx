@@ -9,7 +9,12 @@ import ImagePicker from 'react-native-image-picker';
 import {UserStackParamList} from '../../screens/User';
 
 type Props = {
-  user: {name: string; introduce: string | null; image: string | null};
+  user: {
+    id: number;
+    name: string;
+    introduce: string | null;
+    image: string | null;
+  };
 } & {redirect?: boolean} & {
   editProfile: (
     name: string,
@@ -25,6 +30,7 @@ const options = {
   cancelButtonTitle: 'キャンセル',
   takePhotoButtonTitle: '写真をとる',
   chooseFromLibraryButtonTitle: 'ライブラリから選択',
+  quality: 0.3,
   storageOptions: {
     skipBackup: true,
     path: 'images',
@@ -192,6 +198,7 @@ const styles = StyleSheet.create({
   },
   nameLabel: {
     fontSize: 20,
+    color: '#c9c9c9',
   },
   nameInput: {
     fontSize: 20,
@@ -212,6 +219,7 @@ const styles = StyleSheet.create({
   },
   introduceLabel: {
     fontSize: 20,
+    color: '#c9c9c9',
   },
   introduceInput: {
     fontSize: 15,

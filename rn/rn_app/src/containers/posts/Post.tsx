@@ -9,11 +9,18 @@ export const Container = () => {
   const {id, text, image, date, userID} = useSelector((state: RootState) => {
     return state.postReducer.post!;
   });
+  const user = useSelector((state: RootState) => {
+    return state.userReducer.user!.id;
+  });
   const dispatch = useDispatch();
   const deletePost = (id: number) => {
     dispatch(deletePostAsync(id));
   };
   return (
-    <Post post={{id, text, image, date, userID}} deletePost={deletePost} />
+    <Post
+      post={{id, text, image, date, userID}}
+      user={user}
+      deletePost={deletePost}
+    />
   );
 };

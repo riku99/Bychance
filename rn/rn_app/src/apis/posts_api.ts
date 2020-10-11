@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import {origin} from '../constants/origin';
-import {headers} from '../constants/headers';
+import {headers} from '../helpers/headers';
 import {PostType} from '../redux/post';
 
 export const sendPost: ({

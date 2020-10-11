@@ -9,6 +9,7 @@ import {falseRedirect} from '../../redux/user';
 const Container = () => {
   const userProps = useSelector((state: RootState) => {
     return {
+      id: state.userReducer.user!.id,
       name: state.userReducer.user!.name,
       introduce: state.userReducer.user!.introduce,
       image: state.userReducer.user!.image,
