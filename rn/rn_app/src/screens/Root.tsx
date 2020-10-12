@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
+import {SearchStackScreen} from './Search';
 import {Container as UserEdit} from '../containers/users/UserEdit';
 
 export type RootStackParamList = {
@@ -29,7 +30,7 @@ const Tabs = () => {
       tabBarOptions={{showLabel: false, activeTintColor: '#5c94c8'}}>
       <RootTab.Screen
         name="Search"
-        component={PostStackScreen}
+        component={SearchStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <Icon name="search" size={24} color={color} />
