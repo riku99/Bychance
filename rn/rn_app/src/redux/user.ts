@@ -5,6 +5,7 @@ import {
   subsequentLoginAction,
   editProfileAction,
 } from '../actions/users_action';
+import {getOthersThunk} from '../actions/others_action';
 
 type initialStateType = {
   login: boolean;

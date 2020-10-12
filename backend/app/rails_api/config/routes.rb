@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
       post '/post', to: 'posts#create'
       delete '/post', to: 'posts#destroy'
+
+      get '/others', to: 'others#index'
     end
   end
 end

@@ -65,6 +65,7 @@ class Api::V1::UsersController < ApplicationController
     def edit
         unless user = checkAccessToken(user_params["id"] ,request.headers)
             render json: {loginError: true}
+            return
         end
         name = user_params["name"]
         introduce = user_params["introduce"]

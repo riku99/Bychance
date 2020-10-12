@@ -1,7 +1,11 @@
-import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {ListItem, Avatar, Icon} from 'react-native-elements';
+import {ListItem, Avatar} from 'react-native-elements';
+import {useIsFocused} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+
+import {getOthersThunk} from '../../actions/others_action';
 
 const suuny = require('../../assets/sunny.jpg');
 const ojisan = require('../../assets/ojisan.jpg');
@@ -16,6 +20,15 @@ const List = [
 ];
 
 export const SearchUser = () => {
+  const isFocused = useIsFocused();
+  const dis = useDispatch();
+
+  useEffect(() => {
+    if (isFocused) {
+      dis(getOthersThunk());
+    }
+  });
+
   return (
     <ScrollView style={styles.container}>
       {List.map((u, i) => (
