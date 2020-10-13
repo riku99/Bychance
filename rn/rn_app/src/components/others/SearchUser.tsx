@@ -1,11 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem, Avatar} from 'react-native-elements';
-import {useIsFocused} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
 
-import {getOthersThunk} from '../../actions/others_action';
+import {OtherUserType} from '../../redux/others';
+const noImage = require('../../assets/no-Image.png');
 
 const suuny = require('../../assets/sunny.jpg');
 const ojisan = require('../../assets/ojisan.jpg');
@@ -19,25 +18,30 @@ const List = [
   },
 ];
 
-export const SearchUser = () => {
-  const isFocused = useIsFocused();
-  const dis = useDispatch();
+type PropsType = {others: OtherUserType[]};
 
-  useEffect(() => {
-    if (isFocused) {
-      dis(getOthersThunk());
-    }
-  });
-
+export const SearchOthers = ({others}: PropsType) => {
+  console.log(others);
   return (
     <ScrollView style={styles.container}>
       {List.map((u, i) => (
-        <ListItem
-          key={i}
-          onPress={() => {
-            console.log('List');
-          }}>
+        <ListItem key={i} onPress={() => {}}>
           <Avatar rounded size="medium" source={u.image} />
+          <ListItem.Content>
+            <ListItem.Title>{u.name}</ListItem.Title>
+            <ListItem.Subtitle style={styles.subtitle}>
+              {u.message}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+      ))}
+      {others.map((u, i) => (
+        <ListItem key={i} onPress={() => {}}>
+          <Avatar
+            rounded
+            size="medium"
+            source={u.image ? {uri: u.image} : noImage}
+          />
           <ListItem.Content>
             <ListItem.Title>{u.name}</ListItem.Title>
             <ListItem.Subtitle style={styles.subtitle}>

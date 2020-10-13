@@ -1,10 +1,10 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {SearchUser} from '../components/searchs/SearchUser';
+import {Container as SearchOthers} from '../containers/others/SearchUser';
 
 export type SearchStackParamList = {
-  SearchUser: undefined;
+  SearchOthers: undefined;
 };
 
 const Stack = createStackNavigator<SearchStackParamList>();
@@ -13,8 +13,8 @@ export const SearchStackScreen = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="SearchUser"
-        component={SearchUser}
+        name="SearchOthers"
+        component={SearchOthers}
         options={{title: 'ユーザーを探す'}}
       />
     </Stack.Navigator>
