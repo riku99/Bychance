@@ -11,6 +11,8 @@ class Api::V1::UsersController < ApplicationController
         new_nonce = Nonce.new(nonce: nonce)
         if new_nonce.save
             render json: {nonce: true}
+        else
+            render json: {error: true}
         end
     end
 
@@ -36,7 +38,7 @@ class Api::V1::UsersController < ApplicationController
             if user = User.find_by(uid: uid_hash)
                 user.update_attribute(:token, token_hash)
                 posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), userID: p.user.id} }
-                render json: {user: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display}, token: token, posts: posts} # N+1問題(?)なので改善する
+                render json: {user: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: user.message, display: user.display}, token: token, posts: posts}
             else
                 user = User.create(name: user_name, uid: uid_hash, token: token_hash, image: user_image, display: false)
                 render json: {id: user.id, name: user_name, image: user_image, introduce: "", message: nil, display: false, token: token, posts: []}

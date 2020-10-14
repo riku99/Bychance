@@ -1,14 +1,18 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {RouteProp} from '@react-navigation/native';
 
 import {Post} from '../../components/posts/Post';
 import {RootState} from '../../redux/index';
+import {ProfileStackParamList} from '../../screens/Profile';
 import {deletePostAsync} from '../../actions/posts_action';
 
-export const Container = () => {
-  const {id, text, image, date, userID} = useSelector((state: RootState) => {
-    return state.postReducer.post!;
-  });
+type screenRouteProp = RouteProp<ProfileStackParamList, 'Post'>;
+
+type Props = {route: screenRouteProp};
+
+export const Container = ({route}: Props) => {
+  const post = route.params;
   const user = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
@@ -18,7 +22,13 @@ export const Container = () => {
   };
   return (
     <Post
-      post={{id, text, image, date, userID}}
+      post={{
+        id: post.id,
+        text: post.text,
+        image: post.image,
+        date: post.date,
+        userID: post.userID,
+      }}
       user={user}
       deletePost={deletePost}
     />

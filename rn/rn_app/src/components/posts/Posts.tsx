@@ -9,11 +9,11 @@ import {
 
 import {PostType} from '../../redux/post';
 
-type PropsType = {posts: PostType[]} & {setPost: (post: PostType) => void} & {
+type PropsType = {posts: PostType[]} & {
   navigateToShowPost: (post: PostType) => void;
 };
 
-export const Posts = ({posts, setPost, navigateToShowPost}: PropsType) => {
+export const Posts = ({posts, navigateToShowPost}: PropsType) => {
   return (
     <View style={styles.posts}>
       {posts.map((p, i) => {
@@ -22,13 +22,6 @@ export const Posts = ({posts, setPost, navigateToShowPost}: PropsType) => {
             key={p.id}
             activeOpacity={1}
             onPress={async () => {
-              setPost({
-                id: p.id,
-                text: p.text,
-                image: p.image,
-                date: p.date,
-                userID: p.userID,
-              });
               navigateToShowPost({
                 id: p.id,
                 text: p.text,

@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {
-  firstLoginAction,
+  firstLoginThunk,
   subsequentLoginAction,
   editProfileAction,
 } from '../actions/users_action';
@@ -45,7 +45,7 @@ const userSlice = createSlice({
     }),
   },
   extraReducers: {
-    [firstLoginAction.fulfilled.type]: (
+    [firstLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<UserType>,
     ) => {

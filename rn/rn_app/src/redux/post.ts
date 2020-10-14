@@ -3,13 +3,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {createPostAction, deletePostAsync} from '../actions/posts_action';
 
 type initialStateType = {
-  post?: {
-    id: number;
-    text: string;
-    image: string;
-    date: string;
-    userID: number;
-  };
   posts: {
     id: number;
     text: string;
@@ -23,7 +16,7 @@ type initialStateType = {
   process?: boolean;
 };
 
-export type PostType = NonNullable<initialStateType['post']>;
+export type PostType = initialStateType['posts'][number];
 
 const initialState: initialStateType = {
   posts: [],
@@ -33,10 +26,6 @@ const postSlice = createSlice({
   name: 'post',
   initialState: initialState,
   reducers: {
-    setPostAction: (state, actions: PayloadAction<PostType>) => ({
-      ...state,
-      post: actions.payload,
-    }),
     setPostsAction: (state, actions: PayloadAction<PostType[]>) => ({
       ...state,
       posts: actions.payload,
@@ -110,7 +99,6 @@ const postSlice = createSlice({
 });
 
 export const {
-  setPostAction,
   setPostsAction,
   falseRedirectAction,
   deleteInfoAction,

@@ -14,7 +14,7 @@ import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {setPostsAction} from '../redux/post';
 
-export const firstLoginAction = createAsyncThunk(
+export const firstLoginThunk = createAsyncThunk(
   'users/firstLogin',
   async (dummy: undefined, thunkAPI) => {
     try {
@@ -40,7 +40,7 @@ export const firstLoginAction = createAsyncThunk(
       if (response.type === 'loginError') {
         const callback = () => {
           thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction());
+          thunkAPI.dispatch(firstLoginThunk());
         };
         requestLogin(callback);
         return;
@@ -69,7 +69,7 @@ export const subsequentLoginAction = createAsyncThunk(
       if (response.type === 'loginError') {
         const callback = () => {
           thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction());
+          thunkAPI.dispatch(firstLoginThunk());
         };
         requestLogin(callback);
         return;
@@ -107,7 +107,7 @@ export const editProfileAction = createAsyncThunk(
         if (response.type === 'loginError') {
           const callback = () => {
             thunkAPI.dispatch(loginError());
-            thunkAPI.dispatch(firstLoginAction());
+            thunkAPI.dispatch(firstLoginThunk());
           };
           requestLogin(callback);
         }

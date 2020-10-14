@@ -1,10 +1,11 @@
 import {useEffect} from 'react';
 import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
-import {firstLoginAction, subsequentLoginAction} from '../actions/users_action';
+import {firstLoginThunk, subsequentLoginAction} from '../actions/users_action';
+import {AppDispatch} from '../redux/index';
 
 export const useLogin = async () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     const login: () => Promise<void> = async () => {
       const credentials = await Keychain.getGenericPassword();
@@ -13,7 +14,7 @@ export const useLogin = async () => {
       if (id && token) {
         dispatch(subsequentLoginAction({id: id, token: token}));
       } else {
-        dispatch(firstLoginAction());
+        dispatch(firstLoginThunk());
       }
     };
     login();

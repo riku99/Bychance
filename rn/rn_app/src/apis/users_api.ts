@@ -9,6 +9,7 @@ export const sendNonce: (
   nonce: string,
 ) => Promise<boolean | undefined> = async (nonce) => {
   const response = await axios.post(`${origin}/nonce`, {nonce: nonce});
+
   if (response.data.error) {
     throw new Error(response.data.error);
   }
@@ -24,8 +25,8 @@ export const sendIDtoken: (
   | {
       type: 'success';
       user: UserType;
-      token: string;
       posts: PostType[];
+      token: string;
     }
   | {type: 'loginError'}
 > = async (token) => {

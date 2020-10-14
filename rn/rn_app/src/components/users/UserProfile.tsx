@@ -25,7 +25,6 @@ type Props = {
   };
   postProcess?: boolean;
   posts: PostType[];
-  setPost: (post: PostType) => void;
   navigateToShowPost: (post: PostType) => void;
 };
 
@@ -35,7 +34,7 @@ export const UserProfile = ({
   user,
   posts,
   postProcess,
-  setPost,
+
   navigateToShowPost,
 }: Props) => {
   const [keychainID, setKeychainID] = useState<null | number>(null);
@@ -89,11 +88,7 @@ export const UserProfile = ({
           <Text style={{marginLeft: 10, color: '#999999'}}>投稿中です</Text>
         </View>
       )}
-      <Posts
-        posts={posts}
-        setPost={setPost}
-        navigateToShowPost={navigateToShowPost}
-      />
+      <Posts posts={posts} navigateToShowPost={navigateToShowPost} />
     </ScrollView>
   );
 };

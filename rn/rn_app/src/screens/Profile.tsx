@@ -4,13 +4,14 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Container as UserProfile} from '../containers/users/UserProfile';
 import {MenuBar} from '../components/utils/MenuBar';
 import {Container as Post} from '../containers/posts/Post';
+import {PostType} from '../redux/post';
 
-export type UserStackParamList = {
+export type ProfileStackParamList = {
   UserProfile: undefined;
-  Post: undefined;
+  Post: PostType;
 };
 
-const Stack = createStackNavigator<UserStackParamList>();
+const Stack = createStackNavigator<ProfileStackParamList>();
 
 export const ProfileStackScreen = () => {
   return (

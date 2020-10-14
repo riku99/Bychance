@@ -12,6 +12,8 @@ import {
 import {deleteInvalidAction as deleteUserInvalid} from '../redux/user';
 
 const Root = () => {
+  useLogin();
+
   const login = useSelector((state: RootState) => {
     return state.userReducer.login;
   });
@@ -45,8 +47,6 @@ const Root = () => {
       }, 3000);
     }
   });
-
-  useLogin();
 
   if (!login) {
     return null;
