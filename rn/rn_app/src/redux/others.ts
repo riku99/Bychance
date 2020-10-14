@@ -11,6 +11,7 @@ export type OtherUserType = Pick<
 
 type initialStateType = {
   others?: OtherUserType[];
+  otherUser?: OtherUserType;
 };
 
 const initialState: initialStateType = {
@@ -22,6 +23,10 @@ const othersSlice = createSlice({
   initialState,
   reducers: {
     // ログアウト時のアクションをあとでつくる。postにも作る
+    setOtherUser: (state, actions: PayloadAction<OtherUserType>) => ({
+      ...state,
+      otherUser: actions.payload,
+    }),
   },
   extraReducers: {
     [getOthersThunk.fulfilled.type]: (
@@ -33,5 +38,7 @@ const othersSlice = createSlice({
     }),
   },
 });
+
+export const {setOtherUser} = othersSlice.actions;
 
 export default othersSlice.reducer;

@@ -4,7 +4,10 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {SearchOthers} from '../../components/others/SearchUser';
 import {RootState} from '../../redux/index';
-import {OtherUserType} from '../../redux/others';
+import {
+  OtherUserType,
+  setOtherUser as setOtherUserAction,
+} from '../../redux/others';
 import {getOthersThunk} from '../../actions/others_action';
 import {AppDispatch} from '../../redux/index';
 
@@ -22,5 +25,8 @@ export const Container = () => {
   const others: OtherUserType[] = useSelector((state: RootState) => {
     return state.othersReducer.others!;
   }, shallowEqual);
-  return <SearchOthers others={others} />;
+  const setOtherUser = (otherUser: OtherUserType) => {
+    dispatch(setOtherUserAction(otherUser));
+  };
+  return <SearchOthers others={others} setOtherUser={setOtherUser} />;
 };
