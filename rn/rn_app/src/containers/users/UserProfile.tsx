@@ -27,7 +27,7 @@ export const Container = () => {
   };
 
   const navigation = useNavigation<NavigationProp>();
-  const navigateToPost = () => {
+  const navigateToShowPost = () => {
     navigation.push('Post');
   };
   return (
@@ -41,7 +41,7 @@ export const Container = () => {
       posts={posts}
       postProcess={process}
       setPost={setPost}
-      navigateToShowPost={navigateToPost}
+      navigateToShowPost={navigateToShowPost}
     />
   );
 };

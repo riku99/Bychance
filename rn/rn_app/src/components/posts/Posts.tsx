@@ -10,7 +10,7 @@ import {
 import {PostType} from '../../redux/post';
 
 type PropsType = {posts: PostType[]} & {setPost: (post: PostType) => void} & {
-  navigateToShowPost: () => void;
+  navigateToShowPost: (post: PostType) => void;
 };
 
 export const Posts = ({posts, setPost, navigateToShowPost}: PropsType) => {
@@ -29,7 +29,13 @@ export const Posts = ({posts, setPost, navigateToShowPost}: PropsType) => {
                 date: p.date,
                 userID: p.userID,
               });
-              navigateToShowPost();
+              navigateToShowPost({
+                id: p.id,
+                text: p.text,
+                image: p.image,
+                date: p.date,
+                userID: p.userID,
+              });
             }}>
             <Image source={{uri: p.image}} style={styles.post} key={i} />
           </TouchableOpacity>

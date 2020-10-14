@@ -26,7 +26,7 @@ type Props = {
   postProcess?: boolean;
   posts: PostType[];
   setPost: (post: PostType) => void;
-  navigateToShowPost: () => void;
+  navigateToShowPost: (post: PostType) => void;
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;

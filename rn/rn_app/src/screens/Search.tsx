@@ -2,12 +2,15 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as SearchOthers} from '../containers/others/SearchUser';
-import {Container} from '../containers/others/OtherUserProfile';
+import {Container as OtherUser} from '../containers/others/OtherUserProfile';
+import {Container as OtherPost} from '../containers/others/OtherPost';
 import {MenuBar} from '../components/utils/MenuBar';
+import {PostType} from '../redux/post';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
   OtherProfile: undefined;
+  OtherPost: PostType;
 };
 
 const Stack = createStackNavigator<SearchStackParamList>();
@@ -26,8 +29,13 @@ export const SearchStackScreen = () => {
       />
       <Stack.Screen
         name="OtherProfile"
-        component={Container}
+        component={OtherUser}
         options={{title: 'ユーザーのプロフィール'}}
+      />
+      <Stack.Screen
+        name="OtherPost"
+        component={OtherPost}
+        options={{title: 'ユーザーの投稿'}}
       />
     </Stack.Navigator>
   );
