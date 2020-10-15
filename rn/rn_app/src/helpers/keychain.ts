@@ -10,3 +10,5 @@ export const checkKeychain = async () => {
     return;
   }
 };
+
+export type credentials = {id: number; token: string};

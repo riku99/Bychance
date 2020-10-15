@@ -4,6 +4,7 @@ import {origin} from '../constants/origin';
 import {UserType} from '../redux/user';
 import {PostType} from '../redux/post';
 import {headers} from '../helpers/headers';
+import {credentials} from '../helpers/keychain';
 
 export const sendNonce: (
   nonce: string,
@@ -42,11 +43,8 @@ export const sendIDtoken: (
 export const sendAccessToken: ({
   id,
   token,
-}: {
-  id: number;
-  token: string;
-}) => Promise<
-  ({type: 'success'} & UserType & {posts: PostType[]}) | {type: 'loginError'}
+}: credentials) => Promise<
+  {type: 'success'; user: UserType; posts: PostType[]} | {type: 'loginError'}
 > = async ({id, token}) => {
   const response = await axios.post(
     `${origin}/subsequentLogin`,
@@ -59,7 +57,7 @@ export const sendAccessToken: ({
   );
 
   if (response.data.success) {
-    return {type: 'success', ...response.data.success};
+    return {type: 'success', ...response.data.success.user};
   }
 
   if (response.data.loginError) {

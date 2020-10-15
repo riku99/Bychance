@@ -57,7 +57,19 @@ class Api::V1::UsersController < ApplicationController
     def subsequentLogin
         if user = checkAccessToken(params["id"], request.headers)
             posts = user.posts.map { |p| {id: p.id, text: p.text, image: p.image, date: I18n.l(p.created_at), userID: p.user.id} }
-            render json: {success: {id: user.id, name: user.name, image: user.image, introduce: user.introduce, message: nil, display: false, posts: posts} }
+            render json: {
+                success: {
+                    user: {
+                        id: user.id,
+                        name: user.name,
+                        image: user.image,
+                        introduce: user.introduce,
+                        message: nil,
+                        display:
+                        false,
+                        posts: posts}
+                }
+            }
         else
             render json: {loginError: true}
         end

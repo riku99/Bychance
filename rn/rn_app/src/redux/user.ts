@@ -30,11 +30,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
-    loginError: (state) => ({
-      ...state,
-      login: false,
-      user: undefined,
-    }),
+    loginError: () => initialState,
     falseRedirect: (state) => ({
       ...state,
       redirect: false,

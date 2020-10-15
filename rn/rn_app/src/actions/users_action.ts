@@ -9,7 +9,7 @@ import {
   sendEditedProfile,
 } from '../apis/users_api';
 import {loginError} from '../redux/user';
-import {checkKeychain} from '../helpers/keychain';
+import {checkKeychain, credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {setPostsAction} from '../redux/post';
@@ -47,9 +47,13 @@ export const firstLoginThunk = createAsyncThunk(
       }
     } catch (e) {
       if (e.message === 'User cancelled or interrupted the login process.') {
+        const callback = () => {
+          thunkAPI.dispatch(loginError());
+          thunkAPI.dispatch(firstLoginThunk());
+        };
+        requestLogin(callback);
         return;
       }
-      console.log(e.name);
       console.log(e.message);
       alertSomeError();
     }
@@ -58,9 +62,9 @@ export const firstLoginThunk = createAsyncThunk(
 
 export const subsequentLoginAction = createAsyncThunk(
   'users/subsequentLogin',
-  async ({id, token}: {id: string; token: string}, thunkAPI) => {
+  async ({id, token}: credentials, thunkAPI) => {
     try {
-      const response = await sendAccessToken({id: Number(id), token: token});
+      const response = await sendAccessToken({id, token});
 
       if (response.type === 'success') {
         thunkAPI.dispatch(setPostsAction(response.posts));
@@ -72,11 +76,12 @@ export const subsequentLoginAction = createAsyncThunk(
           thunkAPI.dispatch(firstLoginThunk());
         };
         requestLogin(callback);
-        return;
+        return thunkAPI.rejectWithValue({loginError: true});
       }
     } catch (e) {
       console.log(e.message);
       alertSomeError();
+      return thunkAPI.rejectWithValue({someError: true});
     }
   },
 );
