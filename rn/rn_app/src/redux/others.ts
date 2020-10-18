@@ -2,7 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {UserType} from './user';
 import {PostType} from './post';
-import {getOthersThunk} from '../actions/others_action';
+import {getOthersThunk} from '../actions/others';
+import {loginErrorThunk} from '../actions/index';
 
 export type OtherUserType = Pick<
   UserType,
@@ -22,13 +23,13 @@ const othersSlice = createSlice({
   name: 'others',
   initialState,
   reducers: {
-    // ログアウト時のアクションをあとでつくる。postにも作る
     setOtherUser: (state, actions: PayloadAction<OtherUserType>) => ({
       ...state,
       otherUser: actions.payload,
     }),
   },
   extraReducers: {
+    [loginErrorThunk.fulfilled.type]: () => initialState,
     [getOthersThunk.fulfilled.type]: (
       state,
       actions: PayloadAction<OtherUserType[]>,

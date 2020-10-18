@@ -4,7 +4,7 @@ import {RouteProp} from '@react-navigation/native';
 
 import {SearchStackParamList} from '../../screens/Search';
 import {Post} from '../../components/posts/Post';
-import {deletePostAsync} from '../../actions/posts_action';
+import {deletePostAsync} from '../../actions/posts';
 import {RootState, AppDispatch} from '../../redux/index';
 
 type screensRouteProp = RouteProp<SearchStackParamList, 'OtherPost'>;

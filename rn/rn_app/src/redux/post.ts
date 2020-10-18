@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {createPostAction, deletePostAsync} from '../actions/posts_action';
+import {loginErrorThunk} from '../actions/index';
+import {createPostAction, deletePostAsync} from '../actions/posts';
 
 type initialStateType = {
   posts: {
@@ -20,6 +21,12 @@ export type PostType = initialStateType['posts'][number];
 
 const initialState: initialStateType = {
   posts: [],
+};
+
+type rejectedType = {
+  invalid?: string;
+  loginError?: boolean;
+  someError?: boolean;
 };
 
 const postSlice = createSlice({
@@ -48,6 +55,7 @@ const postSlice = createSlice({
     }),
   },
   extraReducers: {
+    [loginErrorThunk.fulfilled.type]: () => initialState,
     [createPostAction.fulfilled.type]: (
       state,
       actions: PayloadAction<PostType>,
@@ -68,11 +76,15 @@ const postSlice = createSlice({
     }),
     [createPostAction.rejected.type]: (
       state,
-      actions: PayloadAction<string>,
-    ) => ({
-      ...state,
-      errors: {invalidError: actions.payload},
-    }),
+      actions: PayloadAction<rejectedType>,
+    ) => {
+      if (actions.payload.invalid) {
+        return {
+          ...state,
+          errors: {invalidError: actions.payload.invalid},
+        };
+      }
+    },
     [deletePostAsync.fulfilled.type]: (
       state,
       actions: PayloadAction<number>,
@@ -90,11 +102,15 @@ const postSlice = createSlice({
     },
     [deletePostAsync.rejected.type]: (
       state,
-      actions: PayloadAction<string>,
-    ) => ({
-      ...state,
-      errors: {invalidError: actions.payload},
-    }),
+      actions: PayloadAction<rejectedType>,
+    ) => {
+      if (actions.payload.invalid) {
+        return {
+          ...state,
+          errors: {invalidError: actions.payload.invalid},
+        };
+      }
+    },
   },
 });
 

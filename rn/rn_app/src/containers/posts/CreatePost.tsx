@@ -2,7 +2,7 @@ import React from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Post} from '../../components/posts/CreatePost';
-import {createPostAction} from '../../actions/posts_action';
+import {createPostAction} from '../../actions/posts';
 import {setProcessAction} from '../../redux/post';
 
 export const Container = () => {

@@ -4,8 +4,7 @@ import {sendPost, deletePost} from '../apis/posts_api';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {loginError} from '../redux/user';
-import {firstLoginAction} from './users_action';
+import {loginErrorThunk} from './index';
 
 export const createPostAction = createAsyncThunk(
   'posts/createPost',
@@ -31,25 +30,26 @@ export const createPostAction = createAsyncThunk(
         }
         if (response.type === 'loginError') {
           const callback = () => {
-            thunkAPI.dispatch(loginError());
-            thunkAPI.dispatch(firstLoginAction());
+            thunkAPI.dispatch(loginErrorThunk());
           };
           requestLogin(callback);
+          return thunkAPI.rejectWithValue({loginError: true});
         }
 
         if (response.type === 'invalid') {
-          return thunkAPI.rejectWithValue(response.invalid);
+          return thunkAPI.rejectWithValue({invalid: response.invalid});
         }
       } else {
         const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction());
+          thunkAPI.dispatch(loginErrorThunk());
         };
         requestLogin(callback);
+        return thunkAPI.rejectWithValue({loginError: true});
       }
     } catch (e) {
       console.log(e.message);
       alertSomeError();
+      return thunkAPI.rejectWithValue({someError: true});
     }
   },
 );
@@ -72,25 +72,26 @@ export const deletePostAsync = createAsyncThunk(
 
         if (response.type === 'loginError') {
           const callback = () => {
-            thunkAPI.dispatch(loginError());
-            thunkAPI.dispatch(firstLoginAction());
+            thunkAPI.dispatch(loginErrorThunk());
           };
           requestLogin(callback);
+          return thunkAPI.rejectWithValue({loginError: true});
         }
 
         if (response.type === 'invalid') {
-          return thunkAPI.rejectWithValue(response.invalid);
+          return thunkAPI.rejectWithValue({invalid: response.invalid});
         }
       } else {
         const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginAction());
+          thunkAPI.dispatch(loginErrorThunk());
         };
         requestLogin(callback);
+        return thunkAPI.rejectWithValue({loginError: true});
       }
     } catch (e) {
       console.log(e.message);
       alertSomeError();
+      return thunkAPI.rejectWithValue({someError: true});
     }
   },
 );

@@ -5,7 +5,7 @@ import {RouteProp} from '@react-navigation/native';
 import {Post} from '../../components/posts/Post';
 import {RootState} from '../../redux/index';
 import {ProfileStackParamList} from '../../screens/Profile';
-import {deletePostAsync} from '../../actions/posts_action';
+import {deletePostAsync} from '../../actions/posts';
 
 type screenRouteProp = RouteProp<ProfileStackParamList, 'Post'>;
 

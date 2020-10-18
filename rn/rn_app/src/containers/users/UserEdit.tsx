@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '../../redux/index';
 import {UserEdit} from '../../components/users/UserEdit';
-import {editProfileAction} from '../../actions/users_action';
+import {editProfileAction} from '../../actions/users';
 import {falseRedirect} from '../../redux/user';
 
 export const Container = () => {

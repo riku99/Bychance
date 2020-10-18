@@ -8,7 +8,7 @@ import {
   OtherUserType,
   setOtherUser as setOtherUserAction,
 } from '../../redux/others';
-import {getOthersThunk} from '../../actions/others_action';
+import {getOthersThunk} from '../../actions/others';
 import {AppDispatch} from '../../redux/index';
 
 export const Container = () => {

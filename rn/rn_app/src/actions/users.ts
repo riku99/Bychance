@@ -8,11 +8,12 @@ import {
   sendNonce,
   sendEditedProfile,
 } from '../apis/users_api';
-import {loginError} from '../redux/user';
+
 import {checkKeychain, credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {setPostsAction} from '../redux/post';
+import {loginErrorThunk} from './index';
 
 export const firstLoginThunk = createAsyncThunk(
   'users/firstLogin',
@@ -39,8 +40,7 @@ export const firstLoginThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginThunk());
+          thunkAPI.dispatch(loginErrorThunk());
         };
         requestLogin(callback);
         return;
@@ -48,14 +48,14 @@ export const firstLoginThunk = createAsyncThunk(
     } catch (e) {
       if (e.message === 'User cancelled or interrupted the login process.') {
         const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginThunk());
+          thunkAPI.dispatch(loginErrorThunk());
         };
         requestLogin(callback);
-        return;
+        return thunkAPI.rejectWithValue({lineCancelled: true});
       }
       console.log(e.message);
       alertSomeError();
+      return thunkAPI.rejectWithValue({someError: true});
     }
   },
 );
@@ -72,8 +72,7 @@ export const subsequentLoginAction = createAsyncThunk(
       }
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginError());
-          thunkAPI.dispatch(firstLoginThunk());
+          thunkAPI.dispatch(loginErrorThunk());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -111,18 +110,19 @@ export const editProfileAction = createAsyncThunk(
         }
         if (response.type === 'loginError') {
           const callback = () => {
-            thunkAPI.dispatch(loginError());
-            thunkAPI.dispatch(firstLoginThunk());
+            thunkAPI.dispatch(loginErrorThunk());
           };
           requestLogin(callback);
+          return thunkAPI.rejectWithValue({loginError: true});
         }
         if (response.type === 'invalid') {
-          return thunkAPI.rejectWithValue(response.invalid);
+          return thunkAPI.rejectWithValue({invalid: response.invalid});
         }
       }
     } catch (e) {
       console.log(e.message);
       alertSomeError();
+      return thunkAPI.rejectWithValue({someError: true});
     }
   },
 );

@@ -1,10 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+import {loginErrorThunk} from '../actions/index';
 import {
   firstLoginThunk,
   subsequentLoginAction,
   editProfileAction,
-} from '../actions/users_action';
+} from '../actions/users';
 
 type initialStateType = {
   login: boolean;
@@ -30,7 +31,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
-    loginError: () => initialState,
     falseRedirect: (state) => ({
       ...state,
       redirect: false,
@@ -41,6 +41,7 @@ const userSlice = createSlice({
     }),
   },
   extraReducers: {
+    [loginErrorThunk.fulfilled.type]: () => initialState,
     [firstLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<UserType>,
@@ -90,18 +91,22 @@ const userSlice = createSlice({
     }),
     [editProfileAction.rejected.type]: (
       state,
-      actions: PayloadAction<string>,
-    ) => ({
-      ...state,
-      errors: {invalidError: actions.payload},
-    }),
+      actions: PayloadAction<{
+        invalid?: string;
+        loginError?: boolean;
+        someError?: boolean;
+      }>,
+    ) => {
+      if (actions.payload.invalid) {
+        return {
+          ...state,
+          errors: {invalidError: actions.payload.invalid},
+        };
+      }
+    },
   },
 });
 
-export const {
-  loginError,
-  falseRedirect,
-  deleteInvalidAction,
-} = userSlice.actions;
+export const {falseRedirect, deleteInvalidAction} = userSlice.actions;
 
 export default userSlice.reducer;

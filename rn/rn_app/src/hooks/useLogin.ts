@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {firstLoginThunk, subsequentLoginAction} from '../actions/users_action';
+import {firstLoginThunk, subsequentLoginAction} from '../actions/users';
 import {AppDispatch} from '../redux/index';
 import {checkKeychain} from '../helpers/keychain';
 
