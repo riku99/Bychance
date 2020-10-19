@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+//mport * as Keychain from 'react-native-keychain';
 
 import {useLogin} from '../hooks/useLogin';
 import {RootState} from '../redux/index';
@@ -54,7 +55,7 @@ const Root = () => {
 
   return (
     <>
-      {!userInvalid && (
+      {userInvalid && (
         <View style={styles.invalid}>
           <Text style={styles.invalidText}>{userInvalid}</Text>
         </View>

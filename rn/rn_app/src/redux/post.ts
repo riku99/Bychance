@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-//import {loginErrorThunk} from '../actions/index';
+import {loginErrorThunk} from '../actions/index';
 import {createPostAction, deletePostAsync} from '../actions/posts';
 
 type initialStateType = {

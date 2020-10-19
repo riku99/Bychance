@@ -32,23 +32,31 @@ export const sendIDtoken: (
       token: string;
     }
   | {type: 'loginError'}
+  | {type: 'someError'; message: string}
 > = async (token) => {
-  const response = await axios.post(`${origin}/firstLogin`, {}, headers(token));
+  try {
+    const response = await axios.post<AxiosResponseUser & {token: string}>(
+      `${origin}/firstLogin`,
+      {},
+      headers(token),
+    );
 
-  if (response.data.success) {
+    console.log(response);
+
+    const {posts, ...user} = response.data;
     return {
       type: 'success',
-      user: response.data.success.user,
-      posts: response.data.success.posts,
-      token: response.data.success.token,
+      user: user,
+      posts: posts,
+      token: response.data.token,
     };
+  } catch (e) {
+    if (e.response && e.response.data.loginError) {
+      return {type: 'loginError'};
+    } else {
+      return {type: 'someError', message: e.message};
+    }
   }
-
-  if (response.data.loginError) {
-    return {type: 'loginError'};
-  }
-
-  throw new Error();
 };
 
 export const sendAccessToken: ({
@@ -78,7 +86,6 @@ export const sendAccessToken: ({
     };
   } catch (e) {
     if (e.response !== undefined && e.response.data.loginError) {
-      console.log(e.response.data);
       return {type: 'loginError'};
     } else {
       return {type: 'someError', message: e.message};
@@ -99,30 +106,31 @@ export const sendEditedProfile: ({
   id: number;
   token: string;
 }) => Promise<
-  | {type: 'user' & UserType}
+  | {type: 'success'; user: UserType}
   | {type: 'invalid'; invalid: string}
   | {type: 'loginError'}
+  | {type: 'someError'; message: string}
 > = async ({name, introduce, image, id, token}) => {
-  const response = await axios.put(
-    `${origin}/user`,
-    {
-      id: id,
-      name: name,
-      introduce: introduce,
-      image: image,
-    },
-    headers(token),
-  );
+  try {
+    const response = await axios.put<UserType>(
+      `${origin}/user`,
+      {
+        id: id,
+        name: name,
+        introduce: introduce,
+        image: image,
+      },
+      headers(token),
+    );
 
-  if (response.data.success) {
-    return {type: 'user', ...response.data.success};
-  }
-
-  if (response.data.loginError) {
-    return {type: 'loginError'};
-  }
-
-  if (response.data.invalid) {
-    return {type: 'invalid', ...response.data};
+    return {type: 'success', user: response.data};
+  } catch (e) {
+    if (e.response && e.response.data.loginError) {
+      return {type: 'loginError'};
+    } else if (e.response && e.response.data.invalid) {
+      return {type: 'invalid', invalid: e.response.data.invalid};
+    } else {
+      return {type: 'someError', message: e.message};
+    }
   }
 };

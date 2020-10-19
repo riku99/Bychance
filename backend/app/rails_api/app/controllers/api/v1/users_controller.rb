@@ -3,9 +3,11 @@ class Api::V1::UsersController < ApplicationController
     require "aws-sdk"
 
     def u
-        use = User.first
-        posts = use.posts
-        render json: use
+        user = User.first
+        posts = user.posts
+        u = UserSerializer.new(user)
+        data = UserSerializer.new(user).as_json.merge(token: "token")
+        render json: user, serializer: UserWithoutPostsSerializer
     end
 
     def createNonce
@@ -30,8 +32,7 @@ class Api::V1::UsersController < ApplicationController
         parsed_response = JSON.parse(response.body)
 
         unless nonce = Nonce.find_by(nonce: parsed_response["nonce"])
-            render json: {loginError: true}
-            nonce.destroy
+            render json: {loginError: true}, status: 404
             return
         end
 
@@ -43,14 +44,8 @@ class Api::V1::UsersController < ApplicationController
             token_hash = token.crypt(Rails.application.credentials.salt[:salt_key])
             if user = User.find_by(uid: uid_hash)
                 user.update_attribute(:token, token_hash)
-                posts = user.posts
-                render json: {
-                    success: {
-                        user: UserSerializer.new(user),
-                        posts: posts.map { |p| PostSerializer.new(p)},
-                        token: token
-                    }
-                }
+                data = UserSerializer.new(user).as_json.merge(token: token)
+                render json: data
             else
                 user = User.create(
                     name: user_name,
@@ -59,19 +54,17 @@ class Api::V1::UsersController < ApplicationController
                     image: user_image,
                     display: false
                 )
-                render json: {
-                    success: {
-                        user: UserSerializer.new(user),
-                        posts: [],
-                        token: token
-                    }
-                }
+                data = UserSerializer.new(user).as_json.merge(token: token)
+                render json: data
             end
+            nonce.destroy
+        else
+            render json: {loginError: true}, status: 404
             nonce.destroy
         end
 
         if parsed_response["error"]
-            render json: {loginError: true}
+            render json: {loginError: true}, status: 404
             nonce.destroy
             return
         end
@@ -89,7 +82,7 @@ class Api::V1::UsersController < ApplicationController
 
     def edit
         unless user = checkAccessToken(user_params["id"] ,request.headers)
-            render json: {loginError: true}
+            render json: {loginError: true}, status: 404
             return
         end
         name = user_params["name"]
@@ -100,10 +93,10 @@ class Api::V1::UsersController < ApplicationController
             url = user.image
         end
         if user.update(name: name, introduce: introduce, image: url)
-            render json: {success: UserSerializer.new(user)}
+            render json: user, serializer: UserWithoutPostsSerializer
             return
         else
-            render json: {invalid: user.errors.full_messages[0]}
+            render json: {invalid: user.errors.full_messages[0]}, status: 400
         end
     end
 

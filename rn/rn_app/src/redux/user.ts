@@ -93,14 +93,14 @@ const userSlice = createSlice({
       state,
       actions: PayloadAction<{
         invalid?: string;
-        loginError?: boolean;
-        someError?: boolean;
       }>,
     ) => {
       if (actions.payload.invalid) {
+        console.log(actions.payload.invalid);
         return {
           ...state,
           errors: {invalidError: actions.payload.invalid},
+          redirect: true,
         };
       }
     },

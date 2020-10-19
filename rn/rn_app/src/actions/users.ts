@@ -45,6 +45,12 @@ export const firstLoginThunk = createAsyncThunk(
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
       }
+
+      if (response.type === 'someError') {
+        console.log(response.message);
+        alertSomeError();
+        return thunkAPI.rejectWithValue({someError: true});
+      }
     } catch (e) {
       if (e.message === 'User cancelled or interrupted the login process.') {
         const callback = () => {
@@ -53,9 +59,6 @@ export const firstLoginThunk = createAsyncThunk(
         requestLogin(callback);
         return thunkAPI.rejectWithValue({lineCancelled: true});
       }
-      console.log(e.message);
-      alertSomeError();
-      return thunkAPI.rejectWithValue({someError: true});
     }
   },
 );
@@ -95,34 +98,34 @@ export const editProfileAction = createAsyncThunk(
     }: {name: string; introduce: string; image: string | undefined},
     thunkAPI,
   ) => {
-    try {
-      const keychain = await checkKeychain();
-      if (keychain) {
-        const response = await sendEditedProfile({
-          name: name,
-          introduce: introduce,
-          image: image,
-          id: keychain.id,
-          token: keychain.token,
-        });
-        if (response.type === 'user') {
-          return response;
-        }
-        if (response.type === 'loginError') {
-          const callback = () => {
-            thunkAPI.dispatch(loginErrorThunk());
-          };
-          requestLogin(callback);
-          return thunkAPI.rejectWithValue({loginError: true});
-        }
-        if (response.type === 'invalid') {
-          return thunkAPI.rejectWithValue({invalid: response.invalid});
-        }
+    const keychain = await checkKeychain();
+    if (keychain) {
+      const response = await sendEditedProfile({
+        name: name,
+        introduce: introduce,
+        image: image,
+        id: keychain.id,
+        token: keychain.token,
+      });
+      if (response.type === 'success') {
+        return response.user;
       }
-    } catch (e) {
-      console.log(e.message);
-      alertSomeError();
-      return thunkAPI.rejectWithValue({someError: true});
+      if (response.type === 'loginError') {
+        const callback = () => {
+          thunkAPI.dispatch(loginErrorThunk());
+        };
+        requestLogin(callback);
+        return thunkAPI.rejectWithValue({loginError: true});
+      }
+      if (response.type === 'invalid') {
+        return thunkAPI.rejectWithValue({invalid: response.invalid});
+      }
+    } else {
+      const callback = () => {
+        thunkAPI.dispatch(loginErrorThunk());
+      };
+      requestLogin(callback);
+      return thunkAPI.rejectWithValue({loginError: true});
     }
   },
 );
