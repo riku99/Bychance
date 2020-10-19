@@ -43,7 +43,7 @@ export const firstLoginThunk = createAsyncThunk(
           thunkAPI.dispatch(loginErrorThunk());
         };
         requestLogin(callback);
-        return;
+        return thunkAPI.rejectWithValue({loginError: true});
       }
     } catch (e) {
       if (e.message === 'User cancelled or interrupted the login process.') {
@@ -63,22 +63,22 @@ export const firstLoginThunk = createAsyncThunk(
 export const subsequentLoginAction = createAsyncThunk(
   'users/subsequentLogin',
   async ({id, token}: credentials, thunkAPI) => {
-    try {
-      const response = await sendAccessToken({id, token});
+    const response = await sendAccessToken({id, token});
 
-      if (response.type === 'success') {
-        thunkAPI.dispatch(setPostsAction(response.posts));
-        return response;
-      }
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
-        };
-        requestLogin(callback);
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
-    } catch (e) {
-      console.log(e.message);
+    if (response.type === 'success') {
+      thunkAPI.dispatch(setPostsAction(response.posts));
+      return response.user;
+    }
+    if (response.type === 'loginError') {
+      const callback = () => {
+        thunkAPI.dispatch(loginErrorThunk());
+      };
+      requestLogin(callback);
+      return thunkAPI.rejectWithValue({loginError: true});
+    }
+
+    if (response.type === 'someError') {
+      console.log(response.message);
       alertSomeError();
       return thunkAPI.rejectWithValue({someError: true});
     }

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       delete '/post', to: 'posts#destroy'
 
       get '/others', to: 'others#index'
+      get '/u', to: 'users#u'
     end
   end
 end

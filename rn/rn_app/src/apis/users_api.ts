@@ -6,6 +6,8 @@ import {PostType} from '../redux/post';
 import {headers} from '../helpers/headers';
 import {credentials} from '../helpers/keychain';
 
+type AxiosResponseUser = UserType & {posts: PostType[]};
+
 export const sendNonce: (
   nonce: string,
 ) => Promise<boolean | undefined> = async (nonce) => {
@@ -33,35 +35,54 @@ export const sendIDtoken: (
 > = async (token) => {
   const response = await axios.post(`${origin}/firstLogin`, {}, headers(token));
 
+  if (response.data.success) {
+    return {
+      type: 'success',
+      user: response.data.success.user,
+      posts: response.data.success.posts,
+      token: response.data.success.token,
+    };
+  }
+
   if (response.data.loginError) {
     return {type: 'loginError'};
-  } else {
-    return {type: 'success', ...response.data};
   }
+
+  throw new Error();
 };
 
 export const sendAccessToken: ({
   id,
   token,
 }: credentials) => Promise<
-  {type: 'success'; user: UserType; posts: PostType[]} | {type: 'loginError'}
+  | {
+      type: 'success';
+      user: UserType;
+      posts: PostType[];
+    }
+  | {type: 'loginError'}
+  | {type: 'someError'; message: string}
 > = async ({id, token}) => {
-  const response = await axios.post(
-    `${origin}/subsequentLogin`,
-    {id: id},
-    {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    },
-  );
+  try {
+    const response = await axios.post<AxiosResponseUser>(
+      `${origin}/subsequentLogin`,
+      {id: id},
+      headers(token),
+    );
 
-  if (response.data.success) {
-    return {type: 'success', ...response.data.success.user};
-  }
-
-  if (response.data.loginError) {
-    return {type: 'loginError'};
+    const {posts, ...user} = response.data;
+    return {
+      type: 'success',
+      user: user,
+      posts: posts,
+    };
+  } catch (e) {
+    if (e.response !== undefined && e.response.data.loginError) {
+      console.log(e.response.data);
+      return {type: 'loginError'};
+    } else {
+      return {type: 'someError', message: e.message};
+    }
   }
 };
 
@@ -90,11 +111,7 @@ export const sendEditedProfile: ({
       introduce: introduce,
       image: image,
     },
-    {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    },
+    headers(token),
   );
 
   if (response.data.success) {

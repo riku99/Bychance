@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {loginErrorThunk} from '../actions/index';
+//import {loginErrorThunk} from '../actions/index';
 import {createPostAction, deletePostAsync} from '../actions/posts';
 
 type initialStateType = {
@@ -55,7 +55,8 @@ const postSlice = createSlice({
     }),
   },
   extraReducers: {
-    [loginErrorThunk.fulfilled.type]: () => initialState,
+    // registerエラーが出た時これの行消してみる
+    //[loginErrorThunk.fulfilled.type]: () => initialState,
     [createPostAction.fulfilled.type]: (
       state,
       actions: PayloadAction<PostType>,

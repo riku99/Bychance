@@ -8,10 +8,10 @@ class Api::V1::PostsController < ApplicationController
         image_url = createImagePath(image, "post", "#{user.id}")
         post = user.posts.new(text: text, image: image_url)
         if post.save
-            render json: {success: {id: post.id, text: text, image: image_url, date: post.created_at.strftime('%Y/%m/%d'), userID: post.user.id} }
+            render json: {success: PostSerializer.new(post)}
             return
         else
-            render json:  {invalid: post.errors.full_messages[0]}
+            render json: {invalid: post.errors.full_messages[0]}
             return
         end
     end
