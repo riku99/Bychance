@@ -1,19 +1,20 @@
 import React from 'react';
-import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
 import {UserProfile} from '../../components/users/UserProfile';
-import {RootState} from '../../redux/index';
 import {PostType} from '../../redux/post';
 import {SearchStackParamList} from '../../screens/Search';
 
 type NavigationProp = StackNavigationProp<SearchStackParamList, 'OtherProfile'>;
 
-export const Container = () => {
-  const user = useSelector((state: RootState) => {
-    return state.othersReducer.otherUser!;
-  }, shallowEqual);
+type ScreenRouteProp = RouteProp<SearchStackParamList, 'OtherProfile'>;
+
+type Props = {route: ScreenRouteProp};
+
+export const Container = ({route}: Props) => {
+  const user = route.params;
 
   const navigation = useNavigation<NavigationProp>();
   const navigateToShowPost = (post: PostType) => {

@@ -1,15 +1,16 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Container as SearchOthers} from '../containers/others/SearchUser';
+import {Container as SearchOthers} from '../containers/others/SearchOthers';
 import {Container as OtherUser} from '../containers/others/OtherUserProfile';
 import {Container as OtherPost} from '../containers/others/OtherPost';
 import {MenuBar} from '../components/utils/MenuBar';
 import {PostType} from '../redux/post';
+import {OtherUserType} from '../redux/others';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
-  OtherProfile: undefined;
+  OtherProfile: OtherUserType;
   OtherPost: PostType;
 };
 

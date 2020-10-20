@@ -22,12 +22,7 @@ const initialState: initialStateType = {
 const othersSlice = createSlice({
   name: 'others',
   initialState,
-  reducers: {
-    setOtherUser: (state, actions: PayloadAction<OtherUserType>) => ({
-      ...state,
-      otherUser: actions.payload,
-    }),
-  },
+  reducers: {},
   extraReducers: {
     [loginErrorThunk.fulfilled.type]: () => initialState,
     [getOthersThunk.fulfilled.type]: (
@@ -39,7 +34,5 @@ const othersSlice = createSlice({
     }),
   },
 });
-
-export const {setOtherUser} = othersSlice.actions;
 
 export default othersSlice.reducer;

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
     include AuthHelper
 
     def checkAccessToken
-        if @user = User.find_by(id: params["id"])
+        if @user = User.find_by(id: params[:id])
             token = getToken(request.headers)
             if @user.token == User.digest(token)
                 return @user

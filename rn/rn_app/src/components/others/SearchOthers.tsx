@@ -23,12 +23,11 @@ const List = [
 
 type PropsType = {
   others: OtherUserType[];
-  setOtherUser: (otherUser: OtherUserType) => void;
 };
 
 type NavigationProp = StackNavigationProp<SearchStackParamList, 'SearchOthers'>;
 
-export const SearchOthers = ({others, setOtherUser}: PropsType) => {
+export const SearchOthers = ({others}: PropsType) => {
   const navigation = useNavigation<NavigationProp>();
   return (
     <ScrollView style={styles.container}>
@@ -47,8 +46,14 @@ export const SearchOthers = ({others, setOtherUser}: PropsType) => {
         <ListItem
           key={i}
           onPress={() => {
-            setOtherUser(u);
-            navigation.push('OtherProfile');
+            navigation.push('OtherProfile', {
+              id: u.id,
+              name: u.name,
+              image: u.image,
+              introduce: u.introduce,
+              message: u.message,
+              posts: u.posts,
+            });
           }}>
           <Avatar
             rounded

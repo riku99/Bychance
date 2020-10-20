@@ -2,12 +2,9 @@ import React, {useEffect} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 
-import {SearchOthers} from '../../components/others/SearchUser';
+import {SearchOthers} from '../../components/others/SearchOthers';
 import {RootState} from '../../redux/index';
-import {
-  OtherUserType,
-  setOtherUser as setOtherUserAction,
-} from '../../redux/others';
+import {OtherUserType} from '../../redux/others';
 import {getOthersThunk} from '../../actions/others';
 import {AppDispatch} from '../../redux/index';
 
@@ -25,8 +22,5 @@ export const Container = () => {
   const others: OtherUserType[] = useSelector((state: RootState) => {
     return state.othersReducer.others!;
   }, shallowEqual);
-  const setOtherUser = (otherUser: OtherUserType) => {
-    dispatch(setOtherUserAction(otherUser));
-  };
-  return <SearchOthers others={others} setOtherUser={setOtherUser} />;
+  return <SearchOthers others={others} />;
 };
