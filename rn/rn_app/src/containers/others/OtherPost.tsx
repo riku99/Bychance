@@ -4,7 +4,7 @@ import {RouteProp} from '@react-navigation/native';
 
 import {SearchStackParamList} from '../../screens/Search';
 import {Post} from '../../components/posts/Post';
-import {deletePostAsync} from '../../actions/posts';
+import {deletePostThunk} from '../../actions/posts';
 import {RootState, AppDispatch} from '../../redux/index';
 
 type screensRouteProp = RouteProp<SearchStackParamList, 'OtherPost'>;
@@ -17,7 +17,7 @@ export const Container = ({route}: Props) => {
   });
   const dispatch: AppDispatch = useDispatch();
   const deletePost = (id: number) => {
-    dispatch(deletePostAsync(id));
+    dispatch(deletePostThunk(id));
   };
 
   return <Post post={route.params} user={user} deletePost={deletePost} />;

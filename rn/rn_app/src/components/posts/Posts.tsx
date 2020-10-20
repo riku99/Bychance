@@ -27,7 +27,7 @@ export const Posts = ({posts, navigateToShowPost}: PropsType) => {
                 text: p.text,
                 image: p.image,
                 date: p.date,
-                userID: p.userID,
+                userId: p.userId,
               });
             }}>
             <Image source={{uri: p.image}} style={styles.post} key={i} />

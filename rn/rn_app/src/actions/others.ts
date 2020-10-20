@@ -9,33 +9,33 @@ import {loginErrorThunk} from './index';
 export const getOthersThunk = createAsyncThunk(
   'others/getOthersThunk',
   async (dummy: undefined, thunkAPI) => {
-    try {
-      const keychain = await checkKeychain();
-      if (keychain) {
-        const response = await getOthers(keychain);
+    const keychain = await checkKeychain();
+    if (keychain) {
+      const response = await getOthers(keychain);
 
-        if (response.type === 'success') {
-          return response.others;
-        }
+      if (response.type === 'success') {
+        return response.data;
+      }
 
-        if (response.type === 'loginError') {
-          const callback = () => {
-            thunkAPI.dispatch(loginErrorThunk());
-          };
-          requestLogin(callback);
-          return thunkAPI.rejectWithValue({loginError: true});
-        }
-      } else {
+      if (response.type === 'loginError') {
         const callback = () => {
           thunkAPI.dispatch(loginErrorThunk());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
       }
-    } catch (e) {
-      console.log(e.message);
-      alertSomeError();
-      return thunkAPI.rejectWithValue({someError: true});
+
+      if (response.type === 'someError') {
+        console.log(response.message);
+        alertSomeError();
+        return thunkAPI.rejectWithValue({someError: true});
+      }
+    } else {
+      const callback = () => {
+        thunkAPI.dispatch(loginErrorThunk());
+      };
+      requestLogin(callback);
+      return thunkAPI.rejectWithValue({loginError: true});
     }
   },
 );

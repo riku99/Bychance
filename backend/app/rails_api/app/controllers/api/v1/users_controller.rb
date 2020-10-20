@@ -2,12 +2,14 @@ class Api::V1::UsersController < ApplicationController
     require "net/http"
     require "aws-sdk"
 
+    before_action :checkAccessToken, only: [:subsequentLogin, :edit]
+
     def u
-        user = User.first
-        posts = user.posts
-        u = UserSerializer.new(user)
-        data = UserSerializer.new(user).as_json.merge(token: "token")
-        render json: user, serializer: UserWithoutPostsSerializer
+        user = User.all
+        #post = user.posts.first
+        #u = UserSerializer.new(user)
+        #data = UserSerializer.new(user).as_json.merge(token: "token")
+        render json: user
     end
 
     def createNonce
@@ -71,9 +73,8 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def subsequentLogin
-        if user = checkAccessToken(params["id"], request.headers)
-            render json: user
-            return
+        if @user
+            render json: @user
         else
             render json: {loginError: true}, status: 404
         end
@@ -81,22 +82,22 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def edit
-        unless user = checkAccessToken(user_params["id"] ,request.headers)
+        if @user
+            name = user_params["name"]
+            introduce = user_params["introduce"]
+            if image = user_params["image"]
+                url = createImagePath(image, "user", `#{@user.id}`)
+            else
+                url = @user.image
+            end
+            if @user.update(name: name, introduce: introduce, image: url)
+                render json: @user, serializer: UserWithoutPostsSerializer
+                return
+            else
+                render json: {invalid: @user.errors.full_messages[0]}, status: 400
+            end
+        else
             render json: {loginError: true}, status: 404
-            return
-        end
-        name = user_params["name"]
-        introduce = user_params["introduce"]
-        if image = user_params["image"]
-            url = createImagePath(image, "user", `#{user.id}`)
-        else
-            url = user.image
-        end
-        if user.update(name: name, introduce: introduce, image: url)
-            render json: user, serializer: UserWithoutPostsSerializer
-            return
-        else
-            render json: {invalid: user.errors.full_messages[0]}, status: 400
         end
     end
 

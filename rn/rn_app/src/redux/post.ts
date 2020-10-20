@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {loginErrorThunk} from '../actions/index';
-import {createPostAction, deletePostAsync} from '../actions/posts';
+//import {loginErrorThunk} from '../actions/index';
+import {createPostAction, deletePostThunk} from '../actions/posts';
 
 type initialStateType = {
   posts: {
@@ -9,7 +9,7 @@ type initialStateType = {
     text: string;
     image: string;
     date: string;
-    userID: number;
+    userId: number;
   }[];
   info?: string;
   errors?: {invalidError?: string};
@@ -68,7 +68,7 @@ const postSlice = createSlice({
           text: actions.payload.text,
           image: actions.payload.image,
           date: actions.payload.date,
-          userID: actions.payload.userID,
+          userId: actions.payload.userId,
         },
         ...state.posts,
       ],
@@ -86,7 +86,7 @@ const postSlice = createSlice({
         };
       }
     },
-    [deletePostAsync.fulfilled.type]: (
+    [deletePostThunk.fulfilled.type]: (
       state,
       actions: PayloadAction<number>,
     ) => {
@@ -101,7 +101,7 @@ const postSlice = createSlice({
         info: '削除しました',
       };
     },
-    [deletePostAsync.rejected.type]: (
+    [deletePostThunk.rejected.type]: (
       state,
       actions: PayloadAction<rejectedType>,
     ) => {

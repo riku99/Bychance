@@ -3,68 +3,69 @@ import axios from 'axios';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {PostType} from '../redux/post';
+import {credentials} from '../helpers/keychain';
 
 export const sendPost: ({
   text,
   image,
+  id,
+  token,
 }: {
   text: string;
   image: string;
-  user: number;
-  token: string;
-}) => Promise<
-  | ({type: 'success'} & PostType)
+} & credentials) => Promise<
+  | {type: 'success'; post: PostType}
   | {type: 'invalid'; invalid: string}
   | {type: 'loginError'}
-> = async ({text, image, user, token}) => {
-  const response = await axios.post(
-    `${origin}/post`,
-    {post: {text, image, user}},
-    headers(token),
-  );
+  | {type: 'someError'; message: string}
+> = async ({text, image, id, token}) => {
+  try {
+    const response = await axios.post<PostType>(
+      `${origin}/post`,
+      {text, image, id},
+      headers(token),
+    );
 
-  if (response.data.success) {
-    return {type: 'success', ...response.data.success};
-  }
-
-  if (response.data.loginError) {
-    return {type: 'loginError', invalid: response.data.invalid};
-  }
-
-  if (response.data.invalid) {
-    return {type: 'invalid', invalid: response.data.invalid};
+    return {type: 'success', post: response.data};
+  } catch (e) {
+    if (e.response && e.response.data.loginError) {
+      return {type: 'loginError'};
+    } else if (e.response && e.response.data.invalid) {
+      return {type: 'invalid', invalid: e.response.data.invalid};
+    } else {
+      return {type: 'someError', message: e.message};
+    }
   }
 };
 
 export const deletePost: ({
+  postId,
   id,
-  user,
   token,
 }: {
-  id: number;
-  user: number;
-  token: string;
-}) => Promise<
-  {type: 'success'} | {type: 'loginError'} | {type: 'invalid'; invalid: string}
-> = async ({id, user, token}) => {
-  const response = await axios.request({
-    method: 'delete',
-    url: `${origin}/post`,
-    data: {post: {id, user}},
-    ...headers(token),
-  });
+  postId: number;
+} & credentials) => Promise<
+  | {type: 'success'}
+  | {type: 'loginError'}
+  | {type: 'invalid'; invalid: string}
+  | {type: 'someError'; message: string}
+> = async ({postId, id, token}) => {
+  try {
+    await axios.request<{success: true}>({
+      method: 'delete',
+      url: `${origin}/post`,
+      data: {id, postId},
+      ...headers(token),
+    });
 
-  if (response.data.success) {
     return {type: 'success'};
+  } catch (e) {
+    if (e.response && e.response.data.loginError) {
+      return {type: 'loginError'};
+    } else if (e.response && e.response.data.invalid) {
+      return {type: 'invalid', invalid: e.response.data.invalid};
+    } else {
+      return {type: 'someError', message: e.message};
+    }
   }
-
-  if (response.data.loginError) {
-    return {type: 'loginError'};
-  }
-
-  if (response.data.invalid) {
-    return {type: 'invalid', invalid: response.data.invalid};
-  }
-
-  throw new Error();
 };

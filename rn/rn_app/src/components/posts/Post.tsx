@@ -19,7 +19,7 @@ export const Post = ({post, user, deletePost}: PropsType) => {
       <Image source={{uri: post.image}} style={styles.image} />
       <View style={styles.upper_box}>
         <Text style={styles.date}>{post.date}</Text>
-        {user === post.userID && (
+        {user === post.userId && (
           <Button
             icon={<Icon name="delete-outline" color="#999999" />}
             buttonStyle={{backgroundColor: 'transparent'}}

@@ -120,6 +120,12 @@ export const editProfileAction = createAsyncThunk(
       if (response.type === 'invalid') {
         return thunkAPI.rejectWithValue({invalid: response.invalid});
       }
+
+      if (response.type === 'someError') {
+        console.log(response.message);
+        alertSomeError();
+        return thunkAPI.rejectWithValue({someError: true});
+      }
     } else {
       const callback = () => {
         thunkAPI.dispatch(loginErrorThunk());

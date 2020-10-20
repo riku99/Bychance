@@ -22,7 +22,7 @@ export const Container = () => {
       text: post.text,
       image: post.image,
       date: post.date,
-      userID: post.userID,
+      userId: post.userId,
     });
   };
   return (

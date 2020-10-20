@@ -5,7 +5,7 @@ import {RouteProp} from '@react-navigation/native';
 import {Post} from '../../components/posts/Post';
 import {RootState} from '../../redux/index';
 import {ProfileStackParamList} from '../../screens/Profile';
-import {deletePostAsync} from '../../actions/posts';
+import {deletePostThunk} from '../../actions/posts';
 
 type screenRouteProp = RouteProp<ProfileStackParamList, 'Post'>;
 
@@ -18,7 +18,7 @@ export const Container = ({route}: Props) => {
   });
   const dispatch = useDispatch();
   const deletePost = (id: number) => {
-    dispatch(deletePostAsync(id));
+    dispatch(deletePostThunk(id));
   };
   return (
     <Post
@@ -27,7 +27,7 @@ export const Container = ({route}: Props) => {
         text: post.text,
         image: post.image,
         date: post.date,
-        userID: post.userID,
+        userId: post.userId,
       }}
       user={user}
       deletePost={deletePost}

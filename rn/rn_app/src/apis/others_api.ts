@@ -3,29 +3,28 @@ import axios from 'axios';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {OtherUserType} from '../redux/others';
+import {credentials} from '../helpers/keychain';
 
-type resultApi = Promise<
-  {type: 'success'; others: OtherUserType[]} | {type: 'loginError'}
->;
-
-type credentials = {id: number; token: string};
-
-export const getOthers: ({id, token}: credentials) => resultApi = async ({
+export const getOthers: ({
   id,
   token,
-}) => {
-  const response = await axios.get(`${origin}/others`, {
-    params: {id: id},
-    ...headers(token),
-  });
+}: credentials) => Promise<
+  | {type: 'success'; data: OtherUserType[]}
+  | {type: 'loginError'}
+  | {type: 'someError'; message: string}
+> = async ({id, token}) => {
+  try {
+    const response = await axios.get<OtherUserType[]>(`${origin}/others`, {
+      params: {id},
+      ...headers(token),
+    });
 
-  if (response.data.success) {
-    return {type: 'success', others: response.data.success.others};
+    return {type: 'success', data: response.data};
+  } catch (e) {
+    if (e.response && e.response.data.loginError) {
+      return {type: 'loginError'};
+    } else {
+      return {type: 'someError', message: e.message};
+    }
   }
-
-  if (response.data.loginError) {
-    return {type: 'loginError'};
-  }
-
-  throw new Error();
 };
