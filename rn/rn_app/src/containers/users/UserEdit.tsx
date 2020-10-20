@@ -7,12 +7,13 @@ import {editProfileAction} from '../../actions/users';
 import {falseRedirect} from '../../redux/user';
 
 export const Container = () => {
-  const userProps = useSelector((state: RootState) => {
+  const user = useSelector((state: RootState) => {
     return {
       id: state.userReducer.user!.id,
       name: state.userReducer.user!.name,
       introduce: state.userReducer.user!.introduce,
       image: state.userReducer.user!.image,
+      message: state.userReducer.user!.message,
     };
   });
   const redirect = useSelector((state: RootState) => {
@@ -21,14 +22,15 @@ export const Container = () => {
   const dispatch = useDispatch();
   return (
     <UserEdit
-      user={userProps}
+      user={user}
       redirect={redirect}
       editProfile={(
         name: string,
         introduce: string,
         image: string | undefined,
+        message: string,
       ) => {
-        dispatch(editProfileAction({name, introduce, image}));
+        dispatch(editProfileAction({name, introduce, image, message}));
       }}
       falseRedirect={() => {
         dispatch(falseRedirect());

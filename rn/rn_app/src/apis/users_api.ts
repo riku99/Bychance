@@ -97,12 +97,14 @@ export const sendEditedProfile: ({
   name,
   introduce,
   image,
+  message,
   id,
   token,
 }: {
   name: string;
   introduce: string;
   image: string | undefined;
+  message: string;
   id: number;
   token: string;
 }) => Promise<
@@ -110,15 +112,16 @@ export const sendEditedProfile: ({
   | {type: 'invalid'; invalid: string}
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
-> = async ({name, introduce, image, id, token}) => {
+> = async ({name, introduce, image, message, id, token}) => {
   try {
     const response = await axios.put<UserType>(
       `${origin}/user`,
       {
-        id: id,
-        name: name,
-        introduce: introduce,
-        image: image,
+        id,
+        name,
+        introduce,
+        image,
+        message,
       },
       headers(token),
     );

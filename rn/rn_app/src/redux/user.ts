@@ -15,8 +15,8 @@ type initialStateType = {
     id: number;
     name: string;
     image: null | string;
-    introduce: null | string;
-    message: null | string;
+    introduce: string;
+    message: string;
     display: boolean;
   };
 };
@@ -87,6 +87,7 @@ const userSlice = createSlice({
         name: actions.payload.name,
         introduce: actions.payload.introduce,
         image: actions.payload.image,
+        message: actions.payload.message,
       },
     }),
     [editProfileAction.rejected.type]: (

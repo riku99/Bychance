@@ -95,7 +95,13 @@ export const editProfileAction = createAsyncThunk(
       name,
       introduce,
       image,
-    }: {name: string; introduce: string; image: string | undefined},
+      message,
+    }: {
+      name: string;
+      introduce: string;
+      image: string | undefined;
+      message: string;
+    },
     thunkAPI,
   ) => {
     const keychain = await checkKeychain();
@@ -104,6 +110,7 @@ export const editProfileAction = createAsyncThunk(
         name: name,
         introduce: introduce,
         image: image,
+        message: message,
         id: keychain.id,
         token: keychain.token,
       });

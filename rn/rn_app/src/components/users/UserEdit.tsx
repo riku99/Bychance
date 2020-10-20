@@ -14,12 +14,14 @@ type Props = {
     name: string;
     introduce: string | null;
     image: string | null;
+    message: string | null;
   };
 } & {redirect?: boolean} & {
   editProfile: (
     name: string,
     introduce: string,
     image: string | undefined,
+    message: string,
   ) => void;
 } & {falseRedirect: () => void};
 
@@ -48,6 +50,7 @@ export const UserEdit = ({
   const [introduce, setIntroduce] = useState(
     user.introduce ? user.introduce : '',
   );
+  const [message, setMessage] = useState(user.message ? user.message : '');
   const [loading, setLoding] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
@@ -134,6 +137,16 @@ export const UserEdit = ({
             {introduce}
           </TextInput>
         </View>
+        <View style={styles.message}>
+          <Text style={styles.messageLabel}>ステータスメッセージ</Text>
+          <TextInput
+            style={styles.messageInput}
+            onChangeText={(text) => {
+              setMessage(text);
+            }}>
+            {message}
+          </TextInput>
+        </View>
         {loading ? (
           <Button
             loading
@@ -154,7 +167,7 @@ export const UserEdit = ({
             }
             onPress={async () => {
               setLoding(true);
-              editProfile(name, introduce, selectedImage);
+              editProfile(name, introduce, selectedImage, message);
             }}
           />
         )}
@@ -166,14 +179,13 @@ export const UserEdit = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   edit: {
-    height: '85%',
+    width: '80%',
     display: 'flex',
     alignItems: 'center',
-    width: '80%',
+    marginTop: 20,
   },
   image: {
     display: 'flex',
@@ -197,33 +209,32 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   nameLabel: {
-    fontSize: 20,
+    fontSize: 15,
     color: '#c9c9c9',
   },
   nameInput: {
-    fontSize: 20,
+    fontSize: 15,
     marginTop: 20,
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
   },
   nameInputAlert: {
-    fontSize: 20,
+    fontSize: 15,
     marginTop: 20,
     borderBottomWidth: 0.5,
     borderBottomColor: 'red',
   },
   introduce: {
-    height: 180,
+    height: 130,
     width: '100%',
-    marginTop: 10,
   },
   introduceLabel: {
-    fontSize: 20,
+    fontSize: 15,
     color: '#c9c9c9',
   },
   introduceInput: {
     fontSize: 15,
-    marginTop: 25,
+    marginTop: 20,
     maxHeight: '50%',
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
@@ -234,7 +245,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: 'red',
   },
+  message: {
+    width: '100%',
+  },
+  messageLabel: {
+    color: '#c9c9c9',
+    fontSize: 15,
+  },
+  messageInput: {
+    fontSize: 15,
+    marginTop: 20,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#c9c9c9',
+  },
   completeButton: {
+    marginTop: '100%',
     backgroundColor: 'transparent',
   },
   completeTitle: {

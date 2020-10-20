@@ -54,6 +54,8 @@ class Api::V1::UsersController < ApplicationController
                     uid: uid_hash,
                     token: token_hash,
                     image: user_image,
+                    introduce: "",
+                    message: "",
                     display: false
                 )
                 data = UserSerializer.new(user).as_json.merge(token: token)
@@ -85,12 +87,13 @@ class Api::V1::UsersController < ApplicationController
         if @user
             name = user_params["name"]
             introduce = user_params["introduce"]
+            message = user_params["message"]
             if image = user_params["image"]
                 url = createImagePath(image, "user", `#{@user.id}`)
             else
                 url = @user.image
             end
-            if @user.update(name: name, introduce: introduce, image: url)
+            if @user.update(name: name, introduce: introduce, image: url, message: message)
                 render json: @user, serializer: UserWithoutPostsSerializer
                 return
             else
@@ -104,6 +107,6 @@ class Api::V1::UsersController < ApplicationController
     private
 
     def user_params
-        params.require(:user).permit(:id, :name, :introduce, :image)
+        params.require(:user).permit(:id, :name, :introduce, :image, :message)
     end
 end
