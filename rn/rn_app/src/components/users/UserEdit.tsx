@@ -1,12 +1,8 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Avatar, Button} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-picker';
-
-import {RootStackParamList} from '../../screens/Root';
 
 type Props = {
   user: {
@@ -16,16 +12,14 @@ type Props = {
     image: string | null;
     message: string | null;
   };
-} & {redirect?: boolean} & {
+} & {
   editProfile: (
     name: string,
     introduce: string,
     image: string | undefined,
     message: string,
   ) => void;
-} & {falseRedirect: () => void};
-
-type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEdit'>;
+};
 
 const options = {
   title: 'プロフィール画像を変更',
@@ -42,9 +36,8 @@ const options = {
 
 export const UserEdit = ({
   user,
-  redirect,
+
   editProfile,
-  falseRedirect,
 }: Props) => {
   const [name, setName] = useState(user.name);
   const [introduce, setIntroduce] = useState(
@@ -55,15 +48,6 @@ export const UserEdit = ({
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
-  const navigation = useNavigation<NavigationProp>();
-
-  useEffect(() => {
-    if (redirect) {
-      navigation.goBack();
-      falseRedirect();
-      setLoding(false);
-    }
-  }, [redirect, navigation, falseRedirect]);
 
   const pickImage = useCallback(() => {
     ImagePicker.showImagePicker(options, (response) => {
@@ -105,13 +89,13 @@ export const UserEdit = ({
             <Text style={{color: 'red'}}>20文字以下にしてください</Text>
           )}
           {name.length === 0 && (
-            <Text style={{color: 'red'}}>名前を入力してください</Text>
+            <Text style={styles.alertLabel}>名前を入力してください</Text>
           )}
           <TextInput
             style={
               name.length <= 20 && name.length !== 0
                 ? styles.nameInput
-                : styles.nameInputAlert
+                : {...styles.nameInput, ...styles.alertInput}
             }
             onChangeText={(text) => {
               setName(text);
@@ -122,13 +106,13 @@ export const UserEdit = ({
         <View style={styles.introduce}>
           <Text style={styles.introduceLabel}>自己紹介</Text>
           {introduce.length > 100 && (
-            <Text style={{color: 'red'}}>100文字以下にしてください</Text>
+            <Text style={styles.alertLabel}>100文字以下にしてください</Text>
           )}
           <TextInput
             style={
               introduce.length <= 100
                 ? styles.introduceInput
-                : styles.introduceInputAlert
+                : {...styles.introduceInput, ...styles.alertInput}
             }
             multiline={true}
             onChangeText={(text) => {
@@ -139,8 +123,15 @@ export const UserEdit = ({
         </View>
         <View style={styles.message}>
           <Text style={styles.messageLabel}>ステータスメッセージ</Text>
+          {message.length > 50 && (
+            <Text style={styles.alertLabel}>50文字以下にしてください</Text>
+          )}
           <TextInput
-            style={styles.messageInput}
+            style={
+              message.length < 50
+                ? styles.messageInput
+                : {...styles.messageInput, ...styles.alertInput}
+            }
             onChangeText={(text) => {
               setMessage(text);
             }}>
@@ -162,7 +153,8 @@ export const UserEdit = ({
             disabled={
               (name.length > 20 ||
                 name.length === 0 ||
-                introduce.length > 100) &&
+                introduce.length > 100 ||
+                message.length > 50) &&
               true
             }
             onPress={async () => {
@@ -218,12 +210,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
   },
-  nameInputAlert: {
-    fontSize: 15,
-    marginTop: 20,
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'red',
-  },
   introduce: {
     height: 130,
     width: '100%',
@@ -239,12 +225,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
   },
-  introduceInputAlert: {
-    fontSize: 15,
-    marginTop: 25,
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'red',
-  },
   message: {
     width: '100%',
   },
@@ -257,6 +237,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
+  },
+  alertLabel: {
+    color: 'red',
+  },
+  alertInput: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'red',
   },
   completeButton: {
     marginTop: '100%',

@@ -9,8 +9,6 @@ import {
 
 type initialStateType = {
   login: boolean;
-  errors?: {invalidError?: string};
-  redirect?: boolean;
   user?: {
     id: number;
     name: string;
@@ -19,6 +17,7 @@ type initialStateType = {
     message: string;
     display: boolean;
   };
+  errors?: {invalidError?: string};
 };
 
 export type UserType = NonNullable<initialStateType['user']>;
@@ -31,10 +30,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
-    falseRedirect: (state) => ({
-      ...state,
-      redirect: false,
-    }),
     deleteInvalidAction: (state) => ({
       ...state,
       errors: {invalidError: undefined},
@@ -81,7 +76,6 @@ const userSlice = createSlice({
       actions: PayloadAction<UserType>,
     ) => ({
       ...state,
-      redirect: true,
       user: {
         ...state.user!,
         name: actions.payload.name,
@@ -108,6 +102,6 @@ const userSlice = createSlice({
   },
 });
 
-export const {falseRedirect, deleteInvalidAction} = userSlice.actions;
+export const {deleteInvalidAction} = userSlice.actions;
 
 export default userSlice.reducer;

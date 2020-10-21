@@ -1,10 +1,15 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import {RootState} from '../../redux/index';
 import {UserEdit} from '../../components/users/UserEdit';
 import {editProfileAction} from '../../actions/users';
-import {falseRedirect} from '../../redux/user';
+import {AppDispatch} from '../../redux/index';
+import {RootStackParamList} from '../../screens/Root';
+
+type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEdit'>;
 
 export const Container = () => {
   const user = useSelector((state: RootState) => {
@@ -16,24 +21,19 @@ export const Container = () => {
       message: state.userReducer.user!.message,
     };
   });
-  const redirect = useSelector((state: RootState) => {
-    return state.userReducer.redirect;
-  });
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  const navigation: NavigationProp = useNavigation();
   return (
     <UserEdit
       user={user}
-      redirect={redirect}
-      editProfile={(
+      editProfile={async (
         name: string,
         introduce: string,
         image: string | undefined,
         message: string,
       ) => {
-        dispatch(editProfileAction({name, introduce, image, message}));
-      }}
-      falseRedirect={() => {
-        dispatch(falseRedirect());
+        await dispatch(editProfileAction({name, introduce, image, message}));
+        navigation.goBack();
       }}
     />
   );
