@@ -5,6 +5,7 @@ import {
   firstLoginThunk,
   subsequentLoginAction,
   editProfileAction,
+  editUserDisplayThunk,
 } from '../actions/users';
 
 type initialStateType = {
@@ -99,6 +100,13 @@ const userSlice = createSlice({
         };
       }
     },
+    [editUserDisplayThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<boolean>,
+    ) => ({
+      ...state,
+      user: {...state.user!, display: action.payload},
+    }),
   },
 });
 

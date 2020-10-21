@@ -11,7 +11,7 @@ import {
   deleteInvalidAction as deletePostInvalid,
 } from '../redux/post';
 import {deleteInvalidAction as deleteUserInvalid} from '../redux/user';
-import {Menu} from './utils/Menu';
+import {Container as Menu} from '../containers/utils/Menu';
 
 const Root = () => {
   useLogin();

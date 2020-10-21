@@ -2,7 +2,7 @@ class Api::V1::UsersController < ApplicationController
     require "net/http"
     require "aws-sdk"
 
-    before_action :checkAccessToken, only: [:subsequentLogin, :edit]
+    before_action :checkAccessToken, only: [:subsequentLogin, :edit, :changeDisplay]
 
     def u
         user = User.all
@@ -101,6 +101,18 @@ class Api::V1::UsersController < ApplicationController
             end
         else
             render json: {loginError: true}, status: 404
+        end
+    end
+
+    def changeDisplay
+        if @user
+            display = params["display"]
+            @user.update(display: display)
+            render json: {success: true}
+            return
+        else
+            render json: {loginError: true}, status: 404
+            return
         end
     end
 
