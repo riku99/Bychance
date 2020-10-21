@@ -11,6 +11,7 @@ import {
   deleteInvalidAction as deletePostInvalid,
 } from '../redux/post';
 import {deleteInvalidAction as deleteUserInvalid} from '../redux/user';
+import {Menu} from './utils/Menu';
 
 const Root = () => {
   useLogin();
@@ -26,6 +27,9 @@ const Root = () => {
   });
   const postInvalid = useSelector((state: RootState) => {
     return state.postReducer.errors && state.postReducer.errors.invalidError;
+  });
+  const displayedMenu = useSelector((state: RootState) => {
+    return state.indexReducer.displayedMenu;
   });
 
   const dispatch = useDispatch();
@@ -67,6 +71,7 @@ const Root = () => {
       )}
       <View style={styles.container}>
         <RootStackScreen />
+        {displayedMenu && <Menu isVisble={displayedMenu} />}
       </View>
       {info && (
         <View style={styles.info}>
