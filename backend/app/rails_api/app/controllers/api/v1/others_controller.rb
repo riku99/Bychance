@@ -3,7 +3,7 @@ class Api::V1::OthersController < ApplicationController
 
     def index
         if @user
-            @users = User.all
+            @users = User.where(display: true)
             render json: @users
         end
     end

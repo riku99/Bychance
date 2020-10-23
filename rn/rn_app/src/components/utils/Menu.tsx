@@ -21,7 +21,7 @@ export const Menu = ({
     {
       title: '他のユーザーに自分を表示',
       titleStyle: {},
-      onPress: () => {},
+      onPress: async () => {},
       addComponent: (
         <Switch
           value={displaySwitch}

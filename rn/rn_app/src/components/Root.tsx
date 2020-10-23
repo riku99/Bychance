@@ -1,6 +1,14 @@
 import React, {useEffect} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  AppState,
+  AppStateStatus,
+  Alert,
+} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+import Geolocation from 'react-native-geolocation-service';
 //mport * as Keychain from 'react-native-keychain';
 
 import {useLogin} from '../hooks/useLogin';
@@ -12,9 +20,51 @@ import {
 } from '../redux/post';
 import {deleteInvalidAction as deleteUserInvalid} from '../redux/user';
 import {Container as Menu} from '../containers/utils/Menu';
+import {alertSomeError} from '../helpers/error';
 
 const Root = () => {
   useLogin();
+
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange);
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    };
+  }, []);
+
+  const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
+    if (nextAppState === 'active') {
+      console.log(nextAppState);
+      const currentPermission = await Geolocation.requestAuthorization(
+        'always',
+      );
+      console.log(currentPermission);
+      if (currentPermission === ('granted' || 'restricted')) {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            console.log(position);
+          },
+          (e) => {
+            console.log(e);
+            alertSomeError();
+          },
+        );
+      } else if (currentPermission === ('denied' || 'disabled')) {
+        Alert.alert(
+          '位置情報が無効です',
+          'アプリを使うにはデバイスの位置情報を有効にしてください',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                return;
+              },
+            },
+          ],
+        );
+      }
+    }
+  };
 
   const login = useSelector((state: RootState) => {
     return state.userReducer.login;
@@ -71,7 +121,7 @@ const Root = () => {
       )}
       <View style={styles.container}>
         <RootStackScreen />
-        {displayedMenu && <Menu isVisble={displayedMenu} />}
+        {displayedMenu && <Menu />}
       </View>
       {info && (
         <View style={styles.info}>

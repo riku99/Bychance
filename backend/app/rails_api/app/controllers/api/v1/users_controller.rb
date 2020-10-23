@@ -5,7 +5,7 @@ class Api::V1::UsersController < ApplicationController
     before_action :checkAccessToken, only: [:subsequentLogin, :edit, :changeDisplay]
 
     def u
-        user = User.all
+        user = User.where(display: false)
         #post = user.posts.first
         #u = UserSerializer.new(user)
         #data = UserSerializer.new(user).as_json.merge(token: "token")
