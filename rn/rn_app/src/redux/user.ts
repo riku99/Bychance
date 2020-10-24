@@ -6,6 +6,7 @@ import {
   subsequentLoginAction,
   editProfileAction,
   editUserDisplayThunk,
+  updatePositionThunk,
 } from '../actions/users';
 
 type initialStateType = {
@@ -98,7 +99,6 @@ const userSlice = createSlice({
       }>,
     ) => {
       if (actions.payload.invalid) {
-        console.log(actions.payload.invalid);
         return {
           ...state,
           errors: {invalidError: actions.payload.invalid},
@@ -112,6 +112,13 @@ const userSlice = createSlice({
     ) => ({
       ...state,
       user: {...state.user!, display: action.payload},
+    }),
+    [updatePositionThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<{lat: number; lng: number}>,
+    ) => ({
+      ...state,
+      user: {...state.user!, lat: action.payload.lat, lng: action.payload.lng},
     }),
   },
 });

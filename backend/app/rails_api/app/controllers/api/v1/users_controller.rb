@@ -2,15 +2,12 @@ class Api::V1::UsersController < ApplicationController
     require "net/http"
     require "aws-sdk"
 
-    before_action :checkAccessToken, only: [:subsequentLogin, :edit, :changeDisplay]
+    before_action :checkAccessToken, only: [:subsequentLogin, :edit, :changeDisplay, :updatePosition]
 
     def u
-        near_users = User.within(3, origin: [35.667639, 140.012972])
-        users = near_users.select { |u| u.display }
-        #post = user.posts.first
-        #u = UserSerializer.new(user)
-        #data = UserSerializer.new(user).as_json.merge(token: "token")
-        render json: users
+        near_others = User.within(3, origin: [35.667639, 140.012972])
+            display_others = near_others.select { |u| u.display }
+            render json: display_others, each_serializer: OthersSerializer
     end
 
     def createNonce
@@ -104,6 +101,15 @@ class Api::V1::UsersController < ApplicationController
             else
                 render json: {invalid: @user.errors.full_messages[0]}, status: 400
             end
+        else
+            render json: {loginError: true}, status: 404
+        end
+    end
+
+    def updatePosition
+        if @user
+            @user.update(lat: user_params[:lat], lng: user_params[:lng])
+            render json: {success: true}
         else
             render json: {loginError: true}, status: 404
         end

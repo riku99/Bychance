@@ -97,6 +97,36 @@ export const sendAccessToken: ({
   }
 };
 
+export const sendPosition: ({
+  id,
+  token,
+  lat,
+  lng,
+}: credentials & {
+  lat: number | null;
+  lng: number | null;
+}) => Promise<
+  | {type: 'success'}
+  | {type: 'loginError'}
+  | {type: 'someError'; message: string}
+> = async ({id, token, lat, lng}) => {
+  try {
+    await axios.patch<{succless: boolean}>(
+      `${origin}/user/position`,
+      {id, lat, lng},
+      headers(token),
+    );
+
+    return {type: 'success'};
+  } catch (e) {
+    if (e.response && e.response.data) {
+      return {type: 'loginError'};
+    } else {
+      return {type: 'someError', message: e.message};
+    }
+  }
+};
+
 export const sendEditedProfile: ({
   name,
   introduce,

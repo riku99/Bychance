@@ -8,6 +8,7 @@ import {
   sendNonce,
   sendEditedProfile,
   sendRequestToChangeDisplay,
+  sendPosition,
 } from '../apis/users_api';
 
 import {checkKeychain, credentials} from '../helpers/keychain';
@@ -33,8 +34,8 @@ export const firstLoginThunk = createAsyncThunk(
 
       const response = await sendIDtoken({
         token: idToken as string,
-        lat: position ? position.lat : null,
-        lng: position ? position.lng : null,
+        lat: position ? position.coords.latitude : null,
+        lng: position ? position.coords.longitude : null,
       });
 
       if (response.type === 'success') {
@@ -93,6 +94,45 @@ export const subsequentLoginAction = createAsyncThunk(
       console.log(response.message);
       alertSomeError();
       return thunkAPI.rejectWithValue({someError: true});
+    }
+  },
+);
+
+export const updatePositionThunk = createAsyncThunk(
+  'users/updatePosition',
+  async ({lat, lng}: {lat: number | null; lng: number | null}, thunkAPI) => {
+    const keychain = await checkKeychain();
+    if (keychain) {
+      const response = await sendPosition({
+        id: keychain.id,
+        token: keychain.token,
+        lat,
+        lng,
+      });
+
+      if (response.type === 'success') {
+        return {lat, lng};
+      }
+
+      if (response.type === 'loginError') {
+        const callback = () => {
+          thunkAPI.dispatch(loginErrorThunk());
+        };
+        requestLogin(callback);
+        return thunkAPI.rejectWithValue({loginError: true});
+      }
+
+      if (response.type === 'someError') {
+        console.log(response.message);
+        alertSomeError();
+        return thunkAPI.rejectWithValue({someError: true});
+      }
+    } else {
+      const callback = () => {
+        thunkAPI.dispatch(loginErrorThunk());
+      };
+      requestLogin(callback);
+      return thunkAPI.rejectWithValue({loginError: true});
     }
   },
 );

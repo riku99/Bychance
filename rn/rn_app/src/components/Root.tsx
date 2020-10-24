@@ -11,25 +11,32 @@ import {
 } from '../redux/post';
 import {deleteInvalidAction as deleteUserInvalid} from '../redux/user';
 import {Container as Menu} from '../containers/utils/Menu';
-
+import {updatePositionThunk} from '../actions/users';
 import {getCurrentPosition} from '../helpers/gelocation';
 
 const Root = () => {
   useLogin();
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        const position = await getCurrentPosition();
+        dispatch(
+          updatePositionThunk({
+            lat: position ? position.coords.latitude : null,
+            lng: position ? position.coords.longitude : null,
+          }),
+        );
+      }
+    };
+
     AppState.addEventListener('change', _handleAppStateChange);
     return () => {
       AppState.removeEventListener('change', _handleAppStateChange);
     };
-  }, []);
-
-  const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
-    if (nextAppState === 'active') {
-      const position = await getCurrentPosition();
-      console.log(position);
-    }
-  };
+  }, [dispatch]);
 
   const login = useSelector((state: RootState) => {
     return state.userReducer.login;
@@ -46,8 +53,6 @@ const Root = () => {
   const displayedMenu = useSelector((state: RootState) => {
     return state.indexReducer.displayedMenu;
   });
-
-  const dispatch = useDispatch();
 
   const deleteInfo = () => {
     dispatch(deleteInfoAction());
