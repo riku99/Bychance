@@ -6,6 +6,8 @@ class User < ApplicationRecord
     validates :introduce, length: { maximum: 100 }
     validates :message, length: { maximum: 50 }
 
+    acts_as_mappable default_units: :kms, default_formula: :sphere
+
     def User.new_token
         SecureRandom.urlsafe_base64
     end
@@ -13,4 +15,5 @@ class User < ApplicationRecord
     def User.digest(arg)
         arg.crypt(Rails.application.credentials.salt[:salt_key])
     end
+
 end

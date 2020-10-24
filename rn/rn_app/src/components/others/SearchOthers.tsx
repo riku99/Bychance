@@ -31,43 +31,34 @@ export const SearchOthers = ({others}: PropsType) => {
   const navigation = useNavigation<NavigationProp>();
   return (
     <ScrollView style={styles.container}>
-      {List.map((u, i) => (
-        <ListItem key={i} onPress={() => {}}>
-          <Avatar rounded size="medium" source={u.image} />
-          <ListItem.Content>
-            <ListItem.Title>{u.name}</ListItem.Title>
-            <ListItem.Subtitle style={styles.subtitle}>
-              {u.message}
-            </ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-      ))}
-      {others.map((u, i) => (
-        <ListItem
-          key={i}
-          onPress={() => {
-            navigation.push('OtherProfile', {
-              id: u.id,
-              name: u.name,
-              image: u.image,
-              introduce: u.introduce,
-              message: u.message,
-              posts: u.posts,
-            });
-          }}>
-          <Avatar
-            rounded
-            size="medium"
-            source={u.image ? {uri: u.image} : noImage}
-          />
-          <ListItem.Content>
-            <ListItem.Title>{u.name}</ListItem.Title>
-            <ListItem.Subtitle style={styles.subtitle}>
-              {u.message}
-            </ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-      ))}
+      {others.length
+        ? others.map((u, i) => (
+            <ListItem
+              key={i}
+              onPress={() => {
+                navigation.push('OtherProfile', {
+                  id: u.id,
+                  name: u.name,
+                  image: u.image,
+                  introduce: u.introduce,
+                  message: u.message,
+                  posts: u.posts,
+                });
+              }}>
+              <Avatar
+                rounded
+                size="medium"
+                source={u.image ? {uri: u.image} : noImage}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{u.name}</ListItem.Title>
+                <ListItem.Subtitle style={styles.subtitle}>
+                  {u.message}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+          ))
+        : null}
     </ScrollView>
   );
 };

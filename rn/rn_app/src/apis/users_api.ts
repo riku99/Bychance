@@ -22,9 +22,15 @@ export const sendNonce: (
   }
 };
 
-export const sendIDtoken: (
-  token: string,
-) => Promise<
+export const sendIDtoken: ({
+  token,
+  lat,
+  lng,
+}: {
+  token: string;
+  lat: number | null;
+  lng: number | null;
+}) => Promise<
   | {
       type: 'success';
       user: UserType;
@@ -33,15 +39,13 @@ export const sendIDtoken: (
     }
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
-> = async (token) => {
+> = async ({token, lat, lng}) => {
   try {
     const response = await axios.post<AxiosResponseUser & {token: string}>(
       `${origin}/firstLogin`,
-      {},
+      {lat, lng},
       headers(token),
     );
-
-    console.log(response);
 
     const {posts, ...user} = response.data;
     return {

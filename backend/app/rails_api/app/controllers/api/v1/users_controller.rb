@@ -5,11 +5,12 @@ class Api::V1::UsersController < ApplicationController
     before_action :checkAccessToken, only: [:subsequentLogin, :edit, :changeDisplay]
 
     def u
-        user = User.where(display: false)
+        near_users = User.within(3, origin: [35.667639, 140.012972])
+        users = near_users.select { |u| u.display }
         #post = user.posts.first
         #u = UserSerializer.new(user)
         #data = UserSerializer.new(user).as_json.merge(token: "token")
-        render json: user
+        render json: users
     end
 
     def createNonce
@@ -44,6 +45,8 @@ class Api::V1::UsersController < ApplicationController
             uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
             token = User.new_token
             token_hash = token.crypt(Rails.application.credentials.salt[:salt_key])
+            user_lat = user_params[:lat]
+            user_lng = user_params[:lng]
             if user = User.find_by(uid: uid_hash)
                 user.update_attribute(:token, token_hash)
                 data = UserSerializer.new(user).as_json.merge(token: token)
@@ -56,7 +59,9 @@ class Api::V1::UsersController < ApplicationController
                     image: user_image,
                     introduce: "",
                     message: "",
-                    display: false
+                    display: false,
+                    lat: user_lat,
+                    lng: user_lng
                 )
                 data = UserSerializer.new(user).as_json.merge(token: token)
                 render json: data
@@ -119,6 +124,6 @@ class Api::V1::UsersController < ApplicationController
     private
 
     def user_params
-        params.require(:user).permit(:id, :name, :introduce, :image, :message)
+        params.require(:user).permit(:id, :name, :introduce, :image, :message, :lat, :lng)
     end
 end

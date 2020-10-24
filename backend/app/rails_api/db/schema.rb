@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_07_023502) do
+ActiveRecord::Schema.define(version: 2020_10_24_033157) do
 
   create_table "nonces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "nonce"
@@ -37,6 +37,9 @@ ActiveRecord::Schema.define(version: 2020_10_07_023502) do
     t.text "message"
     t.boolean "display"
     t.string "token"
+    t.float "lat"
+    t.float "lng"
+    t.index ["lat", "lng"], name: "index_users_on_lat_and_lng"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 

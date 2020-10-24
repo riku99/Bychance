@@ -1005,6 +1005,10 @@ GEM
     crass (1.0.6)
     erubi (1.9.0)
     ffi (1.13.1)
+    geokit (1.13.1)
+    geokit-rails (2.3.1)
+      geokit (~> 1.5)
+      rails (>= 3.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.8.5)
@@ -1094,6 +1098,7 @@ DEPENDENCIES
   aws-sdk
   bootsnap (>= 1.4.2)
   byebug
+  geokit-rails
   listen (~> 3.2)
   mysql2
   puma (~> 4.1)

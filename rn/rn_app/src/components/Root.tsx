@@ -1,15 +1,6 @@
 import React, {useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  AppState,
-  AppStateStatus,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, Text, AppState, AppStateStatus} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import Geolocation from 'react-native-geolocation-service';
-//mport * as Keychain from 'react-native-keychain';
 
 import {useLogin} from '../hooks/useLogin';
 import {RootState} from '../redux/index';
@@ -20,7 +11,8 @@ import {
 } from '../redux/post';
 import {deleteInvalidAction as deleteUserInvalid} from '../redux/user';
 import {Container as Menu} from '../containers/utils/Menu';
-import {alertSomeError} from '../helpers/error';
+
+import {getCurrentPosition} from '../helpers/gelocation';
 
 const Root = () => {
   useLogin();
@@ -34,35 +26,8 @@ const Root = () => {
 
   const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
     if (nextAppState === 'active') {
-      console.log(nextAppState);
-      const currentPermission = await Geolocation.requestAuthorization(
-        'always',
-      );
-      console.log(currentPermission);
-      if (currentPermission === ('granted' || 'restricted')) {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position);
-          },
-          (e) => {
-            console.log(e);
-            alertSomeError();
-          },
-        );
-      } else if (currentPermission === ('denied' || 'disabled')) {
-        Alert.alert(
-          '位置情報が無効です',
-          'アプリを使うにはデバイスの位置情報を有効にしてください',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                return;
-              },
-            },
-          ],
-        );
-      }
+      const position = await getCurrentPosition();
+      console.log(position);
     }
   };
 

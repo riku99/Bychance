@@ -13,10 +13,12 @@ type initialStateType = {
   user?: {
     id: number;
     name: string;
-    image: null | string;
+    image: string | null;
     introduce: string;
     message: string;
     display: boolean;
+    lat: number | null;
+    lng: number | null;
   };
   errors?: {invalidError?: string};
 };
@@ -52,6 +54,8 @@ const userSlice = createSlice({
           introduce: action.payload.introduce,
           message: action.payload.message,
           display: action.payload.display,
+          lat: action.payload.lat,
+          lng: action.payload.lng,
         },
       };
     },
@@ -69,6 +73,8 @@ const userSlice = createSlice({
           introduce: action.payload.introduce,
           message: action.payload.message,
           display: action.payload.display,
+          lat: action.payload.lat,
+          lng: action.payload.lng,
         },
       };
     },

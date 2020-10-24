@@ -15,6 +15,7 @@ import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {setPostsAction} from '../redux/post';
 import {loginErrorThunk} from './index';
+import {getCurrentPosition} from '../helpers/gelocation';
 
 export const firstLoginThunk = createAsyncThunk(
   'users/firstLogin',
@@ -27,7 +28,14 @@ export const firstLoginThunk = createAsyncThunk(
       const idToken = loginResult.accessToken.id_token;
       const nonce = loginResult.IDTokenNonce;
       await sendNonce(nonce as string);
-      const response = await sendIDtoken(idToken as string);
+
+      const position = await getCurrentPosition();
+
+      const response = await sendIDtoken({
+        token: idToken as string,
+        lat: position ? position.lat : null,
+        lng: position ? position.lng : null,
+      });
 
       if (response.type === 'success') {
         await Keychain.resetGenericPassword();
