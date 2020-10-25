@@ -8,10 +8,10 @@ import {loginErrorThunk} from './index';
 
 export const getOthersThunk = createAsyncThunk(
   'others/getOthersThunk',
-  async (dummy: undefined, thunkAPI) => {
+  async ({lat, lng}: {lat: number | null; lng: number | null}, thunkAPI) => {
     const keychain = await checkKeychain();
     if (keychain) {
-      const response = await getOthers(keychain);
+      const response = await getOthers({...keychain, lat, lng});
 
       if (response.type === 'success') {
         return response.data;

@@ -7,7 +7,7 @@ import {loginErrorThunk} from '../actions/index';
 
 export type OtherUserType = Pick<
   UserType,
-  Exclude<keyof UserType, 'display'>
+  Exclude<keyof UserType, 'display' | 'lat' | 'lng'>
 > & {posts: PostType[]};
 
 type initialStateType = {

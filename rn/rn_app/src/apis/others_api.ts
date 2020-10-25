@@ -8,14 +8,16 @@ import {credentials} from '../helpers/keychain';
 export const getOthers: ({
   id,
   token,
-}: credentials) => Promise<
+  lat,
+  lng,
+}: credentials & {lat: number | null; lng: number | null}) => Promise<
   | {type: 'success'; data: OtherUserType[]}
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
-> = async ({id, token}) => {
+> = async ({id, token, lat, lng}) => {
   try {
     const response = await axios.get<OtherUserType[]>(`${origin}/others`, {
-      params: {id},
+      params: {id, lat, lng},
       ...headers(token),
     });
 
