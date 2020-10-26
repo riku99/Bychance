@@ -27,7 +27,9 @@ export const Container = () => {
   useEffect(() => {
     const getOthers = async (range: number) => {
       if (isFocused) {
-        await dispatch(getOthersThunk({lat: position.lat, lng: position.lng}));
+        await dispatch(
+          getOthersThunk({lat: position.lat, lng: position.lng, range}),
+        );
       }
     };
     getOthers(range);

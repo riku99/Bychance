@@ -10,14 +10,19 @@ export const getOthers: ({
   token,
   lat,
   lng,
-}: credentials & {lat: number | null; lng: number | null}) => Promise<
+  range,
+}: credentials & {
+  lat: number | null;
+  lng: number | null;
+  range: number;
+}) => Promise<
   | {type: 'success'; data: OtherUserType[]}
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
-> = async ({id, token, lat, lng}) => {
+> = async ({id, token, lat, lng, range}) => {
   try {
     const response = await axios.get<OtherUserType[]>(`${origin}/others`, {
-      params: {id, lat, lng},
+      params: {id, lat, lng, range},
       ...headers(token),
     });
 
