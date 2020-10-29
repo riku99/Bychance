@@ -8,5 +8,4 @@ class PostSerializer < ActiveModel::Serializer
   def userId
     object.user.id
   end
-
 end

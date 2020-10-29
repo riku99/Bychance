@@ -5,12 +5,12 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-import {StyleSheet, View, TextInput, Pressable} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem, Avatar} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {SearchBar, Button} from 'react-native-elements';
+import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
 import {OtherUserType} from '../../redux/others';
@@ -82,6 +82,7 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
               },
               inputIOS: {color: '#2c3e50', fontSize: 15, fontWeight: 'bold'},
             }}
+            doneText="完了"
           />
         </View>
       </View>

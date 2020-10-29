@@ -5,10 +5,9 @@ import {PostType} from './post';
 import {getOthersThunk} from '../actions/others';
 import {loginErrorThunk} from '../actions/index';
 
-export type OtherUserType = Pick<
-  UserType,
-  Exclude<keyof UserType, 'display' | 'lat' | 'lng'>
-> & {posts: PostType[]};
+export type OtherUserType = Omit<UserType, 'display' | 'lat' | 'lng'> & {
+  posts: PostType[];
+};
 
 type initialStateType = {
   others?: OtherUserType[];
