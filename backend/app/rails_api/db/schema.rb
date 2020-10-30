@@ -11,40 +11,36 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 2020_10_24_033157) do
-  create_table 'nonces',
-               options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4',
-               force: :cascade do |t|
-    t.string 'nonce'
-    t.datetime 'created_at', precision: 6, null: false
-    t.datetime 'updated_at', precision: 6, null: false
+
+  create_table "nonces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "nonce"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table 'posts',
-               options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4',
-               force: :cascade do |t|
-    t.string 'text'
-    t.string 'image'
-    t.bigint 'user_id'
-    t.datetime 'created_at', precision: 6, null: false
-    t.datetime 'updated_at', precision: 6, null: false
-    t.index %w[user_id], name: 'index_posts_on_user_id'
+  create_table "posts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "text"
+    t.string "image"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
-  create_table 'users',
-               options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4',
-               force: :cascade do |t|
-    t.string 'uid'
-    t.string 'name'
-    t.string 'image'
-    t.datetime 'created_at', precision: 6, null: false
-    t.datetime 'updated_at', precision: 6, null: false
-    t.text 'introduce'
-    t.text 'message'
-    t.boolean 'display'
-    t.string 'token'
-    t.float 'lat'
-    t.float 'lng'
-    t.index %w[lat lng], name: 'index_users_on_lat_and_lng'
-    t.index %w[uid], name: 'index_users_on_uid', unique: true
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "uid"
+    t.string "name"
+    t.string "image"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "introduce"
+    t.text "message"
+    t.boolean "display"
+    t.string "token"
+    t.float "lat"
+    t.float "lng"
+    t.index ["lat", "lng"], name: "index_users_on_lat_and_lng"
+    t.index ["uid"], name: "index_users_on_uid", unique: true
   end
+
 end

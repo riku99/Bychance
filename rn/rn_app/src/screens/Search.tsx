@@ -26,7 +26,7 @@ export const SearchStackScreen = () => {
       <Stack.Screen
         name="SearchOthers"
         component={SearchOthers}
-        options={{title: 'ユーザーを探す'}}
+        options={{title: 'ユーザーを見つける'}}
       />
       <Stack.Screen
         name="OtherProfile"

@@ -17,7 +17,6 @@ export const getOthersThunk = createAsyncThunk(
       const response = await getOthers({...keychain, lat, lng, range});
 
       if (response.type === 'success') {
-        console.log(response.data);
         return response.data;
       }
 

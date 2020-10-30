@@ -4,8 +4,9 @@ import React, {
   SetStateAction,
   useState,
   useEffect,
+  useRef,
 } from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem, Avatar} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +31,9 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
   const [displayedUsers, setDisplayedUsers] = useState(others);
   const [keyword, setKeyword] = useState('');
 
+  const searchTabTransform = useRef(new Animated.Value(0)).current;
+  const offsetY = useRef(0);
+
   useEffect(() => {
     if (keyword === '') {
       setDisplayedUsers(others);
@@ -47,7 +51,11 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.displayOptionsContainer}>
+      <Animated.View
+        style={{
+          ...styles.displayOptionsContainer,
+          transform: [{translateY: searchTabTransform}],
+        }}>
         <SearchBar
           placeholder="キーワードを検索"
           inputContainerStyle={styles.searchInputContainer}
@@ -85,40 +93,68 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
             doneText="完了"
           />
         </View>
-      </View>
-      <ScrollView>
-        {displayedUsers.length
-          ? displayedUsers.map((u, i) => (
-              <ListItem
-                key={i}
-                onPress={() => {
-                  navigation.push('OtherProfile', {
-                    id: u.id,
-                    name: u.name,
-                    image: u.image,
-                    introduce: u.introduce,
-                    message: u.message,
-                    posts: u.posts,
-                  });
-                }}>
-                <Avatar
-                  rounded
-                  size="medium"
-                  source={u.image ? {uri: u.image} : noImage}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{u.name}</ListItem.Title>
-                  <ListItem.Subtitle style={styles.subtitle}>
-                    {u.message}
-                  </ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            ))
-          : null}
+      </Animated.View>
+      <ScrollView
+        style={styles.fill}
+        scrollEventThrottle={1}
+        onScrollEndDrag={(e) => {
+          if (e.nativeEvent.contentOffset.y > offsetY.current) {
+            Animated.timing(searchTabTransform, {
+              toValue: -SEARCH_TAB_HEIGHT,
+              duration: 200,
+              useNativeDriver: false,
+            }).start();
+
+            offsetY.current = e.nativeEvent.contentOffset.y;
+          } else {
+            Animated.timing(searchTabTransform, {
+              toValue: 0,
+              duration: 200,
+              useNativeDriver: false,
+            }).start();
+            offsetY.current = e.nativeEvent.contentOffset.y;
+          }
+        }}>
+        <Animated.View
+          style={{
+            ...styles.scrollViewContent,
+            transform: [{translateY: searchTabTransform}],
+          }}>
+          {displayedUsers.length
+            ? displayedUsers.map((u, i) => (
+                <ListItem
+                  key={i}
+                  onPress={() => {
+                    navigation.push('OtherProfile', {
+                      id: u.id,
+                      name: u.name,
+                      image: u.image,
+                      introduce: u.introduce,
+                      message: u.message,
+                      posts: u.posts,
+                    });
+                  }}>
+                  <Avatar
+                    rounded
+                    size="medium"
+                    source={u.image ? {uri: u.image} : noImage}
+                  />
+                  <ListItem.Content>
+                    <ListItem.Title>{u.name}</ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitle}>
+                      {u.message}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                </ListItem>
+              ))
+            : null}
+        </Animated.View>
       </ScrollView>
     </View>
   );
 };
+
+const SEARCH_TAB_HEIGHT = 80;
 
 const styles = StyleSheet.create({
   container: {
@@ -126,6 +162,12 @@ const styles = StyleSheet.create({
   },
   displayOptionsContainer: {
     backgroundColor: 'white',
+    height: SEARCH_TAB_HEIGHT,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   searchContainer: {
     backgroundColor: 'white',
@@ -142,6 +184,12 @@ const styles = StyleSheet.create({
     color: '#2c3e50',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+  fill: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    marginTop: SEARCH_TAB_HEIGHT,
   },
   subtitle: {
     fontSize: 14,
