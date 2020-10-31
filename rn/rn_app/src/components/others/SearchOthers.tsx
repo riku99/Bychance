@@ -16,6 +16,7 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import {OtherUserType} from '../../redux/others';
 import {SearchStackParamList} from '../../screens/Search';
+
 const noImage = require('../../assets/no-Image.png');
 
 type PropsType = {
@@ -31,8 +32,14 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
   const [displayedUsers, setDisplayedUsers] = useState(others);
   const [keyword, setKeyword] = useState('');
 
-  const searchTabTransform = useRef(new Animated.Value(0)).current;
+  const scrollY = useRef(new Animated.Value(0)).current;
   const offsetY = useRef(0);
+
+  const transformY = scrollY.interpolate({
+    inputRange: [0, SEARCH_TAB_HEIGHT],
+    outputRange: [0, -SEARCH_TAB_HEIGHT],
+    extrapolate: 'clamp',
+  });
 
   useEffect(() => {
     if (keyword === '') {
@@ -54,7 +61,7 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
       <Animated.View
         style={{
           ...styles.displayOptionsContainer,
-          transform: [{translateY: searchTabTransform}],
+          transform: [{translateY: transformY}],
         }}>
         <SearchBar
           placeholder="キーワードを検索"
@@ -96,29 +103,40 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
       </Animated.View>
       <ScrollView
         style={styles.fill}
-        scrollEventThrottle={1}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {
+            useNativeDriver: false,
+          },
+        )}
         onScrollEndDrag={(e) => {
-          if (e.nativeEvent.contentOffset.y > offsetY.current) {
-            Animated.timing(searchTabTransform, {
-              toValue: -SEARCH_TAB_HEIGHT,
-              duration: 200,
+          if (
+            e.nativeEvent.contentOffset.y > offsetY.current &&
+            e.nativeEvent.contentOffset.y > 80
+          ) {
+            Animated.timing(scrollY, {
+              toValue: SEARCH_TAB_HEIGHT,
+              duration: 800,
               useNativeDriver: false,
             }).start();
-
             offsetY.current = e.nativeEvent.contentOffset.y;
-          } else {
-            Animated.timing(searchTabTransform, {
+          } else if (
+            e.nativeEvent.contentOffset.y < offsetY.current //&&
+            //e.nativeEvent.contentOffset.y > 80
+          ) {
+            Animated.timing(scrollY, {
               toValue: 0,
-              duration: 200,
+              duration: 800,
               useNativeDriver: false,
             }).start();
             offsetY.current = e.nativeEvent.contentOffset.y;
           }
         }}>
-        <Animated.View
+        <View
           style={{
             ...styles.scrollViewContent,
-            transform: [{translateY: searchTabTransform}],
+            //transform: [{translateY: transformY}],
           }}>
           {displayedUsers.length
             ? displayedUsers.map((u, i) => (
@@ -148,7 +166,7 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
                 </ListItem>
               ))
             : null}
-        </Animated.View>
+        </View>
       </ScrollView>
     </View>
   );
