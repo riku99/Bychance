@@ -1,5 +1,8 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -7,10 +10,12 @@ import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {Container as UserEdit} from '../containers/users/UserEdit';
+import {MessageExchange} from '../components/messages/MessageExchange';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
+  MessageExchange: undefined;
 };
 
 export type TabList = {
@@ -83,6 +88,15 @@ export const RootStackScreen = () => {
         component={UserEdit}
         options={{
           title: 'プロフィール編集',
+        }}
+      />
+      <RootStack.Screen
+        name="MessageExchange"
+        component={MessageExchange}
+        options={{
+          title: 'メッセージ',
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
         }}
       />
     </RootStack.Navigator>

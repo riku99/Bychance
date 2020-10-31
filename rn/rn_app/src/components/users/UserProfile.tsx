@@ -9,6 +9,7 @@ import {
 import {Avatar, Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {Posts} from '../posts/Posts';
 import {RootStackParamList} from '../../screens/Root';
@@ -34,7 +35,6 @@ export const UserProfile = ({
   user,
   posts,
   postProcess,
-
   navigateToShowPost,
 }: Props) => {
   const [keychainID, setKeychainID] = useState<null | number>(null);
@@ -68,13 +68,30 @@ export const UserProfile = ({
         <Text style={styles.name}>{user.name}</Text>
       </View>
       <View style={styles.edit}>
-        {keychainID === user.id && (
+        {keychainID === user.id ? (
           <Button
             title="プロフィールを編集"
             titleStyle={styles.title_style}
             buttonStyle={styles.edit_button}
             onPress={() => {
               navigation.push('UserEdit');
+            }}
+          />
+        ) : (
+          <Button
+            title="メッセージを送る"
+            icon={
+              <Icon
+                name="send-o"
+                size={17}
+                color="#2c3e50"
+                style={{marginRight: 8}}
+              />
+            }
+            titleStyle={{...styles.title_style, color: '#2c3e50'}}
+            buttonStyle={styles.edit_button}
+            onPress={() => {
+              navigation.push('MessageExchange');
             }}
           />
         )}
@@ -101,7 +118,7 @@ const styles = StyleSheet.create({
   image: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '8%',
+    marginTop: '10%',
   },
   name_box: {
     justifyContent: 'center',
@@ -109,12 +126,12 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   name: {
-    fontSize: 20,
+    fontSize: 18,
     marginTop: 10,
   },
   edit: {
     alignItems: 'center',
-    marginTop: '3%',
+    marginTop: '5%',
     height: 40,
   },
   edit_button: {

@@ -121,10 +121,7 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
               useNativeDriver: false,
             }).start();
             offsetY.current = e.nativeEvent.contentOffset.y;
-          } else if (
-            e.nativeEvent.contentOffset.y < offsetY.current //&&
-            //e.nativeEvent.contentOffset.y > 80
-          ) {
+          } else if (e.nativeEvent.contentOffset.y < offsetY.current) {
             Animated.timing(scrollY, {
               toValue: 0,
               duration: 800,
@@ -136,7 +133,6 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
         <View
           style={{
             ...styles.scrollViewContent,
-            //transform: [{translateY: transformY}],
           }}>
           {displayedUsers.length
             ? displayedUsers.map((u, i) => (
