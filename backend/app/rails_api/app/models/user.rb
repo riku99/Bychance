@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   attr_accessor :distance
   has_many :posts, dependent: :destroy
+  has_many :rooms, foreign_key: :sender_id
+  has_many :room_messages
   validates :uid, presence: true
   validates :token, presence: true
   validates :name, presence: true, length: { maximum: 20 }
