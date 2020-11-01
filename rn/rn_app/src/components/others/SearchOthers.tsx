@@ -5,8 +5,15 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useCallback,
 } from 'react';
-import {StyleSheet, View, Animated} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem, Avatar} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
@@ -34,6 +41,10 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const offsetY = useRef(0);
+
+  const caluculateDuration = useCallback((n: number) => {
+    return n * 5;
+  }, []);
 
   const transformY = scrollY.interpolate({
     inputRange: [0, SEARCH_TAB_HEIGHT],
@@ -108,23 +119,22 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {
             useNativeDriver: false,
+            listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+              if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
+                scrollY.setValue(SEARCH_TAB_HEIGHT);
+              }
+            },
           },
         )}
         onScrollEndDrag={(e) => {
-          if (
-            e.nativeEvent.contentOffset.y > offsetY.current &&
-            e.nativeEvent.contentOffset.y > 80
-          ) {
-            Animated.timing(scrollY, {
-              toValue: SEARCH_TAB_HEIGHT,
-              duration: 800,
-              useNativeDriver: false,
-            }).start();
+          if (e.nativeEvent.contentOffset.y > offsetY.current) {
             offsetY.current = e.nativeEvent.contentOffset.y;
           } else if (e.nativeEvent.contentOffset.y < offsetY.current) {
             Animated.timing(scrollY, {
               toValue: 0,
-              duration: 800,
+              duration: caluculateDuration(
+                offsetY.current > 80 ? 80 : offsetY.current,
+              ),
               useNativeDriver: false,
             }).start();
             offsetY.current = e.nativeEvent.contentOffset.y;
