@@ -1,24 +1,50 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 
 import {UserProfile} from '../../components/users/UserProfile';
 import {PostType} from '../../redux/post';
 import {SearchStackParamList} from '../../screens/Search';
+import {AppDispatch} from '../../redux';
+import {createRoomThunk} from '../../actions/chats';
+import {checkKeychain} from '../../helpers/keychain';
+import {RootStackParamList} from '../../screens/Root';
 
-type NavigationProp = StackNavigationProp<SearchStackParamList, 'OtherProfile'>;
+type SearchNavigationProp = StackNavigationProp<
+  SearchStackParamList,
+  'OtherProfile'
+>;
+type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
-type ScreenRouteProp = RouteProp<SearchStackParamList, 'OtherProfile'>;
+type SearchScreenRouteProp = RouteProp<SearchStackParamList, 'OtherProfile'>;
 
-type Props = {route: ScreenRouteProp};
+type Props = {route: SearchScreenRouteProp};
 
 export const Container = ({route}: Props) => {
   const user = route.params;
 
-  const navigation = useNavigation<NavigationProp>();
-  const navigateToShowPost = (post: PostType) => {
-    navigation.push('OtherPost', {
+  const [keychainId, setKeychainId] = useState<null | number>(null);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    const confirmUser = async () => {
+      const keychain = await checkKeychain();
+      if (keychain && keychain.id === user.id) {
+        setKeychainId(keychain.id);
+      }
+    };
+    confirmUser();
+  }, [user.id]);
+
+  const navigationToPost = useNavigation<SearchNavigationProp>();
+  const navigationToUserEdit = useNavigation<RootNavigationProp>();
+  const navigationToChatRoom = useNavigation<RootNavigationProp>();
+
+  const pushPost = (post: PostType) => {
+    navigationToPost.push('OtherPost', {
       id: post.id,
       text: post.text,
       image: post.image,
@@ -26,6 +52,24 @@ export const Container = ({route}: Props) => {
       userId: post.userId,
     });
   };
+
+  const pushUserEdit = () => {
+    navigationToUserEdit.push('UserEdit');
+  };
+
+  const pushChatRoom = async () => {
+    await dispatch(
+      createRoomThunk({
+        id: user.id,
+        name: user.name,
+        introduce: user.introduce,
+        image: user.image,
+        posts: user.posts,
+      }),
+    );
+    navigationToChatRoom.push('ChatRoom');
+  };
+
   return (
     <UserProfile
       user={{
@@ -34,8 +78,11 @@ export const Container = ({route}: Props) => {
         image: user.image,
         introduce: user.introduce,
       }}
+      keychainId={keychainId}
       posts={user.posts}
-      navigateToShowPost={navigateToShowPost}
+      navigateToPost={pushPost}
+      navigateToUserEdit={pushUserEdit}
+      navigateToChatRoom={pushChatRoom}
     />
   );
 };

@@ -4,6 +4,7 @@ import {combineReducers} from '@reduxjs/toolkit';
 import userReducer from './user';
 import postReducer from './post';
 import othersReducer from './others';
+import messageReducer from './chat';
 
 type InitialStateType = {displayedMenu?: boolean};
 
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   userReducer,
   postReducer,
   othersReducer,
+  messageReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

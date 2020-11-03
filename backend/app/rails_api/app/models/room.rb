@@ -11,15 +11,6 @@ class Room < ApplicationRecord
         )
     end
 
-    def self.get(sender_id, recipient_id)
-        room = between(sender_id, recipient_id).first
-        if room.present
-            return room
-        else
-            create(sender_id: sender_id, recipient_id: recipient_id)
-        end
-    end
-
     def opposed_user(user)
         user == recipient ? sender : recipient
     end

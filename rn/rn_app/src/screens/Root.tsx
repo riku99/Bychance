@@ -10,12 +10,12 @@ import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {Container as UserEdit} from '../containers/users/UserEdit';
-import {MessageExchange} from '../components/messages/MessageExchange';
+import {MessageRoom} from '../components/chats/ChatRoom';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
-  MessageExchange: undefined;
+  ChatRoom: undefined;
 };
 
 export type TabList = {
@@ -91,8 +91,8 @@ export const RootStackScreen = () => {
         }}
       />
       <RootStack.Screen
-        name="MessageExchange"
-        component={MessageExchange}
+        name="ChatRoom"
+        component={MessageRoom}
         options={{
           title: 'メッセージ',
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

@@ -26,10 +26,10 @@ const othersSlice = createSlice({
     [loginErrorThunk.fulfilled.type]: () => initialState,
     [getOthersThunk.fulfilled.type]: (
       state,
-      actions: PayloadAction<OtherUserType[]>,
+      action: PayloadAction<OtherUserType[]>,
     ) => ({
       ...state,
-      others: actions.payload,
+      others: action.payload,
     }),
   },
 });

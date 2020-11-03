@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -7,14 +7,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {Posts} from '../posts/Posts';
-import {RootStackParamList} from '../../screens/Root';
 import {ScrollView} from 'react-native-gesture-handler';
-import {checkKeychain} from '../../helpers/keychain';
 import {PostType} from '../../redux/post';
 
 type Props = {
@@ -24,32 +20,23 @@ type Props = {
     image: string | null;
     introduce: string | null;
   };
+  keychainId: number | null;
   postProcess?: boolean;
   posts: PostType[];
-  navigateToShowPost: (post: PostType) => void;
+  navigateToPost: (post: PostType) => void;
+  navigateToUserEdit?: () => void;
+  navigateToChatRoom?: () => Promise<void>;
 };
-
-type NavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 export const UserProfile = ({
   user,
   posts,
+  keychainId,
   postProcess,
-  navigateToShowPost,
+  navigateToPost,
+  navigateToUserEdit,
+  navigateToChatRoom,
 }: Props) => {
-  const [keychainID, setKeychainID] = useState<null | number>(null);
-  const navigation = useNavigation<NavigationProp>();
-
-  useEffect(() => {
-    const confirmUser = async () => {
-      const keychain = await checkKeychain();
-      if (keychain && keychain.id === user.id) {
-        setKeychainID(keychain.id);
-      }
-    };
-    confirmUser();
-  }, [user.id]);
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.image}>
@@ -68,14 +55,12 @@ export const UserProfile = ({
         <Text style={styles.name}>{user.name}</Text>
       </View>
       <View style={styles.edit}>
-        {keychainID === user.id ? (
+        {keychainId === user.id ? (
           <Button
             title="プロフィールを編集"
             titleStyle={styles.title_style}
             buttonStyle={styles.edit_button}
-            onPress={() => {
-              navigation.push('UserEdit');
-            }}
+            onPress={navigateToUserEdit}
           />
         ) : (
           <Button
@@ -90,9 +75,7 @@ export const UserProfile = ({
             }
             titleStyle={{...styles.title_style, color: '#2c3e50'}}
             buttonStyle={styles.edit_button}
-            onPress={() => {
-              navigation.push('MessageExchange');
-            }}
+            onPress={navigateToChatRoom}
           />
         )}
       </View>
@@ -105,7 +88,7 @@ export const UserProfile = ({
           <Text style={{marginLeft: 10, color: '#999999'}}>投稿中です</Text>
         </View>
       )}
-      <Posts posts={posts} navigateToShowPost={navigateToShowPost} />
+      <Posts posts={posts} navigateToShowPost={navigateToPost} />
     </ScrollView>
   );
 };

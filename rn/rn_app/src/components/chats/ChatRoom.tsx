@@ -1,8 +1,11 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+//import {StyleSheet} from 'react-native';
 import {GiftedChat, IMessage} from 'react-native-gifted-chat';
 
-export const MessageExchange = () => {
+import {createRoomThunk} from '../../actions/chats';
+import {useDispatch} from 'react-redux';
+
+export const MessageRoom = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   useEffect(() => {
     setMessages([
@@ -36,4 +39,4 @@ export const MessageExchange = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+//const styles = StyleSheet.create({});

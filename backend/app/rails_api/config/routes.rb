@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
       get '/others', to: 'others#index'
 
-      post 'rooms', to: 'rooms#create'
+      post '/rooms', to: 'rooms#create'
     end
   end
 end
