@@ -7,20 +7,20 @@ import {credentials} from '../helpers/keychain';
 export const createRoom: ({
   id,
   token,
-  partnerId,
-}: credentials & {partnerId: number}) => Promise<
+  recipientId,
+}: credentials & {recipientId: number}) => Promise<
   | {
       type: 'success';
       data: {id: number; presence: boolean};
     }
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
-> = async ({id, token, partnerId}) => {
+> = async ({id, token, recipientId}) => {
   try {
     const response = await axios.post<{
       presence: boolean;
       room: number;
-    }>(`${origin}/rooms`, {id, partner_id: partnerId}, headers(token));
+    }>(`${origin}/rooms`, {id, recipient_id: recipientId}, headers(token));
 
     return {
       type: 'success',

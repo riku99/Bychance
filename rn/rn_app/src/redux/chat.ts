@@ -30,7 +30,12 @@ const chatSlice = createSlice({
     [createRoomThunk.fulfilled.type]: (
       state,
       action: PayloadAction<
-        (Room & {presence: false}) | {id: number; presence: true}
+        | {
+            id: number;
+            recipient: Omit<OtherUserType, 'message'>;
+            presence: false;
+          }
+        | {id: number; presence: true}
       >,
     ) => {
       console.log(action);
@@ -46,13 +51,13 @@ const chatSlice = createSlice({
           ...state,
           chatLists: [
             {
-              room: {id: action.payload.id, partner: action.payload.partner},
+              room: {id: action.payload.id, partner: action.payload.recipient},
               messages: [],
             },
             ...state.chatLists!,
           ],
           currentChat: {
-            room: {id: action.payload.id, partner: action.payload.partner},
+            room: {id: action.payload.id, partner: action.payload.recipient},
             messages: [],
           },
         };
