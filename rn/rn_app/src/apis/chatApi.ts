@@ -19,12 +19,12 @@ export const createRoom: ({
   try {
     const response = await axios.post<{
       presence: boolean;
-      room: number;
+      id: number;
     }>(`${origin}/rooms`, {id, recipient_id: recipientId}, headers(token));
 
     return {
       type: 'success',
-      data: {id: response.data.room, presence: response.data.presence},
+      data: response.data,
     };
   } catch (e) {
     if (e && e.response) {

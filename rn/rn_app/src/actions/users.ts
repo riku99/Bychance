@@ -78,6 +78,8 @@ export const subsequentLoginAction = createAsyncThunk(
   async ({id, token}: credentials, thunkAPI) => {
     const response = await sendAccessToken({id, token});
 
+    console.log(response);
+
     if (response.type === 'success') {
       thunkAPI.dispatch(setPostsAction(response.posts));
       return response.user;

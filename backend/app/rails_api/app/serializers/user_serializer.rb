@@ -2,6 +2,7 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :image, :introduce, :message, :display, :lat, :lng
 
   has_many :posts
+  has_many :rooms
 end
 
 class UserWithoutPostsSerializer < ActiveModel::Serializer

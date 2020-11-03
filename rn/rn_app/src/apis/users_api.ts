@@ -5,8 +5,9 @@ import {UserType} from '../redux/user';
 import {PostType} from '../redux/post';
 import {headers} from '../helpers/headers';
 import {credentials} from '../helpers/keychain';
+import {ChatType} from '../redux/chat';
 
-type AxiosResponseUser = UserType & {posts: PostType[]};
+type AxiosResponseUser = UserType & {posts: PostType[]} & {rooms: ChatType[]};
 
 export const sendNonce: (
   nonce: string,

@@ -2,8 +2,9 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {createRoomThunk} from '../actions/chats';
 import {OtherUserType} from './others';
+import {subsequentLoginAction} from '../actions/users';
 
-export type ChatType = {room: Room; messages: Message[]};
+export type ChatType = Room & {messages: Message[]};
 
 export type Room = {id: number; partner: Omit<OtherUserType, 'message'>};
 
@@ -27,6 +28,15 @@ const chatSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    [subsequentLoginAction.fulfilled.type]: (
+      state,
+      action: PayloadAction<{rooms: ChatType[]}>,
+    ) => {
+      return {
+        ...state,
+        chatLists: action.payload.rooms,
+      };
+    },
     [createRoomThunk.fulfilled.type]: (
       state,
       action: PayloadAction<
@@ -38,12 +48,11 @@ const chatSlice = createSlice({
         | {id: number; presence: true}
       >,
     ) => {
-      console.log(action);
       if (action.payload.presence) {
         return {
           ...state,
           currentChat: state.chatLists?.find((chat) => {
-            chat.room.id === action.payload.id;
+            chat.id === action.payload.id;
           }),
         };
       } else {
@@ -51,13 +60,15 @@ const chatSlice = createSlice({
           ...state,
           chatLists: [
             {
-              room: {id: action.payload.id, partner: action.payload.recipient},
+              id: action.payload.id,
+              partner: action.payload.recipient,
               messages: [],
             },
             ...state.chatLists!,
           ],
           currentChat: {
-            room: {id: action.payload.id, partner: action.payload.recipient},
+            id: action.payload.id,
+            partner: action.payload.recipient,
             messages: [],
           },
         };

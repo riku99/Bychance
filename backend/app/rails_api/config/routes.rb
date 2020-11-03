@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       get '/others', to: 'others#index'
 
       post '/rooms', to: 'rooms#create'
+
+      get '/u', to: 'users#u'
     end
   end
 end

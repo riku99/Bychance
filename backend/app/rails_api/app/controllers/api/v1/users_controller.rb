@@ -4,11 +4,12 @@ class Api::V1::UsersController < ApplicationController
 
   before_action :checkAccessToken,
                 only: %i[subsequentLogin edit changeDisplay updatePosition]
-
+  
   def u
-    near_others = User.within(3, origin: [35.667639, 140.012972])
-    display_others = near_others.select(&:display)
-    render json: display_others, each_serializer: OthersSerializer
+    room = Room.first
+    user = User.first
+    #render json: {result: RoomSerializer.new(room, {user: user.id})}
+    render json: UserSerializer.new(user, {user: user.id}).as_json(include: ["posts", "rooms.room_messages"])
   end
 
   def createNonce
@@ -82,7 +83,7 @@ class Api::V1::UsersController < ApplicationController
 
   def subsequentLogin
     if @user
-      render json: @user
+      render json: UserSerializer.new(@user, {user: @user.id}).as_json(include: ["posts", "rooms.messages"])
     else
       render json: { loginError: true }, status: 404
     end
