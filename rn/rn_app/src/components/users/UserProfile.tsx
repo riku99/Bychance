@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   name: {
-    fontSize: 18,
+    fontSize: 17,
     marginTop: 10,
   },
   edit: {

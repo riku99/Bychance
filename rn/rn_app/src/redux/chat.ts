@@ -6,7 +6,7 @@ import {subsequentLoginAction} from '../actions/users';
 
 export type ChatType = Room & {messages: Message[]};
 
-export type Room = {id: number; partner: Omit<OtherUserType, 'message'>};
+export type Room = {id: number; partner: OtherUserType};
 
 export type Message = {
   id: number;
@@ -42,7 +42,7 @@ const chatSlice = createSlice({
       action: PayloadAction<
         | {
             id: number;
-            recipient: Omit<OtherUserType, 'message'>;
+            recipient: OtherUserType;
             presence: false;
           }
         | {id: number; presence: true}
@@ -51,8 +51,8 @@ const chatSlice = createSlice({
       if (action.payload.presence) {
         return {
           ...state,
-          currentChat: state.chatLists?.find((chat) => {
-            chat.id === action.payload.id;
+          currentChat: state.chatLists!.find((chat) => {
+            return chat.id === action.payload.id;
           }),
         };
       } else {

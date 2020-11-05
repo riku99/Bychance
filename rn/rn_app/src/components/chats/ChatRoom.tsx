@@ -1,11 +1,15 @@
 import React, {useState, useEffect, useCallback} from 'react';
+import {Text, StyleSheet} from 'react-native';
 //import {StyleSheet} from 'react-native';
-import {GiftedChat, IMessage} from 'react-native-gifted-chat';
+import {
+  GiftedChat,
+  IMessage,
+  Send,
+  Bubble,
+  MessageText,
+} from 'react-native-gifted-chat';
 
-import {createRoomThunk} from '../../actions/chats';
-import {useDispatch} from 'react-redux';
-
-export const MessageRoom = () => {
+export const ChatRoom = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   useEffect(() => {
     setMessages([
@@ -32,6 +36,37 @@ export const MessageRoom = () => {
     <GiftedChat
       messages={messages}
       user={{_id: 1}}
+      placeholder="メッセージを入力"
+      alignTop={true}
+      renderSend={(props) => {
+        return (
+          <Send {...props} containerStyle={styles.sendContainer}>
+            <Text style={styles.sendButtonTitile}>送信</Text>
+          </Send>
+        );
+      }}
+      renderBubble={(props) => {
+        return (
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              left: props.wrapperStyle?.left,
+              right: {backgroundColor: '#c9c9c9'},
+            }}
+          />
+        );
+      }}
+      renderMessageText={(props) => {
+        return (
+          <MessageText
+            {...props}
+            textStyle={{
+              left: props.textStyle?.left,
+              right: {color: 'balck'},
+            }}
+          />
+        );
+      }}
       onSend={(message) => {
         onSend(message);
       }}
@@ -39,4 +74,15 @@ export const MessageRoom = () => {
   );
 };
 
-//const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  sendContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginRight: 15,
+  },
+  sendButtonTitile: {
+    color: '#4fa9ff',
+    fontWeight: 'bold',
+  },
+});

@@ -5,10 +5,11 @@ import {OtherUserType} from '../redux/others';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {loginErrorThunk} from '.';
+import {alertSomeError} from '../helpers/error';
 
 export const createRoomThunk = createAsyncThunk(
   'chats/createRoom',
-  async (recipient: Omit<OtherUserType, 'message'>, thunkAPI) => {
+  async (recipient: OtherUserType, thunkAPI) => {
     const keychain = await checkKeychain();
 
     if (keychain) {
@@ -24,6 +25,19 @@ export const createRoomThunk = createAsyncThunk(
         } else {
           return {id: response.data.id, recipient: recipient, presence: false};
         }
+      }
+
+      if (response.type === 'loginError') {
+        requestLogin(() => {
+          thunkAPI.dispatch(loginErrorThunk());
+        });
+        return thunkAPI.rejectWithValue({loginError: true});
+      }
+
+      if (response.type === 'someError') {
+        console.log(response.message);
+        alertSomeError();
+        return thunkAPI.rejectWithValue({someError: true});
       }
     } else {
       requestLogin(() => {

@@ -10,7 +10,7 @@ import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {Container as UserEdit} from '../containers/users/UserEdit';
-import {MessageRoom} from '../components/chats/ChatRoom';
+import {ChatRoom} from '../components/chats/ChatRoom';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -92,7 +92,7 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="ChatRoom"
-        component={MessageRoom}
+        component={ChatRoom}
         options={{
           title: 'メッセージ',
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
