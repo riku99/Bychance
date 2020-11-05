@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_01_050437) do
+ActiveRecord::Schema.define(version: 2020_11_05_054036) do
 
   create_table "nonces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "nonce"
@@ -28,7 +28,6 @@ ActiveRecord::Schema.define(version: 2020_11_01_050437) do
   end
 
   create_table "room_messages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "room"
     t.bigint "room_id", null: false
     t.bigint "user_id", null: false
     t.text "text"

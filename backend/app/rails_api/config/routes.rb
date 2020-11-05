@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 
       post '/rooms', to: 'rooms#create'
 
+      post '/messages', to: 'room_messages#create'
+
       get '/u', to: 'users#u'
     end
   end

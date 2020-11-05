@@ -1,27 +1,27 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {createRoomThunk} from '../actions/chats';
+import {createRoomThunk, createMessageThunk} from '../actions/chats';
 import {OtherUserType} from './others';
 import {subsequentLoginAction} from '../actions/users';
 
-export type ChatType = Room & {messages: Message[]};
+export type ChatType = Room & {messages: MessageType[]};
 
 export type Room = {id: number; partner: OtherUserType};
 
-export type Message = {
+export type MessageType = {
   id: number;
   roomId: number;
-  partnerId: number;
+  userId: number;
   text: string;
-  date: string;
+  timestamp: string;
 };
 
 type InitialStateType = {
   chatLists?: ChatType[];
-  currentChat?: ChatType | null;
+  currentChat?: ChatType;
 };
 
-const initialState: InitialStateType = {chatLists: [], currentChat: null};
+const initialState: InitialStateType = {chatLists: []};
 
 const chatSlice = createSlice({
   name: 'message',
@@ -73,6 +73,29 @@ const chatSlice = createSlice({
           },
         };
       }
+    },
+    [createMessageThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<MessageType>,
+    ) => {
+      const otherChats = state.chatLists!.filter((c) => {
+        return c.id !== action.payload.roomId;
+      });
+
+      return {
+        ...state,
+        chatLists: [
+          {
+            ...state.currentChat!,
+            messages: [action.payload, ...state.currentChat!.messages],
+          },
+          ...otherChats,
+        ],
+        currentChat: {
+          ...state.currentChat!,
+          messages: [action.payload, ...state.currentChat!.messages],
+        },
+      };
     },
   },
 });

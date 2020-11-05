@@ -1,11 +1,12 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-import {createRoom} from '../apis/chatApi';
+import {createRoom, createMessage} from '../apis/chatApi';
 import {OtherUserType} from '../redux/others';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {loginErrorThunk} from '.';
 import {alertSomeError} from '../helpers/error';
+import {MessageType} from '../redux/chat';
 
 export const createRoomThunk = createAsyncThunk(
   'chats/createRoom',
@@ -43,6 +44,47 @@ export const createRoomThunk = createAsyncThunk(
       requestLogin(() => {
         thunkAPI.dispatch(loginErrorThunk());
       });
+      return thunkAPI.rejectWithValue({loginError: true});
+    }
+  },
+);
+
+export const createMessageThunk = createAsyncThunk(
+  'chats/createMessage',
+  async (
+    {roomId, userId, text}: Pick<MessageType, 'roomId' | 'userId' | 'text'>,
+    thunkAPI,
+  ) => {
+    const keychain = await checkKeychain();
+
+    if (keychain) {
+      const response = await createMessage({
+        id: keychain.id,
+        token: keychain.token,
+        roomId,
+        userId,
+        text,
+      });
+
+      if (response.type === 'success') {
+        return response.data;
+      }
+
+      if (response.type === 'loginError') {
+        requestLogin(() => {
+          thunkAPI.dispatch(loginErrorThunk());
+        });
+        return thunkAPI.rejectWithValue(response);
+      }
+
+      if (response.type === 'invalidError') {
+        return thunkAPI.rejectWithValue(response);
+      }
+    } else {
+      requestLogin(() => {
+        thunkAPI.dispatch(loginErrorThunk());
+      });
+      return thunkAPI.rejectWithValue({type: 'loginError'});
     }
   },
 );

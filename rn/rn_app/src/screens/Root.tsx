@@ -10,7 +10,7 @@ import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {Container as UserEdit} from '../containers/users/UserEdit';
-import {ChatRoom} from '../components/chats/ChatRoom';
+import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 
 export type RootStackParamList = {
   Tab: undefined;

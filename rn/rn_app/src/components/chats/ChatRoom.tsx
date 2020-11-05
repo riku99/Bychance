@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet} from 'react-native';
-//import {StyleSheet} from 'react-native';
 import {
   GiftedChat,
   IMessage,
@@ -9,33 +8,18 @@ import {
   MessageText,
 } from 'react-native-gifted-chat';
 
-export const ChatRoom = () => {
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello world',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          avatar:
-            'https://profile.line-scdn.net/0hdXCqaRjAO3d-CBI8feJEIEJNNRoJJj0_Bjt1GVIPMhQAaywlQmtwE10LbUBWOygpET12GQkNZkEE',
-        },
-      },
-    ]);
-  }, []);
+type PropsType = {
+  messages: IMessage[];
+  userId: number;
+  onSend: (text: string) => void;
+};
 
-  const onSend = useCallback((message) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, message),
-    );
-  }, []);
-
+export const ChatRoom = ({messages, userId, onSend}: PropsType) => {
+  const [text, setText] = useState('');
   return (
     <GiftedChat
       messages={messages}
-      user={{_id: 1}}
+      user={{_id: userId}}
       placeholder="メッセージを入力"
       alignTop={true}
       renderSend={(props) => {
@@ -62,13 +46,16 @@ export const ChatRoom = () => {
             {...props}
             textStyle={{
               left: props.textStyle?.left,
-              right: {color: 'balck'},
+              right: {color: 'black'},
             }}
           />
         );
       }}
-      onSend={(message) => {
-        onSend(message);
+      onInputTextChanged={(t) => {
+        setText(t);
+      }}
+      onSend={() => {
+        onSend(text);
       }}
     />
   );

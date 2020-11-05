@@ -58,15 +58,7 @@ export const Container = ({route}: Props) => {
   };
 
   const pushChatRoom = async () => {
-    await dispatch(
-      createRoomThunk({
-        id: user.id,
-        name: user.name,
-        introduce: user.introduce,
-        image: user.image,
-        posts: user.posts,
-      }),
-    );
+    await dispatch(createRoomThunk(user));
     navigationToChatRoom.push('ChatRoom');
   };
 

@@ -8,8 +8,10 @@ class Api::V1::UsersController < ApplicationController
   def u
     room = Room.first
     user = User.first
+    m = RoomMessage.new(room_id: Room.first.id, user_id: user.id)
     #render json: {result: RoomSerializer.new(room, {user: user.id})}
-    render json: UserSerializer.new(user, {user: user.id}).as_json(include: ["posts", "rooms.room_messages"])
+    #render json: UserSerializer.new(user, {user: user.id}).as_json(include: ["posts", "rooms.room_messages"])
+    render json: m
   end
 
   def createNonce
