@@ -14,7 +14,7 @@ type PropsType = {
   onSend: (text: string) => void;
 };
 
-export const ChatRoom = ({messages, userId, onSend}: PropsType) => {
+export const ChatRoom = React.memo(({messages, userId, onSend}: PropsType) => {
   const [text, setText] = useState('');
   return (
     <GiftedChat
@@ -59,7 +59,7 @@ export const ChatRoom = ({messages, userId, onSend}: PropsType) => {
       }}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   sendContainer: {

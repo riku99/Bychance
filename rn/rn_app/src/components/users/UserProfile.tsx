@@ -80,7 +80,7 @@ export const UserProfile = ({
         )}
       </View>
       <View style={styles.introduce}>
-        {user.introduce && <Text>{user.introduce}</Text>}
+        {!!user.introduce && <Text>{user.introduce}</Text>}
       </View>
       {postProcess && (
         <View style={styles.postProcess}>

@@ -1035,7 +1035,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
-    puma (4.3.5)
+    puma (4.3.6)
       nio4r (~> 2.0)
     rack (2.2.3)
     rack-test (1.1.0)
@@ -1101,7 +1101,7 @@ DEPENDENCIES
   geokit-rails
   listen (~> 3.2)
   mysql2
-  puma (~> 4.1)
+  puma (~> 4.3.6)
   rails (~> 6.0.3, >= 6.0.3.2)
   spring
   spring-watcher-listen (~> 2.0.0)

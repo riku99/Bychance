@@ -11,7 +11,7 @@ class Api::V1::UsersController < ApplicationController
     m = RoomMessage.new(room_id: Room.first.id, user_id: user.id)
     #render json: {result: RoomSerializer.new(room, {user: user.id})}
     #render json: UserSerializer.new(user, {user: user.id}).as_json(include: ["posts", "rooms.room_messages"])
-    render json: m
+    render json: user
   end
 
   def createNonce
@@ -38,7 +38,7 @@ class Api::V1::UsersController < ApplicationController
     parsed_response = JSON.parse(response.body)
 
     unless nonce = Nonce.find_by(nonce: parsed_response['nonce'])
-      render json: { loginError: true }, status: 404
+      render json: { loginError: true }, status: 401
       return
     end
 
@@ -48,8 +48,9 @@ class Api::V1::UsersController < ApplicationController
       uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
       token = User.new_token
       token_hash = token.crypt(Rails.application.credentials.salt[:salt_key])
-      user_lat = user_params[:lat]
-      user_lng = user_params[:lng]
+      crypt = User.create_geolocation_crypt
+      user_lat =  crypt.encrypt_and_sign(user_params[:lat])
+      user_lng = crypt.encrypt_and_sign(user_params[:lng])
       if user = User.find_by(uid: uid_hash)
         user.update_attribute(:token, token_hash)
         data = UserSerializer.new(user).as_json.merge(token: token)
@@ -72,12 +73,12 @@ class Api::V1::UsersController < ApplicationController
       end
       nonce.destroy
     else
-      render json: { loginError: true }, status: 404
+      render json: { loginError: true }, status: 401
       nonce.destroy
     end
 
     if parsed_response['error']
-      render json: { loginError: true }, status: 404
+      render json: { loginError: true }, status: 401
       nonce.destroy
       return
     end
@@ -87,7 +88,7 @@ class Api::V1::UsersController < ApplicationController
     if @user
       render json: UserSerializer.new(@user, {user: @user.id}).as_json(include: ["posts", "rooms.messages"])
     else
-      render json: { loginError: true }, status: 404
+      render json: { loginError: true }, status: 401
     end
   end
 
@@ -110,16 +111,17 @@ class Api::V1::UsersController < ApplicationController
         render json: { invalid: @user.errors.full_messages[0] }, status: 400
       end
     else
-      render json: { loginError: true }, status: 404
+      render json: { loginError: true }, status: 401
     end
   end
 
   def updatePosition
     if @user
-      @user.update(lat: user_params[:lat], lng: user_params[:lng])
+      crypt = User.create_geolocation_crypt
+      @user.update(lat: crypt.encrypt_and_sign(user_params[:lat]), lng: crypt.encrypt_and_sign(user_params[:lng]))
       render json: { success: true }
     else
-      render json: { loginError: true }, status: 404
+      render json: { loginError: true }, status: 401
     end
   end
 
@@ -130,7 +132,7 @@ class Api::V1::UsersController < ApplicationController
       render json: { success: true }
       return
     else
-      render json: { loginError: true }, status: 404
+      render json: { loginError: true }, status: 401
       return
     end
   end

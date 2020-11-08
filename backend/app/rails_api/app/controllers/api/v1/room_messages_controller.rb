@@ -7,10 +7,10 @@ class Api::V1::RoomMessagesController < ApplicationController
             if new_message.save
                 render json: new_message
             else
-                render json: {errorType: "invalidError", message: new_message.errors.full_messages[0]}
+                render json: {errorType: "invalidError", message: new_message.errors.full_messages[0]}, status: 400
             end
         else
-            render json: {errorType: "loginError"}
+            render json: {errorType: "loginError"}, status: 401
         end
     end
 

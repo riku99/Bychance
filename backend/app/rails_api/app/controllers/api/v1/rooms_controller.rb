@@ -10,7 +10,7 @@ class Api::V1::RoomsController < ApplicationController
                 render json: {presence: false, id: new_room.id}
             end
         else
-            render json: { loginError: true }, status: 404
+            render json: { loginError: true }, status: 401
         end
     end
 end

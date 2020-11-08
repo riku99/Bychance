@@ -9,7 +9,7 @@ class User < ApplicationRecord
   validates :introduce, length: { maximum: 100 }
   validates :message, length: { maximum: 50 }
 
-  acts_as_mappable default_units: :kms, default_formula: :sphere, distance_field_name: :distance
+  acts_as_mappable default_units: :kms, default_formula: :sphere
 
   def User.new_token
     SecureRandom.urlsafe_base64
@@ -19,7 +19,13 @@ class User < ApplicationRecord
     arg.crypt(Rails.application.credentials.salt[:salt_key])
   end
 
-  def sort_by_distance(lat, lng)
+  def get_distance(lat, lng)
     self.distance = distance_from([lat, lng])
+  end
+
+  def User.create_geolocation_crypt
+    key_len = ActiveSupport::MessageEncryptor.key_len
+    secret = Rails.application.key_generator.generate_key(Rails.application.credentials.salt[:geolocation_key], key_len)
+    crypt = ActiveSupport::MessageEncryptor.new(secret)
   end
 end

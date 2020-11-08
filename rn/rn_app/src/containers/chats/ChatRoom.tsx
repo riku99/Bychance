@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useMemo, useCallback} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 
@@ -9,20 +9,17 @@ import {createMessageThunk} from '../../actions/chats';
 const noImage = require('../../assets/no-Image.png');
 
 export const Container = () => {
-  const [messages, setMessages] = useState<IMessage[]>([]);
-
   const chat = useSelector((state: RootState) => {
     return state.chatReducer.currentChat!;
   }, shallowEqual);
 
-  const {id, image} = useSelector((state: RootState) => {
+  const {id} = useSelector((state: RootState) => {
     return {
       id: state.userReducer.user!.id,
-      image: state.userReducer.user!.image,
     };
   }, shallowEqual);
 
-  useEffect(() => {
+  const messages: IMessage[] = useMemo(() => {
     if (chat.messages.length) {
       const _messages = chat.messages.map((m) => {
         return {
@@ -35,21 +32,26 @@ export const Container = () => {
           },
         };
       });
-      setMessages(_messages);
+      return _messages;
+    } else {
+      return [];
     }
-  }, [chat.messages, chat.partner.id, chat.partner.image, image]);
+  }, [chat.messages, chat.partner.image]);
 
   const dispatch = useDispatch();
 
-  const onSend = (text: string) => {
-    dispatch(
-      createMessageThunk({
-        roomId: chat.id,
-        userId: id,
-        text,
-      }),
-    );
-  };
+  const onSend = useCallback(
+    (text: string) => {
+      dispatch(
+        createMessageThunk({
+          roomId: chat.id,
+          userId: id,
+          text,
+        }),
+      );
+    },
+    [chat.id, id, dispatch],
+  );
 
   return <ChatRoom messages={messages} userId={id} onSend={onSend} />;
 };

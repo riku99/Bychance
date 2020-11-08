@@ -19,28 +19,10 @@ const Root = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      if (nextAppState === 'active') {
-        const position = await getCurrentPosition();
-        dispatch(
-          updatePositionThunk({
-            lat: position ? position.coords.latitude : null,
-            lng: position ? position.coords.longitude : null,
-          }),
-        );
-      }
-    };
-
-    AppState.addEventListener('change', _handleAppStateChange);
-    return () => {
-      AppState.removeEventListener('change', _handleAppStateChange);
-    };
-  }, [dispatch]);
-
   const login = useSelector((state: RootState) => {
     return state.userReducer.login;
   });
+
   const info = useSelector((state: RootState) => {
     return state.postReducer.info;
   });
@@ -54,15 +36,35 @@ const Root = () => {
     return state.indexReducer.displayedMenu;
   });
 
-  const deleteInfo = () => {
-    dispatch(deleteInfoAction());
-  };
+  useEffect(() => {
+    if (login) {
+      const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
+        if (nextAppState === 'active') {
+          const position = await getCurrentPosition();
+          dispatch(
+            updatePositionThunk({
+              lat: position ? position.coords.latitude : null,
+              lng: position ? position.coords.longitude : null,
+            }),
+          );
+        }
+      };
+
+      AppState.addEventListener('change', _handleAppStateChange);
+      return () => {
+        AppState.removeEventListener('change', _handleAppStateChange);
+      };
+    }
+  }, [dispatch, login]);
 
   useEffect(() => {
+    const deleteInfo = () => {
+      dispatch(deleteInfoAction());
+    };
     if (info) {
       setTimeout(deleteInfo, 3000);
     }
-  });
+  }, [info, dispatch]);
 
   useEffect(() => {
     if (postInvalid || userInvalid) {
