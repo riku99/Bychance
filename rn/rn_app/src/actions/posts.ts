@@ -1,4 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {showMessage} from 'react-native-flash-message';
 
 import {sendPost, deletePost} from '../apis/posts_api';
 import {checkKeychain} from '../helpers/keychain';
@@ -19,6 +20,12 @@ export const createPostAction = createAsyncThunk(
         token: keychain.token,
       });
       if (response.type === 'success') {
+        showMessage({
+          message: '投稿しました',
+          type: 'success',
+          style: {opacity: 0.9},
+          titleStyle: {fontWeight: 'bold'},
+        });
         return response.post;
       }
       if (response.type === 'loginError') {
@@ -30,6 +37,12 @@ export const createPostAction = createAsyncThunk(
       }
 
       if (response.type === 'invalid') {
+        showMessage({
+          message: response.invalid,
+          type: 'danger',
+          style: {opacity: 0.9},
+          titleStyle: {fontWeight: 'bold'},
+        });
         return thunkAPI.rejectWithValue({invalid: response.invalid});
       }
 
@@ -60,6 +73,12 @@ export const deletePostThunk = createAsyncThunk(
       });
 
       if (response.type === 'success') {
+        showMessage({
+          message: '削除しました',
+          type: 'success',
+          style: {opacity: 0.9},
+          titleStyle: {fontWeight: 'bold'},
+        });
         return id;
       }
 
@@ -72,6 +91,12 @@ export const deletePostThunk = createAsyncThunk(
       }
 
       if (response.type === 'invalid') {
+        showMessage({
+          message: response.invalid,
+          type: 'danger',
+          style: {opacity: 0.9},
+          titleStyle: {fontWeight: 'bold'},
+        });
         return thunkAPI.rejectWithValue({invalid: response.invalid});
       }
 

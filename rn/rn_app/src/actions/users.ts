@@ -1,6 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
+import {showMessage} from 'react-native-flash-message';
 
 import {
   sendIDtoken,
@@ -164,6 +165,12 @@ export const editProfileAction = createAsyncThunk(
         token: keychain.token,
       });
       if (response.type === 'success') {
+        showMessage({
+          message: '変更しました',
+          type: 'success',
+          style: {opacity: 0.9},
+          titleStyle: {fontWeight: 'bold'},
+        });
         return response.user;
       }
       if (response.type === 'loginError') {
@@ -174,7 +181,13 @@ export const editProfileAction = createAsyncThunk(
         return thunkAPI.rejectWithValue({loginError: true});
       }
       if (response.type === 'invalid') {
-        return thunkAPI.rejectWithValue({invalid: response.invalid});
+        showMessage({
+          message: response.invalid,
+          type: 'danger',
+          style: {opacity: 0.9},
+          titleStyle: {fontWeight: 'bold'},
+        });
+        return thunkAPI.rejectWithValue({invalid: true});
       }
 
       if (response.type === 'someError') {

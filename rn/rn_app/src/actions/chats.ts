@@ -1,4 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {showMessage} from 'react-native-flash-message';
 
 import {createRoom, createMessage} from '../apis/chatApi';
 import {OtherUserType} from '../redux/others';
@@ -78,6 +79,12 @@ export const createMessageThunk = createAsyncThunk(
       }
 
       if (response.type === 'invalidError') {
+        showMessage({
+          message: '無効なメッセージです',
+          type: 'danger',
+          style: {opacity: 0.9},
+          titleStyle: {fontWeight: 'bold'},
+        });
         return thunkAPI.rejectWithValue(response);
       }
     } else {

@@ -11,8 +11,7 @@ type initialStateType = {
     date: string;
     userId: number;
   }[];
-  info?: string;
-  errors?: {invalidError?: string};
+  errors?: {};
   redirect?: boolean;
   process?: boolean;
 };
@@ -21,12 +20,6 @@ export type PostType = initialStateType['posts'][number];
 
 const initialState: initialStateType = {
   posts: [],
-};
-
-type rejectedType = {
-  invalid?: string;
-  loginError?: boolean;
-  someError?: boolean;
 };
 
 const postSlice = createSlice({
@@ -40,14 +33,6 @@ const postSlice = createSlice({
     falseRedirectAction: (state) => ({
       ...state,
       redirect: false,
-    }),
-    deleteInfoAction: (state) => ({
-      ...state,
-      info: undefined,
-    }),
-    deleteInvalidAction: (state) => ({
-      ...state,
-      errors: {invalidError: undefined},
     }),
     setProcessAction: (state) => ({
       ...state,
@@ -72,20 +57,8 @@ const postSlice = createSlice({
         },
         ...state.posts,
       ],
-      info: '投稿しました',
       process: false,
     }),
-    [createPostAction.rejected.type]: (
-      state,
-      actions: PayloadAction<rejectedType>,
-    ) => {
-      if (actions.payload.invalid) {
-        return {
-          ...state,
-          errors: {invalidError: actions.payload.invalid},
-        };
-      }
-    },
     [deletePostThunk.fulfilled.type]: (
       state,
       actions: PayloadAction<number>,
@@ -98,19 +71,7 @@ const postSlice = createSlice({
       return {
         ...state,
         posts: array,
-        info: '削除しました',
       };
-    },
-    [deletePostThunk.rejected.type]: (
-      state,
-      actions: PayloadAction<rejectedType>,
-    ) => {
-      if (actions.payload.invalid) {
-        return {
-          ...state,
-          errors: {invalidError: actions.payload.invalid},
-        };
-      }
     },
   },
 });
@@ -118,8 +79,6 @@ const postSlice = createSlice({
 export const {
   setPostsAction,
   falseRedirectAction,
-  deleteInfoAction,
-  deleteInvalidAction,
   setProcessAction,
 } = postSlice.actions;
 

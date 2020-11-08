@@ -21,7 +21,7 @@ type initialStateType = {
     lat: number | null;
     lng: number | null;
   };
-  errors?: {invalidError?: string};
+  errors?: {};
 };
 
 export type UserType = NonNullable<initialStateType['user']>;
@@ -92,20 +92,6 @@ const userSlice = createSlice({
         message: actions.payload.message,
       },
     }),
-    [editProfileAction.rejected.type]: (
-      state,
-      actions: PayloadAction<{
-        invalid?: string;
-      }>,
-    ) => {
-      if (actions.payload.invalid) {
-        return {
-          ...state,
-          errors: {invalidError: actions.payload.invalid},
-          redirect: true,
-        };
-      }
-    },
     [editUserDisplayThunk.fulfilled.type]: (
       state,
       action: PayloadAction<boolean>,
