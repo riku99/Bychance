@@ -4,7 +4,7 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {SearchOthers} from '../../components/others/SearchOthers';
 import {RootState} from '../../redux/index';
-import {OtherUserType} from '../../redux/others';
+import {OtherUserType, selectOthers} from '../../redux/others';
 import {getOthersThunk} from '../../actions/others';
 import {AppDispatch} from '../../redux/index';
 
@@ -12,8 +12,9 @@ export const Container = () => {
   const isFocused = useIsFocused();
 
   const others: OtherUserType[] = useSelector((state: RootState) => {
-    return state.othersReducer.others!;
+    return selectOthers(state);
   }, shallowEqual);
+
   const position = useSelector((state: RootState) => {
     const lat = state.userReducer.user!.lat;
     const lng = state.userReducer.user!.lng;

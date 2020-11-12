@@ -3,11 +3,17 @@ import axios from 'axios';
 import {origin} from '../constants/origin';
 import {UserType} from '../redux/user';
 import {PostType} from '../redux/post';
+import {Room} from '../redux/rooms';
+import {MessageType} from '../redux/messages';
 import {headers} from '../helpers/headers';
 import {credentials} from '../helpers/keychain';
-import {ChatType} from '../redux/chat';
 
-type AxiosResponseUser = UserType & {posts: PostType[]} & {rooms: ChatType[]};
+export type SuccessfullLoginData = {
+  user: UserType;
+  posts: PostType[];
+  rooms: Room[];
+  messages: MessageType[];
+};
 
 export const sendNonce: (
   nonce: string,
@@ -42,7 +48,7 @@ export const sendIDtoken: ({
   | {type: 'someError'; message: string}
 > = async ({token, lat, lng}) => {
   try {
-    const response = await axios.post<AxiosResponseUser & {token: string}>(
+    const response = await axios.post(
       `${origin}/firstLogin`,
       {lat, lng},
       headers(token),
@@ -70,25 +76,24 @@ export const sendAccessToken: ({
 }: credentials) => Promise<
   | {
       type: 'success';
-      user: UserType;
-      posts: PostType[];
+      data: {
+        user: UserType;
+        posts: PostType[];
+        rooms: Room[];
+        messages: MessageType[];
+      };
     }
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
 > = async ({id, token}) => {
   try {
-    const response = await axios.post<AxiosResponseUser>(
+    const response = await axios.post<SuccessfullLoginData>(
       `${origin}/subsequentLogin`,
       {id: id},
       headers(token),
     );
 
-    const {posts, ...user} = response.data;
-    return {
-      type: 'success',
-      user: user,
-      posts: posts,
-    };
+    return {type: 'success', data: response.data};
   } catch (e) {
     if (e.response !== undefined && e.response.data.loginError) {
       return {type: 'loginError'};

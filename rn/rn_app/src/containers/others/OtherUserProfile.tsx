@@ -3,14 +3,17 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
+import {unwrapResult} from '@reduxjs/toolkit';
 
 import {UserProfile} from '../../components/users/UserProfile';
 import {PostType} from '../../redux/post';
 import {SearchStackParamList} from '../../screens/Search';
 import {AppDispatch} from '../../redux';
-import {createRoomThunk} from '../../actions/chats';
+import {createRoomThunk} from '../../actions/rooms';
 import {checkKeychain} from '../../helpers/keychain';
 import {RootStackParamList} from '../../screens/Root';
+import {selectRoom} from '../../redux/rooms';
+import {alertSomeError} from '../../helpers/error';
 
 type SearchNavigationProp = StackNavigationProp<
   SearchStackParamList,
@@ -57,9 +60,22 @@ export const Container = ({route}: Props) => {
     navigationToUserEdit.push('UserEdit');
   };
 
-  const pushChatRoom = async () => {
-    await dispatch(createRoomThunk(user));
-    navigationToChatRoom.push('ChatRoom');
+  const pushChatRoom = () => {
+    dispatch(createRoomThunk(user))
+      .then(unwrapResult)
+      .then((payload) => {
+        const selectedRoom = selectRoom(payload.id);
+        if (selectedRoom) {
+          navigationToChatRoom.push('ChatRoom', {
+            id: selectedRoom.id,
+            partner: selectedRoom.partner,
+            timestamp: selectedRoom.timestamp,
+            messages: selectedRoom.messages,
+          });
+        } else {
+          alertSomeError();
+        }
+      });
   };
 
   return (

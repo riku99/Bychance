@@ -1,10 +1,13 @@
 class RoomSerializer < ActiveModel::Serializer
-    attributes :id, :partner
+    attributes :id, :partner, :messages
+    attribute :created_at, key: :timestamp
 
     def partner
         user_id = @instance_options[:user]
         user_id == object.sender.id ? OthersSerializer.new(object.recipient) : OthersSerializer.new(object.sender)
     end
 
-    has_many :room_messages, key: :messages
+    def messages
+        object.room_messages.ids
+    end
 end

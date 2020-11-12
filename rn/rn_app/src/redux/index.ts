@@ -2,9 +2,10 @@ import {configureStore, createSlice} from '@reduxjs/toolkit';
 import {combineReducers} from '@reduxjs/toolkit';
 
 import userReducer from './user';
-import postReducer from './post';
+import {postsReducer} from './post';
 import othersReducer from './others';
-import chatReducer from './chat';
+import {roomsReducer} from './rooms';
+import {messagesReducer} from './messages';
 
 type InitialStateType = {displayedMenu?: boolean};
 
@@ -37,9 +38,10 @@ const indexReducer = indexSlice.reducer;
 const rootReducer = combineReducers({
   indexReducer,
   userReducer,
-  postReducer,
+  postsReducer,
   othersReducer,
-  chatReducer,
+  roomsReducer,
+  messagesReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

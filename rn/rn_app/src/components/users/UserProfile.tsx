@@ -25,7 +25,7 @@ type Props = {
   posts: PostType[];
   navigateToPost: (post: PostType) => void;
   navigateToUserEdit?: () => void;
-  navigateToChatRoom?: () => Promise<void>;
+  navigateToChatRoom?: () => Promise<void> | void;
 };
 
 export const UserProfile = ({

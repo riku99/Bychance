@@ -11,11 +11,12 @@ import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {Container as UserEdit} from '../containers/users/UserEdit';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
+import {Room} from '../redux/rooms';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
-  ChatRoom: undefined;
+  ChatRoom: Room;
 };
 
 export type TabList = {

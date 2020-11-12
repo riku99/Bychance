@@ -18,10 +18,10 @@ export const Container = () => {
     return state.userReducer.user!;
   });
   const posts = useSelector((state: RootState) => {
-    return state.postReducer.posts;
+    return state.postsReducer.posts;
   });
   const process = useSelector((state: RootState) => {
-    return state.postReducer.process;
+    return state.postsReducer.process;
   });
 
   const [keychainId, setKeychainId] = useState<null | number>(null);

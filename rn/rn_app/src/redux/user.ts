@@ -8,6 +8,7 @@ import {
   editUserDisplayThunk,
   updatePositionThunk,
 } from '../actions/users';
+import {SuccessfullLoginData} from '../apis/users_api';
 
 type initialStateType = {
   login: boolean;
@@ -62,21 +63,12 @@ const userSlice = createSlice({
     },
     [subsequentLoginAction.fulfilled.type]: (
       state,
-      action: PayloadAction<UserType>,
+      action: PayloadAction<SuccessfullLoginData>,
     ) => {
       return {
         ...state,
         login: true,
-        user: {
-          id: action.payload.id,
-          name: action.payload.name,
-          image: action.payload.image,
-          introduce: action.payload.introduce,
-          message: action.payload.message,
-          display: action.payload.display,
-          lat: action.payload.lat,
-          lng: action.payload.lng,
-        },
+        user: action.payload.user,
       };
     },
     [editProfileAction.fulfilled.type]: (

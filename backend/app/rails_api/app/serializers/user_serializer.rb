@@ -12,9 +12,6 @@ class UserSerializer < ActiveModel::Serializer
     lng = crypt.decrypt_and_verify(object.lng)
     lng.to_f
   end
-
-  has_many :posts
-  has_many :rooms
 end
 
 class UserWithoutPostsSerializer < ActiveModel::Serializer

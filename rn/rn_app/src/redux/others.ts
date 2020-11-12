@@ -1,9 +1,10 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit';
 
 import {UserType} from './user';
 import {PostType} from './post';
 import {getOthersThunk} from '../actions/others';
 import {loginErrorThunk} from '../actions/index';
+import {RootState} from './index';
 
 export type OtherUserType = Omit<UserType, 'display' | 'lat' | 'lng'> & {
   posts: PostType[];
@@ -32,6 +33,14 @@ const othersSlice = createSlice({
       others: action.payload,
     }),
   },
+});
+
+const selectAllOthers = (state: RootState) => {
+  return state.othersReducer;
+};
+
+export const selectOthers = createSelector(selectAllOthers, (state) => {
+  return state.others!;
 });
 
 export default othersSlice.reducer;

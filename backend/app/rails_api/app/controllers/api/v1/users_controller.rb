@@ -6,12 +6,26 @@ class Api::V1::UsersController < ApplicationController
                 only: %i[subsequentLogin edit changeDisplay updatePosition]
   
   def u
-    room = Room.first
-    user = User.first
-    m = RoomMessage.new(room_id: Room.first.id, user_id: user.id)
-    #render json: {result: RoomSerializer.new(room, {user: user.id})}
-    #render json: UserSerializer.new(user, {user: user.id}).as_json(include: ["posts", "rooms.room_messages"])
-    render json: user
+   @user = User.first
+   posts_arr = []
+      rooms_arr = []
+      messages_arr = []
+      @user.posts.each do |p|
+        posts_arr << PostSerializer.new(p)
+      end
+      rooms = @user.rooms
+      rooms.each do |room|
+        rooms_arr << RoomSerializer.new(room, {user: @user.id})
+        room.room_messages.each do |message|
+          messages_arr << RoomMessageSerializer.new(message)
+        end
+      end
+      render json: {
+        user: UserSerializer.new(@user),
+        posts: posts_arr,
+        rooms: rooms_arr,
+        messages: messages_arr
+      }
   end
 
   def createNonce
@@ -86,7 +100,25 @@ class Api::V1::UsersController < ApplicationController
 
   def subsequentLogin
     if @user
-      render json: UserSerializer.new(@user, {user: @user.id}).as_json(include: ["posts", "rooms.messages"])
+      posts_arr = []
+      rooms_arr = []
+      messages_arr = []
+      @user.posts.each do |p|
+        posts_arr << PostSerializer.new(p)
+      end
+      rooms = @user.rooms
+      rooms.each do |room|
+        rooms_arr << RoomSerializer.new(room, {user: @user.id})
+        room.room_messages.each do |message|
+          messages_arr << RoomMessageSerializer.new(message)
+        end
+      end
+      render json: {
+        user: UserSerializer.new(@user),
+        posts: posts_arr,
+        rooms: rooms_arr,
+        messages: messages_arr
+      }
     else
       render json: { loginError: true }, status: 401
     end

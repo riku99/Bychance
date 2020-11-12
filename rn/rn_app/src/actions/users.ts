@@ -15,7 +15,6 @@ import {
 import {checkKeychain, credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {setPostsAction} from '../redux/post';
 import {loginErrorThunk} from './index';
 import {getCurrentPosition} from '../helpers/gelocation';
 
@@ -45,7 +44,7 @@ export const firstLoginThunk = createAsyncThunk(
           String(response.user.id),
           response.token,
         );
-        thunkAPI.dispatch(setPostsAction(response.posts));
+
         return response.user;
       }
 
@@ -80,8 +79,7 @@ export const subsequentLoginAction = createAsyncThunk(
     const response = await sendAccessToken({id, token});
 
     if (response.type === 'success') {
-      thunkAPI.dispatch(setPostsAction(response.posts));
-      return response.user;
+      return response.data;
     }
     if (response.type === 'loginError') {
       const callback = () => {
