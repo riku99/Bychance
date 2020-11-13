@@ -29,20 +29,24 @@ export const Container = ({route}: Props) => {
   });
 
   const messages: IMessage[] = useMemo(() => {
-    const _messages = selectedMessages.map((m) => {
-      return {
-        _id: m.id,
-        text: m.text,
-        createdAt: new Date(m.timestamp),
-        user: {
-          _id: m.userId,
-          avatar: route.params.partner.image
-            ? route.params.partner.image
-            : noImage,
-        },
-      };
-    });
-    return _messages;
+    if (selectedMessages.length) {
+      const _messages = selectedMessages.map((m) => {
+        return {
+          _id: m.id,
+          text: m.text,
+          createdAt: new Date(m.timestamp),
+          user: {
+            _id: m.userId,
+            avatar: route.params.partner.image
+              ? route.params.partner.image
+              : noImage,
+          },
+        };
+      });
+      return _messages;
+    } else {
+      return [];
+    }
   }, [route.params.partner.image, selectedMessages]);
 
   const dispatch = useDispatch();

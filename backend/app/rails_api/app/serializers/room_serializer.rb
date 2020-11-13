@@ -1,6 +1,6 @@
 class RoomSerializer < ActiveModel::Serializer
     attributes :id, :partner, :messages
-    attribute :created_at, key: :timestamp
+    attribute :updated_at, key: :timestamp
 
     def partner
         user_id = @instance_options[:user]

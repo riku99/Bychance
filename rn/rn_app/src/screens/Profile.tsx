@@ -27,7 +27,6 @@ export const ProfileStackScreen = () => {
         options={{
           headerTitle: 'マイページ',
           animationEnabled: false,
-          //headerBackTitleVisible: false,
           headerLeft: () => null,
         }}
       />

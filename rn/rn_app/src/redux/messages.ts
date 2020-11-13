@@ -8,6 +8,7 @@ import {createMessageThunk} from '../actions/messages';
 import {subsequentLoginAction} from '../actions/users';
 import {SuccessfullLoginData} from '../apis/users_api';
 import {RootState} from './index';
+import {Room} from './rooms';
 
 export type MessageType = {
   id: number;
@@ -52,6 +53,22 @@ export const selectMessages = (state: RootState, messageIds: number[]) => {
     message && _ms.push(message);
   }
   return _ms;
+};
+
+export const selectLatestMessageEntities = (
+  state: RootState,
+  rooms: Room[],
+) => {
+  const _ms = messagesSelectors.selectEntities(state.messagesReducer);
+  let latestMessageEntities: {[key: number]: MessageType} = {};
+  for (let room of rooms) {
+    const latestMessage = room.messages[0];
+    const message = _ms[latestMessage];
+    if (message) {
+      latestMessageEntities[latestMessage] = message;
+    }
+  }
+  return latestMessageEntities;
 };
 
 export const messagesReducer = messagesSlice.reducer;

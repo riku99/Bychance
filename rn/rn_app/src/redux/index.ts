@@ -1,7 +1,7 @@
 import {configureStore, createSlice} from '@reduxjs/toolkit';
 import {combineReducers} from '@reduxjs/toolkit';
 
-import userReducer from './user';
+import {userReducer} from './user';
 import {postsReducer} from './post';
 import othersReducer from './others';
 import {roomsReducer} from './rooms';

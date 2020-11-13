@@ -66,6 +66,7 @@ export const RoomsSlice = createSlice({
           id: action.payload.room,
           changes: {
             messages: [action.payload.message.id, ...relatedRoom.messages],
+            timestamp: action.payload.message.timestamp,
           },
         });
       }
@@ -77,6 +78,10 @@ const roomSelectors = roomsAdapter.getSelectors();
 
 export const selectRoom = (n: number) => {
   return roomSelectors.selectById(store.getState().roomsReducer, n);
+};
+
+export const selectAllRooms = (state: RootState) => {
+  return roomSelectors.selectAll(state.roomsReducer);
 };
 
 export const selectMessageIds = (state: RootState, roomId: number) => {

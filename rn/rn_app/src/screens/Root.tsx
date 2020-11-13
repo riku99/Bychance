@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
+import {ChatListStackScreen} from './ChatList';
 import {Container as UserEdit} from '../containers/users/UserEdit';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Room} from '../redux/rooms';
@@ -22,7 +23,7 @@ export type RootStackParamList = {
 export type TabList = {
   Profile: undefined;
   CreatePost: undefined;
-  Chat: undefined;
+  ChatList: undefined;
   Search: undefined;
 };
 
@@ -44,8 +45,8 @@ const Tabs = () => {
         }}
       />
       <RootTab.Screen
-        name="Chat"
-        component={PostStackScreen}
+        name="ChatList"
+        component={ChatListStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <Icon name="comment-o" size={24} color={color} />

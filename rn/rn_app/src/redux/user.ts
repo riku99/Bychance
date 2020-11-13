@@ -103,4 +103,4 @@ const userSlice = createSlice({
 
 export const {deleteInvalidAction} = userSlice.actions;
 
-export default userSlice.reducer;
+export const userReducer = userSlice.reducer;
