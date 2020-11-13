@@ -1,9 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-//import {loginErrorThunk} from '../actions/index';
 import {createPostAction, deletePostThunk} from '../actions/posts';
-//import {subsequentLoginAction} from '../actions/users';
-import {SuccessfullLoginData} from '../apis/users_api';
+import {SuccessfullLoginData} from '../apis/usersApi';
+import {firstLoginThunk} from '../actions/users';
 
 type initialStateType = {
   posts: {
@@ -40,6 +39,15 @@ const postSlice = createSlice({
   extraReducers: {
     // registerエラーが出た時これの行消してみる
     //[loginErrorThunk.fulfilled.type]: () => initialState,
+    [firstLoginThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<SuccessfullLoginData>,
+    ) => {
+      return {
+        ...state,
+        posts: action.payload.posts,
+      };
+    },
     // ExceptionsManager.js:179 Invariant Violation: Module AppRegistry is not a registered callable moduleが解決できないので文字列で直接指定
     'users/subsequentLogin/fulfilled': (
       state,

@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   require 'aws-sdk'
 
   before_action :checkAccessToken,
-                only: %i[subsequentLogin edit changeDisplay updatePosition]
+                only: %i[subsequent_login edit changeDisplay updatePosition]
   
   def u
    @user = User.first
@@ -19,6 +19,9 @@ class Api::V1::UsersController < ApplicationController
         room.room_messages.each do |message|
           messages_arr << RoomMessageSerializer.new(message)
         end
+      end
+      posts_arr = @user.posts.map do |p|
+        PostSerializer.new(p)
       end
       render json: {
         user: UserSerializer.new(@user),
@@ -42,7 +45,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def firstLogin
+  def first_login
     token = getToken(request.headers)
     body = {
       id_token: token, client_id: Rails.application.credentials.line[:client_id]
@@ -57,19 +60,33 @@ class Api::V1::UsersController < ApplicationController
     end
 
     if uid = parsed_response['sub']
-      user_name = parsed_response['name']
-      user_image = parsed_response['picture']
-      uid_hash = uid.crypt(Rails.application.credentials.salt[:salt_key])
+      uid_hash = User.digest(uid)
       token = User.new_token
-      token_hash = token.crypt(Rails.application.credentials.salt[:salt_key])
-      crypt = User.create_geolocation_crypt
-      user_lat =  crypt.encrypt_and_sign(user_params[:lat])
-      user_lng = crypt.encrypt_and_sign(user_params[:lng])
+      token_hash = User.digest(token)
       if user = User.find_by(uid: uid_hash)
         user.update_attribute(:token, token_hash)
-        data = UserSerializer.new(user).as_json.merge(token: token)
-        render json: data
+        posts = user.posts.map { |p| PostSerializer.new(p) }
+        rooms = []
+        messages = []
+        user.rooms.each do |r|
+          rooms << RoomSerializer.new(r, {user: user.id})
+          r.room_messages.each do |m|
+            messages << RoomMessageSerializer.new(m)
+          end
+        end
+        render json: {
+          user: UserSerializer.new(user),
+          posts: posts,
+          rooms: rooms,
+          messages: messages,
+          token: token
+        }
       else
+        user_name = parsed_response['name']
+        user_image = parsed_response['picture']
+        decryptable_crypt = User.create_geolocation_crypt
+        user_lat =  decryptable_crypt.encrypt_and_sign(user_params[:lat])
+        user_lng = decryptable_crypt.encrypt_and_sign(user_params[:lng])
         user =
           User.create(
             name: user_name,
@@ -82,8 +99,13 @@ class Api::V1::UsersController < ApplicationController
             lat: user_lat,
             lng: user_lng
           )
-        data = UserSerializer.new(user).as_json.merge(token: token)
-        render json: data
+        render json: {
+          user: UserSerializer.new(user),
+          posts: [],
+          rooms: [],
+          messages: [],
+          token: token
+        }
       end
       nonce.destroy
     else
@@ -98,26 +120,22 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def subsequentLogin
+  def subsequent_login
     if @user
-      posts_arr = []
-      rooms_arr = []
-      messages_arr = []
-      @user.posts.each do |p|
-        posts_arr << PostSerializer.new(p)
-      end
-      rooms = @user.rooms
-      rooms.each do |room|
-        rooms_arr << RoomSerializer.new(room, {user: @user.id})
-        room.room_messages.each do |message|
-          messages_arr << RoomMessageSerializer.new(message)
+      posts = @user.posts.map { |p| PostSerializer.new(p) }
+        rooms = []
+        messages = []
+        @user.rooms.each do |r|
+          rooms << RoomSerializer.new(r, {user: @user.id})
+          r.room_messages.each do |m|
+            messages << RoomMessageSerializer.new(m)
+          end
         end
-      end
       render json: {
         user: UserSerializer.new(@user),
-        posts: posts_arr,
-        rooms: rooms_arr,
-        messages: messages_arr
+        posts: posts,
+        rooms: rooms,
+        messages: messages
       }
     else
       render json: { loginError: true }, status: 401

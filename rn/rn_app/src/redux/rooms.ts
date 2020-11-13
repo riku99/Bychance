@@ -7,9 +7,10 @@ import {
 import {createRoomThunk} from '../actions/rooms';
 import {OtherUserType} from './others';
 import {RootState, store} from './index';
-import {subsequentLoginAction} from '../actions/users';
+import {subsequentLoginAction, firstLoginThunk} from '../actions/users';
 import {createMessageThunk} from '../actions/messages';
 import {MessageType} from '../redux/messages';
+import {SuccessfullLoginData} from '../apis/usersApi';
 
 export type Room = {
   id: number;
@@ -29,9 +30,15 @@ export const RoomsSlice = createSlice({
   initialState: roomsAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
+    [firstLoginThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<SuccessfullLoginData>,
+    ) => {
+      roomsAdapter.addMany(state, action.payload.rooms);
+    },
     [subsequentLoginAction.fulfilled.type]: (
       state,
-      action: PayloadAction<{rooms: Room[]}>,
+      action: PayloadAction<SuccessfullLoginData>,
     ) => {
       roomsAdapter.addMany(state, action.payload.rooms);
     },

@@ -40,26 +40,21 @@ export const sendIDtoken: ({
 }) => Promise<
   | {
       type: 'success';
-      user: UserType;
-      posts: PostType[];
-      token: string;
+      data: SuccessfullLoginData & {token: string};
     }
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
 > = async ({token, lat, lng}) => {
   try {
-    const response = await axios.post(
-      `${origin}/firstLogin`,
+    const response = await axios.post<SuccessfullLoginData & {token: string}>(
+      `${origin}/first_login`,
       {lat, lng},
       headers(token),
     );
 
-    const {posts, ...user} = response.data;
     return {
       type: 'success',
-      user: user,
-      posts: posts,
-      token: response.data.token,
+      data: response.data,
     };
   } catch (e) {
     if (e.response && e.response.data.loginError) {
@@ -88,7 +83,7 @@ export const sendAccessToken: ({
 > = async ({id, token}) => {
   try {
     const response = await axios.post<SuccessfullLoginData>(
-      `${origin}/subsequentLogin`,
+      `${origin}/subsequent_login`,
       {id: id},
       headers(token),
     );

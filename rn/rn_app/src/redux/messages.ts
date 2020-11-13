@@ -5,8 +5,8 @@ import {
 } from '@reduxjs/toolkit';
 
 import {createMessageThunk} from '../actions/messages';
-import {subsequentLoginAction} from '../actions/users';
-import {SuccessfullLoginData} from '../apis/users_api';
+import {subsequentLoginAction, firstLoginThunk} from '../actions/users';
+import {SuccessfullLoginData} from '../apis/usersApi';
 import {RootState} from './index';
 import {Room} from './rooms';
 
@@ -29,6 +29,12 @@ const messagesSlice = createSlice({
   initialState: messagesAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
+    [firstLoginThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<SuccessfullLoginData>,
+    ) => {
+      messagesAdapter.addMany(state, action.payload.messages);
+    },
     [subsequentLoginAction.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,

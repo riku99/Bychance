@@ -10,8 +10,7 @@ import {
   sendEditedProfile,
   sendRequestToChangeDisplay,
   sendPosition,
-} from '../apis/users_api';
-
+} from '../apis/usersApi';
 import {checkKeychain, credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
@@ -41,11 +40,10 @@ export const firstLoginThunk = createAsyncThunk(
       if (response.type === 'success') {
         await Keychain.resetGenericPassword();
         await Keychain.setGenericPassword(
-          String(response.user.id),
-          response.token,
+          String(response.data.user.id),
+          response.data.token,
         );
-
-        return response.user;
+        return response.data;
       }
 
       if (response.type === 'loginError') {

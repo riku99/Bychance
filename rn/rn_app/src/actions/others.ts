@@ -13,6 +13,7 @@ export const getOthersThunk = createAsyncThunk(
     thunkAPI,
   ) => {
     const keychain = await checkKeychain();
+
     if (keychain) {
       const response = await getOthers({...keychain, lat, lng, range});
 
