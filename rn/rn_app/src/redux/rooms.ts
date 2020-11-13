@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import {createRoomThunk} from '../actions/rooms';
-import {OtherUserType} from './others';
+import {anotherUser} from './others';
 import {RootState, store} from './index';
 import {subsequentLoginAction, firstLoginThunk} from '../actions/users';
 import {createMessageThunk} from '../actions/messages';
@@ -14,7 +14,7 @@ import {SuccessfullLoginData} from '../apis/usersApi';
 
 export type Room = {
   id: number;
-  partner: OtherUserType; // ここもOthersを正規化した後Id参照にする。?
+  partner: anotherUser; // ここもOthersを正規化した後Id参照にする。?
   timestamp: string;
   messages: number[];
 };
@@ -47,7 +47,7 @@ export const RoomsSlice = createSlice({
       action: PayloadAction<
         | {
             id: number;
-            recipient: OtherUserType;
+            recipient: anotherUser;
             presence: false;
             timestamp: string;
           }

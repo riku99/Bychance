@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   require 'aws-sdk'
 
   before_action :checkAccessToken,
-                only: %i[subsequent_login edit changeDisplay updatePosition]
+                only: %i[subsequent_login edit change_display update_position]
   
   def u
    @user = User.first
@@ -165,7 +165,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def updatePosition
+  def update_position
     if @user
       crypt = User.create_geolocation_crypt
       @user.update(lat: crypt.encrypt_and_sign(user_params[:lat]), lng: crypt.encrypt_and_sign(user_params[:lng]))
@@ -175,7 +175,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def changeDisplay
+  def change_display
     if @user
       display = params['display']
       @user.update(display: display)

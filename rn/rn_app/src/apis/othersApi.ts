@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
-import {OtherUserType} from '../redux/others';
+import {anotherUser} from '../redux/others';
 import {credentials} from '../helpers/keychain';
 
 export const getOthers: ({
@@ -16,12 +16,12 @@ export const getOthers: ({
   lng: number | null;
   range: number;
 }) => Promise<
-  | {type: 'success'; data: OtherUserType[]}
+  | {type: 'success'; data: anotherUser[]}
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
 > = async ({id, token, lat, lng, range}) => {
   try {
-    const response = await axios.get<OtherUserType[]>(`${origin}/others`, {
+    const response = await axios.get<anotherUser[]>(`${origin}/others`, {
       params: {id, lat, lng, range},
       ...headers(token),
     });

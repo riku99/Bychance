@@ -5,8 +5,8 @@ Rails.application.routes.draw do
       post '/subsequent_login', to: 'users#subsequent_login'
       post '/nonce', to: 'users#createNonce'
       patch '/user', to: 'users#edit'
-      patch '/user/position', to: 'users#updatePosition'
-      patch '/user/display', to: 'users#changeDisplay'
+      patch '/user/position', to: 'users#update_position'
+      patch '/user/display', to: 'users#change_display'
 
       post '/post', to: 'posts#create'
       delete '/post', to: 'posts#destroy'

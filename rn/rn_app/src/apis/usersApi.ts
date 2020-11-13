@@ -90,7 +90,7 @@ export const sendAccessToken: ({
 
     return {type: 'success', data: response.data};
   } catch (e) {
-    if (e.response !== undefined && e.response.data.loginError) {
+    if (e.response && e.response.data.loginError) {
       return {type: 'loginError'};
     } else {
       return {type: 'someError', message: e.message};

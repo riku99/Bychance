@@ -6,13 +6,12 @@ import {getOthersThunk} from '../actions/others';
 import {loginErrorThunk} from '../actions/index';
 import {RootState} from './index';
 
-export type OtherUserType = Omit<UserType, 'display' | 'lat' | 'lng'> & {
+export type anotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
   posts: PostType[];
 };
 
 type initialStateType = {
-  others?: OtherUserType[];
-  otherUser?: OtherUserType;
+  others?: anotherUser[];
 };
 
 const initialState: initialStateType = {
@@ -27,7 +26,7 @@ const othersSlice = createSlice({
     [loginErrorThunk.fulfilled.type]: () => initialState,
     [getOthersThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<OtherUserType[]>,
+      action: PayloadAction<anotherUser[]>,
     ) => ({
       ...state,
       others: action.payload,

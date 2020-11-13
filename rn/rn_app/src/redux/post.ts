@@ -12,7 +12,6 @@ type initialStateType = {
     date: string;
     userId: number;
   }[];
-  errors?: {};
   redirect?: boolean;
   process?: boolean;
 };

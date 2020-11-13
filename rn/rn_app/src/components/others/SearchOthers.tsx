@@ -13,29 +13,30 @@ import {
   Animated,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Text,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem, Avatar} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
-import {OtherUserType} from '../../redux/others';
-import {SearchStackParamList} from '../../screens/Search';
+import {anotherUser} from '../../redux/others';
 
 const noImage = require('../../assets/no-Image.png');
 
-type PropsType = {
-  others: OtherUserType[];
+type Props = {
+  others: anotherUser[];
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
+  pushProfile: (user: anotherUser) => void;
 };
 
-type NavigationProp = StackNavigationProp<SearchStackParamList, 'SearchOthers'>;
-
-export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
-  const navigation = useNavigation<NavigationProp>();
+export const SearchOthers = ({
+  others,
+  refRange,
+  setRange,
+  pushProfile,
+}: Props) => {
   const [displayedUsers, setDisplayedUsers] = useState(others);
   const [keyword, setKeyword] = useState('');
 
@@ -106,74 +107,86 @@ export const SearchOthers = ({others, refRange, setRange}: PropsType) => {
                 alignSelf: 'center',
                 marginTop: 10,
               },
-              inputIOS: {color: '#2c3e50', fontSize: 15, fontWeight: 'bold'},
+              inputIOS: {
+                color: '#2c3e50',
+                fontSize: 15,
+                fontWeight: 'bold',
+              },
             }}
             doneText="完了"
           />
         </View>
       </Animated.View>
-      <ScrollView
-        style={styles.fill}
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {
-            useNativeDriver: false,
-            listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-              if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
-                scrollY.setValue(SEARCH_TAB_HEIGHT);
+      {displayedUsers.length ? (
+        <>
+          <ScrollView
+            style={styles.fill}
+            scrollEventThrottle={16}
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollY}}}],
+              {
+                useNativeDriver: false,
+                listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+                  if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
+                    scrollY.setValue(SEARCH_TAB_HEIGHT);
+                  }
+                },
+              },
+            )}
+            onScrollEndDrag={(e) => {
+              if (e.nativeEvent.contentOffset.y > offsetY.current) {
+                offsetY.current = e.nativeEvent.contentOffset.y;
+              } else if (e.nativeEvent.contentOffset.y < offsetY.current) {
+                Animated.timing(scrollY, {
+                  toValue: 0,
+                  duration: caluculateDuration(
+                    offsetY.current > 80 ? 80 : offsetY.current,
+                  ),
+                  useNativeDriver: false,
+                }).start();
+                offsetY.current = e.nativeEvent.contentOffset.y;
               }
-            },
-          },
-        )}
-        onScrollEndDrag={(e) => {
-          if (e.nativeEvent.contentOffset.y > offsetY.current) {
-            offsetY.current = e.nativeEvent.contentOffset.y;
-          } else if (e.nativeEvent.contentOffset.y < offsetY.current) {
-            Animated.timing(scrollY, {
-              toValue: 0,
-              duration: caluculateDuration(
-                offsetY.current > 80 ? 80 : offsetY.current,
-              ),
-              useNativeDriver: false,
-            }).start();
-            offsetY.current = e.nativeEvent.contentOffset.y;
-          }
-        }}>
-        <View
-          style={{
-            ...styles.scrollViewContent,
-          }}>
-          {displayedUsers.length
-            ? displayedUsers.map((u, i) => (
-                <ListItem
-                  key={i}
-                  onPress={() => {
-                    navigation.push('OtherProfile', {
-                      id: u.id,
-                      name: u.name,
-                      image: u.image,
-                      introduce: u.introduce,
-                      message: u.message,
-                      posts: u.posts,
-                    });
-                  }}>
-                  <Avatar
-                    rounded
-                    size="medium"
-                    source={u.image ? {uri: u.image} : noImage}
-                  />
-                  <ListItem.Content>
-                    <ListItem.Title>{u.name}</ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {u.message}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              ))
-            : null}
+            }}>
+            <View
+              style={{
+                ...styles.scrollViewContent,
+              }}>
+              {displayedUsers.length
+                ? displayedUsers.map((u, i) => (
+                    <ListItem
+                      key={i}
+                      onPress={() => {
+                        pushProfile({
+                          id: u.id,
+                          name: u.name,
+                          image: u.image,
+                          introduce: u.introduce,
+                          message: u.message,
+                          posts: u.posts,
+                        });
+                      }}>
+                      <Avatar
+                        rounded
+                        size="medium"
+                        source={u.image ? {uri: u.image} : noImage}
+                      />
+                      <ListItem.Content>
+                        <ListItem.Title>{u.name}</ListItem.Title>
+                        <ListItem.Subtitle style={styles.subtitle}>
+                          {u.message}
+                        </ListItem.Subtitle>
+                      </ListItem.Content>
+                    </ListItem>
+                  ))
+                : null}
+            </View>
+          </ScrollView>
+        </>
+      ) : (
+        <View style={styles.noUser}>
+          <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
         </View>
-      </ScrollView>
+      )}
     </View>
   );
 };
@@ -219,5 +232,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#999999',
     marginTop: 3,
+  },
+  noUser: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noUserText: {
+    fontSize: 18,
+    color: '#999999',
   },
 });
