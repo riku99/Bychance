@@ -1,48 +1,30 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, ActivityIndicator} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
-import ImagePicker from 'react-native-image-picker';
 import {TextInput} from 'react-native-gesture-handler';
-import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
 type Props = {
-  createPost: ({text, image}: {text: string; image: string}) => void;
-  setProcess: () => void;
+  selectedImage: string | undefined;
+  createPost: ({text, image}: {text: string; image: string}) => Promise<void>;
 };
 
-export const Post = ({createPost, setProcess}: Props) => {
-  const isFocused = useIsFocused();
-  const [selectedImage, setSelectedImage] = useState<undefined | string>(
-    undefined,
-  );
+export const CreatePost = ({createPost, selectedImage}: Props) => {
   const [text, setText] = useState('');
-  const [page, setPage] = useState(false);
-  const navigation = useNavigation();
+  const [postProcess, setPostProcess] = useState(false);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
-      ImagePicker.launchImageLibrary({quality: 0.5}, (response) => {
-        if (response.didCancel) {
-          navigation.goBack();
-        }
-        let img;
-        if ((img = response.data)) {
-          setPage(true);
-          const source = 'data:image/jpeg;base64,' + img;
-          setSelectedImage(source);
-        }
-      });
-    } else {
+    if (!isFocused) {
       setText('');
-      setPage(false);
-      setSelectedImage(undefined);
+      setPostProcess(false);
     }
-  }, [isFocused, navigation]);
+  }, [isFocused]);
 
   return (
     <>
-      {page ? (
+      {selectedImage ? (
         <View style={styles.container}>
           {selectedImage ? (
             <Image source={{uri: selectedImage}} style={styles.image} />
@@ -60,16 +42,19 @@ export const Post = ({createPost, setProcess}: Props) => {
             }}>
             {text}
           </TextInput>
-          <Button
-            title={'投稿する'}
-            buttonStyle={styles.postButton}
-            titleStyle={styles.postButtonTitle}
-            onPress={() => {
-              setProcess();
-              navigation.goBack();
-              createPost({text: text, image: selectedImage!});
-            }}
-          />
+          {postProcess ? (
+            <ActivityIndicator style={styles.postButton} />
+          ) : (
+            <Button
+              title={'投稿する'}
+              buttonStyle={styles.postButton}
+              titleStyle={styles.postButtonTitle}
+              onPress={() => {
+                setPostProcess(true);
+                createPost({text: text, image: selectedImage!});
+              }}
+            />
+          )}
         </View>
       ) : (
         <View style={{...styles.container, justifyContent: 'center'}}>

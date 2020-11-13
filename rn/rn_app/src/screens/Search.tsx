@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as SearchOthers} from '../containers/others/SearchOthers';
-import {Container as OtherUser} from '../containers/others/OtherUserProfile';
+import {Container as OtherUser} from '../containers/others/AnotherUserProfile';
 import {Container as OtherPost} from '../containers/others/OtherPost';
 import {MenuBar} from '../components/utils/MenuBar';
 import {PostType} from '../redux/post';

@@ -12,8 +12,6 @@ type initialStateType = {
     date: string;
     userId: number;
   }[];
-  redirect?: boolean;
-  process?: boolean;
 };
 
 export type PostType = initialStateType['posts'][number];
@@ -25,16 +23,7 @@ const initialState: initialStateType = {
 const postSlice = createSlice({
   name: 'post',
   initialState: initialState,
-  reducers: {
-    falseRedirectAction: (state) => ({
-      ...state,
-      redirect: false,
-    }),
-    setProcessAction: (state) => ({
-      ...state,
-      process: true,
-    }),
-  },
+  reducers: {},
   extraReducers: {
     // registerエラーが出た時これの行消してみる
     //[loginErrorThunk.fulfilled.type]: () => initialState,
@@ -90,7 +79,5 @@ const postSlice = createSlice({
     },
   },
 });
-
-export const {falseRedirectAction, setProcessAction} = postSlice.actions;
 
 export const postsReducer = postSlice.reducer;

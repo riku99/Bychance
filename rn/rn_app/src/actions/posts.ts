@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {showMessage} from 'react-native-flash-message';
 
-import {sendPost, deletePost} from '../apis/posts_api';
+import {sendPost, deletePost} from '../apis/postsApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';

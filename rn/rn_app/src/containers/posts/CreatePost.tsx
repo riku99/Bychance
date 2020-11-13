@@ -1,17 +1,42 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import ImagePicker from 'react-native-image-picker';
 
-import {Post} from '../../components/posts/CreatePost';
+import {CreatePost} from '../../components/posts/CreatePost';
 import {createPostAction} from '../../actions/posts';
-import {setProcessAction} from '../../redux/post';
+import {AppDispatch} from '../../redux';
 
 export const Container = () => {
-  const dispatch = useDispatch();
-  const createPost = (data: {text: string; image: string}) => {
-    dispatch(createPostAction(data));
+  const isFocused = useIsFocused();
+  const [selectedImage, setSelectedImage] = useState<undefined | string>(
+    undefined,
+  );
+
+  const navigationToGoBack = useNavigation();
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    if (isFocused) {
+      ImagePicker.launchImageLibrary({quality: 0.5}, (response) => {
+        if (response.didCancel) {
+          navigationToGoBack.goBack();
+        }
+        let img;
+        if ((img = response.data)) {
+          const source = 'data:image/jpeg;base64,' + img;
+          setSelectedImage(source);
+        }
+      });
+    } else {
+      setSelectedImage(undefined);
+    }
+  }, [isFocused, navigationToGoBack]);
+  const createPost = async (data: {text: string; image: string}) => {
+    await dispatch(createPostAction(data));
+    navigationToGoBack.goBack();
   };
-  const setProcess = () => {
-    dispatch(setProcessAction());
-  };
-  return <Post createPost={createPost} setProcess={setProcess} />;
+
+  return <CreatePost selectedImage={selectedImage} createPost={createPost} />;
 };
