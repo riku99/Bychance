@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
+import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {Posts} from '../posts/Posts';
 import {ScrollView} from 'react-native-gesture-handler';
-import {PostType} from '../../redux/post';
+import {Post} from '../../redux/post';
 
 type Props = {
   user: {
@@ -21,9 +15,8 @@ type Props = {
     introduce: string | null;
   };
   keychainId: number | null;
-  postProcess?: boolean;
-  posts: PostType[];
-  navigateToPost: (post: PostType) => void;
+  posts: Post[];
+  navigateToPost: (post: Post) => void;
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
 };
@@ -32,7 +25,6 @@ export const UserProfile = ({
   user,
   posts,
   keychainId,
-  postProcess,
   navigateToPost,
   navigateToUserEdit,
   navigateToChatRoom,
@@ -82,12 +74,6 @@ export const UserProfile = ({
       <View style={styles.introduce}>
         {!!user.introduce && <Text>{user.introduce}</Text>}
       </View>
-      {postProcess && (
-        <View style={styles.postProcess}>
-          <ActivityIndicator size="small" />
-          <Text style={{marginLeft: 10, color: '#999999'}}>投稿中です</Text>
-        </View>
-      )}
       <Posts posts={posts} navigateToShowPost={navigateToPost} />
     </ScrollView>
   );

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
-import {PostType} from '../redux/post';
+import {Post} from '../redux/post';
 import {credentials} from '../helpers/keychain';
 
 export const sendPost: ({
@@ -14,19 +14,19 @@ export const sendPost: ({
   text: string;
   image: string;
 } & credentials) => Promise<
-  | {type: 'success'; post: PostType}
+  | {type: 'success'; data: Post}
   | {type: 'invalid'; invalid: string}
   | {type: 'loginError'}
   | {type: 'someError'; message: string}
 > = async ({text, image, id, token}) => {
   try {
-    const response = await axios.post<PostType>(
+    const response = await axios.post<Post>(
       `${origin}/post`,
       {text, image, id},
       headers(token),
     );
 
-    return {type: 'success', post: response.data};
+    return {type: 'success', data: response.data};
   } catch (e) {
     if (e.response && e.response.data.loginError) {
       return {type: 'loginError'};

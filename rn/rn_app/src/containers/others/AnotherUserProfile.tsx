@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 import {unwrapResult} from '@reduxjs/toolkit';
 
 import {UserProfile} from '../../components/users/UserProfile';
-import {PostType} from '../../redux/post';
+import {Post} from '../../redux/post';
 import {SearchStackParamList} from '../../screens/Search';
 import {AppDispatch} from '../../redux';
 import {createRoomThunk} from '../../actions/rooms';
@@ -46,7 +46,7 @@ export const Container = ({route}: Props) => {
   const navigationToUserEdit = useNavigation<RootNavigationProp>();
   const navigationToChatRoom = useNavigation<RootNavigationProp>();
 
-  const pushPost = (post: PostType) => {
+  const pushPost = (post: Post) => {
     navigationToPost.push('OtherPost', {
       id: post.id,
       text: post.text,

@@ -26,7 +26,7 @@ export const createPostAction = createAsyncThunk(
           style: {opacity: 0.9},
           titleStyle: {fontWeight: 'bold'},
         });
-        return response.post;
+        return response.data;
       }
       if (response.type === 'loginError') {
         const callback = () => {

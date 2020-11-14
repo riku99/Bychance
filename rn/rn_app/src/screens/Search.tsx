@@ -5,13 +5,13 @@ import {Container as SearchOthers} from '../containers/others/SearchOthers';
 import {Container as OtherUser} from '../containers/others/AnotherUserProfile';
 import {Container as OtherPost} from '../containers/others/OtherPost';
 import {MenuBar} from '../components/utils/MenuBar';
-import {PostType} from '../redux/post';
+import {Post} from '../redux/post';
 import {anotherUser} from '../redux/others';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
   OtherProfile: anotherUser;
-  OtherPost: PostType;
+  OtherPost: Post;
 };
 
 const Stack = createStackNavigator<SearchStackParamList>();

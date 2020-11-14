@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Container as UserProfile} from '../containers/users/UserProfile';
 import {MenuBar} from '../components/utils/MenuBar';
 import {Container as Post} from '../containers/posts/Post';
-import {PostType} from '../redux/post';
+import {Post as PostType} from '../redux/post';
 
 export type ProfileStackParamList = {
   UserProfile: undefined;

@@ -4,7 +4,7 @@ import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 
-import {PostType} from '../../redux/post';
+import {Post as PostType} from '../../redux/post';
 
 type PropsType = {
   post: PostType;

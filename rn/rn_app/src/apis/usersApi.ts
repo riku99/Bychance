@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import {origin} from '../constants/origin';
 import {UserType} from '../redux/user';
-import {PostType} from '../redux/post';
+import {Post} from '../redux/post';
 import {Room} from '../redux/rooms';
 import {MessageType} from '../redux/messages';
 import {headers} from '../helpers/headers';
@@ -10,7 +10,7 @@ import {credentials} from '../helpers/keychain';
 
 export type SuccessfullLoginData = {
   user: UserType;
-  posts: PostType[];
+  posts: Post[];
   rooms: Room[];
   messages: MessageType[];
 };
@@ -73,7 +73,7 @@ export const sendAccessToken: ({
       type: 'success';
       data: {
         user: UserType;
-        posts: PostType[];
+        posts: Post[];
         rooms: Room[];
         messages: MessageType[];
       };

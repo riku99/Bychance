@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {PostType} from '../../redux/post';
+import {Post} from '../../redux/post';
 
-type PropsType = {posts: PostType[]} & {
-  navigateToShowPost: (post: PostType) => void;
+type PropsType = {posts: Post[]} & {
+  navigateToShowPost: (post: Post) => void;
 };
 
 export const Posts = ({posts, navigateToShowPost}: PropsType) => {

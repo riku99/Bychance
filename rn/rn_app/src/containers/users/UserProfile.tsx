@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ProfileStackParamList} from '../../screens/Profile';
 
 import {UserProfile} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
-import {PostType} from '../../redux/post';
+import {Post, selectAllPosts} from '../../redux/post';
 import {checkKeychain} from '../../helpers/keychain';
 import {RootStackParamList} from '../../screens/Root';
 
@@ -16,13 +16,10 @@ type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 export const Container = () => {
   const user = useSelector((state: RootState) => {
     return state.userReducer.user!;
-  });
+  }, shallowEqual);
   const posts = useSelector((state: RootState) => {
-    return state.postsReducer.posts;
-  });
-  const process = useSelector((state: RootState) => {
-    return state.postsReducer.process;
-  });
+    return selectAllPosts(state);
+  }, shallowEqual);
 
   const [keychainId, setKeychainId] = useState<null | number>(null);
 
@@ -39,7 +36,7 @@ export const Container = () => {
   const navigationToPost = useNavigation<ProfileNavigationProp>();
   const navigationToUserEdit = useNavigation<RootNavigationProp>();
 
-  const pushPost = (post: PostType) => {
+  const pushPost = (post: Post) => {
     navigationToPost.push('Post', post);
   };
 
@@ -57,7 +54,6 @@ export const Container = () => {
       }}
       keychainId={keychainId}
       posts={posts}
-      postProcess={process}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
     />
