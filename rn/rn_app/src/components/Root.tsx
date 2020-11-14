@@ -1,7 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
+// 型定義ファイルが存在しないまたは見つけられなかったのでignore
+// @ts-ignore
+import {createConsumer} from '@rails/actioncable';
 
 import {useLogin} from '../hooks/useLogin';
 import {RootState} from '../redux/index';
@@ -9,6 +12,8 @@ import {RootStackScreen} from '../screens/Root';
 import {Container as Menu} from '../containers/utils/Menu';
 import {updatePositionThunk} from '../actions/users';
 import {getCurrentPosition} from '../helpers/gelocation';
+
+const consumer = createConsumer('ws://localhost:80/cable');
 
 const Root = () => {
   useLogin();
@@ -22,6 +27,22 @@ const Root = () => {
   const displayedMenu = useSelector((state: RootState) => {
     return state.indexReducer.displayedMenu;
   });
+
+  useMemo(() => {
+    if (login) {
+      return consumer.subscriptions.create('MessagesChannel', {
+        connected: () => {
+          console.log('connect');
+        },
+        received: (data: any) => {
+          console.log('receive');
+          console.log(data);
+        },
+      });
+    } else {
+      consumer.disconnect();
+    }
+  }, [login]);
 
   useEffect(() => {
     if (login) {

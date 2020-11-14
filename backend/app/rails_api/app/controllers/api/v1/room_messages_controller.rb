@@ -7,6 +7,7 @@ class Api::V1::RoomMessagesController < ApplicationController
             if new_message.save
                 Room.find(params[:room_id]).update_attribute(:updated_at, new_message.created_at)
                 render json: new_message
+                MessagesChannel.broadcast_to("messages_channel", "ok")
             else
                 render json: {errorType: "invalidError", message: new_message.errors.full_messages[0]}, status: 400
             end
