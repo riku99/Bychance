@@ -27,7 +27,15 @@ const messagesAdapter = createEntityAdapter<MessageType>({
 const messagesSlice = createSlice({
   name: 'messages',
   initialState: messagesAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    recieveMessage: (
+      state,
+      action: PayloadAction<{room: Room; message: MessageType}>,
+    ) => {
+      console.log(action.type);
+      messagesAdapter.addOne(state, action.payload.message);
+    },
+  },
   extraReducers: {
     [firstLoginThunk.fulfilled.type]: (
       state,
@@ -76,5 +84,7 @@ export const selectLatestMessageEntities = (
   }
   return latestMessageEntities;
 };
+
+export const {recieveMessage} = messagesSlice.actions;
 
 export const messagesReducer = messagesSlice.reducer;

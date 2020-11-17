@@ -13,7 +13,7 @@ import {
   sampleLogin,
 } from '../actions/users';
 import {createMessageThunk} from '../actions/messages';
-import {MessageType} from '../redux/messages';
+import {MessageType, recieveMessage} from '../redux/messages';
 import {SuccessfullLoginData} from '../apis/usersApi';
 
 export type Room = {
@@ -80,6 +80,12 @@ export const RoomsSlice = createSlice({
           },
         });
       }
+    },
+    [recieveMessage.type]: (
+      state,
+      action: PayloadAction<{room: Room; message: MessageType}>,
+    ) => {
+      roomsAdapter.upsertOne(state, action.payload.room);
     },
   },
 });

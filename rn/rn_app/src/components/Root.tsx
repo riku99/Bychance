@@ -15,6 +15,7 @@ import {updatePositionThunk} from '../actions/users';
 import {getCurrentPosition} from '../helpers/gelocation';
 import {checkKeychain} from '../helpers/keychain';
 import {subsequentLoginAction} from '../actions/users';
+import {recieveMessage} from '../redux/messages';
 
 const consumer = createConsumer('ws://localhost:80/cable');
 
@@ -70,13 +71,15 @@ const Root = () => {
               style: {opacity: 0.9},
               titleStyle: {fontWeight: 'bold'},
             });
+            console.log(data);
+            dispatch(recieveMessage(data));
           },
         },
       );
     } else {
       consumer.disconnect();
     }
-  }, [login, id]);
+  }, [login, id, dispatch]);
 
   useEffect(() => {
     if (login) {

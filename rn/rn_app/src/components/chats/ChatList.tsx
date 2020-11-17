@@ -27,7 +27,7 @@ export const ChatList = ({rooms, latestMessages, pushChatRoom}: Props) => {
                 <Avatar
                   rounded
                   size="small"
-                  source={r.partner.image ? r.partner.image : noImage}
+                  source={r.partner.image ? {uri: r.partner.image} : noImage}
                 />
                 <ListItem.Content>
                   <ListItem.Title>{r.partner.name}</ListItem.Title>
