@@ -7,6 +7,7 @@ import {
   editProfileAction,
   editUserDisplayThunk,
   updatePositionThunk,
+  sampleLogin,
 } from '../actions/users';
 import {SuccessfullLoginData} from '../apis/usersApi';
 
@@ -41,6 +42,13 @@ const userSlice = createSlice({
     }),
   },
   extraReducers: {
+    [sampleLogin.fulfilled.type]: (state, action) => {
+      return {
+        ...state,
+        login: true,
+        user: action.payload.user,
+      };
+    },
     [loginErrorThunk.fulfilled.type]: () => initialState,
     [firstLoginThunk.fulfilled.type]: (
       state,

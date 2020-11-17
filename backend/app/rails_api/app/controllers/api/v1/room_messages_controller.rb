@@ -5,9 +5,11 @@ class Api::V1::RoomMessagesController < ApplicationController
         if @user && @user.id == params[:user_id]
             new_message =  RoomMessage.new(room_id: params[:room_id], user_id: params[:user_id], text: params[:text])
             if new_message.save
-                Room.find(params[:room_id]).update_attribute(:updated_at, new_message.created_at)
                 render json: new_message
-                MessagesChannel.broadcast_to("messages_channel", "ok")
+                room = Room.find(params[:room_id])
+                room.update_attribute(:updated_at, new_message.created_at)
+                partner_id = room.sender.id != @user.id ? room.sender.id : room.recipient.id
+                MessagesChannel.broadcast_to("messages_channel_#{partner_id}", {message: RoomMessageSerializer.new(new_message), room: RoomSerializer.new(room)})
             else
                 render json: {errorType: "invalidError", message: new_message.errors.full_messages[0]}, status: 400
             end

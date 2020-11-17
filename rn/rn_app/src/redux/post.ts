@@ -6,7 +6,7 @@ import {
 
 import {createPostAction, deletePostThunk} from '../actions/posts';
 import {SuccessfullLoginData} from '../apis/usersApi';
-import {firstLoginThunk} from '../actions/users';
+import {firstLoginThunk, sampleLogin} from '../actions/users';
 import {RootState} from '.';
 
 export type Post = {
@@ -27,6 +27,9 @@ const postSlice = createSlice({
   initialState: postsAdaper.getInitialState(),
   reducers: {},
   extraReducers: {
+    [sampleLogin.fulfilled.type]: (state, action) => {
+      postsAdaper.addMany(state, action.payload.posts);
+    },
     // registerエラーが出た時これの行消してみる
     //[loginErrorThunk.fulfilled.type]: () => initialState,
     [firstLoginThunk.fulfilled.type]: (

@@ -10,12 +10,20 @@ import {
   sendEditedProfile,
   sendRequestToChangeDisplay,
   sendPosition,
+  sampleLoginApi,
 } from '../apis/usersApi';
 import {checkKeychain, credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {loginErrorThunk} from './index';
 import {getCurrentPosition} from '../helpers/gelocation';
+
+export const sampleLogin = createAsyncThunk('sample/login', async () => {
+  const response = await sampleLoginApi();
+  await Keychain.resetGenericPassword();
+  await Keychain.setGenericPassword(String(response.user.id), response.token);
+  return response;
+});
 
 export const firstLoginThunk = createAsyncThunk(
   'users/firstLogin',

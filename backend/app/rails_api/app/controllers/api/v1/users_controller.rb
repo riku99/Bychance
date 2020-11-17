@@ -7,28 +7,22 @@ class Api::V1::UsersController < ApplicationController
   
   def u
    @user = User.first
-   posts_arr = []
-      rooms_arr = []
-      messages_arr = []
-      @user.posts.each do |p|
-        posts_arr << PostSerializer.new(p)
-      end
-      rooms = @user.rooms
-      rooms.each do |room|
-        rooms_arr << RoomSerializer.new(room, {user: @user.id})
-        room.room_messages.each do |message|
-          messages_arr << RoomMessageSerializer.new(message)
-        end
-      end
-      posts_arr = @user.posts.map do |p|
-        PostSerializer.new(p)
-      end
-      render json: {
-        user: UserSerializer.new(@user),
-        posts: posts_arr,
-        rooms: rooms_arr,
-        messages: messages_arr
-      }
+   posts = @user.posts.map { |p| PostSerializer.new(p) }
+   room_arr = []
+   messages = []
+   rooms = @user.sender_rooms
+   @user.sender_rooms.each do |r|
+     room_arr << RoomSerializer.new(r, {user: @user.id})
+     r.room_messages.each do |m|
+       messages << RoomMessageSerializer.new(m)
+     end
+   end
+ render json: {
+   user: UserSerializer.new(@user),
+   posts: posts,
+   rooms: room_arr,
+   messages: messages
+ }
   end
 
   def createNonce
@@ -42,6 +36,54 @@ class Api::V1::UsersController < ApplicationController
       render json: { nonce: true }
     else
       render json: { error: true }
+    end
+  end
+
+  def sample_login
+    uid_hash = User.digest("kuro")
+    token_hash = User.digest("riku")
+    if user = User.find_by(uid: uid_hash)
+      posts = user.posts.map { |p| PostSerializer.new(p) }
+      room_arr = []
+        message_arr = []
+        rooms = user.sender_rooms + user.recipient_rooms
+        rooms.each do |r|
+          room_arr << RoomSerializer.new(r, {user: user.id})
+          r.room_messages.each do |m|
+            message_arr << RoomMessageSerializer.new(m)
+          end
+        end
+        render json: {
+          user: UserSerializer.new(user),
+          posts: posts,
+          rooms: room_arr,
+          messages: message_arr,
+          token: "riku"
+        }
+    else
+      crypt = User.create_geolocation_crypt
+      name = "demo"
+      image = nil
+      lat = crypt.encrypt_and_sign(35.6486)
+      lng = crypt.encrypt_and_sign(140.042)
+      user = User.create(
+        name: name,
+        uid: uid_hash,
+        image: image,
+        introduce: '',
+        message: '',
+        display: false,
+        lat: lat,
+        lng: lng,
+        token: token_hash
+      )
+      render json: {
+        user: UserSerializer.new(user),
+        posts: [],
+        rooms: [],
+        messages: [],
+        token: "riku"
+      }
     end
   end
 
@@ -66,19 +108,20 @@ class Api::V1::UsersController < ApplicationController
       if user = User.find_by(uid: uid_hash)
         user.update_attribute(:token, token_hash)
         posts = user.posts.map { |p| PostSerializer.new(p) }
-        rooms = []
-        messages = []
-        user.rooms.each do |r|
-          rooms << RoomSerializer.new(r, {user: user.id})
+        room_arr = []
+        message_arr = []
+        rooms = user.sender_rooms + user.recipient_rooms
+        rooms.each do |r|
+          room_arr << RoomSerializer.new(r, {user: user.id})
           r.room_messages.each do |m|
-            messages << RoomMessageSerializer.new(m)
+            message_arr << RoomMessageSerializer.new(m)
           end
         end
         render json: {
           user: UserSerializer.new(user),
           posts: posts,
-          rooms: rooms,
-          messages: messages,
+          rooms: room_arr,
+          messages: message_arr,
           token: token
         }
       else
@@ -123,19 +166,20 @@ class Api::V1::UsersController < ApplicationController
   def subsequent_login
     if @user
       posts = @user.posts.map { |p| PostSerializer.new(p) }
-        rooms = []
-        messages = []
-        @user.rooms.each do |r|
-          rooms << RoomSerializer.new(r, {user: @user.id})
+        room_arr = []
+        messages_arr = []
+        rooms = @user.sender_rooms + @user.recipient_rooms
+        rooms.each do |r|
+          room_arr << RoomSerializer.new(r, {user: @user.id})
           r.room_messages.each do |m|
-            messages << RoomMessageSerializer.new(m)
+            messages_arr << RoomMessageSerializer.new(m)
           end
         end
       render json: {
         user: UserSerializer.new(@user),
         posts: posts,
-        rooms: rooms,
-        messages: messages
+        rooms: room_arr,
+        messages: messages_arr
       }
     else
       render json: { loginError: true }, status: 401
@@ -148,7 +192,7 @@ class Api::V1::UsersController < ApplicationController
       introduce = user_params['introduce']
       message = user_params['message']
       if image = user_params['image']
-        url = createImagePath(image, 'user', `#{@user.id}`)
+        url = createImagePath(image, 'user', "#{@user.id}")
       else
         url = @user.image
       end

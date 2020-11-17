@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   attr_accessor :distance
   has_many :posts, dependent: :destroy
-  has_many :rooms, foreign_key: :sender_id
+  has_many :sender_rooms, class_name: "Room" ,foreign_key: :sender_id
+  has_many :recipient_rooms, class_name: "Room", foreign_key: :recipient_id
   has_many :room_messages
   validates :uid, presence: true
   validates :token, presence: true

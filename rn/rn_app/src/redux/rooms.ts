@@ -7,7 +7,11 @@ import {
 import {createRoomThunk} from '../actions/rooms';
 import {anotherUser} from './others';
 import {RootState, store} from './index';
-import {subsequentLoginAction, firstLoginThunk} from '../actions/users';
+import {
+  subsequentLoginAction,
+  firstLoginThunk,
+  sampleLogin,
+} from '../actions/users';
 import {createMessageThunk} from '../actions/messages';
 import {MessageType} from '../redux/messages';
 import {SuccessfullLoginData} from '../apis/usersApi';
@@ -30,6 +34,9 @@ export const RoomsSlice = createSlice({
   initialState: roomsAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
+    [sampleLogin.fulfilled.type]: (state, action) => {
+      roomsAdapter.addMany(state, action.payload.rooms);
+    },
     [firstLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,
@@ -44,24 +51,20 @@ export const RoomsSlice = createSlice({
     },
     [createRoomThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<
-        | {
-            id: number;
-            recipient: anotherUser;
-            presence: false;
-            timestamp: string;
-          }
-        | {id: number; presence: true}
-      >,
+      action: PayloadAction<{
+        id: number;
+        recipient: anotherUser;
+        timestamp: string;
+      }>,
     ) => {
-      if (!action.payload.presence) {
-        roomsAdapter.addOne(state, {
-          id: action.payload.id,
-          partner: action.payload.recipient,
-          timestamp: action.payload.timestamp,
-          messages: [],
-        });
-      }
+      roomsAdapter.upsertOne(state, {
+        id: action.payload.id,
+        partner: action.payload.recipient,
+        timestamp: action.payload.timestamp,
+        messages: state.entities[action.payload.id]
+          ? state.entities[action.payload.id]?.messages!
+          : [],
+      });
     },
     [createMessageThunk.fulfilled.type]: (
       state,

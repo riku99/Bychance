@@ -22,7 +22,6 @@
     "@types/react-redux": "^7.1.9",
     "@xmartlabs/react-native-line": "^2.1.0",
     "axios": "^0.20.0",
-    "crypto-js": "^4.0.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-elements": "^2.3.2",

@@ -1,27 +1,54 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
 // 型定義ファイルが存在しないまたは見つけられなかったのでignore
 // @ts-ignore
 import {createConsumer} from '@rails/actioncable';
+import {showMessage} from 'react-native-flash-message';
 
-import {useLogin} from '../hooks/useLogin';
-import {RootState} from '../redux/index';
+import {AppDispatch, RootState} from '../redux/index';
 import {RootStackScreen} from '../screens/Root';
+import {Container as Auth} from '../containers/auth/Auth';
 import {Container as Menu} from '../containers/utils/Menu';
 import {updatePositionThunk} from '../actions/users';
 import {getCurrentPosition} from '../helpers/gelocation';
+import {checkKeychain} from '../helpers/keychain';
+import {subsequentLoginAction} from '../actions/users';
 
 const consumer = createConsumer('ws://localhost:80/cable');
 
-const Root = () => {
-  useLogin();
+// @ts-ignore
+global.addEventListener = () => {};
+// @ts-ignore
+global.removeEventListener = () => {};
 
-  const dispatch = useDispatch();
+const Root = () => {
+  const [load, setLoad] = useState(true);
+
+  const dispatch: AppDispatch = useDispatch();
 
   const login = useSelector((state: RootState) => {
     return state.userReducer.login;
+  });
+
+  useEffect(() => {
+    const loginProcess = async () => {
+      const keychain = await checkKeychain();
+      if (keychain) {
+        await dispatch(subsequentLoginAction(keychain));
+        setLoad(false);
+      } else {
+        setLoad(false);
+      }
+    };
+    loginProcess();
+  }, [dispatch]);
+
+  const id = useSelector((state: RootState) => {
+    if (state.userReducer.user) {
+      return state.userReducer.user.id;
+    }
   });
 
   const displayedMenu = useSelector((state: RootState) => {
@@ -30,19 +57,26 @@ const Root = () => {
 
   useMemo(() => {
     if (login) {
-      return consumer.subscriptions.create('MessagesChannel', {
-        connected: () => {
-          console.log('connect');
+      return consumer.subscriptions.create(
+        {channel: 'MessagesChannel', id: id},
+        {
+          connected: () => {
+            console.log('connect');
+          },
+          received: (data: any) => {
+            showMessage({
+              message: 'recieved messages',
+              type: 'success',
+              style: {opacity: 0.9},
+              titleStyle: {fontWeight: 'bold'},
+            });
+          },
         },
-        received: (data: any) => {
-          console.log('receive');
-          console.log(data);
-        },
-      });
+      );
     } else {
       consumer.disconnect();
     }
-  }, [login]);
+  }, [login, id]);
 
   useEffect(() => {
     if (login) {
@@ -65,19 +99,23 @@ const Root = () => {
     }
   }, [dispatch, login]);
 
-  if (!login) {
+  if (load) {
     return null;
   }
 
-  return (
-    <>
+  if (!login) {
+    return <Auth />;
+  }
+
+  if (login) {
+    return (
       <View style={styles.container}>
         <RootStackScreen />
         {displayedMenu && <Menu />}
+        <FlashMessage position="top" />
       </View>
-      <FlashMessage position="top" />
-    </>
-  );
+    );
+  }
 };
 
 const styles = StyleSheet.create({

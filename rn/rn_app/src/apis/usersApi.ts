@@ -29,6 +29,12 @@ export const sendNonce: (
   }
 };
 
+export const sampleLoginApi = async () => {
+  const response = await axios.post(`${origin}/sample_login`);
+  console.log(response.data);
+  return response.data;
+};
+
 export const sendIDtoken: ({
   token,
   lat,

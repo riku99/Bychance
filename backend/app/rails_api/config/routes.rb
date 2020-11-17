@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
+      post '/sample_login', to: 'users#sample_login'
       post '/first_login', to: 'users#first_login'
       post '/subsequent_login', to: 'users#subsequent_login'
       post '/nonce', to: 'users#createNonce'

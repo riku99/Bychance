@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_08_040012) do
+ActiveRecord::Schema.define(version: 2020_11_17_062822) do
 
   create_table "nonces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "nonce"
@@ -38,10 +38,10 @@ ActiveRecord::Schema.define(version: 2020_11_08_040012) do
   end
 
   create_table "rooms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.integer "sender_id"
-    t.integer "recipient_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "sender_id"
+    t.bigint "recipient_id"
     t.index ["recipient_id", "sender_id"], name: "index_rooms_on_recipient_id_and_sender_id", unique: true
     t.index ["recipient_id"], name: "index_rooms_on_recipient_id"
     t.index ["sender_id"], name: "index_rooms_on_sender_id"
@@ -65,4 +65,6 @@ ActiveRecord::Schema.define(version: 2020_11_08_040012) do
 
   add_foreign_key "room_messages", "rooms"
   add_foreign_key "room_messages", "users"
+  add_foreign_key "rooms", "users", column: "recipient_id"
+  add_foreign_key "rooms", "users", column: "sender_id"
 end

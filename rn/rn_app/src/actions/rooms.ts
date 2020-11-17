@@ -19,21 +19,14 @@ export const createRoomThunk = createAsyncThunk(
         recipientId: recipient.id,
       });
 
+      console.log(response);
+
       if (response.type === 'success') {
-        if (response.data.presence) {
-          return {
-            id: response.data.id,
-            presence: true,
-            timestamp: response.data.timestamp,
-          };
-        } else {
-          return {
-            id: response.data.id,
-            recipient: recipient,
-            presence: false,
-            timestamp: response.data.timestamp,
-          };
-        }
+        return {
+          id: response.data.id,
+          recipient: recipient,
+          timestamp: response.data.timestamp,
+        };
       }
 
       if (response.type === 'loginError') {
