@@ -96,6 +96,7 @@ export const selsectNotReadMessageNumber = (
   rooms: Room[],
 ) => {
   const notReadMessageNumber: {[key: number]: number} = {};
+  const userId = state.userReducer.user!.id;
   const messageEntites = messagesSelectors.selectEntities(
     state.messagesReducer,
   );
@@ -104,7 +105,10 @@ export const selsectNotReadMessageNumber = (
     let n = 0;
     for (let message of room.messages) {
       if (message && messageEntites[message]) {
-        if (messageEntites[message]!.read) {
+        if (
+          messageEntites[message]!.read ||
+          messageEntites[message]!.userId === userId
+        ) {
           break;
         } else {
           n++;
@@ -114,6 +118,15 @@ export const selsectNotReadMessageNumber = (
     notReadMessageNumber[room.id] = n;
   }
   return notReadMessageNumber;
+};
+
+export const selectAllNotReadMessagesNumber = (state: RootState): number => {
+  const allMessages = messagesSelectors.selectAll(state.messagesReducer);
+  const userId = state.userReducer.user!.id;
+  const filteredMessages = allMessages.filter((message) => {
+    return message.userId !== userId && !message.read;
+  });
+  return filteredMessages.length;
 };
 
 export const {recieveMessage} = messagesSlice.actions;

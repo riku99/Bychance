@@ -21,9 +21,9 @@ type RootRouteProp = RouteProp<RootStackParamList, 'ChatRoom'>;
 type Props = {route: RootRouteProp};
 
 export const Container = ({route}: Props) => {
-  const {id} = useSelector((state: RootState) => {
+  const {userId} = useSelector((state: RootState) => {
     return {
-      id: state.userReducer.user!.id,
+      userId: state.userReducer.user!.id,
     };
   }, shallowEqual);
 
@@ -61,7 +61,7 @@ export const Container = ({route}: Props) => {
     if (isFocused && selectedMessages[0] && !selectedMessages[0].read) {
       const ids = selectedMessages
         .map((message) => {
-          if (!message.read) {
+          if (!message.read && message.userId !== userId) {
             return message.id;
           }
         })
@@ -70,20 +70,20 @@ export const Container = ({route}: Props) => {
         });
       dispatch(changeMessagesReadThunk(ids));
     }
-  }, [isFocused, selectedMessages, dispatch]);
+  }, [isFocused, selectedMessages, dispatch, userId]);
 
   const onSend = useCallback(
     (text: string) => {
       dispatch(
         createMessageThunk({
           roomId: route.params.id,
-          userId: id,
+          userId: userId,
           text,
         }),
       );
     },
-    [route.params.id, dispatch, id],
+    [route.params.id, dispatch, userId],
   );
 
-  return <ChatRoom messages={messages} userId={id} onSend={onSend} />;
+  return <ChatRoom messages={messages} userId={userId} onSend={onSend} />;
 };
