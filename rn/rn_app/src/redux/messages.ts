@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {createMessageThunk} from '../actions/messages';
+import {createMessageThunk, changeMessagesReadThunk} from '../actions/messages';
 import {subsequentLoginAction, firstLoginThunk} from '../actions/users';
 import {SuccessfullLoginData} from '../apis/usersApi';
 import {RootState} from './index';
@@ -16,6 +16,7 @@ export type MessageType = {
   userId: number;
   text: string;
   timestamp: string;
+  read: boolean;
 };
 
 const messagesAdapter = createEntityAdapter<MessageType>({
@@ -32,7 +33,6 @@ const messagesSlice = createSlice({
       state,
       action: PayloadAction<{room: Room; message: MessageType}>,
     ) => {
-      console.log(action.type);
       messagesAdapter.addOne(state, action.payload.message);
     },
   },
@@ -55,6 +55,12 @@ const messagesSlice = createSlice({
     ) => {
       messagesAdapter.addOne(state, action.payload.message);
     },
+    [changeMessagesReadThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<MessageType[]>,
+    ) => {
+      messagesAdapter.upsertMany(state, action.payload);
+    },
   },
 });
 
@@ -76,13 +82,38 @@ export const selectLatestMessageEntities = (
   const _ms = messagesSelectors.selectEntities(state.messagesReducer);
   let latestMessageEntities: {[key: number]: MessageType} = {};
   for (let room of rooms) {
-    const latestMessage = room.messages[0];
-    const message = _ms[latestMessage];
+    const latestMessageId = room.messages[0];
+    const message = _ms[latestMessageId];
     if (message) {
-      latestMessageEntities[latestMessage] = message;
+      latestMessageEntities[latestMessageId] = message;
     }
   }
   return latestMessageEntities;
+};
+
+export const selsectNotReadMessageNumber = (
+  state: RootState,
+  rooms: Room[],
+) => {
+  const notReadMessageNumber: {[key: number]: number} = {};
+  const messageEntites = messagesSelectors.selectEntities(
+    state.messagesReducer,
+  );
+
+  for (let room of rooms) {
+    let n = 0;
+    for (let message of room.messages) {
+      if (message && messageEntites[message]) {
+        if (messageEntites[message]!.read) {
+          break;
+        } else {
+          n++;
+        }
+      }
+    }
+    notReadMessageNumber[room.id] = n;
+  }
+  return notReadMessageNumber;
 };
 
 export const {recieveMessage} = messagesSlice.actions;

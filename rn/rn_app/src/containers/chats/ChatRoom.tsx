@@ -1,11 +1,15 @@
-import React, {useMemo, useCallback} from 'react';
+import React, {useMemo, useCallback, useEffect} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 
 import {ChatRoom} from '../../components/chats/ChatRoom';
 import {RootState} from '../../redux/index';
-import {createMessageThunk} from '../../actions/messages';
+import {
+  createMessageThunk,
+  changeMessagesReadThunk,
+} from '../../actions/messages';
 import {RootStackParamList} from '../../screens/Root';
 import {selectMessages} from '../../redux/messages';
 import {selectMessageIds} from '../../redux/rooms';
@@ -26,7 +30,7 @@ export const Container = ({route}: Props) => {
   const selectedMessages = useSelector((state: RootState) => {
     const messageIds = selectMessageIds(state, route.params.id);
     return selectMessages(state, messageIds);
-  });
+  }, shallowEqual);
 
   const messages: IMessage[] = useMemo(() => {
     if (selectedMessages.length) {
@@ -49,7 +53,24 @@ export const Container = ({route}: Props) => {
     }
   }, [route.params.partner.image, selectedMessages]);
 
+  const isFocused = useIsFocused();
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isFocused && selectedMessages[0] && !selectedMessages[0].read) {
+      const ids = selectedMessages
+        .map((message) => {
+          if (!message.read) {
+            return message.id;
+          }
+        })
+        .filter((n): n is number => {
+          return typeof n === 'number';
+        });
+      dispatch(changeMessagesReadThunk(ids));
+    }
+  }, [isFocused, selectedMessages, dispatch]);
 
   const onSend = useCallback(
     (text: string) => {

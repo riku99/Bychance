@@ -3,7 +3,7 @@ import axios from 'axios';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {Post} from '../redux/post';
-import {credentials} from '../helpers/keychain';
+import {Credentials} from '../helpers/keychain';
 
 export const sendPost: ({
   text,
@@ -13,7 +13,7 @@ export const sendPost: ({
 }: {
   text: string;
   image: string;
-} & credentials) => Promise<
+} & Credentials) => Promise<
   | {type: 'success'; data: Post}
   | {type: 'invalid'; invalid: string}
   | {type: 'loginError'}
@@ -44,7 +44,7 @@ export const deletePost: ({
   token,
 }: {
   postId: number;
-} & credentials) => Promise<
+} & Credentials) => Promise<
   | {type: 'success'}
   | {type: 'loginError'}
   | {type: 'invalid'; invalid: string}

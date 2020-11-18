@@ -61,9 +61,7 @@ const Root = () => {
       return consumer.subscriptions.create(
         {channel: 'MessagesChannel', id: id},
         {
-          connected: () => {
-            console.log('connect');
-          },
+          connected: () => {},
           received: (data: any) => {
             showMessage({
               message: 'recieved messages',

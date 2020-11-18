@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_17_062822) do
+ActiveRecord::Schema.define(version: 2020_11_17_111423) do
 
   create_table "nonces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "nonce"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2020_11_17_062822) do
     t.text "text"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "read", default: false
     t.index ["room_id"], name: "index_room_messages_on_room_id"
     t.index ["user_id"], name: "index_room_messages_on_user_id"
   end

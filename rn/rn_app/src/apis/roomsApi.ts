@@ -2,13 +2,13 @@ import axios from 'axios';
 
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
-import {credentials} from '../helpers/keychain';
+import {Credentials} from '../helpers/keychain';
 
 export const createRoom: ({
   id,
   token,
   recipientId,
-}: credentials & {recipientId: number}) => Promise<
+}: Credentials & {recipientId: number}) => Promise<
   | {
       type: 'success';
       data: {id: number; presence: boolean; timestamp: string};

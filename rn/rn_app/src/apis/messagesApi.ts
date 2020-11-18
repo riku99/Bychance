@@ -2,7 +2,7 @@ import axios, {AxiosError} from 'axios';
 
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
-import {credentials} from '../helpers/keychain';
+import {Credentials} from '../helpers/keychain';
 
 import {MessageType} from '../redux/messages';
 
@@ -12,7 +12,7 @@ export const createMessage = async ({
   roomId,
   userId,
   text,
-}: credentials & {roomId: number; userId: number; text: string}): Promise<
+}: Credentials & {roomId: number; userId: number; text: string}): Promise<
   | {
       type: 'success';
       data: MessageType;
@@ -49,6 +49,42 @@ export const createMessage = async ({
       } else {
         throw e;
       }
+    } else {
+      return {type: 'someError', message: e.message};
+    }
+  }
+};
+
+export const changeMessagesRead = async ({
+  token,
+  id,
+  messageIds,
+}: Credentials & {messageIds: number[]}): Promise<
+  | {
+      type: 'success';
+      data: MessageType[];
+    }
+  | {type: 'loginError'}
+  | {type: 'someError'; message: string}
+> => {
+  try {
+    const response = axios.patch<MessageType[]>(
+      `${origin}/messages_read`,
+      {
+        id,
+        message_ids: messageIds,
+      },
+      headers(token),
+    );
+
+    return {type: 'success', data: (await response).data};
+  } catch (e) {
+    if (e && e.response) {
+      const axiosError = e as AxiosError<{errorType: 'loginError'}>;
+      if (axiosError.response?.data) {
+        return {type: 'loginError'};
+      }
+      throw e;
     } else {
       return {type: 'someError', message: e.message};
     }

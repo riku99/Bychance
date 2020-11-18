@@ -3,7 +3,7 @@ import axios from 'axios';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {anotherUser} from '../redux/others';
-import {credentials} from '../helpers/keychain';
+import {Credentials} from '../helpers/keychain';
 
 export const getOthers: ({
   id,
@@ -11,7 +11,7 @@ export const getOthers: ({
   lat,
   lng,
   range,
-}: credentials & {
+}: Credentials & {
   lat: number | null;
   lng: number | null;
   range: number;

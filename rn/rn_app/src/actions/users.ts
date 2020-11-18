@@ -12,7 +12,7 @@ import {
   sendPosition,
   sampleLoginApi,
 } from '../apis/usersApi';
-import {checkKeychain, credentials} from '../helpers/keychain';
+import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {loginErrorThunk} from './index';
@@ -81,7 +81,7 @@ export const firstLoginThunk = createAsyncThunk(
 
 export const subsequentLoginAction = createAsyncThunk(
   'users/subsequentLogin',
-  async ({id, token}: credentials, thunkAPI) => {
+  async ({id, token}: Credentials, thunkAPI) => {
     const response = await sendAccessToken({id, token});
 
     if (response.type === 'success') {

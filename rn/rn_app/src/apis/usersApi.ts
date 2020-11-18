@@ -6,7 +6,7 @@ import {Post} from '../redux/post';
 import {Room} from '../redux/rooms';
 import {MessageType} from '../redux/messages';
 import {headers} from '../helpers/headers';
-import {credentials} from '../helpers/keychain';
+import {Credentials} from '../helpers/keychain';
 
 export type SuccessfullLoginData = {
   user: UserType;
@@ -74,7 +74,7 @@ export const sendIDtoken: ({
 export const sendAccessToken: ({
   id,
   token,
-}: credentials) => Promise<
+}: Credentials) => Promise<
   | {
       type: 'success';
       data: {
@@ -109,7 +109,7 @@ export const sendPosition: ({
   token,
   lat,
   lng,
-}: credentials & {
+}: Credentials & {
   lat: number | null;
   lng: number | null;
 }) => Promise<
@@ -183,7 +183,7 @@ export const sendRequestToChangeDisplay: ({
   display,
   id,
   token,
-}: {display: boolean} & credentials) => Promise<
+}: {display: boolean} & Credentials) => Promise<
   | {type: 'success'}
   | {type: 'loginError'}
   | {type: 'someError'; message: string}

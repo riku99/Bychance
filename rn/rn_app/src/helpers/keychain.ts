@@ -11,4 +11,4 @@ export const checkKeychain = async () => {
   }
 };
 
-export type credentials = {id: number; token: string};
+export type Credentials = {id: number; token: string};

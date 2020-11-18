@@ -1,12 +1,13 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {showMessage} from 'react-native-flash-message';
 
-import {createMessage} from '../apis/messagesApi';
+import {createMessage, changeMessagesRead} from '../apis/messagesApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {loginErrorThunk} from '.';
 
 import {MessageType} from '../redux/messages';
+import {alertSomeError} from '../helpers/error';
 
 export const createMessageThunk = createAsyncThunk(
   'messages/createMessage',
@@ -50,6 +51,34 @@ export const createMessageThunk = createAsyncThunk(
         thunkAPI.dispatch(loginErrorThunk());
       });
       return thunkAPI.rejectWithValue({type: 'loginError'});
+    }
+  },
+);
+
+export const changeMessagesReadThunk = createAsyncThunk(
+  'messages/changeRead',
+  async (messageIds: number[], thunkAPI) => {
+    const keychain = await checkKeychain();
+    if (keychain) {
+      const response = await changeMessagesRead({
+        id: keychain.id,
+        token: keychain.token,
+        messageIds,
+      });
+
+      if (response.type === 'success') {
+        return response.data;
+      }
+
+      if (response.type === 'loginError') {
+        console.log('ログインエラー');
+        thunkAPI.rejectWithValue({errorType: response.type});
+      }
+
+      if (response.type === 'someError') {
+        alertSomeError();
+        thunkAPI.rejectWithValue({errorType: response.type});
+      }
     }
   },
 );

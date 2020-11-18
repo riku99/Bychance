@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {ListItem, Avatar} from 'react-native-elements';
+import {ListItem, Avatar, Badge} from 'react-native-elements';
 
 import {Room} from '../../redux/rooms';
 import {MessageType} from '../../redux/messages';
@@ -10,10 +10,16 @@ const noImage = require('../../assets/no-Image.png');
 type Props = {
   rooms: Room[];
   latestMessages: {[key: number]: MessageType};
+  notReadNumber: {[key: number]: number};
   pushChatRoom: (room: Room) => void;
 };
 
-export const ChatList = ({rooms, latestMessages, pushChatRoom}: Props) => {
+export const ChatList = ({
+  rooms,
+  latestMessages,
+  notReadNumber,
+  pushChatRoom,
+}: Props) => {
   return (
     <View style={styles.container}>
       {rooms.length
@@ -26,7 +32,7 @@ export const ChatList = ({rooms, latestMessages, pushChatRoom}: Props) => {
                 }}>
                 <Avatar
                   rounded
-                  size="small"
+                  size="medium"
                   source={r.partner.image ? {uri: r.partner.image} : noImage}
                 />
                 <ListItem.Content>
@@ -36,6 +42,13 @@ export const ChatList = ({rooms, latestMessages, pushChatRoom}: Props) => {
                       latestMessages[r.messages[0]].text}
                   </ListItem.Subtitle>
                 </ListItem.Content>
+                {notReadNumber[r.id] !== 0 && (
+                  <Badge
+                    value={notReadNumber[r.id]}
+                    textStyle={{fontSize: 15}}
+                    badgeStyle={{width: 25, height: 25, borderRadius: 25 / 2}}
+                  />
+                )}
               </ListItem>
             );
           })
