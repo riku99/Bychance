@@ -69,7 +69,7 @@ export const UserEdit = ({
                 ? {uri: selectedImage}
                 : user.image
                 ? {uri: user.image}
-                : require('../../assets/ojisan.jpg')
+                : require('../../assets/noImage.png')
             }
             size="large"
             placeholderStyle={{backgroundColor: 'transeparent'}}
@@ -172,12 +172,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   edit: {
     width: '80%',
+    height: '90%',
     display: 'flex',
     alignItems: 'center',
-    marginTop: 20,
+    // marginTop: 20,
   },
   image: {
     display: 'flex',
@@ -206,7 +208,7 @@ const styles = StyleSheet.create({
   },
   nameInput: {
     fontSize: 15,
-    marginTop: 20,
+    marginTop: '10%',
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
   },
@@ -220,7 +222,7 @@ const styles = StyleSheet.create({
   },
   introduceInput: {
     fontSize: 15,
-    marginTop: 20,
+    marginTop: '10%',
     maxHeight: '50%',
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
@@ -234,7 +236,7 @@ const styles = StyleSheet.create({
   },
   messageInput: {
     fontSize: 15,
-    marginTop: 20,
+    marginTop: '10%',
     borderBottomWidth: 0.5,
     borderBottomColor: '#c9c9c9',
   },

@@ -22,7 +22,7 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import {anotherUser} from '../../redux/others';
 
-const noImage = require('../../assets/no-Image.png');
+const noImage = require('../../assets/noImage.png');
 
 type Props = {
   others: anotherUser[];

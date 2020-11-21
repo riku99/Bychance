@@ -35,9 +35,7 @@ export const UserProfile = ({
         <Avatar
           rounded
           source={
-            user.image
-              ? {uri: user.image}
-              : require('../../assets/no-Image.png')
+            user.image ? {uri: user.image} : require('../../assets/buta.jpg')
           }
           size="large"
           placeholderStyle={{backgroundColor: 'transeparent'}}
@@ -92,10 +90,10 @@ const styles = StyleSheet.create({
   name_box: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '3%',
+    marginTop: '5%',
   },
   name: {
-    fontSize: 17,
+    fontSize: 19,
     marginTop: 10,
   },
   edit: {
@@ -114,7 +112,7 @@ const styles = StyleSheet.create({
     minHeight: height / 5,
     paddingLeft: 25,
     paddingRight: 25,
-    marginTop: '3%',
+    marginTop: '5%',
   },
   introduce_text: {
     fontSize: 16,

@@ -5,7 +5,7 @@ import {ListItem, Avatar, Badge} from 'react-native-elements';
 import {Room} from '../../redux/rooms';
 import {MessageType} from '../../redux/messages';
 
-const noImage = require('../../assets/no-Image.png');
+const noImage = require('../../assets/noImage.png');
 
 type Props = {
   rooms: Room[];

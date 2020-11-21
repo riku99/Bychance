@@ -14,7 +14,7 @@ import {RootStackParamList} from '../../screens/Root';
 import {selectMessages} from '../../redux/messages';
 import {selectMessageIds} from '../../redux/rooms';
 
-const noImage = require('../../assets/no-Image.png');
+const noImage = require('../../assets/noImage.png');
 
 type RootRouteProp = RouteProp<RootStackParamList, 'ChatRoom'>;
 
