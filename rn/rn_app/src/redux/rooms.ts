@@ -18,7 +18,7 @@ import {SuccessfullLoginData} from '../apis/usersApi';
 
 export type Room = {
   id: number;
-  partner: anotherUser; // ここもOthersを正規化した後Id参照にする。?
+  partner: anotherUser;
   timestamp: string;
   messages: number[];
 };
@@ -36,6 +36,9 @@ export const RoomsSlice = createSlice({
   extraReducers: {
     [sampleLogin.fulfilled.type]: (state, action) => {
       roomsAdapter.addMany(state, action.payload.rooms);
+    },
+    'index/logout': () => {
+      return roomsAdapter.getInitialState();
     },
     [firstLoginThunk.fulfilled.type]: (
       state,

@@ -30,8 +30,9 @@ const postSlice = createSlice({
     [sampleLogin.fulfilled.type]: (state, action) => {
       postsAdaper.addMany(state, action.payload.posts);
     },
-    // registerエラーが出た時これの行消してみる
-    //[loginErrorThunk.fulfilled.type]: () => initialState,
+    'index/logout': () => {
+      return postsAdaper.getInitialState();
+    },
     [firstLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,

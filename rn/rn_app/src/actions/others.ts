@@ -4,7 +4,7 @@ import {getOthers} from '../apis/othersApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {loginErrorThunk} from './index';
+import {logout} from '../redux/index';
 
 export const getOthersThunk = createAsyncThunk(
   'others/getOthersThunk',
@@ -23,7 +23,7 @@ export const getOthersThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -36,7 +36,7 @@ export const getOthersThunk = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});

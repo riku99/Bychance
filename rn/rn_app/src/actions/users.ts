@@ -15,8 +15,8 @@ import {
 import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {loginErrorThunk} from './index';
 import {getCurrentPosition} from '../helpers/gelocation';
+import {logout} from '../redux/index';
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
   const response = await sampleLoginApi();
@@ -56,7 +56,7 @@ export const firstLoginThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -69,10 +69,6 @@ export const firstLoginThunk = createAsyncThunk(
       }
     } catch (e) {
       if (e.message === 'User cancelled or interrupted the login process.') {
-        const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
-        };
-        requestLogin(callback);
         return thunkAPI.rejectWithValue({lineCancelled: true});
       }
     }
@@ -89,7 +85,7 @@ export const subsequentLoginAction = createAsyncThunk(
     }
     if (response.type === 'loginError') {
       const callback = () => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});
@@ -121,7 +117,7 @@ export const updatePositionThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -134,7 +130,7 @@ export const updatePositionThunk = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});
@@ -179,7 +175,7 @@ export const editProfileAction = createAsyncThunk(
       }
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -201,7 +197,7 @@ export const editProfileAction = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});
@@ -226,7 +222,7 @@ export const editUserDisplayThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -239,7 +235,7 @@ export const editUserDisplayThunk = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});

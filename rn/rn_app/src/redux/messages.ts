@@ -37,6 +37,9 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: {
+    'index/logout': () => {
+      return messagesAdapter.getInitialState();
+    },
     [firstLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,

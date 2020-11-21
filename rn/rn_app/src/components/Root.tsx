@@ -69,7 +69,6 @@ const Root = () => {
               style: {opacity: 0.9},
               titleStyle: {fontWeight: 'bold'},
             });
-            console.log(data);
             dispatch(recieveMessage(data));
           },
         },

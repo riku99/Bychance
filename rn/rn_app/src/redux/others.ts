@@ -3,7 +3,6 @@ import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit';
 import {UserType} from './user';
 import {Post} from './post';
 import {getOthersThunk} from '../actions/others';
-import {loginErrorThunk} from '../actions/index';
 import {RootState} from './index';
 
 export type anotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
@@ -23,7 +22,7 @@ const othersSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [loginErrorThunk.fulfilled.type]: () => initialState,
+    'index/logout': () => initialState,
     [getOthersThunk.fulfilled.type]: (
       state,
       action: PayloadAction<anotherUser[]>,

@@ -5,7 +5,7 @@ import {sendPost, deletePost} from '../apis/postsApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {loginErrorThunk} from './index';
+import {logout} from '../redux/index';
 
 export const createPostAction = createAsyncThunk(
   'posts/createPost',
@@ -30,7 +30,7 @@ export const createPostAction = createAsyncThunk(
       }
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -53,7 +53,7 @@ export const createPostAction = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});
@@ -84,7 +84,7 @@ export const deletePostThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -107,7 +107,7 @@ export const deletePostThunk = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});

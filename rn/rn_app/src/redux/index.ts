@@ -15,6 +15,9 @@ const indexSlice = createSlice({
   name: 'index',
   initialState: initialState,
   reducers: {
+    logout: () => {
+      return initialState;
+    },
     displayMenu: (state) => {
       if (state.displayedMenu === false) {
         return {
@@ -31,7 +34,7 @@ const indexSlice = createSlice({
   },
 });
 
-export const {displayMenu} = indexSlice.actions;
+export const {logout, displayMenu} = indexSlice.actions;
 
 const indexReducer = indexSlice.reducer;
 

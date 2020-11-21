@@ -1,6 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {loginErrorThunk} from '../actions/index';
 import {
   firstLoginThunk,
   subsequentLoginAction,
@@ -35,12 +34,7 @@ const initialState: initialStateType = {
 const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
-  reducers: {
-    deleteInvalidAction: (state) => ({
-      ...state,
-      errors: {invalidError: undefined},
-    }),
-  },
+  reducers: {},
   extraReducers: {
     [sampleLogin.fulfilled.type]: (state, action) => {
       return {
@@ -49,7 +43,9 @@ const userSlice = createSlice({
         user: action.payload.user,
       };
     },
-    [loginErrorThunk.fulfilled.type]: () => initialState,
+    'index/logout': () => {
+      return initialState;
+    },
     [firstLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,
@@ -99,7 +95,5 @@ const userSlice = createSlice({
     }),
   },
 });
-
-export const {deleteInvalidAction} = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

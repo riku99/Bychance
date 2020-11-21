@@ -4,7 +4,7 @@ import {showMessage} from 'react-native-flash-message';
 import {createMessage, changeMessagesRead} from '../apis/messagesApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
-import {loginErrorThunk} from '.';
+import {logout} from '../redux/index';
 
 import {MessageType} from '../redux/messages';
 import {alertSomeError} from '../helpers/error';
@@ -32,7 +32,7 @@ export const createMessageThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         requestLogin(() => {
-          thunkAPI.dispatch(loginErrorThunk());
+          thunkAPI.dispatch(logout());
         });
         return thunkAPI.rejectWithValue(response);
       }
@@ -48,7 +48,7 @@ export const createMessageThunk = createAsyncThunk(
       }
     } else {
       requestLogin(() => {
-        thunkAPI.dispatch(loginErrorThunk());
+        thunkAPI.dispatch(logout());
       });
       return thunkAPI.rejectWithValue({type: 'loginError'});
     }

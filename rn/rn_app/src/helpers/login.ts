@@ -1,4 +1,5 @@
 import {Alert} from 'react-native';
+import * as Keychain from 'react-native-keychain';
 
 export const requestLogin = (callback: () => void) => {
   Alert.alert(
@@ -7,7 +8,8 @@ export const requestLogin = (callback: () => void) => {
     [
       {
         text: 'OK',
-        onPress: () => {
+        onPress: async () => {
+          await Keychain.resetGenericPassword();
           callback();
           return;
         },
