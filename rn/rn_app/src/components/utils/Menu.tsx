@@ -69,7 +69,6 @@ const {height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   inModalContainer: {
     width: '97%',
-    alignItems: 'stretch',
     alignSelf: 'center',
     marginTop: 10,
   },

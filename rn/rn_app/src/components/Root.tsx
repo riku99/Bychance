@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
@@ -20,6 +20,7 @@ import {recieveMessage} from '../redux/messages';
 const consumer = createConsumer('ws://localhost:80/cable');
 
 // @ts-ignore
+// actioncableで必要なので記述
 global.addEventListener = () => {};
 // @ts-ignore
 global.removeEventListener = () => {};
@@ -31,6 +32,16 @@ const Root = () => {
 
   const login = useSelector((state: RootState) => {
     return state.userReducer.login;
+  });
+
+  const id = useSelector((state: RootState) => {
+    if (state.userReducer.user) {
+      return state.userReducer.user.id;
+    }
+  });
+
+  const displayedMenu = useSelector((state: RootState) => {
+    return state.indexReducer.displayedMenu;
   });
 
   useEffect(() => {
@@ -46,19 +57,9 @@ const Root = () => {
     loginProcess();
   }, [dispatch]);
 
-  const id = useSelector((state: RootState) => {
-    if (state.userReducer.user) {
-      return state.userReducer.user.id;
-    }
-  });
-
-  const displayedMenu = useSelector((state: RootState) => {
-    return state.indexReducer.displayedMenu;
-  });
-
-  useMemo(() => {
+  useEffect(() => {
     if (login) {
-      return consumer.subscriptions.create(
+      consumer.subscriptions.create(
         {channel: 'MessagesChannel', id: id},
         {
           connected: () => {},

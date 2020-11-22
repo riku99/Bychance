@@ -41,7 +41,11 @@ const Tabs = () => {
   return (
     <RootTab.Navigator
       initialRouteName="Profile"
-      tabBarOptions={{showLabel: false, activeTintColor: '#5c94c8'}}>
+      tabBarOptions={{
+        showLabel: false,
+        activeTintColor: '#5c94c8',
+        inactiveTintColor: '#b8b8b8',
+      }}>
       <RootTab.Screen
         name="Search"
         component={SearchStackScreen}
@@ -104,10 +108,12 @@ export const RootStackScreen = () => {
       <RootStack.Screen
         name="ChatRoom"
         component={ChatRoom}
-        options={{
-          title: 'メッセージ',
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          gestureDirection: 'horizontal',
+        options={({route}) => {
+          return {
+            title: route.params.partner.name,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            gestureDirection: 'horizontal',
+          };
         }}
       />
     </RootStack.Navigator>
