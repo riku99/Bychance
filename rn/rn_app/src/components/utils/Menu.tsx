@@ -1,7 +1,11 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Switch, Dimensions, View, StyleSheet} from 'react-native';
+import {Switch, Dimensions, View, StyleSheet, Alert} from 'react-native';
+import {useDispatch} from 'react-redux';
 import {ListItem} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
+import * as Keychain from 'react-native-keychain';
+
+import {logout} from '../../redux/index';
 
 type Props = {
   isVisble: boolean;
@@ -17,11 +21,13 @@ export const Menu = ({
   changeUserDisplay,
 }: Props) => {
   const [displaySwitch, setDisplaySwitch] = useState(userDisplay);
+  const dispatch = useDispatch();
+
   const list = [
     {
       title: '他のユーザーに自分を表示',
       titleStyle: {fontSize: 15, color: '#575757'},
-      onPress: async () => {},
+      onPress: () => {},
       addComponent: (
         <Switch
           value={displaySwitch}
@@ -37,6 +43,28 @@ export const Menu = ({
           }}
         />
       ),
+    },
+    {
+      title: 'ログアウト',
+      titleStyle: {fontSize: 15, color: '#575757'},
+      onPress: () => {
+        Alert.alert('ログアウトしますか?', '', [
+          {
+            text: 'はい',
+            onPress: async () => {
+              await Keychain.resetGenericPassword();
+              dispatch(logout());
+              return;
+            },
+          },
+          {
+            text: 'いいえ',
+            onPress: () => {
+              return;
+            },
+          },
+        ]);
+      },
     },
   ];
   const modalizeRef = useRef<Modalize>(null);

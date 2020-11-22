@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
     if @user = User.find_by(id: params[:id])
       token = getToken(request.headers)
       if @user.token == User.digest(token)
-          return @user
+        return @user
       else
         @user = false
       end

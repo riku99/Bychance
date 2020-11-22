@@ -5,7 +5,6 @@ import FlashMessage from 'react-native-flash-message';
 // 型定義ファイルが存在しないまたは見つけられなかったのでignore
 // @ts-ignore
 import {createConsumer} from '@rails/actioncable';
-import {showMessage} from 'react-native-flash-message';
 
 import {AppDispatch, RootState} from '../redux/index';
 import {RootStackScreen} from '../screens/Root';
@@ -64,12 +63,6 @@ const Root = () => {
         {
           connected: () => {},
           received: (data: any) => {
-            showMessage({
-              message: 'recieved messages',
-              type: 'success',
-              style: {opacity: 0.9},
-              titleStyle: {fontWeight: 'bold'},
-            });
             dispatch(recieveMessage(data));
           },
         },

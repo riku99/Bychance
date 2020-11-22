@@ -19,8 +19,6 @@ export const createRoomThunk = createAsyncThunk(
         recipientId: recipient.id,
       });
 
-      console.log(response);
-
       if (response.type === 'success') {
         return {
           id: response.data.id,

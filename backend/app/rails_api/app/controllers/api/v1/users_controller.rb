@@ -4,25 +4,23 @@ class Api::V1::UsersController < ApplicationController
 
   before_action :checkAccessToken,
                 only: %i[subsequent_login edit change_display update_position]
-  
+
   def u
-   @user = User.first
-   posts = @user.posts.map { |p| PostSerializer.new(p) }
-   room_arr = []
-   messages = []
-   rooms = @user.sender_rooms
-   @user.sender_rooms.each do |r|
-     room_arr << RoomSerializer.new(r, {user: @user.id})
-     r.room_messages.each do |m|
-       messages << RoomMessageSerializer.new(m)
-     end
-   end
- render json: {
-   user: UserSerializer.new(@user),
-   posts: posts,
-   rooms: room_arr,
-   messages: messages
- }
+    @user = User.first
+    posts = @user.posts.map { |p| PostSerializer.new(p) }
+    room_arr = []
+    messages = []
+    rooms = @user.sender_rooms
+    @user.sender_rooms.each do |r|
+      room_arr << RoomSerializer.new(r, { user: @user.id })
+      r.room_messages.each { |m| messages << RoomMessageSerializer.new(m) }
+    end
+    render json: {
+             user: UserSerializer.new(@user),
+             posts: posts,
+             rooms: room_arr,
+             messages: messages
+           }
   end
 
   def createNonce
@@ -40,50 +38,49 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def sample_login
-    uid_hash = User.digest("kuro")
-    token_hash = User.digest("riku")
+    uid_hash = User.digest('kuro')
+    token_hash = User.digest('riku')
     if user = User.find_by(uid: uid_hash)
       posts = user.posts.map { |p| PostSerializer.new(p) }
       room_arr = []
-        message_arr = []
-        rooms = user.sender_rooms + user.recipient_rooms
-        rooms.each do |r|
-          room_arr << RoomSerializer.new(r, {user: user.id})
-          r.room_messages.each do |m|
-            message_arr << RoomMessageSerializer.new(m)
-          end
-        end
-        render json: {
-          user: UserSerializer.new(user),
-          posts: posts,
-          rooms: room_arr,
-          messages: message_arr,
-          token: "riku"
-        }
+      message_arr = []
+      rooms = user.sender_rooms.preload(:room_messages) + user.recipient_rooms.preload(:room_messages)
+      rooms.each do |r|
+        room_arr << RoomSerializer.new(r, { user: user.id })
+        r.room_messages.each { |m| message_arr << RoomMessageSerializer.new(m) }
+      end
+      render json: {
+               user: UserSerializer.new(user),
+               posts: posts,
+               rooms: room_arr,
+               messages: message_arr,
+               token: 'riku'
+             }
     else
       crypt = User.create_geolocation_crypt
-      name = "demo"
+      name = 'demo'
       image = nil
       lat = crypt.encrypt_and_sign(35.6486)
       lng = crypt.encrypt_and_sign(140.042)
-      user = User.create(
-        name: name,
-        uid: uid_hash,
-        image: image,
-        introduce: '',
-        message: '',
-        display: false,
-        lat: lat,
-        lng: lng,
-        token: token_hash
-      )
+      user =
+        User.create(
+          name: name,
+          uid: uid_hash,
+          image: image,
+          introduce: '',
+          message: '',
+          display: false,
+          lat: lat,
+          lng: lng,
+          token: token_hash
+        )
       render json: {
-        user: UserSerializer.new(user),
-        posts: [],
-        rooms: [],
-        messages: [],
-        token: "riku"
-      }
+               user: UserSerializer.new(user),
+               posts: [],
+               rooms: [],
+               messages: [],
+               token: 'riku'
+             }
     end
   end
 
@@ -110,25 +107,25 @@ class Api::V1::UsersController < ApplicationController
         posts = user.posts.map { |p| PostSerializer.new(p) }
         room_arr = []
         message_arr = []
-        rooms = user.sender_rooms + user.recipient_rooms
+        rooms = user.sender_rooms.preload(:room_messages).eager_load(:sender, :recipient) + user.recipient_rooms.preload(:room_messages).eager_load(:sender, :recipient)
         rooms.each do |r|
-          room_arr << RoomSerializer.new(r, {user: user.id})
+          room_arr << RoomSerializer.new(r, { user: user.id })
           r.room_messages.each do |m|
             message_arr << RoomMessageSerializer.new(m)
           end
         end
         render json: {
-          user: UserSerializer.new(user),
-          posts: posts,
-          rooms: room_arr,
-          messages: message_arr,
-          token: token
-        }
+                 user: UserSerializer.new(user),
+                 posts: posts,
+                 rooms: room_arr,
+                 messages: message_arr,
+                 token: token
+               }
       else
         user_name = parsed_response['name']
         user_image = parsed_response['picture']
         decryptable_crypt = User.create_geolocation_crypt
-        user_lat =  decryptable_crypt.encrypt_and_sign(user_params[:lat])
+        user_lat = decryptable_crypt.encrypt_and_sign(user_params[:lat])
         user_lng = decryptable_crypt.encrypt_and_sign(user_params[:lng])
         user =
           User.create(
@@ -143,12 +140,12 @@ class Api::V1::UsersController < ApplicationController
             lng: user_lng
           )
         render json: {
-          user: UserSerializer.new(user),
-          posts: [],
-          rooms: [],
-          messages: [],
-          token: token
-        }
+                 user: UserSerializer.new(user),
+                 posts: [],
+                 rooms: [],
+                 messages: [],
+                 token: token
+               }
       end
       nonce.destroy
     else
@@ -165,22 +162,24 @@ class Api::V1::UsersController < ApplicationController
 
   def subsequent_login
     if @user
-      posts = @user.posts.map { |p| PostSerializer.new(p) }
-        room_arr = []
-        messages_arr = []
-        rooms = @user.sender_rooms + @user.recipient_rooms
-        rooms.each do |r|
-          room_arr << RoomSerializer.new(r, {user: @user.id})
-          r.room_messages.each do |m|
-            messages_arr << RoomMessageSerializer.new(m)
-          end
+      posts =
+        @user.posts.map { |p| PostSerializer.new(p, { user_id: @user.id }) }
+      room_arr = []
+      messages_arr = []
+      rooms =
+        @user.sender_rooms.preload(:room_messages).eager_load(:sender, :recipient) + @user.recipient_rooms.preload(:room_messages).eager_load(:sender, :recipient)
+      rooms.each do |r|
+        room_arr << RoomSerializer.new(r, { user: @user.id })
+        r.room_messages.each do |m|
+          messages_arr << RoomMessageSerializer.new(m)
         end
+      end
       render json: {
-        user: UserSerializer.new(@user),
-        posts: posts,
-        rooms: room_arr,
-        messages: messages_arr
-      }
+               user: UserSerializer.new(@user),
+               posts: posts,
+               rooms: room_arr,
+               messages: messages_arr
+             }
     else
       render json: { loginError: true }, status: 401
     end
@@ -212,7 +211,10 @@ class Api::V1::UsersController < ApplicationController
   def update_position
     if @user
       crypt = User.create_geolocation_crypt
-      @user.update(lat: crypt.encrypt_and_sign(user_params[:lat]), lng: crypt.encrypt_and_sign(user_params[:lng]))
+      @user.update(
+        lat: crypt.encrypt_and_sign(user_params[:lat]),
+        lng: crypt.encrypt_and_sign(user_params[:lng])
+      )
       render json: { success: true }
     else
       render json: { loginError: true }, status: 401
