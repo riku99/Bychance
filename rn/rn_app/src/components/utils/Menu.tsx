@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Switch, Dimensions, View, StyleSheet, Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {ListItem} from 'react-native-elements';
+import {ListItem, Icon} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
 import * as Keychain from 'react-native-keychain';
 
@@ -26,6 +26,7 @@ export const Menu = ({
   const list = [
     {
       title: '他のユーザーに自分を表示',
+      icon: 'emoji-people',
       titleStyle: {fontSize: 15, color: '#575757'},
       onPress: () => {},
       addComponent: (
@@ -46,6 +47,7 @@ export const Menu = ({
     },
     {
       title: 'ログアウト',
+      icon: 'logout',
       titleStyle: {fontSize: 15, color: '#575757'},
       onPress: () => {
         Alert.alert('ログアウトしますか?', '', [
@@ -80,6 +82,7 @@ export const Menu = ({
         {list.map((l, i) => {
           return (
             <ListItem key={i} onPress={l.onPress}>
+              <Icon name={l.icon} color={l.titleStyle.color} />
               <ListItem.Content>
                 <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
               </ListItem.Content>

@@ -163,7 +163,7 @@ class Api::V1::UsersController < ApplicationController
   def subsequent_login
     if @user
       posts =
-        @user.posts.map { |p| PostSerializer.new(p, { user_id: @user.id }) }
+        @user.posts.map { |p| PostSerializer.new(p) }
       room_arr = []
       messages_arr = []
       rooms =

@@ -6,6 +6,6 @@ class PostSerializer < ActiveModel::Serializer
   end
 
   def userId
-    @instance_options[:user_id]
+    object.user_id
   end
 end
