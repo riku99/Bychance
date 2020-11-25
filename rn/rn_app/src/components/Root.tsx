@@ -16,7 +16,7 @@ import {checkKeychain} from '../helpers/keychain';
 import {subsequentLoginAction} from '../actions/users';
 import {recieveMessage} from '../redux/messages';
 
-const consumer = createConsumer('ws://localhost:80/cable');
+const consumer = createConsumer('ws://192.168.179.6:80/cable');
 
 // @ts-ignore
 // actioncableで必要なので記述

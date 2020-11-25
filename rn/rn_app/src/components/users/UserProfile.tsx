@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {Posts} from '../posts/Posts';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -19,6 +20,7 @@ type Props = {
   navigateToPost: (post: Post) => void;
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
+  navigateToTakeStories?: () => void;
 };
 
 export const UserProfile = ({
@@ -28,52 +30,63 @@ export const UserProfile = ({
   navigateToPost,
   navigateToUserEdit,
   navigateToChatRoom,
+  navigateToTakeStories,
 }: Props) => {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.image}>
-        <Avatar
-          rounded
-          source={
-            user.image ? {uri: user.image} : require('../../assets/buta.jpg')
-          }
-          size="large"
-          placeholderStyle={{backgroundColor: 'transeparent'}}
-        />
-      </View>
-      <View style={styles.name_box}>
-        <Text style={styles.name}>{user.name}</Text>
-      </View>
-      <View style={styles.edit}>
-        {keychainId === user.id ? (
-          <Button
-            title="プロフィールを編集"
-            titleStyle={styles.title_style}
-            buttonStyle={styles.edit_button}
-            onPress={navigateToUserEdit}
-          />
-        ) : (
-          <Button
-            title="メッセージを送る"
-            icon={
-              <Icon
-                name="send-o"
-                size={17}
-                color="#2c3e50"
-                style={{marginRight: 8}}
-              />
+    <>
+      <ScrollView style={styles.container}>
+        <View style={styles.image}>
+          <Avatar
+            rounded
+            source={
+              user.image ? {uri: user.image} : require('../../assets/buta.jpg')
             }
-            titleStyle={{...styles.title_style, color: '#2c3e50'}}
-            buttonStyle={styles.edit_button}
-            onPress={navigateToChatRoom}
+            size="large"
+            placeholderStyle={{backgroundColor: 'transeparent'}}
           />
-        )}
-      </View>
-      <View style={styles.introduce}>
-        {!!user.introduce && <Text>{user.introduce}</Text>}
-      </View>
-      <Posts posts={posts} navigateToShowPost={navigateToPost} />
-    </ScrollView>
+        </View>
+        <View style={styles.name_box}>
+          <Text style={styles.name}>{user.name}</Text>
+        </View>
+        <View style={styles.edit}>
+          {keychainId === user.id ? (
+            <Button
+              title="プロフィールを編集"
+              titleStyle={styles.title_style}
+              buttonStyle={styles.edit_button}
+              onPress={navigateToUserEdit}
+            />
+          ) : (
+            <Button
+              title="メッセージを送る"
+              icon={
+                <Icon
+                  name="send-o"
+                  size={17}
+                  color="#2c3e50"
+                  style={{marginRight: 8}}
+                />
+              }
+              titleStyle={{...styles.title_style, color: '#2c3e50'}}
+              buttonStyle={styles.edit_button}
+              onPress={navigateToChatRoom}
+            />
+          )}
+        </View>
+        <View style={styles.introduce}>
+          {!!user.introduce && <Text>{user.introduce}</Text>}
+        </View>
+        <Posts posts={posts} navigateToShowPost={navigateToPost} />
+      </ScrollView>
+      {keychainId === user.id && (
+        <Button
+          icon={<MIcon name="flash-on" size={27} style={{color: 'white'}} />}
+          containerStyle={styles.storyContainer}
+          buttonStyle={styles.stroyButton}
+          onPress={navigateToTakeStories}
+        />
+      )}
+    </>
   );
 };
 
@@ -107,6 +120,7 @@ const styles = StyleSheet.create({
   title_style: {
     color: '#4fa9ff',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   introduce: {
     minHeight: height / 5,
@@ -116,6 +130,14 @@ const styles = StyleSheet.create({
   },
   introduce_text: {
     fontSize: 16,
+  },
+  storyContainer: {position: 'absolute', bottom: '3%', right: '5%'},
+  stroyButton: {
+    width: width / 7,
+    height: width / 7,
+    borderRadius: width / 7,
+    backgroundColor: '#1f6fff',
+    opacity: 0.9,
   },
   postProcess: {
     flexDirection: 'row',

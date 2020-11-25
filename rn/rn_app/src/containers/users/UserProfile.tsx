@@ -34,14 +34,18 @@ export const Container = () => {
   }, [user.id]);
 
   const navigationToPost = useNavigation<ProfileNavigationProp>();
-  const navigationToUserEdit = useNavigation<RootNavigationProp>();
+  const navigationForRoot = useNavigation<RootNavigationProp>();
 
   const pushPost = (post: Post) => {
     navigationToPost.push('Post', post);
   };
 
   const pushUserEdit = () => {
-    navigationToUserEdit.push('UserEdit');
+    navigationForRoot.push('UserEdit');
+  };
+
+  const pushTakeStories = () => {
+    navigationForRoot.push('Story');
   };
 
   return (
@@ -56,6 +60,7 @@ export const Container = () => {
       posts={posts}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
+      navigateToTakeStories={pushTakeStories}
     />
   );
 };

@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 #import "RNLine-Swift.h"
 
-#import "RNNotifications.h"
+
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -29,8 +29,8 @@ static void InitializeFlipper(UIApplication *application) {
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-[RNNotifications startMonitorNotifications];
 {
+  //[RNNotifications startMonitorNotifications];
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
@@ -71,12 +71,12 @@ static void InitializeFlipper(UIApplication *application) {
   return handledLine;
 }
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  [RNNotifications didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-}
+//- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+  //[RNNotifications didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+//}
 
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-  [RNNotifications didFailToRegisterForRemoteNotificationsWithError:error];
-}
+//- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+  //[RNNotifications didFailToRegisterForRemoteNotificationsWithError:error];
+//}
 
 @end

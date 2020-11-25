@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/stack';
 import {useSelector} from 'react-redux';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
@@ -16,11 +16,13 @@ import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
+import {TakeStories} from '../components/stories/TakeStories';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
   ChatRoom: Room;
+  Story: undefined;
 };
 
 export type TabList = {
@@ -51,7 +53,7 @@ const Tabs = () => {
         component={SearchStackScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <Icon name="search" size={24} color={color} />
+            <MIcon name="search" size={27} color={color} />
           ),
         }}
       />
@@ -60,7 +62,7 @@ const Tabs = () => {
         component={ChatListStackScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <Icon name="comment-o" size={24} color={color} />
+            <MIcon name="chat-bubble-outline" size={24} color={color} />
           ),
           tabBarBadge:
             notReadMessageNumber !== 0 ? notReadMessageNumber : undefined,
@@ -71,7 +73,7 @@ const Tabs = () => {
         component={PostStackScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <Icon name="plus-square-o" size={24} color={color} />
+            <MIcon name="add-circle-outline" size={24} color={color} />
           ),
         }}
       />
@@ -80,7 +82,7 @@ const Tabs = () => {
         component={ProfileStackScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <Icon name="user-o" size={24} color={color} />
+            <MIcon name="person-outline" size={24} color={color} />
           ),
         }}
       />
@@ -114,6 +116,15 @@ export const RootStackScreen = () => {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureDirection: 'horizontal',
           };
+        }}
+      />
+      <RootStack.Screen
+        name="Story"
+        component={TakeStories}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal-inverted',
         }}
       />
     </RootStack.Navigator>
