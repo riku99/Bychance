@@ -44,7 +44,7 @@ export const Container = () => {
     navigationForRoot.push('UserEdit');
   };
 
-  const pushTakeStories = () => {
+  const pushTakeFlash = () => {
     navigationForRoot.push('Story');
   };
 
@@ -60,7 +60,7 @@ export const Container = () => {
       posts={posts}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
-      navigateToTakeStories={pushTakeStories}
+      navigateToTakeFlash={pushTakeFlash}
     />
   );
 };

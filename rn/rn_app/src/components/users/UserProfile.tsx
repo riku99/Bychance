@@ -20,7 +20,7 @@ type Props = {
   navigateToPost: (post: Post) => void;
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
-  navigateToTakeStories?: () => void;
+  navigateToTakeFlash?: () => void;
 };
 
 export const UserProfile = ({
@@ -30,7 +30,7 @@ export const UserProfile = ({
   navigateToPost,
   navigateToUserEdit,
   navigateToChatRoom,
-  navigateToTakeStories,
+  navigateToTakeFlash,
 }: Props) => {
   return (
     <>
@@ -83,7 +83,7 @@ export const UserProfile = ({
           icon={<MIcon name="flash-on" size={27} style={{color: 'white'}} />}
           containerStyle={styles.storyContainer}
           buttonStyle={styles.stroyButton}
-          onPress={navigateToTakeStories}
+          onPress={navigateToTakeFlash}
         />
       )}
     </>

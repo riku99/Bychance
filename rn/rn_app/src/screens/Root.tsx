@@ -16,7 +16,7 @@ import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
-import {TakeStories} from '../components/stories/TakeStories';
+import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -120,7 +120,7 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="Story"
-        component={TakeStories}
+        component={TakeFlash}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
