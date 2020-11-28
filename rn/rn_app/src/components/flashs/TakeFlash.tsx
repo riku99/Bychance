@@ -7,19 +7,30 @@ import {
   LayoutAnimation,
   ViewStyle,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FIcon from 'react-native-vector-icons/FontAwesome';
+import Video from 'react-native-video';
 
-type Props = {goBack: () => void};
+import {flashMessage} from '../../helpers/flashMessage';
 
-export const TakeFlash = ({goBack}: Props) => {
+type Props = {
+  goBack: () => void;
+  saveDataToCameraRoll: (uri: string) => Promise<void>;
+};
+
+export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
   const [backPhotoMode, setBackPhotoMode] = useState(true);
-  const [takenPhoto, setTakenPhoto] = useState<string | null>(null);
+  const [takenPhoto, setTakenPhoto] = useState<{
+    base64: string;
+    uri: string;
+  } | null>(null);
   const [takenVideo, setTakenVideo] = useState<string | null>(null);
   const [recordingVideo, setRecordingVideo] = useState(false);
+  const [savingData, setSavingData] = useState(false);
 
   const shootButtonFlexstyle: ViewStyle = {
     justifyContent: !recordingVideo ? 'space-evenly' : 'center',
@@ -29,10 +40,11 @@ export const TakeFlash = ({goBack}: Props) => {
 
   const takePicture = async () => {
     if (cameraRef.current) {
-      const options = {quality: 0.9, base64: true};
+      const options = {quality: 1, base64: true};
       const data = await cameraRef.current.takePictureAsync(options);
-      setTakenPhoto('data:image/jpeg;base64,' + data.base64);
-      console.log(data);
+      if (data && data.base64) {
+        setTakenPhoto({base64: data.base64, uri: data.uri});
+      }
     }
   };
 
@@ -40,7 +52,7 @@ export const TakeFlash = ({goBack}: Props) => {
     if (cameraRef.current) {
       const options = {quality: RNCamera.Constants.VideoQuality['1080p']};
       const data = await cameraRef.current.recordAsync(options);
-      console.log(data);
+      setTakenVideo(data.uri);
     }
   };
 
@@ -62,6 +74,7 @@ export const TakeFlash = ({goBack}: Props) => {
                 ? RNCamera.Constants.Type.back
                 : RNCamera.Constants.Type.front
             }
+            keepAudioSession={true}
           />
           <Button
             icon={
@@ -121,15 +134,79 @@ export const TakeFlash = ({goBack}: Props) => {
             />
           </View>
         </>
-      ) : takenPhoto && !takenVideo ? (
-        <>
-          <Image
-            source={{uri: takenPhoto}}
-            style={{width: '100%', height: '100%'}}
-          />
-        </>
       ) : (
-        <View></View>
+        <>
+          {takenPhoto && !takenVideo && !recordingVideo ? (
+            <>
+              <Image
+                source={{uri: 'data:image/jpeg;base64,' + takenPhoto.base64}}
+                style={{width: '100%', height: '100%'}}
+              />
+            </>
+          ) : (
+            !takenPhoto &&
+            !recordingVideo &&
+            takenVideo && (
+              <>
+                <Video
+                  source={{uri: takenVideo}}
+                  style={styles.backGroundVideo}
+                  repeat={true}
+                />
+              </>
+            )
+          )}
+          <View style={styles.saveDataContainer}>
+            <Button
+              icon={
+                <MIcon name="save-alt" style={{color: 'white'}} size={40} />
+              }
+              buttonStyle={styles.saveDataButton}
+              onPress={async () => {
+                setSavingData(true);
+                if (takenPhoto) {
+                  await saveDataToCameraRoll(takenPhoto.uri);
+                  setSavingData(false);
+                  flashMessage('保存しました', 'success');
+                } else if (takenVideo) {
+                  saveDataToCameraRoll(takenVideo);
+                  setSavingData(true);
+                }
+              }}
+              disabled={savingData}
+              disabledStyle={{backgroundColor: 'transparent'}}
+            />
+            <Text style={styles.saveDataText}>フォルダに保存</Text>
+          </View>
+          <View style={styles.addFlashContaienr}>
+            <Button
+              icon={
+                <MIcon
+                  name="add-circle-outline"
+                  style={{color: 'white'}}
+                  size={40}
+                />
+              }
+              buttonStyle={styles.addFlashButton}
+            />
+            <Text style={styles.addFlashText}>フラッシュに追加</Text>
+          </View>
+          <Button
+            icon={
+              <MIcon
+                name={'chevron-right'}
+                style={{color: 'white'}}
+                size={35}
+              />
+            }
+            containerStyle={styles.backButtonContainer}
+            buttonStyle={styles.backButton}
+            onPress={goBack}
+          />
+          {savingData && (
+            <ActivityIndicator style={styles.load} color="white" />
+          )}
+        </>
       )}
     </View>
   );
@@ -180,5 +257,43 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 2,
     backgroundColor: 'transparent',
+  },
+  backGroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  saveDataContainer: {
+    position: 'absolute',
+    bottom: '3%',
+    right: '10%',
+  },
+  saveDataButton: {
+    backgroundColor: 'transparent',
+  },
+  saveDataText: {
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  addFlashContaienr: {
+    position: 'absolute',
+    bottom: '3%',
+    left: '10%',
+  },
+  addFlashButton: {
+    backgroundColor: 'transparent',
+  },
+  addFlashText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  load: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
