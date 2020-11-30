@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::API
-  include UsersHelper
+  include AwsHelper
   include AuthHelper
 
-  def checkAccessToken
+  def check_access_token
     if @user = User.find_by(id: params[:id])
       token = getToken(request.headers)
       if @user.token == User.digest(token)
@@ -12,4 +12,5 @@ class ApplicationController < ActionController::API
       end
     end
   end
+
 end

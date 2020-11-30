@@ -1,5 +1,5 @@
 class Api::V1::RoomMessagesController < ApplicationController
-  before_action :checkAccessToken
+  before_action :check_access_token
 
   def create
     if @user && @user.id == params[:user_id]

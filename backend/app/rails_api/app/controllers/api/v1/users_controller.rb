@@ -2,7 +2,7 @@ class Api::V1::UsersController < ApplicationController
   require 'net/http'
   require 'aws-sdk'
 
-  before_action :checkAccessToken,
+  before_action :check_access_token,
                 only: %i[subsequent_login edit change_display update_position]
 
   def u
@@ -174,11 +174,13 @@ class Api::V1::UsersController < ApplicationController
           messages_arr << RoomMessageSerializer.new(m)
         end
       end
+      flashes = @user.flashes.map { |f| FlashSerializer.new(f)}
       render json: {
                user: UserSerializer.new(@user),
                posts: posts,
                rooms: room_arr,
-               messages: messages_arr
+               messages: messages_arr,
+               flashes: flashes
              }
     else
       render json: { loginError: true }, status: 401
@@ -191,7 +193,7 @@ class Api::V1::UsersController < ApplicationController
       introduce = user_params['introduce']
       message = user_params['message']
       if image = user_params['image']
-        url = createImagePath(image, 'user', "#{@user.id}")
+        url = create_s3_object_path(image, 'user', "#{@user.id}")
       else
         url = @user.image
       end

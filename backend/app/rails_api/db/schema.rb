@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_23_090401) do
+ActiveRecord::Schema.define(version: 2020_11_29_065532) do
+
+  create_table "flashes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "content"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "content_type", null: false
+    t.index ["user_id"], name: "index_flashes_on_user_id"
+  end
 
   create_table "nonces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "nonce"
@@ -48,14 +57,6 @@ ActiveRecord::Schema.define(version: 2020_11_23_090401) do
     t.index ["sender_id"], name: "index_rooms_on_sender_id"
   end
 
-  create_table "stories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "content"
-    t.bigint "user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_stories_on_user_id"
-  end
-
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "uid"
     t.string "name"
@@ -72,9 +73,9 @@ ActiveRecord::Schema.define(version: 2020_11_23_090401) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
+  add_foreign_key "flashes", "users"
   add_foreign_key "room_messages", "rooms"
   add_foreign_key "room_messages", "users"
   add_foreign_key "rooms", "users", column: "recipient_id"
   add_foreign_key "rooms", "users", column: "sender_id"
-  add_foreign_key "stories", "users"
 end

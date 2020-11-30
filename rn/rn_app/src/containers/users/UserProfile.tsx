@@ -9,6 +9,7 @@ import {RootState} from '../../redux/index';
 import {Post, selectAllPosts} from '../../redux/post';
 import {checkKeychain} from '../../helpers/keychain';
 import {RootStackParamList} from '../../screens/Root';
+import {selectAllFlashes} from '../../redux/flashes';
 
 type ProfileNavigationProp = StackNavigationProp<ProfileStackParamList, 'Post'>;
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
@@ -17,8 +18,13 @@ export const Container = () => {
   const user = useSelector((state: RootState) => {
     return state.userReducer.user!;
   }, shallowEqual);
+
   const posts = useSelector((state: RootState) => {
     return selectAllPosts(state);
+  }, shallowEqual);
+
+  const flashes = useSelector((state: RootState) => {
+    return selectAllFlashes(state);
   }, shallowEqual);
 
   const [keychainId, setKeychainId] = useState<null | number>(null);
@@ -58,6 +64,7 @@ export const Container = () => {
       }}
       keychainId={keychainId}
       posts={posts}
+      flashes={flashes}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
       navigateToTakeFlash={pushTakeFlash}

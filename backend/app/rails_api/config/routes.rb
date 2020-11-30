@@ -19,6 +19,8 @@ Rails.application.routes.draw do
       post '/messages', to: 'room_messages#create'
       patch '/messages_read', to: 'room_messages#change_read'
 
+      post '/flashes', to: 'flashes#create'
+
       get '/u', to: 'users#u'
     end
   end

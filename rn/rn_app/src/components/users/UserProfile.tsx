@@ -3,10 +3,13 @@ import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {Posts} from '../posts/Posts';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Post} from '../../redux/post';
+import {Flash} from '../../redux/flashes';
+import {flashesGradation} from '../../constants/lineGradation';
 
 type Props = {
   user: {
@@ -17,6 +20,7 @@ type Props = {
   };
   keychainId: number | null;
   posts: Post[];
+  flashes: Flash[];
   navigateToPost: (post: Post) => void;
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
@@ -26,6 +30,7 @@ type Props = {
 export const UserProfile = ({
   user,
   posts,
+  flashes,
   keychainId,
   navigateToPost,
   navigateToUserEdit,
@@ -36,16 +41,35 @@ export const UserProfile = ({
     <>
       <ScrollView style={styles.container}>
         <View style={styles.image}>
-          <Avatar
-            rounded
-            source={
-              user.image ? {uri: user.image} : require('../../assets/buta.jpg')
-            }
-            size="large"
-            placeholderStyle={{backgroundColor: 'transeparent'}}
-          />
+          {flashes.length ? (
+            <LinearGradient
+              colors={flashesGradation.colors}
+              start={flashesGradation.start}
+              end={flashesGradation.end}
+              style={styles.imageGradation}>
+              <Avatar
+                rounded
+                source={
+                  user.image
+                    ? {uri: user.image}
+                    : require('../../assets/buta.jpg')
+                }
+                size="large"
+              />
+            </LinearGradient>
+          ) : (
+            <Avatar
+              rounded
+              source={
+                user.image
+                  ? {uri: user.image}
+                  : require('../../assets/buta.jpg')
+              }
+              size="large"
+            />
+          )}
         </View>
-        <View style={styles.name_box}>
+        <View style={styles.nameContainer}>
           <Text style={styles.name}>{user.name}</Text>
         </View>
         <View style={styles.edit}>
@@ -95,12 +119,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  imageGradation: {
+    height: 80,
+    width: 80,
+    borderRadius: 80,
+    ...flashesGradation.baseStyle,
+  },
   image: {
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: '10%',
   },
-  name_box: {
+  nameContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: '5%',

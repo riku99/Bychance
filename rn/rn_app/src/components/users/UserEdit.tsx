@@ -34,11 +34,7 @@ const options = {
   allowsEditing: true,
 };
 
-export const UserEdit = ({
-  user,
-
-  editProfile,
-}: Props) => {
+export const UserEdit = ({user, editProfile}: Props) => {
   const [name, setName] = useState(user.name);
   const [introduce, setIntroduce] = useState(
     user.introduce ? user.introduce : '',

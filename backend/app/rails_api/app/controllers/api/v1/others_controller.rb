@@ -1,5 +1,5 @@
 class Api::V1::OthersController < ApplicationController
-  before_action :checkAccessToken
+  before_action :check_access_token
 
   def index
     if @user

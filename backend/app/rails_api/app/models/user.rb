@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :sender_rooms, class_name: "Room" ,foreign_key: :sender_id
   has_many :recipient_rooms, class_name: "Room", foreign_key: :recipient_id
   has_many :room_messages
-  has_many :stories
+  has_many :flashes
   validates :uid, presence: true
   validates :token, presence: true
   validates :name, presence: true, length: { maximum: 20 }

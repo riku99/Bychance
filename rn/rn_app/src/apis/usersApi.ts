@@ -5,6 +5,7 @@ import {UserType} from '../redux/user';
 import {Post} from '../redux/post';
 import {Room} from '../redux/rooms';
 import {MessageType} from '../redux/messages';
+import {Flash} from '../redux/flashes';
 import {headers} from '../helpers/headers';
 import {Credentials} from '../helpers/keychain';
 
@@ -13,6 +14,7 @@ export type SuccessfullLoginData = {
   posts: Post[];
   rooms: Room[];
   messages: MessageType[];
+  flashes: Flash[];
 };
 
 export const sendNonce: (

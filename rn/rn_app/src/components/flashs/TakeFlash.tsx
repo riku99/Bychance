@@ -20,15 +20,28 @@ import {flashMessage} from '../../helpers/flashMessage';
 type Props = {
   goBack: () => void;
   saveDataToCameraRoll: (uri: string) => Promise<void>;
+  createFlash: ({
+    content,
+    contentType,
+    uri,
+  }: {
+    content?: string;
+    contentType: 'image' | 'video';
+    uri: string;
+  }) => Promise<void>;
 };
 
-export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
+export const TakeFlash = ({
+  goBack,
+  saveDataToCameraRoll,
+  createFlash,
+}: Props) => {
   const [backPhotoMode, setBackPhotoMode] = useState(true);
   const [takenPhoto, setTakenPhoto] = useState<{
     base64: string;
     uri: string;
   } | null>(null);
-  const [takenVideo, setTakenVideo] = useState<string | null>(null);
+  const [takenVideo, setTakenVideo] = useState<{uri: string} | null>(null);
   const [recordingVideo, setRecordingVideo] = useState(false);
   const [savingData, setSavingData] = useState(false);
 
@@ -40,7 +53,7 @@ export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
 
   const takePicture = async () => {
     if (cameraRef.current) {
-      const options = {quality: 1, base64: true};
+      const options = {quality: 0.3, base64: true};
       const data = await cameraRef.current.takePictureAsync(options);
       if (data && data.base64) {
         setTakenPhoto({base64: data.base64, uri: data.uri});
@@ -52,7 +65,7 @@ export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
     if (cameraRef.current) {
       const options = {quality: RNCamera.Constants.VideoQuality['1080p']};
       const data = await cameraRef.current.recordAsync(options);
-      setTakenVideo(data.uri);
+      setTakenVideo({uri: data.uri});
     }
   };
 
@@ -139,7 +152,7 @@ export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
           {takenPhoto && !takenVideo && !recordingVideo ? (
             <>
               <Image
-                source={{uri: 'data:image/jpeg;base64,' + takenPhoto.base64}}
+                source={{uri: takenPhoto.uri}}
                 style={{width: '100%', height: '100%'}}
               />
             </>
@@ -149,7 +162,9 @@ export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
             takenVideo && (
               <>
                 <Video
-                  source={{uri: takenVideo}}
+                  source={{
+                    uri: takenVideo.uri,
+                  }}
                   style={styles.backGroundVideo}
                   repeat={true}
                 />
@@ -166,12 +181,11 @@ export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
                 setSavingData(true);
                 if (takenPhoto) {
                   await saveDataToCameraRoll(takenPhoto.uri);
-                  setSavingData(false);
-                  flashMessage('保存しました', 'success');
                 } else if (takenVideo) {
-                  saveDataToCameraRoll(takenVideo);
-                  setSavingData(true);
+                  await saveDataToCameraRoll(takenVideo.uri);
                 }
+                setSavingData(false);
+                flashMessage('保存しました', 'success');
               }}
               disabled={savingData}
               disabledStyle={{backgroundColor: 'transparent'}}
@@ -188,6 +202,17 @@ export const TakeFlash = ({goBack, saveDataToCameraRoll}: Props) => {
                 />
               }
               buttonStyle={styles.addFlashButton}
+              onPress={() => {
+                if (takenPhoto) {
+                  createFlash({
+                    content: takenPhoto.base64,
+                    contentType: 'image',
+                    uri: takenPhoto.uri,
+                  });
+                } else if (takenVideo) {
+                  createFlash({contentType: 'video', uri: takenVideo.uri});
+                }
+              }}
             />
             <Text style={styles.addFlashText}>フラッシュに追加</Text>
           </View>

@@ -6,6 +6,7 @@ import {postsReducer} from './post';
 import othersReducer from './others';
 import {roomsReducer} from './rooms';
 import {messagesReducer} from './messages';
+import {flashesReducer} from './flashes';
 
 type InitialStateType = {displayedMenu?: boolean};
 
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   othersReducer,
   roomsReducer,
   messagesReducer,
+  flashesReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

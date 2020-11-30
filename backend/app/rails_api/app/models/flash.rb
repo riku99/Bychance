@@ -1,4 +1,4 @@
-class Story < ApplicationRecord
+class Flash < ApplicationRecord
     belongs_to :user
     validates :content, presence: true
 end

@@ -1,5 +1,5 @@
 class Api::V1::RoomsController < ApplicationController
-  before_action :checkAccessToken
+  before_action :check_access_token
   def create
     if @user
       room = Room.between(@user.id, params[:recipient_id]).first

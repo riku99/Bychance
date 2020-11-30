@@ -475,6 +475,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-rn_app-rn_appTests/Pods-rn_app-rn_appTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BVLinearGradient/BVLinearGradient.framework",
 				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
 				"${BUILT_PRODUCTS_DIR}/FBReactNativeSpec/FBReactNativeSpec.framework",
 				"${BUILT_PRODUCTS_DIR}/Folly/folly.framework",
@@ -482,6 +483,7 @@
 				"${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCMaskedView/RNCMaskedView.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCPicker/RNCPicker.framework",
+				"${BUILT_PRODUCTS_DIR}/RNFS/RNFS.framework",
 				"${BUILT_PRODUCTS_DIR}/RNGestureHandler/RNGestureHandler.framework",
 				"${BUILT_PRODUCTS_DIR}/RNKeychain/RNKeychain.framework",
 				"${BUILT_PRODUCTS_DIR}/RNLine/RNLine.framework",
@@ -513,6 +515,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BVLinearGradient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBReactNativeSpec.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/folly.framework",
@@ -520,6 +523,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTTypeSafety.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCMaskedView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCPicker.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNFS.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNGestureHandler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNKeychain.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNLine.framework",
@@ -641,6 +645,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-rn_app/Pods-rn_app-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BVLinearGradient/BVLinearGradient.framework",
 				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
 				"${BUILT_PRODUCTS_DIR}/FBReactNativeSpec/FBReactNativeSpec.framework",
 				"${BUILT_PRODUCTS_DIR}/Folly/folly.framework",
@@ -648,6 +653,7 @@
 				"${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCMaskedView/RNCMaskedView.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCPicker/RNCPicker.framework",
+				"${BUILT_PRODUCTS_DIR}/RNFS/RNFS.framework",
 				"${BUILT_PRODUCTS_DIR}/RNGestureHandler/RNGestureHandler.framework",
 				"${BUILT_PRODUCTS_DIR}/RNKeychain/RNKeychain.framework",
 				"${BUILT_PRODUCTS_DIR}/RNLine/RNLine.framework",
@@ -679,6 +685,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BVLinearGradient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBReactNativeSpec.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/folly.framework",
@@ -686,6 +693,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTTypeSafety.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCMaskedView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCPicker.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNFS.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNGestureHandler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNKeychain.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNLine.framework",

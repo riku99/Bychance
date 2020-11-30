@@ -1,10 +1,10 @@
 require 'net/http'
 require 'aws-sdk'
 
-module UsersHelper
-  def createImagePath(image, model, id)
-    base_data = image.sub %r{data:((image|application)\/.{3,}),}, ''
-    decoded_data = Base64.decode64(base_data)
+module AwsHelper
+  def create_s3_object_path(data, model, id, ext = nil)
+    pure_data = data.sub %r{data:((image|application)\/.{3,}),}, ''
+    decoded_data = Base64.decode64(pure_data)
     s3 =
       Aws::S3::Resource.new(
         {
@@ -19,7 +19,19 @@ module UsersHelper
     bucket = s3.bucket('r-message-app')
     file_name = Time.new.strftime('%Y%m%d%H%M%S')
     obj = bucket.object("#{model}/#{id}/#{file_name}")
-    obj.put(body: decoded_data)
+    case ext
+      when "mov" then
+        type = "video/quicktime"
+      when "mp4" then
+        type = "video/mp4"
+      when "png" then
+        type = "image/png"
+      when "jpeg", "jpg" then
+        type = "image/jpeg"
+      else
+        type = nil
+    end
+    obj.put(body:decoded_data, content_type: type)
     obj.public_url
   end
 end
