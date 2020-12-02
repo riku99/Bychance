@@ -22,7 +22,6 @@ export const createFlash = async ({
   | {type: 'someError'; message: string}
 > => {
   try {
-    console.log(ext);
     const response = await axios.post<Flash>(
       `${origin}/flashes`,
       {id, content, contentType, ext},

@@ -25,6 +25,7 @@ type Props = {
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
   navigateToTakeFlash?: () => void;
+  navigateToShowFlash?: () => void;
 };
 
 export const UserProfile = ({
@@ -36,6 +37,7 @@ export const UserProfile = ({
   navigateToUserEdit,
   navigateToChatRoom,
   navigateToTakeFlash,
+  navigateToShowFlash,
 }: Props) => {
   return (
     <>
@@ -55,6 +57,8 @@ export const UserProfile = ({
                     : require('../../assets/buta.jpg')
                 }
                 size="large"
+                activeOpacity={1}
+                onPress={navigateToShowFlash}
               />
             </LinearGradient>
           ) : (
@@ -66,6 +70,7 @@ export const UserProfile = ({
                   : require('../../assets/buta.jpg')
               }
               size="large"
+              onPress={navigateToShowFlash}
             />
           )}
         </View>

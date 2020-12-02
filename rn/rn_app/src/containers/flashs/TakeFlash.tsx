@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import CameraRoll from '@react-native-community/cameraroll';
 
-import {TakeFlash} from '../../components/flashs/TakeFlash';
+import {TakeFlash} from '../../components/flashes/TakeFlash';
 import {AppDispatch} from '../../redux/index';
 import {createFlashThunk} from '../../actions/flashes';
 import fs from 'react-native-fs';

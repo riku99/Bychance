@@ -13,16 +13,18 @@ import {SearchStackScreen} from './Search';
 import {ChatListStackScreen} from './ChatList';
 import {Container as UserEdit} from '../containers/users/UserEdit';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
+import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
+import {Container as ShowFlash} from '../containers/flashs/ShowFlash';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
-import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
   ChatRoom: Room;
-  Story: undefined;
+  TakeFlash: undefined;
+  ShowFlash: undefined;
 };
 
 export type TabList = {
@@ -91,6 +93,9 @@ const Tabs = () => {
 };
 
 export const RootStackScreen = () => {
+  const displayFlash = useSelector((state: RootState) => {
+    return state.indexReducer.displayFlash;
+  });
   return (
     <RootStack.Navigator
       mode="modal"
@@ -119,12 +124,37 @@ export const RootStackScreen = () => {
         }}
       />
       <RootStack.Screen
-        name="Story"
+        name="TakeFlash"
         component={TakeFlash}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal-inverted',
+        }}
+      />
+      <RootStack.Screen
+        name="ShowFlash"
+        component={ShowFlash}
+        options={({route}) => {
+          return {
+            headerShown: false,
+            gestureDirection: 'vertical',
+            gestureResponseDistance: {vertical: 3000},
+            cardStyleInterpolator: ({current}) => {
+              return {
+                cardStyle: {
+                  transform: [
+                    {
+                      scale: current.progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 1],
+                      }),
+                    },
+                  ],
+                },
+              };
+            },
+          };
         }}
       />
     </RootStack.Navigator>

@@ -10,7 +10,9 @@ import {flashesReducer} from './flashes';
 
 type InitialStateType = {displayedMenu?: boolean};
 
-const initialState: InitialStateType = {displayedMenu: false};
+const initialState: InitialStateType = {
+  displayedMenu: false,
+};
 
 const indexSlice = createSlice({
   name: 'index',

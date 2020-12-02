@@ -51,7 +51,11 @@ export const Container = () => {
   };
 
   const pushTakeFlash = () => {
-    navigationForRoot.push('Story');
+    navigationForRoot.push('TakeFlash');
+  };
+
+  const pushShowFlash = () => {
+    navigationForRoot.push('ShowFlash');
   };
 
   return (
@@ -68,6 +72,7 @@ export const Container = () => {
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
       navigateToTakeFlash={pushTakeFlash}
+      navigateToShowFlash={pushShowFlash}
     />
   );
 };
