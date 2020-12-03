@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import {ListItem, Avatar, Badge} from 'react-native-elements';
 
 import {Room} from '../../redux/rooms';

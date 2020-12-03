@@ -18,13 +18,14 @@ import {Container as ShowFlash} from '../containers/flashs/ShowFlash';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
+import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
   ChatRoom: Room;
   TakeFlash: undefined;
-  ShowFlash: undefined;
+  ShowFlash: {userId: number; userName: string; userImage: string | null};
 };
 
 export type TabList = {
@@ -93,13 +94,13 @@ const Tabs = () => {
 };
 
 export const RootStackScreen = () => {
-  const displayFlash = useSelector((state: RootState) => {
-    return state.indexReducer.displayFlash;
-  });
   return (
     <RootStack.Navigator
       mode="modal"
-      screenOptions={{headerBackTitleVisible: false}}>
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerStatusBarHeight: headerStatusBarHeight(),
+      }}>
       <RootStack.Screen
         name="Tab"
         component={Tabs}
@@ -135,7 +136,7 @@ export const RootStackScreen = () => {
       <RootStack.Screen
         name="ShowFlash"
         component={ShowFlash}
-        options={({route}) => {
+        options={({}) => {
           return {
             headerShown: false,
             gestureDirection: 'vertical',

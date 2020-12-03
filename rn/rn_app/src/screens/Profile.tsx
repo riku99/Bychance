@@ -2,9 +2,10 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as UserProfile} from '../containers/users/UserProfile';
-import {MenuBar} from '../components/utils/MenuBar';
 import {Container as Post} from '../containers/posts/Post';
 import {Post as PostType} from '../redux/post';
+import {MenuBar} from '../components/utils/MenuBar';
+import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type ProfileStackParamList = {
   UserProfile: undefined;
@@ -20,6 +21,7 @@ export const ProfileStackScreen = () => {
       screenOptions={{
         headerRight: () => <MenuBar />,
         headerBackTitleVisible: false,
+        headerStatusBarHeight: headerStatusBarHeight(),
       }}>
       <Stack.Screen
         name="UserProfile"

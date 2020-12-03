@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ProfileStackParamList} from '../../screens/Profile';
 
-import {UserProfile} from '../../components/users/UserProfile';
+import {UserProfile, FlashUserInfo} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
 import {Post, selectAllPosts} from '../../redux/post';
 import {checkKeychain} from '../../helpers/keychain';
@@ -12,6 +12,7 @@ import {RootStackParamList} from '../../screens/Root';
 import {selectAllFlashes} from '../../redux/flashes';
 
 type ProfileNavigationProp = StackNavigationProp<ProfileStackParamList, 'Post'>;
+
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 export const Container = () => {
@@ -54,8 +55,12 @@ export const Container = () => {
     navigationForRoot.push('TakeFlash');
   };
 
-  const pushShowFlash = () => {
-    navigationForRoot.push('ShowFlash');
+  const pushShowFlash = ({userId, userName, userImage}: FlashUserInfo) => {
+    navigationForRoot.push('ShowFlash', {
+      userId,
+      userName,
+      userImage,
+    });
   };
 
   return (

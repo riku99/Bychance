@@ -1,4 +1,5 @@
 import React from 'react';
+import {Dimensions} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as SearchOthers} from '../containers/others/SearchOthers';
@@ -7,6 +8,7 @@ import {Container as OtherPost} from '../containers/others/OtherPost';
 import {MenuBar} from '../components/utils/MenuBar';
 import {Post} from '../redux/post';
 import {anotherUser} from '../redux/others';
+import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
@@ -22,6 +24,7 @@ export const SearchStackScreen = () => {
       screenOptions={{
         headerRight: () => <MenuBar />,
         headerBackTitleVisible: false,
+        headerStatusBarHeight: headerStatusBarHeight(),
       }}>
       <Stack.Screen
         name="SearchOthers"
