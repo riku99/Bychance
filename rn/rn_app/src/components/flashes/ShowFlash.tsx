@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -29,27 +29,31 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
     return MAX_PROGRESS_BAR / flashes.length - 1;
   }, [flashes.length]);
 
+  const [currentFlash, setCurrentFlash] = useState(flashes[0]);
+
   const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
   const progressValue = useRef(-progressWidth);
   const currentProgress = useRef(0);
+  const longPress = useRef(false);
 
   const progressAnimation = useCallback(
     (n: number) => {
-      progressAnim[n].addListener((e) => {
-        progressValue.current = e.value;
-      });
-      Animated.timing(progressAnim[n], {
-        toValue: 0,
-        duration: -progressValue.current / (progressWidth / 6000),
-        useNativeDriver: true,
-      }).start((e) => {
-        let _n = ++n;
-        if (e.finished && n < flashes.length) {
-          currentProgress.current = _n;
-          progressValue.current = -progressWidth;
-          return progressAnimation(_n);
-        }
-      });
+      if (n < flashes.length) {
+        progressAnim[n].addListener((e) => {
+          progressValue.current = e.value;
+        });
+        Animated.timing(progressAnim[n], {
+          toValue: 0,
+          duration: -progressValue.current / (progressWidth / 6000),
+          useNativeDriver: true,
+        }).start((e) => {
+          if (e.finished) {
+            currentProgress.current = ++n;
+            progressValue.current = -progressWidth;
+            return progressAnimation(n);
+          }
+        });
+      }
     },
     [flashes.length, progressAnim, progressWidth],
   );
@@ -62,17 +66,34 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
     <TouchableOpacity
       style={styles.container}
       activeOpacity={1}
-      delayLongPress={100}
-      onPress={() => {}}
+      delayLongPress={200}
+      onPress={() => {
+        progressAnim[currentProgress.current].stopAnimation(() => {
+          progressAnim[currentProgress.current].setValue(0);
+        });
+        currentProgress.current += 1;
+        progressValue.current = -progressWidth;
+        progressAnimation(currentProgress.current);
+      }}
       onLongPress={() => {
         progressAnim[currentProgress.current].stopAnimation();
+        longPress.current = true;
       }}
       onPressOut={() => {
-        progressAnimation(currentProgress.current);
+        if (longPress.current) {
+          progressAnimation(currentProgress.current);
+          longPress.current = false;
+        }
       }}
       onPressIn={() => {}}>
       <StatusBar hidden={true} />
-      <Image source={pic} style={{width: '100%', height: '100%'}} />
+      {currentFlash.contentType === 'image' ? (
+        <Image
+          source={pic}
+          //source={{uri: currentFlash.content}}
+          style={{width: '100%', height: '100%'}}
+        />
+      ) : null}
 
       <View style={styles.info}>
         <View style={styles.progressBarConteiner}>
