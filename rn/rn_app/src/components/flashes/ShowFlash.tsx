@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -14,26 +14,49 @@ import {Button} from 'react-native-elements';
 import {X_HEIGHT} from '../../constants/device';
 import {FlashUserInfo} from '../../components/users/UserProfile';
 import {UserAvatar} from '../utils/Avatar';
+import {Flash} from '../../redux/flashes';
 
 const pic = require('../../assets/flight.jpg');
 
 type Props = {
   userInfo: FlashUserInfo;
+  flashes: Flash[];
   navigateToGoback: () => void;
 };
 
-export const ShowFlash = ({userInfo, navigateToGoback}: Props) => {
-  const progressWidth = useRef(1);
+export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
+  const progressWidth = useMemo(() => {
+    return MAX_PROGRESS_BAR / flashes.length - 1;
+  }, [flashes.length]);
 
-  const progressAnim = useRef(new Animated.Value(0)).current;
+  const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
+  const progressValue = useRef(-progressWidth);
+  const currentProgress = useRef(0);
+
+  const progressAnimation = useCallback(
+    (n: number) => {
+      progressAnim[n].addListener((e) => {
+        progressValue.current = e.value;
+      });
+      Animated.timing(progressAnim[n], {
+        toValue: 0,
+        duration: -progressValue.current / (progressWidth / 6000),
+        useNativeDriver: true,
+      }).start((e) => {
+        let _n = ++n;
+        if (e.finished && n < flashes.length) {
+          currentProgress.current = _n;
+          progressValue.current = -progressWidth;
+          return progressAnimation(_n);
+        }
+      });
+    },
+    [flashes.length, progressAnim, progressWidth],
+  );
 
   useEffect(() => {
-    Animated.timing(progressAnim, {
-      toValue: width - 20,
-      duration: 3000,
-      useNativeDriver: false,
-    }).start();
-  }, [progressAnim, progressWidth]);
+    progressAnimation(0);
+  }, [progressAnimation]);
 
   return (
     <TouchableOpacity
@@ -42,27 +65,37 @@ export const ShowFlash = ({userInfo, navigateToGoback}: Props) => {
       delayLongPress={100}
       onPress={() => {}}
       onLongPress={() => {
-        progressAnim.stopAnimation();
+        progressAnim[currentProgress.current].stopAnimation();
       }}
       onPressOut={() => {
-        Animated.timing(progressAnim, {
-          toValue: width - 20,
-          duration:
-            (width - 20 - progressWidth.current) / ((width - 20) / 3000),
-          useNativeDriver: false,
-        }).start();
-      }}>
+        progressAnimation(currentProgress.current);
+      }}
+      onPressIn={() => {}}>
       <StatusBar hidden={true} />
       <Image source={pic} style={{width: '100%', height: '100%'}} />
 
       <View style={styles.info}>
-        <View style={styles.progressBar}>
-          <Animated.View
-            style={{...styles.animatedProgressBar, width: progressAnim}}
-            onLayout={(e) => {
-              progressWidth.current = e.nativeEvent.layout.width;
-            }}
-          />
+        <View style={styles.progressBarConteiner}>
+          {flashes.map((f, i) => {
+            progressAnim[i] = new Animated.Value(-progressWidth);
+
+            return (
+              <View
+                key={i}
+                style={{
+                  ...styles.progressBar,
+                  width: progressWidth,
+                }}>
+                <Animated.View
+                  style={{
+                    ...styles.animatedProgressBar,
+                    width: progressWidth,
+                    transform: [{translateX: progressAnim[i]}],
+                  }}
+                />
+              </View>
+            );
+          })}
         </View>
         <View style={styles.infoItems}>
           <View style={styles.userInfo}>
@@ -83,6 +116,8 @@ export const ShowFlash = ({userInfo, navigateToGoback}: Props) => {
 
 const {height, width} = Dimensions.get('window');
 
+const MAX_PROGRESS_BAR = width - 20;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -94,12 +129,17 @@ const styles = StyleSheet.create({
     top: height > X_HEIGHT ? 37 : 5,
     alignSelf: 'center',
   },
+  progressBarConteiner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   progressBar: {
-    width: width - 20,
+    width: MAX_PROGRESS_BAR,
     height: 3,
     marginTop: 8,
     borderRadius: 5,
     backgroundColor: '#bdbdbd',
+    overflow: 'hidden',
   },
   animatedProgressBar: {
     height: 3,
