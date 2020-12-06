@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import {Avatar, Button} from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -70,18 +70,7 @@ export const UserProfile = ({
               />
             </LinearGradient>
           ) : (
-            <UserAvatar
-              image={user.image}
-              size="large"
-              opacity={1}
-              onPress={() => {
-                navigateToShowFlash({
-                  userId: user.id,
-                  userName: user.name,
-                  userImage: user.image,
-                });
-              }}
-            />
+            <UserAvatar image={user.image} size="large" opacity={1} />
           )}
         </View>
         <View style={styles.nameContainer}>

@@ -8,15 +8,15 @@ import {
   Image,
   Animated,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {Button} from 'react-native-elements';
+import Video from 'react-native-video';
 
 import {X_HEIGHT} from '../../constants/device';
 import {FlashUserInfo} from '../../components/users/UserProfile';
 import {UserAvatar} from '../utils/Avatar';
 import {Flash} from '../../redux/flashes';
-
-const pic = require('../../assets/flight.jpg');
 
 type Props = {
   userInfo: FlashUserInfo;
@@ -30,37 +30,51 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
   }, [flashes.length]);
 
   const [currentFlash, setCurrentFlash] = useState(flashes[0]);
+  const [onLoading, setOnLoading] = useState(true);
 
+  const firstRender = useRef(false);
   const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
   const progressValue = useRef(-progressWidth);
   const currentProgress = useRef(0);
   const longPress = useRef(false);
+  const videoDuration = useRef<number | undefined>(undefined);
+  const videoStart = useRef(true);
 
   const progressAnimation = useCallback(
-    (n: number) => {
-      if (n < flashes.length) {
-        progressAnim[n].addListener((e) => {
+    ({
+      progressNumber,
+      duration = 5000,
+    }: {
+      progressNumber: number;
+      duration?: number;
+    }) => {
+      if (progressNumber < flashes.length) {
+        progressAnim[progressNumber].addListener((e) => {
           progressValue.current = e.value;
         });
-        Animated.timing(progressAnim[n], {
+        progressValue.current = -progressWidth;
+        Animated.timing(progressAnim[progressNumber], {
           toValue: 0,
-          duration: -progressValue.current / (progressWidth / 6000),
+          duration: -progressValue.current / (progressWidth / duration),
           useNativeDriver: true,
         }).start((e) => {
+          videoDuration.current = undefined;
           if (e.finished) {
-            currentProgress.current = ++n;
-            progressValue.current = -progressWidth;
-            return progressAnimation(n);
+            currentProgress.current += 1;
+            if (currentProgress.current === flashes.length) {
+              return;
+            }
+            setCurrentFlash(flashes[currentProgress.current]);
           }
         });
       }
     },
-    [flashes.length, progressAnim, progressWidth],
+    [progressAnim, progressWidth, flashes],
   );
 
   useEffect(() => {
-    progressAnimation(0);
-  }, [progressAnimation]);
+    firstRender.current = true;
+  }, []);
 
   return (
     <TouchableOpacity
@@ -68,12 +82,12 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
       activeOpacity={1}
       delayLongPress={200}
       onPress={() => {
-        progressAnim[currentProgress.current].stopAnimation(() => {
-          progressAnim[currentProgress.current].setValue(0);
-        });
-        currentProgress.current += 1;
-        progressValue.current = -progressWidth;
-        progressAnimation(currentProgress.current);
+        progressAnim[currentProgress.current].setValue(0);
+        if (currentProgress.current < flashes.length - 1) {
+          currentProgress.current += 1;
+          setCurrentFlash(flashes[currentProgress.current]);
+          videoDuration.current = undefined;
+        }
       }}
       onLongPress={() => {
         progressAnim[currentProgress.current].stopAnimation();
@@ -81,25 +95,61 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
       }}
       onPressOut={() => {
         if (longPress.current) {
-          progressAnimation(currentProgress.current);
+          progressAnimation({
+            progressNumber: currentProgress.current,
+            duration: videoDuration.current,
+          });
           longPress.current = false;
         }
       }}
       onPressIn={() => {}}>
       <StatusBar hidden={true} />
       {currentFlash.contentType === 'image' ? (
-        <Image
-          source={pic}
-          //source={{uri: currentFlash.content}}
+        <View style={styles.imageContainer}>
+          <Image
+            source={{uri: currentFlash.content}}
+            style={{width: '100%', height: '100%'}}
+            onLoadStart={() => {
+              setOnLoading(true);
+            }}
+            onLoad={() => {
+              setOnLoading(false);
+              progressAnimation({progressNumber: currentProgress.current});
+            }}
+          />
+        </View>
+      ) : (
+        <Video
+          source={{uri: currentFlash.content}}
           style={{width: '100%', height: '100%'}}
+          onLoadStart={() => {
+            setOnLoading(true);
+          }}
+          onLoad={(e) => {
+            videoDuration.current = e.duration * 1000;
+          }}
+          onProgress={({currentTime}) => {
+            setOnLoading(false);
+            if (currentTime > 0.002 && videoStart.current) {
+              progressAnimation({
+                progressNumber: currentProgress.current,
+                duration: videoDuration.current,
+              });
+              videoStart.current = false;
+            }
+          }}
+          onEnd={() => {
+            videoStart.current = true;
+          }}
         />
-      ) : null}
+      )}
 
       <View style={styles.info}>
         <View style={styles.progressBarConteiner}>
           {flashes.map((f, i) => {
-            progressAnim[i] = new Animated.Value(-progressWidth);
-
+            if (!firstRender.current) {
+              progressAnim[i] = new Animated.Value(-progressWidth);
+            }
             return (
               <View
                 key={i}
@@ -131,6 +181,7 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
           />
         </View>
       </View>
+      {onLoading && <ActivityIndicator size="large" style={styles.indicator} />}
     </TouchableOpacity>
   );
 };
@@ -189,5 +240,15 @@ const styles = StyleSheet.create({
   timestamp: {
     marginLeft: 10,
     color: 'white',
+  },
+  imageContainer: {
+    backgroundColor: '#1f1f1f',
+  },
+  indicator: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
