@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,6 +8,8 @@ import {
   ViewStyle,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
@@ -18,6 +20,18 @@ import Video from 'react-native-video';
 import {flashMessage} from '../../helpers/flashMessage';
 
 type Props = {
+  cameraRef: React.RefObject<RNCamera>;
+  targetPhoto: {
+    base64: string;
+    uri: string;
+  } | null;
+  targetVideo: {
+    uri: string;
+  } | null;
+  firstCameraRollPhoto: string | null;
+  takePhoto: () => Promise<void>;
+  takeVideo: () => Promise<void>;
+  stopVideo: () => void;
   goBack: () => void;
   saveDataToCameraRoll: (uri: string) => Promise<void>;
   createFlash: ({
@@ -29,213 +43,216 @@ type Props = {
     contentType: 'image' | 'video';
     uri: string;
   }) => Promise<void>;
+  pickImageOrVideo: () => void;
 };
 
-export const TakeFlash = ({
-  goBack,
-  saveDataToCameraRoll,
-  createFlash,
-}: Props) => {
-  const [backPhotoMode, setBackPhotoMode] = useState(true);
-  const [takenPhoto, setTakenPhoto] = useState<{
-    base64: string;
-    uri: string;
-  } | null>(null);
-  const [takenVideo, setTakenVideo] = useState<{uri: string} | null>(null);
-  const [recordingVideo, setRecordingVideo] = useState(false);
-  const [savingData, setSavingData] = useState(false);
+export const TakeFlash = React.memo(
+  ({
+    cameraRef,
+    targetPhoto,
+    targetVideo,
+    firstCameraRollPhoto,
+    takePhoto,
+    takeVideo,
+    stopVideo,
+    goBack,
+    saveDataToCameraRoll,
+    createFlash,
+    pickImageOrVideo,
+  }: Props) => {
+    const [backPhotoMode, setBackPhotoMode] = useState(true);
+    const [recordingVideo, setRecordingVideo] = useState(false);
+    const [savingData, setSavingData] = useState(false);
 
-  const shootButtonFlexstyle: ViewStyle = {
-    justifyContent: !recordingVideo ? 'space-evenly' : 'center',
-  };
+    const shootButtonFlexstyle: ViewStyle = {
+      justifyContent: !recordingVideo ? 'space-evenly' : 'center',
+    };
 
-  const cameraRef = useRef<RNCamera>(null);
-
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      const options = {quality: 0.3, base64: true};
-      const data = await cameraRef.current.takePictureAsync(options);
-      if (data && data.base64) {
-        setTakenPhoto({base64: data.base64, uri: data.uri});
-      }
-    }
-  };
-
-  const takeVideo = async () => {
-    if (cameraRef.current) {
-      const options = {quality: RNCamera.Constants.VideoQuality['1080p']};
-      const data = await cameraRef.current.recordAsync(options);
-      setTakenVideo({uri: data.uri});
-    }
-  };
-
-  const stopVideo = () => {
-    if (cameraRef.current) {
-      cameraRef.current.stopRecording();
-    }
-  };
-
-  return (
-    <View style={styles.container}>
-      {!takenPhoto && !takenVideo ? (
-        <>
-          <RNCamera
-            ref={cameraRef}
-            style={styles.preview}
-            type={
-              backPhotoMode
-                ? RNCamera.Constants.Type.back
-                : RNCamera.Constants.Type.front
-            }
-            keepAudioSession={true}
-          />
-          <Button
-            icon={
-              <MIcon
-                name={'chevron-right'}
-                style={{color: 'white'}}
-                size={35}
-              />
-            }
-            containerStyle={styles.backButtonContainer}
-            buttonStyle={styles.backButton}
-            onPress={goBack}
-          />
-          <Button
-            icon={
-              <MIcon name="party-mode" style={{color: 'white'}} size={25} />
-            }
-            containerStyle={styles.changePhotoModeButtonContainer}
-            buttonStyle={styles.changePhotoModeButton}
-            onPress={() => {
-              backPhotoMode ? setBackPhotoMode(false) : setBackPhotoMode(true);
-            }}
-          />
-          <View style={{...styles.shootButtonBox, ...shootButtonFlexstyle}}>
-            {!recordingVideo && (
-              <Button
-                icon={
-                  <MIcon
-                    name="enhance-photo-translate"
-                    size={20}
-                    style={{color: 'white'}}
-                  />
-                }
-                buttonStyle={styles.shootButton}
-                onPress={takePicture}
-              />
-            )}
-            <Button
-              icon={
-                recordingVideo ? (
-                  <FIcon name="square" style={{color: 'red'}} size={25} />
-                ) : (
-                  <MIcon name="video-call" size={20} style={{color: 'white'}} />
-                )
+    return (
+      <View style={styles.container}>
+        {!targetPhoto && !targetVideo ? (
+          <>
+            <RNCamera
+              ref={cameraRef}
+              style={styles.preview}
+              type={
+                backPhotoMode
+                  ? RNCamera.Constants.Type.back
+                  : RNCamera.Constants.Type.front
               }
-              buttonStyle={styles.shootButton}
-              onPress={() => {
-                if (!recordingVideo) {
-                  LayoutAnimation.easeInEaseOut();
-                  setRecordingVideo(true);
-                  takeVideo();
-                } else {
-                  stopVideo();
-                  setRecordingVideo(false);
-                }
-              }}
+              keepAudioSession={true}
             />
-          </View>
-        </>
-      ) : (
-        <>
-          {takenPhoto && !takenVideo && !recordingVideo ? (
-            <>
-              <Image
-                source={{uri: takenPhoto.uri}}
-                style={{width: '100%', height: '100%'}}
-              />
-            </>
-          ) : (
-            !takenPhoto &&
-            !recordingVideo &&
-            takenVideo && (
-              <>
-                <Video
-                  source={{
-                    uri: takenVideo.uri,
-                  }}
-                  style={styles.backGroundVideo}
-                  repeat={true}
-                />
-              </>
-            )
-          )}
-          <View style={styles.saveDataContainer}>
-            <Button
-              icon={
-                <MIcon name="save-alt" style={{color: 'white'}} size={40} />
-              }
-              buttonStyle={styles.saveDataButton}
-              onPress={async () => {
-                setSavingData(true);
-                if (takenPhoto) {
-                  await saveDataToCameraRoll(takenPhoto.uri);
-                } else if (takenVideo) {
-                  await saveDataToCameraRoll(takenVideo.uri);
-                }
-                setSavingData(false);
-                flashMessage('保存しました', 'success');
-              }}
-              disabled={savingData}
-              disabledStyle={{backgroundColor: 'transparent'}}
-            />
-            <Text style={styles.saveDataText}>フォルダに保存</Text>
-          </View>
-          <View style={styles.addFlashContaienr}>
             <Button
               icon={
                 <MIcon
-                  name="add-circle-outline"
+                  name={'chevron-right'}
                   style={{color: 'white'}}
-                  size={40}
+                  size={45}
                 />
               }
-              buttonStyle={styles.addFlashButton}
+              containerStyle={styles.backButtonContainer}
+              buttonStyle={styles.backButton}
+              onPress={goBack}
+            />
+            <Button
+              icon={
+                <MIcon name="party-mode" style={{color: 'white'}} size={35} />
+              }
+              containerStyle={styles.changePhotoModeButtonContainer}
+              buttonStyle={styles.changePhotoModeButton}
               onPress={() => {
-                if (takenPhoto) {
-                  createFlash({
-                    content: takenPhoto.base64,
-                    contentType: 'image',
-                    uri: takenPhoto.uri,
-                  });
-                } else if (takenVideo) {
-                  createFlash({contentType: 'video', uri: takenVideo.uri});
-                }
+                backPhotoMode
+                  ? setBackPhotoMode(false)
+                  : setBackPhotoMode(true);
               }}
             />
-            <Text style={styles.addFlashText}>フラッシュに追加</Text>
-          </View>
-          <Button
-            icon={
-              <MIcon
-                name={'chevron-right'}
-                style={{color: 'white'}}
-                size={35}
+            <View style={{...styles.shootButtonBox, ...shootButtonFlexstyle}}>
+              {!recordingVideo && (
+                <Button
+                  icon={
+                    <MIcon
+                      name="enhance-photo-translate"
+                      size={25}
+                      style={{color: 'white'}}
+                    />
+                  }
+                  buttonStyle={styles.shootButton}
+                  onPress={takePhoto}
+                />
+              )}
+              <Button
+                icon={
+                  recordingVideo ? (
+                    <FIcon name="square" style={{color: 'red'}} size={25} />
+                  ) : (
+                    <MIcon
+                      name="video-call"
+                      size={25}
+                      style={{color: 'white'}}
+                    />
+                  )
+                }
+                buttonStyle={styles.shootButton}
+                onPress={() => {
+                  if (!recordingVideo) {
+                    LayoutAnimation.easeInEaseOut();
+                    setRecordingVideo(true);
+                    takeVideo();
+                  } else {
+                    stopVideo();
+                    setRecordingVideo(false);
+                  }
+                }}
               />
-            }
-            containerStyle={styles.backButtonContainer}
-            buttonStyle={styles.backButton}
-            onPress={goBack}
-          />
-          {savingData && (
-            <ActivityIndicator style={styles.load} color="white" />
-          )}
-        </>
-      )}
-    </View>
-  );
-};
+            </View>
+            <TouchableOpacity
+              style={styles.accessCamerarollContainer}
+              activeOpacity={1}
+              onPress={() => {
+                pickImageOrVideo();
+              }}>
+              {firstCameraRollPhoto && (
+                <ImageBackground
+                  source={{uri: firstCameraRollPhoto}}
+                  style={{
+                    width: styles.accessCamerarollContainer.width,
+                    height: styles.accessCamerarollContainer.height,
+                  }}
+                  imageStyle={styles.accessCamerarollImage}
+                />
+              )}
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            {targetPhoto && !targetVideo && !recordingVideo ? (
+              <>
+                <Image
+                  source={{uri: targetPhoto.uri}}
+                  style={{width: '100%', height: '100%'}}
+                />
+              </>
+            ) : (
+              !targetPhoto &&
+              !recordingVideo &&
+              targetVideo && (
+                <>
+                  <Video
+                    source={{
+                      uri: targetVideo.uri,
+                    }}
+                    style={styles.backGroundVideo}
+                    repeat={true}
+                  />
+                </>
+              )
+            )}
+            <View style={styles.saveDataContainer}>
+              <Button
+                icon={
+                  <MIcon name="save-alt" style={{color: 'white'}} size={40} />
+                }
+                buttonStyle={styles.saveDataButton}
+                onPress={async () => {
+                  setSavingData(true);
+                  if (targetPhoto) {
+                    await saveDataToCameraRoll(targetPhoto.uri);
+                  } else if (targetVideo) {
+                    await saveDataToCameraRoll(targetVideo.uri);
+                  }
+                  setSavingData(false);
+                  flashMessage('保存しました', 'success');
+                }}
+                disabled={savingData}
+                disabledStyle={{backgroundColor: 'transparent'}}
+              />
+              <Text style={styles.saveDataText}>フォルダに保存</Text>
+            </View>
+            <View style={styles.addFlashContaienr}>
+              <Button
+                icon={
+                  <MIcon
+                    name="add-circle-outline"
+                    style={{color: 'white'}}
+                    size={40}
+                  />
+                }
+                buttonStyle={styles.addFlashButton}
+                onPress={() => {
+                  if (targetPhoto) {
+                    createFlash({
+                      content: targetPhoto.base64,
+                      contentType: 'image',
+                      uri: targetPhoto.uri,
+                    });
+                  } else if (targetVideo) {
+                    createFlash({contentType: 'video', uri: targetVideo.uri});
+                  }
+                }}
+              />
+              <Text style={styles.addFlashText}>フラッシュに追加</Text>
+            </View>
+            <Button
+              icon={
+                <MIcon
+                  name={'chevron-right'}
+                  style={{color: 'white'}}
+                  size={35}
+                />
+              }
+              containerStyle={styles.backButtonContainer}
+              buttonStyle={styles.backButton}
+              onPress={goBack}
+            />
+            {savingData && (
+              <ActivityIndicator style={styles.load} color="white" />
+            )}
+          </>
+        )}
+      </View>
+    );
+  },
+);
 
 const {width} = Dimensions.get('window');
 
@@ -251,8 +268,8 @@ const styles = StyleSheet.create({
   changePhotoModeButtonContainer: {
     width: '15%',
     position: 'absolute',
-    top: '8%',
-    left: '5%',
+    top: '9%',
+    left: 27,
   },
   changePhotoModeButton: {
     backgroundColor: 'transparent',
@@ -260,25 +277,39 @@ const styles = StyleSheet.create({
   backButtonContainer: {
     width: '13%',
     position: 'absolute',
-    top: '8%',
+    top: '9%',
     right: '5%',
   },
   backButton: {
     backgroundColor: 'transparent',
   },
+  accessCamerarollContainer: {
+    position: 'absolute',
+    bottom: '3%',
+    left: 25,
+    width: 35,
+    height: 35,
+    borderRadius: 10,
+    backgroundColor: '#e0e0e0',
+  },
+  accessCamerarollImage: {
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'white',
+  },
   shootButtonBox: {
     width: '80%',
-    height: '8%',
+    height: '10%',
     position: 'absolute',
-    bottom: '5%',
+    bottom: '8%',
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
   },
   shootButton: {
-    width: width / 7,
-    height: width / 7,
-    borderRadius: width / 7,
+    width: width / 6,
+    height: width / 6,
+    borderRadius: width / 6,
     borderColor: 'white',
     borderWidth: 2,
     backgroundColor: 'transparent',

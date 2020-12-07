@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -21,211 +21,223 @@ import {Flash} from '../../redux/flashes';
 type Props = {
   userInfo: FlashUserInfo;
   flashes: Flash[];
+  firstRender: React.MutableRefObject<boolean>;
   navigateToGoback: () => void;
 };
 
-export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
-  const progressWidth = useMemo(() => {
-    return MAX_PROGRESS_BAR / flashes.length - 1;
-  }, [flashes.length]);
+export const ShowFlash = React.memo(
+  ({userInfo, flashes, firstRender, navigateToGoback}: Props) => {
+    const progressWidth = useMemo(() => {
+      return MAX_PROGRESS_BAR / flashes.length - 1;
+    }, [flashes.length]);
 
-  const [currentFlash, setCurrentFlash] = useState(flashes[0]);
-  const [onLoading, setOnLoading] = useState(true);
-  const [isPaused, setisPaused] = useState(false);
+    const [currentFlash, setCurrentFlash] = useState(flashes[0]);
+    const [onLoading, setOnLoading] = useState(true);
+    const [isPaused, setIsPaused] = useState(false);
 
-  const firstRender = useRef(false);
-  const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
-  const progressValue = useRef(-progressWidth);
-  const currentProgress = useRef(0);
-  const longPress = useRef(false);
-  const videoDuration = useRef<number | undefined>(undefined);
-  const videoStart = useRef(true);
+    const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
+    const progressValue = useRef(-progressWidth);
+    const currentProgress = useRef(0);
+    const longPress = useRef(false);
+    const videoDuration = useRef<number | undefined>(undefined);
+    const videoStart = useRef(true);
 
-  const progressAnimation = useCallback(
-    ({
-      progressNumber,
-      duration = 5000,
-      restart = false,
-    }: {
-      progressNumber: number;
-      duration?: number;
-      restart?: boolean;
-    }) => {
-      if (progressNumber < flashes.length) {
-        progressAnim[progressNumber].addListener((e) => {
-          progressValue.current = e.value;
-        });
-        if (!restart) {
-          progressValue.current = -progressWidth;
-        }
-        Animated.timing(progressAnim[progressNumber], {
-          toValue: 0,
-          duration: -progressValue.current / (progressWidth / duration),
-          useNativeDriver: true,
-        }).start((e) => {
-          if (!videoStart) {
-            videoDuration.current = undefined;
-          }
-          if (e.finished) {
-            currentProgress.current += 1;
-            if (currentProgress.current === flashes.length) {
-              return;
-            }
-            setCurrentFlash(flashes[currentProgress.current]);
-          }
-        });
-      }
-    },
-    [progressAnim, progressWidth, flashes],
-  );
-
-  const getTimeDiff = useCallback((timestamp: string) => {
-    const now = new Date();
-    const createdAt = new Date(timestamp);
-    const diff = now.getTime() - createdAt.getTime();
-    return Math.floor(diff / (1000 * 60 * 60));
-  }, []);
-
-  useEffect(() => {
-    firstRender.current = true;
-  }, []);
-
-  return (
-    <TouchableOpacity
-      style={styles.container}
-      activeOpacity={1}
-      delayLongPress={200}
-      onPress={(e) => {
-        if (e.nativeEvent.locationX > width / 2) {
-          progressAnim[currentProgress.current].setValue(0);
-          if (currentProgress.current < flashes.length - 1) {
-            currentProgress.current += 1;
-            setCurrentFlash(flashes[currentProgress.current]);
-            videoDuration.current = undefined;
-          }
-        } else {
-          progressAnim[currentProgress.current].setValue(-progressWidth);
-          if (currentProgress.current > 0) {
-            progressAnim[currentProgress.current - 1].setValue(-progressWidth);
-            currentProgress.current -= 1;
-            setCurrentFlash(flashes[currentProgress.current]);
-            videoDuration.current = undefined;
-          } else {
-            progressAnimation({progressNumber: 0});
-          }
-        }
-      }}
-      onLongPress={() => {
-        progressAnim[currentProgress.current].stopAnimation();
-        if (videoStart) {
-          setisPaused(true);
-        }
-        longPress.current = true;
-      }}
-      onPressOut={() => {
-        if (longPress.current) {
-          progressAnimation({
-            progressNumber: currentProgress.current,
-            duration: videoDuration.current,
-            restart: true,
+    const progressAnimation = useCallback(
+      ({
+        progressNumber,
+        duration = 5000,
+        restart = false,
+      }: {
+        progressNumber: number;
+        duration?: number;
+        restart?: boolean;
+      }) => {
+        if (progressNumber < flashes.length) {
+          progressAnim[progressNumber].addListener((e) => {
+            progressValue.current = e.value;
           });
-          if (videoStart) {
-            setisPaused(false);
+          if (!restart) {
+            progressValue.current = -progressWidth;
           }
-          longPress.current = false;
+          Animated.timing(progressAnim[progressNumber], {
+            toValue: 0,
+            duration: -progressValue.current / (progressWidth / duration),
+            useNativeDriver: true,
+          }).start((e) => {
+            if (!videoStart) {
+              videoDuration.current = undefined;
+            }
+            if (e.finished) {
+              if (currentProgress.current === flashes.length - 1) {
+                return;
+              }
+              currentProgress.current += 1;
+              setCurrentFlash(flashes[currentProgress.current]);
+            }
+          });
         }
-      }}>
-      <StatusBar hidden={true} />
-      {currentFlash.contentType === 'image' ? (
-        <View style={styles.soruceContainer}>
-          <Image
-            source={{uri: currentFlash.content}}
-            style={{width: '100%', height: '100%'}}
-            onLoadStart={() => {
-              setOnLoading(true);
-            }}
-            onLoad={() => {
-              setOnLoading(false);
-              progressAnimation({progressNumber: currentProgress.current});
-            }}
-          />
-        </View>
-      ) : (
-        <View style={styles.soruceContainer}>
-          <Video
-            source={{uri: currentFlash.content}}
-            style={{width: '100%', height: '100%'}}
-            paused={isPaused}
-            onLoadStart={() => {
-              setOnLoading(true);
-            }}
-            onLoad={(e) => {
-              videoDuration.current = e.duration * 1000;
-            }}
-            onProgress={({currentTime}) => {
-              setOnLoading(false);
-              if (currentTime > 0.002 && videoStart.current) {
+      },
+      [progressAnim, progressWidth, flashes],
+    );
+
+    const getTimeDiff = useCallback((timestamp: string) => {
+      const now = new Date();
+      const createdAt = new Date(timestamp);
+      const diff = now.getTime() - createdAt.getTime();
+      return Math.floor(diff / (1000 * 60 * 60));
+    }, []);
+
+    return (
+      <TouchableOpacity
+        style={styles.container}
+        activeOpacity={1}
+        delayLongPress={200}
+        onPress={(e) => {
+          if (e.nativeEvent.locationX > width / 2) {
+            progressAnim[currentProgress.current].setValue(0);
+            if (currentProgress.current < flashes.length - 1) {
+              currentProgress.current += 1;
+              setCurrentFlash(flashes[currentProgress.current]);
+              videoDuration.current = undefined;
+            }
+          } else {
+            if (currentProgress.current > 0) {
+              if (-progressValue.current > progressWidth / 5) {
+                console.log(-progressValue.current);
+                console.log(progressWidth / 5);
+                progressAnim[currentProgress.current].setValue(-progressWidth);
+                currentProgress.current -= 1;
+                setCurrentFlash(flashes[currentProgress.current]);
+                videoDuration.current = undefined;
+              } else {
+                progressAnim[currentProgress.current].setValue(-progressWidth);
                 progressAnimation({
                   progressNumber: currentProgress.current,
-                  duration: videoDuration.current,
+                  duration: videoDuration.current
+                    ? videoDuration.current
+                    : undefined,
                 });
-                videoStart.current = false;
               }
-            }}
-            onEnd={() => {
-              videoStart.current = true;
-            }}
-          />
-        </View>
-      )}
-
-      <View style={styles.info}>
-        <View style={styles.progressBarConteiner}>
-          {flashes.map((f, i) => {
-            if (!firstRender.current) {
-              progressAnim[i] = new Animated.Value(-progressWidth);
+            } else {
+              progressAnimation({progressNumber: 0});
             }
-            return (
-              <View
-                key={i}
-                style={{
-                  ...styles.progressBar,
-                  width: progressWidth,
-                }}>
-                <Animated.View
-                  style={{
-                    ...styles.animatedProgressBar,
-                    width: progressWidth,
-                    transform: [{translateX: progressAnim[i]}],
-                  }}
-                />
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.infoItems}>
-          <View style={styles.userInfo}>
-            <UserAvatar image={userInfo.userImage} size="small" opacity={1} />
-            <Text style={styles.userName}>{userInfo.userName}</Text>
-            <Text style={styles.timestamp}>
-              {getTimeDiff(flashes[currentProgress.current].timestamp) < 24
-                ? getTimeDiff(
-                    flashes[currentProgress.current].timestamp,
-                  ).toString() + '時間前'
-                : '1日前'}
-            </Text>
+          }
+        }}
+        onLongPress={() => {
+          progressAnim[currentProgress.current].stopAnimation();
+          if (videoStart) {
+            setIsPaused(true);
+          }
+          longPress.current = true;
+        }}
+        onPressOut={() => {
+          if (longPress.current) {
+            progressAnimation({
+              progressNumber: currentProgress.current,
+              duration: videoDuration.current,
+              restart: true,
+            });
+            if (videoStart) {
+              setIsPaused(false);
+            }
+            longPress.current = false;
+          }
+        }}>
+        <StatusBar hidden={true} />
+        {currentFlash.contentType === 'image' ? (
+          <View style={styles.soruceContainer}>
+            <Image
+              source={{uri: currentFlash.content}}
+              style={{width: '100%', height: '100%'}}
+              onLoadStart={() => {
+                setOnLoading(true);
+              }}
+              onLoad={() => {
+                setOnLoading(false);
+                progressAnimation({progressNumber: currentProgress.current});
+              }}
+            />
           </View>
-          <Button
-            icon={{name: 'close', color: 'white'}}
-            buttonStyle={{backgroundColor: 'transparent'}}
-            onPress={navigateToGoback}
-          />
+        ) : (
+          <View style={styles.soruceContainer}>
+            <Video
+              source={{uri: currentFlash.content}}
+              style={{width: '100%', height: '100%'}}
+              resizeMode="cover"
+              paused={isPaused}
+              onLoadStart={() => {
+                setOnLoading(true);
+              }}
+              onLoad={(e) => {
+                videoDuration.current = e.duration * 1000;
+              }}
+              onProgress={({currentTime}) => {
+                setOnLoading(false);
+                if (currentTime > 0.002 && videoStart.current) {
+                  progressAnimation({
+                    progressNumber: currentProgress.current,
+                    duration: videoDuration.current,
+                  });
+                  videoStart.current = false;
+                }
+              }}
+              onEnd={() => {
+                videoStart.current = true;
+              }}
+            />
+          </View>
+        )}
+
+        <View style={styles.info}>
+          <View style={styles.progressBarConteiner}>
+            {flashes.map((f, i) => {
+              if (!firstRender.current) {
+                progressAnim[i] = new Animated.Value(-progressWidth);
+              }
+              return (
+                <View
+                  key={i}
+                  style={{
+                    ...styles.progressBar,
+                    width: progressWidth,
+                  }}>
+                  <Animated.View
+                    style={{
+                      ...styles.animatedProgressBar,
+                      width: progressWidth,
+                      transform: [{translateX: progressAnim[i]}],
+                    }}
+                  />
+                </View>
+              );
+            })}
+          </View>
+          <View style={styles.infoItems}>
+            <View style={styles.userInfo}>
+              <UserAvatar image={userInfo.userImage} size="small" opacity={1} />
+              <Text style={styles.userName}>{userInfo.userName}</Text>
+              <Text style={styles.timestamp}>
+                {getTimeDiff(flashes[currentProgress.current].timestamp) < 24
+                  ? getTimeDiff(
+                      flashes[currentProgress.current].timestamp,
+                    ).toString() + '時間前'
+                  : '1日前'}
+              </Text>
+            </View>
+            <Button
+              icon={{name: 'close', color: 'white'}}
+              buttonStyle={{backgroundColor: 'transparent'}}
+              onPress={navigateToGoback}
+            />
+          </View>
         </View>
-      </View>
-      {onLoading && <ActivityIndicator size="large" style={styles.indicator} />}
-    </TouchableOpacity>
-  );
-};
+        {onLoading && (
+          <ActivityIndicator size="large" style={styles.indicator} />
+        )}
+      </TouchableOpacity>
+    );
+  },
+);
 
 const {height, width} = Dimensions.get('window');
 
