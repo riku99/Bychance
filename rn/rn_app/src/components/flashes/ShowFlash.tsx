@@ -31,6 +31,7 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
 
   const [currentFlash, setCurrentFlash] = useState(flashes[0]);
   const [onLoading, setOnLoading] = useState(true);
+  const [isPaused, setisPaused] = useState(false);
 
   const firstRender = useRef(false);
   const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
@@ -44,21 +45,27 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
     ({
       progressNumber,
       duration = 5000,
+      restart = false,
     }: {
       progressNumber: number;
       duration?: number;
+      restart?: boolean;
     }) => {
       if (progressNumber < flashes.length) {
         progressAnim[progressNumber].addListener((e) => {
           progressValue.current = e.value;
         });
-        progressValue.current = -progressWidth;
+        if (!restart) {
+          progressValue.current = -progressWidth;
+        }
         Animated.timing(progressAnim[progressNumber], {
           toValue: 0,
           duration: -progressValue.current / (progressWidth / duration),
           useNativeDriver: true,
         }).start((e) => {
-          videoDuration.current = undefined;
+          if (!videoStart) {
+            videoDuration.current = undefined;
+          }
           if (e.finished) {
             currentProgress.current += 1;
             if (currentProgress.current === flashes.length) {
@@ -72,6 +79,13 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
     [progressAnim, progressWidth, flashes],
   );
 
+  const getTimeDiff = useCallback((timestamp: string) => {
+    const now = new Date();
+    const createdAt = new Date(timestamp);
+    const diff = now.getTime() - createdAt.getTime();
+    return Math.floor(diff / (1000 * 60 * 60));
+  }, []);
+
   useEffect(() => {
     firstRender.current = true;
   }, []);
@@ -81,16 +95,31 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
       style={styles.container}
       activeOpacity={1}
       delayLongPress={200}
-      onPress={() => {
-        progressAnim[currentProgress.current].setValue(0);
-        if (currentProgress.current < flashes.length - 1) {
-          currentProgress.current += 1;
-          setCurrentFlash(flashes[currentProgress.current]);
-          videoDuration.current = undefined;
+      onPress={(e) => {
+        if (e.nativeEvent.locationX > width / 2) {
+          progressAnim[currentProgress.current].setValue(0);
+          if (currentProgress.current < flashes.length - 1) {
+            currentProgress.current += 1;
+            setCurrentFlash(flashes[currentProgress.current]);
+            videoDuration.current = undefined;
+          }
+        } else {
+          progressAnim[currentProgress.current].setValue(-progressWidth);
+          if (currentProgress.current > 0) {
+            progressAnim[currentProgress.current - 1].setValue(-progressWidth);
+            currentProgress.current -= 1;
+            setCurrentFlash(flashes[currentProgress.current]);
+            videoDuration.current = undefined;
+          } else {
+            progressAnimation({progressNumber: 0});
+          }
         }
       }}
       onLongPress={() => {
         progressAnim[currentProgress.current].stopAnimation();
+        if (videoStart) {
+          setisPaused(true);
+        }
         longPress.current = true;
       }}
       onPressOut={() => {
@@ -98,14 +127,17 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
           progressAnimation({
             progressNumber: currentProgress.current,
             duration: videoDuration.current,
+            restart: true,
           });
+          if (videoStart) {
+            setisPaused(false);
+          }
           longPress.current = false;
         }
-      }}
-      onPressIn={() => {}}>
+      }}>
       <StatusBar hidden={true} />
       {currentFlash.contentType === 'image' ? (
-        <View style={styles.imageContainer}>
+        <View style={styles.soruceContainer}>
           <Image
             source={{uri: currentFlash.content}}
             style={{width: '100%', height: '100%'}}
@@ -119,29 +151,32 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
           />
         </View>
       ) : (
-        <Video
-          source={{uri: currentFlash.content}}
-          style={{width: '100%', height: '100%'}}
-          onLoadStart={() => {
-            setOnLoading(true);
-          }}
-          onLoad={(e) => {
-            videoDuration.current = e.duration * 1000;
-          }}
-          onProgress={({currentTime}) => {
-            setOnLoading(false);
-            if (currentTime > 0.002 && videoStart.current) {
-              progressAnimation({
-                progressNumber: currentProgress.current,
-                duration: videoDuration.current,
-              });
-              videoStart.current = false;
-            }
-          }}
-          onEnd={() => {
-            videoStart.current = true;
-          }}
-        />
+        <View style={styles.soruceContainer}>
+          <Video
+            source={{uri: currentFlash.content}}
+            style={{width: '100%', height: '100%'}}
+            paused={isPaused}
+            onLoadStart={() => {
+              setOnLoading(true);
+            }}
+            onLoad={(e) => {
+              videoDuration.current = e.duration * 1000;
+            }}
+            onProgress={({currentTime}) => {
+              setOnLoading(false);
+              if (currentTime > 0.002 && videoStart.current) {
+                progressAnimation({
+                  progressNumber: currentProgress.current,
+                  duration: videoDuration.current,
+                });
+                videoStart.current = false;
+              }
+            }}
+            onEnd={() => {
+              videoStart.current = true;
+            }}
+          />
+        </View>
       )}
 
       <View style={styles.info}>
@@ -172,7 +207,13 @@ export const ShowFlash = ({userInfo, flashes, navigateToGoback}: Props) => {
           <View style={styles.userInfo}>
             <UserAvatar image={userInfo.userImage} size="small" opacity={1} />
             <Text style={styles.userName}>{userInfo.userName}</Text>
-            <Text style={styles.timestamp}>2時間前</Text>
+            <Text style={styles.timestamp}>
+              {getTimeDiff(flashes[currentProgress.current].timestamp) < 24
+                ? getTimeDiff(
+                    flashes[currentProgress.current].timestamp,
+                  ).toString() + '時間前'
+                : '1日前'}
+            </Text>
           </View>
           <Button
             icon={{name: 'close', color: 'white'}}
@@ -241,7 +282,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: 'white',
   },
-  imageContainer: {
+  soruceContainer: {
     backgroundColor: '#1f1f1f',
   },
   indicator: {

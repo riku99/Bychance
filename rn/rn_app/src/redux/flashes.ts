@@ -23,7 +23,7 @@ export type Flash = {
 const flashesAdapter = createEntityAdapter<Flash>({
   selectId: (flash) => flash.id,
   sortComparer: (a, b) =>
-    new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1,
+    new Date(b.timestamp) < new Date(a.timestamp) ? 1 : -1,
 });
 
 const flashesSlice = createSlice({
