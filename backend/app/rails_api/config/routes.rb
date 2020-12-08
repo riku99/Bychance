@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       patch '/messages_read', to: 'room_messages#change_read'
 
       post '/flashes', to: 'flashes#create'
+      delete '/flashes', to: 'flashes#destroy'
 
       get '/u', to: 'users#u'
     end

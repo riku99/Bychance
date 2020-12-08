@@ -17,4 +17,19 @@ class Api::V1::FlashesController < ApplicationController
             render json: {errorType: "loginError"}, status: 401
         end
     end
+
+    def destroy
+        if @user
+            flash_id = params[:flashId]
+            flash = Flash.find_by(id: flash_id)
+            if @user.id == flash.user_id
+                flash.destroy
+                render json: {success: true}
+            else
+                render json: {errorType: "invalidError", message: "他のユーザーのものは削除できません"}, status: 400
+            end
+        else
+            render json: {errorType: "loginError"}, status: 401
+        end
+    end
 end

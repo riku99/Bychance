@@ -4,8 +4,8 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {logout, RootState} from './index';
-import {createFlashThunk} from '../actions/flashes';
+import {RootState} from './index';
+import {createFlashThunk, deleteFlashThunk} from '../actions/flashes';
 import {
   subsequentLoginAction,
   //firstLoginThunk,
@@ -38,6 +38,8 @@ const flashesSlice = createSlice({
     ) => flashesAdapter.addMany(state, action.payload.flashes),
     [createFlashThunk.fulfilled.type]: (state, action: PayloadAction<Flash>) =>
       flashesAdapter.addOne(state, action.payload),
+    [deleteFlashThunk.fulfilled.type]: (state, action: PayloadAction<number>) =>
+      flashesAdapter.removeOne(state, action.payload),
   },
 });
 
