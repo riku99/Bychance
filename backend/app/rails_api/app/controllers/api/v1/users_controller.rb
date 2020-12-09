@@ -114,12 +114,14 @@ class Api::V1::UsersController < ApplicationController
             message_arr << RoomMessageSerializer.new(m)
           end
         end
+        flashes = @user.flashes.map { |f| FlashSerializer.new(f)}
         render json: {
                  user: UserSerializer.new(user),
                  posts: posts,
                  rooms: room_arr,
                  messages: message_arr,
-                 token: token
+                 token: token,
+                 flashes: flashes,
                }
       else
         user_name = parsed_response['name']

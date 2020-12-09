@@ -1,13 +1,13 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
+import {rejectPayload, basicAxiosError} from './d';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {createFlash} from '../apis/flashes';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {logout} from '../redux';
-
 import {flashMessage} from '../helpers/flashMessage';
 
 export const createFlashThunk = createAsyncThunk(
@@ -55,38 +55,52 @@ export const createFlashThunk = createAsyncThunk(
   },
 );
 
-// これまでは外部通信のロジックを別ファイルに分けていたがactionsに統一
-export const deleteFlashThunk = createAsyncThunk(
-  'flashes/delete',
-  async ({flashId}: {flashId: number}, thunkApi) => {
-    const keychain = await checkKeychain();
+// これまでは外部通信のロジックを別ファイルに分けていたが、意味ないしむしろ記述量が倍になるのでactionsに統一
+// また、これまではactions内でreturnによって何かのロジックを実装していたことがあったが、ここから基本的にthunk内ではアクションのリターン、dispatchのみ行うようにする
+export const deleteFlashThunk = createAsyncThunk<
+  number,
+  {flashId: number},
+  {
+    rejectValue: rejectPayload;
+  }
+>('flashes/delete', async ({flashId}, thunkApi) => {
+  const keychain = await checkKeychain();
 
-    if (keychain) {
-      try {
-        await axios.request<{success: true}>({
-          method: 'delete',
-          url: `${origin}/flashes`,
-          data: {id: keychain.id, flashId},
-          ...headers(keychain.token),
-        });
-        return flashId;
-      } catch (e) {
-        if (e && e.response) {
-          const axiosError = e as AxiosError<
-            | {errorType: 'invalidError'; message: string}
-            | {errorType: 'loginError'}
-          >;
-          if (axiosError.response?.data.errorType === 'loginError') {
-            requestLogin(() => {
-              console.log('logout');
-            });
-          } else if (axiosError.response?.data.errorType === 'invalidError') {
-            flashMessage(axiosError.response?.data.message, 'danger');
-          }
+  if (keychain) {
+    try {
+      await axios.request<{success: true}>({
+        method: 'delete',
+        url: `${origin}/flashes`,
+        data: {id: keychain.id, flashId},
+        ...headers(keychain.token),
+      });
+      return flashId;
+    } catch (e) {
+      if (e && e.response) {
+        const axiosError = e as basicAxiosError;
+        if (axiosError.response?.data.errorType === 'loginError') {
+          requestLogin(() => {
+            thunkApi.dispatch(logout());
+          });
+          return thunkApi.rejectWithValue({
+            errorType: 'loginError',
+          });
+        } else if (axiosError.response?.data.errorType === 'invalidError') {
+          return thunkApi.rejectWithValue({
+            errorType: 'invalidError',
+            message: axiosError.response?.data.message,
+          });
+        } else {
+          return thunkApi.rejectWithValue({errorType: 'someError'});
         }
+      } else {
+        return thunkApi.rejectWithValue({errorType: 'someError'});
       }
-    } else {
-      requestLogin(() => thunkApi.dispatch(logout()));
     }
-  },
-);
+  } else {
+    requestLogin(() => thunkApi.dispatch(logout()));
+    return thunkApi.rejectWithValue({
+      errorType: 'loginError',
+    });
+  }
+});

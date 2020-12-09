@@ -165,7 +165,11 @@ const styles = StyleSheet.create({
   introduce_text: {
     fontSize: 16,
   },
-  storyContainer: {position: 'absolute', bottom: '3%', right: '5%'},
+  storyContainer: {
+    position: 'absolute',
+    bottom: '3%',
+    right: '7%',
+  },
   stroyButton: {
     width: width / 7,
     height: width / 7,

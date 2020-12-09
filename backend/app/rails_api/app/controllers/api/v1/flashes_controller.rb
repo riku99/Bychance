@@ -22,7 +22,7 @@ class Api::V1::FlashesController < ApplicationController
         if @user
             flash_id = params[:flashId]
             flash = Flash.find_by(id: flash_id)
-            if @user.id == flash.user_id
+            if @user.id == 3 #flash.user_id
                 flash.destroy
                 render json: {success: true}
             else

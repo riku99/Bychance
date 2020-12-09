@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -49,7 +49,7 @@ export const ShowFlash = React.memo(
     const [currentFlash, setCurrentFlash] = useState(flashes[0]);
     const [onLoading, setOnLoading] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
-    const [visbleModal, setVisbleModal] = useState(false);
+    const [visibleModal, setvisibleModal] = useState(false);
     const [videoRepeat, setVideoRepeat] = useState(false);
 
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
@@ -60,43 +60,43 @@ export const ShowFlash = React.memo(
     const canStartVideo = useRef(true);
     const modalizeRef = useRef<Modalize>(null);
 
-    const progressAnimation = useCallback(
-      ({
-        progressNumber,
-        duration = 5000,
-        restart = false,
-      }: {
-        progressNumber: number;
-        duration?: number;
-        restart?: boolean;
-      }) => {
-        if (progressNumber < flashes.length) {
-          progressAnim[progressNumber].addListener((e) => {
-            progressValue.current = e.value;
-          });
-          if (!restart) {
-            progressValue.current = -progressWidth;
-          }
-          Animated.timing(progressAnim[progressNumber], {
-            toValue: 0,
-            duration: -progressValue.current / (progressWidth / duration),
-            useNativeDriver: true,
-          }).start((e) => {
-            if (!canStartVideo) {
-              videoDuration.current = undefined;
-            }
-            if (e.finished) {
-              if (currentProgress.current === flashes.length - 1) {
-                return;
-              }
-              currentProgress.current += 1;
-              setCurrentFlash(flashes[currentProgress.current]);
-            }
-          });
+    const progressAnimation = ({
+      progressNumber,
+      duration = 5000,
+      restart = false,
+    }: {
+      progressNumber: number;
+      duration?: number;
+      restart?: boolean;
+    }) => {
+      if (progressNumber < flashes.length) {
+        progressAnim[progressNumber].addListener((e) => {
+          progressValue.current = e.value;
+        });
+        if (!restart) {
+          progressValue.current = -progressWidth;
         }
-      },
-      [progressAnim, progressWidth, flashes],
-    );
+        Animated.timing(progressAnim[progressNumber], {
+          toValue: 0,
+          duration: -progressValue.current / (progressWidth / duration),
+          useNativeDriver: true,
+        }).start((e) => {
+          if (videoRepeat) {
+            setVideoRepeat(false);
+          }
+          if (!canStartVideo) {
+            videoDuration.current = undefined;
+          }
+          if (e.finished) {
+            if (currentProgress.current === flashes.length - 1) {
+              return;
+            }
+            currentProgress.current += 1;
+            setCurrentFlash(flashes[currentProgress.current]);
+          }
+        });
+      }
+    };
 
     const getTimeDiff = useCallback((timestamp: string) => {
       const now = new Date();
@@ -105,17 +105,12 @@ export const ShowFlash = React.memo(
       return Math.floor(diff / (1000 * 60 * 60));
     }, []);
 
-    useEffect(() => {
-      if (visbleModal) {
-        modalizeRef.current?.open();
-      }
-    }, [visbleModal]);
-
     return (
       <TouchableOpacity
         style={styles.container}
         activeOpacity={1}
         delayLongPress={200}
+        disabled={visibleModal}
         onPress={(e) => {
           if (e.nativeEvent.locationX > width / 2) {
             progressAnim[currentProgress.current].setValue(0);
@@ -272,51 +267,60 @@ export const ShowFlash = React.memo(
           containerStyle={{position: 'absolute', bottom: '4%', right: 30}}
           buttonStyle={{backgroundColor: 'transparent'}}
           onPress={() => {
-            setVisbleModal(true);
+            modalizeRef.current?.open();
+            setvisibleModal(true);
+            setIsPaused(true);
+            progressAnim[currentProgress.current].stopAnimation();
           }}
         />
         {onLoading && (
           <ActivityIndicator size="large" style={styles.indicator} />
         )}
-        {visbleModal && (
-          <Modalize
-            ref={modalizeRef}
-            modalHeight={140}
-            onClose={() => {
-              setVisbleModal(false);
-            }}>
-            <View style={styles.modalListContainer}>
-              {modalList.map((item, i) => {
-                return (
-                  <ListItem
-                    key={i}
-                    style={{marginTop: 10}}
-                    onPress={() => {
-                      if (item.title === '削除') {
-                        item.onPress({flashId: currentFlash.id});
-                      }
-                    }}>
-                    {item.icon && (
-                      <Icon name={item.icon} color={item.titleStyle.color} />
-                    )}
-                    <ListItem.Content>
-                      <ListItem.Title style={item.titleStyle}>
-                        {item.title}
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                );
-              })}
-              <TouchableOpacity
-                style={styles.modalCancel}
-                onPress={() => {
-                  setVisbleModal(false);
-                }}>
-                <Text style={{fontSize: 18, color: '#575757'}}>キャンセル</Text>
-              </TouchableOpacity>
-            </View>
-          </Modalize>
-        )}
+
+        <Modalize
+          ref={modalizeRef}
+          modalHeight={140}
+          onClosed={() => {
+            setIsPaused(false);
+            progressAnimation({
+              progressNumber: currentProgress.current,
+              duration: videoDuration ? videoDuration.current : undefined,
+              restart: true,
+            });
+            setvisibleModal(false);
+          }}>
+          <View style={styles.modalListContainer}>
+            {modalList.map((item, i) => {
+              return (
+                <ListItem
+                  key={i}
+                  style={{marginTop: 10}}
+                  onPress={() => {
+                    if (item.title === '削除') {
+                      item.onPress({flashId: currentFlash.id});
+                    }
+                  }}>
+                  {item.icon && (
+                    <Icon name={item.icon} color={item.titleStyle.color} />
+                  )}
+                  <ListItem.Content>
+                    <ListItem.Title style={item.titleStyle}>
+                      {item.title}
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              );
+            })}
+            <TouchableOpacity
+              style={styles.modalCancel}
+              onPress={() => {
+                modalizeRef.current?.close();
+                setvisibleModal(false);
+              }}>
+              <Text style={{fontSize: 18, color: '#575757'}}>キャンセル</Text>
+            </TouchableOpacity>
+          </View>
+        </Modalize>
       </TouchableOpacity>
     );
   },
