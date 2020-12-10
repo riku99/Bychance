@@ -50,7 +50,6 @@ export const ShowFlash = React.memo(
     const [onLoading, setOnLoading] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
     const [visibleModal, setvisibleModal] = useState(false);
-    const [videoRepeat, setVideoRepeat] = useState(false);
 
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
     const progressValue = useRef(-progressWidth);
@@ -59,6 +58,7 @@ export const ShowFlash = React.memo(
     const videoDuration = useRef<number | undefined>(undefined);
     const canStartVideo = useRef(true);
     const modalizeRef = useRef<Modalize>(null);
+    const videoRef = useRef<Video>(null);
 
     const progressAnimation = ({
       progressNumber,
@@ -81,14 +81,13 @@ export const ShowFlash = React.memo(
           duration: -progressValue.current / (progressWidth / duration),
           useNativeDriver: true,
         }).start((e) => {
-          if (videoRepeat) {
-            setVideoRepeat(false);
-          }
           if (!canStartVideo) {
             videoDuration.current = undefined;
           }
           if (e.finished) {
+            // 進行してたプログレスバーがラストだった場合
             if (currentProgress.current === flashes.length - 1) {
+              navigateToGoback();
               return;
             }
             currentProgress.current += 1;
@@ -112,17 +111,23 @@ export const ShowFlash = React.memo(
         delayLongPress={200}
         disabled={visibleModal}
         onPress={(e) => {
+          // 画面右半分をプレスした場合
           if (e.nativeEvent.locationX > width / 2) {
             progressAnim[currentProgress.current].setValue(0);
             if (currentProgress.current < flashes.length - 1) {
               currentProgress.current += 1;
               setCurrentFlash(flashes[currentProgress.current]);
               videoDuration.current = undefined;
+            } else {
+              navigateToGoback();
             }
+            // 画面左半分をプレスした場合
           } else {
+            // プログレスバーの進行状況が1/7未満の場合
             if (-progressValue.current > progressWidth - progressWidth / 7) {
               canStartVideo.current = true;
               progressAnim[currentProgress.current].setValue(-progressWidth);
+              // 進行しているプログレスバーが2個目以上の場合
               if (currentProgress.current > 0) {
                 currentProgress.current -= 1;
                 progressAnim[currentProgress.current].setValue(-progressWidth);
@@ -146,7 +151,13 @@ export const ShowFlash = React.memo(
                     : undefined,
                 });
               } else {
-                setVideoRepeat(true);
+                if (videoRef.current) {
+                  progressAnimation({
+                    progressNumber: currentProgress.current,
+                    duration: videoDuration.current,
+                  });
+                  videoRef.current.seek(0);
+                }
               }
             }
           }
@@ -190,11 +201,11 @@ export const ShowFlash = React.memo(
         ) : (
           <View style={styles.soruceContainer}>
             <Video
+              ref={videoRef}
               source={{uri: currentFlash.content}}
               style={{width: '100%', height: '100%'}}
               resizeMode="cover"
               paused={isPaused}
-              repeat={videoRepeat}
               onLoadStart={() => {
                 setOnLoading(true);
               }}

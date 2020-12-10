@@ -4,56 +4,58 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {rejectPayload, basicAxiosError} from './d';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
-import {createFlash} from '../apis/flashes';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {logout} from '../redux';
-import {flashMessage} from '../helpers/flashMessage';
+import {Flash} from '../redux/flashes';
 
-export const createFlashThunk = createAsyncThunk(
-  'flashes/createFlash',
-  async (
-    {
-      contentType,
-      content,
-      ext,
-    }: {
-      contentType: 'image' | 'video';
-      content: string;
-      ext: string | null;
-    },
-    thunkApi,
-  ) => {
-    const keychain = await checkKeychain();
+export const createFlashThunk = createAsyncThunk<
+  Flash,
+  {contentType: 'image' | 'video'; content: string; ext: string | null},
+  {
+    rejectValue: rejectPayload;
+  }
+>('flashes/createFlash', async ({contentType, content, ext}, thunkApi) => {
+  const keychain = await checkKeychain();
 
-    if (keychain) {
-      const response = await createFlash({
-        id: keychain.id,
-        token: keychain.token,
-        contentType,
-        content,
-        ext,
-      });
+  if (keychain) {
+    try {
+      const response = await axios.post<Flash>(
+        `${origin}/flashes`,
+        {id: keychain.id, content, contentType, ext},
+        headers(keychain.token),
+      );
 
-      if (response.type === 'success') {
-        return response.data;
+      return response.data;
+    } catch (e) {
+      if (e && e.response) {
+        const axiosError = e as basicAxiosError;
+        if (axiosError.response?.data.errorType === 'loginError') {
+          requestLogin(() => {
+            thunkApi.dispatch(logout());
+          });
+          return thunkApi.rejectWithValue({
+            errorType: 'loginError',
+          });
+        } else if (axiosError.response?.data.errorType === 'invalidError') {
+          return thunkApi.rejectWithValue({
+            errorType: 'invalidError',
+            message: axiosError.response.data.message,
+          });
+        } else {
+          return thunkApi.rejectWithValue({errorType: 'someError'});
+        }
+      } else {
+        return thunkApi.rejectWithValue({errorType: 'someError'});
       }
-
-      if (response.type === 'loginError') {
-        requestLogin(() => thunkApi.dispatch(logout()));
-      }
-
-      if (response.type === 'invalidError') {
-        flashMessage('無効なデータです', 'danger');
-      }
-
-      if (response.type === 'someError') {
-      }
-    } else {
-      requestLogin(() => thunkApi.dispatch(logout()));
     }
-  },
-);
+  } else {
+    requestLogin(() => thunkApi.dispatch(logout()));
+  }
+  return thunkApi.rejectWithValue({
+    errorType: 'loginError',
+  });
+});
 
 // これまでは外部通信のロジックを別ファイルに分けていたが、意味ないしむしろ記述量が倍になるのでactionsに統一
 // また、これまではactions内でreturnによって何かのロジックを実装していたことがあったが、ここから基本的にthunk内ではアクションのリターン、dispatchのみ行うようにする

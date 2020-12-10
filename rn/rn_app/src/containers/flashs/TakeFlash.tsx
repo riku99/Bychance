@@ -9,6 +9,8 @@ import {RNCamera} from 'react-native-camera';
 import {TakeFlash} from '../../components/flashes/TakeFlash';
 import {AppDispatch} from '../../redux/index';
 import {createFlashThunk} from '../../actions/flashes';
+import {flashMessage} from '../../helpers/flashMessage';
+import {alertSomeError} from '../../helpers/error';
 
 export const Container = () => {
   const [firstCameraRollPhoto, setFirstCameraRollPhoto] = useState<
@@ -75,25 +77,25 @@ export const Container = () => {
     navigaiton.goBack();
     const length = uri.lastIndexOf('.');
     const ext = length !== -1 ? uri.slice(length + 1) : null;
-    if (content && contentType === 'image') {
-      dispatch(
-        createFlashThunk({
-          content,
-          contentType,
-          ext: ext ? ext.toLowerCase() : null,
-        }),
-      );
-    } else if (contentType === 'video') {
-      const videoContent = await fs.readFile(uri, 'base64');
-      dispatch(
-        createFlashThunk({
-          content: videoContent,
-          contentType,
-          ext: ext ? ext.toLowerCase() : null,
-        }),
-      );
+    const result = await dispatch(
+      createFlashThunk({
+        content:
+          contentType === 'image' && content
+            ? content
+            : await fs.readFile(uri, 'base64'),
+        contentType,
+        ext: ext ? ext.toLowerCase() : null,
+      }),
+    );
+    if (createFlashThunk.fulfilled.match(result)) {
+      flashMessage('追加しました', 'success');
+    } else {
+      if (result.payload?.errorType === 'invalidError') {
+        flashMessage(result.payload.message, 'danger');
+      } else if (result.payload?.errorType === 'someError') {
+        alertSomeError();
+      }
     }
-    return;
   };
 
   const saveDataToCameraRoll = async (uri: string) => {

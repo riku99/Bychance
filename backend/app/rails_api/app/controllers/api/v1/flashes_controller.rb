@@ -11,7 +11,7 @@ class Api::V1::FlashesController < ApplicationController
                 if (flash.save)
                     render json: flash
                 else
-                    render json: {errorType: "invalidError", message: flash.errors.full_messages[0]}, status: 400
+                    render json: {errorType: "invalidError", message: "無効なデータです"}, status: 400
                 end
         else
             render json: {errorType: "loginError"}, status: 401
@@ -20,9 +20,9 @@ class Api::V1::FlashesController < ApplicationController
 
     def destroy
         if @user
-            flash_id = params[:flashId]
+            flash_id = params[flashId]
             flash = Flash.find_by(id: flash_id)
-            if @user.id == 3 #flash.user_id
+            if @user.id == flash.user_id
                 flash.destroy
                 render json: {success: true}
             else
