@@ -8,10 +8,11 @@ import {roomsReducer} from './rooms';
 import {messagesReducer} from './messages';
 import {flashesReducer} from './flashes';
 
-type InitialStateType = {displayedMenu?: boolean};
+type InitialStateType = {displayedMenu?: boolean; creatingFlash?: boolean};
 
 const initialState: InitialStateType = {
   displayedMenu: false,
+  creatingFlash: false,
 };
 
 const indexSlice = createSlice({
@@ -34,10 +35,16 @@ const indexSlice = createSlice({
         };
       }
     },
+    creatingFlash: (state) => {
+      return {
+        ...state,
+        creatingFlash: state.creatingFlash ? false : true,
+      };
+    },
   },
 });
 
-export const {logout, displayMenu} = indexSlice.actions;
+export const {logout, displayMenu, creatingFlash} = indexSlice.actions;
 
 const indexReducer = indexSlice.reducer;
 

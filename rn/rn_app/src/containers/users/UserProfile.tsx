@@ -28,6 +28,10 @@ export const Container = () => {
     return selectAllFlashes(state);
   }, shallowEqual);
 
+  const creatingFlash = useSelector((state: RootState) => {
+    return state.indexReducer.creatingFlash;
+  });
+
   const [keychainId, setKeychainId] = useState<null | number>(null);
 
   useEffect(() => {
@@ -74,6 +78,7 @@ export const Container = () => {
       keychainId={keychainId}
       posts={posts}
       flashes={flashes}
+      creatingFlash={creatingFlash}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
       navigateToTakeFlash={pushTakeFlash}

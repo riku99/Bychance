@@ -20,7 +20,7 @@ class Api::V1::FlashesController < ApplicationController
 
     def destroy
         if @user
-            flash_id = params[flashId]
+            flash_id = params[:flashId]
             flash = Flash.find_by(id: flash_id)
             if @user.id == flash.user_id
                 flash.destroy

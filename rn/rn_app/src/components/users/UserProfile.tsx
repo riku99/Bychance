@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {View, StyleSheet, Text, Dimensions, Animated} from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -28,6 +28,7 @@ type Props = {
   keychainId: number | null;
   posts: Post[];
   flashes: Flash[];
+  creatingFlash?: boolean;
   navigateToPost: (post: Post) => void;
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
@@ -35,88 +36,91 @@ type Props = {
   navigateToShowFlash: ({userId, userName, userImage}: FlashUserInfo) => void;
 };
 
-export const UserProfile = ({
-  user,
-  posts,
-  flashes,
-  keychainId,
-  navigateToPost,
-  navigateToUserEdit,
-  navigateToChatRoom,
-  navigateToTakeFlash,
-  navigateToShowFlash,
-}: Props) => {
-  return (
-    <>
-      <ScrollView style={styles.container}>
-        <View style={styles.image}>
-          {flashes.length ? (
-            <LinearGradient
-              colors={flashesGradation.colors}
-              start={flashesGradation.start}
-              end={flashesGradation.end}
-              style={styles.imageGradation}>
-              <UserAvatar
-                image={user.image}
-                size="large"
-                opacity={1}
-                onPress={() => {
-                  navigateToShowFlash({
-                    userId: user.id,
-                    userName: user.name,
-                    userImage: user.image,
-                  });
-                }}
-              />
-            </LinearGradient>
-          ) : (
-            <UserAvatar image={user.image} size="large" opacity={1} />
-          )}
-        </View>
-        <View style={styles.nameContainer}>
-          <Text style={styles.name}>{user.name}</Text>
-        </View>
-        <View style={styles.edit}>
-          {keychainId === user.id ? (
-            <Button
-              title="プロフィールを編集"
-              titleStyle={styles.title_style}
-              buttonStyle={styles.edit_button}
-              onPress={navigateToUserEdit}
-            />
-          ) : (
-            <Button
-              title="メッセージを送る"
-              icon={
-                <Icon
-                  name="send-o"
-                  size={17}
-                  color="#2c3e50"
-                  style={{marginRight: 8}}
+export const UserProfile = React.memo(
+  ({
+    user,
+    posts,
+    flashes,
+    creatingFlash,
+    keychainId,
+    navigateToPost,
+    navigateToUserEdit,
+    navigateToChatRoom,
+    navigateToTakeFlash,
+    navigateToShowFlash,
+  }: Props) => {
+    return (
+      <>
+        <ScrollView style={styles.container}>
+          <View style={styles.image}>
+            {flashes.length || creatingFlash ? (
+              <LinearGradient
+                colors={flashesGradation.colors}
+                start={flashesGradation.start}
+                end={flashesGradation.end}
+                style={styles.imageGradation}>
+                <UserAvatar
+                  image={user.image}
+                  size="large"
+                  opacity={1}
+                  onPress={() => {
+                    navigateToShowFlash({
+                      userId: user.id,
+                      userName: user.name,
+                      userImage: user.image,
+                    });
+                  }}
                 />
-              }
-              titleStyle={{...styles.title_style, color: '#2c3e50'}}
-              buttonStyle={styles.edit_button}
-              onPress={navigateToChatRoom}
-            />
-          )}
-        </View>
-        <View style={styles.introduce}>
-          {!!user.introduce && <Text>{user.introduce}</Text>}
-        </View>
-        <Posts posts={posts} navigateToShowPost={navigateToPost} />
-      </ScrollView>
-      {keychainId === user.id && (
-        <Button
-          icon={<MIcon name="flash-on" size={27} style={{color: 'white'}} />}
-          containerStyle={styles.storyContainer}
-          buttonStyle={styles.stroyButton}
-          onPress={navigateToTakeFlash}
-        />
-      )}
-    </>
-  );
-};
+              </LinearGradient>
+            ) : (
+              <UserAvatar image={user.image} size="large" opacity={1} />
+            )}
+          </View>
+          <View style={styles.nameContainer}>
+            <Text style={styles.name}>{user.name}</Text>
+          </View>
+          <View style={styles.edit}>
+            {keychainId === user.id ? (
+              <Button
+                title="プロフィールを編集"
+                titleStyle={styles.title_style}
+                buttonStyle={styles.edit_button}
+                onPress={navigateToUserEdit}
+              />
+            ) : (
+              <Button
+                title="メッセージを送る"
+                icon={
+                  <Icon
+                    name="send-o"
+                    size={17}
+                    color="#2c3e50"
+                    style={{marginRight: 8}}
+                  />
+                }
+                titleStyle={{...styles.title_style, color: '#2c3e50'}}
+                buttonStyle={styles.edit_button}
+                onPress={navigateToChatRoom}
+              />
+            )}
+          </View>
+          <View style={styles.introduce}>
+            {!!user.introduce && <Text>{user.introduce}</Text>}
+          </View>
+          <Posts posts={posts} navigateToShowPost={navigateToPost} />
+        </ScrollView>
+        {keychainId === user.id && (
+          <Button
+            icon={<MIcon name="flash-on" size={27} style={{color: 'white'}} />}
+            containerStyle={styles.storyContainer}
+            buttonStyle={styles.stroyButton}
+            onPress={navigateToTakeFlash}
+          />
+        )}
+      </>
+    );
+  },
+);
 
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -142,6 +146,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 19,
     marginTop: 10,
+    color: '#34495e',
   },
   edit: {
     alignItems: 'center',
@@ -161,6 +166,7 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     paddingRight: 25,
     marginTop: '5%',
+    color: '#34495e',
   },
   introduce_text: {
     fontSize: 16,

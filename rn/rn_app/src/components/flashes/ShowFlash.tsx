@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -23,12 +23,22 @@ type Props = {
   userInfo: FlashUserInfo;
   flashes: Flash[];
   firstRender: React.MutableRefObject<boolean>;
+  modalizeRef: React.RefObject<Modalize>;
+  creatingFlash?: boolean;
   deleteFlash: ({flashId}: {flashId: number}) => void;
   navigateToGoback: () => void;
 };
 
 export const ShowFlash = React.memo(
-  ({userInfo, flashes, firstRender, deleteFlash, navigateToGoback}: Props) => {
+  ({
+    userInfo,
+    flashes,
+    firstRender,
+    modalizeRef,
+    creatingFlash,
+    deleteFlash,
+    navigateToGoback,
+  }: Props) => {
     const progressWidth = useMemo(() => {
       return MAX_PROGRESS_BAR / flashes.length - 1;
     }, [flashes.length]);
@@ -57,8 +67,16 @@ export const ShowFlash = React.memo(
     const longPress = useRef(false);
     const videoDuration = useRef<number | undefined>(undefined);
     const canStartVideo = useRef(true);
-    const modalizeRef = useRef<Modalize>(null);
     const videoRef = useRef<Video>(null);
+    const flashesLength = useRef(flashes.length);
+
+    useEffect(() => {
+      // アイテムが削除された場合
+      if (flashes.length < flashesLength.current) {
+        setCurrentFlash(flashes[currentProgress.current]);
+      }
+      flashesLength.current = flashes.length;
+    }, [flashes.length, flashes]);
 
     const progressAnimation = ({
       progressNumber,
@@ -105,234 +123,296 @@ export const ShowFlash = React.memo(
     }, []);
 
     return (
-      <TouchableOpacity
-        style={styles.container}
-        activeOpacity={1}
-        delayLongPress={200}
-        disabled={visibleModal}
-        onPress={(e) => {
-          // 画面右半分をプレスした場合
-          if (e.nativeEvent.locationX > width / 2) {
-            progressAnim[currentProgress.current].setValue(0);
-            if (currentProgress.current < flashes.length - 1) {
-              currentProgress.current += 1;
-              setCurrentFlash(flashes[currentProgress.current]);
-              videoDuration.current = undefined;
-            } else {
-              navigateToGoback();
-            }
-            // 画面左半分をプレスした場合
-          } else {
-            // プログレスバーの進行状況が1/7未満の場合
-            if (-progressValue.current > progressWidth - progressWidth / 7) {
-              canStartVideo.current = true;
-              progressAnim[currentProgress.current].setValue(-progressWidth);
-              // 進行しているプログレスバーが2個目以上の場合
-              if (currentProgress.current > 0) {
-                currentProgress.current -= 1;
-                progressAnim[currentProgress.current].setValue(-progressWidth);
-                setCurrentFlash(flashes[currentProgress.current]);
+      <>
+        {flashes.length ? (
+          <TouchableOpacity
+            style={styles.container}
+            activeOpacity={1}
+            delayLongPress={200}
+            disabled={visibleModal}
+            onPress={(e) => {
+              // 画面右半分をプレスした場合
+              if (e.nativeEvent.locationX > width / 2) {
+                progressAnim[currentProgress.current].setValue(0);
+                if (currentProgress.current < flashes.length - 1) {
+                  currentProgress.current += 1;
+                  setCurrentFlash(flashes[currentProgress.current]);
+                  videoDuration.current = undefined;
+                } else {
+                  navigateToGoback();
+                }
+                // 画面左半分をプレスした場合
               } else {
-                progressAnimation({
-                  progressNumber: currentProgress.current,
-                  duration: videoDuration.current
-                    ? videoDuration.current
-                    : undefined,
-                });
-              }
-              videoDuration.current = undefined;
-            } else {
-              progressAnim[currentProgress.current].setValue(-progressWidth);
-              if (currentFlash.contentType === 'image') {
-                progressAnimation({
-                  progressNumber: currentProgress.current,
-                  duration: videoDuration.current
-                    ? videoDuration.current
-                    : undefined,
-                });
-              } else {
-                if (videoRef.current) {
-                  progressAnimation({
-                    progressNumber: currentProgress.current,
-                    duration: videoDuration.current,
-                  });
-                  videoRef.current.seek(0);
+                // プログレスバーの進行状況が1/7未満の場合
+                if (
+                  -progressValue.current >
+                  progressWidth - progressWidth / 7
+                ) {
+                  canStartVideo.current = true;
+                  progressAnim[currentProgress.current].setValue(
+                    -progressWidth,
+                  );
+                  // 進行しているプログレスバーが2個目以上の場合
+                  if (currentProgress.current > 0) {
+                    currentProgress.current -= 1;
+                    progressAnim[currentProgress.current].setValue(
+                      -progressWidth,
+                    );
+                    videoDuration.current = undefined;
+                    setCurrentFlash(flashes[currentProgress.current]);
+                  } else {
+                    progressAnimation({
+                      progressNumber: currentProgress.current,
+                      duration: videoDuration.current
+                        ? videoDuration.current
+                        : undefined,
+                    });
+                    if (videoRef.current) {
+                      videoRef.current.seek(0);
+                    }
+                  }
+                } else {
+                  progressAnim[currentProgress.current].setValue(
+                    -progressWidth,
+                  );
+                  if (currentFlash.contentType === 'image') {
+                    progressAnimation({
+                      progressNumber: currentProgress.current,
+                      duration: videoDuration.current
+                        ? videoDuration.current
+                        : undefined,
+                    });
+                  } else {
+                    if (videoRef.current) {
+                      progressAnimation({
+                        progressNumber: currentProgress.current,
+                        duration: videoDuration.current,
+                      });
+                      videoRef.current.seek(0);
+                    }
+                  }
                 }
               }
-            }
-          }
-        }}
-        onLongPress={() => {
-          progressAnim[currentProgress.current].stopAnimation();
-          if (canStartVideo) {
-            setIsPaused(true);
-          }
-          longPress.current = true;
-        }}
-        onPressOut={() => {
-          if (longPress.current) {
-            progressAnimation({
-              progressNumber: currentProgress.current,
-              duration: videoDuration.current,
-              restart: true,
-            });
-            if (canStartVideo) {
-              setIsPaused(false);
-            }
-            longPress.current = false;
-          }
-        }}>
-        <StatusBar hidden={true} />
-        {currentFlash.contentType === 'image' ? (
-          <View style={styles.soruceContainer}>
-            <Image
-              source={{uri: currentFlash.content}}
-              style={{width: '100%', height: '100%'}}
-              onLoadStart={() => {
-                setOnLoading(true);
-                videoDuration.current = undefined;
-              }}
-              onLoad={() => {
-                setOnLoading(false);
-                progressAnimation({progressNumber: currentProgress.current});
-              }}
-            />
-          </View>
-        ) : (
-          <View style={styles.soruceContainer}>
-            <Video
-              ref={videoRef}
-              source={{uri: currentFlash.content}}
-              style={{width: '100%', height: '100%'}}
-              resizeMode="cover"
-              paused={isPaused}
-              onLoadStart={() => {
-                setOnLoading(true);
-              }}
-              onLoad={(e) => {
-                videoDuration.current = e.duration * 1000;
-              }}
-              onProgress={({currentTime}) => {
-                setOnLoading(false);
-                if (currentTime > 0.002 && canStartVideo.current) {
-                  progressAnimation({
-                    progressNumber: currentProgress.current,
-                    duration: videoDuration.current,
-                  });
-                  canStartVideo.current = false;
+            }}
+            onLongPress={() => {
+              progressAnim[currentProgress.current].stopAnimation();
+              if (canStartVideo) {
+                setIsPaused(true);
+              }
+              longPress.current = true;
+            }}
+            onPressOut={() => {
+              if (longPress.current) {
+                progressAnimation({
+                  progressNumber: currentProgress.current,
+                  duration: videoDuration.current,
+                  restart: true,
+                });
+                if (canStartVideo) {
+                  setIsPaused(false);
                 }
-              }}
-              onEnd={() => {
-                canStartVideo.current = true;
-              }}
-            />
-          </View>
-        )}
+                longPress.current = false;
+              }
+            }}>
+            <StatusBar hidden={true} />
+            {currentFlash.contentType === 'image' ? (
+              <View style={styles.soruceContainer}>
+                <Image
+                  source={{uri: currentFlash.content}}
+                  style={{width: '100%', height: '100%'}}
+                  onLoadStart={() => {
+                    setOnLoading(true);
+                    videoDuration.current = undefined;
+                  }}
+                  onLoad={() => {
+                    setOnLoading(false);
+                    progressAnimation({
+                      progressNumber: currentProgress.current,
+                    });
+                  }}
+                />
+              </View>
+            ) : (
+              <View style={styles.soruceContainer}>
+                <Video
+                  ref={videoRef}
+                  source={{uri: currentFlash.content}}
+                  style={{width: '100%', height: '100%'}}
+                  resizeMode="cover"
+                  paused={isPaused}
+                  onLoadStart={() => {
+                    setOnLoading(true);
+                  }}
+                  onLoad={(e) => {
+                    videoDuration.current = e.duration * 1000;
+                  }}
+                  onProgress={({currentTime}) => {
+                    setOnLoading(false);
+                    if (currentTime > 0.002 && canStartVideo.current) {
+                      progressAnimation({
+                        progressNumber: currentProgress.current,
+                        duration: videoDuration.current,
+                      });
+                      canStartVideo.current = false;
+                    }
+                  }}
+                  onEnd={() => {
+                    canStartVideo.current = true;
+                  }}
+                />
+              </View>
+            )}
 
-        <View style={styles.info}>
-          <View style={styles.progressBarConteiner}>
-            {flashes.map((f, i) => {
-              if (!firstRender.current) {
-                progressAnim[i] = new Animated.Value(-progressWidth);
-              }
-              return (
-                <View
-                  key={i}
-                  style={{
-                    ...styles.progressBar,
-                    width: progressWidth,
-                  }}>
-                  <Animated.View
-                    style={{
-                      ...styles.animatedProgressBar,
-                      width: progressWidth,
-                      transform: [{translateX: progressAnim[i]}],
-                    }}
+            <View style={styles.info}>
+              <View style={styles.progressBarConteiner}>
+                {flashes.map((f, i) => {
+                  // 初回レンダリングの場合
+                  if (!firstRender.current) {
+                    progressAnim[i] = new Animated.Value(-progressWidth);
+                  }
+                  // アイテムが追加された場合
+                  if (flashes.length > flashesLength.current) {
+                    progressAnim[flashes.length - 1] = new Animated.Value(
+                      -progressWidth,
+                    );
+                  }
+                  // アイテムが削除された場合
+                  if (flashes.length < flashesLength.current) {
+                    // 削除されたアイテムが最後のものだった場合
+                    if (currentProgress.current === flashes.length) {
+                      currentProgress.current -= 1;
+                    }
+                    // この要素(f)が削除されたアイテムよりも後にある場合
+                    if (i >= currentProgress.current) {
+                      progressAnim[i] = new Animated.Value(-progressWidth);
+                    }
+                  }
+                  return (
+                    <View
+                      key={f.id}
+                      style={{
+                        ...styles.progressBar,
+                        width: progressWidth,
+                      }}>
+                      <Animated.View
+                        style={{
+                          ...styles.animatedProgressBar,
+                          width: progressWidth,
+                          transform: [
+                            {
+                              translateX: progressAnim[i],
+                            },
+                          ],
+                        }}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+              <View style={styles.infoItems}>
+                <View style={styles.userInfo}>
+                  <UserAvatar
+                    image={userInfo.userImage}
+                    size="small"
+                    opacity={1}
                   />
+                  <Text style={styles.userName}>{userInfo.userName}</Text>
+                  <Text style={styles.timestamp}>
+                    {getTimeDiff(flashes[currentProgress.current].timestamp) <
+                    24
+                      ? getTimeDiff(
+                          flashes[currentProgress.current].timestamp,
+                        ).toString() + '時間前'
+                      : '1日前'}
+                  </Text>
                 </View>
-              );
-            })}
-          </View>
-          <View style={styles.infoItems}>
-            <View style={styles.userInfo}>
-              <UserAvatar image={userInfo.userImage} size="small" opacity={1} />
-              <Text style={styles.userName}>{userInfo.userName}</Text>
-              <Text style={styles.timestamp}>
-                {getTimeDiff(flashes[currentProgress.current].timestamp) < 24
-                  ? getTimeDiff(
-                      flashes[currentProgress.current].timestamp,
-                    ).toString() + '時間前'
-                  : '1日前'}
-              </Text>
+                <Button
+                  icon={{name: 'close', color: 'white'}}
+                  buttonStyle={{backgroundColor: 'transparent'}}
+                  onPress={navigateToGoback}
+                />
+              </View>
+              {creatingFlash && (
+                <View style={styles.addMessageContainer}>
+                  <ActivityIndicator color="white" />
+                  <Text style={styles.addMessage}>新しく追加しています</Text>
+                </View>
+              )}
             </View>
             <Button
-              icon={{name: 'close', color: 'white'}}
+              title="..."
+              titleStyle={{fontSize: 30}}
+              containerStyle={{position: 'absolute', bottom: '4%', right: 30}}
               buttonStyle={{backgroundColor: 'transparent'}}
-              onPress={navigateToGoback}
-            />
-          </View>
-        </View>
-        <Button
-          title="..."
-          titleStyle={{fontSize: 30}}
-          containerStyle={{position: 'absolute', bottom: '4%', right: 30}}
-          buttonStyle={{backgroundColor: 'transparent'}}
-          onPress={() => {
-            modalizeRef.current?.open();
-            setvisibleModal(true);
-            setIsPaused(true);
-            progressAnim[currentProgress.current].stopAnimation();
-          }}
-        />
-        {onLoading && (
-          <ActivityIndicator size="large" style={styles.indicator} />
-        )}
-
-        <Modalize
-          ref={modalizeRef}
-          modalHeight={140}
-          onClosed={() => {
-            setIsPaused(false);
-            progressAnimation({
-              progressNumber: currentProgress.current,
-              duration: videoDuration ? videoDuration.current : undefined,
-              restart: true,
-            });
-            setvisibleModal(false);
-          }}>
-          <View style={styles.modalListContainer}>
-            {modalList.map((item, i) => {
-              return (
-                <ListItem
-                  key={i}
-                  style={{marginTop: 10}}
-                  onPress={() => {
-                    if (item.title === '削除') {
-                      item.onPress({flashId: currentFlash.id});
-                    }
-                  }}>
-                  {item.icon && (
-                    <Icon name={item.icon} color={item.titleStyle.color} />
-                  )}
-                  <ListItem.Content>
-                    <ListItem.Title style={item.titleStyle}>
-                      {item.title}
-                    </ListItem.Title>
-                  </ListItem.Content>
-                </ListItem>
-              );
-            })}
-            <TouchableOpacity
-              style={styles.modalCancel}
               onPress={() => {
-                modalizeRef.current?.close();
+                modalizeRef.current?.open();
+                setvisibleModal(true);
+                setIsPaused(true);
+                progressAnim[currentProgress.current].stopAnimation();
+              }}
+            />
+            {onLoading && (
+              <ActivityIndicator size="large" style={styles.indicator} />
+            )}
+
+            <Modalize
+              ref={modalizeRef}
+              modalHeight={140}
+              onClosed={() => {
+                setIsPaused(false);
+                progressAnimation({
+                  progressNumber: currentProgress.current,
+                  duration: videoDuration ? videoDuration.current : undefined,
+                  restart: true,
+                });
                 setvisibleModal(false);
               }}>
-              <Text style={{fontSize: 18, color: '#575757'}}>キャンセル</Text>
-            </TouchableOpacity>
-          </View>
-        </Modalize>
-      </TouchableOpacity>
+              <View style={styles.modalListContainer}>
+                {modalList.map((item, i) => {
+                  return (
+                    <ListItem
+                      key={i}
+                      style={{marginTop: 10}}
+                      onPress={() => {
+                        if (item.title === '削除') {
+                          item.onPress({flashId: currentFlash.id});
+                        }
+                      }}>
+                      {item.icon && (
+                        <Icon name={item.icon} color={item.titleStyle.color} />
+                      )}
+                      <ListItem.Content>
+                        <ListItem.Title style={item.titleStyle}>
+                          {item.title}
+                        </ListItem.Title>
+                      </ListItem.Content>
+                    </ListItem>
+                  );
+                })}
+                <TouchableOpacity
+                  style={styles.modalCancel}
+                  onPress={() => {
+                    modalizeRef.current?.close();
+                    setvisibleModal(false);
+                  }}>
+                  <Text style={{fontSize: 18, color: '#575757'}}>
+                    キャンセル
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Modalize>
+          </TouchableOpacity>
+        ) : (
+          creatingFlash && (
+            <View style={styles.creatingFlashContainer}>
+              <View style={styles.creatingFlashMessage}>
+                <ActivityIndicator color="white" />
+                <Text style={{color: 'white'}}>追加しています</Text>
+              </View>
+            </View>
+          )
+        )}
+      </>
     );
   },
 );
@@ -392,6 +472,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: 'white',
   },
+  addMessageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  addMessage: {
+    color: 'white',
+    marginLeft: 10,
+    fontWeight: 'bold',
+  },
   soruceContainer: {
     backgroundColor: '#1f1f1f',
   },
@@ -413,5 +503,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  creatingFlashContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#1f1f1f',
+  },
+  creatingFlashMessage: {
+    width: 160,
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
 });

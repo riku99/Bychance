@@ -7,7 +7,7 @@ import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 
 import {TakeFlash} from '../../components/flashes/TakeFlash';
-import {AppDispatch} from '../../redux/index';
+import {AppDispatch, creatingFlash} from '../../redux/index';
 import {createFlashThunk} from '../../actions/flashes';
 import {flashMessage} from '../../helpers/flashMessage';
 import {alertSomeError} from '../../helpers/error';
@@ -74,6 +74,7 @@ export const Container = () => {
     contentType: 'image' | 'video';
     uri: string;
   }) => {
+    dispatch(creatingFlash());
     navigaiton.goBack();
     const length = uri.lastIndexOf('.');
     const ext = length !== -1 ? uri.slice(length + 1) : null;
@@ -96,6 +97,7 @@ export const Container = () => {
         alertSomeError();
       }
     }
+    dispatch(creatingFlash());
   };
 
   const saveDataToCameraRoll = async (uri: string) => {
