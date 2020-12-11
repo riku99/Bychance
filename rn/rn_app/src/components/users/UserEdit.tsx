@@ -1,8 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {Avatar, Button} from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
+
+import {UserAvatar} from '../utils/Avatar';
 
 type Props = {
   user: {
@@ -58,18 +60,7 @@ export const UserEdit = ({user, editProfile}: Props) => {
     <View style={styles.container}>
       <View style={styles.edit}>
         <View style={styles.image}>
-          <Avatar
-            rounded
-            source={
-              selectedImage
-                ? {uri: selectedImage}
-                : user.image
-                ? {uri: user.image}
-                : require('../../assets/noImage.png')
-            }
-            size="large"
-            placeholderStyle={{backgroundColor: 'transeparent'}}
-          />
+          <UserAvatar image={user.image} size="large" opacity={1} />
           <Button
             title="プロフィール画像を変更"
             titleStyle={styles.imageButtonTitle}

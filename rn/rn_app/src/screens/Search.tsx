@@ -1,5 +1,4 @@
 import React from 'react';
-import {Dimensions} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as SearchOthers} from '../containers/others/SearchOthers';

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import {Post} from '../../redux/post';
+import {basicStyles} from '../../constants/styles';
 
 type PropsType = {posts: Post[]} & {
   navigateToShowPost: (post: Post) => void;
@@ -30,7 +31,9 @@ export const Posts = ({posts, navigateToShowPost}: PropsType) => {
                 userId: p.userId,
               });
             }}>
-            <Image source={{uri: p.image}} style={styles.post} key={i} />
+            <View style={{backgroundColor: basicStyles.imageBackGroundColor}}>
+              <Image source={{uri: p.image}} style={styles.post} key={i} />
+            </View>
           </TouchableOpacity>
         );
       })}
@@ -43,9 +46,10 @@ const styles = StyleSheet.create({
   posts: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   post: {
-    width: width / 3,
-    height: width / 3,
+    width: width / 3.02,
+    height: width / 3.02,
   },
 });

@@ -1,11 +1,12 @@
-import React, {useEffect, useRef} from 'react';
-import {View, StyleSheet, Text, Dimensions, Animated} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Posts} from '../posts/Posts';
+import {basicStyles} from '../../constants/styles';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
@@ -83,8 +84,8 @@ export const UserProfile = React.memo(
             {keychainId === user.id ? (
               <Button
                 title="プロフィールを編集"
-                titleStyle={styles.title_style}
-                buttonStyle={styles.edit_button}
+                titleStyle={styles.editButtonTitle}
+                buttonStyle={styles.editButton}
                 onPress={navigateToUserEdit}
               />
             ) : (
@@ -98,14 +99,18 @@ export const UserProfile = React.memo(
                     style={{marginRight: 8}}
                   />
                 }
-                titleStyle={{...styles.title_style, color: '#2c3e50'}}
-                buttonStyle={styles.edit_button}
+                titleStyle={{...styles.editButtonTitle, color: '#2c3e50'}}
+                buttonStyle={styles.editButton}
                 onPress={navigateToChatRoom}
               />
             )}
           </View>
           <View style={styles.introduce}>
-            {!!user.introduce && <Text>{user.introduce}</Text>}
+            {!!user.introduce && (
+              <Text style={{color: basicStyles.mainTextColor}}>
+                {user.introduce}
+              </Text>
+            )}
           </View>
           <Posts posts={posts} navigateToShowPost={navigateToPost} />
         </ScrollView>
@@ -146,18 +151,18 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 19,
     marginTop: 10,
-    color: '#34495e',
+    color: basicStyles.mainTextColor,
   },
   edit: {
     alignItems: 'center',
     marginTop: '5%',
     height: 40,
   },
-  edit_button: {
+  editButton: {
     backgroundColor: 'transparent',
   },
-  title_style: {
-    color: '#4fa9ff',
+  editButtonTitle: {
+    color: basicStyles.skyBlueButtonColor,
     fontWeight: 'bold',
     fontSize: 16,
   },
@@ -166,7 +171,6 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     paddingRight: 25,
     marginTop: '5%',
-    color: '#34495e',
   },
   introduce_text: {
     fontSize: 16,

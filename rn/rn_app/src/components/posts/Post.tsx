@@ -5,19 +5,22 @@ import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 
 import {Post as PostType} from '../../redux/post';
+import {basicStyles} from '../../constants/styles';
 
-type PropsType = {
+type Props = {
   post: PostType;
   user: number;
   deletePost: (id: number) => void;
 };
 
-export const Post = ({post, user, deletePost}: PropsType) => {
+export const Post = ({post, user, deletePost}: Props) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Image source={{uri: post.image}} style={styles.image} />
-      <View style={styles.upper_box}>
+      <View style={{backgroundColor: basicStyles.imageBackGroundColor}}>
+        <Image source={{uri: post.image}} style={styles.image} />
+      </View>
+      <View style={styles.upperBox}>
         <Text style={styles.date}>{post.date}</Text>
         {user === post.userId && (
           <Button
@@ -53,7 +56,7 @@ const styles = StyleSheet.create({
     width: width,
     height: 400,
   },
-  upper_box: {
+  upperBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
