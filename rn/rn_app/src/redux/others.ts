@@ -2,15 +2,17 @@ import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit';
 
 import {UserType} from './user';
 import {Post} from './post';
+import {Flash} from './flashes';
 import {getOthersThunk} from '../actions/others';
 import {RootState} from './index';
 
-export type anotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
+export type AnotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
   posts: Post[];
+  flashes: Flash[];
 };
 
 type initialStateType = {
-  others?: anotherUser[];
+  others?: AnotherUser[];
 };
 
 const initialState: initialStateType = {
@@ -25,11 +27,13 @@ const othersSlice = createSlice({
     'index/logout': () => initialState,
     [getOthersThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<anotherUser[]>,
-    ) => ({
-      ...state,
-      others: action.payload,
-    }),
+      action: PayloadAction<AnotherUser[]>,
+    ) => {
+      return {
+        ...state,
+        others: action.payload,
+      };
+    },
   },
 });
 

@@ -22,8 +22,13 @@ type RootRouteProp = RouteProp<RootStackParamList, 'ShowFlash'>;
 type Props = {route: RootRouteProp};
 
 export const Container = ({route}: Props) => {
+  console.log(route.params.displayedList);
   const firstRender = useRef(false);
   const modalizeRef = useRef<Modalize>(null);
+
+  const referenceId = useSelector((state: RootState) => {
+    return state.userReducer.user!.id;
+  });
 
   const flashes = useSelector((state: RootState) => {
     return selectAllFlashes(state);
@@ -83,7 +88,8 @@ export const Container = ({route}: Props) => {
       userInfo={route.params}
       firstRender={firstRender}
       modalizeRef={modalizeRef}
-      flashes={flashes}
+      flashes={route.params.flashes ? route.params.flashes : flashes}
+      referenceId={referenceId}
     />
   );
 };

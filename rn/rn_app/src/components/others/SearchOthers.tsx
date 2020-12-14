@@ -16,19 +16,34 @@ import {
   Text,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {ListItem, Avatar} from 'react-native-elements';
+import {ListItem} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
+import LinearGradient from 'react-native-linear-gradient';
 
-import {anotherUser} from '../../redux/others';
-
-const noImage = require('../../assets/noImage.png');
+import {AnotherUser} from '../../redux/others';
+import {Flash} from '../../redux/flashes';
+import {flashesGradation} from '../../constants/lineGradation';
+import {UserAvatar} from '../utils/Avatar';
 
 type Props = {
-  others: anotherUser[];
+  others: AnotherUser[];
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
-  pushProfile: (user: anotherUser) => void;
+  pushProfile: (user: AnotherUser) => void;
+  navigateToShowFlash: ({
+    userId,
+    userName,
+    userImage,
+    flashes,
+    displayedList,
+  }: {
+    userId: number;
+    userName: string;
+    userImage: string | null;
+    flashes: Flash[];
+    displayedList?: AnotherUser[];
+  }) => void;
 };
 
 export const SearchOthers = ({
@@ -36,6 +51,7 @@ export const SearchOthers = ({
   refRange,
   setRange,
   pushProfile,
+  navigateToShowFlash,
 }: Props) => {
   const [displayedUsers, setDisplayedUsers] = useState(others);
   const [keyword, setKeyword] = useState('');
@@ -163,13 +179,33 @@ export const SearchOthers = ({
                           introduce: u.introduce,
                           message: u.message,
                           posts: u.posts,
+                          flashes: [],
                         });
                       }}>
-                      <Avatar
-                        rounded
-                        size="medium"
-                        source={u.image ? {uri: u.image} : noImage}
-                      />
+                      {u.flashes.length ? (
+                        <LinearGradient
+                          colors={flashesGradation.colors}
+                          start={flashesGradation.start}
+                          end={flashesGradation.end}
+                          style={styles.userImageGradation}>
+                          <UserAvatar
+                            image={u.image}
+                            size="medium"
+                            opacity={1}
+                            onPress={() => {
+                              navigateToShowFlash({
+                                userId: u.id,
+                                userName: u.name,
+                                userImage: u.image,
+                                flashes: u.flashes,
+                                displayedList: others,
+                              });
+                            }}
+                          />
+                        </LinearGradient>
+                      ) : (
+                        <UserAvatar image={u.image} size="medium" opacity={1} />
+                      )}
                       <ListItem.Content>
                         <ListItem.Title>{u.name}</ListItem.Title>
                         <ListItem.Subtitle style={styles.subtitle}>
@@ -216,6 +252,12 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: '#ebebeb',
     alignSelf: 'center',
+  },
+  userImageGradation: {
+    height: 55,
+    width: 55,
+    borderRadius: 55,
+    ...flashesGradation.baseStyle,
   },
   iosPicker: {
     color: '#2c3e50',

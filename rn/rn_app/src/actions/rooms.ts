@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
 import {createRoom} from '../apis/roomsApi';
-import {anotherUser} from '../redux/others';
+import {AnotherUser} from '../redux/others';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {logout} from '../redux/index';
@@ -9,7 +9,7 @@ import {alertSomeError} from '../helpers/error';
 
 export const createRoomThunk = createAsyncThunk(
   'chats/createRoom',
-  async (recipient: anotherUser, thunkAPI) => {
+  async (recipient: AnotherUser, thunkAPI) => {
     const keychain = await checkKeychain();
 
     if (keychain) {

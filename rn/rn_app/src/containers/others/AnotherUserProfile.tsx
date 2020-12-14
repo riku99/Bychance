@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {unwrapResult} from '@reduxjs/toolkit';
 
-import {UserProfile} from '../../components/users/UserProfile';
+import {UserProfile, FlashUserInfo} from '../../components/users/UserProfile';
 import {Post} from '../../redux/post';
 import {SearchStackParamList} from '../../screens/Search';
-import {AppDispatch} from '../../redux';
+import {AppDispatch, RootState} from '../../redux';
 import {createRoomThunk} from '../../actions/rooms';
-import {checkKeychain} from '../../helpers/keychain';
 import {RootStackParamList} from '../../screens/Root';
 import {selectRoom} from '../../redux/rooms';
 import {alertSomeError} from '../../helpers/error';
@@ -28,26 +27,18 @@ type Props = {route: SearchScreenRouteProp};
 export const Container = ({route}: Props) => {
   const user = route.params;
 
-  const [keychainId, setKeychainId] = useState<null | number>(null);
+  const referenceId = useSelector((state: RootState) => {
+    return state.userReducer.user!.id;
+  });
 
   const dispatch: AppDispatch = useDispatch();
 
-  useEffect(() => {
-    const confirmUser = async () => {
-      const keychain = await checkKeychain();
-      if (keychain && keychain.id === user.id) {
-        setKeychainId(keychain.id);
-      }
-    };
-    confirmUser();
-  }, [user.id]);
+  const searchStackNavigation = useNavigation<SearchNavigationProp>();
 
-  const navigationToPost = useNavigation<SearchNavigationProp>();
-  const navigationToUserEdit = useNavigation<RootNavigationProp>();
-  const navigationToChatRoom = useNavigation<RootNavigationProp>();
+  const rootStackNavigation = useNavigation<RootNavigationProp>();
 
   const pushPost = (post: Post) => {
-    navigationToPost.push('OtherPost', {
+    searchStackNavigation.push('OtherPost', {
       id: post.id,
       text: post.text,
       image: post.image,
@@ -56,17 +47,13 @@ export const Container = ({route}: Props) => {
     });
   };
 
-  const pushUserEdit = () => {
-    navigationToUserEdit.push('UserEdit');
-  };
-
   const pushChatRoom = () => {
     dispatch(createRoomThunk(user))
       .then(unwrapResult)
       .then((payload) => {
         const selectedRoom = selectRoom(payload.id);
         if (selectedRoom) {
-          navigationToChatRoom.push('ChatRoom', {
+          rootStackNavigation.push('ChatRoom', {
             id: selectedRoom.id,
             partner: selectedRoom.partner,
             timestamp: selectedRoom.timestamp,
@@ -78,6 +65,14 @@ export const Container = ({route}: Props) => {
       });
   };
 
+  const pushFlash = ({userId, userName, userImage}: FlashUserInfo) => {
+    rootStackNavigation.push('ShowFlash', {
+      userId,
+      userName,
+      userImage,
+    });
+  };
+
   return (
     <UserProfile
       user={{
@@ -86,11 +81,12 @@ export const Container = ({route}: Props) => {
         image: user.image,
         introduce: user.introduce,
       }}
-      keychainId={keychainId}
+      referenceId={referenceId}
       posts={user.posts}
       navigateToPost={pushPost}
-      navigateToUserEdit={pushUserEdit}
       navigateToChatRoom={pushChatRoom}
+      navigateToShowFlash={pushFlash}
+      flashes={[]}
     />
   );
 };

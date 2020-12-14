@@ -1,45 +1,55 @@
+import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-import {getOthers} from '../apis/othersApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {logout} from '../redux/index';
+import {AnotherUser} from '../redux/others';
+import {rejectPayload, basicAxiosError} from './d';
+import {origin} from '../constants/origin';
+import {headers} from '../helpers/headers';
 
-export const getOthersThunk = createAsyncThunk(
-  'others/getOthersThunk',
-  async (
-    {lat, lng, range}: {lat: number | null; lng: number | null; range: number},
-    thunkAPI,
-  ) => {
-    const keychain = await checkKeychain();
+export const getOthersThunk = createAsyncThunk<
+  AnotherUser[],
+  {lat: number | null; lng: number | null; range: number},
+  {
+    rejectValue: rejectPayload;
+  }
+>('others/getOthersThunk', async ({lat, lng, range}, thunkAPI) => {
+  const keychain = await checkKeychain();
 
-    if (keychain) {
-      const response = await getOthers({...keychain, lat, lng, range});
+  if (keychain) {
+    try {
+      const response = await axios.get<AnotherUser[]>(`${origin}/others`, {
+        params: {id: keychain.id, lat, lng, range},
+        ...headers(keychain.token),
+      });
 
-      if (response.type === 'success') {
-        return response.data;
-      }
+      return response.data;
+    } catch (e) {
+      if (e && e.response) {
+        const axiosError = e as basicAxiosError;
 
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(logout());
-        };
-        requestLogin(callback);
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
-
-      if (response.type === 'someError') {
-        console.log(response.message);
+        switch (axiosError.response?.data.errorType) {
+          case 'loginError':
+            requestLogin(() => {
+              thunkAPI.dispatch(logout());
+            });
+            return thunkAPI.rejectWithValue({errorType: 'loginError'});
+          default:
+            alertSomeError();
+            return thunkAPI.rejectWithValue({errorType: 'someError'});
+        }
+      } else {
         alertSomeError();
-        return thunkAPI.rejectWithValue({someError: true});
+        return thunkAPI.rejectWithValue({errorType: 'someError'});
       }
-    } else {
-      const callback = () => {
-        thunkAPI.dispatch(logout());
-      };
-      requestLogin(callback);
-      return thunkAPI.rejectWithValue({loginError: true});
     }
-  },
-);
+  } else {
+    requestLogin(() => {
+      thunkAPI.dispatch(logout());
+    });
+    return thunkAPI.rejectWithValue({errorType: 'loginError'});
+  }
+});

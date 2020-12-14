@@ -6,21 +6,25 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {SearchOthers} from '../../components/others/SearchOthers';
 import {RootState} from '../../redux/index';
-import {anotherUser, selectOthers} from '../../redux/others';
+import {AnotherUser, selectOthers} from '../../redux/others';
 import {getOthersThunk} from '../../actions/others';
 import {AppDispatch} from '../../redux/index';
 
+import {RootStackParamList} from '../../screens/Root';
 import {SearchStackParamList} from '../../screens/Search';
+import {Flash} from '../../redux/flashes';
 
 type SearchNavigationProp = StackNavigationProp<
   SearchStackParamList,
   'SearchOthers'
 >;
 
+type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
+
 export const Container = () => {
   const isFocused = useIsFocused();
 
-  const others: anotherUser[] = useSelector((state: RootState) => {
+  const others: AnotherUser[] = useSelector((state: RootState) => {
     return selectOthers(state);
   }, shallowEqual);
 
@@ -31,9 +35,11 @@ export const Container = () => {
   }, shallowEqual);
 
   const _range = useRef(1);
+
   const [range, setRange] = useState(_range.current);
 
   const dispatch: AppDispatch = useDispatch();
+
   useEffect(() => {
     const getOthers = async (range: number) => {
       if (isFocused) {
@@ -45,17 +51,43 @@ export const Container = () => {
     getOthers(range);
   }, [dispatch, isFocused, position.lat, position.lng, range]);
 
-  const navigationToProfile = useNavigation<SearchNavigationProp>();
+  const searchStackNavigation = useNavigation<SearchNavigationProp>();
 
-  const pushProfile = (user: anotherUser) => {
-    navigationToProfile.push('OtherProfile', user);
+  const rootStackNavigation = useNavigation<RootNavigationProp>();
+
+  const pushProfile = (user: AnotherUser) => {
+    searchStackNavigation.push('OtherProfile', user);
   };
+
+  const pushShowFlassh = ({
+    userId,
+    userName,
+    userImage,
+    flashes,
+    displayedList,
+  }: {
+    userId: number;
+    userName: string;
+    userImage: string | null;
+    flashes: Flash[];
+    displayedList?: AnotherUser[];
+  }) => {
+    rootStackNavigation.push('ShowFlash', {
+      userId,
+      userName,
+      userImage,
+      flashes,
+      displayedList,
+    });
+  };
+
   return (
     <SearchOthers
       others={others}
       refRange={_range}
       setRange={setRange}
       pushProfile={pushProfile}
+      navigateToShowFlash={pushShowFlassh}
     />
   );
 };

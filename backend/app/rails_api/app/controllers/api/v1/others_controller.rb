@@ -20,7 +20,7 @@ class Api::V1::OthersController < ApplicationController
       render json: sorted_others, each_serializer: OthersSerializer
       return
     else
-      render json: { loginError: true }, status: 401
+      render json: {errorType: "loginError"}, status: 401
     end
   end
 end

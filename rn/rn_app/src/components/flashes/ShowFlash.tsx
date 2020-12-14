@@ -22,6 +22,7 @@ import {Flash} from '../../redux/flashes';
 type Props = {
   userInfo: FlashUserInfo;
   flashes: Flash[];
+  referenceId: number;
   firstRender: React.MutableRefObject<boolean>;
   modalizeRef: React.RefObject<Modalize>;
   creatingFlash?: boolean;
@@ -33,6 +34,7 @@ export const ShowFlash = React.memo(
   ({
     userInfo,
     flashes,
+    referenceId,
     firstRender,
     modalizeRef,
     creatingFlash,
@@ -332,7 +334,7 @@ export const ShowFlash = React.memo(
                   onPress={navigateToGoback}
                 />
               </View>
-              {creatingFlash && (
+              {creatingFlash && referenceId === userInfo.userId && (
                 <View style={styles.addMessageContainer}>
                   <ActivityIndicator color="white" />
                   <Text style={styles.addMessage}>新しく追加しています</Text>

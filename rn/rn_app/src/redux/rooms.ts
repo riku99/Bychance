@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import {createRoomThunk} from '../actions/rooms';
-import {anotherUser} from './others';
+import {AnotherUser} from './others';
 import {RootState, store} from './index';
 import {
   subsequentLoginAction,
@@ -18,7 +18,7 @@ import {SuccessfullLoginData} from '../apis/usersApi';
 
 export type Room = {
   id: number;
-  partner: anotherUser;
+  partner: AnotherUser;
   timestamp: string;
   messages: number[];
 };
@@ -56,7 +56,7 @@ export const RoomsSlice = createSlice({
       state,
       action: PayloadAction<{
         id: number;
-        recipient: anotherUser;
+        recipient: AnotherUser;
         timestamp: string;
       }>,
     ) => {

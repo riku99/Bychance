@@ -26,7 +26,7 @@ type Props = {
     image: string | null;
     introduce: string | null;
   };
-  keychainId: number | null;
+  referenceId: number;
   posts: Post[];
   flashes: Flash[];
   creatingFlash?: boolean;
@@ -43,7 +43,7 @@ export const UserProfile = React.memo(
     posts,
     flashes,
     creatingFlash,
-    keychainId,
+    referenceId,
     navigateToPost,
     navigateToUserEdit,
     navigateToChatRoom,
@@ -81,7 +81,7 @@ export const UserProfile = React.memo(
             <Text style={styles.name}>{user.name}</Text>
           </View>
           <View style={styles.edit}>
-            {keychainId === user.id ? (
+            {referenceId === user.id ? (
               <Button
                 title="プロフィールを編集"
                 titleStyle={styles.editButtonTitle}
@@ -114,7 +114,7 @@ export const UserProfile = React.memo(
           </View>
           <Posts posts={posts} navigateToShowPost={navigateToPost} />
         </ScrollView>
-        {keychainId === user.id && (
+        {referenceId === user.id && (
           <Button
             icon={<MIcon name="flash-on" size={27} style={{color: 'white'}} />}
             containerStyle={styles.storyContainer}

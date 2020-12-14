@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  getFocusedRouteNameFromRoute,
-  RouteProp,
-} from '@react-navigation/native';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   createStackNavigator,
@@ -24,13 +21,19 @@ import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {AnotherUser} from '../redux/others';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
   ChatRoom: Room;
   TakeFlash: undefined;
-  ShowFlash: {userId: number; userName: string; userImage: string | null};
+  ShowFlash: {
+    userId: number;
+    userName: string;
+    userImage: string | null;
+    displayedList?: AnotherUser[];
+  };
 };
 
 export type TabList = {
