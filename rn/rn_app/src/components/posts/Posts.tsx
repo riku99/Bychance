@@ -31,7 +31,11 @@ export const Posts = ({posts, navigateToShowPost}: PropsType) => {
                 userId: p.userId,
               });
             }}>
-            <View style={{backgroundColor: basicStyles.imageBackGroundColor}}>
+            <View
+              style={{
+                backgroundColor: basicStyles.imageBackGroundColor,
+                marginTop: 2,
+              }}>
               <Image source={{uri: p.image}} style={styles.post} key={i} />
             </View>
           </TouchableOpacity>

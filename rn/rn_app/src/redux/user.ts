@@ -22,7 +22,11 @@ type initialStateType = {
     lat: number | null;
     lng: number | null;
   };
-  errors?: {};
+  temporarilySavedData?: {
+    name?: string;
+    introduce?: string;
+    statusMessage?: string;
+  };
 };
 
 export type UserType = NonNullable<initialStateType['user']>;
@@ -34,7 +38,47 @@ const initialState: initialStateType = {
 const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    saveEditData: (
+      state,
+      action: PayloadAction<initialStateType['temporarilySavedData']>,
+    ) => {
+      if (action.payload?.name) {
+        return {
+          ...state,
+          temporarilySavedData: {
+            ...state.temporarilySavedData,
+            name: action.payload.name,
+          },
+        };
+      }
+      if (action.payload?.introduce || action.payload?.introduce === '') {
+        return {
+          ...state,
+          temporarilySavedData: {
+            ...state.temporarilySavedData,
+            introduce: action.payload.introduce,
+          },
+        };
+      }
+      if (
+        action.payload?.statusMessage ||
+        action.payload?.statusMessage === ''
+      ) {
+        return {
+          ...state,
+          temporarilySavedData: {
+            ...state.temporarilySavedData,
+            statusMessage: action.payload.statusMessage,
+          },
+        };
+      }
+    },
+    resetEditData: (state) => ({
+      ...state,
+      temporarilySavedData: undefined,
+    }),
+  },
   extraReducers: {
     [sampleLogin.fulfilled.type]: (state, action) => {
       return {
@@ -95,5 +139,7 @@ const userSlice = createSlice({
     }),
   },
 });
+
+export const {saveEditData, resetEditData} = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

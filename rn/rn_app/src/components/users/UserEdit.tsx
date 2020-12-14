@@ -1,10 +1,19 @@
-import React, {useCallback, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 
 import {UserAvatar} from '../utils/Avatar';
+import {basicStyles} from '../../constants/styles';
+import {UserEditNavigationProp} from '../../containers/users/UserEdit';
+import {MyTheme} from '../../App';
 
 type Props = {
   user: {
@@ -14,13 +23,25 @@ type Props = {
     image: string | null;
     message: string | null;
   };
-} & {
+  savedEditData?: {
+    name?: string;
+    introduce?: string;
+    statusMessage?: string;
+  };
+  navigateToNameEdit: ({name}: {name: string}) => void;
+  navigateToIntroduceEdit: ({introduce}: {introduce: string}) => void;
+  navigateToStatusMessageEdit: ({
+    statusMessage,
+  }: {
+    statusMessage: string;
+  }) => void;
   editProfile: (
     name: string,
     introduce: string,
     image: string | undefined,
     message: string,
   ) => void;
+  navigation: UserEditNavigationProp;
 };
 
 const options = {
@@ -36,7 +57,15 @@ const options = {
   allowsEditing: true,
 };
 
-export const UserEdit = ({user, editProfile}: Props) => {
+export const UserEdit = ({
+  user,
+  savedEditData,
+  navigateToNameEdit,
+  navigateToIntroduceEdit,
+  navigateToStatusMessageEdit,
+  editProfile,
+  navigation,
+}: Props) => {
   const [name, setName] = useState(user.name);
   const [introduce, setIntroduce] = useState(
     user.introduce ? user.introduce : '',
@@ -46,6 +75,52 @@ export const UserEdit = ({user, editProfile}: Props) => {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (savedEditData?.name) {
+      setName(savedEditData?.name);
+    }
+    if (savedEditData?.introduce || savedEditData?.introduce === '') {
+      const _data = savedEditData.introduce.replace(/\n{2,}/g, '\n');
+      setIntroduce(_data);
+    }
+    if (savedEditData?.statusMessage || savedEditData?.statusMessage === '') {
+      setMessage(savedEditData.statusMessage);
+    }
+  }, [savedEditData]);
+
+  useLayoutEffect(() => {
+    if (isFocused) {
+      navigation.dangerouslyGetParent()?.setOptions({
+        title: 'プロフィールを編集',
+        headerRight: () =>
+          !loading ? (
+            <Button
+              title="完了"
+              titleStyle={{color: MyTheme.colors.text, fontWeight: 'bold'}}
+              buttonStyle={{backgroundColor: 'transparent'}}
+              onPress={() => {
+                setLoding(true);
+                editProfile(name, introduce, selectedImage, message);
+              }}
+            />
+          ) : (
+            <ActivityIndicator />
+          ),
+      });
+    }
+  }, [
+    navigation,
+    editProfile,
+    name,
+    introduce,
+    message,
+    selectedImage,
+    isFocused,
+    loading,
+  ]);
 
   const pickImage = useCallback(() => {
     ImagePicker.showImagePicker(options, (response) => {
@@ -58,9 +133,13 @@ export const UserEdit = ({user, editProfile}: Props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.edit}>
+      <View style={styles.mainEditContainer}>
         <View style={styles.image}>
-          <UserAvatar image={user.image} size="large" opacity={1} />
+          <UserAvatar
+            image={selectedImage ? selectedImage : user.image}
+            size="large"
+            opacity={1}
+          />
           <Button
             title="プロフィール画像を変更"
             titleStyle={styles.imageButtonTitle}
@@ -70,90 +149,50 @@ export const UserEdit = ({user, editProfile}: Props) => {
             }}
           />
         </View>
-        <View style={styles.name}>
-          <Text style={styles.nameLabel}>名前</Text>
-          {name.length > 20 && (
-            <Text style={{color: 'red'}}>20文字以下にしてください</Text>
-          )}
-          {name.length === 0 && (
-            <Text style={styles.alertLabel}>名前を入力してください</Text>
-          )}
-          <TextInput
-            style={
-              name.length <= 20 && name.length !== 0
-                ? styles.nameInput
-                : {...styles.nameInput, ...styles.alertInput}
-            }
-            onChangeText={(text) => {
-              setName(text);
+        <View style={styles.profileContainer}>
+          <TouchableOpacity
+            style={styles.editElenentContainer}
+            onPress={() => {
+              navigateToNameEdit({
+                name,
+              });
             }}>
-            {name}
-          </TextInput>
-        </View>
-        <View style={styles.introduce}>
-          <Text style={styles.introduceLabel}>自己紹介</Text>
-          {introduce.length > 100 && (
-            <Text style={styles.alertLabel}>100文字以下にしてください</Text>
-          )}
-          <TextInput
-            style={
-              introduce.length <= 100
-                ? styles.introduceInput
-                : {...styles.introduceInput, ...styles.alertInput}
-            }
-            multiline={true}
-            onChangeText={(text) => {
-              setIntroduce(text);
+            <Text style={styles.elementLabel}>名前</Text>
+            <Text style={styles.element}>{name}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.editElenentContainer}
+            onPress={() => {
+              navigateToIntroduceEdit({
+                introduce,
+              });
             }}>
-            {introduce}
-          </TextInput>
+            <Text style={styles.elementLabel}>自己紹介</Text>
+            <Text style={styles.element}>
+              {introduce && introduce !== ''
+                ? introduce.split('\n')[1]
+                  ? introduce.split('\n')[0] + ' ...'
+                  : introduce
+                : ''}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.editElenentContainer}
+            onPress={() =>
+              navigateToStatusMessageEdit({
+                statusMessage: message,
+              })
+            }>
+            <Text style={styles.elementLabel}>ステータス{'\n'}メッセージ</Text>
+            <Text style={styles.element}>{message}</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.message}>
-          <Text style={styles.messageLabel}>ステータスメッセージ</Text>
-          {message.length > 50 && (
-            <Text style={styles.alertLabel}>50文字以下にしてください</Text>
-          )}
-          <TextInput
-            style={
-              message.length < 50
-                ? styles.messageInput
-                : {...styles.messageInput, ...styles.alertInput}
-            }
-            onChangeText={(text) => {
-              setMessage(text);
-            }}>
-            {message}
-          </TextInput>
-        </View>
-        {loading ? (
-          <Button
-            loading
-            loadingProps={{color: '#5c94c8'}}
-            buttonStyle={styles.completeButton}
-          />
-        ) : (
-          <Button
-            title={'完了'}
-            titleStyle={styles.completeTitle}
-            buttonStyle={styles.completeButton}
-            disabledStyle={{backgroundColor: 'transparent'}}
-            disabled={
-              (name.length > 20 ||
-                name.length === 0 ||
-                introduce.length > 100 ||
-                message.length > 50) &&
-              true
-            }
-            onPress={async () => {
-              setLoding(true);
-              editProfile(name, introduce, selectedImage, message);
-            }}
-          />
-        )}
       </View>
     </View>
   );
 };
+
+const labelColor = '#a3a3a3';
 
 const styles = StyleSheet.create({
   container: {
@@ -161,12 +200,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  edit: {
-    width: '80%',
+  mainEditContainer: {
+    width: '90%',
     height: '90%',
     display: 'flex',
     alignItems: 'center',
-    // marginTop: 20,
+  },
+  profileContainer: {
+    width: '100%',
+    height: 200,
+    marginTop: 15,
+  },
+  editElenentContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  elementLabel: {
+    fontSize: 16,
+    color: labelColor,
+  },
+  element: {
+    position: 'absolute',
+    left: 100,
+    fontSize: 16,
+    color: basicStyles.mainTextColor,
   },
   image: {
     display: 'flex',
@@ -183,59 +242,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
-  name: {
-    display: 'flex',
-    height: 90,
-    width: '100%',
-    marginTop: 20,
-  },
-  nameLabel: {
-    fontSize: 15,
-    color: '#c9c9c9',
-  },
-  nameInput: {
-    fontSize: 15,
-    marginTop: '10%',
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#c9c9c9',
-  },
-  introduce: {
-    height: 130,
-    width: '100%',
-  },
-  introduceLabel: {
-    fontSize: 15,
-    color: '#c9c9c9',
-  },
-  introduceInput: {
-    fontSize: 15,
-    marginTop: '10%',
-    maxHeight: '50%',
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#c9c9c9',
-  },
-  message: {
-    width: '100%',
-  },
-  messageLabel: {
-    color: '#c9c9c9',
-    fontSize: 15,
-  },
-  messageInput: {
-    fontSize: 15,
-    marginTop: '10%',
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#c9c9c9',
-  },
-  alertLabel: {
-    color: 'red',
-  },
-  alertInput: {
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'red',
-  },
   completeButton: {
-    marginTop: '100%',
+    marginTop: 20,
     backgroundColor: 'transparent',
   },
   completeTitle: {

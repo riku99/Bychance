@@ -16,7 +16,7 @@ const App: () => React.ReactNode = () => {
   );
 };
 
-const MyTheme = {
+export const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,

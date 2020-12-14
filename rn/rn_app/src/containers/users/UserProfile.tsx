@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {ProfileStackParamList} from '../../screens/Profile';
 
+import {ProfileStackParamList} from '../../screens/Profile';
 import {UserProfile, FlashUserInfo} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
 import {Post, selectAllPosts} from '../../redux/post';

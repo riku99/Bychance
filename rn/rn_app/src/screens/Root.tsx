@@ -1,17 +1,22 @@
 import React from 'react';
 import {
+  getFocusedRouteNameFromRoute,
+  RouteProp,
+} from '@react-navigation/native';
+import {
   CardStyleInterpolators,
   createStackNavigator,
 } from '@react-navigation/stack';
 import {useSelector} from 'react-redux';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {PostStackScreen} from './Post';
 import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {ChatListStackScreen} from './ChatList';
-import {Container as UserEdit} from '../containers/users/UserEdit';
+import {UserEditStackScreen} from './UserEdit';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
 import {Container as ShowFlash} from '../containers/flashs/ShowFlash';
@@ -108,9 +113,23 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="UserEdit"
-        component={UserEdit}
-        options={{
-          title: 'プロフィール編集',
+        component={UserEditStackScreen}
+        options={({route, navigation}) => {
+          return {
+            headerLeft:
+              getFocusedRouteNameFromRoute(route) === undefined ||
+              getFocusedRouteNameFromRoute(route) === 'EditContents'
+                ? undefined
+                : () => (
+                    <Button
+                      title="キャンセル"
+                      style={{marginBottom: 3}}
+                      titleStyle={{color: '#5c94c8'}}
+                      buttonStyle={{backgroundColor: 'transparent'}}
+                      onPress={() => navigation.navigate('EditContents')}
+                    />
+                  ),
+          };
         }}
       />
       <RootStack.Screen
