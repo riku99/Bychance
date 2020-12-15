@@ -4,13 +4,12 @@ import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 
 import {ShowFlash} from '../../components/flashes/ShowFlash';
 import {RootStackParamList} from '../../screens/Root';
 import {RootState, AppDispatch} from '../../redux/index';
-import {selectAllFlashes} from '../../redux/flashes';
 import {deleteFlashThunk} from '../../actions/flashes';
 import {flashMessage} from '../../helpers/flashMessage';
 import {alertSomeError} from '../../helpers/error';
@@ -22,17 +21,31 @@ type RootRouteProp = RouteProp<RootStackParamList, 'ShowFlash'>;
 type Props = {route: RootRouteProp};
 
 export const Container = ({route}: Props) => {
-  console.log(route.params.displayedList);
+  const routePropsData = route.params;
+
+  const getUserInfo = () => {
+    switch (routePropsData.type) {
+      case 'fromProfilePage':
+        return {
+          userId: routePropsData.userId,
+          userName: routePropsData.userName,
+          userImage: routePropsData.userImage,
+        };
+      case 'fromSearchPage':
+        return {
+          userId: routePropsData.displayedList[routePropsData.index].id,
+          userName: routePropsData.displayedList[routePropsData.index].name,
+          userImage: routePropsData.displayedList[routePropsData.index].image,
+        };
+    }
+  };
+
   const firstRender = useRef(false);
   const modalizeRef = useRef<Modalize>(null);
 
   const referenceId = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
-
-  const flashes = useSelector((state: RootState) => {
-    return selectAllFlashes(state);
-  }, shallowEqual);
 
   const creatingFlash = useSelector((state: RootState) => {
     return state.indexReducer.creatingFlash;
@@ -85,10 +98,14 @@ export const Container = ({route}: Props) => {
       deleteFlash={deleteFlash}
       creatingFlash={creatingFlash}
       navigateToGoback={backScreen}
-      userInfo={route.params}
+      userInfo={getUserInfo()}
       firstRender={firstRender}
       modalizeRef={modalizeRef}
-      flashes={route.params.flashes ? route.params.flashes : flashes}
+      flashes={
+        routePropsData.type === 'fromProfilePage'
+          ? routePropsData.flashes
+          : routePropsData.displayedList[routePropsData.index].flashes
+      }
       referenceId={referenceId}
     />
   );

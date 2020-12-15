@@ -53,9 +53,11 @@ export const Container = () => {
 
   const pushShowFlash = ({userId, userName, userImage}: FlashUserInfo) => {
     rootstackNavigation.push('ShowFlash', {
+      type: 'fromProfilePage',
       userId,
       userName,
       userImage,
+      flashes,
     });
   };
 

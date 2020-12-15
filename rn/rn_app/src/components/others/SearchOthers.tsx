@@ -22,7 +22,6 @@ import RNPickerSelect from 'react-native-picker-select';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {AnotherUser} from '../../redux/others';
-import {Flash} from '../../redux/flashes';
 import {flashesGradation} from '../../constants/lineGradation';
 import {UserAvatar} from '../utils/Avatar';
 
@@ -31,19 +30,7 @@ type Props = {
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
   pushProfile: (user: AnotherUser) => void;
-  navigateToShowFlash: ({
-    userId,
-    userName,
-    userImage,
-    flashes,
-    displayedList,
-  }: {
-    userId: number;
-    userName: string;
-    userImage: string | null;
-    flashes: Flash[];
-    displayedList?: AnotherUser[];
-  }) => void;
+  navigateToShowFlash: ({userId}: {userId: number}) => void;
 };
 
 export const SearchOthers = ({
@@ -193,13 +180,7 @@ export const SearchOthers = ({
                             size="medium"
                             opacity={1}
                             onPress={() => {
-                              navigateToShowFlash({
-                                userId: u.id,
-                                userName: u.name,
-                                userImage: u.image,
-                                flashes: u.flashes,
-                                displayedList: others,
-                              });
+                              navigateToShowFlash({userId: u.id});
                             }}
                           />
                         </LinearGradient>

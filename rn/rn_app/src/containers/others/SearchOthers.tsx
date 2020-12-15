@@ -12,7 +12,6 @@ import {AppDispatch} from '../../redux/index';
 
 import {RootStackParamList} from '../../screens/Root';
 import {SearchStackParamList} from '../../screens/Search';
-import {Flash} from '../../redux/flashes';
 
 type SearchNavigationProp = StackNavigationProp<
   SearchStackParamList,
@@ -38,6 +37,10 @@ export const Container = () => {
 
   const [range, setRange] = useState(_range.current);
 
+  const [haveFlashOthers, setHaveFlashOthers] = useState<
+    [AnotherUser, ...AnotherUser[]] | undefined
+  >(undefined);
+
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -51,6 +54,15 @@ export const Container = () => {
     getOthers(range);
   }, [dispatch, isFocused, position.lat, position.lng, range]);
 
+  useEffect(() => {
+    if (others.length) {
+      const _haveFlashOthers = others.filter((f) => f.flashes.length);
+      if (_haveFlashOthers.length) {
+        setHaveFlashOthers(_haveFlashOthers as [AnotherUser, ...AnotherUser[]]);
+      }
+    }
+  }, [others]);
+
   const searchStackNavigation = useNavigation<SearchNavigationProp>();
 
   const rootStackNavigation = useNavigation<RootNavigationProp>();
@@ -59,25 +71,12 @@ export const Container = () => {
     searchStackNavigation.push('OtherProfile', user);
   };
 
-  const pushShowFlassh = ({
-    userId,
-    userName,
-    userImage,
-    flashes,
-    displayedList,
-  }: {
-    userId: number;
-    userName: string;
-    userImage: string | null;
-    flashes: Flash[];
-    displayedList?: AnotherUser[];
-  }) => {
+  const pushShowFlash = ({userId}: {userId: number}) => {
+    const index = haveFlashOthers!.findIndex((user) => user.id === userId);
     rootStackNavigation.push('ShowFlash', {
-      userId,
-      userName,
-      userImage,
-      flashes,
-      displayedList,
+      type: 'fromSearchPage',
+      displayedList: haveFlashOthers as [AnotherUser, ...AnotherUser[]],
+      index,
     });
   };
 
@@ -87,7 +86,7 @@ export const Container = () => {
       refRange={_range}
       setRange={setRange}
       pushProfile={pushProfile}
-      navigateToShowFlash={pushShowFlassh}
+      navigateToShowFlash={pushShowFlash}
     />
   );
 };

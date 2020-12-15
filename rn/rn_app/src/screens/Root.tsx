@@ -20,6 +20,7 @@ import {Container as ShowFlash} from '../containers/flashs/ShowFlash';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
+import {Flash} from '../redux/flashes';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {AnotherUser} from '../redux/others';
 
@@ -28,12 +29,19 @@ export type RootStackParamList = {
   UserEdit: undefined;
   ChatRoom: Room;
   TakeFlash: undefined;
-  ShowFlash: {
-    userId: number;
-    userName: string;
-    userImage: string | null;
-    displayedList?: AnotherUser[];
-  };
+  ShowFlash:
+    | {
+        type: 'fromProfilePage';
+        userId: number;
+        userName: string;
+        userImage: string | null;
+        flashes: Flash[];
+      }
+    | {
+        type: 'fromSearchPage';
+        displayedList: [AnotherUser, ...AnotherUser[]];
+        index: number;
+      };
 };
 
 export type TabList = {

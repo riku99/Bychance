@@ -341,18 +341,20 @@ export const ShowFlash = React.memo(
                 </View>
               )}
             </View>
-            <Button
-              title="..."
-              titleStyle={{fontSize: 30}}
-              containerStyle={{position: 'absolute', bottom: '4%', right: 30}}
-              buttonStyle={{backgroundColor: 'transparent'}}
-              onPress={() => {
-                modalizeRef.current?.open();
-                setvisibleModal(true);
-                setIsPaused(true);
-                progressAnim[currentProgress.current].stopAnimation();
-              }}
-            />
+            {userInfo.userId === referenceId && (
+              <Button
+                title="..."
+                titleStyle={{fontSize: 30}}
+                containerStyle={{position: 'absolute', bottom: '4%', right: 30}}
+                buttonStyle={{backgroundColor: 'transparent'}}
+                onPress={() => {
+                  modalizeRef.current?.open();
+                  setvisibleModal(true);
+                  setIsPaused(true);
+                  progressAnim[currentProgress.current].stopAnimation();
+                }}
+              />
+            )}
             {onLoading && (
               <ActivityIndicator size="large" style={styles.indicator} />
             )}
