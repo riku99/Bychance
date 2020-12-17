@@ -1,45 +1,28 @@
 import React, {useRef, useEffect} from 'react';
 import {Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 
-import {ShowFlash} from '../../components/flashes/ShowFlash';
-import {RootStackParamList} from '../../screens/Root';
+import {ShowFlash, FlashData} from '../../components/flashes/ShowFlash';
 import {RootState, AppDispatch} from '../../redux/index';
 import {deleteFlashThunk} from '../../actions/flashes';
 import {flashMessage} from '../../helpers/flashMessage';
 import {alertSomeError} from '../../helpers/error';
 
-type RootNavigationProp = StackNavigationProp<RootStackParamList, 'ShowFlash'>;
+type Props = {
+  flashData: FlashData;
+  isDisplayed: boolean;
+  scrollToNextOrBackScreen: () => void;
+  goBackScreen: () => void;
+};
 
-type RootRouteProp = RouteProp<RootStackParamList, 'ShowFlash'>;
-
-type Props = {route: RootRouteProp};
-
-export const Container = ({route}: Props) => {
-  const routePropsData = route.params;
-
-  const getUserInfo = () => {
-    switch (routePropsData.type) {
-      case 'fromProfilePage':
-        return {
-          userId: routePropsData.userId,
-          userName: routePropsData.userName,
-          userImage: routePropsData.userImage,
-        };
-      case 'fromSearchPage':
-        return {
-          userId: routePropsData.displayedList[routePropsData.index].id,
-          userName: routePropsData.displayedList[routePropsData.index].name,
-          userImage: routePropsData.displayedList[routePropsData.index].image,
-        };
-    }
-  };
-
+export const Container = ({
+  flashData,
+  isDisplayed,
+  scrollToNextOrBackScreen,
+  goBackScreen,
+}: Props) => {
   const firstRender = useRef(false);
   const modalizeRef = useRef<Modalize>(null);
 
@@ -51,15 +34,9 @@ export const Container = ({route}: Props) => {
     return state.indexReducer.creatingFlash;
   });
 
-  const rootNavigation = useNavigation<RootNavigationProp>();
-
   useEffect(() => {
     firstRender.current = true;
   }, []);
-
-  const backScreen = () => {
-    rootNavigation.goBack();
-  };
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -95,18 +72,15 @@ export const Container = ({route}: Props) => {
 
   return (
     <ShowFlash
+      flashData={flashData}
+      referenceId={referenceId}
+      isDisplayed={isDisplayed}
       deleteFlash={deleteFlash}
       creatingFlash={creatingFlash}
-      navigateToGoback={backScreen}
-      userInfo={getUserInfo()}
+      scrollToNextOrBackScreen={scrollToNextOrBackScreen}
       firstRender={firstRender}
       modalizeRef={modalizeRef}
-      flashes={
-        routePropsData.type === 'fromProfilePage'
-          ? routePropsData.flashes
-          : routePropsData.displayedList[routePropsData.index].flashes
-      }
-      referenceId={referenceId}
+      goBackScreen={goBackScreen}
     />
   );
 };

@@ -30,7 +30,7 @@ type Props = {
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
   pushProfile: (user: AnotherUser) => void;
-  navigateToShowFlash: ({userId}: {userId: number}) => void;
+  navigateToShowFlash: ({id}: {id: number}) => void;
 };
 
 export const SearchOthers = ({
@@ -180,7 +180,7 @@ export const SearchOthers = ({
                             size="medium"
                             opacity={1}
                             onPress={() => {
-                              navigateToShowFlash({userId: u.id});
+                              navigateToShowFlash({id: u.id});
                             }}
                           />
                         </LinearGradient>

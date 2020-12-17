@@ -16,32 +16,22 @@ import {ChatListStackScreen} from './ChatList';
 import {UserEditStackScreen} from './UserEdit';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
-import {Container as ShowFlash} from '../containers/flashs/ShowFlash';
+import {Flashes} from '../components/flashes/Flashes';
+import {FlashData} from '../components/flashes/ShowFlash';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
-import {Flash} from '../redux/flashes';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
-import {AnotherUser} from '../redux/others';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
   ChatRoom: Room;
   TakeFlash: undefined;
-  ShowFlash:
-    | {
-        type: 'fromProfilePage';
-        userId: number;
-        userName: string;
-        userImage: string | null;
-        flashes: Flash[];
-      }
-    | {
-        type: 'fromSearchPage';
-        displayedList: [AnotherUser, ...AnotherUser[]];
-        index: number;
-      };
+  Flashes: {
+    allFlashData: FlashData[];
+    index: number;
+  };
 };
 
 export type TabList = {
@@ -164,13 +154,12 @@ export const RootStackScreen = () => {
         }}
       />
       <RootStack.Screen
-        name="ShowFlash"
-        component={ShowFlash}
+        name="Flashes"
+        component={Flashes}
         options={({}) => {
           return {
             headerShown: false,
-            gestureDirection: 'vertical',
-            gestureResponseDistance: {vertical: 3000},
+            gestureDirection: 'horizontal',
             cardStyleInterpolator: ({current}) => {
               return {
                 cardStyle: {

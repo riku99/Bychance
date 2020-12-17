@@ -5,11 +5,11 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {SearchOthers} from '../../components/others/SearchOthers';
+import {FlashData} from '../../components/flashes/ShowFlash';
 import {RootState} from '../../redux/index';
 import {AnotherUser, selectOthers} from '../../redux/others';
-import {getOthersThunk} from '../../actions/others';
 import {AppDispatch} from '../../redux/index';
-
+import {getOthersThunk} from '../../actions/others';
 import {RootStackParamList} from '../../screens/Root';
 import {SearchStackParamList} from '../../screens/Search';
 
@@ -37,9 +37,7 @@ export const Container = () => {
 
   const [range, setRange] = useState(_range.current);
 
-  const [haveFlashOthers, setHaveFlashOthers] = useState<
-    [AnotherUser, ...AnotherUser[]] | undefined
-  >(undefined);
+  const [flashData, setFlashData] = useState<FlashData[]>([]);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -56,9 +54,16 @@ export const Container = () => {
 
   useEffect(() => {
     if (others.length) {
-      const _haveFlashOthers = others.filter((f) => f.flashes.length);
-      if (_haveFlashOthers.length) {
-        setHaveFlashOthers(_haveFlashOthers as [AnotherUser, ...AnotherUser[]]);
+      const haveFlashOthers = others.filter((f) => f.flashes.length);
+      if (haveFlashOthers.length) {
+        const _flashData = haveFlashOthers.map((user) => {
+          const {flashes, ...rest} = user;
+          return {
+            flashes,
+            user: rest,
+          };
+        });
+        setFlashData(_flashData);
       }
     }
   }, [others]);
@@ -71,13 +76,9 @@ export const Container = () => {
     searchStackNavigation.push('OtherProfile', user);
   };
 
-  const pushShowFlash = ({userId}: {userId: number}) => {
-    const index = haveFlashOthers!.findIndex((user) => user.id === userId);
-    rootStackNavigation.push('ShowFlash', {
-      type: 'fromSearchPage',
-      displayedList: haveFlashOthers as [AnotherUser, ...AnotherUser[]],
-      index,
-    });
+  const pushShowFlash = ({id}: {id: number}) => {
+    const index = flashData!.findIndex((item) => item.user.id === id);
+    rootStackNavigation.push('Flashes', {allFlashData: flashData, index});
   };
 
   return (
