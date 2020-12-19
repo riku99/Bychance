@@ -86,6 +86,7 @@ export const ShowFlash = React.memo(
     const videoRef = useRef<Video>(null);
     const flashesLength = useRef(flashData.flashes.length);
 
+    // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
       // アイテムが削除された場合
       if (flashData.flashes.length < flashesLength.current) {
@@ -93,6 +94,28 @@ export const ShowFlash = React.memo(
       }
       flashesLength.current = flashData.flashes.length;
     }, [flashData.flashes.length, flashData.flashes]);
+
+    // このコンポーネントが表示された、表示されている時の責務を定義
+    useEffect(() => {
+      if (isDisplayed) {
+        if (currentFlash.contentType === 'video') {
+          setIsPaused(false);
+        }
+      }
+    }, [currentFlash, isDisplayed]);
+
+    // このコンポーネントが表示されなくなった、されていない時の責務を定義
+    useEffect(() => {
+      if (!isDisplayed) {
+        progressAnim[currentProgress.current].setValue(-progressWidth);
+        progressAnim[currentProgress.current].stopAnimation();
+        if (currentFlash.contentType === 'video') {
+          setIsPaused(true);
+          videoRef.current!.seek(0);
+        }
+        canStartVideo.current = true;
+      }
+    }, [isDisplayed, progressAnim, progressWidth, currentFlash.contentType]);
 
     const progressAnimation = ({
       progressNumber,
@@ -267,40 +290,36 @@ export const ShowFlash = React.memo(
                 </View>
               ) : (
                 <View style={styles.soruceContainer}>
-                  {isDisplayed ? (
-                    <Video
-                      ref={videoRef}
-                      source={{uri: currentFlash.content}}
-                      style={{width: '100%', height: '100%'}}
-                      resizeMode="cover"
-                      paused={isPaused}
-                      onLoadStart={() => {
-                        setOnLoading(true);
-                      }}
-                      onLoad={(e) => {
-                        videoDuration.current = e.duration * 1000;
-                      }}
-                      onProgress={({currentTime}) => {
+                  <Video
+                    ref={videoRef}
+                    source={{uri: currentFlash.content}}
+                    style={{width: '100%', height: '100%'}}
+                    resizeMode="cover"
+                    paused={isPaused}
+                    onLoadStart={() => {
+                      setOnLoading(true);
+                    }}
+                    onLoad={(e) => {
+                      if (!isDisplayed) {
+                        setIsPaused(true);
                         setOnLoading(false);
-                        if (currentTime > 0.002 && canStartVideo.current) {
-                          progressAnimation({
-                            progressNumber: currentProgress.current,
-                            duration: videoDuration.current,
-                          });
-                          canStartVideo.current = false;
-                        }
-                      }}
-                      onEnd={() => {
-                        canStartVideo.current = true;
-                      }}
-                    />
-                  ) : (
-                    <Video
-                      source={{uri: currentFlash.content + '?' + new Date()}}
-                      style={{width: '100%', height: '100%'}}
-                      resizeMode="cover"
-                    />
-                  )}
+                      }
+                      videoDuration.current = e.duration * 1000;
+                    }}
+                    onProgress={({currentTime}) => {
+                      setOnLoading(false);
+                      if (currentTime > 0.002 && canStartVideo.current) {
+                        progressAnimation({
+                          progressNumber: currentProgress.current,
+                          duration: videoDuration.current,
+                        });
+                        canStartVideo.current = false;
+                      }
+                    }}
+                    onEnd={() => {
+                      canStartVideo.current = true;
+                    }}
+                  />
                 </View>
               )}
 

@@ -6,21 +6,10 @@ class Api::V1::UsersController < ApplicationController
                 only: %i[subsequent_login edit change_display update_position]
 
   def u
-    @user = User.first
-    posts = @user.posts.map { |p| PostSerializer.new(p) }
-    room_arr = []
-    messages = []
-    rooms = @user.sender_rooms
-    @user.sender_rooms.each do |r|
-      room_arr << RoomSerializer.new(r, { user: @user.id })
-      r.room_messages.each { |m| messages << RoomMessageSerializer.new(m) }
-    end
+    user = User.first
     render json: {
-             user: UserSerializer.new(@user),
-             posts: posts,
-             rooms: room_arr,
-             messages: messages
-           }
+        result: OthersSerializer.new(user)
+    }
   end
 
   def createNonce
@@ -114,14 +103,14 @@ class Api::V1::UsersController < ApplicationController
             message_arr << RoomMessageSerializer.new(m)
           end
         end
-        flashes = @user.flashes.map { |f| FlashSerializer.new(f)}
+        flashes = user.flashes.map { |f| FlashSerializer.new(f) }
         render json: {
                  user: UserSerializer.new(user),
                  posts: posts,
                  rooms: room_arr,
                  messages: message_arr,
                  token: token,
-                 flashes: flashes,
+                 flashes: flashes
                }
       else
         user_name = parsed_response['name']

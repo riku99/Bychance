@@ -18,7 +18,15 @@ type Props = {
 export const Flashes = ({route, navigation}: Props) => {
   const routePrams = route.params;
 
-  const [isDisplayedList, setIsDisprayedList] = useState(() => {
+  const [isDisplayedList, setIsDisplayedList] = useState(() => {
+    let obj: {[key: number]: boolean} = {};
+    for (let i = 0; i < routePrams.allFlashData.length; i++) {
+      obj[i] = i === routePrams.index ? true : false;
+    }
+    return obj;
+  });
+
+  const [switchingItem, setSwitchingItem] = useState(() => {
     let obj: {[key: number]: boolean} = {};
     for (let i = 0; i < routePrams.allFlashData.length; i++) {
       obj[i] = i === routePrams.index ? true : false;
@@ -68,7 +76,7 @@ export const Flashes = ({route, navigation}: Props) => {
             const displayedElementIndex =
               e.nativeEvent.contentOffset.y / height; // 表示されている要素のインデックス
             // 表示状態をpropsとして伝える
-            setIsDisprayedList({
+            setIsDisplayedList({
               ...isDisplayedList,
               [currentDisplayedIndex.current]: false,
               [displayedElementIndex]: true,
