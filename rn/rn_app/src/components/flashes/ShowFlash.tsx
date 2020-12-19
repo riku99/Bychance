@@ -104,13 +104,12 @@ export const ShowFlash = React.memo(
       }
     }, [currentFlash, isDisplayed]);
 
-    // このコンポーネントが表示されなくなった、されていない時の責務を定義
+    // このコンポーネントが非表示になった、なっている時の責務を定義
     useEffect(() => {
       if (!isDisplayed) {
-        progressAnim[currentProgress.current].setValue(-progressWidth);
         progressAnim[currentProgress.current].stopAnimation();
+        progressAnim[currentProgress.current].setValue(-progressWidth);
         if (currentFlash.contentType === 'video') {
-          setIsPaused(true);
           videoRef.current!.seek(0);
         }
         canStartVideo.current = true;
@@ -138,15 +137,18 @@ export const ShowFlash = React.memo(
           duration: -progressValue.current / (progressWidth / duration),
           useNativeDriver: true,
         }).start((e) => {
-          if (!canStartVideo) {
-            videoDuration.current = undefined;
-          }
+          // アイテムの追加、削除で必要になるかもしれないので消さずにコメントアウト
+          // if (!canStartVideo) {
+          //   videoDuration.current = undefined;
+          // }
+          // アニメーションが終了した、つまりタップによるスキップなく最後まで完了した場合
           if (e.finished) {
             // 進行してたプログレスバーがラストだった場合
             if (currentProgress.current === flashData.flashes.length - 1) {
               scrollToNextOrBackScreen();
               return;
             }
+            canStartVideo.current = true;
             currentProgress.current += 1;
             setCurrentFlash(flashData.flashes[currentProgress.current]);
           }
@@ -170,13 +172,14 @@ export const ShowFlash = React.memo(
               delayLongPress={200}
               disabled={visibleModal}
               onPress={(e) => {
-                // 画面右半分をプレスした場合
+                // 画面右半分をプレスした、つまりアイテムをスキップした場合
                 if (e.nativeEvent.locationX > width / 2) {
                   progressAnim[currentProgress.current].setValue(0);
                   if (currentProgress.current < flashData.flashes.length - 1) {
                     currentProgress.current += 1;
                     setCurrentFlash(flashData.flashes[currentProgress.current]);
                     videoDuration.current = undefined;
+                    canStartVideo.current = true;
                   } else {
                     scrollToNextOrBackScreen();
                   }
@@ -313,7 +316,14 @@ export const ShowFlash = React.memo(
                           progressNumber: currentProgress.current,
                           duration: videoDuration.current,
                         });
-                        canStartVideo.current = false;
+                        if (canStartVideo.current) {
+                          canStartVideo.current = false;
+                        }
+                      }
+                    }}
+                    onSeek={() => {
+                      if (!isDisplayed) {
+                        setIsPaused(true);
                       }
                     }}
                     onEnd={() => {
