@@ -26,14 +26,6 @@ export const Flashes = ({route, navigation}: Props) => {
     return obj;
   });
 
-  const [switchingItem, setSwitchingItem] = useState(() => {
-    let obj: {[key: number]: boolean} = {};
-    for (let i = 0; i < routePrams.allFlashData.length; i++) {
-      obj[i] = i === routePrams.index ? true : false;
-    }
-    return obj;
-  });
-
   const flatListRef = useRef<FlatList>(null);
 
   const currentDisplayedIndex = useRef(routePrams.index);

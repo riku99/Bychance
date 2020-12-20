@@ -13,12 +13,6 @@ import {Flash} from '../../redux/flashes';
 import {flashesGradation} from '../../constants/lineGradation';
 import {UserAvatar} from '../utils/Avatar';
 
-export type FlashUserInfo = {
-  userId: number;
-  userName: string;
-  userImage: string | null;
-};
-
 type Props = {
   user: {
     id: number;
@@ -34,7 +28,7 @@ type Props = {
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
   navigateToTakeFlash?: () => void;
-  navigateToShowFlash: ({userId, userName, userImage}: FlashUserInfo) => void;
+  navigateToFlashes: () => void;
 };
 
 export const UserProfile = React.memo(
@@ -48,7 +42,7 @@ export const UserProfile = React.memo(
     navigateToUserEdit,
     navigateToChatRoom,
     navigateToTakeFlash,
-    navigateToShowFlash,
+    navigateToFlashes,
   }: Props) => {
     return (
       <>
@@ -65,11 +59,7 @@ export const UserProfile = React.memo(
                   size="large"
                   opacity={1}
                   onPress={() => {
-                    navigateToShowFlash({
-                      userId: user.id,
-                      userName: user.name,
-                      userImage: user.image,
-                    });
+                    navigateToFlashes();
                   }}
                 />
               </LinearGradient>

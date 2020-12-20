@@ -1,7 +1,6 @@
 import React, {useRef, useEffect} from 'react';
 import {Alert} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector, shallowEqual} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 
 import {ShowFlash, FlashData} from '../../components/flashes/ShowFlash';
@@ -9,6 +8,7 @@ import {RootState, AppDispatch} from '../../redux/index';
 import {deleteFlashThunk} from '../../actions/flashes';
 import {flashMessage} from '../../helpers/flashMessage';
 import {alertSomeError} from '../../helpers/error';
+import {selectAllFlashes} from '../../redux/flashes';
 
 type Props = {
   flashData: FlashData;
@@ -29,6 +29,10 @@ export const Container = ({
   const referenceId = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
+
+  const flashes = useSelector((state: RootState) => {
+    return selectAllFlashes(state);
+  }, shallowEqual);
 
   const creatingFlash = useSelector((state: RootState) => {
     return state.indexReducer.creatingFlash;
@@ -72,7 +76,9 @@ export const Container = ({
 
   return (
     <ShowFlash
-      flashData={flashData}
+      flashData={
+        flashData.flashes ? flashData : {flashes, user: flashData.user}
+      }
       referenceId={referenceId}
       isDisplayed={isDisplayed}
       deleteFlash={deleteFlash}

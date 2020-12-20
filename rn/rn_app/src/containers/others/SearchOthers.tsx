@@ -76,7 +76,7 @@ export const Container = () => {
     searchStackNavigation.push('OtherProfile', user);
   };
 
-  const pushShowFlash = ({id}: {id: number}) => {
+  const pushFlashes = ({id}: {id: number}) => {
     const index = flashData!.findIndex((item) => item.user.id === id);
     rootStackNavigation.push('Flashes', {allFlashData: flashData, index});
   };
@@ -87,7 +87,7 @@ export const Container = () => {
       refRange={_range}
       setRange={setRange}
       pushProfile={pushProfile}
-      navigateToShowFlash={pushShowFlash}
+      navigateToShowFlash={pushFlashes}
     />
   );
 };

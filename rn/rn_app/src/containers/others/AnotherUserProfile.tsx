@@ -5,7 +5,7 @@ import {RouteProp} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {unwrapResult} from '@reduxjs/toolkit';
 
-import {UserProfile, FlashUserInfo} from '../../components/users/UserProfile';
+import {UserProfile} from '../../components/users/UserProfile';
 import {Post} from '../../redux/post';
 import {SearchStackParamList} from '../../screens/Search';
 import {AppDispatch, RootState} from '../../redux';
@@ -25,7 +25,9 @@ type SearchScreenRouteProp = RouteProp<SearchStackParamList, 'OtherProfile'>;
 type Props = {route: SearchScreenRouteProp};
 
 export const Container = ({route}: Props) => {
-  const user = route.params;
+  const routeParam = route.params;
+
+  const {flashes, ...restUserData} = routeParam;
 
   const referenceId = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
@@ -48,7 +50,7 @@ export const Container = ({route}: Props) => {
   };
 
   const pushChatRoom = () => {
-    dispatch(createRoomThunk(user))
+    dispatch(createRoomThunk(routeParam))
       .then(unwrapResult)
       .then((payload) => {
         const selectedRoom = selectRoom(payload.id);
@@ -65,28 +67,32 @@ export const Container = ({route}: Props) => {
       });
   };
 
-  const pushFlash = ({userId, userName, userImage}: FlashUserInfo) => {
-    rootStackNavigation.push('ShowFlash', {
-      userId,
-      userName,
-      userImage,
+  const pushFlashes = () => {
+    rootStackNavigation.push('Flashes', {
+      allFlashData: [
+        {
+          flashes: routeParam.flashes,
+          user: restUserData,
+        },
+      ],
+      index: 0,
     });
   };
 
   return (
     <UserProfile
       user={{
-        id: user.id,
-        name: user.name,
-        image: user.image,
-        introduce: user.introduce,
+        id: routeParam.id,
+        name: routeParam.name,
+        image: routeParam.image,
+        introduce: routeParam.introduce,
       }}
       referenceId={referenceId}
-      posts={user.posts}
+      posts={routeParam.posts}
       navigateToPost={pushPost}
       navigateToChatRoom={pushChatRoom}
-      navigateToShowFlash={pushFlash}
-      flashes={[]}
+      navigateToFlashes={pushFlashes}
+      flashes={flashes}
     />
   );
 };

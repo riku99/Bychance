@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ProfileStackParamList} from '../../screens/Profile';
-import {UserProfile, FlashUserInfo} from '../../components/users/UserProfile';
+import {UserProfile} from '../../components/users/UserProfile';
 import {RootState} from '../../redux/index';
 import {Post, selectAllPosts} from '../../redux/post';
 import {RootStackParamList} from '../../screens/Root';
@@ -35,6 +35,8 @@ export const Container = () => {
     return state.indexReducer.creatingFlash;
   });
 
+  const {display, lat, lng, ...restUserData} = user; // eslint-disable-line
+
   const profileStackNavigation = useNavigation<ProfileNavigationProp>();
 
   const rootstackNavigation = useNavigation<RootNavigationProp>();
@@ -51,13 +53,16 @@ export const Container = () => {
     rootstackNavigation.push('TakeFlash');
   };
 
-  const pushShowFlash = ({userId, userName, userImage}: FlashUserInfo) => {
-    rootstackNavigation.push('ShowFlash', {
-      type: 'fromProfilePage',
-      userId,
-      userName,
-      userImage,
-      flashes,
+  // UserProfileからのみflashesプロパティをundefiend
+  const pushFlashes = () => {
+    rootstackNavigation.push('Flashes', {
+      allFlashData: [
+        {
+          flashes: undefined,
+          user: restUserData,
+        },
+      ],
+      index: 0,
     });
   };
 
@@ -76,7 +81,7 @@ export const Container = () => {
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
       navigateToTakeFlash={pushTakeFlash}
-      navigateToShowFlash={pushShowFlash}
+      navigateToFlashes={pushFlashes}
     />
   );
 };

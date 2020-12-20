@@ -159,15 +159,7 @@ export const SearchOthers = ({
                     <ListItem
                       key={i}
                       onPress={() => {
-                        pushProfile({
-                          id: u.id,
-                          name: u.name,
-                          image: u.image,
-                          introduce: u.introduce,
-                          message: u.message,
-                          posts: u.posts,
-                          flashes: [],
-                        });
+                        pushProfile(u);
                       }}>
                       {u.flashes.length ? (
                         <LinearGradient

@@ -22,6 +22,7 @@ import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {PartiallyPartial} from '../constants/d';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -29,7 +30,7 @@ export type RootStackParamList = {
   ChatRoom: Room;
   TakeFlash: undefined;
   Flashes: {
-    allFlashData: FlashData[];
+    allFlashData: PartiallyPartial<FlashData, 'flashes'>[];
     index: number;
   };
 };
