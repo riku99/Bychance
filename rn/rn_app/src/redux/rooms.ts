@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import {createRoomThunk} from '../actions/rooms';
-import {AnotherUser} from './others';
+import {AnotherUser} from '../components/others/SearchOthers';
 import {RootState, store} from './index';
 import {
   subsequentLoginAction,

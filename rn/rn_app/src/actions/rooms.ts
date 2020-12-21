@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
 import {createRoom} from '../apis/roomsApi';
-import {AnotherUser} from '../redux/others';
+import {AnotherUser} from '../components/others/SearchOthers';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {logout} from '../redux/index';

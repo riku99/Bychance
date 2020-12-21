@@ -5,7 +5,7 @@ import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {logout} from '../redux/index';
-import {AnotherUser} from '../redux/others';
+import {AnotherUser} from '../components/others/SearchOthers';
 import {rejectPayload, basicAxiosError} from './d';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';

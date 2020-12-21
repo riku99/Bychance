@@ -106,3 +106,51 @@ export const deleteFlashThunk = createAsyncThunk<
     });
   }
 });
+
+export const createAlreadyViewdFlashThunk = createAsyncThunk<
+  {result: true},
+  {flashId: number},
+  {
+    rejectValue: rejectPayload;
+  }
+>('flashes/createAlreadyViewdFlash', async ({flashId}, thunkApi) => {
+  const keychain = await checkKeychain();
+
+  if (keychain) {
+    try {
+      const response = await axios.post<{result: true}>(
+        `${origin}/user_flash_viewing`,
+        {id: keychain.id, flashId},
+        headers(keychain.token),
+      );
+
+      return response.data;
+    } catch (e) {
+      if (e && e.response) {
+        const axiosError = e as basicAxiosError;
+        if (axiosError.response?.data.errorType === 'loginError') {
+          requestLogin(() => {
+            thunkApi.dispatch(logout());
+          });
+          return thunkApi.rejectWithValue({
+            errorType: 'loginError',
+          });
+        } else if (axiosError.response?.data.errorType === 'invalidError') {
+          return thunkApi.rejectWithValue({
+            errorType: 'invalidError',
+            message: axiosError.response?.data.message,
+          });
+        } else {
+          return thunkApi.rejectWithValue({errorType: 'someError'});
+        }
+      } else {
+        return thunkApi.rejectWithValue({errorType: 'someError'});
+      }
+    }
+  } else {
+    requestLogin(() => thunkApi.dispatch(logout()));
+    return thunkApi.rejectWithValue({
+      errorType: 'loginError',
+    });
+  }
+});

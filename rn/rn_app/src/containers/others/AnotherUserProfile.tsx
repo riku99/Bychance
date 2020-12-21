@@ -18,6 +18,7 @@ type SearchNavigationProp = StackNavigationProp<
   SearchStackParamList,
   'OtherProfile'
 >;
+
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 type SearchScreenRouteProp = RouteProp<SearchStackParamList, 'OtherProfile'>;
@@ -69,7 +70,7 @@ export const Container = ({route}: Props) => {
 
   const pushFlashes = () => {
     rootStackNavigation.push('Flashes', {
-      allFlashData: [
+      allFlashesWithUser: [
         {
           flashes: routeParam.flashes,
           user: restUserData,
@@ -92,7 +93,7 @@ export const Container = ({route}: Props) => {
       navigateToPost={pushPost}
       navigateToChatRoom={pushChatRoom}
       navigateToFlashes={pushFlashes}
-      flashes={flashes}
+      flashes={flashes.entities}
     />
   );
 };

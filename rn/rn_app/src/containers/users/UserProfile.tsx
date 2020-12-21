@@ -56,7 +56,7 @@ export const Container = () => {
   // UserProfileからのみflashesプロパティをundefiend
   const pushFlashes = () => {
     rootstackNavigation.push('Flashes', {
-      allFlashData: [
+      allFlashesWithUser: [
         {
           flashes: undefined,
           user: restUserData,

@@ -19,8 +19,11 @@ import {UserAvatar} from '../utils/Avatar';
 import {Flash} from '../../redux/flashes';
 import {Post} from '../../redux/post';
 
-export type FlashData = {
-  flashes: Flash[];
+export type FlashesWithUser = {
+  flashes: {
+    entities: Flash[];
+    alreadyViewed: number[];
+  };
   user: {
     id: number;
     name: string;
@@ -32,13 +35,14 @@ export type FlashData = {
 };
 
 type Props = {
-  flashData: FlashData;
+  flashData: FlashesWithUser;
   referenceId: number;
   isDisplayed: boolean;
   firstRender: React.MutableRefObject<boolean>;
   modalizeRef: React.RefObject<Modalize>;
   creatingFlash?: boolean;
   deleteFlash: ({flashId}: {flashId: number}) => void;
+  createAlreadyViewdFlash: ({flashId}: {flashId: number}) => void;
   scrollToNextOrBackScreen: () => void;
   goBackScreen: () => void;
 };
@@ -52,12 +56,13 @@ export const ShowFlash = React.memo(
     modalizeRef,
     creatingFlash,
     deleteFlash,
+    createAlreadyViewdFlash,
     scrollToNextOrBackScreen,
     goBackScreen,
   }: Props) => {
     const progressWidth = useMemo(() => {
-      return MAX_PROGRESS_BAR / flashData.flashes.length - 1;
-    }, [flashData.flashes.length]);
+      return MAX_PROGRESS_BAR / flashData.flashes.entities.length - 1;
+    }, [flashData.flashes.entities.length]);
 
     const modalList = useMemo(() => {
       return [
@@ -72,7 +77,9 @@ export const ShowFlash = React.memo(
       ];
     }, [deleteFlash]);
 
-    const [currentFlash, setCurrentFlash] = useState(flashData.flashes[0]);
+    const [currentFlash, setCurrentFlash] = useState(
+      flashData.flashes.entities[0],
+    );
     const [onLoading, setOnLoading] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
     const [visibleModal, setvisibleModal] = useState(false);
@@ -84,16 +91,16 @@ export const ShowFlash = React.memo(
     const videoDuration = useRef<number | undefined>(undefined);
     const canStartVideo = useRef(true);
     const videoRef = useRef<Video>(null);
-    const flashesLength = useRef(flashData.flashes.length);
+    const flashesLength = useRef(flashData.flashes.entities.length);
 
     // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
       // アイテムが削除された場合
-      if (flashData.flashes.length < flashesLength.current) {
-        setCurrentFlash(flashData.flashes[currentProgress.current]);
+      if (flashData.flashes.entities.length < flashesLength.current) {
+        setCurrentFlash(flashData.flashes.entities[currentProgress.current]);
       }
-      flashesLength.current = flashData.flashes.length;
-    }, [flashData.flashes.length, flashData.flashes]);
+      flashesLength.current = flashData.flashes.entities.length;
+    }, [flashData.flashes.entities.length, flashData.flashes]);
 
     // このコンポーネントが表示された、表示されている時の責務を定義
     useEffect(() => {
@@ -125,7 +132,7 @@ export const ShowFlash = React.memo(
       duration?: number;
       restart?: boolean;
     }) => {
-      if (progressNumber < flashData.flashes.length) {
+      if (progressNumber < flashData.flashes.entities.length) {
         progressAnim[progressNumber].addListener((e) => {
           progressValue.current = e.value;
         });
@@ -137,6 +144,7 @@ export const ShowFlash = React.memo(
           duration: -progressValue.current / (progressWidth / duration),
           useNativeDriver: true,
         }).start((e) => {
+          createAlreadyViewdFlash({flashId: currentFlash.id});
           // アイテムの追加、削除で必要になるかもしれないので消さずにコメントアウト
           // if (!canStartVideo) {
           //   videoDuration.current = undefined;
@@ -144,13 +152,18 @@ export const ShowFlash = React.memo(
           // アニメーションが終了した、つまりタップによるスキップなく最後まで完了した場合
           if (e.finished) {
             // 進行してたプログレスバーがラストだった場合
-            if (currentProgress.current === flashData.flashes.length - 1) {
+            if (
+              currentProgress.current ===
+              flashData.flashes.entities.length - 1
+            ) {
               scrollToNextOrBackScreen();
               return;
             }
             canStartVideo.current = true;
             currentProgress.current += 1;
-            setCurrentFlash(flashData.flashes[currentProgress.current]);
+            setCurrentFlash(
+              flashData.flashes.entities[currentProgress.current],
+            );
           }
         });
       }
@@ -166,7 +179,7 @@ export const ShowFlash = React.memo(
     return (
       <>
         <View style={styles.container}>
-          {flashData.flashes.length ? (
+          {flashData.flashes.entities.length ? (
             <TouchableOpacity
               activeOpacity={1}
               delayLongPress={200}
@@ -175,9 +188,14 @@ export const ShowFlash = React.memo(
                 // 画面右半分をプレスした、つまりアイテムをスキップした場合
                 if (e.nativeEvent.locationX > width / 2) {
                   progressAnim[currentProgress.current].setValue(0);
-                  if (currentProgress.current < flashData.flashes.length - 1) {
+                  if (
+                    currentProgress.current <
+                    flashData.flashes.entities.length - 1
+                  ) {
                     currentProgress.current += 1;
-                    setCurrentFlash(flashData.flashes[currentProgress.current]);
+                    setCurrentFlash(
+                      flashData.flashes.entities[currentProgress.current],
+                    );
                     videoDuration.current = undefined;
                     canStartVideo.current = true;
                   } else {
@@ -202,7 +220,7 @@ export const ShowFlash = React.memo(
                       );
                       videoDuration.current = undefined;
                       setCurrentFlash(
-                        flashData.flashes[currentProgress.current],
+                        flashData.flashes.entities[currentProgress.current],
                       );
                     } else {
                       if (!onLoading) {
@@ -335,22 +353,27 @@ export const ShowFlash = React.memo(
 
               <View style={styles.info}>
                 <View style={styles.progressBarConteiner}>
-                  {flashData.flashes.map((f, i) => {
+                  {flashData.flashes.entities.map((f, i) => {
                     // 初回レンダリングの場合
                     if (!firstRender.current) {
                       progressAnim[i] = new Animated.Value(-progressWidth);
                     }
                     // アイテムが追加された場合
-                    if (flashData.flashes.length > flashesLength.current) {
+                    if (
+                      flashData.flashes.entities.length > flashesLength.current
+                    ) {
                       progressAnim[
-                        flashData.flashes.length - 1
+                        flashData.flashes.entities.length - 1
                       ] = new Animated.Value(-progressWidth);
                     }
                     // アイテムが削除された場合
-                    if (flashData.flashes.length < flashesLength.current) {
+                    if (
+                      flashData.flashes.entities.length < flashesLength.current
+                    ) {
                       // 削除されたアイテムが最後のものだった場合
                       if (
-                        currentProgress.current === flashData.flashes.length
+                        currentProgress.current ===
+                        flashData.flashes.entities.length
                       ) {
                         currentProgress.current -= 1;
                       }
@@ -391,10 +414,11 @@ export const ShowFlash = React.memo(
                     <Text style={styles.userName}>{flashData.user.name}</Text>
                     <Text style={styles.timestamp}>
                       {getTimeDiff(
-                        flashData.flashes[currentProgress.current].timestamp,
+                        flashData.flashes.entities[currentProgress.current]
+                          .timestamp,
                       ) < 24
                         ? getTimeDiff(
-                            flashData.flashes[currentProgress.current]
+                            flashData.flashes.entities[currentProgress.current]
                               .timestamp,
                           ).toString() + '時間前'
                         : '1日前'}

@@ -21,26 +21,36 @@ import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {AnotherUser} from '../../redux/others';
 import {flashesGradation} from '../../constants/lineGradation';
 import {UserAvatar} from '../utils/Avatar';
+import {UserType} from '../../redux/user';
+import {Post} from '../../redux/post';
+import {Flash} from '../../redux/flashes';
+
+export type AnotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
+  posts: Post[];
+  flashes: {
+    entities: Flash[];
+    alreadyViewed: number[];
+  };
+};
 
 type Props = {
   others: AnotherUser[];
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
-  pushProfile: (user: AnotherUser) => void;
-  navigateToShowFlash: ({id}: {id: number}) => void;
+  navigateToProfile: (user: AnotherUser) => void;
+  navigateToFlashes: ({id}: {id: number}) => void;
 };
 
 export const SearchOthers = ({
   others,
   refRange,
   setRange,
-  pushProfile,
-  navigateToShowFlash,
+  navigateToProfile,
+  navigateToFlashes,
 }: Props) => {
-  const [displayedUsers, setDisplayedUsers] = useState(others);
+  const [filteredUsers, setFilteredUsers] = useState(others);
   const [keyword, setKeyword] = useState('');
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -58,7 +68,7 @@ export const SearchOthers = ({
 
   useEffect(() => {
     if (keyword === '') {
-      setDisplayedUsers(others);
+      setFilteredUsers(others);
     } else {
       const matchedUsers = others.filter((u) => {
         return (
@@ -67,7 +77,7 @@ export const SearchOthers = ({
           u.message.toLowerCase().includes(keyword.toLowerCase())
         );
       });
-      setDisplayedUsers(matchedUsers);
+      setFilteredUsers(matchedUsers);
     }
   }, [keyword, others]);
 
@@ -120,7 +130,7 @@ export const SearchOthers = ({
           />
         </View>
       </Animated.View>
-      {displayedUsers.length ? (
+      {filteredUsers.length ? (
         <>
           <ScrollView
             style={styles.fill}
@@ -154,40 +164,38 @@ export const SearchOthers = ({
               style={{
                 ...styles.scrollViewContent,
               }}>
-              {displayedUsers.length
-                ? displayedUsers.map((u, i) => (
-                    <ListItem
-                      key={i}
-                      onPress={() => {
-                        pushProfile(u);
-                      }}>
-                      {u.flashes.length ? (
-                        <LinearGradient
-                          colors={flashesGradation.colors}
-                          start={flashesGradation.start}
-                          end={flashesGradation.end}
-                          style={styles.userImageGradation}>
-                          <UserAvatar
-                            image={u.image}
-                            size="medium"
-                            opacity={1}
-                            onPress={() => {
-                              navigateToShowFlash({id: u.id});
-                            }}
-                          />
-                        </LinearGradient>
-                      ) : (
-                        <UserAvatar image={u.image} size="medium" opacity={1} />
-                      )}
-                      <ListItem.Content>
-                        <ListItem.Title>{u.name}</ListItem.Title>
-                        <ListItem.Subtitle style={styles.subtitle}>
-                          {u.message}
-                        </ListItem.Subtitle>
-                      </ListItem.Content>
-                    </ListItem>
-                  ))
-                : null}
+              {filteredUsers.map((u) => (
+                <ListItem
+                  key={u.id}
+                  onPress={() => {
+                    navigateToProfile(u);
+                  }}>
+                  {u.flashes.entities.length ? ( // アイテムをもつ全てのユーザーがグラデーションをもつことになっている
+                    <LinearGradient
+                      colors={flashesGradation.colors}
+                      start={flashesGradation.start}
+                      end={flashesGradation.end}
+                      style={styles.userImageGradation}>
+                      <UserAvatar
+                        image={u.image}
+                        size="medium"
+                        opacity={1}
+                        onPress={() => {
+                          navigateToFlashes({id: u.id});
+                        }}
+                      />
+                    </LinearGradient>
+                  ) : (
+                    <UserAvatar image={u.image} size="medium" opacity={1} /> // アイテムを持たないユーザー
+                  )}
+                  <ListItem.Content>
+                    <ListItem.Title>{u.name}</ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitle}>
+                      {u.message}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
             </View>
           </ScrollView>
         </>

@@ -160,7 +160,7 @@ class Api::V1::UsersController < ApplicationController
       rooms =
         @user.sender_rooms.preload(:room_messages).eager_load(:sender, :recipient) + @user.recipient_rooms.preload(:room_messages).eager_load(:sender, :recipient)
       rooms.each do |r|
-        room_arr << RoomSerializer.new(r, { user: @user.id })
+        room_arr << RoomSerializer.new(r, { user: @user })
         r.room_messages.each do |m|
           messages_arr << RoomMessageSerializer.new(m)
         end

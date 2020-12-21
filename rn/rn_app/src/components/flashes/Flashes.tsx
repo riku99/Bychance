@@ -20,7 +20,7 @@ export const Flashes = ({route, navigation}: Props) => {
 
   const [isDisplayedList, setIsDisplayedList] = useState(() => {
     let obj: {[key: number]: boolean} = {};
-    for (let i = 0; i < routePrams.allFlashData.length; i++) {
+    for (let i = 0; i < routePrams.allFlashesWithUser.length; i++) {
       obj[i] = i === routePrams.index ? true : false;
     }
     return obj;
@@ -32,7 +32,10 @@ export const Flashes = ({route, navigation}: Props) => {
 
   const scrollToNextOrBackScreen = () => {
     if (flatListRef.current) {
-      if (currentDisplayedIndex.current < routePrams.allFlashData.length - 1) {
+      if (
+        currentDisplayedIndex.current <
+        routePrams.allFlashesWithUser.length - 1
+      ) {
         flatListRef.current.scrollToIndex({
           index: currentDisplayedIndex.current + 1,
         });
@@ -51,7 +54,7 @@ export const Flashes = ({route, navigation}: Props) => {
       <FlatList
         keyExtractor={(item) => item.user.id.toString()}
         ref={flatListRef}
-        data={routePrams.allFlashData}
+        data={routePrams.allFlashesWithUser}
         renderItem={({item, index}) => (
           <View style={{width, height}}>
             <ShowFlash

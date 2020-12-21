@@ -1,10 +1,14 @@
 class User < ApplicationRecord
   attr_accessor :distance
+
   has_many :posts, dependent: :destroy
   has_many :sender_rooms, class_name: "Room" ,foreign_key: :sender_id
   has_many :recipient_rooms, class_name: "Room", foreign_key: :recipient_id
   has_many :room_messages
-  has_many :flashes
+  has_many :flashes, dependent: :destroy
+  has_many :user_flash_viewings, dependent: :destroy
+  has_many :viewing_flashes, through: :user_flash_viewings, source: :flash
+
   validates :uid, presence: true
   validates :token, presence: true
   validates :name, presence: true, length: { maximum: 20 }

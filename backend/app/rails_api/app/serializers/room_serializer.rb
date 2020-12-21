@@ -3,8 +3,8 @@ class RoomSerializer < ActiveModel::Serializer
     attribute :updated_at, key: :timestamp
 
     def partner
-        user_id = @instance_options[:user]
-        user_id == object.sender.id ? OthersSerializer.new(object.recipient) : OthersSerializer.new(object.sender)
+        user = @instance_options[:user]
+        user.id == object.sender.id ? OthersSerializer.new(object.recipient, user: @instance_options[:user]) : OthersSerializer.new(object.sender, user: @instance_options[:user])
     end
 
     def messages

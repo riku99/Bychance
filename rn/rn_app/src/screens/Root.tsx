@@ -17,7 +17,7 @@ import {UserEditStackScreen} from './UserEdit';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
 import {Flashes} from '../components/flashes/Flashes';
-import {FlashData} from '../components/flashes/ShowFlash';
+import {FlashesWithUser} from '../components/flashes/ShowFlash';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
@@ -30,7 +30,7 @@ export type RootStackParamList = {
   ChatRoom: Room;
   TakeFlash: undefined;
   Flashes: {
-    allFlashData: PartiallyPartial<FlashData, 'flashes'>[];
+    allFlashesWithUser: PartiallyPartial<FlashesWithUser, 'flashes'>[];
     index: number;
   };
 };

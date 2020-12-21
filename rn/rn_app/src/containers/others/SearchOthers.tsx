@@ -5,9 +5,9 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {SearchOthers} from '../../components/others/SearchOthers';
-import {FlashData} from '../../components/flashes/ShowFlash';
+import {FlashesWithUser} from '../../components/flashes/ShowFlash';
 import {RootState} from '../../redux/index';
-import {AnotherUser, selectOthers} from '../../redux/others';
+import {AnotherUser} from '../../components/others/SearchOthers';
 import {AppDispatch} from '../../redux/index';
 import {getOthersThunk} from '../../actions/others';
 import {RootStackParamList} from '../../screens/Root';
@@ -23,10 +23,6 @@ type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 export const Container = () => {
   const isFocused = useIsFocused();
 
-  const others: AnotherUser[] = useSelector((state: RootState) => {
-    return selectOthers(state);
-  }, shallowEqual);
-
   const position = useSelector((state: RootState) => {
     const lat = state.userReducer.user!.lat;
     const lng = state.userReducer.user!.lng;
@@ -37,16 +33,23 @@ export const Container = () => {
 
   const [range, setRange] = useState(_range.current);
 
-  const [flashData, setFlashData] = useState<FlashData[]>([]);
+  const [flashesWithUser, setFlashesWithUser] = useState<FlashesWithUser[]>([]);
 
   const dispatch: AppDispatch = useDispatch();
 
+  const [others, setOthers] = useState<AnotherUser[]>([]);
+
+  // API通信が成功した場合、そのデータはdispatchされる必要はないが
+  // エラーハンドリングでdispatchが必要なのでthunkで通信を行う
   useEffect(() => {
     const getOthers = async (range: number) => {
       if (isFocused) {
-        await dispatch(
+        const result = await dispatch(
           getOthersThunk({lat: position.lat, lng: position.lng, range}),
         );
+        if (getOthersThunk.fulfilled.match(result)) {
+          setOthers(result.payload);
+        }
       }
     };
     getOthers(range);
@@ -54,16 +57,16 @@ export const Container = () => {
 
   useEffect(() => {
     if (others.length) {
-      const haveFlashOthers = others.filter((f) => f.flashes.length);
-      if (haveFlashOthers.length) {
-        const _flashData = haveFlashOthers.map((user) => {
+      const othersWithFlashes = others.filter((f) => f.flashes.entities.length);
+      if (othersWithFlashes.length) {
+        const _flashesWithUser = othersWithFlashes.map((user) => {
           const {flashes, ...rest} = user;
           return {
             flashes,
             user: rest,
           };
         });
-        setFlashData(_flashData);
+        setFlashesWithUser(_flashesWithUser);
       }
     }
   }, [others]);
@@ -76,9 +79,13 @@ export const Container = () => {
     searchStackNavigation.push('OtherProfile', user);
   };
 
+  // 全てのアイテムを閲覧している場合、allFlashesWithUserには入らないようにする
   const pushFlashes = ({id}: {id: number}) => {
-    const index = flashData!.findIndex((item) => item.user.id === id);
-    rootStackNavigation.push('Flashes', {allFlashData: flashData, index});
+    const index = flashesWithUser!.findIndex((item) => item.user.id === id);
+    rootStackNavigation.push('Flashes', {
+      allFlashesWithUser: flashesWithUser,
+      index,
+    });
   };
 
   return (
@@ -86,8 +93,8 @@ export const Container = () => {
       others={others}
       refRange={_range}
       setRange={setRange}
-      pushProfile={pushProfile}
-      navigateToShowFlash={pushFlashes}
+      navigateToProfile={pushProfile}
+      navigateToFlashes={pushFlashes}
     />
   );
 };

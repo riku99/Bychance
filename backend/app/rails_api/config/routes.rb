@@ -22,6 +22,8 @@ Rails.application.routes.draw do
       post '/flashes', to: 'flashes#create'
       delete '/flashes', to: 'flashes#destroy'
 
+      post '/user_flash_viewing', to: 'user_flash_viewings#create'
+
       get '/u', to: 'users#u'
     end
   end

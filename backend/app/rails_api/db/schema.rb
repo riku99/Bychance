@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_29_065532) do
+ActiveRecord::Schema.define(version: 2020_12_21_063653) do
 
   create_table "flashes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "content"
@@ -57,6 +57,16 @@ ActiveRecord::Schema.define(version: 2020_11_29_065532) do
     t.index ["sender_id"], name: "index_rooms_on_sender_id"
   end
 
+  create_table "user_flash_viewings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "flash_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["flash_id"], name: "index_user_flash_viewings_on_flash_id"
+    t.index ["user_id", "flash_id"], name: "index_user_flash_viewings_on_user_id_and_flash_id", unique: true
+    t.index ["user_id"], name: "index_user_flash_viewings_on_user_id"
+  end
+
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "uid"
     t.string "name"
@@ -78,4 +88,6 @@ ActiveRecord::Schema.define(version: 2020_11_29_065532) do
   add_foreign_key "room_messages", "users"
   add_foreign_key "rooms", "users", column: "recipient_id"
   add_foreign_key "rooms", "users", column: "sender_id"
+  add_foreign_key "user_flash_viewings", "flashes"
+  add_foreign_key "user_flash_viewings", "users"
 end

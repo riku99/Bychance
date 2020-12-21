@@ -3,15 +3,18 @@ import {Alert} from 'react-native';
 import {useDispatch, useSelector, shallowEqual} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 
-import {ShowFlash, FlashData} from '../../components/flashes/ShowFlash';
+import {ShowFlash, FlashesWithUser} from '../../components/flashes/ShowFlash';
 import {RootState, AppDispatch} from '../../redux/index';
-import {deleteFlashThunk} from '../../actions/flashes';
+import {
+  deleteFlashThunk,
+  createAlreadyViewdFlashThunk,
+} from '../../actions/flashes';
 import {flashMessage} from '../../helpers/flashMessage';
 import {alertSomeError} from '../../helpers/error';
 import {selectAllFlashes} from '../../redux/flashes';
 
 type Props = {
-  flashData: FlashData;
+  flashData: FlashesWithUser;
   isDisplayed: boolean;
   scrollToNextOrBackScreen: () => void;
   goBackScreen: () => void;
@@ -74,14 +77,24 @@ export const Container = ({
     ]);
   };
 
+  const createAlreadyViewdFlash = async ({flashId}: {flashId: number}) => {
+    await dispatch(createAlreadyViewdFlashThunk({flashId}));
+  };
+
   return (
     <ShowFlash
       flashData={
-        flashData.flashes ? flashData : {flashes, user: flashData.user}
+        flashData.flashes
+          ? flashData
+          : {
+              flashes: {entities: flashes, alreadyViewed: []},
+              user: flashData.user,
+            }
       }
       referenceId={referenceId}
       isDisplayed={isDisplayed}
       deleteFlash={deleteFlash}
+      createAlreadyViewdFlash={createAlreadyViewdFlash}
       creatingFlash={creatingFlash}
       scrollToNextOrBackScreen={scrollToNextOrBackScreen}
       firstRender={firstRender}

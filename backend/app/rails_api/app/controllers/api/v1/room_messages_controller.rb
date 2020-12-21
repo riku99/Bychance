@@ -13,13 +13,13 @@ class Api::V1::RoomMessagesController < ApplicationController
         render json: new_message
         room = Room.find(params[:room_id])
         room.update_attribute(:updated_at, new_message.created_at)
-        partner_id =
-          room.sender.id != @user.id ? room.sender.id : room.recipient.id
+        partner =
+          room.sender != @user ? room.sender : room.recipient
         MessagesChannel.broadcast_to(
-          "messages_channel_#{partner_id}",
+          "messages_channel_#{partner.id}",
           {
             message: RoomMessageSerializer.new(new_message),
-            room: RoomSerializer.new(room, { user: partner_id })
+            room: RoomSerializer.new(room, { user: partner })
           }
         )
       else

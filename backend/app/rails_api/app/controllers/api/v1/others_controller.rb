@@ -17,7 +17,7 @@ class Api::V1::OthersController < ApplicationController
         end.sort_by(
           &:distance
         )
-      render json: sorted_others, each_serializer: OthersSerializer
+      render json: sorted_others, each_serializer: OthersSerializer, user: @user
       return
     else
       render json: {errorType: "loginError"}, status: 401

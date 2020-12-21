@@ -3,7 +3,6 @@ import {combineReducers} from '@reduxjs/toolkit';
 
 import {userReducer} from './user';
 import {postsReducer} from './post';
-import othersReducer from './others';
 import {roomsReducer} from './rooms';
 import {messagesReducer} from './messages';
 import {flashesReducer} from './flashes';
@@ -52,7 +51,6 @@ const rootReducer = combineReducers({
   indexReducer,
   userReducer,
   postsReducer,
-  othersReducer,
   roomsReducer,
   messagesReducer,
   flashesReducer,
