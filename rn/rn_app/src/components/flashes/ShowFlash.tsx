@@ -23,6 +23,7 @@ export type FlashesWithUser = {
   flashes: {
     entities: Flash[];
     alreadyViewed: number[];
+    isAllAlreadyViewed: boolean;
   };
   user: {
     id: number;
@@ -594,11 +595,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#1f1f1f',
   },
   indicator: {
+    width: 40,
+    height: 40,
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    top: height / 2,
+    left: width / 2,
+    transform: [{translateX: -20}, {translateY: -20}],
   },
   modalListContainer: {
     width: '97%',

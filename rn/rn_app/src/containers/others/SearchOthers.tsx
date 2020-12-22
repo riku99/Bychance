@@ -35,6 +35,11 @@ export const Container = () => {
 
   const [flashesWithUser, setFlashesWithUser] = useState<FlashesWithUser[]>([]);
 
+  const [
+    containedNotAlreadyViewdFlashes,
+    setContainedNotAlreadyViewdFlashes,
+  ] = useState<FlashesWithUser[]>([]);
+
   const dispatch: AppDispatch = useDispatch();
 
   const [others, setOthers] = useState<AnotherUser[]>([]);
@@ -66,7 +71,11 @@ export const Container = () => {
             user: rest,
           };
         });
+        const _containedNotAlreadyViewdFlashes = _flashesWithUser.filter(
+          (item) => !item.flashes.isAllAlreadyViewed,
+        );
         setFlashesWithUser(_flashesWithUser);
+        setContainedNotAlreadyViewdFlashes(_containedNotAlreadyViewdFlashes);
       }
     }
   }, [others]);
@@ -79,11 +88,26 @@ export const Container = () => {
     searchStackNavigation.push('OtherProfile', user);
   };
 
-  // 全てのアイテムを閲覧している場合、allFlashesWithUserには入らないようにする
-  const pushFlashes = ({id}: {id: number}) => {
-    const index = flashesWithUser!.findIndex((item) => item.user.id === id);
+  const pushFlashes = ({
+    id,
+    isAllAlreadyViewed,
+  }: {
+    id: number;
+    isAllAlreadyViewed?: boolean;
+  }) => {
+    let index: number;
+    let singleEntity: FlashesWithUser[];
+    if (isAllAlreadyViewed) {
+      index = 0;
+      singleEntity = flashesWithUser.filter((item) => item.user.id === id);
+    }
+    index = containedNotAlreadyViewdFlashes!.findIndex(
+      (item) => item.user.id === id,
+    );
     rootStackNavigation.push('Flashes', {
-      allFlashesWithUser: flashesWithUser,
+      allFlashesWithUser: isAllAlreadyViewed
+        ? singleEntity!
+        : containedNotAlreadyViewdFlashes,
       index,
     });
   };

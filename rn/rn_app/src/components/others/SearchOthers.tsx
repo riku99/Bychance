@@ -32,6 +32,7 @@ export type AnotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
   flashes: {
     entities: Flash[];
     alreadyViewed: number[];
+    isAllAlreadyViewed: boolean;
   };
 };
 
@@ -40,7 +41,7 @@ type Props = {
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
   navigateToProfile: (user: AnotherUser) => void;
-  navigateToFlashes: ({id}: {id: number}) => void;
+  navigateToFlashes: ({id}: {id: number; isAllAlreadyViewed?: boolean}) => void;
 };
 
 export const SearchOthers = ({
@@ -170,7 +171,8 @@ export const SearchOthers = ({
                   onPress={() => {
                     navigateToProfile(u);
                   }}>
-                  {u.flashes.entities.length ? ( // アイテムをもつ全てのユーザーがグラデーションをもつことになっている
+                  {u.flashes.entities.length &&
+                  !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
                     <LinearGradient
                       colors={flashesGradation.colors}
                       start={flashesGradation.start}
@@ -185,8 +187,26 @@ export const SearchOthers = ({
                         }}
                       />
                     </LinearGradient>
+                  ) : u.flashes.entities.length && u.flashes.alreadyViewed ? ( // アイテムは持っているが、全て閲覧されている場合
+                    <View
+                      style={[
+                        styles.userImageGradation,
+                        {backgroundColor: 'gray'},
+                      ]}>
+                      <UserAvatar
+                        image={u.image}
+                        size="medium"
+                        opacity={1}
+                        onPress={() => {
+                          navigateToFlashes({
+                            id: u.id,
+                            isAllAlreadyViewed: true,
+                          });
+                        }}
+                      />
+                    </View>
                   ) : (
-                    <UserAvatar image={u.image} size="medium" opacity={1} /> // アイテムを持たないユーザー
+                    <UserAvatar image={u.image} size="medium" opacity={1} />
                   )}
                   <ListItem.Content>
                     <ListItem.Title>{u.name}</ListItem.Title>
