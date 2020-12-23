@@ -2,16 +2,16 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as SearchOthers} from '../containers/others/SearchOthers';
-import {Container as OtherUser} from '../containers/others/AnotherUserProfile';
+import {Container as AnotherUserProfile} from '../containers/others/AnotherUserProfile';
 import {Container as OtherPost} from '../containers/others/OtherPost';
 import {MenuBar} from '../components/utils/MenuBar';
 import {Post} from '../redux/post';
-import {AnotherUser} from '../components/others/SearchOthers';
+import {AnotherUser as AnotherUserType} from '../components/others/SearchOthers';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
-  AnotherUserProfile: AnotherUser;
+  AnotherUserProfile: AnotherUserType;
   Post: Post;
 };
 
@@ -32,7 +32,7 @@ export const SearchStackScreen = () => {
       />
       <Stack.Screen
         name="AnotherUserProfile"
-        component={OtherUser}
+        component={AnotherUserProfile}
         options={({route}) => {
           return {title: `${route.params.name}のプロフィール`};
         }}

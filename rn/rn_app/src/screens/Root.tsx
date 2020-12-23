@@ -17,7 +17,7 @@ import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {ChatListStackScreen} from './ChatList';
 import {UserEditStackScreen} from './UserEdit';
-import {FlashStackScreen, FlashStackParamList} from './Flash';
+import {FlashesStackScreen, FlashStackParamList} from './Flash';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
 import {Room} from '../redux/rooms';
@@ -154,7 +154,7 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="Flashes"
-        component={FlashStackScreen}
+        component={FlashesStackScreen}
         options={({}) => {
           return {
             headerShown: false,

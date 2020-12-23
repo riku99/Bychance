@@ -106,7 +106,7 @@ export const Container = () => {
       );
     }
     rootStackNavigation.push('Flashes', {
-      screen: 'showFlashes',
+      screen: 'Flashes',
       params: {
         allFlashesWithUser: isAllAlreadyViewed
           ? singleEntity!

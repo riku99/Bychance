@@ -55,7 +55,7 @@ export const Container = () => {
 
   const pushFlashes = () => {
     rootstackNavigation.push('Flashes', {
-      screen: 'showFlashes',
+      screen: 'Flashes',
       params: {
         allFlashesWithUser: [
           {

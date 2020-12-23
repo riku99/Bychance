@@ -8,9 +8,10 @@ import {AnotherUser} from '../components/others/SearchOthers';
 import {FlashesWithUser} from '../components/flashes/ShowFlash';
 import {PartiallyPartial} from '../constants/d';
 import {Post as PostType} from '../redux/post';
+import {MenuBar} from '../components/utils/MenuBar';
 
 export type FlashStackParamList = {
-  showFlashes: {
+  Flashes: {
     allFlashesWithUser: PartiallyPartial<FlashesWithUser, 'flashes'>[];
     index: number;
   };
@@ -20,17 +21,27 @@ export type FlashStackParamList = {
 
 const Stack = createStackNavigator<FlashStackParamList>();
 
-export const FlashStackScreen = () => {
+export const FlashesStackScreen = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerRight: () => <MenuBar />,
+      }}>
       <Stack.Screen
-        name="showFlashes"
+        name="Flashes"
         component={Flashes}
         options={() => ({
           headerShown: false,
         })}
       />
-      <Stack.Screen name="AnotherUserProfile" component={AnotherUserProfile} />
+      <Stack.Screen
+        name="AnotherUserProfile"
+        component={AnotherUserProfile}
+        options={({route}) => ({
+          title: `${route.params.name}`,
+        })}
+      />
       <Stack.Screen name="Post" component={Post} />
     </Stack.Navigator>
   );

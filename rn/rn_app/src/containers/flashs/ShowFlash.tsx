@@ -18,7 +18,7 @@ import {FlashStackParamList} from '../../screens/Flash';
 
 type FlashStackNavigationProp = StackNavigationProp<
   FlashStackParamList,
-  'showFlashes'
+  'Flashes'
 >;
 
 type Props = {

@@ -7,7 +7,7 @@ import {Container as ShowFlash} from '../../containers/flashs/ShowFlash';
 import {RootStackParamList} from '../../screens/Root';
 import {FlashStackParamList} from '../../screens/Flash';
 
-type FlashRouteProp = RouteProp<FlashStackParamList, 'showFlashes'>;
+type FlashRouteProp = RouteProp<FlashStackParamList, 'Flashes'>;
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Flashes'>;
 
