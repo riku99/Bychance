@@ -1,5 +1,8 @@
 import React from 'react';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import {
+  getFocusedRouteNameFromRoute,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   createStackNavigator,
@@ -14,25 +17,20 @@ import {ProfileStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {ChatListStackScreen} from './ChatList';
 import {UserEditStackScreen} from './UserEdit';
+import {FlashStackScreen, FlashStackParamList} from './Flash';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
-import {Flashes} from '../components/flashes/Flashes';
-import {FlashesWithUser} from '../components/flashes/ShowFlash';
 import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
-import {PartiallyPartial} from '../constants/d';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
   ChatRoom: Room;
   TakeFlash: undefined;
-  Flashes: {
-    allFlashesWithUser: PartiallyPartial<FlashesWithUser, 'flashes'>[];
-    index: number;
-  };
+  Flashes: NavigatorScreenParams<FlashStackParamList>;
 };
 
 export type TabList = {
@@ -156,7 +154,7 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="Flashes"
-        component={Flashes}
+        component={FlashStackScreen}
         options={({}) => {
           return {
             headerShown: false,

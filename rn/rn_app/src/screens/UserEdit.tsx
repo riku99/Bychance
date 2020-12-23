@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as UserEdit} from '../containers/users/UserEdit';
 import {Container as EditPage} from '../containers/users/EditPage';
-//import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type UserEditStackParamList = {
   EditContents: undefined;

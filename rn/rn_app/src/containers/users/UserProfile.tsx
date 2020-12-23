@@ -53,16 +53,18 @@ export const Container = () => {
     rootstackNavigation.push('TakeFlash');
   };
 
-  // UserProfileからのみflashesプロパティをundefiend
   const pushFlashes = () => {
     rootstackNavigation.push('Flashes', {
-      allFlashesWithUser: [
-        {
-          flashes: undefined,
-          user: restUserData,
-        },
-      ],
-      index: 0,
+      screen: 'showFlashes',
+      params: {
+        allFlashesWithUser: [
+          {
+            flashes: undefined, // UserProfileからのみflashesプロパティをundefiend
+            user: {...restUserData, posts},
+          },
+        ],
+        index: 0,
+      },
     });
   };
 

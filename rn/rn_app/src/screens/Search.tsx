@@ -11,8 +11,8 @@ import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
-  OtherProfile: AnotherUser;
-  OtherPost: Post;
+  AnotherUserProfile: AnotherUser;
+  Post: Post;
 };
 
 const Stack = createStackNavigator<SearchStackParamList>();
@@ -31,14 +31,14 @@ export const SearchStackScreen = () => {
         options={{title: 'ユーザーを見つける'}}
       />
       <Stack.Screen
-        name="OtherProfile"
+        name="AnotherUserProfile"
         component={OtherUser}
         options={({route}) => {
           return {title: `${route.params.name}のプロフィール`};
         }}
       />
       <Stack.Screen
-        name="OtherPost"
+        name="Post"
         component={OtherPost}
         options={{title: 'ユーザーの投稿'}}
       />

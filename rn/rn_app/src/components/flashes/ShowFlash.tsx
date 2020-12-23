@@ -23,15 +23,15 @@ export type FlashesWithUser = {
   flashes: {
     entities: Flash[];
     alreadyViewed: number[];
-    isAllAlreadyViewed: boolean;
+    isAllAlreadyViewed?: boolean;
   };
   user: {
     id: number;
     name: string;
-    introduce?: string;
-    image?: string | null;
-    message?: string;
-    posts?: Post[];
+    introduce: string;
+    image: string | null;
+    message: string;
+    posts: Post[];
   };
 };
 
@@ -46,6 +46,7 @@ type Props = {
   createAlreadyViewdFlash: ({flashId}: {flashId: number}) => void;
   scrollToNextOrBackScreen: () => void;
   goBackScreen: () => void;
+  navigateToProfile: () => void;
 };
 
 export const ShowFlash = React.memo(
@@ -60,6 +61,7 @@ export const ShowFlash = React.memo(
     createAlreadyViewdFlash,
     scrollToNextOrBackScreen,
     goBackScreen,
+    navigateToProfile,
   }: Props) => {
     const progressWidth = useMemo(() => {
       return MAX_PROGRESS_BAR / flashData.flashes.entities.length - 1;
@@ -405,7 +407,9 @@ export const ShowFlash = React.memo(
                     );
                   })}
                 </View>
-                <View style={styles.infoItems}>
+                <TouchableOpacity
+                  style={styles.infoItems}
+                  onPress={navigateToProfile}>
                   <View style={styles.userInfo}>
                     <UserAvatar
                       image={flashData.user.image}
@@ -430,7 +434,7 @@ export const ShowFlash = React.memo(
                     buttonStyle={{backgroundColor: 'transparent'}}
                     onPress={goBackScreen}
                   />
-                </View>
+                </TouchableOpacity>
                 {creatingFlash && referenceId === flashData.user.id && (
                   <View style={styles.addMessageContainer}>
                     <ActivityIndicator color="white" />

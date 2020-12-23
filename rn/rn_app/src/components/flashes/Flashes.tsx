@@ -5,13 +5,14 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {Container as ShowFlash} from '../../containers/flashs/ShowFlash';
 import {RootStackParamList} from '../../screens/Root';
+import {FlashStackParamList} from '../../screens/Flash';
 
-type RootRouteProp = RouteProp<RootStackParamList, 'Flashes'>;
+type FlashRouteProp = RouteProp<FlashStackParamList, 'showFlashes'>;
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Flashes'>;
 
 type Props = {
-  route: RootRouteProp;
+  route: FlashRouteProp;
   navigation: RootNavigationProp;
 };
 

@@ -16,12 +16,15 @@ import {alertSomeError} from '../../helpers/error';
 
 type SearchNavigationProp = StackNavigationProp<
   SearchStackParamList,
-  'OtherProfile'
+  'AnotherUserProfile'
 >;
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
-type SearchScreenRouteProp = RouteProp<SearchStackParamList, 'OtherProfile'>;
+type SearchScreenRouteProp = RouteProp<
+  SearchStackParamList,
+  'AnotherUserProfile'
+>;
 
 type Props = {route: SearchScreenRouteProp};
 
@@ -41,7 +44,7 @@ export const Container = ({route}: Props) => {
   const rootStackNavigation = useNavigation<RootNavigationProp>();
 
   const pushPost = (post: Post) => {
-    searchStackNavigation.push('OtherPost', {
+    searchStackNavigation.push('Post', {
       id: post.id,
       text: post.text,
       image: post.image,
@@ -70,13 +73,16 @@ export const Container = ({route}: Props) => {
 
   const pushFlashes = () => {
     rootStackNavigation.push('Flashes', {
-      allFlashesWithUser: [
-        {
-          flashes: routeParam.flashes,
-          user: restUserData,
-        },
-      ],
-      index: 0,
+      screen: 'showFlashes',
+      params: {
+        allFlashesWithUser: [
+          {
+            flashes: routeParam.flashes,
+            user: restUserData,
+          },
+        ],
+        index: 0,
+      },
     });
   };
 

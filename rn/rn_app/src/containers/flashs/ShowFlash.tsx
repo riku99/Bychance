@@ -2,6 +2,8 @@ import React, {useRef, useEffect} from 'react';
 import {Alert} from 'react-native';
 import {useDispatch, useSelector, shallowEqual} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ShowFlash, FlashesWithUser} from '../../components/flashes/ShowFlash';
 import {RootState, AppDispatch} from '../../redux/index';
@@ -12,6 +14,12 @@ import {
 import {flashMessage} from '../../helpers/flashMessage';
 import {alertSomeError} from '../../helpers/error';
 import {selectAllFlashes} from '../../redux/flashes';
+import {FlashStackParamList} from '../../screens/Flash';
+
+type FlashStackNavigationProp = StackNavigationProp<
+  FlashStackParamList,
+  'showFlashes'
+>;
 
 type Props = {
   flashData: FlashesWithUser;
@@ -81,6 +89,15 @@ export const Container = ({
     await dispatch(createAlreadyViewdFlashThunk({flashId}));
   };
 
+  const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
+
+  const pushProfile = () => {
+    flashStackNavigation.push('AnotherUserProfile', {
+      ...flashData.user,
+      flashes: flashData.flashes,
+    });
+  };
+
   return (
     <ShowFlash
       flashData={
@@ -100,6 +117,7 @@ export const Container = ({
       firstRender={firstRender}
       modalizeRef={modalizeRef}
       goBackScreen={goBackScreen}
+      navigateToProfile={pushProfile}
     />
   );
 };

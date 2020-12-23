@@ -85,7 +85,7 @@ export const Container = () => {
   const rootStackNavigation = useNavigation<RootNavigationProp>();
 
   const pushProfile = (user: AnotherUser) => {
-    searchStackNavigation.push('OtherProfile', user);
+    searchStackNavigation.push('AnotherUserProfile', user);
   };
 
   const pushFlashes = ({
@@ -106,10 +106,13 @@ export const Container = () => {
       );
     }
     rootStackNavigation.push('Flashes', {
-      allFlashesWithUser: isAllAlreadyViewed
-        ? singleEntity!
-        : containedNotAlreadyViewdFlashes,
-      index,
+      screen: 'showFlashes',
+      params: {
+        allFlashesWithUser: isAllAlreadyViewed
+          ? singleEntity!
+          : containedNotAlreadyViewdFlashes,
+        index,
+      },
     });
   };
 

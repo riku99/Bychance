@@ -12,7 +12,6 @@ type screenRouteProp = RouteProp<ProfileStackParamList, 'Post'>;
 type Props = {route: screenRouteProp};
 
 export const Container = ({route}: Props) => {
-  const post = route.params;
   const user = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
@@ -20,17 +19,5 @@ export const Container = ({route}: Props) => {
   const deletePost = (id: number) => {
     dispatch(deletePostThunk(id));
   };
-  return (
-    <Post
-      post={{
-        id: post.id,
-        text: post.text,
-        image: post.image,
-        date: post.date,
-        userId: post.userId,
-      }}
-      user={user}
-      deletePost={deletePost}
-    />
-  );
+  return <Post post={route.params} user={user} deletePost={deletePost} />;
 };

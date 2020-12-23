@@ -7,7 +7,7 @@ import {Post} from '../../components/posts/Post';
 import {deletePostThunk} from '../../actions/posts';
 import {RootState, AppDispatch} from '../../redux/index';
 
-type screensRouteProp = RouteProp<SearchStackParamList, 'OtherPost'>;
+type screensRouteProp = RouteProp<SearchStackParamList, 'Post'>;
 
 type Props = {route: screensRouteProp};
 

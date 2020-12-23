@@ -32,7 +32,7 @@ export type AnotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
   flashes: {
     entities: Flash[];
     alreadyViewed: number[];
-    isAllAlreadyViewed: boolean;
+    isAllAlreadyViewed?: boolean;
   };
 };
 
