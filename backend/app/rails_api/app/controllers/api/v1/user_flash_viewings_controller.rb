@@ -4,7 +4,9 @@ class Api::V1::UserFlashViewingsController < ApplicationController
     def create
         if @user
             flash_id = params[:flashId]
-            @user.user_flash_viewings.create(flash_id: flash_id)
+            unless @user.viewed_flashes.find(flash_id)
+                @user.user_flash_viewings.create(flash_id: flash_id)
+            end
             render json: {result: true}
         else
             render json: {errorType: "loginError"}, status: 401

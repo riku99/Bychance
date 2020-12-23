@@ -8,13 +8,13 @@ import {
   MessageText,
 } from 'react-native-gifted-chat';
 
-type PropsType = {
+type Props = {
   messages: IMessage[];
   userId: number;
   onSend: (text: string) => void;
 };
 
-export const ChatRoom = React.memo(({messages, userId, onSend}: PropsType) => {
+export const ChatRoom = React.memo(({messages, userId, onSend}: Props) => {
   const [text, setText] = useState('');
   return (
     <GiftedChat

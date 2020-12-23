@@ -84,13 +84,13 @@ export const UserProfile = React.memo(
                 icon={
                   <Icon
                     name="send-o"
-                    size={17}
+                    size={15}
                     color="#2c3e50"
                     style={{marginRight: 8}}
                   />
                 }
                 titleStyle={{...styles.editButtonTitle, color: '#2c3e50'}}
-                buttonStyle={styles.editButton}
+                buttonStyle={[styles.editButton, styles.sendMessageButton]}
                 onPress={navigateToChatRoom}
               />
             )}
@@ -149,12 +149,23 @@ const styles = StyleSheet.create({
     height: 40,
   },
   editButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#5c94c8',
+    width: '90%',
+    height: 30,
+    alignSelf: 'center',
   },
   editButtonTitle: {
-    color: basicStyles.skyBlueButtonColor,
+    //color: basicStyles.skyBlueButtonColor,
+    color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 14,
+  },
+  sendMessageButton: {
+    borderWidth: 1,
+    borderColor: '#2c3e50',
+    backgroundColor: 'transparent',
+    borderRadius: 30,
+    height: 33,
   },
   introduce: {
     minHeight: height / 5,
@@ -174,8 +185,7 @@ const styles = StyleSheet.create({
     width: width / 7,
     height: width / 7,
     borderRadius: width / 7,
-    backgroundColor: '#1f6fff',
-    opacity: 0.9,
+    backgroundColor: '#5c94c8',
   },
   postProcess: {
     flexDirection: 'row',

@@ -100,10 +100,11 @@ export const Container = () => {
     if (isAllAlreadyViewed) {
       index = 0;
       singleEntity = flashesWithUser.filter((item) => item.user.id === id);
+    } else {
+      index = containedNotAlreadyViewdFlashes!.findIndex(
+        (item) => item.user.id === id,
+      );
     }
-    index = containedNotAlreadyViewdFlashes!.findIndex(
-      (item) => item.user.id === id,
-    );
     rootStackNavigation.push('Flashes', {
       allFlashesWithUser: isAllAlreadyViewed
         ? singleEntity!

@@ -3,6 +3,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 import {useIsFocused} from '@react-navigation/native';
+import {Avatar} from 'react-native-elements';
 
 import {ChatRoom} from '../../components/chats/ChatRoom';
 import {RootState} from '../../redux/index';
@@ -13,8 +14,6 @@ import {
 import {RootStackParamList} from '../../screens/Root';
 import {selectMessages} from '../../redux/messages';
 import {selectMessageIds} from '../../redux/rooms';
-
-const noImage = require('../../assets/noImage.png');
 
 type RootRouteProp = RouteProp<RootStackParamList, 'ChatRoom'>;
 
@@ -43,7 +42,13 @@ export const Container = ({route}: Props) => {
             _id: m.userId,
             avatar: route.params.partner.image
               ? route.params.partner.image
-              : noImage,
+              : () => (
+                  <Avatar
+                    rounded
+                    icon={{name: 'user', type: 'font-awesome'}}
+                    containerStyle={{backgroundColor: '#BDBDBD'}}
+                  />
+                ),
           },
         };
       });

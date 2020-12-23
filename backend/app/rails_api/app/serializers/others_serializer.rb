@@ -5,7 +5,7 @@ class OthersSerializer < ActiveModel::Serializer
 
     def flashes
         user = @instance_options[:user]
-        aleady_viewed_ids = object.flashes.ids.select { |n| user.viewing_flashes.ids.include?(n) }
+        aleady_viewed_ids = object.flashes.ids.select { |n| user.viewed_flashes.ids.include?(n) }
         flash_entities = object.flashes.map { |flash| FlashSerializer.new(flash) }
         is_all_already_viewed = aleady_viewed_ids.include?(flash_entities.last ? flash_entities.last.as_json[:id] : false)
         {

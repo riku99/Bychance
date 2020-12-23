@@ -1,11 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
-import {ListItem, Avatar, Badge} from 'react-native-elements';
+import {View, StyleSheet} from 'react-native';
+import {ListItem, Badge} from 'react-native-elements';
 
 import {Room} from '../../redux/rooms';
 import {MessageType} from '../../redux/messages';
-
-const noImage = require('../../assets/noImage.png');
+import {UserAvatar} from '../utils/Avatar';
 
 type Props = {
   rooms: Room[];
@@ -30,11 +29,7 @@ export const ChatList = ({
                 onPress={() => {
                   pushChatRoom(r);
                 }}>
-                <Avatar
-                  rounded
-                  size="medium"
-                  source={r.partner.image ? {uri: r.partner.image} : noImage}
-                />
+                <UserAvatar image={r.partner.image} size="medium" opacity={1} />
                 <ListItem.Content>
                   <ListItem.Title>{r.partner.name}</ListItem.Title>
                   <ListItem.Subtitle style={styles.subtitle}>
