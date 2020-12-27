@@ -49,6 +49,8 @@ export const Container = ({
     return state.indexReducer.creatingFlash;
   });
 
+  const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
+
   useEffect(() => {
     firstRender.current = true;
   }, []);
@@ -89,10 +91,8 @@ export const Container = ({
     await dispatch(createAlreadyViewdFlashThunk({flashId}));
   };
 
-  const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
-
   const pushProfile = () => {
-    flashStackNavigation.push('AnotherUserProfile', {
+    flashStackNavigation.push('AnotherUserProfileFromFlash', {
       ...flashData.user,
       flashes: flashData.flashes,
     });

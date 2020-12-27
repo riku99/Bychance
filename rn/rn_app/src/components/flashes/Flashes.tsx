@@ -1,11 +1,12 @@
 import React, {useRef, useState} from 'react';
-import {View, StyleSheet, Dimensions, FlatList} from 'react-native';
+import {View, StyleSheet, Dimensions, FlatList, StatusBar} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {Container as ShowFlash} from '../../containers/flashs/ShowFlash';
 import {RootStackParamList} from '../../screens/Root';
 import {FlashStackParamList} from '../../screens/Flash';
+import {X_HEIGHT} from '../../constants/device';
 
 type FlashRouteProp = RouteProp<FlashStackParamList, 'Flashes'>;
 
@@ -48,6 +49,11 @@ export const Flashes = ({route, navigation}: Props) => {
 
   const goBackScreen = () => {
     navigation.goBack();
+    if (height < X_HEIGHT) {
+      StatusBar.setHidden(false);
+    } else {
+      StatusBar.setBarStyle('default');
+    }
   };
 
   return (

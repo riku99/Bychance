@@ -9,6 +9,7 @@ import {
   Animated,
   TouchableOpacity,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import {Button, ListItem, Icon} from 'react-native-elements';
 import Video from 'react-native-video';
@@ -181,7 +182,7 @@ export const ShowFlash = React.memo(
 
     return (
       <>
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           {flashData.flashes.entities.length ? (
             <TouchableOpacity
               activeOpacity={1}
@@ -283,7 +284,11 @@ export const ShowFlash = React.memo(
                   longPress.current = false;
                 }
               }}>
-              <StatusBar hidden={true} />
+              {height >= X_HEIGHT ? (
+                <StatusBar barStyle="light-content" />
+              ) : (
+                <StatusBar hidden={true} />
+              )}
               {currentFlash.contentType === 'image' ? (
                 <View style={styles.soruceContainer}>
                   {isDisplayed ? (
@@ -407,10 +412,10 @@ export const ShowFlash = React.memo(
                     );
                   })}
                 </View>
-                <TouchableOpacity
-                  style={styles.infoItems}
-                  onPress={navigateToProfile}>
-                  <View style={styles.userInfo}>
+                <View style={styles.infoItems}>
+                  <TouchableOpacity
+                    style={styles.userInfo}
+                    onPress={navigateToProfile}>
                     <UserAvatar
                       image={flashData.user.image}
                       size="small"
@@ -428,13 +433,13 @@ export const ShowFlash = React.memo(
                           ).toString() + '時間前'
                         : '1日前'}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                   <Button
                     icon={{name: 'close', color: 'white'}}
                     buttonStyle={{backgroundColor: 'transparent'}}
                     onPress={goBackScreen}
                   />
-                </TouchableOpacity>
+                </View>
                 {creatingFlash && referenceId === flashData.user.id && (
                   <View style={styles.addMessageContainer}>
                     <ActivityIndicator color="white" />
@@ -524,7 +529,7 @@ export const ShowFlash = React.memo(
               </View>
             )
           )}
-        </View>
+        </SafeAreaView>
       </>
     );
   },
@@ -542,7 +547,7 @@ const styles = StyleSheet.create({
     width: '95%',
     height: 65,
     position: 'absolute',
-    top: height > X_HEIGHT ? 37 : 5,
+    top: 5,
     alignSelf: 'center',
   },
   progressBarConteiner: {
