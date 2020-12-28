@@ -1,18 +1,22 @@
 import React, {useEffect, useMemo} from 'react';
 import {StatusBar, Dimensions} from 'react-native';
-import {shallowEqual, useSelector} from 'react-redux';
+import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import {useNavigation, RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {unwrapResult} from '@reduxjs/toolkit';
 
 import {RootStackParamList} from '../../screens/Root';
 import {ProfileStackParamList} from '../../screens/Profile';
 import {SearchStackParamList} from '../../screens/Search';
 import {FlashStackParamList} from '../../screens/Flash';
 import {UserProfile} from '../../components/users/UserProfile';
-import {RootState} from '../../redux/index';
+import {createRoomThunk} from '../../actions/rooms';
+import {RootState, AppDispatch} from '../../redux/index';
 import {Post, selectAllPosts} from '../../redux/post';
 import {selectAllFlashes} from '../../redux/flashes';
+import {selectRoom} from '../../redux/rooms';
 import {X_HEIGHT} from '../../constants/device';
+import {alertSomeError} from '../../helpers/error';
 
 type ProfileStackScreenRouteProp = RouteProp<
   ProfileStackParamList,
@@ -95,7 +99,7 @@ export const Container = ({route}: Props) => {
     }
   }, [routeParam, user, posts]);
 
-  const rootstackNavigation = useNavigation<RootNavigationProp>();
+  const rootStackNavigation = useNavigation<RootNavigationProp>();
 
   const profileStackNavigation = useNavigation<ProfileNavigationProp>();
 
@@ -167,15 +171,37 @@ export const Container = ({route}: Props) => {
   };
 
   const pushUserEdit = () => {
-    rootstackNavigation.push('UserEdit');
+    rootStackNavigation.push('UserEdit');
   };
 
   const pushTakeFlash = () => {
-    rootstackNavigation.push('TakeFlash');
+    rootStackNavigation.push('TakeFlash');
+  };
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const pushChatRoom = () => {
+    if (routeParam) {
+      dispatch(createRoomThunk(routeParam))
+        .then(unwrapResult)
+        .then((payload) => {
+          const selectedRoom = selectRoom(payload.id);
+          if (selectedRoom) {
+            rootStackNavigation.push('ChatRoom', {
+              id: selectedRoom.id,
+              partner: selectedRoom.partner,
+              timestamp: selectedRoom.timestamp,
+              messages: selectedRoom.messages,
+            });
+          } else {
+            alertSomeError();
+          }
+        });
+    }
   };
 
   const pushFlashes = () => {
-    rootstackNavigation.push('Flashes', {
+    rootStackNavigation.push('Flashes', {
       screen: 'Flashes',
       params: {
         allFlashesWithUser: [
@@ -203,6 +229,7 @@ export const Container = ({route}: Props) => {
       creatingFlash={creatingFlash}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
+      navigateToChatRoom={pushChatRoom}
       navigateToTakeFlash={pushTakeFlash}
       navigateToFlashes={pushFlashes}
     />

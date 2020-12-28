@@ -40,7 +40,7 @@ type Props = {
   flashData: FlashesWithUser;
   referenceId: number;
   isDisplayed: boolean;
-  firstRender: React.MutableRefObject<boolean>;
+  finishFirstRender: React.MutableRefObject<boolean>;
   modalizeRef: React.RefObject<Modalize>;
   creatingFlash?: boolean;
   deleteFlash: ({flashId}: {flashId: number}) => void;
@@ -55,7 +55,7 @@ export const ShowFlash = React.memo(
     flashData,
     referenceId,
     isDisplayed,
-    firstRender,
+    finishFirstRender,
     modalizeRef,
     creatingFlash,
     deleteFlash,
@@ -64,9 +64,18 @@ export const ShowFlash = React.memo(
     goBackScreen,
     navigateToProfile,
   }: Props) => {
+    const entityLength = useMemo(() => flashData.flashes.entities.length, [
+      flashData.flashes.entities.length,
+    ]);
+
+    const alreadyViewedLength = useMemo(
+      () => flashData.flashes.alreadyViewed.length,
+      [flashData.flashes.alreadyViewed.length],
+    );
+
     const progressWidth = useMemo(() => {
-      return MAX_PROGRESS_BAR / flashData.flashes.entities.length - 1;
-    }, [flashData.flashes.entities.length]);
+      return MAX_PROGRESS_BAR / entityLength - 1;
+    }, [entityLength]);
 
     const modalList = useMemo(() => {
       return [
@@ -81,30 +90,38 @@ export const ShowFlash = React.memo(
       ];
     }, [deleteFlash]);
 
-    const [currentFlash, setCurrentFlash] = useState(
-      flashData.flashes.entities[0],
-    );
+    const [currentFlash, setCurrentFlash] = useState(() => {
+      if (alreadyViewedLength && alreadyViewedLength !== entityLength) {
+        return flashData.flashes.entities[alreadyViewedLength];
+      } else {
+        return flashData.flashes.entities[0];
+      }
+    });
     const [onLoading, setOnLoading] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
     const [visibleModal, setvisibleModal] = useState(false);
 
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
     const progressValue = useRef(-progressWidth);
-    const currentProgress = useRef(0);
+    const currentProgressBar = useRef(
+      alreadyViewedLength && alreadyViewedLength !== entityLength
+        ? alreadyViewedLength
+        : 0,
+    );
     const longPress = useRef(false);
     const videoDuration = useRef<number | undefined>(undefined);
     const canStartVideo = useRef(true);
     const videoRef = useRef<Video>(null);
-    const flashesLength = useRef(flashData.flashes.entities.length);
+    const flashesLength = useRef(entityLength);
 
     // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
       // アイテムが削除された場合
-      if (flashData.flashes.entities.length < flashesLength.current) {
-        setCurrentFlash(flashData.flashes.entities[currentProgress.current]);
+      if (entityLength < flashesLength.current) {
+        setCurrentFlash(flashData.flashes.entities[currentProgressBar.current]);
       }
-      flashesLength.current = flashData.flashes.entities.length;
-    }, [flashData.flashes.entities.length, flashData.flashes]);
+      flashesLength.current = entityLength;
+    }, [entityLength, flashData.flashes]);
 
     // このコンポーネントが表示された、表示されている時の責務を定義
     useEffect(() => {
@@ -118,8 +135,8 @@ export const ShowFlash = React.memo(
     // このコンポーネントが非表示になった、なっている時の責務を定義
     useEffect(() => {
       if (!isDisplayed) {
-        progressAnim[currentProgress.current].stopAnimation();
-        progressAnim[currentProgress.current].setValue(-progressWidth);
+        progressAnim[currentProgressBar.current].stopAnimation();
+        progressAnim[currentProgressBar.current].setValue(-progressWidth);
         if (currentFlash.contentType === 'video') {
           videoRef.current!.seek(0);
         }
@@ -136,7 +153,7 @@ export const ShowFlash = React.memo(
       duration?: number;
       restart?: boolean;
     }) => {
-      if (progressNumber < flashData.flashes.entities.length) {
+      if (progressNumber < entityLength) {
         progressAnim[progressNumber].addListener((e) => {
           progressValue.current = e.value;
         });
@@ -149,24 +166,17 @@ export const ShowFlash = React.memo(
           useNativeDriver: true,
         }).start((e) => {
           createAlreadyViewdFlash({flashId: currentFlash.id});
-          // アイテムの追加、削除で必要になるかもしれないので消さずにコメントアウト
-          // if (!canStartVideo) {
-          //   videoDuration.current = undefined;
-          // }
           // アニメーションが終了した、つまりタップによるスキップなく最後まで完了した場合
           if (e.finished) {
             // 進行してたプログレスバーがラストだった場合
-            if (
-              currentProgress.current ===
-              flashData.flashes.entities.length - 1
-            ) {
+            if (currentProgressBar.current === entityLength - 1) {
               scrollToNextOrBackScreen();
               return;
             }
             canStartVideo.current = true;
-            currentProgress.current += 1;
+            currentProgressBar.current += 1;
             setCurrentFlash(
-              flashData.flashes.entities[currentProgress.current],
+              flashData.flashes.entities[currentProgressBar.current],
             );
           }
         });
@@ -183,7 +193,7 @@ export const ShowFlash = React.memo(
     return (
       <>
         <SafeAreaView style={styles.container}>
-          {flashData.flashes.entities.length ? (
+          {entityLength ? (
             <TouchableOpacity
               activeOpacity={1}
               delayLongPress={200}
@@ -191,14 +201,11 @@ export const ShowFlash = React.memo(
               onPress={(e) => {
                 // 画面右半分をプレスした、つまりアイテムをスキップした場合
                 if (e.nativeEvent.locationX > width / 2) {
-                  progressAnim[currentProgress.current].setValue(0);
-                  if (
-                    currentProgress.current <
-                    flashData.flashes.entities.length - 1
-                  ) {
-                    currentProgress.current += 1;
+                  progressAnim[currentProgressBar.current].setValue(0);
+                  if (currentProgressBar.current < entityLength - 1) {
+                    currentProgressBar.current += 1;
                     setCurrentFlash(
-                      flashData.flashes.entities[currentProgress.current],
+                      flashData.flashes.entities[currentProgressBar.current],
                     );
                     videoDuration.current = undefined;
                     canStartVideo.current = true;
@@ -213,23 +220,23 @@ export const ShowFlash = React.memo(
                     progressWidth - progressWidth / 7
                   ) {
                     canStartVideo.current = true;
-                    progressAnim[currentProgress.current].setValue(
+                    progressAnim[currentProgressBar.current].setValue(
                       -progressWidth,
                     );
                     // 進行しているプログレスバーが2個目以上の場合
-                    if (currentProgress.current > 0) {
-                      currentProgress.current -= 1;
-                      progressAnim[currentProgress.current].setValue(
+                    if (currentProgressBar.current > 0) {
+                      currentProgressBar.current -= 1;
+                      progressAnim[currentProgressBar.current].setValue(
                         -progressWidth,
                       );
                       videoDuration.current = undefined;
                       setCurrentFlash(
-                        flashData.flashes.entities[currentProgress.current],
+                        flashData.flashes.entities[currentProgressBar.current],
                       );
                     } else {
                       if (!onLoading) {
                         progressAnimation({
-                          progressNumber: currentProgress.current,
+                          progressNumber: currentProgressBar.current,
                           duration: videoDuration.current
                             ? videoDuration.current
                             : undefined,
@@ -241,12 +248,12 @@ export const ShowFlash = React.memo(
                     }
                   } else {
                     if (!onLoading) {
-                      progressAnim[currentProgress.current].setValue(
+                      progressAnim[currentProgressBar.current].setValue(
                         -progressWidth,
                       );
                       if (currentFlash.contentType === 'image') {
                         progressAnimation({
-                          progressNumber: currentProgress.current,
+                          progressNumber: currentProgressBar.current,
                           duration: videoDuration.current
                             ? videoDuration.current
                             : undefined,
@@ -254,7 +261,7 @@ export const ShowFlash = React.memo(
                       } else {
                         if (videoRef.current) {
                           progressAnimation({
-                            progressNumber: currentProgress.current,
+                            progressNumber: currentProgressBar.current,
                             duration: videoDuration.current,
                           });
                           videoRef.current.seek(0);
@@ -265,7 +272,7 @@ export const ShowFlash = React.memo(
                 }
               }}
               onLongPress={() => {
-                progressAnim[currentProgress.current].stopAnimation();
+                progressAnim[currentProgressBar.current].stopAnimation();
                 if (canStartVideo) {
                   setIsPaused(true);
                 }
@@ -274,7 +281,7 @@ export const ShowFlash = React.memo(
               onPressOut={() => {
                 if (longPress.current) {
                   progressAnimation({
-                    progressNumber: currentProgress.current,
+                    progressNumber: currentProgressBar.current,
                     duration: videoDuration.current,
                     restart: true,
                   });
@@ -304,7 +311,7 @@ export const ShowFlash = React.memo(
                       onLoad={() => {
                         setOnLoading(false);
                         progressAnimation({
-                          progressNumber: currentProgress.current,
+                          progressNumber: currentProgressBar.current,
                         });
                       }}
                     />
@@ -339,7 +346,7 @@ export const ShowFlash = React.memo(
                       setOnLoading(false);
                       if (currentTime > 0.002 && canStartVideo.current) {
                         progressAnimation({
-                          progressNumber: currentProgress.current,
+                          progressNumber: currentProgressBar.current,
                           duration: videoDuration.current,
                         });
                         if (canStartVideo.current) {
@@ -363,30 +370,30 @@ export const ShowFlash = React.memo(
                 <View style={styles.progressBarConteiner}>
                   {flashData.flashes.entities.map((f, i) => {
                     // 初回レンダリングの場合
-                    if (!firstRender.current) {
-                      progressAnim[i] = new Animated.Value(-progressWidth);
+                    if (!finishFirstRender.current) {
+                      if (
+                        i < alreadyViewedLength &&
+                        alreadyViewedLength !== entityLength
+                      ) {
+                        progressAnim[i] = new Animated.Value(0);
+                      } else {
+                        progressAnim[i] = new Animated.Value(-progressWidth);
+                      }
                     }
                     // アイテムが追加された場合
-                    if (
-                      flashData.flashes.entities.length > flashesLength.current
-                    ) {
-                      progressAnim[
-                        flashData.flashes.entities.length - 1
-                      ] = new Animated.Value(-progressWidth);
+                    if (entityLength > flashesLength.current) {
+                      progressAnim[entityLength - 1] = new Animated.Value(
+                        -progressWidth,
+                      );
                     }
                     // アイテムが削除された場合
-                    if (
-                      flashData.flashes.entities.length < flashesLength.current
-                    ) {
+                    if (entityLength < flashesLength.current) {
                       // 削除されたアイテムが最後のものだった場合
-                      if (
-                        currentProgress.current ===
-                        flashData.flashes.entities.length
-                      ) {
-                        currentProgress.current -= 1;
+                      if (currentProgressBar.current === entityLength) {
+                        currentProgressBar.current -= 1;
                       }
                       // この要素(f)が削除されたアイテムよりも後にある場合
-                      if (i >= currentProgress.current) {
+                      if (i >= currentProgressBar.current) {
                         progressAnim[i] = new Animated.Value(-progressWidth);
                       }
                     }
@@ -424,12 +431,13 @@ export const ShowFlash = React.memo(
                     <Text style={styles.userName}>{flashData.user.name}</Text>
                     <Text style={styles.timestamp}>
                       {getTimeDiff(
-                        flashData.flashes.entities[currentProgress.current]
+                        flashData.flashes.entities[currentProgressBar.current]
                           .timestamp,
                       ) < 24
                         ? getTimeDiff(
-                            flashData.flashes.entities[currentProgress.current]
-                              .timestamp,
+                            flashData.flashes.entities[
+                              currentProgressBar.current
+                            ].timestamp,
                           ).toString() + '時間前'
                         : '1日前'}
                     </Text>
@@ -461,7 +469,7 @@ export const ShowFlash = React.memo(
                     modalizeRef.current?.open();
                     setvisibleModal(true);
                     setIsPaused(true);
-                    progressAnim[currentProgress.current].stopAnimation();
+                    progressAnim[currentProgressBar.current].stopAnimation();
                   }}
                 />
               )}
@@ -475,7 +483,7 @@ export const ShowFlash = React.memo(
                 onClosed={() => {
                   setIsPaused(false);
                   progressAnimation({
-                    progressNumber: currentProgress.current,
+                    progressNumber: currentProgressBar.current,
                     duration: videoDuration ? videoDuration.current : undefined,
                     restart: true,
                   });

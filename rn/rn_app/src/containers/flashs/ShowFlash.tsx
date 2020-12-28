@@ -34,7 +34,7 @@ export const Container = ({
   scrollToNextOrBackScreen,
   goBackScreen,
 }: Props) => {
-  const firstRender = useRef(false);
+  const finishFirstRender = useRef(false);
   const modalizeRef = useRef<Modalize>(null);
 
   const referenceId = useSelector((state: RootState) => {
@@ -52,7 +52,7 @@ export const Container = ({
   const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
 
   useEffect(() => {
-    firstRender.current = true;
+    finishFirstRender.current = true;
   }, []);
 
   const dispatch: AppDispatch = useDispatch();
@@ -114,7 +114,7 @@ export const Container = ({
       createAlreadyViewdFlash={createAlreadyViewdFlash}
       creatingFlash={creatingFlash}
       scrollToNextOrBackScreen={scrollToNextOrBackScreen}
-      firstRender={firstRender}
+      finishFirstRender={finishFirstRender}
       modalizeRef={modalizeRef}
       goBackScreen={goBackScreen}
       navigateToProfile={pushProfile}
