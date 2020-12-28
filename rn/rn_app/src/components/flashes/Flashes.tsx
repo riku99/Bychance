@@ -1,12 +1,15 @@
 import React, {useRef, useState} from 'react';
 import {View, StyleSheet, Dimensions, FlatList, StatusBar} from 'react-native';
+import {shallowEqual, useSelector} from 'react-redux';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {Container as ShowFlash} from '../../containers/flashs/ShowFlash';
+import {ShowFlash} from './ShowFlash';
 import {RootStackParamList} from '../../screens/Root';
 import {FlashStackParamList} from '../../screens/Flash';
 import {X_HEIGHT} from '../../constants/device';
+import {RootState} from '../../redux/index';
+import {selectAllFlashes} from '../../redux/flashes';
 
 type FlashRouteProp = RouteProp<FlashStackParamList, 'Flashes'>;
 
@@ -19,6 +22,15 @@ type Props = {
 
 export const Flashes = ({route, navigation}: Props) => {
   const routePrams = route.params;
+
+  // 自分のデータを表示する時のみtrue
+  const needSelector = routePrams.allFlashesWithUser[0].flashes ? false : true;
+
+  const myFlashes = useSelector((state: RootState) => {
+    if (needSelector) {
+      return selectAllFlashes(state);
+    }
+  }, shallowEqual);
 
   const [isDisplayedList, setIsDisplayedList] = useState(() => {
     let obj: {[key: number]: boolean} = {};
@@ -65,7 +77,18 @@ export const Flashes = ({route, navigation}: Props) => {
         renderItem={({item, index}) => (
           <View style={{width, height}}>
             <ShowFlash
-              flashData={item}
+              flashData={
+                !needSelector
+                  ? item
+                  : {
+                      flashes: {
+                        entities: myFlashes,
+                        alreadyViewed: [],
+                        isAllAlreadyViewed: false,
+                      },
+                      user: item.user,
+                    }
+              }
               isDisplayed={isDisplayedList[index]}
               scrollToNextOrBackScreen={scrollToNextOrBackScreen}
               goBackScreen={goBackScreen}

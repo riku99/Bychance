@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   SafeAreaView,
+  Alert,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {Button, ListItem, Icon} from 'react-native-elements';
 import Video from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
@@ -22,6 +24,13 @@ import {UserAvatar} from '../utils/Avatar';
 import {Flash} from '../../redux/flashes';
 import {Post} from '../../redux/post';
 import {FlashStackParamList} from '../../screens/Flash';
+import {RootState, AppDispatch} from '../../redux/index';
+import {
+  deleteFlashThunk,
+  createAlreadyViewdFlashThunk,
+} from '../../actions/flashes';
+import {flashMessage} from '../../helpers/flashMessage';
+import {alertSomeError} from '../../helpers/error';
 
 type FlashStackNavigationProp = StackNavigationProp<
   FlashStackParamList,
@@ -46,30 +55,13 @@ export type FlashesWithUser = {
 
 type Props = {
   flashData: FlashesWithUser;
-  referenceId: number;
   isDisplayed: boolean;
-  finishFirstRender: React.MutableRefObject<boolean>;
-  modalizeRef: React.RefObject<Modalize>;
-  creatingFlash?: boolean;
-  deleteFlash: ({flashId}: {flashId: number}) => void;
-  createAlreadyViewdFlash: ({flashId}: {flashId: number}) => void;
   scrollToNextOrBackScreen: () => void;
   goBackScreen: () => void;
 };
 
 export const ShowFlash = React.memo(
-  ({
-    flashData,
-    referenceId,
-    isDisplayed,
-    finishFirstRender,
-    modalizeRef,
-    creatingFlash,
-    deleteFlash,
-    createAlreadyViewdFlash,
-    scrollToNextOrBackScreen,
-    goBackScreen,
-  }: Props) => {
+  ({flashData, isDisplayed, scrollToNextOrBackScreen, goBackScreen}: Props) => {
     const entityLength = useMemo(() => flashData.flashes.entities.length, [
       flashData.flashes.entities.length,
     ]);
@@ -79,22 +71,13 @@ export const ShowFlash = React.memo(
       [flashData.flashes.alreadyViewed.length],
     );
 
-    const progressWidth = useMemo(() => {
-      return MAX_PROGRESS_BAR / entityLength - 1;
-    }, [entityLength]);
+    const referenceId = useSelector((state: RootState) => {
+      return state.userReducer.user!.id;
+    });
 
-    const modalList = useMemo(() => {
-      return [
-        {
-          title: '削除',
-          icon: 'delete-outline',
-          titleStyle: {fontSize: 18, color: '#f74a4a'},
-          onPress: ({flashId}: {flashId: number}) => {
-            deleteFlash({flashId});
-          },
-        },
-      ];
-    }, [deleteFlash]);
+    const creatingFlash = useSelector((state: RootState) => {
+      return state.indexReducer.creatingFlash;
+    });
 
     const [currentFlash, setCurrentFlash] = useState(() => {
       if (alreadyViewedLength && alreadyViewedLength !== entityLength) {
@@ -108,6 +91,10 @@ export const ShowFlash = React.memo(
     const [visibleModal, setvisibleModal] = useState(false);
     const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
 
+    const progressWidth = useMemo(() => {
+      return MAX_PROGRESS_BAR / entityLength;
+    }, [entityLength]);
+
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
     const progressValue = useRef(-progressWidth);
     const currentProgressBar = useRef(
@@ -115,13 +102,24 @@ export const ShowFlash = React.memo(
         ? alreadyViewedLength
         : 0,
     );
+    const finishFirstRender = useRef(false);
     const longPress = useRef(false);
     const videoDuration = useRef<number | undefined>(undefined);
     const canStartVideo = useRef(true);
     const videoRef = useRef<Video>(null);
     const flashesLength = useRef(entityLength);
+    const modalizeRef = useRef<Modalize>(null);
 
     const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
+
+    const dispatch: AppDispatch = useDispatch();
+
+    const createAlreadyViewdFlash = useCallback(
+      async ({flashId}: {flashId: number}) => {
+        await dispatch(createAlreadyViewdFlashThunk({flashId}));
+      },
+      [dispatch],
+    );
 
     const progressAnimation = useCallback(
       ({
@@ -187,6 +185,59 @@ export const ShowFlash = React.memo(
       });
       setIsNavigatedToProfile(true);
     };
+
+    const deleteFlash = useCallback(
+      async ({flashId}: {flashId: number}) => {
+        Alert.alert('本当に削除してもよろしいですか?', '', [
+          {
+            text: 'はい',
+            onPress: async () => {
+              const result = await dispatch(deleteFlashThunk({flashId}));
+              if (deleteFlashThunk.fulfilled.match(result)) {
+                flashMessage('削除しました', 'success');
+                modalizeRef.current?.close();
+              } else {
+                if (
+                  result.payload &&
+                  result.payload.errorType === 'invalidError'
+                ) {
+                  flashMessage(result.payload.message, 'danger');
+                } else if (
+                  result.payload &&
+                  result.payload.errorType === 'someError'
+                ) {
+                  alertSomeError();
+                }
+              }
+            },
+          },
+          {
+            text: 'いいえ',
+            onPress: () => {
+              return;
+            },
+          },
+        ]);
+      },
+      [dispatch],
+    );
+
+    const modalList = useMemo(() => {
+      return [
+        {
+          title: '削除',
+          icon: 'delete-outline',
+          titleStyle: {fontSize: 18, color: '#f74a4a'},
+          onPress: ({flashId}: {flashId: number}) => {
+            deleteFlash({flashId});
+          },
+        },
+      ];
+    }, [deleteFlash]);
+
+    useEffect(() => {
+      finishFirstRender.current = true;
+    }, []);
 
     // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
