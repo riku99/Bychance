@@ -91,13 +91,6 @@ export const Container = ({
     await dispatch(createAlreadyViewdFlashThunk({flashId}));
   };
 
-  const pushProfile = () => {
-    flashStackNavigation.push('AnotherUserProfileFromFlash', {
-      ...flashData.user,
-      flashes: flashData.flashes,
-    });
-  };
-
   return (
     <ShowFlash
       flashData={
@@ -117,7 +110,6 @@ export const Container = ({
       finishFirstRender={finishFirstRender}
       modalizeRef={modalizeRef}
       goBackScreen={goBackScreen}
-      navigateToProfile={pushProfile}
     />
   );
 };

@@ -14,11 +14,19 @@ import {
 import {Button, ListItem, Icon} from 'react-native-elements';
 import Video from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import {X_HEIGHT} from '../../constants/device';
 import {UserAvatar} from '../utils/Avatar';
 import {Flash} from '../../redux/flashes';
 import {Post} from '../../redux/post';
+import {FlashStackParamList} from '../../screens/Flash';
+
+type FlashStackNavigationProp = StackNavigationProp<
+  FlashStackParamList,
+  'Flashes'
+>;
 
 export type FlashesWithUser = {
   flashes: {
@@ -47,7 +55,6 @@ type Props = {
   createAlreadyViewdFlash: ({flashId}: {flashId: number}) => void;
   scrollToNextOrBackScreen: () => void;
   goBackScreen: () => void;
-  navigateToProfile: () => void;
 };
 
 export const ShowFlash = React.memo(
@@ -62,7 +69,6 @@ export const ShowFlash = React.memo(
     createAlreadyViewdFlash,
     scrollToNextOrBackScreen,
     goBackScreen,
-    navigateToProfile,
   }: Props) => {
     const entityLength = useMemo(() => flashData.flashes.entities.length, [
       flashData.flashes.entities.length,
@@ -100,6 +106,7 @@ export const ShowFlash = React.memo(
     const [onLoading, setOnLoading] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
     const [visibleModal, setvisibleModal] = useState(false);
+    const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
 
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
     const progressValue = useRef(-progressWidth);
@@ -113,6 +120,73 @@ export const ShowFlash = React.memo(
     const canStartVideo = useRef(true);
     const videoRef = useRef<Video>(null);
     const flashesLength = useRef(entityLength);
+
+    const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
+
+    const progressAnimation = useCallback(
+      ({
+        progressNumber,
+        duration = 5000,
+        restart = false,
+      }: {
+        progressNumber: number;
+        duration?: number;
+        restart?: boolean;
+      }) => {
+        if (progressNumber < entityLength) {
+          progressAnim[progressNumber].addListener((e) => {
+            progressValue.current = e.value;
+          });
+          if (!restart) {
+            progressValue.current = -progressWidth;
+          }
+          Animated.timing(progressAnim[progressNumber], {
+            toValue: 0,
+            duration: -progressValue.current / (progressWidth / duration),
+            useNativeDriver: true,
+          }).start((e) => {
+            createAlreadyViewdFlash({flashId: currentFlash.id});
+            // アニメーションが終了した、つまりタップによるスキップなく最後まで完了した場合
+            if (e.finished) {
+              // 進行してたプログレスバーがラストだった場合
+              if (currentProgressBar.current === entityLength - 1) {
+                scrollToNextOrBackScreen();
+                return;
+              }
+              canStartVideo.current = true;
+              currentProgressBar.current += 1;
+              setCurrentFlash(
+                flashData.flashes.entities[currentProgressBar.current],
+              );
+            }
+          });
+        }
+      },
+      [
+        createAlreadyViewdFlash,
+        currentFlash.id,
+        entityLength,
+        flashData.flashes.entities,
+        progressAnim,
+        progressWidth,
+        scrollToNextOrBackScreen,
+      ],
+    );
+
+    const getTimeDiff = useCallback((timestamp: string) => {
+      const now = new Date();
+      const createdAt = new Date(timestamp);
+      const diff = now.getTime() - createdAt.getTime();
+      return Math.floor(diff / (1000 * 60 * 60));
+    }, []);
+
+    const navigateToProfile = () => {
+      flashStackNavigation.push('AnotherUserProfileFromFlash', {
+        ...flashData.user,
+        flashes: flashData.flashes,
+      });
+      setIsNavigatedToProfile(true);
+    };
 
     // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
@@ -144,51 +218,38 @@ export const ShowFlash = React.memo(
       }
     }, [isDisplayed, progressAnim, progressWidth, currentFlash.contentType]);
 
-    const progressAnimation = ({
-      progressNumber,
-      duration = 5000,
-      restart = false,
-    }: {
-      progressNumber: number;
-      duration?: number;
-      restart?: boolean;
-    }) => {
-      if (progressNumber < entityLength) {
-        progressAnim[progressNumber].addListener((e) => {
-          progressValue.current = e.value;
-        });
-        if (!restart) {
-          progressValue.current = -progressWidth;
+    // profileに移動した時の責務
+    useEffect(() => {
+      if (isNavigatedToPofile) {
+        progressAnim[currentProgressBar.current].stopAnimation();
+        progressAnim[currentProgressBar.current].setValue(-progressWidth);
+        if (currentFlash.contentType === 'video') {
+          videoRef.current!.seek(0);
         }
-        Animated.timing(progressAnim[progressNumber], {
-          toValue: 0,
-          duration: -progressValue.current / (progressWidth / duration),
-          useNativeDriver: true,
-        }).start((e) => {
-          createAlreadyViewdFlash({flashId: currentFlash.id});
-          // アニメーションが終了した、つまりタップによるスキップなく最後まで完了した場合
-          if (e.finished) {
-            // 進行してたプログレスバーがラストだった場合
-            if (currentProgressBar.current === entityLength - 1) {
-              scrollToNextOrBackScreen();
-              return;
-            }
-            canStartVideo.current = true;
-            currentProgressBar.current += 1;
-            setCurrentFlash(
-              flashData.flashes.entities[currentProgressBar.current],
-            );
-          }
-        });
       }
-    };
+    }, [
+      isNavigatedToPofile,
+      progressAnim,
+      currentProgressBar,
+      progressWidth,
+      currentFlash.contentType,
+    ]);
 
-    const getTimeDiff = useCallback((timestamp: string) => {
-      const now = new Date();
-      const createdAt = new Date(timestamp);
-      const diff = now.getTime() - createdAt.getTime();
-      return Math.floor(diff / (1000 * 60 * 60));
-    }, []);
+    // profileから戻ってきた時のリスナー
+    useEffect(() => {
+      const unsbscribe = flashStackNavigation.addListener('focus', () => {
+        if (isNavigatedToPofile) {
+          setIsPaused(false);
+          progressAnimation({
+            progressNumber: currentProgressBar.current,
+            duration: videoDuration.current,
+          });
+          setIsNavigatedToProfile(false);
+        }
+      });
+
+      return unsbscribe;
+    }, [flashStackNavigation, isNavigatedToPofile, progressAnimation]);
 
     return (
       <>
@@ -355,7 +416,7 @@ export const ShowFlash = React.memo(
                       }
                     }}
                     onSeek={() => {
-                      if (!isDisplayed) {
+                      if (!isDisplayed || isNavigatedToPofile) {
                         setIsPaused(true);
                       }
                     }}
