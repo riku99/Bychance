@@ -34,7 +34,7 @@ export const SearchStackScreen = () => {
         name="AnotherUserProfile"
         component={AnotherUserProfile}
         options={({route}) => {
-          return {title: `${route.params.name}のプロフィール`};
+          return {title: route.params.name};
         }}
       />
       <Stack.Screen

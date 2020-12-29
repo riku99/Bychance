@@ -66,18 +66,14 @@ export const ShowFlash = React.memo(
       flashData.flashes.entities.length,
     ]);
 
+    const progressWidth = useMemo(() => {
+      return MAX_PROGRESS_BAR / entityLength;
+    }, [entityLength]);
+
     const alreadyViewedLength = useMemo(
       () => flashData.flashes.alreadyViewed.length,
       [flashData.flashes.alreadyViewed.length],
     );
-
-    const referenceId = useSelector((state: RootState) => {
-      return state.userReducer.user!.id;
-    });
-
-    const creatingFlash = useSelector((state: RootState) => {
-      return state.indexReducer.creatingFlash;
-    });
 
     const [currentFlash, setCurrentFlash] = useState(() => {
       if (alreadyViewedLength && alreadyViewedLength !== entityLength) {
@@ -90,10 +86,6 @@ export const ShowFlash = React.memo(
     const [isPaused, setIsPaused] = useState(false);
     const [visibleModal, setvisibleModal] = useState(false);
     const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
-
-    const progressWidth = useMemo(() => {
-      return MAX_PROGRESS_BAR / entityLength;
-    }, [entityLength]);
 
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
     const progressValue = useRef(-progressWidth);
@@ -109,6 +101,14 @@ export const ShowFlash = React.memo(
     const videoRef = useRef<Video>(null);
     const flashesLength = useRef(entityLength);
     const modalizeRef = useRef<Modalize>(null);
+
+    const referenceId = useSelector((state: RootState) => {
+      return state.userReducer.user!.id;
+    });
+
+    const creatingFlash = useSelector((state: RootState) => {
+      return state.indexReducer.creatingFlash;
+    });
 
     const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
 
@@ -178,13 +178,13 @@ export const ShowFlash = React.memo(
       return Math.floor(diff / (1000 * 60 * 60));
     }, []);
 
-    const navigateToProfile = () => {
+    const navigateToProfile = useCallback(() => {
       flashStackNavigation.push('AnotherUserProfileFromFlash', {
         ...flashData.user,
         flashes: flashData.flashes,
       });
       setIsNavigatedToProfile(true);
-    };
+    }, [flashData, flashStackNavigation]);
 
     const deleteFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
@@ -257,7 +257,7 @@ export const ShowFlash = React.memo(
       }
     }, [currentFlash, isDisplayed]);
 
-    // このコンポーネントが非表示になった、なっている時の責務を定義
+    // このコンポーネントがスクリーンにおさまった、おさまっている時の責務を定義
     useEffect(() => {
       if (!isDisplayed) {
         progressAnim[currentProgressBar.current].stopAnimation();

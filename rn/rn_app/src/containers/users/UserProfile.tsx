@@ -225,7 +225,17 @@ export const Container = ({route}: Props) => {
       }}
       referenceId={referenceId}
       posts={routeParam ? routeParam.posts : posts!}
-      flashes={flashes}
+      flashes={
+        routeParam
+          ? {
+              entites: routeParam.flashes.entities,
+              isAllAlreadyViewd: routeParam.flashes.isAllAlreadyViewed,
+            }
+          : {
+              entites: flashes,
+              isAllAlreadyViewd: false,
+            }
+      }
       creatingFlash={creatingFlash}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}

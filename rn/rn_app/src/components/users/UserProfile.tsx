@@ -3,15 +3,14 @@ import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import LinearGradient from 'react-native-linear-gradient';
 
 import {Posts} from '../posts/Posts';
 import {basicStyles} from '../../constants/styles';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
-import {flashesGradation} from '../../constants/lineGradation';
 import {UserAvatar} from '../utils/Avatar';
+import {UserProfileOuter} from '../utils/UserProfileOuter';
 
 type Props = {
   user: {
@@ -22,7 +21,10 @@ type Props = {
   };
   referenceId: number;
   posts: Post[];
-  flashes: Flash[];
+  flashes: {
+    entites: Flash[];
+    isAllAlreadyViewd?: boolean;
+  };
   creatingFlash?: boolean;
   navigateToPost: (post: Post) => void;
   navigateToUserEdit?: () => void;
@@ -48,12 +50,9 @@ export const UserProfile = React.memo(
       <>
         <ScrollView style={styles.container}>
           <View style={styles.image}>
-            {flashes.length || creatingFlash ? (
-              <LinearGradient
-                colors={flashesGradation.colors}
-                start={flashesGradation.start}
-                end={flashesGradation.end}
-                style={styles.imageGradation}>
+            {(flashes.entites.length && !flashes.isAllAlreadyViewd) ||
+            creatingFlash ? (
+              <UserProfileOuter avatarSize="large" outerType="gradation">
                 <UserAvatar
                   image={user.image}
                   size="large"
@@ -62,7 +61,18 @@ export const UserProfile = React.memo(
                     navigateToFlashes();
                   }}
                 />
-              </LinearGradient>
+              </UserProfileOuter>
+            ) : flashes.entites.length && flashes.isAllAlreadyViewd ? (
+              <UserProfileOuter avatarSize="large" outerType="silver">
+                <UserAvatar
+                  image={user.image}
+                  size="large"
+                  opacity={1}
+                  onPress={() => {
+                    navigateToFlashes();
+                  }}
+                />
+              </UserProfileOuter>
             ) : (
               <UserAvatar image={user.image} size="large" opacity={1} />
             )}
@@ -122,16 +132,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  imageGradation: {
-    height: 80,
-    width: 80,
-    borderRadius: 80,
-    ...flashesGradation.baseStyle,
-  },
   image: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '10%',
+    marginTop: '8%',
   },
   nameContainer: {
     justifyContent: 'center',
@@ -140,7 +144,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 19,
-    marginTop: 10,
+    marginTop: 3,
     color: basicStyles.mainTextColor,
   },
   edit: {

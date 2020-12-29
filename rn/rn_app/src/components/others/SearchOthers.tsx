@@ -19,13 +19,12 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
-import LinearGradient from 'react-native-linear-gradient';
 
-import {flashesGradation} from '../../constants/lineGradation';
 import {UserAvatar} from '../utils/Avatar';
 import {UserType} from '../../redux/user';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
+import {UserProfileOuter} from '../utils/UserProfileOuter';
 
 export type AnotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
   posts: Post[];
@@ -167,17 +166,14 @@ export const SearchOthers = ({
               }}>
               {filteredUsers.map((u) => (
                 <ListItem
+                  containerStyle={{height: 75}}
                   key={u.id}
                   onPress={() => {
                     navigateToProfile(u);
                   }}>
                   {u.flashes.entities.length &&
                   !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
-                    <LinearGradient
-                      colors={flashesGradation.colors}
-                      start={flashesGradation.start}
-                      end={flashesGradation.end}
-                      style={styles.userImageGradation}>
+                    <UserProfileOuter avatarSize="medium" outerType="gradation">
                       <UserAvatar
                         image={u.image}
                         size="medium"
@@ -186,13 +182,9 @@ export const SearchOthers = ({
                           navigateToFlashes({id: u.id});
                         }}
                       />
-                    </LinearGradient>
+                    </UserProfileOuter>
                   ) : u.flashes.entities.length && u.flashes.alreadyViewed ? ( // アイテムは持っているが、全て閲覧されている場合
-                    <View
-                      style={[
-                        styles.userImageGradation,
-                        {backgroundColor: 'gray'},
-                      ]}>
+                    <UserProfileOuter avatarSize="medium" outerType="silver">
                       <UserAvatar
                         image={u.image}
                         size="medium"
@@ -204,9 +196,11 @@ export const SearchOthers = ({
                           });
                         }}
                       />
-                    </View>
+                    </UserProfileOuter>
                   ) : (
-                    <UserAvatar image={u.image} size="medium" opacity={1} />
+                    <UserProfileOuter avatarSize="medium" outerType="none">
+                      <UserAvatar image={u.image} size="medium" opacity={1} />
+                    </UserProfileOuter>
                   )}
                   <ListItem.Content>
                     <ListItem.Title>{u.name}</ListItem.Title>
@@ -253,12 +247,6 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: '#ebebeb',
     alignSelf: 'center',
-  },
-  userImageGradation: {
-    height: 55,
-    width: 55,
-    borderRadius: 55,
-    ...flashesGradation.baseStyle,
   },
   iosPicker: {
     color: '#2c3e50',
