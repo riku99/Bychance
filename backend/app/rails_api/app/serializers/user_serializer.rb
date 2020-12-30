@@ -14,6 +14,6 @@ class UserSerializer < ActiveModel::Serializer
   end
 end
 
-class UserWithoutPostsSerializer < ActiveModel::Serializer
-  attributes :id, :name, :image, :introduce, :message, :display
+class UserEditItemSerializer < ActiveModel::Serializer
+  attributes :id, :name, :image, :introduce, :message
 end

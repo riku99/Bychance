@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 
 import {UserAvatar} from '../utils/Avatar';
 import {basicStyles} from '../../constants/styles';
@@ -35,20 +35,28 @@ type Props = {
   }: {
     statusMessage: string;
   }) => void;
-  editProfile: (
-    name: string,
-    introduce: string,
-    image: string | undefined,
-    message: string,
-  ) => void;
+  editProfile: ({
+    name,
+    introduce,
+    selectedImage,
+    message,
+    deleteImage,
+  }: {
+    name: string;
+    introduce: string;
+    selectedImage: string | undefined;
+    message: string;
+    deleteImage: boolean;
+  }) => void;
   navigation: UserEditNavigationProp;
 };
 
-const options = {
+const options: ImagePickerOptions = {
   title: 'プロフィール画像を変更',
   cancelButtonTitle: 'キャンセル',
   takePhotoButtonTitle: '写真をとる',
   chooseFromLibraryButtonTitle: 'ライブラリから選択',
+  customButtons: [{title: '現在の写真を削除', name: 'delete'}],
   quality: 0.3,
   storageOptions: {
     skipBackup: true,
@@ -75,6 +83,7 @@ export const UserEdit = ({
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
+  const [deleteImage, setDeleteImage] = useState(false);
 
   const isFocused = useIsFocused();
 
@@ -103,7 +112,13 @@ export const UserEdit = ({
               buttonStyle={{backgroundColor: 'transparent'}}
               onPress={() => {
                 setLoding(true);
-                editProfile(name, introduce, selectedImage, message);
+                editProfile({
+                  name,
+                  introduce,
+                  selectedImage,
+                  message,
+                  deleteImage,
+                });
               }}
             />
           ) : (
@@ -118,25 +133,35 @@ export const UserEdit = ({
     introduce,
     message,
     selectedImage,
+    deleteImage,
     isFocused,
     loading,
   ]);
 
   const pickImage = useCallback(() => {
     ImagePicker.showImagePicker(options, (response) => {
+      if (response.customButton === 'delete') {
+        setDeleteImage(true);
+        return;
+      }
       if (response.uri) {
         const source = 'data:image/jpeg;base64,' + response.data;
         setSelectedImage(source);
+        if (deleteImage) {
+          setDeleteImage(false);
+        }
       }
     });
-  }, []);
+  }, [deleteImage]);
 
   return (
     <View style={styles.container}>
       <View style={styles.mainEditContainer}>
         <View style={styles.image}>
           <UserAvatar
-            image={selectedImage ? selectedImage : user.image}
+            image={
+              selectedImage ? selectedImage : !deleteImage ? user.image : null
+            }
             size="large"
             opacity={1}
           />

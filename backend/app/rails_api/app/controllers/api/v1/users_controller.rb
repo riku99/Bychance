@@ -185,19 +185,21 @@ class Api::V1::UsersController < ApplicationController
       message = user_params['message']
       if image = user_params['image']
         url = create_s3_object_path(image, 'user', "#{@user.id}")
+      elsif params["deleteImage"]
+        url = nil
       else
         url = @user.image
       end
       if @user.update(
            name: name, introduce: introduce, image: url, message: message
          )
-        render json: @user, serializer: UserWithoutPostsSerializer
+        render json: @user, serializer: UserEditItemSerializer
         return
       else
-        render json: { invalid: @user.errors.full_messages[0] }, status: 400
+        render json: { errorType: "invalidError", message: @user.errors.full_messages[0] }, status: 400
       end
     else
-      render json: { loginError: true }, status: 401
+      render json: {errorType: "loginError"}, status: 401
     end
   end
 

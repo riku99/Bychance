@@ -1,22 +1,26 @@
+import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
-import {showMessage} from 'react-native-flash-message';
 
 import {
   sendIDtoken,
   sendAccessToken,
   sendNonce,
-  sendEditedProfile,
   sendRequestToChangeDisplay,
   sendPosition,
   sampleLoginApi,
 } from '../apis/usersApi';
+import {logout} from '../redux/index';
+import {User} from '../redux/user';
+import {origin} from '../constants/origin';
+import {headers} from '../helpers/headers';
 import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
 import {getCurrentPosition} from '../helpers/gelocation';
-import {logout} from '../redux/index';
+import {handleBasicAxiosError} from '../helpers/axios';
+import {rejectPayload} from './d';
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
   const response = await sampleLoginApi();
@@ -138,69 +142,51 @@ export const updatePositionThunk = createAsyncThunk(
   },
 );
 
-export const editProfileAction = createAsyncThunk(
-  'users/editUser',
+export const editProfileThunk = createAsyncThunk<
+  Pick<User, 'id' | 'name' | 'introduce' | 'image' | 'message'>,
+  {
+    name: string;
+    introduce: string;
+    image: string | undefined;
+    message: string;
+    deleteImage: boolean;
+  },
+  {
+    rejectValue: rejectPayload;
+  }
+>(
+  'users/editProfile',
   async (
-    {
-      name,
-      introduce,
-      image,
-      message,
-    }: {
-      name: string;
-      introduce: string;
-      image: string | undefined;
-      message: string;
-    },
-    thunkAPI,
+    {name, introduce, image, message, deleteImage},
+    {rejectWithValue, dispatch},
   ) => {
     const keychain = await checkKeychain();
-    if (keychain) {
-      const response = await sendEditedProfile({
-        name: name,
-        introduce: introduce,
-        image: image,
-        message: message,
-        id: keychain.id,
-        token: keychain.token,
-      });
-      if (response.type === 'success') {
-        showMessage({
-          message: '変更しました',
-          type: 'success',
-          style: {opacity: 0.9},
-          titleStyle: {fontWeight: 'bold'},
-        });
-        return response.user;
-      }
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(logout());
-        };
-        requestLogin(callback);
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
-      if (response.type === 'invalid') {
-        showMessage({
-          message: response.invalid,
-          type: 'danger',
-          style: {opacity: 0.9},
-          titleStyle: {fontWeight: 'bold'},
-        });
-        return thunkAPI.rejectWithValue({invalid: true});
-      }
 
-      if (response.type === 'someError') {
-        console.log(response.message);
-        alertSomeError();
-        return thunkAPI.rejectWithValue({someError: true});
+    if (keychain) {
+      try {
+        const response = await axios.patch<
+          Pick<User, 'id' | 'name' | 'introduce' | 'image' | 'message'>
+        >(
+          `${origin}/user`,
+          {
+            id: keychain.id,
+            name,
+            introduce,
+            image,
+            message,
+            deleteImage,
+          },
+          headers(keychain.token),
+        );
+
+        return response.data;
+      } catch (e) {
+        const result = handleBasicAxiosError({e, dispatch});
+        return rejectWithValue(result);
       }
     } else {
-      const callback = () => {
-        thunkAPI.dispatch(logout());
-      };
-      requestLogin(callback);
-      return thunkAPI.rejectWithValue({loginError: true});
+      requestLogin(() => dispatch(logout()));
+      return rejectWithValue({errorType: 'loginError'});
     }
   },
 );

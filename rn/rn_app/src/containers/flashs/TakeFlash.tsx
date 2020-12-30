@@ -9,7 +9,7 @@ import {RNCamera} from 'react-native-camera';
 import {TakeFlash} from '../../components/flashes/TakeFlash';
 import {AppDispatch, creatingFlash} from '../../redux/index';
 import {createFlashThunk} from '../../actions/flashes';
-import {flashMessage} from '../../helpers/flashMessage';
+import {displayShortMessage} from '../../helpers/shortMessage';
 import {alertSomeError} from '../../helpers/error';
 
 export const Container = () => {
@@ -89,10 +89,10 @@ export const Container = () => {
       }),
     );
     if (createFlashThunk.fulfilled.match(result)) {
-      flashMessage('追加しました', 'success');
+      displayShortMessage('追加しました', 'success');
     } else {
       if (result.payload?.errorType === 'invalidError') {
-        flashMessage(result.payload.message, 'danger');
+        displayShortMessage(result.payload.message, 'danger');
       } else if (result.payload?.errorType === 'someError') {
         alertSomeError();
       }

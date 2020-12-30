@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {
   firstLoginThunk,
   subsequentLoginAction,
-  editProfileAction,
+  editProfileThunk,
   editUserDisplayThunk,
   updatePositionThunk,
   sampleLogin,
@@ -29,7 +29,7 @@ type initialStateType = {
   };
 };
 
-export type UserType = NonNullable<initialStateType['user']>;
+export type User = NonNullable<initialStateType['user']>;
 
 const initialState: initialStateType = {
   login: false,
@@ -110,9 +110,9 @@ const userSlice = createSlice({
         user: action.payload.user,
       };
     },
-    [editProfileAction.fulfilled.type]: (
+    [editProfileThunk.fulfilled.type]: (
       state,
-      actions: PayloadAction<UserType>,
+      actions: PayloadAction<User>,
     ) => ({
       ...state,
       user: {

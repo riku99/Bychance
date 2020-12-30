@@ -5,10 +5,12 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {RootState, AppDispatch} from '../../redux/index';
 import {UserEdit} from '../../components/users/UserEdit';
-import {editProfileAction} from '../../actions/users';
+import {editProfileThunk} from '../../actions/users';
 import {resetEditData} from '../../redux/user';
 import {RootStackParamList} from '../../screens/Root';
 import {UserEditStackParamList} from '../../screens/UserEdit';
+import {displayShortMessage} from '../../helpers/shortMessage';
+import {alertSomeError} from '../../helpers/error';
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEdit'>;
 
@@ -43,6 +45,42 @@ export const Container = () => {
     return unsbscribe;
   }, [navigation, dispatch]);
 
+  const editProfile = async ({
+    name,
+    introduce,
+    selectedImage,
+    message,
+    deleteImage,
+  }: {
+    name: string;
+    introduce: string;
+    selectedImage: string | undefined;
+    message: string;
+    deleteImage: boolean;
+  }) => {
+    const result = await dispatch(
+      editProfileThunk({
+        name,
+        introduce,
+        image: selectedImage,
+        message,
+        deleteImage,
+      }),
+    );
+    if (editProfileThunk.fulfilled.match(result)) {
+      displayShortMessage('編集しました', 'success');
+    } else {
+      switch (result.payload?.errorType) {
+        case 'invalidError':
+          displayShortMessage(result.payload.message, 'danger');
+          break;
+        case 'someError':
+          alertSomeError();
+      }
+    }
+    navigation.goBack();
+  };
+
   return (
     <UserEdit
       user={user}
@@ -60,15 +98,7 @@ export const Container = () => {
         })
       }
       navigation={userEditNavigation}
-      editProfile={async (
-        name: string,
-        introduce: string,
-        image: string | undefined,
-        message: string,
-      ) => {
-        await dispatch(editProfileAction({name, introduce, image, message}));
-        navigation.goBack();
-      }}
+      editProfile={editProfile}
     />
   );
 };

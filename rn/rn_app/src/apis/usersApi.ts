@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import {origin} from '../constants/origin';
-import {UserType} from '../redux/user';
+import {User} from '../redux/user';
 import {Post} from '../redux/post';
 import {Room} from '../redux/rooms';
 import {MessageType} from '../redux/messages';
@@ -10,7 +10,7 @@ import {headers} from '../helpers/headers';
 import {Credentials} from '../helpers/keychain';
 
 export type SuccessfullLoginData = {
-  user: UserType;
+  user: User;
   posts: Post[];
   rooms: Room[];
   messages: MessageType[];
@@ -80,7 +80,7 @@ export const sendAccessToken: ({
   | {
       type: 'success';
       data: {
-        user: UserType;
+        user: User;
         posts: Post[];
         rooms: Room[];
         messages: MessageType[];
@@ -130,51 +130,6 @@ export const sendPosition: ({
   } catch (e) {
     if (e.response && e.response.data) {
       return {type: 'loginError'};
-    } else {
-      return {type: 'someError', message: e.message};
-    }
-  }
-};
-
-export const sendEditedProfile: ({
-  name,
-  introduce,
-  image,
-  message,
-  id,
-  token,
-}: {
-  name: string;
-  introduce: string;
-  image: string | undefined;
-  message: string;
-  id: number;
-  token: string;
-}) => Promise<
-  | {type: 'success'; user: UserType}
-  | {type: 'invalid'; invalid: string}
-  | {type: 'loginError'}
-  | {type: 'someError'; message: string}
-> = async ({name, introduce, image, message, id, token}) => {
-  try {
-    const response = await axios.patch<UserType>(
-      `${origin}/user`,
-      {
-        id,
-        name,
-        introduce,
-        image,
-        message,
-      },
-      headers(token),
-    );
-
-    return {type: 'success', user: response.data};
-  } catch (e) {
-    if (e.response && e.response.data.loginError) {
-      return {type: 'loginError'};
-    } else if (e.response && e.response.data.invalid) {
-      return {type: 'invalid', invalid: e.response.data.invalid};
     } else {
       return {type: 'someError', message: e.message};
     }

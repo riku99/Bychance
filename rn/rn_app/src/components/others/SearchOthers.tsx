@@ -21,12 +21,12 @@ import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
 import {UserAvatar} from '../utils/Avatar';
-import {UserType} from '../../redux/user';
+import {User} from '../../redux/user';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
 import {UserProfileOuter} from '../utils/UserProfileOuter';
 
-export type AnotherUser = Omit<UserType, 'display' | 'lat' | 'lng'> & {
+export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
   posts: Post[];
   flashes: {
     entities: Flash[];

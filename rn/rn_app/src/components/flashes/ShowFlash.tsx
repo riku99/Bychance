@@ -29,7 +29,7 @@ import {
   deleteFlashThunk,
   createAlreadyViewdFlashThunk,
 } from '../../actions/flashes';
-import {flashMessage} from '../../helpers/flashMessage';
+import {displayShortMessage} from '../../helpers/shortMessage';
 import {alertSomeError} from '../../helpers/error';
 
 type FlashStackNavigationProp = StackNavigationProp<
@@ -194,14 +194,14 @@ export const ShowFlash = React.memo(
             onPress: async () => {
               const result = await dispatch(deleteFlashThunk({flashId}));
               if (deleteFlashThunk.fulfilled.match(result)) {
-                flashMessage('削除しました', 'success');
+                displayShortMessage('削除しました', 'success');
                 modalizeRef.current?.close();
               } else {
                 if (
                   result.payload &&
                   result.payload.errorType === 'invalidError'
                 ) {
-                  flashMessage(result.payload.message, 'danger');
+                  displayShortMessage(result.payload.message, 'danger');
                 } else if (
                   result.payload &&
                   result.payload.errorType === 'someError'

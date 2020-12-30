@@ -17,7 +17,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import Video from 'react-native-video';
 
-import {flashMessage} from '../../helpers/flashMessage';
+import {displayShortMessage} from '../../helpers/shortMessage';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -201,7 +201,7 @@ export const TakeFlash = React.memo(
                     await saveDataToCameraRoll(targetVideo.uri);
                   }
                   setSavingData(false);
-                  flashMessage('保存しました', 'success');
+                  displayShortMessage('保存しました', 'success');
                 }}
                 disabled={savingData}
                 disabledStyle={{backgroundColor: 'transparent'}}

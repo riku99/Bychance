@@ -6,12 +6,12 @@ import {Container as AnotherUserProfile} from '../containers/users/UserProfile';
 import {Container as Post} from '../containers/posts/Post';
 import {MenuBar} from '../components/utils/MenuBar';
 import {Post as PostType} from '../redux/post';
-import {AnotherUser as AnotherUserType} from '../components/others/SearchOthers';
+import {AnotherUser} from '../components/others/SearchOthers';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
-  AnotherUserProfile: AnotherUserType;
+  AnotherUserProfile: AnotherUser;
   Post: PostType;
 };
 

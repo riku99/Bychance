@@ -1,6 +1,9 @@
 import {showMessage, MessageOptions} from 'react-native-flash-message';
 
-export const flashMessage = (text: string, type: MessageOptions['type']) => {
+export const displayShortMessage = (
+  text: string,
+  type: MessageOptions['type'],
+) => {
   showMessage({
     message: text,
     type: type,
