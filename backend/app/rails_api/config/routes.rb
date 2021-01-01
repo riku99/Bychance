@@ -23,8 +23,6 @@ Rails.application.routes.draw do
       delete '/flashes', to: 'flashes#destroy'
 
       post '/user_flash_viewing', to: 'user_flash_viewings#create'
-
-      get '/u', to: 'users#u'
     end
   end
 end

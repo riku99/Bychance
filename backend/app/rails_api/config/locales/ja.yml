@@ -2,3 +2,15 @@ ja:
   time:
     formats:
       default: "%Y/%m/%d"
+  activerecord:
+    attributes:
+      user:
+        name: "名前"
+    errors:
+      models:
+        user:
+          attributes:
+            name:
+              blank: "を空にすることはできません"
+  errors:
+    format: "%{attribute}%{message}"

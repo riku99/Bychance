@@ -81,22 +81,29 @@ export const Container = () => {
     navigation.goBack();
   };
 
+  const navigateToNameEditPage = ({name}: {name: string}) =>
+    userEditNavigation.push('NameEdit', {type: 'name', name});
+
+  const navigateToIntroduceEditPage = ({introduce}: {introduce: string}) =>
+    userEditNavigation.push('IntroduceEdit', {type: 'introduce', introduce});
+
+  const navigateToStatusMessageEditPage = ({
+    statusMessage,
+  }: {
+    statusMessage: string;
+  }) =>
+    userEditNavigation.push('StatusMessageEdit', {
+      type: 'statusMessage',
+      statusMessage,
+    });
+
   return (
     <UserEdit
       user={user}
       savedEditData={savedEditData}
-      navigateToNameEdit={({name}: {name: string}) =>
-        userEditNavigation.push('NameEdit', {type: 'name', name})
-      }
-      navigateToIntroduceEdit={({introduce}: {introduce: string}) =>
-        userEditNavigation.push('IntroduceEdit', {type: 'introduce', introduce})
-      }
-      navigateToStatusMessageEdit={({statusMessage}: {statusMessage: string}) =>
-        userEditNavigation.push('StatusMessageEdit', {
-          type: 'statusMessage',
-          statusMessage,
-        })
-      }
+      navigateToNameEdit={navigateToNameEditPage}
+      navigateToIntroduceEdit={navigateToIntroduceEditPage}
+      navigateToStatusMessageEdit={navigateToStatusMessageEditPage}
       navigation={userEditNavigation}
       editProfile={editProfile}
     />
