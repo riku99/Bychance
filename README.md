@@ -41,4 +41,12 @@
   * アプリ名やチャンネル名もまだ設定、変更を行っておらずそのままなので不自然です
  
  ![login_demo](https://user-images.githubusercontent.com/52064725/103432480-d3be5f80-4c22-11eb-808a-d872a8d9bbba.gif)
+ 
+**フラッシュを撮って投稿するまで**
+
++ 注意点
+  * フラッシュとはいわゆるインスタのストーリーズみたいなものです
+  * 写真の撮影、フォルダからの選択、撮影したものをフォルダに保存することもできます
+  
+![take_flash_demo](https://user-images.githubusercontent.com/52064725/103432511-4c252080-4c23-11eb-9148-5ad6de5475c0.gif)
 
