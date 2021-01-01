@@ -72,6 +72,6 @@
   * 距離検索するボタンがわからない(現在は表示されている距離)ですが、今後デザインを変更する時にわかりやすくします
   * 開発の効率上の関係で自分も表示されるようになっていますが、最終的には自分は表示されないようにします
   
-  ![search_users_demo](https://user-images.githubusercontent.com/52064725/103433204-7b8e5a00-4c30-11eb-93a9-5597a0a8b66e.gif)
+![search_users_demo](https://user-images.githubusercontent.com/52064725/103433204-7b8e5a00-4c30-11eb-93a9-5597a0a8b66e.gif)
 
 
