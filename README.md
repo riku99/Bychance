@@ -50,3 +50,11 @@
   
 ![take_flash_demo](https://user-images.githubusercontent.com/52064725/103432511-4c252080-4c23-11eb-9148-5ad6de5475c0.gif)
 
+**フラッシュを表示する**
+
++ 注意点
+  * 動画が止まったり、画面上部にあるプログレスバーが止まったりしますがこれはインスタのストーリーのように自分でタップして操作しているものです
+
+![show_flash_demo](https://user-images.githubusercontent.com/52064725/103432769-b8eee980-4c28-11eb-91ed-f364a0699a79.gif)
+
+
