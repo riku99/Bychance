@@ -42,6 +42,14 @@
  
  ![login_demo](https://user-images.githubusercontent.com/52064725/103432480-d3be5f80-4c22-11eb-808a-d872a8d9bbba.gif)
  
+ **プロフィール編集**
+ 
+ + 注意点
+   * 自己紹介の編集で複数の改行を行ったにも関わらず、結果1回の改行になっていますがこれは仕様でそうしています。
+ 
+ ![edit_profile_demo](https://user-images.githubusercontent.com/52064725/103433009-02413800-4c2d-11eb-88b2-b7a57a8b49cd.gif)
+
+ 
 **フラッシュを撮って投稿するまで**
 
 + 注意点
