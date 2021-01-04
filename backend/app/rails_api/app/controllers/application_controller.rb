@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   include AwsHelper
   include AuthHelper
+  include LoginHelper
 
   def check_access_token
     if @user = User.find_by(id: params[:id])

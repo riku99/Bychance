@@ -90,27 +90,9 @@ class Api::V1::UsersController < ApplicationController
       token_hash = User.digest(token)
       if user = User.find_by(uid: uid_hash)
         user.update_attribute(:token, token_hash)
-        posts = user.posts.map { |p| PostSerializer.new(p) }
-        room_arr = []
-        message_arr = []
-        rooms = user.sender_rooms.preload(:room_messages).eager_load(:sender, :recipient) + user.recipient_rooms.preload(:room_messages).eager_load(:sender, :recipient)
-        rooms.each do |r|
-          room_arr << RoomSerializer.new(r, { user: user })
-          r.room_messages.each do |m|
-            message_arr << RoomMessageSerializer.new(m)
-          end
-        end
-        flashes = @user.flashes
-        not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 }
-        flash_entities= not_expired_flashes.map { |f| FlashSerializer.new(f)}
-        render json: {
-                 user: UserSerializer.new(user),
-                 posts: posts,
-                 rooms: room_arr,
-                 messages: message_arr,
-                 token: token,
-                 flashes: flashes
-               }
+        result = create_user_data(user)
+        result[:token] = token
+        render json: result
       else
         user_name = parsed_response['name']
         user_image = parsed_response['picture']
@@ -152,28 +134,8 @@ class Api::V1::UsersController < ApplicationController
 
   def subsequent_login
     if @user
-      posts =
-        @user.posts.map { |p| PostSerializer.new(p) }
-      room_arr = []
-      messages_arr = []
-      rooms =
-        @user.sender_rooms.eager_load(:room_messages).eager_load(:sender, :recipient) + @user.recipient_rooms.eager_load(:room_messages).eager_load(:sender, :recipient)
-      rooms.each do |r|
-        room_arr << RoomSerializer.new(r, { user: @user })
-        r.room_messages.each do |m|
-          messages_arr << RoomMessageSerializer.new(m)
-        end
-      end
-      flashes = @user.flashes
-      not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 }
-      flash_entities= not_expired_flashes.map { |f| FlashSerializer.new(f)}
-      render json: {
-               user: UserSerializer.new(@user),
-               posts: posts,
-               rooms: room_arr,
-               messages: messages_arr,
-               flashes: flash_entities
-             }
+      result = create_user_data(@user)
+      render json: result
     else
       render json: { loginError: true }, status: 401
     end
