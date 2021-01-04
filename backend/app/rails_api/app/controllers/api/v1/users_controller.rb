@@ -31,12 +31,16 @@ class Api::V1::UsersController < ApplicationController
         room_arr << RoomSerializer.new(r, { user: user })
         r.room_messages.each { |m| message_arr << RoomMessageSerializer.new(m) }
       end
+      flashes = user.flashes
+      not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 }
+      flash_entities= not_expired_flashes.map { |f| FlashSerializer.new(f)}
       render json: {
                user: UserSerializer.new(user),
                posts: posts,
                rooms: room_arr,
                messages: message_arr,
-               token: 'riku'
+               token: 'riku',
+               flashes: flash_entities
              }
     else
       crypt = User.create_geolocation_crypt
@@ -96,7 +100,9 @@ class Api::V1::UsersController < ApplicationController
             message_arr << RoomMessageSerializer.new(m)
           end
         end
-        flashes = user.flashes.map { |f| FlashSerializer.new(f) }
+        flashes = @user.flashes
+        not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 }
+        flash_entities= not_expired_flashes.map { |f| FlashSerializer.new(f)}
         render json: {
                  user: UserSerializer.new(user),
                  posts: posts,
@@ -158,13 +164,15 @@ class Api::V1::UsersController < ApplicationController
           messages_arr << RoomMessageSerializer.new(m)
         end
       end
-      flashes = @user.flashes.map { |f| FlashSerializer.new(f)}
+      flashes = @user.flashes
+      not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 }
+      flash_entities= not_expired_flashes.map { |f| FlashSerializer.new(f)}
       render json: {
                user: UserSerializer.new(@user),
                posts: posts,
                rooms: room_arr,
                messages: messages_arr,
-               flashes: flashes
+               flashes: flash_entities
              }
     else
       render json: { loginError: true }, status: 401
