@@ -12,7 +12,7 @@ import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type FlashStackParamList = {
-  Flashes: {
+  showFlashes: {
     allFlashesWithUser: PartiallyPartial<FlashesWithUser, 'flashes'>[];
     index: number;
   };
@@ -31,7 +31,7 @@ export const FlashesStackScreen = () => {
         headerStatusBarHeight: headerStatusBarHeight(),
       }}>
       <Stack.Screen
-        name="Flashes"
+        name="showFlashes"
         component={Flashes}
         options={() => ({
           headerShown: false,
@@ -42,16 +42,6 @@ export const FlashesStackScreen = () => {
         component={AnotherUserProfile}
         options={({route}) => ({
           title: `${route.params.name}`,
-          transitionSpec: {
-            open: {
-              animation: 'timing',
-              config: {duration: 200},
-            },
-            close: {
-              animation: 'timing',
-              config: {duration: 200},
-            },
-          },
         })}
       />
       <Stack.Screen name="Post" component={Post} />

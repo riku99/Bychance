@@ -1,8 +1,9 @@
-import React, {useRef, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {View, StyleSheet, Dimensions, FlatList, StatusBar} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
 import {RootStackParamList} from '../../screens/Root';
@@ -11,7 +12,7 @@ import {X_HEIGHT} from '../../constants/device';
 import {RootState} from '../../redux/index';
 import {selectAllFlashes} from '../../redux/flashes';
 
-type FlashRouteProp = RouteProp<FlashStackParamList, 'Flashes'>;
+type FlashRouteProp = RouteProp<FlashStackParamList, 'showFlashes'>;
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Flashes'>;
 
@@ -68,14 +69,17 @@ export const Flashes = ({route, navigation}: Props) => {
     }
   };
 
+  const {top, bottom} = useSafeAreaInsets();
+  const safeAreaHeight = useMemo(() => height - top - bottom, [top, bottom]);
+
   return (
-    <View style={styles.contaienr}>
+    <View style={[styles.container, {paddingTop: top, paddingBottom: bottom}]}>
       <FlatList
         keyExtractor={(item) => item.user.id.toString()}
         ref={flatListRef}
         data={routePrams.allFlashesWithUser}
         renderItem={({item, index}) => (
-          <View style={{width, height}}>
+          <View style={{height: safeAreaHeight, width}}>
             <ShowFlash
               flashData={
                 !needSelector
@@ -97,9 +101,9 @@ export const Flashes = ({route, navigation}: Props) => {
         )}
         onScroll={(e) => {
           // offset.yがheightで割り切れる、つまり画面内の要素が完全に切り替わった時
-          if (e.nativeEvent.contentOffset.y % height === 0) {
+          if (e.nativeEvent.contentOffset.y % safeAreaHeight === 0) {
             const displayedElementIndex =
-              e.nativeEvent.contentOffset.y / height; // 表示されている要素のインデックス
+              e.nativeEvent.contentOffset.y / safeAreaHeight; // 表示されている要素のインデックス
             // 表示状態をpropsとして伝える
             setIsDisplayedList({
               ...isDisplayedList,
@@ -110,10 +114,10 @@ export const Flashes = ({route, navigation}: Props) => {
           }
         }}
         decelerationRate="fast"
-        snapToInterval={height}
+        snapToInterval={safeAreaHeight}
         getItemLayout={(data, index) => ({
-          length: height,
-          offset: height * index,
+          length: safeAreaHeight,
+          offset: safeAreaHeight * index,
           index,
         })}
         initialScrollIndex={routePrams.index}
@@ -125,7 +129,7 @@ export const Flashes = ({route, navigation}: Props) => {
 const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  contaienr: {
+  container: {
     flex: 1,
     backgroundColor: 'black',
   },

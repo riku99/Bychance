@@ -202,7 +202,7 @@ export const Container = ({route}: Props) => {
 
   const pushFlashes = () => {
     rootStackNavigation.push('Flashes', {
-      screen: 'Flashes',
+      screen: 'showFlashes',
       params: {
         allFlashesWithUser: [
           {

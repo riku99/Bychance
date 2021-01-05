@@ -9,7 +9,6 @@ import {
   Animated,
   TouchableOpacity,
   ActivityIndicator,
-  SafeAreaView,
   Alert,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -34,7 +33,7 @@ import {alertSomeError} from '../../helpers/error';
 
 type FlashStackNavigationProp = StackNavigationProp<
   FlashStackParamList,
-  'Flashes'
+  'showFlashes'
 >;
 
 export type FlashesWithUser = {
@@ -304,7 +303,7 @@ export const ShowFlash = React.memo(
 
     return (
       <>
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
           {entityLength ? (
             <TouchableOpacity
               activeOpacity={1}
@@ -649,7 +648,7 @@ export const ShowFlash = React.memo(
               </View>
             )
           )}
-        </SafeAreaView>
+        </View>
       </>
     );
   },
