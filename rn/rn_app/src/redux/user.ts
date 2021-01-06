@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import {
   firstLoginThunk,
@@ -7,8 +7,8 @@ import {
   editUserDisplayThunk,
   updatePositionThunk,
   sampleLogin,
-} from '../actions/users';
-import {SuccessfullLoginData} from '../apis/usersApi';
+} from "../actions/users";
+import { SuccessfullLoginData } from "../apis/usersApi";
 
 type initialStateType = {
   login: boolean;
@@ -29,19 +29,19 @@ type initialStateType = {
   };
 };
 
-export type User = NonNullable<initialStateType['user']>;
+export type User = NonNullable<initialStateType["user"]>;
 
 const initialState: initialStateType = {
   login: false,
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: initialState,
   reducers: {
     saveEditData: (
       state,
-      action: PayloadAction<initialStateType['temporarilySavedData']>,
+      action: PayloadAction<initialStateType["temporarilySavedData"]>
     ) => {
       if (action.payload?.name) {
         return {
@@ -52,7 +52,7 @@ const userSlice = createSlice({
           },
         };
       }
-      if (action.payload?.introduce || action.payload?.introduce === '') {
+      if (action.payload?.introduce || action.payload?.introduce === "") {
         return {
           ...state,
           temporarilySavedData: {
@@ -63,7 +63,7 @@ const userSlice = createSlice({
       }
       if (
         action.payload?.statusMessage ||
-        action.payload?.statusMessage === ''
+        action.payload?.statusMessage === ""
       ) {
         return {
           ...state,
@@ -87,12 +87,12 @@ const userSlice = createSlice({
         user: action.payload.user,
       };
     },
-    'index/logout': () => {
+    "index/logout": () => {
       return initialState;
     },
     [firstLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SuccessfullLoginData>
     ) => {
       return {
         ...state,
@@ -102,7 +102,7 @@ const userSlice = createSlice({
     },
     [subsequentLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SuccessfullLoginData>
     ) => {
       return {
         ...state,
@@ -112,7 +112,7 @@ const userSlice = createSlice({
     },
     [editProfileThunk.fulfilled.type]: (
       state,
-      actions: PayloadAction<User>,
+      actions: PayloadAction<User>
     ) => ({
       ...state,
       user: {
@@ -125,21 +125,25 @@ const userSlice = createSlice({
     }),
     [editUserDisplayThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<boolean>,
+      action: PayloadAction<boolean>
     ) => ({
       ...state,
-      user: {...state.user!, display: action.payload},
+      user: { ...state.user!, display: action.payload },
     }),
     [updatePositionThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{lat: number; lng: number}>,
+      action: PayloadAction<{ lat: number; lng: number }>
     ) => ({
       ...state,
-      user: {...state.user!, lat: action.payload.lat, lng: action.payload.lng},
+      user: {
+        ...state.user!,
+        lat: action.payload.lat,
+        lng: action.payload.lng,
+      },
     }),
   },
 });
 
-export const {saveEditData, resetEditData} = userSlice.actions;
+export const { saveEditData, resetEditData } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

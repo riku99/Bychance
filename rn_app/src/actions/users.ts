@@ -4,9 +4,6 @@ import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
 
 import {
-  sendIDtoken,
-  sendAccessToken,
-  sendNonce,
   sendRequestToChangeDisplay,
   sendPosition,
   sampleLoginApi,
@@ -17,10 +14,8 @@ import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
-import {alertSomeError} from '../helpers/error';
-import {getCurrentPosition} from '../helpers/gelocation';
-import {handleBasicAxiosError} from '../helpers/axios';
-import {rejectPayload} from './d';
+import {alertSomeError, handleBasicError} from '../helpers/error';
+import {rejectPayload, SuccessfullLoginData} from './d';
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
   const response = await sampleLoginApi();
@@ -29,118 +24,68 @@ export const sampleLogin = createAsyncThunk('sample/login', async () => {
   return response;
 });
 
-export const firstLoginThunk = createAsyncThunk(
-  'users/firstLogin',
-  async (dummy: undefined, thunkAPI) => {
-    try {
-      const loginResult = await LineLogin.login({
-        // @ts-ignore ドキュメント通りにやっても直らなかったのでignore
-        scopes: ['openid', 'profile'],
-      });
-      const idToken = loginResult.accessToken.id_token;
-      const nonce = loginResult.IDTokenNonce;
-      await sendNonce(nonce as string);
+export const firstLoginThunk = createAsyncThunk<
+  SuccessfullLoginData | void,
+  undefined,
+  {rejectValue: rejectPayload}
+>('users/firstLogin', async (dummy, {dispatch, rejectWithValue}) => {
+  try {
+    const loginResult = await LineLogin.login({
+      // @ts-ignore ドキュメント通りにやっても直らなかったのでignore
+      scopes: ['openid', 'profile'],
+    });
+    const idToken = loginResult.accessToken.id_token;
+    const nonce = loginResult.IDTokenNonce;
 
-      const position = await getCurrentPosition();
+    await axios.post(`${origin}/nonce`, {nonce});
 
-      const response = await sendIDtoken({
-        token: idToken as string,
-        lat: position ? position.coords.latitude : null,
-        lng: position ? position.coords.longitude : null,
-      });
+    // firstログインで位置情報とる必要ある?
+    // コンポーネントがマウントされたらで良くない?
+    //const position = await getCurrentPosition();
 
-      if (response.type === 'success') {
-        await Keychain.resetGenericPassword();
-        await Keychain.setGenericPassword(
-          String(response.data.user.id),
-          response.data.token,
-        );
-        return response.data;
-      }
+    const response = await axios.post<SuccessfullLoginData & {token: string}>(
+      `${origin}/first_login`,
+      {},
+      idToken && headers(idToken as string),
+    );
 
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(logout());
-        };
-        requestLogin(callback);
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
+    // 成功したらキーチェーンにcredentialsを保存
+    await Keychain.resetGenericPassword(); // パスワードに入るデータは更新されるので一旦リセット
+    await Keychain.setGenericPassword(
+      String(response.data.user.id),
+      response.data.token,
+    );
 
-      if (response.type === 'someError') {
-        console.log(response.message);
-        alertSomeError();
-        return thunkAPI.rejectWithValue({someError: true});
-      }
-    } catch (e) {
-      if (e.message === 'User cancelled or interrupted the login process.') {
-        return thunkAPI.rejectWithValue({lineCancelled: true});
-      }
-    }
-  },
-);
-
-export const subsequentLoginAction = createAsyncThunk(
-  'users/subsequentLogin',
-  async ({id, token}: Credentials, thunkAPI) => {
-    const response = await sendAccessToken({id, token});
-
-    if (response.type === 'success') {
-      return response.data;
-    }
-    if (response.type === 'loginError') {
-      const callback = () => {
-        thunkAPI.dispatch(logout());
-      };
-      requestLogin(callback);
-      return thunkAPI.rejectWithValue({loginError: true});
-    }
-
-    if (response.type === 'someError') {
-      console.log(response.message);
-      alertSomeError();
-      return thunkAPI.rejectWithValue({someError: true});
-    }
-  },
-);
-
-export const updatePositionThunk = createAsyncThunk(
-  'users/updatePosition',
-  async ({lat, lng}: {lat: number | null; lng: number | null}, thunkAPI) => {
-    const keychain = await checkKeychain();
-    if (keychain) {
-      const response = await sendPosition({
-        id: keychain.id,
-        token: keychain.token,
-        lat,
-        lng,
-      });
-
-      if (response.type === 'success') {
-        return {lat, lng};
-      }
-
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(logout());
-        };
-        requestLogin(callback);
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
-
-      if (response.type === 'someError') {
-        console.log(response.message);
-        alertSomeError();
-        return thunkAPI.rejectWithValue({someError: true});
-      }
+    const {token, ...restData} = response.data; // eslint-disable-line
+    return restData;
+  } catch (e) {
+    if (e.message === 'User cancelled or interrupted the login process.') {
+      console.log('cancelled');
     } else {
-      const callback = () => {
-        thunkAPI.dispatch(logout());
-      };
-      requestLogin(callback);
-      return thunkAPI.rejectWithValue({loginError: true});
+      const result = handleBasicError({e, dispatch});
+      return rejectWithValue(result);
     }
-  },
-);
+  }
+});
+
+export const subsequentLoginThunk = createAsyncThunk<
+  SuccessfullLoginData,
+  Credentials,
+  {rejectValue: rejectPayload}
+>('users/subsequentLogin', async ({id, token}, {dispatch, rejectWithValue}) => {
+  try {
+    const response = await axios.post<SuccessfullLoginData>(
+      `${origin}/subsequent_login`,
+      {id},
+      headers(token),
+    );
+
+    return response.data;
+  } catch (e) {
+    const result = handleBasicError({e, dispatch});
+    return rejectWithValue(result);
+  }
+});
 
 export const editProfileThunk = createAsyncThunk<
   Pick<User, 'id' | 'name' | 'introduce' | 'image' | 'message'>,
@@ -181,12 +126,51 @@ export const editProfileThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicAxiosError({e, dispatch});
+        const result = handleBasicError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {
       requestLogin(() => dispatch(logout()));
       return rejectWithValue({errorType: 'loginError'});
+    }
+  },
+);
+
+export const updatePositionThunk = createAsyncThunk(
+  'users/updatePosition',
+  async ({lat, lng}: {lat: number | null; lng: number | null}, thunkAPI) => {
+    const keychain = await checkKeychain();
+    if (keychain) {
+      const response = await sendPosition({
+        id: keychain.id,
+        token: keychain.token,
+        lat,
+        lng,
+      });
+
+      if (response.type === 'success') {
+        return {lat, lng};
+      }
+
+      if (response.type === 'loginError') {
+        const callback = () => {
+          thunkAPI.dispatch(logout());
+        };
+        requestLogin(callback);
+        return thunkAPI.rejectWithValue({loginError: true});
+      }
+
+      if (response.type === 'someError') {
+        console.log(response.message);
+        alertSomeError();
+        return thunkAPI.rejectWithValue({someError: true});
+      }
+    } else {
+      const callback = () => {
+        thunkAPI.dispatch(logout());
+      };
+      requestLogin(callback);
+      return thunkAPI.rejectWithValue({loginError: true});
     }
   },
 );

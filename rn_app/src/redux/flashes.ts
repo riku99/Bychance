@@ -7,7 +7,7 @@ import {
 import {RootState} from './index';
 import {createFlashThunk, deleteFlashThunk} from '../actions/flashes';
 import {
-  subsequentLoginAction,
+  subsequentLoginThunk,
   firstLoginThunk,
   //sampleLogin,
 } from '../actions/users';
@@ -32,7 +32,7 @@ const flashesSlice = createSlice({
   reducers: {},
   extraReducers: {
     'index/logout': () => flashesAdapter.getInitialState(),
-    [subsequentLoginAction.fulfilled.type]: (
+    [subsequentLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,
     ) => flashesAdapter.addMany(state, action.payload.flashes),

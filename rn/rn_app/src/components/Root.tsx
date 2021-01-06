@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import FlashMessage from 'react-native-flash-message';
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, AppState, AppStateStatus } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import FlashMessage from "react-native-flash-message";
 // 型定義ファイルが存在しないまたは見つけられなかったのでignore
 // @ts-ignore
-import {createConsumer} from '@rails/actioncable';
+import { createConsumer } from "@rails/actioncable";
 
-import {AppDispatch, RootState} from '../redux/index';
-import {RootStackScreen} from '../screens/Root';
-import {Container as Auth} from '../containers/auth/Auth';
-import {Container as Menu} from '../containers/utils/Menu';
-import {updatePositionThunk} from '../actions/users';
-import {getCurrentPosition} from '../helpers/gelocation';
-import {checkKeychain} from '../helpers/keychain';
-import {subsequentLoginThunk} from '../actions/users';
-import {recieveMessage} from '../redux/messages';
+import { AppDispatch, RootState } from "../redux/index";
+import { RootStackScreen } from "../screens/Root";
+import { Container as Auth } from "../containers/auth/Auth";
+import { Container as Menu } from "../containers/utils/Menu";
+import { updatePositionThunk } from "../actions/users";
+import { getCurrentPosition } from "../helpers/gelocation";
+import { checkKeychain } from "../helpers/keychain";
+import { subsequentLoginThunk } from "../actions/users";
+import { recieveMessage } from "../redux/messages";
 
-const consumer = createConsumer('ws://localhost/cable');
+const consumer = createConsumer("ws://localhost/cable");
 
 // @ts-ignore
 // actioncableで必要なので記述
@@ -59,13 +59,13 @@ const Root = () => {
   useEffect(() => {
     if (login) {
       consumer.subscriptions.create(
-        {channel: 'MessagesChannel', id: id},
+        { channel: "MessagesChannel", id: id },
         {
           connected: () => {},
           received: (data: any) => {
             dispatch(recieveMessage(data));
           },
-        },
+        }
       );
     } else {
       consumer.disconnect();
@@ -75,20 +75,20 @@ const Root = () => {
   useEffect(() => {
     if (login) {
       const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
-        if (nextAppState === 'active') {
+        if (nextAppState === "active") {
           const position = await getCurrentPosition();
           dispatch(
             updatePositionThunk({
               lat: position ? position.coords.latitude : null,
               lng: position ? position.coords.longitude : null,
-            }),
+            })
           );
         }
       };
 
-      AppState.addEventListener('change', _handleAppStateChange);
+      AppState.addEventListener("change", _handleAppStateChange);
       return () => {
-        AppState.removeEventListener('change', _handleAppStateChange);
+        AppState.removeEventListener("change", _handleAppStateChange);
       };
     }
   }, [dispatch, login]);
@@ -118,29 +118,29 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '50%',
+    justifyContent: "center",
+    alignItems: "center",
+    width: "50%",
     height: 30,
     borderRadius: 30,
-    backgroundColor: '#2089dc',
-    position: 'absolute',
+    backgroundColor: "#2089dc",
+    position: "absolute",
     bottom: 80,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   infoText: {
     fontSize: 15,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   invalid: {
-    position: 'absolute',
+    position: "absolute",
     top: 80,
     zIndex: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   invalidText: {
-    color: 'red',
+    color: "red",
   },
 });
 

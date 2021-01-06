@@ -6,7 +6,7 @@ import {
 
 import {createMessageThunk, changeMessagesReadThunk} from '../actions/messages';
 import {
-  subsequentLoginAction,
+  subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
 } from '../actions/users';
@@ -53,7 +53,7 @@ const messagesSlice = createSlice({
     ) => {
       messagesAdapter.addMany(state, action.payload.messages);
     },
-    [subsequentLoginAction.fulfilled.type]: (
+    [subsequentLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,
     ) => {

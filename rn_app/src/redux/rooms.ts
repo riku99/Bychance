@@ -8,7 +8,7 @@ import {createRoomThunk} from '../actions/rooms';
 import {AnotherUser} from '../components/others/SearchOthers';
 import {RootState, store} from './index';
 import {
-  subsequentLoginAction,
+  subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
 } from '../actions/users';
@@ -46,7 +46,7 @@ export const RoomsSlice = createSlice({
     ) => {
       roomsAdapter.addMany(state, action.payload.rooms);
     },
-    [subsequentLoginAction.fulfilled.type]: (
+    [subsequentLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,
     ) => {

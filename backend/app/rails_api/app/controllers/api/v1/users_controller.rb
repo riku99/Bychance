@@ -8,14 +8,14 @@ class Api::V1::UsersController < ApplicationController
   def createNonce
     nonce = params['nonce']
     unless nonce
-      render json: { error: true }
+      render json: {errorType: "invalidError", message: "無効なログインです"}, status: 400
       return
     end
     new_nonce = Nonce.new(nonce: nonce)
     if new_nonce.save
-      render json: { nonce: true }
+      render json: {result: true}
     else
-      render json: { error: true }
+      render json: { errorType: "invalidError", message: "無効なログインです" }, status: 400
     end
   end
 
@@ -80,7 +80,7 @@ class Api::V1::UsersController < ApplicationController
     parsed_response = JSON.parse(response.body)
 
     unless nonce = Nonce.find_by(nonce: parsed_response['nonce'])
-      render json: { loginError: true }, status: 401
+      render json: { errorType: "loginError" }, status: 401
       return
     end
 
@@ -97,8 +97,8 @@ class Api::V1::UsersController < ApplicationController
         user_name = parsed_response['name']
         user_image = parsed_response['picture']
         decryptable_crypt = User.create_geolocation_crypt
-        user_lat = decryptable_crypt.encrypt_and_sign(user_params[:lat])
-        user_lng = decryptable_crypt.encrypt_and_sign(user_params[:lng])
+        #user_lat = decryptable_crypt.encrypt_and_sign(user_params[:lat]) # コメント　最初のログインではnullでいい?
+        #user_lng = decryptable_crypt.encrypt_and_sign(user_params[:lng])
         user =
           User.create(
             name: user_name,
@@ -108,8 +108,8 @@ class Api::V1::UsersController < ApplicationController
             introduce: '',
             message: '',
             display: false,
-            lat: user_lat,
-            lng: user_lng
+            lat: nil,
+            lng: nil
           )
         render json: {
                  user: UserSerializer.new(user),
@@ -121,14 +121,13 @@ class Api::V1::UsersController < ApplicationController
       end
       nonce.destroy
     else
-      render json: { loginError: true }, status: 401
+      render json: { errorType: "loginError" }, status: 401
       nonce.destroy
     end
 
     if parsed_response['error']
-      render json: { loginError: true }, status: 401
+      render json: { errorType: "loginError" }, status: 401
       nonce.destroy
-      return
     end
   end
 
@@ -137,7 +136,7 @@ class Api::V1::UsersController < ApplicationController
       result = create_user_data(@user)
       render json: result
     else
-      render json: { loginError: true }, status: 401
+      render json: { errorType: "loginError" }, status: 401
     end
   end
 
