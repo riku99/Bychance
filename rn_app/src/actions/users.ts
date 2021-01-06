@@ -50,7 +50,7 @@ export const firstLoginThunk = createAsyncThunk<
     );
 
     // 成功したらキーチェーンにcredentialsを保存
-    await Keychain.resetGenericPassword(); // パスワードに入るデータは更新されるので一旦リセット
+    await Keychain.resetGenericPassword();
     await Keychain.setGenericPassword(
       String(response.data.user.id),
       response.data.token,

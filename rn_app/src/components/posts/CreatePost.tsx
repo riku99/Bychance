@@ -1,24 +1,79 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Image, ActivityIndicator} from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {useIsFocused, NavigationProp} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
+import ImagePicker from 'react-native-image-picker';
+
+import {AppDispatch} from '../../redux';
+import {PostStackParamList} from '../../screens/Post';
+import {createPostAction} from '../../actions/posts';
+import {MyTheme} from '../../App';
+
+type CreatePostNavigationProp = NavigationProp<
+  PostStackParamList,
+  'CreatePostTable'
+>;
 
 type Props = {
-  selectedImage: string | undefined;
-  createPost: ({text, image}: {text: string; image: string}) => Promise<void>;
+  navigation: CreatePostNavigationProp;
 };
 
-export const CreatePost = ({createPost, selectedImage}: Props) => {
-  const [text, setText] = useState('');
-  const [postProcess, setPostProcess] = useState(false);
-
+export const CreatePost = ({navigation}: Props) => {
   const isFocused = useIsFocused();
+
+  const [selectedImage, setSelectedImage] = useState<undefined | string>();
+  const [text, setText] = useState('');
+
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    const createPost = async (data: {text: string; image: string}) => {
+      navigation.goBack();
+      await dispatch(createPostAction(data));
+    };
+
+    navigation.setOptions({
+      headerRight: selectedImage
+        ? () => (
+            <Button
+              title="投稿"
+              buttonStyle={{backgroundColor: 'transparent'}}
+              titleStyle={{color: MyTheme.colors.text, fontWeight: 'bold'}}
+              onPress={() => createPost({text, image: selectedImage})}
+            />
+          )
+        : undefined,
+    });
+  }, [navigation, selectedImage, text, dispatch]);
+
+  useEffect(() => {
+    if (isFocused) {
+      ImagePicker.launchImageLibrary({quality: 0.5}, (response) => {
+        if (response.didCancel) {
+          navigation.goBack();
+        }
+        let img;
+        if ((img = response.data)) {
+          const source = 'data:image/jpeg;base64,' + img;
+          setSelectedImage(source);
+        }
+      });
+    } else {
+      setSelectedImage(undefined);
+    }
+  }, [isFocused, navigation]);
 
   useEffect(() => {
     if (!isFocused) {
       setText('');
-      setPostProcess(false);
     }
   }, [isFocused]);
 
@@ -26,35 +81,24 @@ export const CreatePost = ({createPost, selectedImage}: Props) => {
     <>
       {selectedImage ? (
         <View style={styles.container}>
-          {selectedImage ? (
-            <Image source={{uri: selectedImage}} style={styles.image} />
-          ) : (
-            <View style={{...styles.image, justifyContent: 'center'}}>
-              <ActivityIndicator size="small" />
-            </View>
-          )}
-          <TextInput
-            style={styles.textArea}
-            multiline={true}
-            placeholder="テキストの入力"
-            onChangeText={(t) => {
-              setText(t);
-            }}>
-            {text}
-          </TextInput>
-          {postProcess ? (
-            <ActivityIndicator style={styles.postButton} />
-          ) : (
-            <Button
-              title={'投稿する'}
-              buttonStyle={styles.postButton}
-              titleStyle={styles.postButtonTitle}
-              onPress={() => {
-                setPostProcess(true);
-                createPost({text: text, image: selectedImage!});
-              }}
-            />
-          )}
+          <View style={styles.contents}>
+            {selectedImage ? (
+              <Image source={{uri: selectedImage}} style={styles.image} />
+            ) : (
+              <View style={{...styles.image, justifyContent: 'center'}}>
+                <ActivityIndicator size="small" />
+              </View>
+            )}
+            <TextInput
+              style={styles.textInputArea}
+              multiline={true}
+              placeholder="テキストの入力"
+              onChangeText={(t) => {
+                setText(t);
+              }}>
+              {text}
+            </TextInput>
+          </View>
         </View>
       ) : (
         <View style={{...styles.container, justifyContent: 'center'}}>
@@ -65,27 +109,27 @@ export const CreatePost = ({createPost, selectedImage}: Props) => {
   );
 };
 
+const {height} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
   },
+  contents: {
+    width: '100%',
+    height: '19%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   image: {
-    height: 70,
-    width: 70,
-    marginTop: 30,
+    width: height / 9,
+    height: height / 9,
+    marginLeft: 15,
   },
-  textArea: {
-    width: '85%',
-    marginTop: 30,
-    borderBottomColor: '#c9c9c9',
-    borderBottomWidth: 0.5,
-    fontSize: 17,
+  textInputArea: {
+    height: height / 9,
+    width: '67%',
+    marginLeft: 15,
   },
-  postButton: {
-    marginTop: 40,
-    fontSize: 17,
-    backgroundColor: 'transparent',
-  },
-  postButtonTitle: {color: '#4fa9ff', fontWeight: 'bold'},
 });
