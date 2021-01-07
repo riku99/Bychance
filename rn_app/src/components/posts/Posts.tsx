@@ -27,9 +27,6 @@ export const Posts = React.memo(({posts, navigateToShowPost}: Props) => {
   return (
     <View style={styles.posts}>
       {posts.map((p, i) => {
-        if (checkMiddleItem(i + 1)) {
-          console.log(i);
-        }
         return (
           <TouchableOpacity
             key={p.id}

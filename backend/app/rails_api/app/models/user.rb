@@ -12,7 +12,7 @@ class User < ApplicationRecord
   validates :uid, presence: true
   validates :token, presence: true
   validates :name, presence: true, length: { maximum: 20 }
-  validates :introduce, length: { maximum: 100 }
+  validates :introduce, length: { maximum: 300 }
   validates :message, length: { maximum: 50 }
 
   acts_as_mappable default_units: :kms, default_formula: :sphere

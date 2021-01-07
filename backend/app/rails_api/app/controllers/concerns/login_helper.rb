@@ -11,7 +11,8 @@ module LoginHelper
             end
         end
         flashes = user.flashes
-        not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 }
+        #not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 } あとで直す
+        not_expired_flashes = flashes.select { |f| true } 
         flash_entities= not_expired_flashes.map { |f| FlashSerializer.new(f)}
         {
             user: UserSerializer.new(user),

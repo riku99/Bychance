@@ -5,7 +5,8 @@ class OthersSerializer < ActiveModel::Serializer
 
     def flashes
         user = @instance_options[:user]
-        not_expired_flashes = object.flashes.select { |flash| (Time.zone.now - flash.created_at) / (60 * 60) < 2 }
+        #not_expired_flashes = object.flashes.select { |flash| (Time.zone.now - flash.created_at) / (60 * 60) < 2 } あとで直す
+        not_expired_flashes = object.flashes.select { |flash| true }
         already_viewed_flashes = not_expired_flashes.select { |n| user.viewed_flashes.ids.include?(n.id) }
         aleady_viewed_ids = already_viewed_flashes.map { |f| f.id }
         flash_entities = not_expired_flashes.map { |flash| FlashSerializer.new(flash) }

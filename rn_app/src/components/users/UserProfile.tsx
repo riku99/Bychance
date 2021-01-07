@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo, useState} from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -46,6 +46,24 @@ export const UserProfile = React.memo(
     navigateToTakeFlash,
     navigateToFlashes,
   }: Props) => {
+    const lineNumber = useMemo(
+      () =>
+        user.introduce?.split(/\n|\r\n|\r/).length
+          ? user.introduce?.split(/\n|\r\n|\r/).length
+          : 0,
+      [user.introduce],
+    );
+
+    const displayHideButton = useMemo(
+      () =>
+        lineNumber * oneTextLineHeght > introduceMaxAndMinHight ? true : false,
+      [lineNumber],
+    );
+
+    const [hideIntroduce, setHideIntroduce] = useState(
+      lineNumber * oneTextLineHeght > introduceMaxAndMinHight ? true : false,
+    );
+
     return (
       <>
         <ScrollView style={styles.container}>
@@ -105,13 +123,40 @@ export const UserProfile = React.memo(
               />
             )}
           </View>
-          <View style={styles.introduce}>
+          <View
+            style={[
+              styles.introduce,
+              {
+                maxHeight: hideIntroduce ? introduceMaxAndMinHight : undefined,
+              },
+            ]}>
             {!!user.introduce && (
-              <Text style={{color: basicStyles.mainTextColor}}>
+              <Text
+                style={{
+                  color: basicStyles.mainTextColor,
+                  lineHeight: oneTextLineHeght,
+                }}>
                 {user.introduce}
               </Text>
             )}
           </View>
+          {displayHideButton && (
+            <Button
+              icon={
+                <MIcon
+                  name={hideIntroduce ? 'expand-more' : 'expand-less'}
+                  size={30}
+                  style={{color: '#5c94c8'}}
+                />
+              }
+              containerStyle={{
+                alignSelf: 'center',
+              }}
+              buttonStyle={{backgroundColor: 'transparent'}}
+              activeOpacity={1}
+              onPress={() => setHideIntroduce(!hideIntroduce)}
+            />
+          )}
           <Posts posts={posts} navigateToShowPost={navigateToPost} />
         </ScrollView>
         {referenceId === user.id && (
@@ -128,6 +173,11 @@ export const UserProfile = React.memo(
 );
 
 const {width, height} = Dimensions.get('window');
+
+const oneTextLineHeght = 18.7;
+
+const introduceMaxAndMinHight = height / 5;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -149,18 +199,20 @@ const styles = StyleSheet.create({
   },
   edit: {
     alignItems: 'center',
-    marginTop: '5%',
+    marginTop: 25,
     height: 40,
   },
   editButton: {
-    backgroundColor: '#5c94c8',
+    backgroundColor: 'white',
     width: '90%',
-    height: 30,
+    height: 32,
+    borderRadius: 30,
     alignSelf: 'center',
+    borderColor: '#3381ff',
+    borderWidth: 1,
   },
   editButtonTitle: {
-    //color: basicStyles.skyBlueButtonColor,
-    color: 'white',
+    color: '#3381ff',
     fontWeight: 'bold',
     fontSize: 14,
   },
@@ -172,7 +224,7 @@ const styles = StyleSheet.create({
     height: 33,
   },
   introduce: {
-    minHeight: height / 5,
+    minHeight: introduceMaxAndMinHight,
     paddingLeft: 25,
     paddingRight: 25,
     marginTop: '5%',
@@ -189,7 +241,7 @@ const styles = StyleSheet.create({
     width: width / 7,
     height: width / 7,
     borderRadius: width / 7,
-    backgroundColor: '#5c94c8',
+    backgroundColor: '#317ad4',
   },
   postProcess: {
     flexDirection: 'row',

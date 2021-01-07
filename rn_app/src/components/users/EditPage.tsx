@@ -49,14 +49,19 @@ export const EditPage = ({
         return;
       } else if (text?.length === 0) {
         setAlert('名前を入力してください');
-      } else {
+        return;
+      } else if (alert && text && text?.length < 20 && text?.length !== 0) {
         setAlert('');
+        return;
       }
     }
 
     if (introduce) {
-      if (text && text.length > 100) {
-        setAlert('100文字以下にしてください');
+      if (text && text.length > 300) {
+        setAlert('300文字以下にしてください');
+        return;
+      } else if (alert && text && text.length < 100) {
+        setAlert('');
         return;
       }
     }
@@ -65,9 +70,11 @@ export const EditPage = ({
       if (text && text.length > 50) {
         setAlert('50文字以下にしてください');
         return;
+      } else if (alert && text && text.length < 50) {
+        setAlert('');
       }
     }
-  }, [text, name, introduce, statusMessage]);
+  }, [text, name, introduce, statusMessage, alert]);
 
   useLayoutEffect(() => {
     navigation.dangerouslyGetParent()?.setOptions({
