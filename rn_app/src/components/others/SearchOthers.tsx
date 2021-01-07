@@ -99,36 +99,6 @@ export const SearchOthers = ({
             setKeyword(text);
           }}
         />
-        <View style={{width: '90%', alignSelf: 'center'}}>
-          <RNPickerSelect
-            onValueChange={(value) => {
-              refRange.current = value;
-              setRange(refRange.current);
-            }}
-            items={[
-              {label: '1km', value: 1},
-              {label: '2km', value: 2},
-              {label: '3km', value: 3},
-              {label: '4km', value: 4},
-              {label: '5km', value: 5},
-            ]}
-            placeholder={{}}
-            style={{
-              viewContainer: {
-                width: '90%',
-                height: 25,
-                alignSelf: 'center',
-                marginTop: 10,
-              },
-              inputIOS: {
-                color: '#2c3e50',
-                fontSize: 15,
-                fontWeight: 'bold',
-              },
-            }}
-            doneText="完了"
-          />
-        </View>
       </Animated.View>
       {filteredUsers.length ? (
         <>
@@ -218,11 +188,45 @@ export const SearchOthers = ({
           <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
         </View>
       )}
+
+      <RNPickerSelect
+        onValueChange={(value) => {
+          refRange.current = value;
+          setRange(refRange.current);
+        }}
+        items={[
+          {label: '1km', value: 1},
+          {label: '2km', value: 2},
+          {label: '3km', value: 3},
+          {label: '4km', value: 4},
+          {label: '5km', value: 5},
+        ]}
+        placeholder={{}}
+        style={{
+          viewContainer: {
+            backgroundColor: '#4ba5fa',
+            width: 130,
+            height: 40,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 40,
+            position: 'absolute',
+            bottom: '3%',
+            right: '7%',
+          },
+          inputIOS: {
+            color: 'white',
+            fontSize: 15,
+            fontWeight: 'bold',
+          },
+        }}
+        doneText="完了"
+      />
     </View>
   );
 };
 
-const SEARCH_TAB_HEIGHT = 80;
+const SEARCH_TAB_HEIGHT = 50;
 
 const styles = StyleSheet.create({
   container: {
@@ -272,5 +276,10 @@ const styles = StyleSheet.create({
   noUserText: {
     fontSize: 18,
     color: '#999999',
+  },
+  selectButtonContainer: {
+    backgroundColor: 'gray',
+    width: 170,
+    justifyContent: 'center',
   },
 });

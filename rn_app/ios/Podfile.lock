@@ -204,7 +204,7 @@ PODS:
     - React
   - react-native-image-picker (2.3.4):
     - React-Core
-  - react-native-safe-area-context (3.1.8):
+  - react-native-safe-area-context (3.1.9):
     - React-Core
   - react-native-video (5.1.0-alpha8):
     - React
@@ -452,7 +452,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 60ba0068826eab1c8d43146191bafd4363ea58a7
   react-native-geolocation-service: 141e33bdb179bcba10b216ee13962611e21f2be4
   react-native-image-picker: c6d75c4ab2cf46f9289f341242b219cb3c1180d3
-  react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
+  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-video: dbb8df4f0bbdf80de6797c90fcad8bc12b19401d
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2

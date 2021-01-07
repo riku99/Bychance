@@ -208,11 +208,11 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 30,
     alignSelf: 'center',
-    borderColor: '#3381ff',
+    borderColor: '#4ba5fa',
     borderWidth: 1,
   },
   editButtonTitle: {
-    color: '#3381ff',
+    color: '#4ba5fa',
     fontWeight: 'bold',
     fontSize: 14,
   },
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     width: width / 7,
     height: width / 7,
     borderRadius: width / 7,
-    backgroundColor: '#317ad4',
+    backgroundColor: '#4ba5fa',
   },
   postProcess: {
     flexDirection: 'row',
