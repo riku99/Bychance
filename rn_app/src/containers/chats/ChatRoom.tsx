@@ -2,6 +2,7 @@ import React, {useMemo, useCallback, useEffect} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {useIsFocused} from '@react-navigation/native';
 import {Avatar} from 'react-native-elements';
 
@@ -11,15 +12,20 @@ import {
   createMessageThunk,
   changeMessagesReadThunk,
 } from '../../actions/messages';
-import {RootStackParamList} from '../../screens/Root';
+import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
 import {selectMessages} from '../../redux/messages';
 import {selectMessageIds} from '../../redux/rooms';
 
-type RootRouteProp = RouteProp<RootStackParamList, 'ChatRoom'>;
+type RootRouteProp = RouteProp<ChatRoomStackParamParamList, 'ChatRoom'>;
 
-type Props = {route: RootRouteProp};
+type ChatRoomStackNavigationProp = StackNavigationProp<
+  ChatRoomStackParamParamList,
+  'ChatRoom'
+>;
 
-export const Container = ({route}: Props) => {
+type Props = {route: RootRouteProp; navigation: ChatRoomStackNavigationProp};
+
+export const Container = ({route, navigation}: Props) => {
   const {userId} = useSelector((state: RootState) => {
     return {
       userId: state.userReducer.user!.id,
@@ -32,6 +38,9 @@ export const Container = ({route}: Props) => {
   }, shallowEqual);
 
   const messages: IMessage[] = useMemo(() => {
+    const navigateToProfile = () => {
+      navigation.push('Profile', route.params.partner);
+    };
     if (selectedMessages.length) {
       const _messages = selectedMessages.map((m) => {
         return {
@@ -40,15 +49,26 @@ export const Container = ({route}: Props) => {
           createdAt: new Date(m.timestamp),
           user: {
             _id: m.userId,
-            avatar: route.params.partner.image
-              ? route.params.partner.image
-              : () => (
-                  <Avatar
-                    rounded
-                    icon={{name: 'user', type: 'font-awesome'}}
-                    containerStyle={{backgroundColor: '#BDBDBD'}}
-                  />
-                ),
+            avatar: () => (
+              <Avatar
+                rounded
+                source={{
+                  uri: route.params.partner.image
+                    ? route.params.partner.image
+                    : undefined,
+                }}
+                icon={
+                  !route.params.partner.image
+                    ? {
+                        name: 'user',
+                        type: 'font-awesome',
+                      }
+                    : undefined
+                }
+                containerStyle={{backgroundColor: '#BDBDBD'}}
+                onPress={navigateToProfile}
+              />
+            ),
           },
         };
       });
@@ -56,7 +76,7 @@ export const Container = ({route}: Props) => {
     } else {
       return [];
     }
-  }, [route.params.partner.image, selectedMessages]);
+  }, [route.params.partner, selectedMessages, navigation]);
 
   const isFocused = useIsFocused();
 

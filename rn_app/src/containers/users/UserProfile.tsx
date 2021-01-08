@@ -1,14 +1,18 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useLayoutEffect, useMemo} from 'react';
 import {StatusBar, Dimensions} from 'react-native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
-import {useNavigation, RouteProp} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {unwrapResult} from '@reduxjs/toolkit';
 
 import {RootStackParamList} from '../../screens/Root';
-import {ProfileStackParamList} from '../../screens/Profile';
+import {
+  MyPageStackParamList,
+  ProfileScreensGroupParamList,
+} from '../../screens/Profile';
 import {SearchStackParamList} from '../../screens/Search';
 import {FlashStackParamList} from '../../screens/Flash';
+import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
 import {UserProfile} from '../../components/users/UserProfile';
 import {createRoomThunk} from '../../actions/rooms';
 import {RootState, AppDispatch} from '../../redux/index';
@@ -18,9 +22,11 @@ import {selectRoom} from '../../redux/rooms';
 import {X_HEIGHT} from '../../constants/device';
 import {alertSomeError} from '../../helpers/error';
 
+type MyPageStackScreenRouteProp = RouteProp<MyPageStackParamList, 'MyProfile'>;
+
 type ProfileStackScreenRouteProp = RouteProp<
-  ProfileStackParamList,
-  'UserProfile'
+  ProfileScreensGroupParamList,
+  'Profile'
 >;
 
 type SearchScreenRouteProp = RouteProp<
@@ -33,18 +39,11 @@ type FlashStackScreenRouteProp = RouteProp<
   'AnotherUserProfileFromFlash'
 >;
 
-type Props = {
-  route:
-    | ProfileStackScreenRouteProp
-    | SearchScreenRouteProp
-    | FlashStackScreenRouteProp;
-};
-
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
-type ProfileNavigationProp = StackNavigationProp<
-  ProfileStackParamList,
-  'UserProfile'
+type MyPageNavigationProp = StackNavigationProp<
+  MyPageStackParamList,
+  'MyProfile'
 >;
 
 type SearchStackNavigationProp = StackNavigationProp<
@@ -57,9 +56,26 @@ type FlashStackNavigationProp = StackNavigationProp<
   'AnotherUserProfileFromFlash'
 >;
 
+type ChatRoomStackNavigationProp = StackNavigationProp<
+  ChatRoomStackParamParamList,
+  'Profile'
+>;
+
+type Props = {
+  route:
+    | MyPageStackScreenRouteProp
+    | ProfileStackScreenRouteProp
+    | SearchScreenRouteProp
+    | FlashStackScreenRouteProp;
+  navigation: RootNavigationProp &
+    MyPageNavigationProp &
+    SearchStackNavigationProp &
+    ChatRoomStackNavigationProp;
+};
+
 const {height} = Dimensions.get('window');
 
-export const Container = ({route}: Props) => {
+export const Container = ({route, navigation}: Props) => {
   // 自分以外のユーザーのプロフィールの場合はrouteにデータが存在する
   const routeParam = route && route.params;
 
@@ -99,83 +115,66 @@ export const Container = ({route}: Props) => {
     }
   }, [routeParam, user, posts]);
 
-  const rootStackNavigation = useNavigation<RootNavigationProp>();
-
-  const profileStackNavigation = useNavigation<ProfileNavigationProp>();
-
-  const searchSrackNavigation = useNavigation<SearchStackNavigationProp>();
-
-  const flashStackNavigation = useNavigation<FlashStackNavigationProp>();
+  useLayoutEffect(() => {
+    if (route.name !== 'MyProfile' && routeParam) {
+      navigation.setOptions({headerTitle: routeParam.name});
+    }
+  }, [navigation, route.name, routeParam]);
 
   // ナビゲーションのジェスチャーが始まった場合の責務を持ったリスナー
   useEffect(() => {
     if (route.name === 'AnotherUserProfileFromFlash') {
-      const unsbscribe = flashStackNavigation.addListener(
-        'gestureStart',
-        () => {
-          if (height < X_HEIGHT) {
-            StatusBar.setHidden(true);
-          } else {
-            StatusBar.setBarStyle('light-content');
-          }
-        },
-      );
+      const unsbscribe = navigation.addListener('gestureStart', () => {
+        if (height < X_HEIGHT) {
+          StatusBar.setHidden(true);
+        } else {
+          StatusBar.setBarStyle('light-content');
+        }
+      });
 
       return unsbscribe;
     }
-  }, [flashStackNavigation, route]);
+  }, [navigation, route]);
 
   // transitionが終了、またジェスチャーの終了で他のスクリーンに遷移しなかった場合の責務を持ったリスナー
   useEffect(() => {
     if (route.name === 'AnotherUserProfileFromFlash') {
-      const unsbscribe = flashStackNavigation.addListener(
-        'transitionEnd',
-        (e) => {
-          if (!e.data.closing) {
-            StatusBar.setBarStyle('default');
-            StatusBar.setHidden(false);
-          }
-        },
-      );
+      const unsbscribe = navigation.addListener('transitionEnd', (e) => {
+        if (!e.data.closing) {
+          StatusBar.setBarStyle('default');
+          StatusBar.setHidden(false);
+        }
+      });
 
       return unsbscribe;
     }
-  }, [flashStackNavigation, route]);
+  }, [navigation, route]);
 
   // バックボタンによるtransitionに対しての責務を持ったリスナー
   useEffect(() => {
     if (route.name === 'AnotherUserProfileFromFlash') {
-      const unsbscribe = flashStackNavigation.addListener(
-        'transitionStart',
-        () => {
-          if (height < X_HEIGHT) {
-            StatusBar.setHidden(true);
-          } else {
-            StatusBar.setBarStyle('light-content');
-          }
-        },
-      );
+      const unsbscribe = navigation.addListener('transitionStart', () => {
+        if (height < X_HEIGHT) {
+          StatusBar.setHidden(true);
+        } else {
+          StatusBar.setBarStyle('light-content');
+        }
+      });
 
       return unsbscribe;
     }
-  }, [flashStackNavigation, route]);
+  }, [navigation, route]);
 
   const pushPost = (post: Post) => {
-    if (route.name === 'UserProfile') {
-      profileStackNavigation.push('Post', post);
-    } else if (route.name === 'AnotherUserProfile') {
-      searchSrackNavigation.push('Post', post);
-    } else if (route.name === 'AnotherUserProfileFromFlash') {
-      flashStackNavigation.push('Post', post);
-    }
+    navigation.push('Post', post);
   };
 
   const pushUserEdit = () => {
-    rootStackNavigation.push('UserEdit');
+    navigation.push('UserEdit');
   };
 
   const pushTakeFlash = () => {
-    rootStackNavigation.push('TakeFlash');
+    navigation.push('TakeFlash');
   };
 
   const dispatch: AppDispatch = useDispatch();
@@ -187,11 +186,14 @@ export const Container = ({route}: Props) => {
         .then((payload) => {
           const selectedRoom = selectRoom(payload.id);
           if (selectedRoom) {
-            rootStackNavigation.push('ChatRoom', {
-              id: selectedRoom.id,
-              partner: selectedRoom.partner,
-              timestamp: selectedRoom.timestamp,
-              messages: selectedRoom.messages,
+            navigation.push('ChatRoomStack', {
+              screen: 'ChatRoom',
+              params: {
+                id: selectedRoom.id,
+                partner: selectedRoom.partner,
+                timestamp: selectedRoom.timestamp,
+                messages: selectedRoom.messages,
+              },
             });
           } else {
             alertSomeError();
@@ -201,7 +203,7 @@ export const Container = ({route}: Props) => {
   };
 
   const pushFlashes = () => {
-    rootStackNavigation.push('Flashes', {
+    navigation.push('Flashes', {
       screen: 'showFlashes',
       params: {
         allFlashesWithUser: [

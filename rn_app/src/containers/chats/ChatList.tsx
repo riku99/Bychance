@@ -29,7 +29,10 @@ export const Container = () => {
   const navigationToChatRoom = useNavigation<RootNavigationProp>();
 
   const pushChatRoom = (room: Room) => {
-    navigationToChatRoom.push('ChatRoom', room);
+    navigationToChatRoom.push('ChatRoomStack', {
+      screen: 'ChatRoom',
+      params: room,
+    });
   };
 
   return (

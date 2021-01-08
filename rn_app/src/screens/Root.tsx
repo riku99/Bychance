@@ -13,14 +13,15 @@ import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {PostStackScreen} from './Post';
-import {ProfileStackScreen} from './Profile';
+import {MyPageStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {ChatListStackScreen} from './ChatList';
 import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackScreen, FlashStackParamList} from './Flash';
-import {Container as ChatRoom} from '../containers/chats/ChatRoom';
+import {ChatRoomStackParamParamList, ChatRoomStackScreen} from './ChatRoom';
+//import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
-import {Room} from '../redux/rooms';
+//import {Room} from '../redux/rooms';
 import {RootState} from '../redux/index';
 import {selectAllNotReadMessagesNumber} from '../redux/messages';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
@@ -28,7 +29,7 @@ import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
-  ChatRoom: Room;
+  ChatRoomStack: NavigatorScreenParams<ChatRoomStackParamParamList>;
   TakeFlash: undefined;
   Flashes: NavigatorScreenParams<FlashStackParamList>;
 };
@@ -87,7 +88,7 @@ const Tabs = () => {
       />
       <RootTab.Screen
         name="Profile"
-        component={ProfileStackScreen}
+        component={MyPageStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <MIcon name="person-outline" size={24} color={color} />
@@ -133,11 +134,11 @@ export const RootStackScreen = () => {
         }}
       />
       <RootStack.Screen
-        name="ChatRoom"
-        component={ChatRoom}
-        options={({route}) => {
+        name="ChatRoomStack"
+        component={ChatRoomStackScreen}
+        options={() => {
           return {
-            title: route.params.partner.name,
+            headerShown: false,
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureDirection: 'horizontal',
           };
