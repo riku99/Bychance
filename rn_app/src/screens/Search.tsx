@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Container as SearchOthers} from '../containers/others/SearchOthers';
 import {Container as AnotherUserProfile} from '../containers/users/UserProfile';
 import {Container as Post} from '../containers/posts/Post';
-import {MenuBar} from '../components/utils/MenuBar';
 import {Post as PostType} from '../redux/post';
 import {AnotherUser} from '../components/others/SearchOthers';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
@@ -21,7 +20,6 @@ export const SearchStackScreen = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerRight: () => <MenuBar />,
         headerBackTitleVisible: false,
         headerStatusBarHeight: headerStatusBarHeight(),
       }}>

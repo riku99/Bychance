@@ -21,7 +21,6 @@ export const MyPageStackScreen = () => {
     <Stack.Navigator
       initialRouteName={'MyProfile'}
       screenOptions={{
-        headerRight: () => <MenuBar />,
         headerBackTitleVisible: false,
         headerStatusBarHeight: headerStatusBarHeight(),
       }}>
@@ -32,6 +31,7 @@ export const MyPageStackScreen = () => {
           headerTitle: 'マイページ',
           animationEnabled: false,
           headerLeft: () => null,
+          headerRight: () => <MenuBar />,
         }}
       />
       <Stack.Screen component={Post} name="Post" options={{title: '投稿'}} />

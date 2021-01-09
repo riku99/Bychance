@@ -1,7 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {MenuBar} from '../components/utils/MenuBar';
 import {Container as ChatList} from '../containers/chats/ChatList';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
@@ -16,7 +15,6 @@ export const ChatListStackScreen = () => {
     <Stack.Navigator
       initialRouteName="ChatList"
       screenOptions={{
-        headerRight: () => <MenuBar />,
         headerBackTitleVisible: false,
         headerStatusBarHeight: headerStatusBarHeight(),
       }}>
