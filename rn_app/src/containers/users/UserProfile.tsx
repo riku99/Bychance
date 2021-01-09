@@ -15,10 +15,10 @@ import {FlashStackParamList} from '../../screens/Flash';
 import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
 import {UserProfile} from '../../components/users/UserProfile';
 import {createRoomThunk} from '../../actions/rooms';
-import {RootState, AppDispatch} from '../../redux/index';
+import {RootState, AppDispatch, store} from '../../redux/index';
 import {Post, selectAllPosts} from '../../redux/post';
 import {selectAllFlashes} from '../../redux/flashes';
-import {selectRoom} from '../../redux/selectors/rooms';
+import {selectRoom} from '../../redux/rooms';
 import {X_HEIGHT} from '../../constants/device';
 import {alertSomeError} from '../../helpers/error';
 
@@ -70,7 +70,8 @@ type Props = {
   navigation: RootNavigationProp &
     MyPageNavigationProp &
     SearchStackNavigationProp &
-    ChatRoomStackNavigationProp;
+    ChatRoomStackNavigationProp &
+    FlashStackNavigationProp;
 };
 
 const {height} = Dimensions.get('window');
@@ -184,7 +185,7 @@ export const Container = ({route, navigation}: Props) => {
       dispatch(createRoomThunk(routeParam))
         .then(unwrapResult)
         .then((payload) => {
-          const selectedRoom = selectRoom(payload.id);
+          const selectedRoom = selectRoom(store.getState(), payload.id);
           if (selectedRoom) {
             navigation.push('ChatRoomStack', {
               screen: 'ChatRoom',

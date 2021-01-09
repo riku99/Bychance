@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
+import {RootState} from './index';
 import {createRoomThunk} from '../actions/rooms';
 import {AnotherUser} from '../components/others/SearchOthers';
 import {
@@ -93,5 +94,18 @@ export const RoomsSlice = createSlice({
 });
 
 export const roomSelectors = roomsAdapter.getSelectors();
+
+export const selectRoom = (state: RootState, n: number) => {
+  return roomSelectors.selectById(state.roomsReducer, n);
+};
+
+export const selectAllRooms = (state: RootState) => {
+  return roomSelectors.selectAll(state.roomsReducer);
+};
+
+export const selectMessageIds = (state: RootState, roomId: number) => {
+  const room = selectRoom(state, roomId);
+  return room!.messages;
+};
 
 export const roomsReducer = RoomsSlice.reducer;

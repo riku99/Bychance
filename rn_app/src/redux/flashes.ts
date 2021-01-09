@@ -11,6 +11,7 @@ import {
   firstLoginThunk,
   //sampleLogin,
 } from '../actions/users';
+import {logoutAction} from '../actions/sessions';
 import {SuccessfullLoginData} from '../apis/usersApi';
 
 export type Flash = {
@@ -31,7 +32,7 @@ const flashesSlice = createSlice({
   initialState: flashesAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
-    'index/logout': () => flashesAdapter.getInitialState(),
+    [logoutAction.type]: () => flashesAdapter.getInitialState(),
     [subsequentLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SuccessfullLoginData>,
