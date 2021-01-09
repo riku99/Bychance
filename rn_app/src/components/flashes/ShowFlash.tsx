@@ -106,7 +106,7 @@ export const ShowFlash = React.memo(
     });
 
     const creatingFlash = useSelector((state: RootState) => {
-      return state.indexReducer.creatingFlash;
+      return state.otherSettingsReducer.creatingFlash;
     });
 
     const flashStackNavigation = useNavigation<FlashStackNavigationProp>();

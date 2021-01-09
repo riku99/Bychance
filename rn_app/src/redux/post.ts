@@ -5,8 +5,9 @@ import {
 } from '@reduxjs/toolkit';
 
 import {createPostAction, deletePostThunk} from '../actions/posts';
-import {SuccessfullLoginData} from '../apis/usersApi';
 import {firstLoginThunk, sampleLogin} from '../actions/users';
+import {logoutAction} from '../actions/sessions';
+import {SuccessfullLoginData} from '../apis/usersApi';
 import {RootState} from '.';
 
 export type Post = {
@@ -30,7 +31,7 @@ const postSlice = createSlice({
     [sampleLogin.fulfilled.type]: (state, action) => {
       postsAdaper.addMany(state, action.payload.posts);
     },
-    'index/logout': () => {
+    [logoutAction.type]: () => {
       return postsAdaper.getInitialState();
     },
     [firstLoginThunk.fulfilled.type]: (

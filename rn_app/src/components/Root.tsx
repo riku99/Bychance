@@ -40,7 +40,7 @@ const Root = () => {
   });
 
   const displayedMenu = useSelector((state: RootState) => {
-    return state.indexReducer.displayedMenu;
+    return state.otherSettingsReducer.displayedMenu;
   });
 
   useEffect(() => {

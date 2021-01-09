@@ -1,4 +1,4 @@
-import {configureStore, createSlice} from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import {combineReducers} from '@reduxjs/toolkit';
 
 import {sessionReducer} from './session';
@@ -7,55 +7,16 @@ import {postsReducer} from './post';
 import {roomsReducer} from './rooms';
 import {messagesReducer} from './messages';
 import {flashesReducer} from './flashes';
-
-type InitialStateType = {displayedMenu?: boolean; creatingFlash?: boolean};
-
-const initialState: InitialStateType = {
-  displayedMenu: false,
-  creatingFlash: false,
-};
-
-const indexSlice = createSlice({
-  name: 'index',
-  initialState: initialState,
-  reducers: {
-    // logout: () => {
-    //   return initialState;
-    // },
-    displayMenu: (state) => {
-      if (state.displayedMenu === false) {
-        return {
-          ...state,
-          displayedMenu: true,
-        };
-      } else {
-        return {
-          ...state,
-          displayedMenu: false,
-        };
-      }
-    },
-    creatingFlash: (state) => {
-      return {
-        ...state,
-        creatingFlash: state.creatingFlash ? false : true,
-      };
-    },
-  },
-});
-
-export const {displayMenu, creatingFlash} = indexSlice.actions;
-
-const indexReducer = indexSlice.reducer;
+import {otherSettingsReducer} from './otherSettings';
 
 const rootReducer = combineReducers({
   sessionReducer,
-  indexReducer,
   userReducer,
   postsReducer,
   roomsReducer,
   messagesReducer,
   flashesReducer,
+  otherSettingsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

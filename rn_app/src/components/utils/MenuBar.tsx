@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 
-import {displayMenu} from '../../redux/index';
+import {displayMenu} from '../../redux/otherSettings';
 
 export const MenuBar = () => {
   const dispatch = useDispatch();

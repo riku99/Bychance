@@ -8,6 +8,7 @@ import {
   updatePositionThunk,
   sampleLogin,
 } from '../actions/users';
+import {logoutAction} from '../actions/sessions';
 import {SuccessfullLoginData} from '../apis/usersApi';
 
 type initialStateType = {
@@ -101,6 +102,7 @@ const userSlice = createSlice({
         user: action.payload.user,
       };
     },
+    [logoutAction.type]: () => initialState,
     [editProfileThunk.fulfilled.type]: (
       state,
       actions: PayloadAction<User>,

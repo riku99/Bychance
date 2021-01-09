@@ -10,6 +10,7 @@ import {
   firstLoginThunk,
   sampleLogin,
 } from '../actions/users';
+import {logoutAction} from '../actions/sessions';
 import {SuccessfullLoginData} from '../apis/usersApi';
 import {RootState} from './index';
 import {Room} from './rooms';
@@ -41,7 +42,7 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: {
-    'index/logout': () => {
+    [logoutAction.type]: () => {
       return messagesAdapter.getInitialState();
     },
     [sampleLogin.fulfilled.type]: (state, action) => {

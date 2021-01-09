@@ -7,7 +7,8 @@ import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 
 import {TakeFlash} from '../../components/flashes/TakeFlash';
-import {AppDispatch, creatingFlash} from '../../redux/index';
+import {AppDispatch} from '../../redux/index';
+import {creatingFlash} from '../../redux/otherSettings';
 import {createFlashThunk} from '../../actions/flashes';
 import {displayShortMessage} from '../../helpers/shortMessage';
 import {alertSomeError} from '../../helpers/error';

@@ -102,7 +102,7 @@ export const Container = ({route, navigation}: Props) => {
 
   const creatingFlash = useSelector((state: RootState) => {
     if (!routeParam) {
-      return state.indexReducer.creatingFlash;
+      return state.otherSettingsReducer.creatingFlash;
     }
   });
 

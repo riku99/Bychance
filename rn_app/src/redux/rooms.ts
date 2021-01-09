@@ -6,15 +6,16 @@ import {
 
 import {RootState} from './index';
 import {createRoomThunk} from '../actions/rooms';
-import {AnotherUser} from '../components/others/SearchOthers';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
 } from '../actions/users';
+import {logoutAction} from '../actions/sessions';
 import {createMessageThunk} from '../actions/messages';
 import {MessageType, recieveMessage} from '../redux/messages';
 import {SuccessfullLoginData} from '../apis/usersApi';
+import {AnotherUser} from '../components/others/SearchOthers';
 
 export type Room = {
   id: number;
@@ -37,7 +38,7 @@ export const RoomsSlice = createSlice({
     [sampleLogin.fulfilled.type]: (state, action) => {
       roomsAdapter.addMany(state, action.payload.rooms);
     },
-    'index/logout': () => {
+    [logoutAction.type]: () => {
       return roomsAdapter.getInitialState();
     },
     [firstLoginThunk.fulfilled.type]: (
