@@ -14,7 +14,7 @@ import {
 } from '../../actions/messages';
 import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
 import {selectMessages} from '../../redux/messages';
-import {selectMessageIds} from '../../redux/rooms';
+import {selectMessageIds} from '../../redux/selectors/rooms';
 
 type RootRouteProp = RouteProp<ChatRoomStackParamParamList, 'ChatRoom'>;
 

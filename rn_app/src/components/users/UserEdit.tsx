@@ -13,7 +13,6 @@ import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import {UserAvatar} from '../utils/Avatar';
 import {basicStyles} from '../../constants/styles';
 import {UserEditNavigationProp} from '../../containers/users/UserEdit';
-import {MyTheme} from '../../App';
 
 type Props = {
   user: {
@@ -108,7 +107,7 @@ export const UserEdit = ({
           !loading ? (
             <Button
               title="完了"
-              titleStyle={{color: MyTheme.colors.text, fontWeight: 'bold'}}
+              titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
               buttonStyle={{backgroundColor: 'transparent'}}
               onPress={() => {
                 setLoding(true);

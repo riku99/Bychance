@@ -1,11 +1,11 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {showMessage} from 'react-native-flash-message';
 
+import {logoutAction} from './sessions';
 import {sendPost, deletePost} from '../apis/postsApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {logout} from '../redux/index';
 
 export const createPostAction = createAsyncThunk(
   'posts/createPost',
@@ -30,7 +30,7 @@ export const createPostAction = createAsyncThunk(
       }
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(logout());
+          thunkAPI.dispatch(logoutAction);
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -53,7 +53,7 @@ export const createPostAction = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(logout());
+        thunkAPI.dispatch(logoutAction);
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});
@@ -84,7 +84,7 @@ export const deletePostThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(logout());
+          thunkAPI.dispatch(logoutAction);
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -107,7 +107,7 @@ export const deletePostThunk = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(logout());
+        thunkAPI.dispatch(logoutAction);
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});

@@ -1,6 +1,7 @@
 import {configureStore, createSlice} from '@reduxjs/toolkit';
 import {combineReducers} from '@reduxjs/toolkit';
 
+import {sessionReducer} from './session';
 import {userReducer} from './user';
 import {postsReducer} from './post';
 import {roomsReducer} from './rooms';
@@ -18,9 +19,9 @@ const indexSlice = createSlice({
   name: 'index',
   initialState: initialState,
   reducers: {
-    logout: () => {
-      return initialState;
-    },
+    // logout: () => {
+    //   return initialState;
+    // },
     displayMenu: (state) => {
       if (state.displayedMenu === false) {
         return {
@@ -43,11 +44,12 @@ const indexSlice = createSlice({
   },
 });
 
-export const {logout, displayMenu, creatingFlash} = indexSlice.actions;
+export const {displayMenu, creatingFlash} = indexSlice.actions;
 
 const indexReducer = indexSlice.reducer;
 
 const rootReducer = combineReducers({
+  sessionReducer,
   indexReducer,
   userReducer,
   postsReducer,

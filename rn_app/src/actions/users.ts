@@ -3,12 +3,12 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
 
+import {logoutAction} from './sessions';
 import {
   sendRequestToChangeDisplay,
   sendPosition,
   sampleLoginApi,
 } from '../apis/usersApi';
-import {logout} from '../redux/index';
 import {User} from '../redux/user';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
@@ -130,7 +130,7 @@ export const editProfileThunk = createAsyncThunk<
         return rejectWithValue(result);
       }
     } else {
-      requestLogin(() => dispatch(logout()));
+      requestLogin(() => dispatch(logoutAction));
       return rejectWithValue({errorType: 'loginError'});
     }
   },
@@ -154,7 +154,7 @@ export const updatePositionThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(logout());
+          thunkAPI.dispatch(logoutAction);
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -167,7 +167,7 @@ export const updatePositionThunk = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(logout());
+        thunkAPI.dispatch(logoutAction);
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});
@@ -192,7 +192,7 @@ export const editUserDisplayThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         const callback = () => {
-          thunkAPI.dispatch(logout());
+          thunkAPI.dispatch(logoutAction);
         };
         requestLogin(callback);
         return thunkAPI.rejectWithValue({loginError: true});
@@ -205,7 +205,7 @@ export const editUserDisplayThunk = createAsyncThunk(
       }
     } else {
       const callback = () => {
-        thunkAPI.dispatch(logout());
+        thunkAPI.dispatch(logoutAction);
       };
       requestLogin(callback);
       return thunkAPI.rejectWithValue({loginError: true});

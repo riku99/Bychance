@@ -30,7 +30,7 @@ const Root = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const login = useSelector((state: RootState) => {
-    return state.userReducer.login;
+    return state.sessionReducer.login;
   });
 
   const id = useSelector((state: RootState) => {
@@ -97,10 +97,6 @@ const Root = () => {
     return null;
   }
 
-  if (!login) {
-    return <Auth />;
-  }
-
   if (login) {
     return (
       <View style={styles.container}>
@@ -109,6 +105,8 @@ const Root = () => {
         <FlashMessage position="top" />
       </View>
     );
+  } else {
+    return <Auth />;
   }
 };
 

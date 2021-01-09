@@ -5,7 +5,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ChatList} from '../../components/chats/ChatList';
 import {RootState} from '../../redux/index';
-import {selectAllRooms, Room} from '../../redux/rooms';
+import {Room} from '../../redux/rooms';
+import {selectAllRooms} from '../../redux/selectors/rooms';
 import {
   selectLatestMessageEntities,
   selsectNotReadMessageNumber,

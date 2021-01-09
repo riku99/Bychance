@@ -6,7 +6,6 @@ import {
 
 import {createRoomThunk} from '../actions/rooms';
 import {AnotherUser} from '../components/others/SearchOthers';
-import {RootState, store} from './index';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
@@ -93,19 +92,6 @@ export const RoomsSlice = createSlice({
   },
 });
 
-const roomSelectors = roomsAdapter.getSelectors();
-
-export const selectRoom = (n: number) => {
-  return roomSelectors.selectById(store.getState().roomsReducer, n);
-};
-
-export const selectAllRooms = (state: RootState) => {
-  return roomSelectors.selectAll(state.roomsReducer);
-};
-
-export const selectMessageIds = (state: RootState, roomId: number) => {
-  const room = selectRoom(roomId);
-  return room!.messages;
-};
+export const roomSelectors = roomsAdapter.getSelectors();
 
 export const roomsReducer = RoomsSlice.reducer;

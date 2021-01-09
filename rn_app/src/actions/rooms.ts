@@ -1,10 +1,10 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
+import {logoutAction} from './sessions';
 import {createRoom} from '../apis/roomsApi';
 import {AnotherUser} from '../components/others/SearchOthers';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
-import {logout} from '../redux/index';
 import {alertSomeError} from '../helpers/error';
 
 export const createRoomThunk = createAsyncThunk(
@@ -29,7 +29,7 @@ export const createRoomThunk = createAsyncThunk(
 
       if (response.type === 'loginError') {
         requestLogin(() => {
-          thunkAPI.dispatch(logout());
+          thunkAPI.dispatch(logoutAction);
         });
         return thunkAPI.rejectWithValue({loginError: true});
       }
@@ -43,7 +43,7 @@ export const createRoomThunk = createAsyncThunk(
       throw new Error();
     } else {
       requestLogin(() => {
-        thunkAPI.dispatch(logout());
+        thunkAPI.dispatch(logoutAction);
       });
       return thunkAPI.rejectWithValue({loginError: true});
     }

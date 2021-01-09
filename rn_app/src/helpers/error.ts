@@ -1,8 +1,9 @@
 import {Alert} from 'react-native';
 import {ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
-import {logout} from '../redux/index';
+
 import {rejectPayload, basicAxiosError} from '../actions/d';
 import {requestLogin} from '../helpers/login';
+import {logoutAction} from '../actions/sessions';
 
 export const alertSomeError = () => {
   Alert.alert(
@@ -30,7 +31,7 @@ export const handleBasicError = ({
     const axiosError = e as basicAxiosError;
     switch (axiosError.response?.data.errorType) {
       case 'loginError':
-        requestLogin(() => dispatch(logout()));
+        requestLogin(() => dispatch(logoutAction));
         return {errorType: 'loginError'};
       case 'invalidError':
         return {

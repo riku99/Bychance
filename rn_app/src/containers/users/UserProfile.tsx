@@ -18,7 +18,7 @@ import {createRoomThunk} from '../../actions/rooms';
 import {RootState, AppDispatch} from '../../redux/index';
 import {Post, selectAllPosts} from '../../redux/post';
 import {selectAllFlashes} from '../../redux/flashes';
-import {selectRoom} from '../../redux/rooms';
+import {selectRoom} from '../../redux/selectors/rooms';
 import {X_HEIGHT} from '../../constants/device';
 import {alertSomeError} from '../../helpers/error';
 

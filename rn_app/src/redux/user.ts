@@ -11,7 +11,6 @@ import {
 import {SuccessfullLoginData} from '../apis/usersApi';
 
 type initialStateType = {
-  login: boolean;
   user?: {
     id: number;
     name: string;
@@ -31,9 +30,7 @@ type initialStateType = {
 
 export type User = NonNullable<initialStateType['user']>;
 
-const initialState: initialStateType = {
-  login: false,
-};
+const initialState: initialStateType = {};
 
 const userSlice = createSlice({
   name: 'user',
@@ -83,12 +80,8 @@ const userSlice = createSlice({
     [sampleLogin.fulfilled.type]: (state, action) => {
       return {
         ...state,
-        login: true,
         user: action.payload.user,
       };
-    },
-    'index/logout': () => {
-      return initialState;
     },
     [firstLoginThunk.fulfilled.type]: (
       state,
@@ -96,7 +89,6 @@ const userSlice = createSlice({
     ) => {
       return {
         ...state,
-        login: true,
         user: action.payload.user,
       };
     },
@@ -106,7 +98,6 @@ const userSlice = createSlice({
     ) => {
       return {
         ...state,
-        login: true,
         user: action.payload.user,
       };
     },

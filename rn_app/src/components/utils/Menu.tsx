@@ -5,7 +5,7 @@ import {ListItem, Icon} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
 import * as Keychain from 'react-native-keychain';
 
-import {logout} from '../../redux/index';
+import {logoutAction} from '../../actions/sessions';
 
 type Props = {
   isVisble: boolean;
@@ -55,7 +55,7 @@ export const Menu = ({
             text: 'はい',
             onPress: async () => {
               await Keychain.resetGenericPassword();
-              dispatch(logout());
+              dispatch(logoutAction);
               return;
             },
           },

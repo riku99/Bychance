@@ -15,7 +15,6 @@ import ImagePicker from 'react-native-image-picker';
 import {AppDispatch} from '../../redux';
 import {PostStackParamList} from '../../screens/Post';
 import {createPostAction} from '../../actions/posts';
-import {MyTheme} from '../../App';
 
 type CreatePostNavigationProp = NavigationProp<
   PostStackParamList,
@@ -46,7 +45,7 @@ export const CreatePost = ({navigation}: Props) => {
             <Button
               title="投稿"
               buttonStyle={{backgroundColor: 'transparent'}}
-              titleStyle={{color: MyTheme.colors.text, fontWeight: 'bold'}}
+              titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
               onPress={() => createPost({text, image: selectedImage})}
             />
           )

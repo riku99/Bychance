@@ -2,11 +2,11 @@ import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
 import {rejectPayload, basicAxiosError} from './d';
+import {logoutAction} from './sessions';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
-import {logout} from '../redux';
 import {Flash} from '../redux/flashes';
 
 export const createFlashThunk = createAsyncThunk<
@@ -32,7 +32,7 @@ export const createFlashThunk = createAsyncThunk<
         const axiosError = e as basicAxiosError;
         if (axiosError.response?.data.errorType === 'loginError') {
           requestLogin(() => {
-            thunkApi.dispatch(logout());
+            thunkApi.dispatch(logoutAction);
           });
           return thunkApi.rejectWithValue({
             errorType: 'loginError',
@@ -50,7 +50,7 @@ export const createFlashThunk = createAsyncThunk<
       }
     }
   } else {
-    requestLogin(() => thunkApi.dispatch(logout()));
+    requestLogin(() => thunkApi.dispatch(logoutAction));
   }
   return thunkApi.rejectWithValue({
     errorType: 'loginError',
@@ -82,7 +82,7 @@ export const deleteFlashThunk = createAsyncThunk<
         const axiosError = e as basicAxiosError;
         if (axiosError.response?.data.errorType === 'loginError') {
           requestLogin(() => {
-            thunkApi.dispatch(logout());
+            thunkApi.dispatch(logoutAction);
           });
           return thunkApi.rejectWithValue({
             errorType: 'loginError',
@@ -100,7 +100,7 @@ export const deleteFlashThunk = createAsyncThunk<
       }
     }
   } else {
-    requestLogin(() => thunkApi.dispatch(logout()));
+    requestLogin(() => thunkApi.dispatch(logoutAction));
     return thunkApi.rejectWithValue({
       errorType: 'loginError',
     });
@@ -130,7 +130,7 @@ export const createAlreadyViewdFlashThunk = createAsyncThunk<
         const axiosError = e as basicAxiosError;
         if (axiosError.response?.data.errorType === 'loginError') {
           requestLogin(() => {
-            thunkApi.dispatch(logout());
+            thunkApi.dispatch(logoutAction);
           });
           return thunkApi.rejectWithValue({
             errorType: 'loginError',
@@ -148,7 +148,7 @@ export const createAlreadyViewdFlashThunk = createAsyncThunk<
       }
     }
   } else {
-    requestLogin(() => thunkApi.dispatch(logout()));
+    requestLogin(() => thunkApi.dispatch(logoutAction));
     return thunkApi.rejectWithValue({
       errorType: 'loginError',
     });

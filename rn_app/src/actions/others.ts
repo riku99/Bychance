@@ -1,12 +1,12 @@
 import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
+import {rejectPayload, basicAxiosError} from './d';
+import {logoutAction} from './sessions';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {logout} from '../redux/index';
 import {AnotherUser} from '../components/others/SearchOthers';
-import {rejectPayload, basicAxiosError} from './d';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 
@@ -34,7 +34,7 @@ export const getOthersThunk = createAsyncThunk<
         switch (axiosError.response?.data.errorType) {
           case 'loginError':
             requestLogin(() => {
-              thunkAPI.dispatch(logout());
+              thunkAPI.dispatch(logoutAction);
             });
             return thunkAPI.rejectWithValue({errorType: 'loginError'});
           default:
@@ -48,7 +48,7 @@ export const getOthersThunk = createAsyncThunk<
     }
   } else {
     requestLogin(() => {
-      thunkAPI.dispatch(logout());
+      thunkAPI.dispatch(logoutAction);
     });
     return thunkAPI.rejectWithValue({errorType: 'loginError'});
   }
