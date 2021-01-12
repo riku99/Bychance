@@ -43,7 +43,7 @@ export const Posts = React.memo(({posts, navigateToShowPost}: Props) => {
             <View
               style={{
                 backgroundColor: basicStyles.imageBackGroundColor,
-                marginTop: 2,
+                marginBottom: 2,
                 marginHorizontal: checkMiddleItem(i + 1) ? createGap() : 0,
               }}>
               <Image source={{uri: p.image}} style={styles.post} />

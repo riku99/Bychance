@@ -65,99 +65,120 @@ export const UserProfile = React.memo(
     );
 
     return (
-      <>
-        <ScrollView style={styles.container}>
-          <View style={styles.image}>
-            {(flashes.entites.length && !flashes.isAllAlreadyViewd) ||
-            creatingFlash ? (
-              <UserProfileOuter avatarSize="large" outerType="gradation">
-                <UserAvatar
-                  image={user.image}
-                  size="large"
-                  opacity={1}
-                  onPress={() => {
-                    navigateToFlashes();
-                  }}
+      <View style={styles.container}>
+        <ScrollView stickyHeaderIndices={[1]} scrollEventThrottle={16}>
+          <View>
+            <View style={styles.image}>
+              {(flashes.entites.length && !flashes.isAllAlreadyViewd) ||
+              creatingFlash ? (
+                <UserProfileOuter avatarSize="large" outerType="gradation">
+                  <UserAvatar
+                    image={user.image}
+                    size="large"
+                    opacity={1}
+                    onPress={() => {
+                      navigateToFlashes();
+                    }}
+                  />
+                </UserProfileOuter>
+              ) : flashes.entites.length && flashes.isAllAlreadyViewd ? (
+                <UserProfileOuter avatarSize="large" outerType="silver">
+                  <UserAvatar
+                    image={user.image}
+                    size="large"
+                    opacity={1}
+                    onPress={() => {
+                      navigateToFlashes();
+                    }}
+                  />
+                </UserProfileOuter>
+              ) : (
+                <UserAvatar image={user.image} size="large" opacity={1} />
+              )}
+            </View>
+            <View style={styles.nameContainer}>
+              <Text style={styles.name}>{user.name}</Text>
+            </View>
+            <View style={styles.edit}>
+              {referenceId === user.id ? (
+                <Button
+                  title="プロフィールを編集"
+                  titleStyle={styles.editButtonTitle}
+                  buttonStyle={styles.editButton}
+                  onPress={navigateToUserEdit}
                 />
-              </UserProfileOuter>
-            ) : flashes.entites.length && flashes.isAllAlreadyViewd ? (
-              <UserProfileOuter avatarSize="large" outerType="silver">
-                <UserAvatar
-                  image={user.image}
-                  size="large"
-                  opacity={1}
-                  onPress={() => {
-                    navigateToFlashes();
-                  }}
+              ) : (
+                <Button
+                  title="メッセージを送る"
+                  icon={
+                    <Icon
+                      name="send-o"
+                      size={15}
+                      color="#2c3e50"
+                      style={{marginRight: 8}}
+                    />
+                  }
+                  titleStyle={{...styles.editButtonTitle, color: '#2c3e50'}}
+                  buttonStyle={[styles.editButton, styles.sendMessageButton]}
+                  onPress={navigateToChatRoom}
                 />
-              </UserProfileOuter>
-            ) : (
-              <UserAvatar image={user.image} size="large" opacity={1} />
-            )}
-          </View>
-          <View style={styles.nameContainer}>
-            <Text style={styles.name}>{user.name}</Text>
-          </View>
-          <View style={styles.edit}>
-            {referenceId === user.id ? (
+              )}
+            </View>
+            <View
+              style={[
+                styles.introduce,
+                {
+                  maxHeight: hideIntroduce
+                    ? introduceMaxAndMinHight
+                    : undefined,
+                },
+              ]}>
+              {!!user.introduce && (
+                <Text
+                  style={{
+                    color: basicStyles.mainTextColor,
+                    lineHeight: oneTextLineHeght,
+                  }}>
+                  {user.introduce}
+                </Text>
+              )}
+            </View>
+            {displayHideButton && (
               <Button
-                title="プロフィールを編集"
-                titleStyle={styles.editButtonTitle}
-                buttonStyle={styles.editButton}
-                onPress={navigateToUserEdit}
-              />
-            ) : (
-              <Button
-                title="メッセージを送る"
                 icon={
-                  <Icon
-                    name="send-o"
-                    size={15}
-                    color="#2c3e50"
-                    style={{marginRight: 8}}
+                  <MIcon
+                    name={hideIntroduce ? 'expand-more' : 'expand-less'}
+                    size={30}
+                    style={{color: '#5c94c8'}}
                   />
                 }
-                titleStyle={{...styles.editButtonTitle, color: '#2c3e50'}}
-                buttonStyle={[styles.editButton, styles.sendMessageButton]}
-                onPress={navigateToChatRoom}
+                containerStyle={{
+                  alignSelf: 'center',
+                }}
+                buttonStyle={{backgroundColor: 'transparent'}}
+                activeOpacity={1}
+                onPress={() => setHideIntroduce(!hideIntroduce)}
               />
             )}
           </View>
-          <View
-            style={[
-              styles.introduce,
-              {
-                maxHeight: hideIntroduce ? introduceMaxAndMinHight : undefined,
-              },
-            ]}>
-            {!!user.introduce && (
-              <Text
-                style={{
-                  color: basicStyles.mainTextColor,
-                  lineHeight: oneTextLineHeght,
-                }}>
-                {user.introduce}
-              </Text>
-            )}
+          <View>
+            <View
+              style={{
+                height: 40,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                backgroundColor: 'white',
+              }}>
+              <Button
+                icon={<MIcon name="apps" size={30} color="#575757" />}
+                buttonStyle={{backgroundColor: 'white'}}
+              />
+            </View>
           </View>
-          {displayHideButton && (
-            <Button
-              icon={
-                <MIcon
-                  name={hideIntroduce ? 'expand-more' : 'expand-less'}
-                  size={30}
-                  style={{color: '#5c94c8'}}
-                />
-              }
-              containerStyle={{
-                alignSelf: 'center',
-              }}
-              buttonStyle={{backgroundColor: 'transparent'}}
-              activeOpacity={1}
-              onPress={() => setHideIntroduce(!hideIntroduce)}
-            />
-          )}
-          <Posts posts={posts} navigateToShowPost={navigateToPost} />
+          <View>
+            <Posts posts={posts} navigateToShowPost={navigateToPost} />
+          </View>
         </ScrollView>
         {referenceId === user.id && (
           <Button
@@ -167,7 +188,7 @@ export const UserProfile = React.memo(
             onPress={navigateToTakeFlash}
           />
         )}
-      </>
+      </View>
     );
   },
 );
