@@ -22,6 +22,7 @@ export type Room = {
   partner: AnotherUser;
   timestamp: string;
   messages: number[];
+  unreadNumber?: number; //コメント　あとで?抜く
 };
 
 const roomsAdapter = createEntityAdapter<Room>({

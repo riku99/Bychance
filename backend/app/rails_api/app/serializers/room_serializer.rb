@@ -1,5 +1,5 @@
 class RoomSerializer < ActiveModel::Serializer
-    attributes :id, :partner, :messages
+    attributes :id, :partner, :messages, :unreadNumber
     attribute :updated_at, key: :timestamp
 
     def partner
@@ -9,5 +9,10 @@ class RoomSerializer < ActiveModel::Serializer
 
     def messages
         object.room_messages.ids
+    end
+
+    def unreadNumber
+        user =  @instance_options[:user]
+        UserRoomMessageRead.get_unread_room_message_number(object, user.id)
     end
 end

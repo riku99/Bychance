@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_13_075310) do
+ActiveRecord::Schema.define(version: 2021_01_13_084948) do
 
   create_table "flashes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "content"
@@ -72,6 +72,8 @@ ActiveRecord::Schema.define(version: 2021_01_13_075310) do
     t.bigint "room_message_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "room_id"
+    t.index ["room_id"], name: "index_user_room_message_reads_on_room_id"
     t.index ["room_message_id"], name: "index_user_room_message_reads_on_room_message_id"
     t.index ["user_id", "room_message_id"], name: "index_user_room_message_reads_on_user_id_and_room_message_id", unique: true
     t.index ["user_id"], name: "index_user_room_message_reads_on_user_id"
