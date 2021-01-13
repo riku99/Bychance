@@ -182,7 +182,7 @@ export const UserProfile = React.memo(
             )}
             <View style={styles.stickyItem}>
               <Button
-                icon={<MIcon name="apps" size={30} color="#575757" />}
+                icon={<MIcon name="apps" size={30} color="#4ba5fa" />}
                 buttonStyle={{backgroundColor: 'white'}}
               />
             </View>

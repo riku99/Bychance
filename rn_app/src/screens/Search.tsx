@@ -20,6 +20,7 @@ export const SearchStackScreen = () => {
   return (
     <Stack.Navigator
       screenOptions={{
+        headerStyle: {shadowColor: 'transparent'},
         headerBackTitleVisible: false,
         headerStatusBarHeight: headerStatusBarHeight(),
       }}>

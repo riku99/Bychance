@@ -1,4 +1,5 @@
 import React from 'react';
+import {Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as UserProfile} from '../containers/users/UserProfile';
@@ -23,14 +24,24 @@ export const MyPageStackScreen = () => {
       screenOptions={{
         headerBackTitleVisible: false,
         headerStatusBarHeight: headerStatusBarHeight(),
+        headerStyle: {shadowColor: 'transparent'},
       }}>
       <Stack.Screen
         name="MyProfile"
         component={UserProfile}
         options={{
-          headerTitle: 'マイページ',
-          animationEnabled: false,
-          headerLeft: () => null,
+          headerTitle: () => null,
+          headerLeft: () => (
+            <Text
+              style={{
+                marginLeft: 20,
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#5c94c8',
+              }}>
+              マイページ
+            </Text>
+          ),
           headerRight: () => <MenuBar />,
         }}
       />
