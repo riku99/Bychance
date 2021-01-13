@@ -1,5 +1,11 @@
 import React, {useMemo, useState} from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -7,10 +13,12 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Posts} from '../posts/Posts';
 import {basicStyles} from '../../constants/styles';
 import {ScrollView} from 'react-native-gesture-handler';
+import {RootState} from '../../redux';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
 import {UserAvatar} from '../utils/Avatar';
 import {UserProfileOuter} from '../utils/UserProfileOuter';
+import {useSelector} from 'react-redux';
 
 type Props = {
   user: {
@@ -62,6 +70,10 @@ export const UserProfile = React.memo(
 
     const [hideIntroduce, setHideIntroduce] = useState(
       lineNumber * oneTextLineHeght > introduceMaxAndMinHight ? true : false,
+    );
+
+    const creatingPost = useSelector(
+      (state: RootState) => state.otherSettingsReducer.creatingPost,
     );
 
     return (
@@ -161,15 +173,14 @@ export const UserProfile = React.memo(
               />
             )}
           </View>
-          <View>
-            <View
-              style={{
-                height: 40,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                backgroundColor: 'white',
-              }}>
+          <View style={styles.stickyHeader}>
+            {creatingPost && (
+              <View style={styles.creatingPost}>
+                <ActivityIndicator color="#575757" />
+                <Text style={{color: '#575757'}}>投稿しています</Text>
+              </View>
+            )}
+            <View style={styles.stickyItem}>
               <Button
                 icon={<MIcon name="apps" size={30} color="#575757" />}
                 buttonStyle={{backgroundColor: 'white'}}
@@ -214,9 +225,10 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   name: {
-    fontSize: 19,
+    fontSize: 18,
     marginTop: 3,
     color: basicStyles.mainTextColor,
+    fontWeight: '500',
   },
   edit: {
     alignItems: 'center',
@@ -270,6 +282,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 35,
     marginBottom: 5,
+  },
+  stickyHeader: {
+    backgroundColor: 'white',
+    borderBottomWidth: 0.5,
+    borderBottomColor: basicStyles.imageBackGroundColor,
+  },
+  creatingPost: {
+    width: 130,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  stickyItem: {
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: 'white',
   },
   dummy: {
     height: width / 3,

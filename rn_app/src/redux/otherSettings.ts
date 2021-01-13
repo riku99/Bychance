@@ -2,10 +2,15 @@ import {createSlice} from '@reduxjs/toolkit';
 
 import {logoutAction} from '../actions/sessions';
 
-type InitialState = {displayedMenu?: boolean; creatingFlash?: boolean};
+type InitialState = {
+  displayedMenu?: boolean;
+  creatingPost: boolean;
+  creatingFlash?: boolean;
+};
 
 const initialState: InitialState = {
   displayedMenu: false,
+  creatingPost: false,
   creatingFlash: false,
 };
 
@@ -26,6 +31,12 @@ const otherSettingsSlice = createSlice({
         };
       }
     },
+    creatingPost: (state) => {
+      return {
+        ...state,
+        creatingPost: !state.creatingPost,
+      };
+    },
     creatingFlash: (state) => {
       return {
         ...state,
@@ -38,6 +49,10 @@ const otherSettingsSlice = createSlice({
   },
 });
 
-export const {displayMenu, creatingFlash} = otherSettingsSlice.actions;
+export const {
+  displayMenu,
+  creatingFlash,
+  creatingPost,
+} = otherSettingsSlice.actions;
 
 export const otherSettingsReducer = otherSettingsSlice.reducer;

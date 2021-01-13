@@ -13,6 +13,7 @@ import {Button} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 
 import {AppDispatch} from '../../redux';
+import {creatingPost} from '../../redux/otherSettings';
 import {PostStackParamList} from '../../screens/Post';
 import {createPostAction} from '../../actions/posts';
 
@@ -35,8 +36,10 @@ export const CreatePost = ({navigation}: Props) => {
 
   useEffect(() => {
     const createPost = async (data: {text: string; image: string}) => {
+      dispatch(creatingPost());
       navigation.goBack();
       await dispatch(createPostAction(data));
+      dispatch(creatingPost());
     };
 
     navigation.setOptions({

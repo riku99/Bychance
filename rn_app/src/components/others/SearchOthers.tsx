@@ -110,7 +110,6 @@ export const SearchOthers = ({
               {
                 useNativeDriver: false,
                 listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-                  console.log(e.nativeEvent.contentOffset.y);
                   if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
                     scrollY.setValue(SEARCH_TAB_HEIGHT);
                   }

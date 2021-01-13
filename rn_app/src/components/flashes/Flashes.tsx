@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {View, StyleSheet, Dimensions, FlatList, StatusBar} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {RouteProp} from '@react-navigation/native';
@@ -60,20 +60,43 @@ export const Flashes = ({route, navigation}: Props) => {
     }
   };
 
+  const moreDeviceX = useMemo(() => {
+    return height >= X_HEIGHT ? true : false;
+  }, []);
+
   const goBackScreen = () => {
     navigation.goBack();
-    if (height < X_HEIGHT) {
-      StatusBar.setHidden(false);
-    } else {
-      StatusBar.setBarStyle('default');
-    }
   };
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      StatusBar.setHidden(false);
+      StatusBar.setBarStyle('default');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      StatusBar.setHidden(!moreDeviceX ? true : false);
+      StatusBar.setBarStyle('light-content');
+    });
+
+    return unsubscribe;
+  }, [navigation, moreDeviceX]);
+
   const {top, bottom} = useSafeAreaInsets();
-  const safeAreaHeight = useMemo(() => height - top - bottom, [top, bottom]);
+  const safeAreaHeight = useMemo(() => {
+    return moreDeviceX ? height - top - bottom : height;
+  }, [top, bottom, moreDeviceX]);
 
   return (
-    <View style={[styles.container, {paddingTop: top, paddingBottom: bottom}]}>
+    <View
+      style={[
+        styles.container,
+        {paddingTop: moreDeviceX ? top : 0, paddingBottom: bottom},
+      ]}>
       <FlatList
         keyExtractor={(item) => item.user.id.toString()}
         ref={flatListRef}

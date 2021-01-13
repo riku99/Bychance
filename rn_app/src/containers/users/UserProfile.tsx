@@ -151,21 +151,6 @@ export const Container = ({route, navigation}: Props) => {
     }
   }, [navigation, route]);
 
-  // バックボタンによるtransitionに対しての責務を持ったリスナー
-  useEffect(() => {
-    if (route.name === 'AnotherUserProfileFromFlash') {
-      const unsbscribe = navigation.addListener('transitionStart', () => {
-        if (height < X_HEIGHT) {
-          StatusBar.setHidden(true);
-        } else {
-          StatusBar.setBarStyle('light-content');
-        }
-      });
-
-      return unsbscribe;
-    }
-  }, [navigation, route]);
-
   const pushPost = (post: Post) => {
     navigation.push('Post', post);
   };

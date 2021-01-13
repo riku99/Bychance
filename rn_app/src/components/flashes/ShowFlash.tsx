@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Text,
-  StatusBar,
   Dimensions,
   Image,
   Animated,
@@ -18,7 +17,6 @@ import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {X_HEIGHT} from '../../constants/device';
 import {UserAvatar} from '../utils/Avatar';
 import {Flash} from '../../redux/flashes';
 import {Post} from '../../redux/post';
@@ -402,11 +400,6 @@ export const ShowFlash = React.memo(
                   longPress.current = false;
                 }
               }}>
-              {height >= X_HEIGHT ? (
-                <StatusBar barStyle="light-content" />
-              ) : (
-                <StatusBar hidden={true} />
-              )}
               {currentFlash.contentType === 'image' ? (
                 <View style={styles.soruceContainer}>
                   {isDisplayed ? (
