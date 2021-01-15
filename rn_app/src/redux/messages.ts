@@ -86,60 +86,6 @@ export const selectMessages = (state: RootState, messageIds: number[]) => {
   return _ms;
 };
 
-export const selectLatestMessageEntities = (
-  state: RootState,
-  rooms: Room[],
-) => {
-  const _ms = messagesSelectors.selectEntities(state.messagesReducer);
-  let latestMessageEntities: {[key: number]: MessageType} = {};
-  for (let room of rooms) {
-    const latestMessageId = room.messages[0];
-    const message = _ms[latestMessageId];
-    if (message) {
-      latestMessageEntities[latestMessageId] = message;
-    }
-  }
-  return latestMessageEntities;
-};
-
-export const selsectNotReadMessageNumber = (
-  state: RootState,
-  rooms: Room[],
-) => {
-  const notReadMessageNumber: {[key: number]: number} = {};
-  const userId = state.userReducer.user!.id;
-  const messageEntites = messagesSelectors.selectEntities(
-    state.messagesReducer,
-  );
-
-  for (let room of rooms) {
-    let n = 0;
-    for (let message of room.messages) {
-      if (message && messageEntites[message]) {
-        if (
-          messageEntites[message]!.read ||
-          messageEntites[message]!.userId === userId
-        ) {
-          break;
-        } else {
-          n++;
-        }
-      }
-    }
-    notReadMessageNumber[room.id] = n;
-  }
-  return notReadMessageNumber;
-};
-
-export const selectAllNotReadMessagesNumber = (state: RootState): number => {
-  const allMessages = messagesSelectors.selectAll(state.messagesReducer);
-  const userId = state.userReducer.user!.id;
-  const filteredMessages = allMessages.filter((message) => {
-    return message.userId !== userId && !message.read;
-  });
-  return filteredMessages.length;
-};
-
 export const {recieveMessage} = messagesSlice.actions;
 
 export const messagesReducer = messagesSlice.reducer;

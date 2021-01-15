@@ -3,22 +3,14 @@ import {View, StyleSheet} from 'react-native';
 import {ListItem, Badge} from 'react-native-elements';
 
 import {Room} from '../../redux/rooms';
-import {MessageType} from '../../redux/messages';
 import {UserAvatar} from '../utils/Avatar';
 
 type Props = {
   rooms: Room[];
-  latestMessages: {[key: number]: MessageType};
-  notReadNumber: {[key: number]: number};
   pushChatRoom: (room: Room) => void;
 };
 
-export const ChatList = ({
-  rooms,
-  latestMessages,
-  notReadNumber,
-  pushChatRoom,
-}: Props) => {
+export const ChatList = ({rooms, pushChatRoom}: Props) => {
   return (
     <View style={styles.container}>
       {rooms.length
@@ -33,13 +25,12 @@ export const ChatList = ({
                 <ListItem.Content>
                   <ListItem.Title>{r.partner.name}</ListItem.Title>
                   <ListItem.Subtitle style={styles.subtitle}>
-                    {latestMessages[r.messages[0]] &&
-                      latestMessages[r.messages[0]].text}
+                    {r.latestMessage && r.latestMessage}
                   </ListItem.Subtitle>
                 </ListItem.Content>
-                {notReadNumber[r.id] !== 0 && (
+                {r.unreadNumber !== 0 && (
                   <Badge
-                    value={notReadNumber[r.id]}
+                    value={r.unreadNumber}
                     textStyle={{fontSize: 15}}
                     badgeStyle={{width: 25, height: 25, borderRadius: 25 / 2}}
                   />

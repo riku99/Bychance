@@ -179,6 +179,7 @@ export const Container = ({route, navigation}: Props) => {
                 partner: selectedRoom.partner,
                 timestamp: selectedRoom.timestamp,
                 messages: selectedRoom.messages,
+                unreadNumber: 0,
               },
             });
           } else {

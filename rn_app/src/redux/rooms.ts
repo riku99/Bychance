@@ -22,7 +22,8 @@ export type Room = {
   partner: AnotherUser;
   timestamp: string;
   messages: number[];
-  unreadNumber?: number; //コメント　あとで?抜く
+  unreadNumber: number;
+  latestMessage?: string | null;
 };
 
 const roomsAdapter = createEntityAdapter<Room>({
@@ -69,6 +70,8 @@ export const RoomsSlice = createSlice({
         messages: state.entities[action.payload.id]
           ? state.entities[action.payload.id]?.messages!
           : [],
+        unreadNumber: state.entities[action.payload.id]?.unreadNumber!, // あとで直す
+        latestMessage: null, // あとで直す
       });
     },
     [createMessageThunk.fulfilled.type]: (
@@ -103,6 +106,15 @@ export const selectRoom = (state: RootState, n: number) => {
 
 export const selectAllRooms = (state: RootState) => {
   return roomSelectors.selectAll(state.roomsReducer);
+};
+
+export const getAllUnreadMessagesNumber = (state: RootState) => {
+  const rooms = selectAllRooms(state);
+  let allunreadMessagesNumber = 0;
+  for (let room of rooms) {
+    allunreadMessagesNumber! += room.unreadNumber;
+  }
+  return allunreadMessagesNumber;
 };
 
 export const selectMessageIds = (state: RootState, roomId: number) => {

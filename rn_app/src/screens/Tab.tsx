@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {RootState} from '../redux/index';
-import {selectAllNotReadMessagesNumber} from '../redux/messages';
+import {getAllUnreadMessagesNumber} from '../redux/rooms';
 import {PostStackScreen} from './Post';
 import {MyPageStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
@@ -20,8 +20,8 @@ type TabList = {
 const RootTab = createBottomTabNavigator<TabList>();
 
 export const Tabs = () => {
-  const notReadMessageNumber = useSelector((state: RootState) => {
-    return selectAllNotReadMessagesNumber(state);
+  const unreadMessagesNumber = useSelector((state: RootState) => {
+    return getAllUnreadMessagesNumber(state);
   });
 
   return (
@@ -49,7 +49,7 @@ export const Tabs = () => {
             <MIcon name="chat-bubble-outline" size={24} color={color} />
           ),
           tabBarBadge:
-            notReadMessageNumber !== 0 ? notReadMessageNumber : undefined,
+            unreadMessagesNumber !== 0 ? unreadMessagesNumber : undefined,
         }}
       />
       <RootTab.Screen
