@@ -14,7 +14,7 @@ import {
 } from '../../actions/messages';
 import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
 import {selectMessages} from '../../redux/messages';
-import {selectMessageIds} from '../../redux/rooms';
+import {UserAvatar} from '../../components/utils/Avatar';
 
 type RootRouteProp = RouteProp<ChatRoomStackParamParamList, 'ChatRoom'>;
 
@@ -26,14 +26,10 @@ type ChatRoomStackNavigationProp = StackNavigationProp<
 type Props = {route: RootRouteProp; navigation: ChatRoomStackNavigationProp};
 
 export const Container = ({route, navigation}: Props) => {
-  const {userId} = useSelector((state: RootState) => {
-    return {
-      userId: state.userReducer.user!.id,
-    };
-  }, shallowEqual);
+  const userId = useSelector((state: RootState) => state.userReducer.user!.id);
 
   const selectedMessages = useSelector((state: RootState) => {
-    const messageIds = selectMessageIds(state, route.params.id);
+    const messageIds = route.params.messages;
     return selectMessages(state, messageIds);
   }, shallowEqual);
 
@@ -50,22 +46,10 @@ export const Container = ({route, navigation}: Props) => {
           user: {
             _id: m.userId,
             avatar: () => (
-              <Avatar
-                rounded
-                source={{
-                  uri: route.params.partner.image
-                    ? route.params.partner.image
-                    : undefined,
-                }}
-                icon={
-                  !route.params.partner.image
-                    ? {
-                        name: 'user',
-                        type: 'font-awesome',
-                      }
-                    : undefined
-                }
-                containerStyle={{backgroundColor: '#BDBDBD'}}
+              <UserAvatar
+                image={route.params.partner.image}
+                size={'small'}
+                opacity={0}
                 onPress={navigateToProfile}
               />
             ),

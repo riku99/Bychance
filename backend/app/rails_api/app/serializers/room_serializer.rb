@@ -17,6 +17,6 @@ class RoomSerializer < ActiveModel::Serializer
     end
 
     def latestMessage
-        object.room_messages.last ? object.room_messages.last.text : nil
+        object.room_messages.first ? object.room_messages.first.text : nil
     end
 end

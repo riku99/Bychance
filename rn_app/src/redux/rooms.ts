@@ -29,7 +29,7 @@ export type Room = {
 const roomsAdapter = createEntityAdapter<Room>({
   selectId: (room) => room.id,
   sortComparer: (a, b) =>
-    new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1,
+    new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1, // 更新日時を基準に降順
 });
 
 export const RoomsSlice = createSlice({
@@ -115,11 +115,6 @@ export const getAllUnreadMessagesNumber = (state: RootState) => {
     allunreadMessagesNumber! += room.unreadNumber;
   }
   return allunreadMessagesNumber;
-};
-
-export const selectMessageIds = (state: RootState, roomId: number) => {
-  const room = selectRoom(state, roomId);
-  return room!.messages;
 };
 
 export const roomsReducer = RoomsSlice.reducer;
