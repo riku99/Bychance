@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {createMessageThunk, changeMessagesReadThunk} from '../actions/messages';
+import {createMessageThunk} from '../actions/messages';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
@@ -65,12 +65,6 @@ const messagesSlice = createSlice({
       action: PayloadAction<{message: MessageType; roomId: number}>,
     ) => {
       messagesAdapter.addOne(state, action.payload.message);
-    },
-    [changeMessagesReadThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<MessageType[]>,
-    ) => {
-      messagesAdapter.upsertMany(state, action.payload);
     },
   },
 });

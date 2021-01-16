@@ -64,21 +64,6 @@ export const Container = ({route, navigation}: Props) => {
 
   const dispatch: AppDispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (isFocused && selectedMessages[0] && !selectedMessages[0].read) {
-  //     const ids = selectedMessages
-  //       .map((message) => {
-  //         if (!message.read && message.userId !== userId) {
-  //           return message.id;
-  //         }
-  //       })
-  //       .filter((n): n is number => {
-  //         return typeof n === 'number';
-  //       });
-  //     dispatch(changeMessagesReadThunk(ids));
-  //   }
-  // }, [isFocused, selectedMessages, dispatch, userId]);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if (route.params.unreadNumber !== 0) {

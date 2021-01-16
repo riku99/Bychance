@@ -3,12 +3,11 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 
 import {logoutAction} from './sessions';
 import {rejectPayload} from './d';
-import {changeMessagesRead} from '../apis/messagesApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {headers} from '../helpers/headers';
 import {MessageType} from '../redux/messages';
-import {alertSomeError, handleBasicError} from '../helpers/error';
+import {handleBasicError} from '../helpers/error';
 import {origin} from '../constants/origin';
 
 export const createMessageThunk = createAsyncThunk<
@@ -80,34 +79,6 @@ export const createReadMessagesThunk = createAsyncThunk<
       // loginerror
       requestLogin(() => dispatch(logoutAction));
       return rejectWithValue({errorType: 'loginError'});
-    }
-  },
-);
-
-export const changeMessagesReadThunk = createAsyncThunk(
-  'messages/changeRead',
-  async (messageIds: number[], thunkAPI) => {
-    const keychain = await checkKeychain();
-    if (keychain) {
-      const response = await changeMessagesRead({
-        id: keychain.id,
-        token: keychain.token,
-        messageIds,
-      });
-
-      if (response.type === 'success') {
-        return response.data;
-      }
-
-      if (response.type === 'loginError') {
-        console.log('ログインエラー');
-        thunkAPI.rejectWithValue({errorType: response.type});
-      }
-
-      if (response.type === 'someError') {
-        alertSomeError();
-        thunkAPI.rejectWithValue({errorType: response.type});
-      }
     }
   },
 );
