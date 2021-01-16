@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :flashes, dependent: :destroy
   has_many :user_flash_viewings, dependent: :destroy
   has_many :viewed_flashes, through: :user_flash_viewings, source: :flash
+  has_many :user_room_message_reads, dependent: :destroy
 
   validates :uid, presence: true
   validates :token, presence: true

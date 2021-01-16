@@ -63,6 +63,7 @@ const Root = () => {
         {
           connected: () => {},
           received: (data: any) => {
+            console.log(data);
             dispatch(recieveMessage(data));
           },
         },

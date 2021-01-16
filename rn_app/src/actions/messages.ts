@@ -1,56 +1,85 @@
+import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {showMessage} from 'react-native-flash-message';
 
-import {createMessage, changeMessagesRead} from '../apis/messagesApi';
+import {logoutAction} from './sessions';
+import {rejectPayload} from './d';
+import {changeMessagesRead} from '../apis/messagesApi';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
-import {logoutAction} from './sessions';
-
+import {headers} from '../helpers/headers';
 import {MessageType} from '../redux/messages';
-import {alertSomeError} from '../helpers/error';
+import {alertSomeError, handleBasicError} from '../helpers/error';
+import {origin} from '../constants/origin';
 
-export const createMessageThunk = createAsyncThunk(
+export const createMessageThunk = createAsyncThunk<
+  {message: MessageType; roomId: number},
+  {roomId: number; userId: number; text: string},
+  {
+    rejectValue: rejectPayload;
+  }
+>(
   'messages/createMessage',
-  async (
-    {roomId, userId, text}: Pick<MessageType, 'roomId' | 'userId' | 'text'>,
-    thunkAPI,
-  ) => {
+  async ({roomId, userId, text}, {dispatch, rejectWithValue}) => {
     const keychain = await checkKeychain();
 
     if (keychain) {
-      const response = await createMessage({
-        id: keychain.id,
-        token: keychain.token,
-        roomId,
-        userId,
-        text,
-      });
+      try {
+        const response = await axios.post<MessageType>(
+          `${origin}/messages`,
+          {
+            roomId,
+            userId,
+            text,
+            id: keychain.id,
+          },
+          headers(keychain.token),
+        );
 
-      if (response.type === 'success') {
-        return {message: response.data, room: roomId};
-      }
-
-      if (response.type === 'loginError') {
-        requestLogin(() => {
-          thunkAPI.dispatch(logoutAction);
-        });
-        return thunkAPI.rejectWithValue(response);
-      }
-
-      if (response.type === 'invalidError') {
-        showMessage({
-          message: '無効なメッセージです',
-          type: 'danger',
-          style: {opacity: 0.9},
-          titleStyle: {fontWeight: 'bold'},
-        });
-        return thunkAPI.rejectWithValue(response);
+        return {message: response.data, roomId};
+      } catch (e) {
+        // axioserror
+        const result = handleBasicError({e, dispatch});
+        return rejectWithValue(result);
       }
     } else {
-      requestLogin(() => {
-        thunkAPI.dispatch(logoutAction);
-      });
-      return thunkAPI.rejectWithValue({type: 'loginError'});
+      // loginerror
+      requestLogin(() => dispatch(logoutAction));
+      return rejectWithValue({errorType: 'loginError'});
+    }
+  },
+);
+
+export const createReadMessagesThunk = createAsyncThunk<
+  undefined,
+  {roomId: number; unreadNumber: number},
+  {
+    rejectValue: rejectPayload;
+  }
+>(
+  'messages/createReadMessages',
+  async ({roomId, unreadNumber}, {dispatch, rejectWithValue}) => {
+    const keychain = await checkKeychain();
+
+    if (keychain) {
+      try {
+        axios.post(
+          `${origin}/user_room_message_reads`,
+          {
+            roomId,
+            unreadNumber,
+            id: keychain.id,
+          },
+          headers(keychain.token),
+        );
+      } catch (e) {
+        // axioserror
+        const result = handleBasicError({e, dispatch});
+        return rejectWithValue(result);
+      }
+    } else {
+      // loginerror
+      requestLogin(() => dispatch(logoutAction));
+      return rejectWithValue({errorType: 'loginError'});
     }
   },
 );

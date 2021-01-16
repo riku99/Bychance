@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
@@ -12,7 +12,10 @@ import {RootStackParamList} from '../../screens/Root';
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 export const Container = () => {
-  const rooms = useSelector((state: RootState) => selectAllRooms(state));
+  const rooms = useSelector(
+    (state: RootState) => selectAllRooms(state),
+    shallowEqual,
+  );
 
   const navigationToChatRoom = useNavigation<RootNavigationProp>();
 

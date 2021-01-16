@@ -23,6 +23,8 @@ Rails.application.routes.draw do
       delete '/flashes', to: 'flashes#destroy'
 
       post '/user_flash_viewing', to: 'user_flash_viewings#create'
+
+      post '/user_room_message_reads', to: 'user_room_message_reads#create'
     end
   end
 end

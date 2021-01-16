@@ -23,7 +23,7 @@ export type Room = {
   timestamp: string;
   messages: number[];
   unreadNumber: number;
-  latestMessage?: string | null;
+  latestMessage: string | null;
 };
 
 const roomsAdapter = createEntityAdapter<Room>({
@@ -35,7 +35,16 @@ const roomsAdapter = createEntityAdapter<Room>({
 export const RoomsSlice = createSlice({
   name: 'rooms',
   initialState: roomsAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    resetUnreadNumber: (state, actions: PayloadAction<{roomId: number}>) => {
+      roomsAdapter.updateOne(state, {
+        id: actions.payload.roomId,
+        changes: {
+          unreadNumber: 0,
+        },
+      });
+    },
+  },
   extraReducers: {
     [sampleLogin.fulfilled.type]: (state, action) => {
       roomsAdapter.addMany(state, action.payload.rooms);
@@ -70,21 +79,26 @@ export const RoomsSlice = createSlice({
         messages: state.entities[action.payload.id]
           ? state.entities[action.payload.id]?.messages!
           : [],
-        unreadNumber: state.entities[action.payload.id]?.unreadNumber!, // あとで直す
-        latestMessage: null, // あとで直す
+        unreadNumber: state.entities[action.payload.id]
+          ? state.entities[action.payload.id]?.unreadNumber!
+          : 0,
+        latestMessage: state.entities[action.payload.id]?.latestMessage
+          ? state.entities[action.payload.id]?.latestMessage!
+          : null,
       });
     },
     [createMessageThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{message: MessageType; room: number}>,
+      action: PayloadAction<{message: MessageType; roomId: number}>,
     ) => {
-      const relatedRoom = state.entities[action.payload.room];
+      const relatedRoom = state.entities[action.payload.roomId];
       if (relatedRoom) {
         roomsAdapter.updateOne(state, {
-          id: action.payload.room,
+          id: action.payload.roomId,
           changes: {
             messages: [action.payload.message.id, ...relatedRoom.messages],
             timestamp: action.payload.message.timestamp,
+            latestMessage: action.payload.message.text,
           },
         });
       }
@@ -97,6 +111,8 @@ export const RoomsSlice = createSlice({
     },
   },
 });
+
+export const {resetUnreadNumber} = RoomsSlice.actions;
 
 export const roomSelectors = roomsAdapter.getSelectors();
 

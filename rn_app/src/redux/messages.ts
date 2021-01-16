@@ -62,7 +62,7 @@ const messagesSlice = createSlice({
     },
     [createMessageThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{message: MessageType; room: number}>,
+      action: PayloadAction<{message: MessageType; roomId: number}>,
     ) => {
       messagesAdapter.addOne(state, action.payload.message);
     },

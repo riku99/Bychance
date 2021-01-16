@@ -4,7 +4,7 @@ class Api::V1::RoomsController < ApplicationController
     if @user
       room = Room.between(@user.id, params[:recipient_id]).first
       if room.present?
-        render json: { id: room.id, timestamp: room.created_at }
+        render json: { id: room.id, timestamp: room.updated_at }
       else
         new_room =
           Room.create(sender_id: @user.id, recipient_id: params[:recipient_id])

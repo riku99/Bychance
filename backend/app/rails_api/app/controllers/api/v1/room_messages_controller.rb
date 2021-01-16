@@ -2,16 +2,16 @@ class Api::V1::RoomMessagesController < ApplicationController
   before_action :check_access_token
 
   def create
-    if @user && @user.id == params[:user_id]
+    if @user && @user.id == params[:userId]
       new_message =
         RoomMessage.new(
-          room_id: params[:room_id],
-          user_id: params[:user_id],
+          room_id: params[:roomId],
+          user_id: params[:userId],
           text: params[:text]
         )
       if new_message.save
         render json: new_message
-        room = Room.find(params[:room_id])
+        room = Room.find(params[:roomId])
         room.update_attribute(:updated_at, new_message.created_at)
         partner =
           room.sender != @user ? room.sender : room.recipient

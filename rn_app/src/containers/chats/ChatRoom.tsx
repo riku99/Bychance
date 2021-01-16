@@ -1,19 +1,18 @@
-import React, {useMemo, useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useIsFocused} from '@react-navigation/native';
-import {Avatar} from 'react-native-elements';
 
 import {ChatRoom} from '../../components/chats/ChatRoom';
-import {RootState} from '../../redux/index';
+import {AppDispatch, RootState} from '../../redux/index';
 import {
   createMessageThunk,
-  changeMessagesReadThunk,
+  createReadMessagesThunk,
 } from '../../actions/messages';
 import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
 import {selectMessages} from '../../redux/messages';
+import {resetUnreadNumber} from '../../redux/rooms';
 import {UserAvatar} from '../../components/utils/Avatar';
 
 type RootRouteProp = RouteProp<ChatRoomStackParamParamList, 'ChatRoom'>;
@@ -33,10 +32,11 @@ export const Container = ({route, navigation}: Props) => {
     return selectMessages(state, messageIds);
   }, shallowEqual);
 
-  const messages: IMessage[] = useMemo(() => {
-    const navigateToProfile = () => {
-      navigation.push('Profile', route.params.partner);
-    };
+  const navigateToProfile = () => {
+    navigation.push('Profile', route.params.partner);
+  };
+
+  const [messages, setMessages] = useState<IMessage[]>(() => {
     if (selectedMessages.length) {
       const _messages = selectedMessages.map((m) => {
         return {
@@ -60,38 +60,66 @@ export const Container = ({route, navigation}: Props) => {
     } else {
       return [];
     }
-  }, [route.params.partner, selectedMessages, navigation]);
+  });
 
-  const isFocused = useIsFocused();
+  const dispatch: AppDispatch = useDispatch();
 
-  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (isFocused && selectedMessages[0] && !selectedMessages[0].read) {
+  //     const ids = selectedMessages
+  //       .map((message) => {
+  //         if (!message.read && message.userId !== userId) {
+  //           return message.id;
+  //         }
+  //       })
+  //       .filter((n): n is number => {
+  //         return typeof n === 'number';
+  //       });
+  //     dispatch(changeMessagesReadThunk(ids));
+  //   }
+  // }, [isFocused, selectedMessages, dispatch, userId]);
 
   useEffect(() => {
-    if (isFocused && selectedMessages[0] && !selectedMessages[0].read) {
-      const ids = selectedMessages
-        .map((message) => {
-          if (!message.read && message.userId !== userId) {
-            return message.id;
-          }
-        })
-        .filter((n): n is number => {
-          return typeof n === 'number';
-        });
-      dispatch(changeMessagesReadThunk(ids));
-    }
-  }, [isFocused, selectedMessages, dispatch, userId]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (route.params.unreadNumber !== 0) {
+        dispatch(resetUnreadNumber({roomId: route.params.id}));
+        dispatch(
+          createReadMessagesThunk({
+            roomId: route.params.id,
+            unreadNumber: route.params.unreadNumber,
+          }),
+        );
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, route.params, dispatch]);
 
   const onSend = useCallback(
-    (text: string) => {
-      dispatch(
+    async (text: string) => {
+      const result = await dispatch(
         createMessageThunk({
           roomId: route.params.id,
           userId: userId,
           text,
         }),
       );
+      if (createMessageThunk.fulfilled.match(result)) {
+        const _message = result.payload.message;
+        setMessages([
+          {
+            _id: _message.id,
+            text: _message.text,
+            createdAt: new Date(_message.timestamp),
+            user: {
+              _id: _message.userId,
+            },
+          },
+          ...messages,
+        ]);
+      }
     },
-    [route.params.id, dispatch, userId],
+    [route.params.id, dispatch, userId, messages],
   );
 
   return <ChatRoom messages={messages} userId={userId} onSend={onSend} />;
