@@ -32,6 +32,6 @@ module AwsHelper
         type = nil
     end
     obj.put(body:decoded_data, content_type: type)
-    obj.public_url
+    "https://#{Rails.application.credentials.aws[:cloud_front_origin]}/#{model}/#{id}/#{file_name}"
   end
 end

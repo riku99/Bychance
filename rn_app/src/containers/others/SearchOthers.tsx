@@ -29,7 +29,7 @@ export const Container = () => {
     return {lat, lng};
   }, shallowEqual);
 
-  const _range = useRef(1);
+  const _range = useRef(0.1);
 
   const [range, setRange] = useState(_range.current);
 
