@@ -13,7 +13,7 @@ import {
 } from '../actions/users';
 import {logoutAction} from '../actions/sessions';
 import {createMessageThunk} from '../actions/messages';
-import {MessageType, recieveMessage} from '../redux/messages';
+import {MessageType, receiveMessage} from '../redux/messages';
 import {SuccessfullLoginData} from '../apis/usersApi';
 import {AnotherUser} from '../components/others/SearchOthers';
 
@@ -103,7 +103,7 @@ export const RoomsSlice = createSlice({
         });
       }
     },
-    [recieveMessage.type]: (
+    [receiveMessage.type]: (
       state,
       action: PayloadAction<{room: Room; message: MessageType}>,
     ) => {

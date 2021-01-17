@@ -1,17 +1,21 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {logoutAction} from '../actions/sessions';
+import {MessageType, receiveMessage} from './messages';
+import {Room} from './rooms';
 
 type InitialState = {
   displayedMenu?: boolean;
-  creatingPost: boolean;
+  creatingPost?: boolean;
   creatingFlash?: boolean;
+  receivedMessage?: MessageType;
 };
 
 const initialState: InitialState = {
   displayedMenu: false,
   creatingPost: false,
   creatingFlash: false,
+  receivedMessage: undefined,
 };
 
 const otherSettingsSlice = createSlice({
@@ -43,9 +47,22 @@ const otherSettingsSlice = createSlice({
         creatingFlash: state.creatingFlash ? false : true,
       };
     },
+    resetRecievedMessage: (state) => ({
+      ...state,
+      receivedMessage: undefined,
+    }),
   },
   extraReducers: {
     [logoutAction.type]: () => initialState,
+    [receiveMessage.type]: (
+      state,
+      action: PayloadAction<{room: Room; message: MessageType}>,
+    ) => {
+      return {
+        ...state,
+        receivedMessage: action.payload.message,
+      };
+    },
   },
 });
 
@@ -53,6 +70,7 @@ export const {
   displayMenu,
   creatingFlash,
   creatingPost,
+  resetRecievedMessage,
 } = otherSettingsSlice.actions;
 
 export const otherSettingsReducer = otherSettingsSlice.reducer;

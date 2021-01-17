@@ -7,6 +7,8 @@ import FlashMessage from 'react-native-flash-message';
 import {createConsumer} from '@rails/actioncable';
 
 import {AppDispatch, RootState} from '../redux/index';
+import {receiveMessage, MessageType} from '../redux/messages';
+import {Room} from '../redux/rooms';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from '../containers/auth/Auth';
 import {Container as Menu} from '../containers/utils/Menu';
@@ -14,7 +16,6 @@ import {updatePositionThunk} from '../actions/users';
 import {getCurrentPosition} from '../helpers/gelocation';
 import {checkKeychain} from '../helpers/keychain';
 import {subsequentLoginThunk} from '../actions/users';
-import {recieveMessage} from '../redux/messages';
 
 const consumer = createConsumer('ws://localhost/cable');
 
@@ -62,9 +63,8 @@ const Root = () => {
         {channel: 'MessagesChannel', id: id},
         {
           connected: () => {},
-          received: (data: any) => {
-            console.log(data);
-            dispatch(recieveMessage(data));
+          received: (data: {room: Room; message: MessageType}) => {
+            dispatch(receiveMessage(data));
           },
         },
       );

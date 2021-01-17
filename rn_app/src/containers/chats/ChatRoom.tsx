@@ -6,13 +6,14 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ChatRoom} from '../../components/chats/ChatRoom';
 import {AppDispatch, RootState} from '../../redux/index';
+import {selectMessages} from '../../redux/messages';
+import {resetUnreadNumber} from '../../redux/rooms';
+import {resetRecievedMessage} from '../../redux/otherSettings';
 import {
   createMessageThunk,
   createReadMessagesThunk,
 } from '../../actions/messages';
 import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
-import {selectMessages} from '../../redux/messages';
-import {resetUnreadNumber} from '../../redux/rooms';
 import {UserAvatar} from '../../components/utils/Avatar';
 
 type RootRouteProp = RouteProp<ChatRoomStackParamParamList, 'ChatRoom'>;
@@ -28,13 +29,17 @@ export const Container = ({route, navigation}: Props) => {
   const userId = useSelector((state: RootState) => state.userReducer.user!.id);
 
   const selectedMessages = useSelector((state: RootState) => {
-    const messageIds = route.params.messages;
-    return selectMessages(state, messageIds);
+    return selectMessages(state, route.params.messages);
   }, shallowEqual);
 
-  const navigateToProfile = () => {
+  // チャットルームを開いている時にwsでメッセージを受け取った時のためのセレクタ
+  const receivedMessage = useSelector((state: RootState) => {
+    return state.otherSettingsReducer.receivedMessage;
+  }, shallowEqual);
+
+  const navigateToProfile = useCallback(() => {
     navigation.push('Profile', route.params.partner);
-  };
+  }, [navigation, route.params.partner]);
 
   const [messages, setMessages] = useState<IMessage[]>(() => {
     if (selectedMessages.length) {
@@ -64,6 +69,53 @@ export const Container = ({route, navigation}: Props) => {
 
   const dispatch: AppDispatch = useDispatch();
 
+  // チャットルームを開いている時にwsでメッセージを受け取った場合のためのeffect
+  useEffect(() => {
+    if (
+      receivedMessage &&
+      receivedMessage.roomId === route.params.id &&
+      receivedMessage.id !== route.params.messages[0]
+    ) {
+      setMessages((m) => {
+        return [
+          {
+            _id: receivedMessage.id,
+            text: receivedMessage.text,
+            createdAt: new Date(receivedMessage.timestamp),
+            user: {
+              _id: receivedMessage.userId,
+              avatar: () => (
+                <UserAvatar
+                  image={route.params.partner.image}
+                  size={'small'}
+                  opacity={0}
+                  onPress={navigateToProfile}
+                />
+              ),
+            },
+          },
+          ...m,
+        ];
+      });
+      // 未読数を0にする
+      dispatch(resetUnreadNumber({roomId: route.params.id}));
+      // 既読データを作成
+      dispatch(
+        createReadMessagesThunk({
+          roomId: route.params.id,
+          unreadNumber: 1,
+        }),
+      );
+    }
+  }, [
+    receivedMessage,
+    route.params.id,
+    route.params.partner.image,
+    route.params.messages,
+    navigateToProfile,
+    dispatch,
+  ]);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if (route.params.unreadNumber !== 0) {
@@ -79,6 +131,14 @@ export const Container = ({route, navigation}: Props) => {
 
     return unsubscribe;
   }, [navigation, route.params, dispatch]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      dispatch(resetRecievedMessage());
+    });
+
+    return unsubscribe;
+  }, [navigation, dispatch]);
 
   const onSend = useCallback(
     async (text: string) => {

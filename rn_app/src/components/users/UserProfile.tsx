@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   name: {
-    fontSize: 18,
+    fontSize: 16,
     marginTop: 3,
     color: basicStyles.mainTextColor,
     fontWeight: '500',

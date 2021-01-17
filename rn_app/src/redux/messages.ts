@@ -34,7 +34,7 @@ const messagesSlice = createSlice({
   name: 'messages',
   initialState: messagesAdapter.getInitialState(),
   reducers: {
-    recieveMessage: (
+    receiveMessage: (
       state,
       action: PayloadAction<{room: Room; message: MessageType}>,
     ) => {
@@ -80,6 +80,6 @@ export const selectMessages = (state: RootState, messageIds: number[]) => {
   return _ms;
 };
 
-export const {recieveMessage} = messagesSlice.actions;
+export const {receiveMessage} = messagesSlice.actions;
 
 export const messagesReducer = messagesSlice.reducer;
