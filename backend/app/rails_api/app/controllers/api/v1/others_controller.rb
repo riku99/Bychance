@@ -4,7 +4,7 @@ class Api::V1::OthersController < ApplicationController
   def index
     if @user
       crypt = User.create_geolocation_crypt
-      displayed_others = User.preload(:posts).select(&:display)
+      displayed_others = User.preload(:posts).preload(:flashes).select(&:display)
       near_others =
         displayed_others.select do |user|
           user.lat = crypt.decrypt_and_verify(user.lat)

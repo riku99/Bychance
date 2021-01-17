@@ -195,11 +195,12 @@ export const SearchOthers = ({
           setRange(refRange.current);
         }}
         items={[
+          {label: '100m', value: 0.1},
+          {label: '200m', value: 0.2},
+          {label: '300m', value: 0.3},
+          {label: '400m', value: 0.4},
+          {label: '500m', value: 0.5},
           {label: '1km', value: 1},
-          {label: '2km', value: 2},
-          {label: '3km', value: 3},
-          {label: '4km', value: 4},
-          {label: '5km', value: 5},
         ]}
         placeholder={{}}
         style={{
