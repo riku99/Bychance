@@ -9,7 +9,7 @@ export const MenuBar = () => {
   const dispatch = useDispatch();
   return (
     <Button
-      icon={{name: 'menu', color: '#64a0d9'}}
+      icon={{name: 'menu', color: '#64a0d9', size: 25}}
       buttonStyle={styles.button}
       onPress={() => {
         dispatch(displayMenu());

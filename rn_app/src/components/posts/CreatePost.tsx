@@ -58,7 +58,7 @@ export const CreatePost = ({navigation}: Props) => {
 
   useEffect(() => {
     if (isFocused) {
-      ImagePicker.launchImageLibrary({quality: 0.5}, (response) => {
+      ImagePicker.launchImageLibrary({quality: 1}, (response) => {
         if (response.didCancel) {
           navigation.goBack();
         }
