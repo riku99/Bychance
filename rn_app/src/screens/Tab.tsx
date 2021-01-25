@@ -9,6 +9,7 @@ import {PostStackScreen} from './Post';
 import {MyPageStackScreen} from './Profile';
 import {SearchStackScreen} from './Search';
 import {ChatListStackScreen} from './ChatList';
+import {View} from 'react-native';
 
 type TabList = {
   Profile: undefined;
