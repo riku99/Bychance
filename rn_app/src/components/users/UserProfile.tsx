@@ -6,6 +6,7 @@ import {
   Dimensions,
   ActivityIndicator,
   Animated,
+  ScrollView,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,8 +20,7 @@ import {
 
 import {Posts} from '../posts/Posts';
 import {basicStyles} from '../../constants/styles';
-import {HEIGHT} from '../../constants/bottomTabBar';
-import {ScrollView} from 'react-native-gesture-handler';
+import {BOTTOM_TAB_HEIGHT} from '../../constants/bottomTabBar';
 import {RootState} from '../../redux';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
@@ -58,6 +58,7 @@ type PostsRouteProp = {
 // 実際にTabViewないで表示されるコンポーネントたち
 const PostsRoute = React.memo(
   ({posts, navigateToPost, profileContainerHeight}: PostsRouteProp) => {
+    console.log(profileContainerHeight + 'プロフィールの高さ');
     return (
       <>
         <View>
@@ -88,7 +89,7 @@ const BasicUserInformationRoute = React.memo(
             mostRecentlyScrolledView && mostRecentlyScrolledView === 'posts'
               ? containerHeght +
                 profileContainerHeight +
-                HEIGHT -
+                BOTTOM_TAB_HEIGHT -
                 stickyHeaderHeight
               : undefined,
         }}>
@@ -364,6 +365,11 @@ export const UserProfile = React.memo(
       );
     };
 
+    const [
+      userImageAndNameContainerHeight,
+      setUserImageAndNameContainerHeight,
+    ] = useState(0);
+
     const renderUserProfile = () => {
       const y = scrollY.interpolate({
         inputRange: [0, profileContainerHeight],
@@ -381,63 +387,17 @@ export const UserProfile = React.memo(
           onLayout={(e) => {
             setProfileContainerHeight(e.nativeEvent.layout.height);
           }}>
-          <View style={styles.image}>
-            {(flashes.entites.length && !flashes.isAllAlreadyViewd) ||
-            creatingFlash ? (
-              <UserProfileOuter avatarSize="large" outerType="gradation">
-                <UserAvatar
-                  image={user.image}
-                  size="large"
-                  opacity={1}
-                  onPress={() => {
-                    navigateToFlashes();
-                  }}
-                />
-              </UserProfileOuter>
-            ) : flashes.entites.length && flashes.isAllAlreadyViewd ? (
-              <UserProfileOuter avatarSize="large" outerType="silver">
-                <UserAvatar
-                  image={user.image}
-                  size="large"
-                  opacity={1}
-                  onPress={() => {
-                    navigateToFlashes();
-                  }}
-                />
-              </UserProfileOuter>
-            ) : (
-              <UserAvatar image={user.image} size="large" opacity={1} />
-            )}
-          </View>
+          <View
+            onLayout={(e) => {
+              setUserImageAndNameContainerHeight(e.nativeEvent.layout.height);
+            }}>
+            <View style={[styles.image, {height: 85}]} />
 
-          <View style={styles.nameContainer}>
-            <Text style={styles.name}>{user.name}</Text>
+            <View style={[styles.nameContainer]}>
+              <Text style={styles.name}>{user.name}</Text>
+            </View>
           </View>
-          <View style={styles.edit}>
-            {referenceId === user.id ? (
-              <Button
-                title="プロフィールを編集"
-                titleStyle={styles.editButtonTitle}
-                buttonStyle={styles.editButton}
-                onPress={navigateToUserEdit}
-              />
-            ) : (
-              <Button
-                title="メッセージを送る"
-                icon={
-                  <Icon
-                    name="send-o"
-                    size={15}
-                    color="#2c3e50"
-                    style={{marginRight: 8}}
-                  />
-                }
-                titleStyle={{...styles.editButtonTitle, color: '#2c3e50'}}
-                buttonStyle={[styles.editButton, styles.sendMessageButton]}
-                onPress={navigateToChatRoom}
-              />
-            )}
-          </View>
+          <View style={[styles.edit, {height: 40}]} />
           <View
             style={[
               styles.introduce,
@@ -455,6 +415,111 @@ export const UserProfile = React.memo(
               </Text>
             )}
           </View>
+          <View style={{height: displayHideButton ? 46 : undefined}} />
+        </Animated.View>
+      );
+    };
+
+    const renderUserImage = () => {
+      const y = scrollY.interpolate({
+        inputRange: [0, profileContainerHeight],
+        outputRange: [0, -profileContainerHeight],
+        extrapolateRight: 'clamp',
+      });
+      return (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            top: '3.4%',
+            transform: [{translateY: y}],
+          }}>
+          {(flashes.entites.length && !flashes.isAllAlreadyViewd) ||
+          creatingFlash ? (
+            <UserProfileOuter avatarSize="large" outerType="gradation">
+              <UserAvatar
+                image={user.image}
+                size="large"
+                opacity={1}
+                onPress={() => {
+                  navigateToFlashes();
+                }}
+              />
+            </UserProfileOuter>
+          ) : flashes.entites.length && flashes.isAllAlreadyViewd ? (
+            <UserProfileOuter avatarSize="large" outerType="silver">
+              <UserAvatar
+                image={user.image}
+                size="large"
+                opacity={1}
+                onPress={() => {
+                  navigateToFlashes();
+                }}
+              />
+            </UserProfileOuter>
+          ) : (
+            <UserAvatar image={user.image} size="large" opacity={1} />
+          )}
+        </Animated.View>
+      );
+    };
+
+    const renderEditButton = () => {
+      const y = scrollY.interpolate({
+        inputRange: [0, profileContainerHeight],
+        outputRange: [0, -profileContainerHeight],
+        extrapolateRight: 'clamp',
+      });
+
+      return (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            top: userImageAndNameContainerHeight + 20,
+            transform: [{translateY: y}],
+          }}>
+          {referenceId === user.id ? (
+            <Button
+              title="プロフィールを編集"
+              titleStyle={styles.editButtonTitle}
+              buttonStyle={styles.editButton}
+              onPress={navigateToUserEdit}
+            />
+          ) : (
+            <Button
+              title="メッセージを送る"
+              icon={
+                <Icon
+                  name="send-o"
+                  size={15}
+                  color="#2c3e50"
+                  style={{marginRight: 8}}
+                />
+              }
+              titleStyle={{...styles.editButtonTitle, color: '#2c3e50'}}
+              buttonStyle={[styles.editButton, styles.sendMessageButton]}
+              onPress={navigateToChatRoom}
+            />
+          )}
+        </Animated.View>
+      );
+    };
+
+    const renderDisplayIntroduceButton = () => {
+      const y = scrollY.interpolate({
+        inputRange: [0, profileContainerHeight],
+        outputRange: [0, -profileContainerHeight],
+        extrapolateRight: 'clamp',
+      });
+      return (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: profileContainerHeight - 46,
+            alignSelf: 'center',
+            transform: [{translateY: y}],
+          }}>
           {displayHideButton && (
             <Button
               icon={
@@ -482,6 +547,9 @@ export const UserProfile = React.memo(
         onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}>
         {renderUserProfile()}
         {renderTabView()}
+        {renderUserImage()}
+        {renderEditButton()}
+        {renderDisplayIntroduceButton()}
 
         {referenceId === user.id && (
           <Button
