@@ -20,7 +20,6 @@ import {
 
 import {Posts} from '../posts/Posts';
 import {basicStyles} from '../../constants/styles';
-import {BOTTOM_TAB_HEIGHT} from '../../constants/bottomTabBar';
 import {RootState} from '../../redux';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
@@ -52,62 +51,197 @@ type Props = {
 type PostsRouteProp = {
   posts: Post[];
   navigateToPost: (post: Post) => void;
+  containerHeight: number;
   profileContainerHeight: number;
+  defaultProfileContainerHeight: number;
+  mostRecentlyScrolledView: 'posts' | 'userInformation' | null;
 };
 
-// 実際にTabViewないで表示されるコンポーネントたち
 const PostsRoute = React.memo(
-  ({posts, navigateToPost, profileContainerHeight}: PostsRouteProp) => {
-    console.log(profileContainerHeight + 'プロフィールの高さ');
+  ({
+    posts,
+    navigateToPost,
+    profileContainerHeight,
+    containerHeight,
+    defaultProfileContainerHeight,
+    mostRecentlyScrolledView,
+  }: PostsRouteProp) => {
+    const [contentsHeight, setContentsHeight] = useState(0);
+    const paddingTopHeight = useMemo(
+      () => profileContainerHeight + stickyHeaderHeight,
+      [profileContainerHeight],
+    );
+
+    const scrollableHeight = useMemo(() => {
+      // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
+      if (profileContainerHeight === defaultProfileContainerHeight) {
+        switch (mostRecentlyScrolledView) {
+          case 'posts':
+            return paddingTopHeight;
+          case 'userInformation':
+            return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
+        }
+      }
+
+      // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
+      if (
+        profileContainerHeight > defaultProfileContainerHeight &&
+        paddingTopHeight <= containerHeight
+      ) {
+        switch (mostRecentlyScrolledView) {
+          case 'posts':
+            return paddingTopHeight;
+          case 'userInformation':
+            return containerHeight + profileContainerHeight - contentsHeight;
+        }
+      }
+
+      // paddingTopの値がContainerを超えている場合
+      if (paddingTopHeight > containerHeight) {
+        switch (mostRecentlyScrolledView) {
+          case 'posts':
+            return (
+              profileContainerHeight +
+              stickyHeaderHeight +
+              (paddingTopHeight - containerHeight)
+            );
+          case 'userInformation':
+            return (
+              containerHeight +
+              profileContainerHeight -
+              contentsHeight +
+              (paddingTopHeight - containerHeight)
+            );
+        }
+      }
+    }, [
+      mostRecentlyScrolledView,
+      containerHeight,
+      profileContainerHeight,
+      defaultProfileContainerHeight,
+      paddingTopHeight,
+      contentsHeight,
+    ]);
+
     return (
       <>
-        <View>
+        <View onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
           <Posts posts={posts} navigateToShowPost={navigateToPost} />
         </View>
-        <View style={{height: profileContainerHeight + stickyHeaderHeight}} />
+        <View
+          style={{
+            height: scrollableHeight,
+          }}
+        />
       </>
     );
   },
 );
 
 type BasicUserInformationRouteProp = {
-  containerHeght: number;
+  containerHeight: number;
   profileContainerHeight: number;
   mostRecentlyScrolledView: 'posts' | 'userInformation' | null;
+  defaultProfileContainerHeight: number;
 };
 
 const BasicUserInformationRoute = React.memo(
   ({
-    containerHeght,
+    containerHeight,
     profileContainerHeight,
     mostRecentlyScrolledView,
+    defaultProfileContainerHeight,
   }: BasicUserInformationRouteProp) => {
+    const [contentsHeight, setContentsHeight] = useState(0);
+
+    const paddingTopHeight = useMemo(
+      () => profileContainerHeight + stickyHeaderHeight,
+      [profileContainerHeight],
+    );
+
+    const scrollableHeight = useMemo(() => {
+      // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
+      if (profileContainerHeight === defaultProfileContainerHeight) {
+        switch (mostRecentlyScrolledView) {
+          case 'userInformation':
+            return paddingTopHeight;
+          case 'posts':
+            return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
+        }
+      }
+
+      // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
+      if (
+        profileContainerHeight > defaultProfileContainerHeight &&
+        paddingTopHeight <= containerHeight
+      ) {
+        switch (mostRecentlyScrolledView) {
+          case 'userInformation':
+            return paddingTopHeight;
+          case 'posts':
+            return containerHeight + profileContainerHeight - contentsHeight;
+        }
+      }
+
+      // paddingTopの値がContainerを超えている場合
+      if (paddingTopHeight > containerHeight) {
+        switch (mostRecentlyScrolledView) {
+          case 'userInformation':
+            return (
+              profileContainerHeight +
+              stickyHeaderHeight +
+              (paddingTopHeight - containerHeight)
+            );
+          case 'posts':
+            return (
+              containerHeight +
+              profileContainerHeight -
+              contentsHeight +
+              (paddingTopHeight - containerHeight)
+            );
+        }
+      }
+    }, [
+      mostRecentlyScrolledView,
+      containerHeight,
+      profileContainerHeight,
+      defaultProfileContainerHeight,
+      paddingTopHeight,
+      contentsHeight,
+    ]);
+
     return (
-      <View
-        style={{
-          height:
-            mostRecentlyScrolledView && mostRecentlyScrolledView === 'posts'
-              ? containerHeght +
-                profileContainerHeight +
-                BOTTOM_TAB_HEIGHT -
-                stickyHeaderHeight
-              : undefined,
-        }}>
-        <Text
+      <>
+        <View
           style={{
-            fontSize: 25,
-            fontWeight: 'bold',
-            color: '#a6c6f7',
-            marginTop: 20,
-            alignSelf: 'center',
-          }}>
-          coming soon...
-        </Text>
-      </View>
+            backgroundColor: 'gray',
+            minHeight:
+              containerHeight -
+              (defaultProfileContainerHeight + stickyHeaderHeight),
+            justifyContent: 'center',
+          }}
+          onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: 'bold',
+              color: '#a6c6f7',
+              marginTop: 40,
+              marginBottom: 40,
+              alignSelf: 'center',
+            }}>
+            coming soon...
+          </Text>
+        </View>
+        <View
+          style={{
+            height: scrollableHeight,
+          }}
+        />
+      </>
     );
   },
 );
-//
 
 type TabSceneProps = {
   profileContainerHeight: number;
@@ -138,7 +272,9 @@ const TabScene = ({
       scrollEventThrottle={16}
       onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
         useNativeDriver: true,
-        listener: () => setMostRecentlyScrolledView(),
+        listener: () => {
+          setMostRecentlyScrolledView();
+        },
       })}
       onScrollEndDrag={onScrollEndDrag}
       onMomentumScrollEnd={onMomentumScrollEnd}>
@@ -181,6 +317,16 @@ export const UserProfile = React.memo(
 
     const [containerHeight, setContainerHeight] = useState(0);
     const [profileContainerHeight, setProfileContainerHeight] = useState(0);
+
+    const defaultProfileContainerHeight = useRef(0);
+    const getDefaultContainerHeight = useRef(false);
+    useEffect(() => {
+      if (!getDefaultContainerHeight.current && profileContainerHeight !== 0) {
+        defaultProfileContainerHeight.current = profileContainerHeight;
+        getDefaultContainerHeight.current = true;
+      }
+    }, [profileContainerHeight]);
+
     const tabRoute: [
       {key: 'posts'; title: 'posts'},
       {key: 'userInformation'; title: 'info'},
@@ -219,6 +365,7 @@ export const UserProfile = React.memo(
     }, [scrollY, tabIndex, tabRoute]);
 
     const syncScrollOffset = () => {
+      console.log('sync');
       const currentRouteTabKey = tabRoute[tabIndex].key;
       if (currentRouteTabKey === 'posts') {
         if (userInformationTabViewRef.current) {
@@ -236,6 +383,11 @@ export const UserProfile = React.memo(
         }
       }
     };
+
+    useEffect(() => {
+      console.log(profileContainerHeight + 'profilecontainer');
+      console.log(defaultProfileContainerHeight.current + 'defaultcontainer');
+    });
 
     const renderTabBar = (
       props: SceneRendererProps & {
@@ -311,8 +463,13 @@ export const UserProfile = React.memo(
               children={
                 <PostsRoute
                   posts={posts}
-                  profileContainerHeight={profileContainerHeight}
                   navigateToPost={navigateToPost}
+                  containerHeight={containerHeight}
+                  profileContainerHeight={profileContainerHeight}
+                  defaultProfileContainerHeight={
+                    defaultProfileContainerHeight.current
+                  }
+                  mostRecentlyScrolledView={mostRecentlyScrolledView}
                 />
               }
             />
@@ -340,8 +497,11 @@ export const UserProfile = React.memo(
               onMomentumScrollEnd={syncScrollOffset}
               children={
                 <BasicUserInformationRoute
-                  containerHeght={containerHeight}
+                  containerHeight={containerHeight}
                   profileContainerHeight={profileContainerHeight}
+                  defaultProfileContainerHeight={
+                    defaultProfileContainerHeight.current
+                  }
                   mostRecentlyScrolledView={mostRecentlyScrolledView}
                 />
               }
@@ -385,6 +545,7 @@ export const UserProfile = React.memo(
             width: '100%',
           }}
           onLayout={(e) => {
+            console.log(e.nativeEvent.layout.height + 'profile');
             setProfileContainerHeight(e.nativeEvent.layout.height);
           }}>
           <View
@@ -393,11 +554,21 @@ export const UserProfile = React.memo(
             }}>
             <View style={[styles.image, {height: 85}]} />
 
-            <View style={[styles.nameContainer]}>
+            <View
+              style={[
+                styles.nameContainer,
+                {marginTop: flashes.entites.length ? 24 : 20},
+              ]}>
               <Text style={styles.name}>{user.name}</Text>
             </View>
           </View>
-          <View style={[styles.edit, {height: 40}]} />
+          <View
+            style={[
+              styles.edit,
+              {marginTop: flashes.entites.length ? 24 : 29},
+              {height: 40},
+            ]}
+          />
           <View
             style={[
               styles.introduce,
@@ -429,9 +600,11 @@ export const UserProfile = React.memo(
       return (
         <Animated.View
           style={{
+            height: 85,
             position: 'absolute',
             alignSelf: 'center',
-            top: '3.4%',
+            justifyContent: 'center',
+            top: 24,
             transform: [{translateY: y}],
           }}>
           {(flashes.entites.length && !flashes.isAllAlreadyViewd) ||
@@ -476,7 +649,9 @@ export const UserProfile = React.memo(
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            top: userImageAndNameContainerHeight + 20,
+            top: flashes.entites.length
+              ? userImageAndNameContainerHeight + 24
+              : userImageAndNameContainerHeight + 29,
             transform: [{translateY: y}],
           }}>
           {referenceId === user.id ? (
@@ -534,7 +709,20 @@ export const UserProfile = React.memo(
               }}
               buttonStyle={{backgroundColor: 'transparent'}}
               activeOpacity={1}
-              onPress={() => setHideIntroduce(!hideIntroduce)}
+              onPress={() => {
+                // intorduceの範囲を拡張している状態から元に戻した場合、どちらのViewもスクロールして最初の状態に戻す
+                if (!hideIntroduce) {
+                  postsTabViewRef.current?.scrollTo({
+                    y: 0,
+                    animated: false,
+                  });
+                  userInformationTabViewRef.current?.scrollTo({
+                    y: 0,
+                    animated: false,
+                  });
+                }
+                setHideIntroduce(!hideIntroduce);
+              }}
             />
           )}
         </Animated.View>
@@ -544,7 +732,9 @@ export const UserProfile = React.memo(
     return (
       <View
         style={styles.container}
-        onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}>
+        onLayout={(e) => {
+          setContainerHeight(e.nativeEvent.layout.height);
+        }}>
         {renderUserProfile()}
         {renderTabView()}
         {renderUserImage()}
@@ -568,14 +758,13 @@ const {width, height} = Dimensions.get('window');
 
 const oneTextLineHeght = 18.7;
 
-const introduceMaxAndMinHight = height / 5;
+const introduceMaxAndMinHight = height / 7;
 
 const stickyHeaderHeight = 40.5;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: height,
   },
   profileContainer: {
     width: '100%',
@@ -584,12 +773,11 @@ const styles = StyleSheet.create({
   image: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '6%',
+    marginTop: 24,
   },
   nameContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '5%',
   },
   name: {
     fontSize: 16,
@@ -599,8 +787,6 @@ const styles = StyleSheet.create({
   },
   edit: {
     alignItems: 'center',
-    marginTop: 25,
-    height: 40,
   },
   editButton: {
     backgroundColor: 'white',
