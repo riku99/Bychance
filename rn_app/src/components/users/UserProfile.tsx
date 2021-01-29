@@ -520,6 +520,11 @@ export const UserProfile = React.memo(
       setUserImageAndNameContainerHeight,
     ] = useState(0);
 
+    const [
+      profileContainerHeightWithoutExpandButton,
+      setProfileContainerHeightWithoutExpandButton,
+    ] = useState(0);
+
     const renderUserProfile = () => {
       const y = scrollY.interpolate({
         inputRange: [0, profileContainerHeight],
@@ -530,41 +535,52 @@ export const UserProfile = React.memo(
         <Animated.View
           style={[styles.profileContainer, {transform: [{translateY: y}]}]}
           onLayout={(e) => {
-            console.log(e.nativeEvent.layout.height + 'profile');
             setProfileContainerHeight(e.nativeEvent.layout.height);
           }}>
           <View
-            onLayout={(e) => {
-              setUserImageAndNameContainerHeight(e.nativeEvent.layout.height);
-            }}>
-            <View style={styles.image} />
+            onLayout={(e) =>
+              setProfileContainerHeightWithoutExpandButton(
+                e.nativeEvent.layout.height,
+              )
+            }>
+            <View
+              onLayout={(e) => {
+                setUserImageAndNameContainerHeight(e.nativeEvent.layout.height);
+              }}>
+              <View style={styles.image} />
+              <View
+                style={[
+                  styles.nameContainer,
+                  {marginTop: flashes.entites.length ? 24 : 20},
+                ]}>
+                <Text style={styles.name}>{user.name}</Text>
+              </View>
+            </View>
             <View
               style={[
-                styles.nameContainer,
-                {marginTop: flashes.entites.length ? 24 : 20},
+                styles.edit,
+                {marginTop: flashes.entites.length ? 24 : 29},
+              ]}
+            />
+            <View
+              style={[
+                styles.introduce,
+                {
+                  maxHeight: hideIntroduce
+                    ? introduceMaxAndMinHight
+                    : undefined,
+                },
               ]}>
-              <Text style={styles.name}>{user.name}</Text>
+              {!!user.introduce && (
+                <Text
+                  style={{
+                    color: basicStyles.mainTextColor,
+                    lineHeight: oneTextLineHeght,
+                  }}>
+                  {user.introduce}
+                </Text>
+              )}
             </View>
-          </View>
-          <View
-            style={[styles.edit, {marginTop: flashes.entites.length ? 24 : 29}]}
-          />
-          <View
-            style={[
-              styles.introduce,
-              {
-                maxHeight: hideIntroduce ? introduceMaxAndMinHight : undefined,
-              },
-            ]}>
-            {!!user.introduce && (
-              <Text
-                style={{
-                  color: basicStyles.mainTextColor,
-                  lineHeight: oneTextLineHeght,
-                }}>
-                {user.introduce}
-              </Text>
-            )}
           </View>
           <View
             style={{
@@ -573,6 +589,14 @@ export const UserProfile = React.memo(
                 : undefined,
             }}
           />
+          {creatingPost ? (
+            <View style={styles.creatingPost}>
+              <ActivityIndicator />
+              <Text style={{fontWeight: 'bold', color: '#999999'}}>
+                投稿中です
+              </Text>
+            </View>
+          ) : undefined}
         </Animated.View>
       );
     };
@@ -680,7 +704,7 @@ export const UserProfile = React.memo(
           style={[
             styles.animatedElement,
             {
-              top: profileContainerHeight - expandIntroduceButtonContainer,
+              top: profileContainerHeightWithoutExpandButton,
               transform: [{translateY: y}],
             },
           ]}>
@@ -835,11 +859,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   creatingPost: {
-    width: 130,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
     alignSelf: 'center',
+    marginTop: 15,
+    width: 120,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
   tabBarContainer: {
     position: 'absolute',
