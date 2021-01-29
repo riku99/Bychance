@@ -27,27 +27,6 @@ import {UserAvatar} from '../utils/Avatar';
 import {UserProfileOuter} from '../utils/UserProfileOuter';
 import {useSelector} from 'react-redux';
 
-type Props = {
-  user: {
-    id: number;
-    name: string;
-    image: string | null;
-    introduce: string | null;
-  };
-  referenceId: number;
-  posts: Post[];
-  flashes: {
-    entites: Flash[];
-    isAllAlreadyViewd?: boolean;
-  };
-  creatingFlash?: boolean;
-  navigateToPost: (post: Post) => void;
-  navigateToUserEdit?: () => void;
-  navigateToChatRoom?: () => Promise<void> | void;
-  navigateToTakeFlash?: () => void;
-  navigateToFlashes: () => void;
-};
-
 type PostsRouteProp = {
   posts: Post[];
   navigateToPost: (post: Post) => void;
@@ -57,6 +36,7 @@ type PostsRouteProp = {
   mostRecentlyScrolledView: 'posts' | 'userInformation' | null;
 };
 
+// TabSceneに渡され表示されるコンポーネント
 const PostsRoute = React.memo(
   ({
     posts,
@@ -68,7 +48,7 @@ const PostsRoute = React.memo(
   }: PostsRouteProp) => {
     const [contentsHeight, setContentsHeight] = useState(0);
     const paddingTopHeight = useMemo(
-      () => profileContainerHeight + stickyHeaderHeight,
+      () => profileContainerHeight + stickyTabHeight,
       [profileContainerHeight],
     );
 
@@ -102,7 +82,7 @@ const PostsRoute = React.memo(
           case 'posts':
             return (
               profileContainerHeight +
-              stickyHeaderHeight +
+              stickyTabHeight +
               (paddingTopHeight - containerHeight)
             );
           case 'userInformation':
@@ -145,6 +125,7 @@ type BasicUserInformationRouteProp = {
   defaultProfileContainerHeight: number;
 };
 
+// TabSceneに渡され表示されるコンポーネント
 const BasicUserInformationRoute = React.memo(
   ({
     containerHeight,
@@ -155,7 +136,7 @@ const BasicUserInformationRoute = React.memo(
     const [contentsHeight, setContentsHeight] = useState(0);
 
     const paddingTopHeight = useMemo(
-      () => profileContainerHeight + stickyHeaderHeight,
+      () => profileContainerHeight + stickyTabHeight,
       [profileContainerHeight],
     );
 
@@ -189,7 +170,7 @@ const BasicUserInformationRoute = React.memo(
           case 'userInformation':
             return (
               profileContainerHeight +
-              stickyHeaderHeight +
+              stickyTabHeight +
               (paddingTopHeight - containerHeight)
             );
           case 'posts':
@@ -214,24 +195,13 @@ const BasicUserInformationRoute = React.memo(
       <>
         <View
           style={{
-            backgroundColor: 'gray',
             minHeight:
               containerHeight -
-              (defaultProfileContainerHeight + stickyHeaderHeight),
+              (defaultProfileContainerHeight + stickyTabHeight),
             justifyContent: 'center',
           }}
           onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
-          <Text
-            style={{
-              fontSize: 25,
-              fontWeight: 'bold',
-              color: '#a6c6f7',
-              marginTop: 40,
-              marginBottom: 40,
-              alignSelf: 'center',
-            }}>
-            coming soon...
-          </Text>
+          <Text style={styles.comingSoon}>coming soon...</Text>
         </View>
         <View
           style={{
@@ -250,9 +220,12 @@ type TabSceneProps = {
   setMostRecentlyScrolledView: () => void;
   onScrollEndDrag: () => void;
   onMomentumScrollEnd: () => void;
-  children: JSX.Element;
+  children: Element;
 };
 
+// TabViewに渡されるコンポーネント
+// TabViewは複数種類のコンポーネントをレンダリングするが、それぞれに共通したロジックを持たせるためのコンポーネント
+// ここでの共通したロジックとはアニメーション、スタイル、イベントハンドラなど
 const TabScene = ({
   profileContainerHeight,
   scrollY,
@@ -266,7 +239,7 @@ const TabScene = ({
     <Animated.ScrollView
       ref={tabViewRef}
       style={{
-        paddingTop: profileContainerHeight + stickyHeaderHeight,
+        paddingTop: profileContainerHeight + stickyTabHeight,
       }}
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
@@ -281,6 +254,27 @@ const TabScene = ({
       {children}
     </Animated.ScrollView>
   );
+};
+
+type Props = {
+  user: {
+    id: number;
+    name: string;
+    image: string | null;
+    introduce: string | null;
+  };
+  referenceId: number;
+  posts: Post[];
+  flashes: {
+    entites: Flash[];
+    isAllAlreadyViewd?: boolean;
+  };
+  creatingFlash?: boolean;
+  navigateToPost: (post: Post) => void;
+  navigateToUserEdit?: () => void;
+  navigateToChatRoom?: () => Promise<void> | void;
+  navigateToTakeFlash?: () => void;
+  navigateToFlashes: () => void;
 };
 
 export const UserProfile = React.memo(
@@ -311,13 +305,13 @@ export const UserProfile = React.memo(
     const [hideIntroduce, setHideIntroduce] = useState(
       lineNumber * oneTextLineHeght > introduceMaxAndMinHight ? true : false,
     );
+
     const creatingPost = useSelector(
       (state: RootState) => state.otherSettingsReducer.creatingPost,
     );
 
     const [containerHeight, setContainerHeight] = useState(0);
     const [profileContainerHeight, setProfileContainerHeight] = useState(0);
-
     const defaultProfileContainerHeight = useRef(0);
     const getDefaultContainerHeight = useRef(false);
     useEffect(() => {
@@ -351,7 +345,7 @@ export const UserProfile = React.memo(
     const postsTabViewRef = useRef<ScrollView>(null);
     const userInformationTabViewRef = useRef<ScrollView>(null);
 
-    // 表示されているTabViewのrouteをどれだけスクロールしたかを記録
+    // 表示されているTabViewをどれだけスクロールしたかを記録
     useEffect(() => {
       scrollY.addListener(({value}) => {
         const key = tabRoute[tabIndex].key;
@@ -364,8 +358,8 @@ export const UserProfile = React.memo(
       };
     }, [scrollY, tabIndex, tabRoute]);
 
+    // 片方のTabViewがスクロールされた場合、もう片方もそのoffsetに合わせる
     const syncScrollOffset = () => {
-      console.log('sync');
       const currentRouteTabKey = tabRoute[tabIndex].key;
       if (currentRouteTabKey === 'posts') {
         if (userInformationTabViewRef.current) {
@@ -384,11 +378,7 @@ export const UserProfile = React.memo(
       }
     };
 
-    useEffect(() => {
-      console.log(profileContainerHeight + 'profilecontainer');
-      console.log(defaultProfileContainerHeight.current + 'defaultcontainer');
-    });
-
+    // TabViewで使用するTabBarを定義
     const renderTabBar = (
       props: SceneRendererProps & {
         navigationState: NavigationState<{
@@ -404,13 +394,7 @@ export const UserProfile = React.memo(
       });
       return (
         <Animated.View
-          style={{
-            position: 'absolute',
-            top: 0,
-            width: '100%',
-            transform: [{translateY: y}],
-            zIndex: 1,
-          }}>
+          style={[styles.tabBarContainer, {transform: [{translateY: y}]}]}>
           <TabBar
             {...props}
             indicatorStyle={{backgroundColor: '#4ba5fa'}}
@@ -436,6 +420,8 @@ export const UserProfile = React.memo(
       );
     };
 
+    // TabViewに渡すコンポーネント
+    // TabViewから渡されるrouteに応じて表示する内容を変える
     const renderScene = ({
       route,
     }: SceneRendererProps & {
@@ -448,31 +434,35 @@ export const UserProfile = React.memo(
         case 'posts':
           return (
             <TabScene
-              profileContainerHeight={profileContainerHeight}
               scrollY={scrollY}
+              profileContainerHeight={profileContainerHeight}
               tabViewRef={postsTabViewRef}
               setMostRecentlyScrolledView={() => {
-                if (tabRoute[tabIndex].key === 'posts') {
+                if (
+                  tabRoute[tabIndex].key === 'posts' &&
+                  mostRecentlyScrolledView !== 'posts'
+                ) {
                   setMostRecentlyScrolledView('posts');
-                } else {
+                } else if (
+                  tabRoute[tabIndex].key === 'userInformation' &&
+                  mostRecentlyScrolledView !== 'userInformation'
+                ) {
                   setMostRecentlyScrolledView('userInformation');
                 }
               }}
               onScrollEndDrag={syncScrollOffset}
-              onMomentumScrollEnd={syncScrollOffset}
-              children={
-                <PostsRoute
-                  posts={posts}
-                  navigateToPost={navigateToPost}
-                  containerHeight={containerHeight}
-                  profileContainerHeight={profileContainerHeight}
-                  defaultProfileContainerHeight={
-                    defaultProfileContainerHeight.current
-                  }
-                  mostRecentlyScrolledView={mostRecentlyScrolledView}
-                />
-              }
-            />
+              onMomentumScrollEnd={syncScrollOffset}>
+              <PostsRoute
+                posts={posts}
+                navigateToPost={navigateToPost}
+                containerHeight={containerHeight}
+                profileContainerHeight={profileContainerHeight}
+                defaultProfileContainerHeight={
+                  defaultProfileContainerHeight.current
+                }
+                mostRecentlyScrolledView={mostRecentlyScrolledView}
+              />
+            </TabScene>
           );
         case 'userInformation':
           return (
@@ -538,12 +528,7 @@ export const UserProfile = React.memo(
       });
       return (
         <Animated.View
-          style={{
-            transform: [{translateY: y}],
-            position: 'absolute',
-            top: 0,
-            width: '100%',
-          }}
+          style={[styles.profileContainer, {transform: [{translateY: y}]}]}
           onLayout={(e) => {
             console.log(e.nativeEvent.layout.height + 'profile');
             setProfileContainerHeight(e.nativeEvent.layout.height);
@@ -552,8 +537,7 @@ export const UserProfile = React.memo(
             onLayout={(e) => {
               setUserImageAndNameContainerHeight(e.nativeEvent.layout.height);
             }}>
-            <View style={[styles.image, {height: 85}]} />
-
+            <View style={styles.image} />
             <View
               style={[
                 styles.nameContainer,
@@ -563,11 +547,7 @@ export const UserProfile = React.memo(
             </View>
           </View>
           <View
-            style={[
-              styles.edit,
-              {marginTop: flashes.entites.length ? 24 : 29},
-              {height: 40},
-            ]}
+            style={[styles.edit, {marginTop: flashes.entites.length ? 24 : 29}]}
           />
           <View
             style={[
@@ -586,7 +566,13 @@ export const UserProfile = React.memo(
               </Text>
             )}
           </View>
-          <View style={{height: displayHideButton ? 46 : undefined}} />
+          <View
+            style={{
+              height: displayHideButton
+                ? expandIntroduceButtonContainer
+                : undefined,
+            }}
+          />
         </Animated.View>
       );
     };
@@ -599,14 +585,15 @@ export const UserProfile = React.memo(
       });
       return (
         <Animated.View
-          style={{
-            height: 85,
-            position: 'absolute',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            top: 24,
-            transform: [{translateY: y}],
-          }}>
+          style={[
+            styles.animatedElement,
+            {
+              justifyContent: 'center',
+              height: userImageHeight,
+              top: userImageTop,
+              transform: [{translateY: y}],
+            },
+          ]}>
           {(flashes.entites.length && !flashes.isAllAlreadyViewd) ||
           creatingFlash ? (
             <UserProfileOuter avatarSize="large" outerType="gradation">
@@ -646,14 +633,15 @@ export const UserProfile = React.memo(
 
       return (
         <Animated.View
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            top: flashes.entites.length
-              ? userImageAndNameContainerHeight + 24
-              : userImageAndNameContainerHeight + 29,
-            transform: [{translateY: y}],
-          }}>
+          style={[
+            styles.animatedElement,
+            {
+              top: flashes.entites.length
+                ? userImageAndNameContainerHeight + 24
+                : userImageAndNameContainerHeight + 29,
+              transform: [{translateY: y}],
+            },
+          ]}>
           {referenceId === user.id ? (
             <Button
               title="プロフィールを編集"
@@ -689,12 +677,13 @@ export const UserProfile = React.memo(
       });
       return (
         <Animated.View
-          style={{
-            position: 'absolute',
-            top: profileContainerHeight - 46,
-            alignSelf: 'center',
-            transform: [{translateY: y}],
-          }}>
+          style={[
+            styles.animatedElement,
+            {
+              top: profileContainerHeight - expandIntroduceButtonContainer,
+              transform: [{translateY: y}],
+            },
+          ]}>
           {displayHideButton && (
             <Button
               icon={
@@ -760,20 +749,28 @@ const oneTextLineHeght = 18.7;
 
 const introduceMaxAndMinHight = height / 7;
 
-const stickyHeaderHeight = 40.5;
+const stickyTabHeight = 40.5;
+
+const expandIntroduceButtonContainer = 46;
+
+const userImageHeight = 85;
+
+const userImageTop = 24;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   profileContainer: {
-    width: '100%',
     position: 'absolute',
+    top: 0,
+    width: '100%',
   },
   image: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: userImageTop,
+    height: userImageHeight,
   },
   nameContainer: {
     justifyContent: 'center',
@@ -787,6 +784,7 @@ const styles = StyleSheet.create({
   },
   edit: {
     alignItems: 'center',
+    height: 40,
   },
   editButton: {
     backgroundColor: 'white',
@@ -836,13 +834,6 @@ const styles = StyleSheet.create({
     height: 35,
     marginBottom: 5,
   },
-  stickyHeader: {
-    height: stickyHeaderHeight,
-    width: '100%',
-    backgroundColor: 'gray',
-    borderBottomWidth: 0.5,
-    borderBottomColor: basicStyles.imageBackGroundColor,
-  },
   creatingPost: {
     width: 130,
     flexDirection: 'row',
@@ -850,12 +841,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
-  stickyItem: {
-    height: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
+  tabBarContainer: {
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    zIndex: 1,
+  },
+  animatedElement: {
+    position: 'absolute',
+    alignSelf: 'center',
+  },
+  comingSoon: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#a6c6f7',
+    marginTop: 40,
+    marginBottom: 40,
+    alignSelf: 'center',
   },
   dummy: {
     height: width / 3,
