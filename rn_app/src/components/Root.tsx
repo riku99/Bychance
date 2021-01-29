@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import FlashMessage from 'react-native-flash-message';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 // 型定義ファイルが存在しないまたは見つけられなかったのでignore
 // @ts-ignore
 import {createConsumer} from '@rails/actioncable';
+import {Avatar} from 'react-native-elements';
 
 import {AppDispatch, RootState} from '../redux/index';
 import {receiveMessage, MessageType} from '../redux/messages';
@@ -16,6 +17,7 @@ import {updatePositionThunk} from '../actions/users';
 import {getCurrentPosition} from '../helpers/gelocation';
 import {checkKeychain} from '../helpers/keychain';
 import {subsequentLoginThunk} from '../actions/users';
+import {UserAvatar} from '../components/utils/Avatar';
 
 const consumer = createConsumer('ws://localhost/cable');
 
@@ -65,6 +67,22 @@ const Root = () => {
           connected: () => {},
           received: (data: {room: Room; message: MessageType}) => {
             dispatch(receiveMessage(data));
+            showMessage({
+              message: data.room.partner.name,
+              description: data.message.text,
+              style: {backgroundColor: '#00163b'},
+              titleStyle: {color: 'white', marginLeft: 10},
+              textStyle: {color: 'white', marginLeft: 10},
+              icon: 'default',
+              renderFlashMessageIcon: () => {
+                return (
+                  <View style={{marginRight: 5}}>
+                    <UserAvatar size={40} image={data.room.partner.image} />
+                  </View>
+                );
+              },
+              duration: 2500,
+            });
           },
         },
       );
