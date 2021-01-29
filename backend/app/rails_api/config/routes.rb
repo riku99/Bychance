@@ -17,7 +17,6 @@ Rails.application.routes.draw do
       post '/rooms', to: 'rooms#create'
 
       post '/messages', to: 'room_messages#create'
-      patch '/messages_read', to: 'room_messages#change_read'
 
       post '/flashes', to: 'flashes#create'
       delete '/flashes', to: 'flashes#destroy'

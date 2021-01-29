@@ -34,17 +34,6 @@ class Api::V1::RoomMessagesController < ApplicationController
     end
   end
 
-  def change_read
-    if @user
-      notReadMessages = RoomMessage.where(id: params[:message_ids])
-      notReadMessages.each { |message| message.update_attribute(:read, true) }
-      render json: RoomMessage.where(id: params[:message_ids]),
-             each_serializer: RoomMessageSerializer
-    else
-      render json: { errorType: 'loginError' }, status: 401
-    end
-  end
-
   private
 
   def room_message_params
