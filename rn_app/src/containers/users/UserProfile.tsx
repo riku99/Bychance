@@ -1,4 +1,10 @@
-import React, {useEffect, useLayoutEffect, useMemo} from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from 'react';
 import {StatusBar, Dimensions} from 'react-native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import {RouteProp} from '@react-navigation/native';
@@ -21,6 +27,7 @@ import {selectAllFlashes} from '../../redux/flashes';
 import {selectRoom} from '../../redux/rooms';
 import {X_HEIGHT} from '../../constants/device';
 import {alertSomeError} from '../../helpers/error';
+import {refreshUserThunk} from '../../actions/users';
 
 type MyPageStackScreenRouteProp = RouteProp<MyPageStackParamList, 'MyProfile'>;
 
@@ -78,20 +85,22 @@ const {height} = Dimensions.get('window');
 
 export const Container = ({route, navigation}: Props) => {
   // 自分以外のユーザーのプロフィールの場合はrouteにデータが存在する
-  const routeParam = route && route.params;
+  const [anotherUser, setAnotherUser] = useState(route && route.params);
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const referenceId = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
 
   const user = useSelector((state: RootState) => {
-    if (!routeParam) {
+    if (!anotherUser) {
       return state.userReducer.user!;
     }
   }, shallowEqual);
 
   const posts = useSelector((state: RootState) => {
-    if (!routeParam) {
+    if (!anotherUser) {
       return selectAllPosts(state);
     }
   }, shallowEqual);
@@ -101,26 +110,26 @@ export const Container = ({route, navigation}: Props) => {
   }, shallowEqual);
 
   const creatingFlash = useSelector((state: RootState) => {
-    if (!routeParam) {
+    if (!anotherUser) {
       return state.otherSettingsReducer.creatingFlash;
     }
   });
 
   const restUserDataForFlashes = useMemo(() => {
-    if (routeParam) {
-      const {flashes, ...restUserData} = routeParam; // eslint-disable-line
+    if (anotherUser) {
+      const {flashes, ...restUserData} = anotherUser; // eslint-disable-line
       return restUserData;
     } else {
       const {display, lat, lng, ...restUserData} = user!; // eslint-disable-line
       return {...restUserData, posts: posts!};
     }
-  }, [routeParam, user, posts]);
+  }, [anotherUser, user, posts]);
 
   useLayoutEffect(() => {
-    if (route.name !== 'MyProfile' && routeParam) {
-      navigation.setOptions({headerTitle: routeParam.name});
+    if (route.name !== 'MyProfile' && anotherUser) {
+      navigation.setOptions({headerTitle: anotherUser.name});
     }
-  }, [navigation, route.name, routeParam]);
+  }, [navigation, route.name, anotherUser]);
 
   // ナビゲーションのジェスチャーが始まった場合の責務を持ったリスナー
   useEffect(() => {
@@ -166,8 +175,8 @@ export const Container = ({route, navigation}: Props) => {
   const dispatch: AppDispatch = useDispatch();
 
   const pushChatRoom = () => {
-    if (routeParam) {
-      dispatch(createRoomThunk(routeParam))
+    if (anotherUser) {
+      dispatch(createRoomThunk(anotherUser))
         .then(unwrapResult)
         .then((payload) => {
           const selectedRoom = selectRoom(store.getState(), payload.id);
@@ -195,7 +204,7 @@ export const Container = ({route, navigation}: Props) => {
       params: {
         allFlashesWithUser: [
           {
-            flashes: routeParam ? routeParam.flashes : undefined, // 自分のプロフィールからのみflashesプロパティをundefiend
+            flashes: anotherUser ? anotherUser.flashes : undefined, // 自分のプロフィールからのみflashesプロパティをundefiend
             user: restUserDataForFlashes,
           },
         ],
@@ -204,21 +213,36 @@ export const Container = ({route, navigation}: Props) => {
     });
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    const result = await dispatch(
+      refreshUserThunk({
+        userId: user && !anotherUser ? user.id : anotherUser!.id,
+      }),
+    );
+    if (refreshUserThunk.fulfilled.match(result)) {
+      if (!result.payload.isMyData) {
+        setAnotherUser(result.payload.data);
+      }
+    }
+    setRefreshing(false);
+  }, [dispatch, user, anotherUser]);
+
   return (
     <UserProfile
       user={{
-        id: routeParam ? routeParam.id : user!.id,
-        name: routeParam ? routeParam.name : user!.name,
-        image: routeParam ? routeParam.image : user!.image,
-        introduce: routeParam ? routeParam.introduce : user!.introduce,
+        id: anotherUser ? anotherUser.id : user!.id,
+        name: anotherUser ? anotherUser.name : user!.name,
+        image: anotherUser ? anotherUser.image : user!.image,
+        introduce: anotherUser ? anotherUser.introduce : user!.introduce,
       }}
       referenceId={referenceId}
-      posts={routeParam ? routeParam.posts : posts!}
+      posts={anotherUser ? anotherUser.posts : posts!}
       flashes={
-        routeParam
+        anotherUser
           ? {
-              entites: routeParam.flashes.entities,
-              isAllAlreadyViewd: routeParam.flashes.isAllAlreadyViewed,
+              entites: anotherUser.flashes.entities,
+              isAllAlreadyViewd: anotherUser.flashes.isAllAlreadyViewed,
             }
           : {
               entites: flashes,
@@ -226,6 +250,8 @@ export const Container = ({route, navigation}: Props) => {
             }
       }
       creatingFlash={creatingFlash}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
       navigateToPost={pushPost}
       navigateToUserEdit={pushUserEdit}
       navigateToChatRoom={pushChatRoom}

@@ -6,6 +6,7 @@ import {
   editProfileThunk,
   editUserDisplayThunk,
   updatePositionThunk,
+  refreshUserThunk,
   sampleLogin,
 } from '../actions/users';
 import {logoutAction} from '../actions/sessions';
@@ -130,6 +131,19 @@ const userSlice = createSlice({
       ...state,
       user: {...state.user!, lat: action.payload.lat, lng: action.payload.lng},
     }),
+    [refreshUserThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<{isMyData: boolean; data: User}>,
+    ) => {
+      if (action.payload.isMyData) {
+        return {
+          ...state,
+          user: action.payload.data,
+        };
+      } else {
+        return state;
+      }
+    },
   },
 });
 

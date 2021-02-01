@@ -16,6 +16,7 @@ import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError, handleBasicError} from '../helpers/error';
 import {rejectPayload, SuccessfullLoginData} from './d';
+import {AnotherUser} from '../components/others/SearchOthers';
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
   const response = await sampleLoginApi();
@@ -212,3 +213,32 @@ export const editUserDisplayThunk = createAsyncThunk(
     }
   },
 );
+
+export const refreshUserThunk = createAsyncThunk<
+  {isMyData: true; data: User} | {isMyData: false; data: AnotherUser},
+  {userId: number},
+  {rejectValue: rejectPayload}
+>('users/refreshUser', async ({userId}, {dispatch, rejectWithValue}) => {
+  const credentials = await checkKeychain();
+
+  if (credentials) {
+    try {
+      const response = await axios.patch<
+        {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
+      >(
+        `${origin}/user/refresh`,
+        {userId, id: credentials.id},
+        headers(credentials.token),
+      );
+      return response.data;
+    } catch (e) {
+      // axiosエラー
+      const result = handleBasicError({e, dispatch});
+      return rejectWithValue(result);
+    }
+  } else {
+    // credentialsなしのログインエラー
+    requestLogin(() => dispatch(logoutAction));
+    return rejectWithValue({errorType: 'loginError'});
+  }
+});

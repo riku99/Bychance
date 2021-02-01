@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       patch '/user', to: 'users#edit'
       patch '/user/position', to: 'users#update_position'
       patch '/user/display', to: 'users#change_display'
+      patch '/user/refresh', to: 'users#refresh'
 
       post '/post', to: 'posts#create'
       delete '/post', to: 'posts#destroy'

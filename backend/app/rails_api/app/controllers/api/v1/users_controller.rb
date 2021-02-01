@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   require 'aws-sdk'
 
   before_action :check_access_token,
-                only: %i[subsequent_login edit change_display update_position]
+                only: %i[subsequent_login edit change_display update_position refresh]
 
   def createNonce
     nonce = params['nonce']
@@ -187,6 +187,25 @@ class Api::V1::UsersController < ApplicationController
     else
       render json: { loginError: true }, status: 401
       return
+    end
+  end
+
+  def refresh
+    if @user
+      if (@user.id == params["userId"])
+        render json: {
+          isMyData: true,
+          data: UserSerializer.new(@user)
+        }
+      else
+        target_user = User.find(params["userId"])
+        render json: {
+          isMyData: false,
+          data: OthersSerializer.new(target_user, {user: @user})
+        }
+      end
+    else
+      render json: {errorType: "loginError"}, status: 401
     end
   end
 

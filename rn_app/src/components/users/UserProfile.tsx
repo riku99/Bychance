@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Animated,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -25,7 +26,8 @@ import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
 import {UserAvatar} from '../utils/Avatar';
 import {UserProfileOuter} from '../utils/UserProfileOuter';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {refreshUserThunk} from '../../actions/users';
 
 type PostsRouteProp = {
   posts: Post[];
@@ -217,9 +219,11 @@ type TabSceneProps = {
   profileContainerHeight: number;
   scrollY: Animated.Value;
   tabViewRef: React.RefObject<ScrollView>;
+  refreshing: boolean;
   setMostRecentlyScrolledView: () => void;
   onScrollEndDrag: () => void;
   onMomentumScrollEnd: () => void;
+  onRefresh: () => void;
   children: Element;
 };
 
@@ -230,6 +234,8 @@ const TabScene = ({
   profileContainerHeight,
   scrollY,
   tabViewRef,
+  refreshing,
+  onRefresh,
   setMostRecentlyScrolledView,
   onScrollEndDrag,
   onMomentumScrollEnd,
@@ -238,6 +244,9 @@ const TabScene = ({
   return (
     <Animated.ScrollView
       ref={tabViewRef}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={{
         paddingTop: profileContainerHeight + stickyTabHeight,
       }}
@@ -270,6 +279,8 @@ type Props = {
     isAllAlreadyViewd?: boolean;
   };
   creatingFlash?: boolean;
+  refreshing: boolean;
+  onRefresh: () => void;
   navigateToPost: (post: Post) => void;
   navigateToUserEdit?: () => void;
   navigateToChatRoom?: () => Promise<void> | void;
@@ -281,9 +292,11 @@ export const UserProfile = React.memo(
   ({
     user,
     posts,
+    referenceId,
     flashes,
     creatingFlash,
-    referenceId,
+    refreshing,
+    onRefresh,
     navigateToPost,
     navigateToUserEdit,
     navigateToChatRoom,
@@ -437,6 +450,8 @@ export const UserProfile = React.memo(
               scrollY={scrollY}
               profileContainerHeight={profileContainerHeight}
               tabViewRef={postsTabViewRef}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
               setMostRecentlyScrolledView={() => {
                 if (
                   tabRoute[tabIndex].key === 'posts' &&
@@ -467,6 +482,7 @@ export const UserProfile = React.memo(
         case 'userInformation':
           return (
             <TabScene
+              userId={user.id}
               scrollY={scrollY}
               tabViewRef={userInformationTabViewRef}
               profileContainerHeight={profileContainerHeight}
