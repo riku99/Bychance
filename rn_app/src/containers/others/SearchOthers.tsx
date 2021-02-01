@@ -40,6 +40,8 @@ export const Container = () => {
     setContainedNotAlreadyViewdFlashes,
   ] = useState<FlashesWithUser[]>([]);
 
+  const [refreshing, setRefreshing] = useState(false);
+
   const dispatch: AppDispatch = useDispatch();
 
   const [others, setOthers] = useState<AnotherUser[]>([]);
@@ -116,11 +118,24 @@ export const Container = () => {
     });
   };
 
+  const onRefresh = async (range: number) => {
+    setRefreshing(true);
+    const result = await dispatch(
+      getOthersThunk({lat: position.lat, lng: position.lng, range}),
+    );
+    if (getOthersThunk.fulfilled.match(result)) {
+      setOthers(result.payload);
+    }
+    setRefreshing(false);
+  };
+
   return (
     <SearchOthers
       others={others}
       refRange={_range}
       setRange={setRange}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
       navigateToProfile={pushProfile}
       navigateToFlashes={pushFlashes}
     />

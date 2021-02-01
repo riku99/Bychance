@@ -41,11 +41,10 @@ export const Posts = React.memo(({posts, navigateToShowPost}: Props) => {
               });
             }}>
             <View
-              style={{
-                backgroundColor: basicStyles.imageBackGroundColor,
-                marginBottom: 2,
-                marginHorizontal: checkMiddleItem(i + 1) ? createGap() : 0,
-              }}>
+              style={[
+                styles.postWrapper,
+                {marginHorizontal: checkMiddleItem(i + 1) ? createGap() : 0},
+              ]}>
               <Image source={{uri: p.image}} style={styles.post} />
             </View>
           </TouchableOpacity>
@@ -64,5 +63,11 @@ const styles = StyleSheet.create({
   post: {
     width: width / 3.02,
     height: width / 3.02,
+    borderRadius: 10,
+  },
+  postWrapper: {
+    backgroundColor: basicStyles.imageBackGroundColor,
+    borderRadius: 10,
+    marginBottom: 2,
   },
 });

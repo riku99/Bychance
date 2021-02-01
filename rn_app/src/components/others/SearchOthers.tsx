@@ -14,6 +14,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Text,
+  RefreshControl,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
@@ -39,6 +40,8 @@ type Props = {
   others: AnotherUser[];
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
+  refreshing: boolean;
+  onRefresh: (range: number) => void;
   navigateToProfile: (user: AnotherUser) => void;
   navigateToFlashes: ({id}: {id: number; isAllAlreadyViewed?: boolean}) => void;
 };
@@ -47,6 +50,8 @@ export const SearchOthers = ({
   others,
   refRange,
   setRange,
+  refreshing,
+  onRefresh,
   navigateToProfile,
   navigateToFlashes,
 }: Props) => {
@@ -103,8 +108,14 @@ export const SearchOthers = ({
       {filteredUsers.length ? (
         <>
           <ScrollView
-            style={styles.fill}
+            contentInset={{top: SEARCH_TAB_HEIGHT}}
             scrollEventThrottle={16}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => onRefresh(refRange.current)}
+              />
+            }
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {
@@ -130,10 +141,7 @@ export const SearchOthers = ({
                 offsetY.current = e.nativeEvent.contentOffset.y;
               }
             }}>
-            <View
-              style={{
-                ...styles.scrollViewContent,
-              }}>
+            <View>
               {filteredUsers.map((u) => (
                 <ListItem
                   containerStyle={{height: 75}}
@@ -257,12 +265,6 @@ const styles = StyleSheet.create({
     color: '#2c3e50',
     fontSize: 15,
     fontWeight: 'bold',
-  },
-  fill: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    marginTop: SEARCH_TAB_HEIGHT,
   },
   subtitle: {
     fontSize: 14,
