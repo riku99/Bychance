@@ -12,14 +12,14 @@ import {Button} from 'react-native-elements';
 import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackScreen, FlashStackParamList} from './Flash';
-import {ChatRoomStackParamParamList, ChatRoomStackScreen} from './ChatRoom';
+import {ChatRoomStackParamList, ChatRoomStackScreen} from './ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEdit: undefined;
-  ChatRoomStack: NavigatorScreenParams<ChatRoomStackParamParamList>;
+  ChatRoomStack: NavigatorScreenParams<ChatRoomStackParamList>;
   TakeFlash: undefined;
   Flashes: NavigatorScreenParams<FlashStackParamList>;
 };

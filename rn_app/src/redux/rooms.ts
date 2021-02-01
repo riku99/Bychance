@@ -15,7 +15,7 @@ import {logoutAction} from '../actions/sessions';
 import {createMessageThunk} from '../actions/messages';
 import {MessageType, receiveMessage} from '../redux/messages';
 import {SuccessfullLoginData} from '../apis/usersApi';
-import {AnotherUser} from '../components/others/SearchOthers';
+import {AnotherUser} from '../components/users/SearchUsers';
 
 export type Room = {
   id: number;

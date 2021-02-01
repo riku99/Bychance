@@ -5,11 +5,11 @@ import {Room} from '../redux/rooms';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {ProfileScreensGroupParamList, profileScreens} from './Profile';
 
-export type ChatRoomStackParamParamList = {
+export type ChatRoomStackParamList = {
   ChatRoom: Room;
 } & ProfileScreensGroupParamList;
 
-const Stack = createStackNavigator<ChatRoomStackParamParamList>();
+const Stack = createStackNavigator<ChatRoomStackParamList>();
 
 export const ChatRoomStackScreen = () => {
   return (

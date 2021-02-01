@@ -1,18 +1,13 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Container as SearchOthers} from '../containers/others/SearchOthers';
-import {Container as AnotherUserProfile} from '../containers/users/UserProfile';
-import {Container as Post} from '../containers/posts/Post';
-import {Post as PostType} from '../redux/post';
-import {AnotherUser} from '../components/others/SearchOthers';
+import {Container as SearchOthers} from '../containers/users/SearchUsers';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {ProfileScreensGroupParamList, profileScreens} from './Profile';
 
 export type SearchStackParamList = {
   SearchOthers: undefined;
-  AnotherUserProfile: AnotherUser;
-  Post: PostType;
-};
+} & ProfileScreensGroupParamList;
 
 const Stack = createStackNavigator<SearchStackParamList>();
 
@@ -29,18 +24,16 @@ export const SearchStackScreen = () => {
         component={SearchOthers}
         options={{title: 'ユーザーを見つける'}}
       />
-      <Stack.Screen
-        name="AnotherUserProfile"
-        component={AnotherUserProfile}
-        options={({route}) => {
-          return {title: route.params.name};
-        }}
-      />
-      <Stack.Screen
-        name="Post"
-        component={Post}
-        options={{title: 'ユーザーの投稿'}}
-      />
+      {Object.entries(profileScreens).map(([name, component]) => (
+        <Stack.Screen
+          key={name}
+          name={name as keyof ProfileScreensGroupParamList}
+          component={component}
+          options={({route}) => ({
+            headerTitle: route.name === 'Post' ? '投稿' : undefined,
+          })}
+        />
+      ))}
     </Stack.Navigator>
   );
 };

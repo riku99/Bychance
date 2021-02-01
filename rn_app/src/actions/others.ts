@@ -6,7 +6,7 @@ import {logoutAction} from './sessions';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {AnotherUser} from '../components/others/SearchOthers';
+import {AnotherUser} from '../components/users/SearchUsers';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 

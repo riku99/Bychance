@@ -13,13 +13,13 @@ import {
   createMessageThunk,
   createReadMessagesThunk,
 } from '../../actions/messages';
-import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
+import {ChatRoomStackParamList} from '../../screens/ChatRoom';
 import {UserAvatar} from '../../components/utils/Avatar';
 
-type RootRouteProp = RouteProp<ChatRoomStackParamParamList, 'ChatRoom'>;
+type RootRouteProp = RouteProp<ChatRoomStackParamList, 'ChatRoom'>;
 
 type ChatRoomStackNavigationProp = StackNavigationProp<
-  ChatRoomStackParamParamList,
+  ChatRoomStackParamList,
   'ChatRoom'
 >;
 

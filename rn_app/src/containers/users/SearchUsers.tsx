@@ -4,10 +4,10 @@ import {useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {SearchOthers} from '../../components/others/SearchOthers';
+import {SearchUsers} from '../../components/users/SearchUsers';
 import {FlashesWithUser} from '../../components/flashes/ShowFlash';
 import {RootState} from '../../redux/index';
-import {AnotherUser} from '../../components/others/SearchOthers';
+import {AnotherUser} from '../../components/users/SearchUsers';
 import {AppDispatch} from '../../redux/index';
 import {getOthersThunk} from '../../actions/others';
 import {RootStackParamList} from '../../screens/Root';
@@ -87,7 +87,7 @@ export const Container = () => {
   const rootStackNavigation = useNavigation<RootNavigationProp>();
 
   const pushProfile = (user: AnotherUser) => {
-    searchStackNavigation.push('AnotherUserProfile', user);
+    searchStackNavigation.push('Profile', user);
   };
 
   const pushFlashes = ({
@@ -130,7 +130,7 @@ export const Container = () => {
   };
 
   return (
-    <SearchOthers
+    <SearchUsers
       others={others}
       refRange={_range}
       setRange={setRange}

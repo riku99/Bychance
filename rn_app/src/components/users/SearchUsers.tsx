@@ -46,7 +46,7 @@ type Props = {
   navigateToFlashes: ({id}: {id: number; isAllAlreadyViewed?: boolean}) => void;
 };
 
-export const SearchOthers = ({
+export const SearchUsers = ({
   others,
   refRange,
   setRange,

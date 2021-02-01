@@ -16,7 +16,7 @@ import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError, handleBasicError} from '../helpers/error';
 import {rejectPayload, SuccessfullLoginData} from './d';
-import {AnotherUser} from '../components/others/SearchOthers';
+import {AnotherUser} from '../components/users/SearchUsers';
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
   const response = await sampleLoginApi();

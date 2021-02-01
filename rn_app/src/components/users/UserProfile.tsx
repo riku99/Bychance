@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -26,8 +26,7 @@ import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
 import {UserAvatar} from '../utils/Avatar';
 import {UserProfileOuter} from '../utils/UserProfileOuter';
-import {useDispatch, useSelector} from 'react-redux';
-import {refreshUserThunk} from '../../actions/users';
+import {useSelector} from 'react-redux';
 
 type PostsRouteProp = {
   posts: Post[];
@@ -482,8 +481,9 @@ export const UserProfile = React.memo(
         case 'userInformation':
           return (
             <TabScene
-              userId={user.id}
               scrollY={scrollY}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
               tabViewRef={userInformationTabViewRef}
               profileContainerHeight={profileContainerHeight}
               setMostRecentlyScrolledView={() => {

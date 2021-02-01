@@ -5,7 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Container as UserProfile} from '../containers/users/UserProfile';
 import {Container as Post} from '../containers/posts/Post';
 import {Post as PostType} from '../redux/post';
-import {AnotherUser} from '../components/others/SearchOthers';
+import {AnotherUser} from '../components/users/SearchUsers';
 import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 

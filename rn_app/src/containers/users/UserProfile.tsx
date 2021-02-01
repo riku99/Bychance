@@ -18,7 +18,6 @@ import {
 } from '../../screens/Profile';
 import {SearchStackParamList} from '../../screens/Search';
 import {FlashStackParamList} from '../../screens/Flash';
-import {ChatRoomStackParamParamList} from '../../screens/ChatRoom';
 import {UserProfile} from '../../components/users/UserProfile';
 import {createRoomThunk} from '../../actions/rooms';
 import {RootState, AppDispatch, store} from '../../redux/index';
@@ -36,37 +35,19 @@ type ProfileStackScreenRouteProp = RouteProp<
   'Profile'
 >;
 
-type SearchScreenRouteProp = RouteProp<
-  SearchStackParamList,
-  'AnotherUserProfile'
->;
+type SearchScreenRouteProp = RouteProp<SearchStackParamList, 'Profile'>;
 
 type FlashStackScreenRouteProp = RouteProp<
   FlashStackParamList,
   'AnotherUserProfileFromFlash'
 >;
 
-type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
-
 type MyPageNavigationProp = StackNavigationProp<
   MyPageStackParamList,
   'MyProfile'
 >;
 
-type SearchStackNavigationProp = StackNavigationProp<
-  SearchStackParamList,
-  'AnotherUserProfile'
->;
-
-type FlashStackNavigationProp = StackNavigationProp<
-  FlashStackParamList,
-  'AnotherUserProfileFromFlash'
->;
-
-type ChatRoomStackNavigationProp = StackNavigationProp<
-  ChatRoomStackParamParamList,
-  'Profile'
->;
+type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 type Props = {
   route:
@@ -74,11 +55,7 @@ type Props = {
     | ProfileStackScreenRouteProp
     | SearchScreenRouteProp
     | FlashStackScreenRouteProp;
-  navigation: RootNavigationProp &
-    MyPageNavigationProp &
-    SearchStackNavigationProp &
-    ChatRoomStackNavigationProp &
-    FlashStackNavigationProp;
+  navigation: RootNavigationProp & MyPageNavigationProp;
 };
 
 const {height} = Dimensions.get('window');
@@ -189,6 +166,7 @@ export const Container = ({route, navigation}: Props) => {
                 timestamp: selectedRoom.timestamp,
                 messages: selectedRoom.messages,
                 unreadNumber: 0,
+                latestMessage: selectedRoom.latestMessage,
               },
             });
           } else {

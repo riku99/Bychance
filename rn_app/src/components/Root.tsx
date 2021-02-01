@@ -5,7 +5,6 @@ import FlashMessage, {showMessage} from 'react-native-flash-message';
 // 型定義ファイルが存在しないまたは見つけられなかったのでignore
 // @ts-ignore
 import {createConsumer} from '@rails/actioncable';
-import {Avatar} from 'react-native-elements';
 
 import {AppDispatch, RootState} from '../redux/index';
 import {receiveMessage, MessageType} from '../redux/messages';
