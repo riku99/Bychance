@@ -24,7 +24,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import {UserAvatar} from '../utils/Avatar';
 import {User} from '../../redux/user';
 import {Post} from '../../redux/post';
-import {UserProfileOuter} from '../utils/UserProfileOuter';
+import {UserProfileOuter} from '../utils/AvatarOuter';
 import {FlashesData} from '../flashes/ShowFlash';
 
 export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {

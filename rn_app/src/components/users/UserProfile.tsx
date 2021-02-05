@@ -25,7 +25,7 @@ import {RootState} from '../../redux';
 import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
 import {UserAvatar} from '../utils/Avatar';
-import {UserProfileOuter} from '../utils/UserProfileOuter';
+import {UserProfileOuter} from '../utils/AvatarOuter';
 import {useSelector} from 'react-redux';
 
 type PostsRouteProp = {
@@ -107,7 +107,7 @@ const PostsRoute = React.memo(
     return (
       <>
         <View onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
-          <Posts posts={posts} navigateToShowPost={navigateToPost} />
+          <Posts posts={posts} />
         </View>
         <View
           style={{

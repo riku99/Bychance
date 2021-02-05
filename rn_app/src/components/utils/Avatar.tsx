@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {Avatar} from 'react-native-elements';
 
 import {basicStyles} from '../../constants/styles';
-import {UserProfileOuter} from './UserProfileOuter';
+import {UserProfileOuter} from './AvatarOuter';
 
 type Props = {
   image?: string | null;
@@ -30,7 +30,7 @@ export const UserAvatar = ({image, size, opacity, onPress}: Props) => {
 
 type Props2 = {
   image?: string | null;
-  size: 'small' | 'medium' | 'large' | 'xlarge' | number;
+  size: 'small' | 'medium' | 'large' | number;
   opacity?: number;
   onPress?: () => any;
   isNeedOuter?: boolean;
