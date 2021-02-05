@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   require 'aws-sdk'
 
   before_action :check_access_token,
-                only: %i[subsequent_login edit change_display update_position refresh]
+                only: %i[subsequent_login edit change_display update_position refresh index]
 
   def createNonce
     nonce = params['nonce']
@@ -165,6 +165,29 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def index
+    if @user
+      crypt = User.create_geolocation_crypt
+      displayed_others = User.preload(:posts).preload(:flashes).select(&:display)
+      near_others =
+        displayed_others.select do |user|
+          user.lat = crypt.decrypt_and_verify(user.lat)
+          user.lng = crypt.decrypt_and_verify(user.lng)
+          user.distance_to([params[:lat], params[:lng]]) < params[:range].to_f
+        end
+      sorted_others =
+        near_others.each do |user|
+          user.get_distance(params[:lat], params[:lng])
+        end.sort_by(
+          &:distance
+        )
+      render json: sorted_others, each_serializer: AnotherUserSerializer, user: @user
+      return
+    else
+      render json: {errorType: "loginError"}, status: 401
+    end
+  end
+
   def update_position
     if @user
       crypt = User.create_geolocation_crypt
@@ -201,7 +224,7 @@ class Api::V1::UsersController < ApplicationController
         target_user = User.find(params["userId"])
         render json: {
           isMyData: false,
-          data: OthersSerializer.new(target_user, {user: @user})
+          data: AnotherUserSerializer.new(target_user, {user: @user})
         }
       end
     else

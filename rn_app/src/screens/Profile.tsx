@@ -9,6 +9,8 @@ import {AnotherUser} from '../components/users/SearchUsers';
 import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
+import {UserPage} from '../components/pages/UserPage/Page';
+
 export type MyPageStackParamList = {
   MyProfile: undefined;
   Post: PostType;
@@ -28,7 +30,7 @@ export const MyPageStackScreen = () => {
       }}>
       <Stack.Screen
         name="MyProfile"
-        component={UserProfile}
+        component={UserPage}
         options={{
           headerTitle: () => null,
           headerLeft: () => (

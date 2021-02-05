@@ -6,15 +6,18 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
-import {Post} from '../../redux/post';
-import {basicStyles} from '../../constants/styles';
+import {Post} from '../../../redux/post';
+import {basicStyles} from '../../../constants/styles';
+import {
+  UserPageNavigationProp,
+  MyPageNavigationProp,
+} from '../../../screens/types';
 
-type Props = {posts: Post[]} & {
-  navigateToShowPost: (post: Post) => void;
-};
+type Props = {posts: Post[]};
 
-export const Posts = React.memo(({posts, navigateToShowPost}: Props) => {
+export const Posts = React.memo(({posts}: Props) => {
   const checkMiddleItem = (i: number) => {
     return (i + 1) % 3 === 0 ? true : false;
   };
@@ -24,6 +27,14 @@ export const Posts = React.memo(({posts, navigateToShowPost}: Props) => {
     return n / 2;
   };
 
+  const navigation = useNavigation<
+    UserPageNavigationProp<'Profile'> & MyPageNavigationProp<'MyProfile'>
+  >();
+
+  const onPress = (post: Post) => {
+    navigation.push('Post', post);
+  };
+
   return (
     <View style={styles.posts}>
       {posts.map((p, i) => {
@@ -31,15 +42,7 @@ export const Posts = React.memo(({posts, navigateToShowPost}: Props) => {
           <TouchableOpacity
             key={p.id}
             activeOpacity={1}
-            onPress={async () => {
-              navigateToShowPost({
-                id: p.id,
-                text: p.text,
-                image: p.image,
-                date: p.date,
-                userId: p.userId,
-              });
-            }}>
+            onPress={() => onPress(p)}>
             <View
               style={[
                 styles.postWrapper,

@@ -19,7 +19,7 @@ import {
   NavigationState,
 } from 'react-native-tab-view';
 
-import {Posts} from '../posts/Posts';
+import {Posts} from '../pages/UserPage/Posts';
 import {basicStyles} from '../../constants/styles';
 import {RootState} from '../../redux';
 import {Post} from '../../redux/post';
@@ -240,12 +240,16 @@ const TabScene = ({
   onMomentumScrollEnd,
   children,
 }: TabSceneProps) => {
+  const [f, setF] = useState(false);
+  const refr = () => {
+    setF(true);
+    console.log('refresh!');
+    setTimeout(() => setF(false), 3000);
+  };
   return (
     <Animated.ScrollView
       ref={tabViewRef}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
+      refreshControl={<RefreshControl refreshing={f} onRefresh={refr} />}
       style={{
         paddingTop: profileContainerHeight + stickyTabHeight,
       }}

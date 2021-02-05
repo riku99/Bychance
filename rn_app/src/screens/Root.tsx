@@ -11,7 +11,12 @@ import {Button} from 'react-native-elements';
 
 import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
-import {FlashesStackScreen, FlashStackParamList} from './Flash';
+import {
+  FlashesStackScreen,
+  FlashStackParamList,
+  FlashStackParamList2,
+  FlashesStackScreen2,
+} from './Flash';
 import {ChatRoomStackParamList, ChatRoomStackScreen} from './ChatRoom';
 import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
@@ -21,7 +26,7 @@ export type RootStackParamList = {
   UserEdit: undefined;
   ChatRoomStack: NavigatorScreenParams<ChatRoomStackParamList>;
   TakeFlash: undefined;
-  Flashes: NavigatorScreenParams<FlashStackParamList>;
+  Flashes: NavigatorScreenParams<FlashStackParamList2>;
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -82,7 +87,7 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="Flashes"
-        component={FlashesStackScreen}
+        component={FlashesStackScreen2}
         options={({}) => {
           return {
             headerShown: false,

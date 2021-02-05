@@ -24,16 +24,12 @@ import RNPickerSelect from 'react-native-picker-select';
 import {UserAvatar} from '../utils/Avatar';
 import {User} from '../../redux/user';
 import {Post} from '../../redux/post';
-import {Flash} from '../../redux/flashes';
 import {UserProfileOuter} from '../utils/UserProfileOuter';
+import {FlashesData} from '../flashes/ShowFlash';
 
 export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
   posts: Post[];
-  flashes: {
-    entities: Flash[];
-    alreadyViewed: number[];
-    isAllAlreadyViewed?: boolean;
-  };
+  flashes: FlashesData;
 };
 
 type Props = {
@@ -109,6 +105,7 @@ export const SearchUsers = ({
         <>
           <ScrollView
             contentInset={{top: SEARCH_TAB_HEIGHT}}
+            contentOffset={{y: -SEARCH_TAB_HEIGHT, x: 0}}
             scrollEventThrottle={16}
             refreshControl={
               <RefreshControl

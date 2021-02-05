@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       post '/first_login', to: 'users#first_login'
       post '/subsequent_login', to: 'users#subsequent_login'
       post '/nonce', to: 'users#createNonce'
+      get  '/users', to: 'users#index'
       patch '/user', to: 'users#edit'
       patch '/user/position', to: 'users#update_position'
       patch '/user/display', to: 'users#change_display'
@@ -12,8 +13,6 @@ Rails.application.routes.draw do
 
       post '/post', to: 'posts#create'
       delete '/post', to: 'posts#destroy'
-
-      get '/others', to: 'others#index'
 
       post '/rooms', to: 'rooms#create'
 

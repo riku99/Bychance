@@ -28,6 +28,7 @@ export const ChatRoomStackScreen = () => {
           component={component}
           options={({route}) => ({
             headerTitle: route.name === 'Post' ? '投稿' : undefined,
+            headerStyle: {shadowColor: 'transparent'},
           })}
         />
       ))}

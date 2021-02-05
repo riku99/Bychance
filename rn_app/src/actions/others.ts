@@ -21,7 +21,7 @@ export const getOthersThunk = createAsyncThunk<
 
   if (keychain) {
     try {
-      const response = await axios.get<AnotherUser[]>(`${origin}/others`, {
+      const response = await axios.get<AnotherUser[]>(`${origin}/users`, {
         params: {id: keychain.id, lat, lng, range},
         ...headers(keychain.token),
       });
