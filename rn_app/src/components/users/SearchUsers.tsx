@@ -21,10 +21,9 @@ import {ListItem} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
-import {UserAvatar} from '../utils/Avatar';
+import {UserAvatarWithOuter} from '../utils/Avatar';
 import {User} from '../../redux/user';
 import {Post} from '../../redux/post';
-import {UserProfileOuter} from '../utils/AvatarOuter';
 import {FlashesData} from '../flashes/ShowFlash';
 
 export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
@@ -49,7 +48,6 @@ export const SearchUsers = ({
   refreshing,
   onRefresh,
   navigateToProfile,
-  navigateToFlashes,
 }: Props) => {
   const [filteredUsers, setFilteredUsers] = useState(others);
   const [keyword, setKeyword] = useState('');
@@ -148,34 +146,26 @@ export const SearchUsers = ({
                   }}>
                   {u.flashes.entities.length &&
                   !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
-                    <UserProfileOuter avatarSize="medium" outerType="gradation">
-                      <UserAvatar
-                        image={u.image}
-                        size="medium"
-                        opacity={1}
-                        onPress={() => {
-                          navigateToFlashes({id: u.id});
-                        }}
-                      />
-                    </UserProfileOuter>
+                    <UserAvatarWithOuter
+                      image={u.image}
+                      size="medium"
+                      opacity={1}
+                      outerType="gradation"
+                    />
                   ) : u.flashes.entities.length && u.flashes.alreadyViewed ? ( // アイテムは持っているが、全て閲覧されている場合
-                    <UserProfileOuter avatarSize="medium" outerType="silver">
-                      <UserAvatar
-                        image={u.image}
-                        size="medium"
-                        opacity={1}
-                        onPress={() => {
-                          navigateToFlashes({
-                            id: u.id,
-                            isAllAlreadyViewed: true,
-                          });
-                        }}
-                      />
-                    </UserProfileOuter>
+                    <UserAvatarWithOuter
+                      image={u.image}
+                      size="medium"
+                      opacity={1}
+                      outerType="silver"
+                    />
                   ) : (
-                    <UserProfileOuter avatarSize="medium" outerType="none">
-                      <UserAvatar image={u.image} size="medium" opacity={1} />
-                    </UserProfileOuter>
+                    <UserAvatarWithOuter
+                      image={u.image}
+                      size="medium"
+                      opacity={1}
+                      outerType="none"
+                    />
                   )}
                   <ListItem.Content>
                     <ListItem.Title>{u.name}</ListItem.Title>

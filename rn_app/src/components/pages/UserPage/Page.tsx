@@ -107,6 +107,26 @@ export const UserPage = ({route}: Props) => {
     }
   }, [anotherUser, me, myPosts]);
 
+  const avatarOuterType: 'gradation' | 'silver' | 'none' = useMemo(() => {
+    if (me) {
+      if (myFlashes && myFlashes.length) {
+        return 'gradation';
+      } else {
+        return 'none';
+      }
+    } else {
+      if (anotherUser?.flashes.entities.length) {
+        if (!anotherUser.flashes.isAllAlreadyViewed) {
+          return 'gradation';
+        } else {
+          return 'silver';
+        }
+      } else {
+        return 'none';
+      }
+    }
+  }, [anotherUser?.flashes, myFlashes, me]);
+
   const isNeedOuter = useMemo(() => {
     if (me) {
       return !!myFlashes && !!myFlashes.length;
@@ -114,14 +134,6 @@ export const UserPage = ({route}: Props) => {
       return !!anotherUser && !!anotherUser.flashes.entities.length;
     }
   }, [me, myFlashes, anotherUser]);
-
-  const showGradationOuter = useMemo(() => {
-    if (me) {
-      return !!myFlashes && !!myFlashes.length;
-    } else {
-      return !!anotherUser && !!anotherUser.flashes.entities.length;
-    }
-  }, [anotherUser, me, myFlashes]);
 
   const [containerHeight, setContainerHeight] = useState(0);
   const [profileContainerHeight, setProfileContainerHeight] = useState(0);
@@ -193,7 +205,7 @@ export const UserPage = ({route}: Props) => {
         }>
         <Profile
           user={{name: user.name, introduce: user.introduce, image: user.image}}
-          isNeedOuter={isNeedOuter}
+          avatarOuterType={avatarOuterType}
           setUserAvatarAndNameContainerHeight={
             setUserAvatarAndNameContainerHeight
           }
@@ -220,9 +232,8 @@ export const UserPage = ({route}: Props) => {
         ]}>
         <Avatar
           source={user.image}
-          isNeedOuter={isNeedOuter}
-          showGradationOuter={showGradationOuter}
           flashesDataAndUser={flashesDataAndUser}
+          outerType={avatarOuterType}
         />
       </Animated.View>
       <Animated.View

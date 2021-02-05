@@ -5,22 +5,16 @@ import {
   RootNavigationProp,
   PartialFlashesDataAndUser,
 } from '../../../screens/types';
-import {UserAvatar2} from '../../utils/Avatar';
+import {UserAvatarWithOuter} from '../../utils/Avatar';
 
 type AvatarProps = {
   source: string | null;
   flashesDataAndUser: PartialFlashesDataAndUser;
-  isNeedOuter?: boolean;
-  showGradationOuter: boolean;
+  outerType: 'gradation' | 'silver' | 'none';
 };
 
 export const Avatar = React.memo(
-  ({
-    source,
-    isNeedOuter,
-    showGradationOuter,
-    flashesDataAndUser,
-  }: AvatarProps) => {
+  ({source, flashesDataAndUser, outerType}: AvatarProps) => {
     const navigation = useNavigation<RootNavigationProp<'Tab'>>();
     const onUserAvatarPress = () => {
       navigation.push('Flashes', {
@@ -33,12 +27,11 @@ export const Avatar = React.memo(
     };
 
     return (
-      <UserAvatar2
+      <UserAvatarWithOuter
         size="large"
         image={source}
-        isNeedOuter={isNeedOuter}
-        haveFlashes={showGradationOuter}
         onPress={onUserAvatarPress}
+        outerType={outerType}
       />
     );
   },

@@ -1,16 +1,12 @@
 import React, {useMemo} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
 
 import {User} from '../../../redux/user';
 import {basicStyles} from '../../../constants/styles';
-import {RootStackParamList} from '../../../screens/Root';
-
-type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 type Props = {
   user: Pick<User, 'name' | 'introduce' | 'image'>;
-  isNeedOuter?: boolean;
+  avatarOuterType: 'gradation' | 'silver' | 'none';
   setUserAvatarAndNameContainerHeight: React.Dispatch<
     React.SetStateAction<number>
   >;
@@ -20,17 +16,18 @@ type Props = {
 export const Profile = React.memo(
   ({
     user,
-    isNeedOuter,
+    avatarOuterType,
     setUserAvatarAndNameContainerHeight,
     expandedIntroduceContainer,
   }: Props) => {
     const {nameContainerTop, editContainerTop} = useMemo(() => {
-      if (isNeedOuter) {
-        return {nameContainerTop: 24, editContainerTop: 24};
-      } else {
-        return {nameContainerTop: 20, editContainerTop: 29};
+      switch (avatarOuterType) {
+        case 'none':
+          return {nameContainerTop: 20, editContainerTop: 29};
+        default:
+          return {nameContainerTop: 24, editContainerTop: 24};
       }
-    }, [isNeedOuter]);
+    }, [avatarOuterType]);
 
     const lineNumber = useMemo(
       () =>
