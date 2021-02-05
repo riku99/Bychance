@@ -41,7 +41,7 @@ type Props = {
 
 export const UserPage = ({route}: Props) => {
   // 自分以外のユーザーを表示する場合は値が存在する
-  const anotherUser = route && route.params;
+  const [anotherUser, setAnotherUser] = useState(route && route.params);
 
   const me = useSelector((state: RootState) => {
     if (!anotherUser) {
@@ -192,7 +192,6 @@ export const UserPage = ({route}: Props) => {
   const [expandedIntroduceContainer, setExpandedIntroduceContainer] = useState(
     false,
   );
-
   const [avatarToIntroduceHeight, setAvatarToIntroduceHeight] = useState(0);
 
   return (
@@ -215,6 +214,7 @@ export const UserPage = ({route}: Props) => {
         />
       </Animated.View>
       <UserTabView
+        userId={user.id}
         containerHeight={containerHeight}
         profileContainerHeight={profileContainerHeight}
         defaultProfileContainerHeight={defaultProfileContainerHeight}
@@ -222,6 +222,7 @@ export const UserPage = ({route}: Props) => {
         scrollY={scrollY}
         postsTabViewRef={postsTabViewRef}
         userInformationTabViewRef={userInformationTabViewRef}
+        setAnotherUser={setAnotherUser}
       />
       <Animated.View
         style={[

@@ -30,6 +30,7 @@ export const Avatar = React.memo(
       <UserAvatarWithOuter
         size="large"
         image={source}
+        opacity={1}
         onPress={onUserAvatarPress}
         outerType={outerType}
       />
