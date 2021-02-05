@@ -18,6 +18,7 @@ import {
   SceneRendererProps,
   NavigationState,
 } from 'react-native-tab-view';
+import {useSelector} from 'react-redux';
 
 import {Posts} from '../pages/UserPage/Posts';
 import {basicStyles} from '../../constants/styles';
@@ -26,7 +27,6 @@ import {Post} from '../../redux/post';
 import {Flash} from '../../redux/flashes';
 import {UserAvatar} from '../utils/Avatar';
 import {UserProfileOuter} from '../utils/AvatarOuter';
-import {useSelector} from 'react-redux';
 
 type PostsRouteProp = {
   posts: Post[];

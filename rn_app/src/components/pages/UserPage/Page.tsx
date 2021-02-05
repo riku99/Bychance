@@ -10,7 +10,6 @@ import {
   userAvatarHeight,
   oneIntroduceTextLineHeght,
   introduceMaxAndMinHight,
-  expandIntroduceButtonContainerHeight,
 } from './Profile';
 import {UserTabView} from './TabView';
 import {Avatar} from './Avatar';
@@ -194,6 +193,8 @@ export const UserPage = ({route}: Props) => {
     false,
   );
 
+  const [avatarToIntroduceHeight, setAvatarToIntroduceHeight] = useState(0);
+
   return (
     <View
       style={styles.container}
@@ -210,6 +211,7 @@ export const UserPage = ({route}: Props) => {
             setUserAvatarAndNameContainerHeight
           }
           expandedIntroduceContainer={expandedIntroduceContainer}
+          setAvatarToIntroduceHeight={setAvatarToIntroduceHeight}
         />
       </Animated.View>
       <UserTabView
@@ -251,8 +253,7 @@ export const UserPage = ({route}: Props) => {
           style={[
             styles.animatedElement,
             {
-              top:
-                profileContainerHeight - expandIntroduceButtonContainerHeight,
+              top: avatarToIntroduceHeight,
               transform: [{translateY: y}],
             },
           ]}>

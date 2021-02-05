@@ -34,6 +34,7 @@ const PostsRoute = React.memo(
     defaultProfileContainerHeight,
     mostRecentlyScrolledView,
   }: PostsRouteProps) => {
+    console.log('re-render');
     const [contentsHeight, setContentsHeight] = useState(0);
     const paddingTopHeight = useMemo(
       () => profileContainerHeight + stickyTabHeight,

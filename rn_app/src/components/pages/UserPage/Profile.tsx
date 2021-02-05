@@ -1,6 +1,14 @@
 import React, {useMemo} from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import {useSelector} from 'react-redux';
 
+import {RootState} from '../../../redux/index';
 import {User} from '../../../redux/user';
 import {basicStyles} from '../../../constants/styles';
 
@@ -11,6 +19,7 @@ type Props = {
     React.SetStateAction<number>
   >;
   expandedIntroduceContainer: boolean;
+  setAvatarToIntroduceHeight: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const Profile = React.memo(
@@ -19,6 +28,7 @@ export const Profile = React.memo(
     avatarOuterType,
     setUserAvatarAndNameContainerHeight,
     expandedIntroduceContainer,
+    setAvatarToIntroduceHeight,
   }: Props) => {
     const {nameContainerTop, editContainerTop} = useMemo(() => {
       switch (avatarOuterType) {
@@ -45,32 +55,53 @@ export const Profile = React.memo(
       }
     }, [lineNumber]);
 
+    const creatingPost = useSelector(
+      (state: RootState) => state.otherSettingsReducer.creatingPost,
+    );
+
     return (
       <View style={styles.contaienr}>
         <View
           onLayout={(e) =>
-            setUserAvatarAndNameContainerHeight(e.nativeEvent.layout.height)
+            setAvatarToIntroduceHeight(e.nativeEvent.layout.height)
           }>
-          <View style={styles.avatarContainer} />
-          <View style={[styles.nameContainer, {marginTop: nameContainerTop}]}>
-            <Text style={styles.name}>{user.name}</Text>
+          <View
+            onLayout={(e) =>
+              setUserAvatarAndNameContainerHeight(e.nativeEvent.layout.height)
+            }>
+            <View style={styles.avatarContainer} />
+            <View style={[styles.nameContainer, {marginTop: nameContainerTop}]}>
+              <Text style={styles.name}>{user.name}</Text>
+            </View>
+          </View>
+          <View style={[styles.editContainer, {marginTop: editContainerTop}]} />
+          <View
+            style={[
+              styles.introduceContainer,
+              {
+                maxHeight: expandedIntroduceContainer
+                  ? undefined
+                  : introduceMaxAndMinHight,
+              },
+            ]}>
+            <Text style={styles.introduce}>{user.introduce}</Text>
           </View>
         </View>
-        <View style={[styles.editContainer, {marginTop: editContainerTop}]} />
-        <View
-          style={[
-            styles.introduceContainer,
-            {
-              maxHeight: expandedIntroduceContainer
-                ? undefined
-                : introduceMaxAndMinHight,
-            },
-          ]}>
-          <Text style={styles.introduce}>{user.introduce}</Text>
-        </View>
         {showExpandButton ? (
-          <View style={{height: expandIntroduceButtonContainerHeight}} />
+          <View
+            style={{
+              height: expandIntroduceButtonContainerHeight,
+            }}
+          />
         ) : undefined}
+        {creatingPost && (
+          <View style={styles.creatingPost}>
+            <ActivityIndicator />
+            <Text style={{fontWeight: 'bold', color: '#999999'}}>
+              投稿中です
+            </Text>
+          </View>
+        )}
       </View>
     );
   },
@@ -81,7 +112,7 @@ export const userAvatarTop = 24;
 export const userAvatarHeight = 85;
 
 export const introduceMaxAndMinHight = height / 7;
-export const oneIntroduceTextLineHeght = 18.7;
+export const oneIntroduceTextLineHeght = 19.7;
 
 export const expandIntroduceButtonContainerHeight = 46;
 
@@ -117,5 +148,13 @@ const styles = StyleSheet.create({
   introduce: {
     color: basicStyles.mainTextColor,
     lineHeight: oneIntroduceTextLineHeght,
+  },
+  creatingPost: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: 15,
+    width: 120,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
 });
