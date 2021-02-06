@@ -21,7 +21,6 @@ import {AppDispatch} from '../../../redux/index';
 import {Post} from '../../../redux/post';
 import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../actions/users';
-import {AnotherUser} from '../../users/SearchUsers';
 
 type PostsRouteProps = {
   posts: Post[];
@@ -206,9 +205,6 @@ type TabSceneProps = {
   onScrollEndDrag: () => void;
   onMomentumScrollEnd: () => void;
   setMostRecentlyScrolledView: () => void;
-  setAnotherUser: React.Dispatch<
-    React.SetStateAction<Readonly<AnotherUser> | undefined>
-  >;
 };
 
 const TabScene = React.memo(
@@ -221,25 +217,19 @@ const TabScene = React.memo(
     onScrollEndDrag,
     onMomentumScrollEnd,
     setMostRecentlyScrolledView,
-    setAnotherUser,
   }: TabSceneProps) => {
     const dispatch: AppDispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
-      const result = await dispatch(
+      await dispatch(
         refreshUserThunk({
           userId,
         }),
       );
-      if (refreshUserThunk.fulfilled.match(result)) {
-        if (!result.payload.isMyData) {
-          setAnotherUser(result.payload.data);
-        }
-      }
       setRefreshing(false);
-    }, [dispatch, userId, setAnotherUser]);
+    }, [dispatch, userId]);
 
     return (
       <Animated.ScrollView
@@ -275,9 +265,6 @@ type Props = {
   scrollY: Animated.Value;
   postsTabViewRef: React.RefObject<ScrollView>;
   userInformationTabViewRef: React.RefObject<ScrollView>;
-  setAnotherUser: React.Dispatch<
-    React.SetStateAction<Readonly<AnotherUser> | undefined>
-  >;
 };
 
 export const UserTabView = React.memo(
@@ -290,7 +277,6 @@ export const UserTabView = React.memo(
     scrollY,
     postsTabViewRef,
     userInformationTabViewRef,
-    setAnotherUser,
   }: Props) => {
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
@@ -355,7 +341,6 @@ export const UserTabView = React.memo(
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
-              setAnotherUser={setAnotherUser}
               setMostRecentlyScrolledView={() => {
                 if (
                   tabRoute[tabIndex].key === 'Posts' &&
@@ -387,7 +372,6 @@ export const UserTabView = React.memo(
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
-              setAnotherUser={setAnotherUser}
               setMostRecentlyScrolledView={() => {
                 if (
                   tabRoute[tabIndex].key === 'Posts' &&

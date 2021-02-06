@@ -5,7 +5,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Container as UserProfile} from '../containers/users/UserProfile';
 import {Container as Post} from '../containers/posts/Post';
 import {Post as PostType} from '../redux/post';
-import {AnotherUser} from '../components/users/SearchUsers';
 import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
@@ -52,13 +51,18 @@ export const MyPageStackScreen = () => {
   );
 };
 
+// export type ProfileScreensGroupParamList = {
+//   Profile: AnotherUser;
+//   Post: PostType;
+// };
+
 export type ProfileScreensGroupParamList = {
-  Profile: AnotherUser;
+  UserPage: {userId: number | undefined};
   Post: PostType;
 };
 
 // stackで使われるscreenのグループ。Tabに渡されるMyPageStackScreenとは分けて使う
 export const profileScreens = {
-  Profile: UserProfile,
+  UserPage: UserPage,
   Post: Post,
 };

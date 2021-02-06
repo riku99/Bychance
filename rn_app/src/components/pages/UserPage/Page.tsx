@@ -25,6 +25,7 @@ import {
 import {RootState} from '../../../redux/index';
 import {selectAllPosts} from '../../../redux/post';
 import {selectAllFlashes} from '../../../redux/flashes';
+import {selectAnotherUser} from '../../../redux/getUsers';
 import {PartiallyPartial} from '../../../constants/d';
 
 // BottomTabに渡される時のプロップス
@@ -32,7 +33,7 @@ type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyProfile'>;
 // StackNavigationに渡される時のプロップス
 type ProfileStackScreenProp = RouteProp<
   ProfileScreensGroupParamList,
-  'Profile'
+  'UserPage'
 >;
 
 type Props = {
@@ -41,7 +42,13 @@ type Props = {
 
 export const UserPage = ({route}: Props) => {
   // 自分以外のユーザーを表示する場合は値が存在する
-  const [anotherUser, setAnotherUser] = useState(route && route.params);
+  const _anotherUser = useMemo(() => route && route.params, [route]);
+
+  const anotherUser = useSelector((state: RootState) => {
+    if (_anotherUser && _anotherUser.userId) {
+      return selectAnotherUser(state, _anotherUser.userId);
+    }
+  });
 
   const me = useSelector((state: RootState) => {
     if (!anotherUser) {
@@ -222,7 +229,6 @@ export const UserPage = ({route}: Props) => {
         scrollY={scrollY}
         postsTabViewRef={postsTabViewRef}
         userInformationTabViewRef={userInformationTabViewRef}
-        setAnotherUser={setAnotherUser}
       />
       <Animated.View
         style={[

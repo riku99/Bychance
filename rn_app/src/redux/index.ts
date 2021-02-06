@@ -7,7 +7,7 @@ import {postsReducer} from './post';
 import {roomsReducer} from './rooms';
 import {messagesReducer} from './messages';
 import {flashesReducer} from './flashes';
-import {otherUsersReducer} from './otherUsers';
+import {getUsersReducer} from './getUsers';
 import {otherSettingsReducer} from './otherSettings';
 
 const rootReducer = combineReducers({
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   roomsReducer,
   messagesReducer,
   flashesReducer,
-  otherUsersReducer,
+  getUsersReducer,
   otherSettingsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

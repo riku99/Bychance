@@ -9,7 +9,7 @@ import {FlashesWithUser} from '../../components/pages/Flashes/ShowFlash';
 import {RootState} from '../../redux/index';
 import {AnotherUser} from '../../components/users/SearchUsers';
 import {AppDispatch} from '../../redux/index';
-import {selectOtherUsersArray} from '../../redux/otherUsers';
+import {selectGetUsersArray} from '../../redux/getUsers';
 import {getOtherUsersThunk} from '../../actions/otherUsers';
 import {RootStackParamList} from '../../screens/Root';
 import {SearchStackParamList} from '../../screens/Search';
@@ -46,7 +46,7 @@ export const Container = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const otherUsers = useSelector((state: RootState) => {
-    return selectOtherUsersArray(state);
+    return selectGetUsersArray(state);
   }, shallowEqual);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export const Container = () => {
   const rootStackNavigation = useNavigation<RootNavigationProp>();
 
   const pushProfile = (user: AnotherUser) => {
-    searchStackNavigation.push('Profile', user);
+    searchStackNavigation.push('UserPage', {userId: user.id});
   };
 
   const pushFlashes = ({

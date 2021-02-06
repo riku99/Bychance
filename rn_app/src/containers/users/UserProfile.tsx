@@ -32,7 +32,7 @@ type MyPageStackScreenRouteProp = RouteProp<MyPageStackParamList, 'MyProfile'>;
 
 type ProfileStackScreenRouteProp = RouteProp<
   ProfileScreensGroupParamList,
-  'Profile'
+  'UserPage'
 >;
 
 type SearchScreenRouteProp = RouteProp<SearchStackParamList, 'Profile'>;
