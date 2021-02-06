@@ -1,14 +1,15 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Flashes} from '../components/flashes/Flashes';
+//import {Flashes} from '../components/flashes/Flashes';
+import {Flashes} from '../components/pages/Flashes/Page';
 import {Container as UserProfile} from '../containers/users/UserProfile';
 import {Container as Post} from '../containers/posts/Post';
 import {AnotherUser} from '../components/users/SearchUsers';
 import {
   FlashesWithUser,
   FlashesDataAndUser,
-} from '../components/flashes/ShowFlash';
+} from '../components/pages/Flashes/ShowFlash';
 import {PartiallyPartial} from '../constants/d';
 import {Post as PostType} from '../redux/post';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';

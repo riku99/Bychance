@@ -1,6 +1,6 @@
 import {FlashStackParamList} from '../../../screens/Flash';
 import {Flash} from '../../../redux/flashes';
-import {FlashesWithUser} from '../../flashes/ShowFlash';
+import {FlashesWithUser} from '../Flashes/ShowFlash';
 
 // flashそのもの
 type Flashそのもの = Flash;

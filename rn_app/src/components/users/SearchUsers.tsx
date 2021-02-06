@@ -24,7 +24,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import {UserAvatarWithOuter} from '../utils/Avatar';
 import {User} from '../../redux/user';
 import {Post} from '../../redux/post';
-import {FlashesData} from '../flashes/ShowFlash';
+import {FlashesData} from '../pages/Flashes/ShowFlash';
 
 export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
   posts: Post[];
@@ -32,7 +32,7 @@ export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
 };
 
 type Props = {
-  others: AnotherUser[];
+  otherUsers: AnotherUser[];
   refRange: MutableRefObject<number>;
   setRange: Dispatch<SetStateAction<number>>;
   refreshing: boolean;
@@ -42,14 +42,14 @@ type Props = {
 };
 
 export const SearchUsers = ({
-  others,
+  otherUsers,
   refRange,
   setRange,
   refreshing,
   onRefresh,
   navigateToProfile,
 }: Props) => {
-  const [filteredUsers, setFilteredUsers] = useState(others);
+  const [filteredUsers, setFilteredUsers] = useState(otherUsers);
   const [keyword, setKeyword] = useState('');
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -67,9 +67,9 @@ export const SearchUsers = ({
 
   useEffect(() => {
     if (keyword === '') {
-      setFilteredUsers(others);
+      setFilteredUsers(otherUsers);
     } else {
-      const matchedUsers = others.filter((u) => {
+      const matchedUsers = otherUsers.filter((u) => {
         return (
           u.name.toLowerCase().includes(keyword.toLowerCase()) ||
           u.introduce.toLowerCase().includes(keyword.toLowerCase()) ||
@@ -78,7 +78,7 @@ export const SearchUsers = ({
       });
       setFilteredUsers(matchedUsers);
     }
-  }, [keyword, others]);
+  }, [keyword, otherUsers]);
 
   return (
     <View style={styles.container}>

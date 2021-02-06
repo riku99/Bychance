@@ -2,7 +2,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {RootStackParamList} from './Root';
 import {MyPageStackParamList, ProfileScreensGroupParamList} from './Profile';
-import {FlashesDataAndUser} from '../components/flashes/ShowFlash';
+import {FlashesDataAndUser} from '../components/pages/Flashes/ShowFlash';
 import {PartiallyPartial} from '../constants/d';
 
 export type RootNavigationProp<

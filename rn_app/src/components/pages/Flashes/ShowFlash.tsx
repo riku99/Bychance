@@ -17,17 +17,17 @@ import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {UserAvatar} from '../utils/Avatar';
-import {Flash} from '../../redux/flashes';
-import {Post} from '../../redux/post';
-import {FlashStackParamList} from '../../screens/Flash';
-import {RootState, AppDispatch} from '../../redux/index';
+import {UserAvatar} from '../../utils/Avatar';
+import {Flash} from '../../../redux/flashes';
+import {Post} from '../../../redux/post';
+import {FlashStackParamList} from '../../../screens/Flash';
+import {RootState, AppDispatch} from '../../../redux/index';
 import {
   deleteFlashThunk,
   createAlreadyViewdFlashThunk,
-} from '../../actions/flashes';
-import {displayShortMessage} from '../../helpers/shortMessage';
-import {alertSomeError} from '../../helpers/error';
+} from '../../../actions/flashes';
+import {displayShortMessage} from '../../../helpers/shortMessage';
+import {alertSomeError} from '../../../helpers/error';
 
 type FlashStackNavigationProp = StackNavigationProp<
   FlashStackParamList,

@@ -6,11 +6,11 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
-import {RootStackParamList} from '../../screens/Root';
-import {FlashStackParamList} from '../../screens/Flash';
-import {X_HEIGHT} from '../../constants/device';
-import {RootState} from '../../redux/index';
-import {selectAllFlashes} from '../../redux/flashes';
+import {RootStackParamList} from '../../../screens/Root';
+import {FlashStackParamList} from '../../../screens/Flash';
+import {X_HEIGHT} from '../../../constants/device';
+import {RootState} from '../../../redux/index';
+import {selectAllFlashes} from '../../../redux/flashes';
 
 type FlashRouteProp = RouteProp<FlashStackParamList, 'showFlashes'>;
 

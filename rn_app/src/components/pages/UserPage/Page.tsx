@@ -17,7 +17,7 @@ import {EditButton} from './EditButton';
 import {ExpandButton} from './ExpandButton';
 import {TakeFlashButton} from './TakeFlashButton';
 import {SendMessageButton} from './SendMessageButton';
-import {FlashesDataAndUser} from '../../flashes/ShowFlash';
+import {FlashesDataAndUser} from '../Flashes/ShowFlash';
 import {
   MyPageStackParamList,
   ProfileScreensGroupParamList,

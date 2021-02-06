@@ -5,11 +5,12 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {SearchUsers} from '../../components/users/SearchUsers';
-import {FlashesWithUser} from '../../components/flashes/ShowFlash';
+import {FlashesWithUser} from '../../components/pages/Flashes/ShowFlash';
 import {RootState} from '../../redux/index';
 import {AnotherUser} from '../../components/users/SearchUsers';
 import {AppDispatch} from '../../redux/index';
-import {getOthersThunk} from '../../actions/others';
+import {selectOtherUsersArray} from '../../redux/otherUsers';
+import {getOtherUsersThunk} from '../../actions/otherUsers';
 import {RootStackParamList} from '../../screens/Root';
 import {SearchStackParamList} from '../../screens/Search';
 
@@ -44,29 +45,25 @@ export const Container = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
-  const [others, setOthers] = useState<AnotherUser[]>([]);
+  const otherUsers = useSelector((state: RootState) => {
+    return selectOtherUsersArray(state);
+  }, shallowEqual);
 
-  // API通信が成功した場合、そのデータはdispatchされる必要はないが
-  // エラーハンドリングでdispatchが必要なのでthunkで通信を行う
   useEffect(() => {
-    const getOthers = async (range: number) => {
-      if (isFocused) {
-        const result = await dispatch(
-          getOthersThunk({lat: position.lat, lng: position.lng, range}),
-        );
-        if (getOthersThunk.fulfilled.match(result)) {
-          setOthers(result.payload);
-        }
-      }
-    };
-    getOthers(range);
+    if (isFocused) {
+      dispatch(
+        getOtherUsersThunk({lat: position.lat, lng: position.lng, range}),
+      );
+    }
   }, [dispatch, isFocused, position.lat, position.lng, range]);
 
   useEffect(() => {
-    if (others.length) {
-      const othersWithFlashes = others.filter((f) => f.flashes.entities.length);
-      if (othersWithFlashes.length) {
-        const _flashesWithUser = othersWithFlashes.map((user) => {
+    if (otherUsers.length) {
+      const otherUsersWithFlashes = otherUsers.filter(
+        (f) => f.flashes.entities.length,
+      );
+      if (otherUsersWithFlashes.length) {
+        const _flashesWithUser = otherUsersWithFlashes.map((user) => {
           const {flashes, ...rest} = user;
           return {
             flashes,
@@ -80,7 +77,7 @@ export const Container = () => {
         setContainedNotAlreadyViewdFlashes(_containedNotAlreadyViewdFlashes);
       }
     }
-  }, [others]);
+  }, [otherUsers]);
 
   const searchStackNavigation = useNavigation<SearchNavigationProp>();
 
@@ -120,18 +117,15 @@ export const Container = () => {
 
   const onRefresh = async (range: number) => {
     setRefreshing(true);
-    const result = await dispatch(
-      getOthersThunk({lat: position.lat, lng: position.lng, range}),
+    await dispatch(
+      getOtherUsersThunk({lat: position.lat, lng: position.lng, range}),
     );
-    if (getOthersThunk.fulfilled.match(result)) {
-      setOthers(result.payload);
-    }
     setRefreshing(false);
   };
 
   return (
     <SearchUsers
-      others={others}
+      otherUsers={otherUsers}
       refRange={_range}
       setRange={setRange}
       refreshing={refreshing}

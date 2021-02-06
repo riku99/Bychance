@@ -10,13 +10,13 @@ import {AnotherUser} from '../components/users/SearchUsers';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 
-export const getOthersThunk = createAsyncThunk<
+export const getOtherUsersThunk = createAsyncThunk<
   AnotherUser[],
   {lat: number | null; lng: number | null; range: number},
   {
     rejectValue: rejectPayload;
   }
->('others/getOthersThunk', async ({lat, lng, range}, thunkAPI) => {
+>('others/getOtherUsersThunk', async ({lat, lng, range}, thunkAPI) => {
   const keychain = await checkKeychain();
 
   if (keychain) {
