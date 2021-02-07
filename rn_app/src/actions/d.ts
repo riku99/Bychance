@@ -4,6 +4,7 @@ import {Post} from '../redux/post';
 import {Room} from '../redux/rooms';
 import {MessageType} from '../redux/messages';
 import {Flash} from '../redux/flashes';
+import {AnotherUser} from '../redux/getUsers';
 
 export type rejectPayload =
   | {errorType: 'loginError'}
@@ -18,6 +19,7 @@ export type SuccessfullLoginData = {
   user: User;
   posts: Post[];
   rooms: Room[];
+  chatPartners: AnotherUser[];
   messages: MessageType[];
   flashes: Flash[];
 };

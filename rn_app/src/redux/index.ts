@@ -5,6 +5,7 @@ import {sessionReducer} from './session';
 import {userReducer} from './user';
 import {postsReducer} from './post';
 import {roomsReducer} from './rooms';
+import {chatPartnersReducer} from './chatPartners';
 import {messagesReducer} from './messages';
 import {flashesReducer} from './flashes';
 import {getUsersReducer} from './getUsers';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   userReducer,
   postsReducer,
   roomsReducer,
+  chatPartnersReducer,
   messagesReducer,
   flashesReducer,
   getUsersReducer,

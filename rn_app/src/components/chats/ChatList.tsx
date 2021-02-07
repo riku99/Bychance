@@ -3,14 +3,16 @@ import {View, StyleSheet} from 'react-native';
 import {ListItem, Badge} from 'react-native-elements';
 
 import {Room} from '../../redux/rooms';
+import {chatPartnerEntities} from '../../redux/chatPartners';
 import {UserAvatar} from '../utils/Avatar';
 
 type Props = {
   rooms: Room[];
+  chatPartnerEntites: chatPartnerEntities;
   pushChatRoom: (room: Room) => void;
 };
 
-export const ChatList = ({rooms, pushChatRoom}: Props) => {
+export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {
   return (
     <View style={styles.container}>
       {rooms.length
@@ -21,9 +23,15 @@ export const ChatList = ({rooms, pushChatRoom}: Props) => {
                 onPress={() => {
                   pushChatRoom(r);
                 }}>
-                <UserAvatar image={r.partner.image} size="medium" opacity={1} />
+                <UserAvatar
+                  image={chatPartnerEntites[r.partner]?.image}
+                  size="medium"
+                  opacity={1}
+                />
                 <ListItem.Content>
-                  <ListItem.Title>{r.partner.name}</ListItem.Title>
+                  <ListItem.Title>
+                    {chatPartnerEntites[r.partner]?.name}
+                  </ListItem.Title>
                   <ListItem.Subtitle style={styles.subtitle}>
                     {r.latestMessage && r.latestMessage}
                   </ListItem.Subtitle>

@@ -10,6 +10,12 @@ module LoginHelper
                 messages_arr << RoomMessageSerializer.new(m)
             end
         end
+        chat_partners = room_arr.map do |room|
+            partner = User.find_by(id: room.partner)
+            if partner
+                AnotherUserSerializer.new(partner, user: user)
+            end
+        end
         flashes = user.flashes
         #not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 } あとで直す
         not_expired_flashes = flashes.select { |f| true } 
@@ -18,6 +24,7 @@ module LoginHelper
             user: UserSerializer.new(user),
             posts: posts,
             rooms: room_arr,
+            chatPartners: chat_partners,
             messages: messages_arr,
             flashes: flash_entities
         }

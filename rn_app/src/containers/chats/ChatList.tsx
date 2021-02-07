@@ -7,6 +7,7 @@ import {ChatList} from '../../components/chats/ChatList';
 import {RootState} from '../../redux/index';
 import {Room} from '../../redux/rooms';
 import {selectAllRooms} from '../../redux/rooms';
+import {selectChatPartnerEntities} from '../../redux/chatPartners';
 import {RootStackParamList} from '../../screens/Root';
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
@@ -17,6 +18,10 @@ export const Container = () => {
     shallowEqual,
   );
 
+  const chatPartnerEntities = useSelector((state: RootState) => {
+    return selectChatPartnerEntities(state);
+  });
+
   const navigationToChatRoom = useNavigation<RootNavigationProp>();
 
   const pushChatRoom = (room: Room) => {
@@ -26,5 +31,11 @@ export const Container = () => {
     });
   };
 
-  return <ChatList rooms={rooms} pushChatRoom={pushChatRoom} />;
+  return (
+    <ChatList
+      rooms={rooms}
+      chatPartnerEntites={chatPartnerEntities}
+      pushChatRoom={pushChatRoom}
+    />
+  );
 };

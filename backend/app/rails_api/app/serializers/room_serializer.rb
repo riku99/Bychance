@@ -4,7 +4,7 @@ class RoomSerializer < ActiveModel::Serializer
 
     def partner
         user =  @instance_options[:user]
-        object.sender.id == user.id ? AnotherUserSerializer.new(object.recipient, user: user) : AnotherUserSerializer.new(object.sender, user: user)
+        object.sender.id == user.id ? object.recipient.id : object.sender.id
     end
 
     def messages

@@ -19,7 +19,7 @@ import {AnotherUser} from '../components/users/SearchUsers';
 
 export type Room = {
   id: number;
-  partner: AnotherUser;
+  partner: number;
   timestamp: string;
   messages: number[];
   unreadNumber: number;

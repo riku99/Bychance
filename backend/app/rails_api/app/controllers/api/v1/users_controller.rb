@@ -31,6 +31,12 @@ class Api::V1::UsersController < ApplicationController
         room_arr << RoomSerializer.new(r, { user: user })
         r.room_messages.each { |m| message_arr << RoomMessageSerializer.new(m) }
       end
+      chat_partners = room_arr.map do |room|
+        partner = User.find_by(id: room.partner)
+        if partner
+            AnotherUserSerializer.new(partner, user: user)
+        end
+    end
       flashes = user.flashes
       not_expired_flashes = flashes.select { |f| (Time.zone.now - f.created_at) / (60 * 60) < 2 }
       flash_entities= not_expired_flashes.map { |f| FlashSerializer.new(f)}
@@ -38,6 +44,7 @@ class Api::V1::UsersController < ApplicationController
                user: UserSerializer.new(user),
                posts: posts,
                rooms: room_arr,
+               chatPartners: chat_partners,
                messages: message_arr,
                token: 'riku',
                flashes: flash_entities
