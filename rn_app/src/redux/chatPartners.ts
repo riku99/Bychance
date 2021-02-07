@@ -49,4 +49,7 @@ export const selectChatPartnerEntities = (state: RootState) => {
   return chatPartnersSelector.selectEntities(state.chatPartnersReducer);
 };
 
+export const selectChatPartner = (state: RootState, partnerId: number) =>
+  chatPartnersSelector.selectById(state.chatPartnersReducer, partnerId);
+
 export const chatPartnersReducer = chatPartnersSlice.reducer;

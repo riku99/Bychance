@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
@@ -8,6 +8,7 @@ import {ChatRoom} from '../../components/chats/ChatRoom';
 import {AppDispatch, RootState} from '../../redux/index';
 import {selectMessages} from '../../redux/messages';
 import {resetUnreadNumber} from '../../redux/rooms';
+import {selectChatPartner} from '../../redux/chatPartners';
 import {resetRecievedMessage} from '../../redux/otherSettings';
 import {
   createMessageThunk,
@@ -26,11 +27,15 @@ type ChatRoomStackNavigationProp = StackNavigationProp<
 type Props = {route: RootRouteProp; navigation: ChatRoomStackNavigationProp};
 
 export const Container = ({route, navigation}: Props) => {
-  const userId = useSelector((state: RootState) => state.userReducer.user!.id);
+  const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
   const selectedMessages = useSelector((state: RootState) => {
-    return selectMessages(state, route.params.messages);
+    return selectMessages(state, route.params.room.messages);
   }, shallowEqual);
+
+  const partner = useSelector((state: RootState) =>
+    selectChatPartner(state, route.params.partnerId),
+  );
 
   // チャットルームを開いている時にwsでメッセージを受け取った時のためのセレクタ
   const receivedMessage = useSelector((state: RootState) => {
@@ -39,10 +44,10 @@ export const Container = ({route, navigation}: Props) => {
 
   const navigateToProfile = useCallback(() => {
     navigation.push('UserPage', {
-      roomId: route.params.id,
+      roomId: route.params.room.id,
       from: 'chatRoom',
     });
-  }, [navigation, route.params.id]);
+  }, [navigation, route.params.room.id]);
 
   const [messages, setMessages] = useState<IMessage[]>(() => {
     if (selectedMessages.length) {
@@ -55,7 +60,7 @@ export const Container = ({route, navigation}: Props) => {
             _id: m.userId,
             avatar: () => (
               <UserAvatar
-                image={route.params.partner.image}
+                image={partner?.image}
                 size={'small'}
                 opacity={0}
                 onPress={navigateToProfile}
@@ -70,14 +75,19 @@ export const Container = ({route, navigation}: Props) => {
     }
   });
 
+  useLayoutEffect(() => {
+    navigation.setOptions({headerTitle: partner?.name});
+  });
+
   const dispatch: AppDispatch = useDispatch();
 
   // チャットルームを開いている時にwsでメッセージを受け取った場合のためのeffect
+  // wsでメッセージを受け取り、そのメッセージがこのルーム宛のものであれば表示
   useEffect(() => {
     if (
       receivedMessage &&
-      receivedMessage.roomId === route.params.id &&
-      receivedMessage.id !== route.params.messages[0]
+      receivedMessage.roomId === route.params.room.id &&
+      receivedMessage.id !== route.params.room.messages[0]
     ) {
       setMessages((m) => {
         return [
@@ -89,7 +99,7 @@ export const Container = ({route, navigation}: Props) => {
               _id: receivedMessage.userId,
               avatar: () => (
                 <UserAvatar
-                  image={route.params.partner.image}
+                  image={partner?.image}
                   size={'small'}
                   opacity={0}
                   onPress={navigateToProfile}
@@ -100,33 +110,34 @@ export const Container = ({route, navigation}: Props) => {
           ...m,
         ];
       });
-      // 未読数を0にする
-      dispatch(resetUnreadNumber({roomId: route.params.id}));
-      // 既読データを作成
+      // ルームを開いている状態で取得したメッセージなので未読数を0にする
+      dispatch(resetUnreadNumber({roomId: route.params.room.id}));
+      // 既読データをサーバの方で作成
       dispatch(
         createReadMessagesThunk({
-          roomId: route.params.id,
+          roomId: route.params.room.id,
           unreadNumber: 1,
         }),
       );
     }
   }, [
     receivedMessage,
-    route.params.id,
-    route.params.partner.image,
-    route.params.messages,
+    route.params.room.id,
+    partner?.image,
+    route.params.room.messages,
     navigateToProfile,
     dispatch,
   ]);
 
   useEffect(() => {
+    // ルームが開かれたら未読を0にする
     const unsubscribe = navigation.addListener('focus', () => {
-      if (route.params.unreadNumber !== 0) {
-        dispatch(resetUnreadNumber({roomId: route.params.id}));
+      if (route.params.room.unreadNumber !== 0) {
+        dispatch(resetUnreadNumber({roomId: route.params.room.id}));
         dispatch(
           createReadMessagesThunk({
-            roomId: route.params.id,
-            unreadNumber: route.params.unreadNumber,
+            roomId: route.params.room.id,
+            unreadNumber: route.params.room.unreadNumber,
           }),
         );
       }
@@ -147,13 +158,14 @@ export const Container = ({route, navigation}: Props) => {
     async (text: string) => {
       const result = await dispatch(
         createMessageThunk({
-          roomId: route.params.id,
-          userId: userId,
+          roomId: route.params.room.id,
+          userId: myId,
           text,
         }),
       );
       if (createMessageThunk.fulfilled.match(result)) {
         const _message = result.payload.message;
+        // 送信したメッセージを追加
         setMessages([
           {
             _id: _message.id,
@@ -167,8 +179,8 @@ export const Container = ({route, navigation}: Props) => {
         ]);
       }
     },
-    [route.params.id, dispatch, userId, messages],
+    [route.params.room.id, dispatch, myId, messages],
   );
 
-  return <ChatRoom messages={messages} userId={userId} onSend={onSend} />;
+  return <ChatRoom messages={messages} userId={myId} onSend={onSend} />;
 };

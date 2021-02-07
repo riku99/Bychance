@@ -9,7 +9,7 @@ import {UserAvatar} from '../utils/Avatar';
 type Props = {
   rooms: Room[];
   chatPartnerEntites: chatPartnerEntities;
-  pushChatRoom: (room: Room) => void;
+  pushChatRoom: ({room, partnerId}: {room: Room; partnerId: number}) => void;
 };
 
 export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {
@@ -21,7 +21,10 @@ export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {
               <ListItem
                 key={r.id}
                 onPress={() => {
-                  pushChatRoom(r);
+                  pushChatRoom({
+                    room: r,
+                    partnerId: r.partner,
+                  });
                 }}>
                 <UserAvatar
                   image={chatPartnerEntites[r.partner]?.image}

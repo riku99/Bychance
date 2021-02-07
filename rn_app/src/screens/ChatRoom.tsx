@@ -6,7 +6,7 @@ import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {ProfileScreensGroupParamList, profileScreens} from './Profile';
 
 export type ChatRoomStackParamList = {
-  ChatRoom: Room;
+  ChatRoom: {room: Room; partnerId: number};
 } & ProfileScreensGroupParamList;
 
 const Stack = createStackNavigator<ChatRoomStackParamList>();
@@ -14,13 +14,7 @@ const Stack = createStackNavigator<ChatRoomStackParamList>();
 export const ChatRoomStackScreen = () => {
   return (
     <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
-      <Stack.Screen
-        name="ChatRoom"
-        component={ChatRoom}
-        options={({route}) => ({
-          title: route.params.partner.name,
-        })}
-      />
+      <Stack.Screen name="ChatRoom" component={ChatRoom} />
       {Object.entries(profileScreens).map(([name, component]) => (
         <Stack.Screen
           key={name}
