@@ -84,7 +84,10 @@ export const Container = () => {
   const rootStackNavigation = useNavigation<RootNavigationProp>();
 
   const pushProfile = (user: AnotherUser) => {
-    searchStackNavigation.push('UserPage', {userId: user.id});
+    searchStackNavigation.push('UserPage', {
+      userId: user.id,
+      from: 'searchUsers',
+    });
   };
 
   const pushFlashes = ({

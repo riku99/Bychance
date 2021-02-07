@@ -28,7 +28,7 @@ export const Posts = React.memo(({posts}: Props) => {
   };
 
   const navigation = useNavigation<
-    UserPageNavigationProp<'Profile'> & MyPageNavigationProp<'MyProfile'>
+    UserPageNavigationProp<'UserPage'> & MyPageNavigationProp<'MyProfile'>
   >();
 
   const onPress = (post: Post) => {

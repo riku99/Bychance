@@ -38,8 +38,11 @@ export const Container = ({route, navigation}: Props) => {
   }, shallowEqual);
 
   const navigateToProfile = useCallback(() => {
-    navigation.push('Profile', route.params.partner);
-  }, [navigation, route.params.partner]);
+    navigation.push('UserPage', {
+      roomId: route.params.id,
+      from: 'chatRoom',
+    });
+  }, [navigation, route.params.id]);
 
   const [messages, setMessages] = useState<IMessage[]>(() => {
     if (selectedMessages.length) {

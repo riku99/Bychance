@@ -133,4 +133,13 @@ export const getAllUnreadMessagesNumber = (state: RootState) => {
   return allunreadMessagesNumber;
 };
 
+export const selectPartner = (state: RootState, roomId: number) => {
+  const user = roomSelectors.selectById(state.roomsReducer, roomId)?.partner;
+  if (user) {
+    return user;
+  } else {
+    throw new Error();
+  }
+};
+
 export const roomsReducer = RoomsSlice.reducer;

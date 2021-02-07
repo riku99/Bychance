@@ -1,4 +1,10 @@
-import React, {useMemo, useRef, useState, useEffect} from 'react';
+import React, {
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+  useLayoutEffect,
+} from 'react';
 import {View, StyleSheet, Animated, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 
@@ -22,14 +28,19 @@ import {
   MyPageStackParamList,
   ProfileScreensGroupParamList,
 } from '../../../screens/Profile';
+import {
+  RootNavigationProp,
+  UserPageNavigationProp,
+} from '../../../screens/types';
 import {RootState} from '../../../redux/index';
 import {selectAllPosts} from '../../../redux/post';
 import {selectAllFlashes} from '../../../redux/flashes';
 import {selectAnotherUser} from '../../../redux/getUsers';
+import {selectPartner} from '../../../redux/rooms';
 import {PartiallyPartial} from '../../../constants/d';
 
 // BottomTabに渡される時のプロップス
-type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyProfile'>;
+type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
 // StackNavigationに渡される時のプロップス
 type ProfileStackScreenProp = RouteProp<
   ProfileScreensGroupParamList,
@@ -38,15 +49,25 @@ type ProfileStackScreenProp = RouteProp<
 
 type Props = {
   route: MyPageStackScreenProp | ProfileStackScreenProp;
+  navigation: RootNavigationProp<'Tab'> & UserPageNavigationProp<'UserPage'>;
 };
 
-export const UserPage = ({route}: Props) => {
-  // 自分以外のユーザーを表示する場合は値が存在する
-  const _anotherUser = useMemo(() => route && route.params, [route]);
+export const UserPage = ({route, navigation}: Props) => {
+  // bottomタブではなくてスタックから呼び出される場合は値が存在する
+  const routeParams = useMemo(() => route && route.params, [route]);
+
+  const referenceId = useSelector(
+    (state: RootState) => state.userReducer.user!.id,
+  );
 
   const anotherUser = useSelector((state: RootState) => {
-    if (_anotherUser && _anotherUser.userId) {
-      return selectAnotherUser(state, _anotherUser.userId);
+    if (routeParams) {
+      // どのページからこのページがpushされたかによってサブスクライブするreducerを指定
+      if (routeParams.from === 'searchUsers') {
+        return selectAnotherUser(state, routeParams.userId);
+      } else if (routeParams.from === 'chatRoom') {
+        return selectPartner(state, routeParams.roomId);
+      }
     }
   });
 
@@ -58,7 +79,7 @@ export const UserPage = ({route}: Props) => {
 
   const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
 
-  const isMe = useMemo(() => !anotherUser && !!me, [anotherUser, me]);
+  const isMe = useMemo(() => referenceId === user.id, [referenceId, user.id]);
 
   const myPosts = useSelector((state: RootState) => {
     if (!anotherUser) {
@@ -200,6 +221,12 @@ export const UserPage = ({route}: Props) => {
     false,
   );
   const [avatarToIntroduceHeight, setAvatarToIntroduceHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    if (route.name === 'UserPage') {
+      navigation.setOptions({headerTitle: anotherUser && anotherUser.name});
+    }
+  }, [navigation, anotherUser, route.name]);
 
   return (
     <View
