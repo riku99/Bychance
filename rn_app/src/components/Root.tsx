@@ -7,8 +7,8 @@ import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {createConsumer} from '@rails/actioncable';
 
 import {AppDispatch, RootState} from '../redux/index';
-import {receiveMessage, MessageType} from '../redux/messages';
-import {Room} from '../redux/rooms';
+import {receiveMessage} from '../redux/messages';
+import {ReceivedMessageData} from '../redux/types';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from '../containers/auth/Auth';
 import {Container as Menu} from '../containers/utils/Menu';
@@ -58,16 +58,17 @@ const Root = () => {
     loginProcess();
   }, [dispatch]);
 
+  // wsでメッセージを受け取ったときに関する処理
   useEffect(() => {
     if (login) {
       consumer.subscriptions.create(
         {channel: 'MessagesChannel', id: id},
         {
           connected: () => {},
-          received: (data: {room: Room; message: MessageType}) => {
+          received: (data: ReceivedMessageData) => {
             dispatch(receiveMessage(data));
             showMessage({
-              message: data.room.partner.name,
+              message: data.sender.name,
               description: data.message.text,
               style: {backgroundColor: '#00163b'},
               titleStyle: {color: 'white', marginLeft: 10},
@@ -76,7 +77,7 @@ const Root = () => {
               renderFlashMessageIcon: () => {
                 return (
                   <View style={{marginRight: 5}}>
-                    <UserAvatar size={40} image={data.room.partner.image} />
+                    <UserAvatar size={40} image={data.sender.image} />
                   </View>
                 );
               },

@@ -6,12 +6,12 @@ import {rejectPayload} from './d';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {headers} from '../helpers/headers';
-import {MessageType} from '../redux/messages';
+import {Message} from '../redux/messages';
 import {handleBasicError} from '../helpers/error';
 import {origin} from '../constants/origin';
 
 export const createMessageThunk = createAsyncThunk<
-  {message: MessageType; roomId: number},
+  {message: Message; roomId: number},
   {roomId: number; userId: number; text: string},
   {
     rejectValue: rejectPayload;
@@ -23,7 +23,7 @@ export const createMessageThunk = createAsyncThunk<
 
     if (keychain) {
       try {
-        const response = await axios.post<MessageType>(
+        const response = await axios.post<Message>(
           `${origin}/messages`,
           {
             roomId,

@@ -18,7 +18,7 @@ class UserEditItemSerializer < ActiveModel::Serializer
   attributes :id, :name, :image, :introduce, :message
 end
 
-# オプションとしてuserインスタンス(本人の)を渡さなければいけない
+# オプションとしてリクエストしたユーザー側(例外あり)のインスタンスを渡す
 class AnotherUserSerializer < ActiveModel::Serializer
   attributes :id, :name, :image, :introduce, :message, :flashes
 

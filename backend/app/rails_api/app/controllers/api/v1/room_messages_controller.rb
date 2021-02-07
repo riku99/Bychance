@@ -19,7 +19,8 @@ class Api::V1::RoomMessagesController < ApplicationController
           "messages_channel_#{partner.id}",
           {
             message: RoomMessageSerializer.new(new_message),
-            room: RoomSerializer.new(room, { user: partner })
+            room: RoomSerializer.new(room, { user: partner }),
+            sender: AnotherUserSerializer.new(@user, user: partner) #　wsで相手に送信するデータなので自分をシリアライズする
           }
         )
       else

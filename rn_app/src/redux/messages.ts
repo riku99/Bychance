@@ -13,9 +13,9 @@ import {
 import {logoutAction} from '../actions/sessions';
 import {SuccessfullLoginData} from '../apis/usersApi';
 import {RootState} from './index';
-import {Room} from './rooms';
+import {ReceivedMessageData} from './types';
 
-export type MessageType = {
+export type Message = {
   id: number;
   roomId: number;
   userId: number;
@@ -24,7 +24,7 @@ export type MessageType = {
   read: boolean;
 };
 
-const messagesAdapter = createEntityAdapter<MessageType>({
+const messagesAdapter = createEntityAdapter<Message>({
   selectId: (message) => message.id,
   sortComparer: (a, b) =>
     new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1,
@@ -34,10 +34,7 @@ const messagesSlice = createSlice({
   name: 'messages',
   initialState: messagesAdapter.getInitialState(),
   reducers: {
-    receiveMessage: (
-      state,
-      action: PayloadAction<{room: Room; message: MessageType}>,
-    ) => {
+    receiveMessage: (state, action: PayloadAction<ReceivedMessageData>) => {
       messagesAdapter.addOne(state, action.payload.message);
     },
   },
@@ -62,7 +59,7 @@ const messagesSlice = createSlice({
     },
     [createMessageThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{message: MessageType; roomId: number}>,
+      action: PayloadAction<{message: Message; roomId: number}>,
     ) => {
       messagesAdapter.addOne(state, action.payload.message);
     },

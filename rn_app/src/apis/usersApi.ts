@@ -4,7 +4,7 @@ import {origin} from '../constants/origin';
 import {User} from '../redux/user';
 import {Post} from '../redux/post';
 import {Room} from '../redux/rooms';
-import {MessageType} from '../redux/messages';
+import {Message} from '../redux/messages';
 import {Flash} from '../redux/flashes';
 import {headers} from '../helpers/headers';
 import {Credentials} from '../helpers/keychain';
@@ -13,7 +13,7 @@ export type SuccessfullLoginData = {
   user: User;
   posts: Post[];
   rooms: Room[];
-  messages: MessageType[];
+  messages: Message[];
   flashes: Flash[];
 };
 

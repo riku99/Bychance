@@ -13,7 +13,7 @@ import {
 } from '../actions/users';
 import {logoutAction} from '../actions/sessions';
 import {createMessageThunk} from '../actions/messages';
-import {MessageType, receiveMessage} from '../redux/messages';
+import {Message, receiveMessage} from '../redux/messages';
 import {SuccessfullLoginData} from '../apis/usersApi';
 import {AnotherUser} from '../components/users/SearchUsers';
 
@@ -89,7 +89,7 @@ export const RoomsSlice = createSlice({
     },
     [createMessageThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{message: MessageType; roomId: number}>,
+      action: PayloadAction<{message: Message; roomId: number}>,
     ) => {
       const relatedRoom = state.entities[action.payload.roomId];
       if (relatedRoom) {
@@ -105,7 +105,7 @@ export const RoomsSlice = createSlice({
     },
     [receiveMessage.type]: (
       state,
-      action: PayloadAction<{room: Room; message: MessageType}>,
+      action: PayloadAction<{room: Room; message: Message}>,
     ) => {
       roomsAdapter.upsertOne(state, action.payload.room);
     },
