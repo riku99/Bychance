@@ -2,6 +2,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {RootStackParamList} from './Root';
 import {MyPageStackParamList, ProfileScreensGroupParamList} from './Profile';
+import {ChatRoomStackParamList} from './ChatRoom';
 import {FlashesDataAndUser} from '../components/pages/Flashes/ShowFlash';
 import {PartiallyPartial} from '../constants/d';
 
@@ -16,6 +17,10 @@ export type MyPageNavigationProp<
 export type UserPageNavigationProp<
   T extends keyof ProfileScreensGroupParamList
 > = StackNavigationProp<ProfileScreensGroupParamList, T>;
+
+export type ChatRoomStackNavigationProp<
+  T extends keyof ChatRoomStackParamList
+> = StackNavigationProp<ChatRoomStackParamList, T>;
 
 export type PartialFlashesDataAndUser = PartiallyPartial<
   FlashesDataAndUser,

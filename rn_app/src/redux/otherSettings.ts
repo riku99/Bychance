@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {logoutAction} from '../actions/sessions';
 import {Message, receiveMessage} from './messages';
+import {ReceivedMessageData} from './types';
 import {Room} from './rooms';
 
 type InitialState = {
@@ -56,7 +57,7 @@ const otherSettingsSlice = createSlice({
     [logoutAction.type]: () => initialState,
     [receiveMessage.type]: (
       state,
-      action: PayloadAction<{room: Room; message: Message}>,
+      action: PayloadAction<ReceivedMessageData>,
     ) => {
       return {
         ...state,

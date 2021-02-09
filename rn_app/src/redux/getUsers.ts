@@ -6,15 +6,9 @@ import {
 
 import {RootState} from './index';
 import {User} from './user';
-import {Post} from './post';
-import {FlashesData} from '../components/pages/Flashes/ShowFlash';
+import {AnotherUser} from './types';
 import {getOtherUsersThunk} from '../actions/otherUsers';
 import {refreshUserThunk} from '../actions/users';
-
-export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
-  posts: Post[];
-  flashes: FlashesData;
-};
 
 export type GetUsers = AnotherUser[];
 

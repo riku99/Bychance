@@ -280,7 +280,7 @@ export const UserPage = ({route, navigation}: Props) => {
             transform: [{translateY: y}],
           },
         ]}>
-        {isMe ? <EditButton /> : <SendMessageButton />}
+        {isMe ? <EditButton /> : <SendMessageButton user={user} />}
       </Animated.View>
       {showExpandButton ? (
         <Animated.View

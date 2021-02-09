@@ -4,15 +4,17 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
+import {AnotherUser, ReceivedMessageData} from './types';
+import {RootState} from './index';
+import {receiveMessage} from './messages';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
 } from '../actions/users';
 import {logoutAction} from '../actions/sessions';
-import {SuccessfullLoginData} from '../actions/d';
-import {RootState} from './index';
-import {AnotherUser} from './getUsers';
+import {SuccessfullLoginData} from '../actions/types';
+import {createRoomThunk} from '../actions/rooms';
 
 const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
@@ -40,6 +42,25 @@ export const chatPartnersSlice = createSlice({
       state,
       action: PayloadAction<SuccessfullLoginData>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
+    [createRoomThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<{
+        presence: boolean;
+        roomId: number;
+        partner: AnotherUser;
+        timestamp: string;
+      }>,
+    ) => {
+      if (!action.payload.presence) {
+        chatPartnersAdapter.addOne(state, action.payload.partner);
+      }
+    },
+    [receiveMessage.type]: (
+      state,
+      action: PayloadAction<ReceivedMessageData>,
+    ) => {
+      chatPartnersAdapter.upsertOne(state, action.payload.sender);
+    },
   },
 });
 

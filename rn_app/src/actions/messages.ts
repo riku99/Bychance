@@ -2,7 +2,7 @@ import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
 import {logoutAction} from './sessions';
-import {rejectPayload} from './d';
+import {rejectPayload} from './types';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {headers} from '../helpers/headers';
@@ -19,9 +19,9 @@ export const createMessageThunk = createAsyncThunk<
 >(
   'messages/createMessage',
   async ({roomId, userId, text}, {dispatch, rejectWithValue}) => {
-    const keychain = await checkKeychain();
+    const credentials = await checkKeychain();
 
-    if (keychain) {
+    if (credentials) {
       try {
         const response = await axios.post<Message>(
           `${origin}/messages`,
@@ -29,9 +29,9 @@ export const createMessageThunk = createAsyncThunk<
             roomId,
             userId,
             text,
-            id: keychain.id,
+            id: credentials.id,
           },
-          headers(keychain.token),
+          headers(credentials.token),
         );
 
         return {message: response.data, roomId};

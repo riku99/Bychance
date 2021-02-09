@@ -67,25 +67,26 @@ export const RoomsSlice = createSlice({
     [createRoomThunk.fulfilled.type]: (
       state,
       action: PayloadAction<{
-        id: number;
-        recipient: AnotherUser;
+        presence: boolean;
+        roomId: number;
+        partner: AnotherUser;
         timestamp: string;
       }>,
     ) => {
-      roomsAdapter.upsertOne(state, {
-        id: action.payload.id,
-        partner: action.payload.recipient,
-        timestamp: action.payload.timestamp,
-        messages: state.entities[action.payload.id]
-          ? state.entities[action.payload.id]?.messages!
-          : [],
-        unreadNumber: state.entities[action.payload.id]
-          ? state.entities[action.payload.id]?.unreadNumber!
-          : 0,
-        latestMessage: state.entities[action.payload.id]?.latestMessage
-          ? state.entities[action.payload.id]?.latestMessage!
-          : null,
-      });
+      // const room = state.entities[action.payload.roomId];
+      // roomが存在する場合は何もしなくていい。upsertOneの必要ない
+      // なかったら新しくaddする。messageとunreadNumberとlatestMessageはなしで。
+      if (!action.payload.presence) {
+        const data = action.payload;
+        roomsAdapter.addOne(state, {
+          id: data.roomId,
+          partner: data.partner.id,
+          timestamp: data.timestamp,
+          messages: [],
+          unreadNumber: 0,
+          latestMessage: null,
+        });
+      }
     },
     [createMessageThunk.fulfilled.type]: (
       state,
@@ -116,8 +117,8 @@ export const {resetUnreadNumber} = RoomsSlice.actions;
 
 export const roomSelectors = roomsAdapter.getSelectors();
 
-export const selectRoom = (state: RootState, n: number) => {
-  return roomSelectors.selectById(state.roomsReducer, n);
+export const selectRoom = (state: RootState, roomId: number) => {
+  return roomSelectors.selectById(state.roomsReducer, roomId);
 };
 
 export const selectAllRooms = (state: RootState) => {

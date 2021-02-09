@@ -1,7 +1,7 @@
 import {Alert} from 'react-native';
 import {ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
 
-import {rejectPayload, basicAxiosError} from '../actions/d';
+import {rejectPayload, basicAxiosError} from '../actions/types';
 import {requestLogin} from '../helpers/login';
 import {logoutAction} from '../actions/sessions';
 

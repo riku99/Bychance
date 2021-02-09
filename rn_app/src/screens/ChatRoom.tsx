@@ -1,12 +1,11 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Room} from '../redux/rooms';
 import {Container as ChatRoom} from '../containers/chats/ChatRoom';
 import {ProfileScreensGroupParamList, profileScreens} from './Profile';
 
 export type ChatRoomStackParamList = {
-  ChatRoom: {room: Room; partnerId: number};
+  ChatRoom: {roomId: number; partnerId: number};
 } & ProfileScreensGroupParamList;
 
 const Stack = createStackNavigator<ChatRoomStackParamList>();

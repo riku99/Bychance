@@ -1,51 +1,47 @@
+import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
 import {logoutAction} from './sessions';
-import {createRoom} from '../apis/roomsApi';
-import {AnotherUser} from '../components/users/SearchUsers';
+import {AnotherUser} from '../redux/types';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
-import {alertSomeError} from '../helpers/error';
+import {handleBasicError} from '../helpers/error';
+import {headers} from '../helpers/headers';
+import {origin} from '../constants/origin';
+import {rejectPayload} from './types';
 
-export const createRoomThunk = createAsyncThunk(
-  'chats/createRoom',
-  async (recipient: AnotherUser, thunkAPI) => {
-    const keychain = await checkKeychain();
-
-    if (keychain) {
-      const response = await createRoom({
-        id: keychain.id,
-        token: keychain.token,
-        recipientId: recipient.id,
-      });
-
-      if (response.type === 'success') {
-        return {
-          id: response.data.id,
-          recipient: recipient,
-          timestamp: response.data.timestamp,
-        };
-      }
-
-      if (response.type === 'loginError') {
-        requestLogin(() => {
-          thunkAPI.dispatch(logoutAction);
-        });
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
-
-      if (response.type === 'someError') {
-        console.log(response.message);
-        alertSomeError();
-        return thunkAPI.rejectWithValue({someError: true});
-      }
-
-      throw new Error();
-    } else {
-      requestLogin(() => {
-        thunkAPI.dispatch(logoutAction);
-      });
-      return thunkAPI.rejectWithValue({loginError: true});
-    }
+export const createRoomThunk = createAsyncThunk<
+  {
+    presence: boolean;
+    roomId: number;
+    partner: AnotherUser;
+    timestamp: string;
   },
-);
+  {partner: AnotherUser},
+  {rejectValue: rejectPayload}
+>('chats/createRoom', async ({partner}, {dispatch, rejectWithValue}) => {
+  const credentials = await checkKeychain();
+
+  if (credentials) {
+    try {
+      const response = await axios.post<{
+        presence: boolean;
+        roomId: number;
+        timestamp: string;
+      }>(
+        `${origin}/rooms`,
+        {accessId: credentials.id, partnerId: partner.id},
+        headers(credentials.token),
+      );
+
+      return {...response.data, partner};
+    } catch (e) {
+      const result = handleBasicError({e, dispatch});
+      return rejectWithValue(result);
+    }
+  } else {
+    // loginerror
+    requestLogin(() => dispatch(logoutAction));
+    return rejectWithValue({errorType: 'loginError'});
+  }
+});
