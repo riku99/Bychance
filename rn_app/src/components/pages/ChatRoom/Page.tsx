@@ -46,14 +46,14 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
     selectChatPartner(state, route.params.partnerId),
   );
 
-  const navigateToProfile = useCallback(() => {
-    if (room) {
+  const onAvatarPress = useCallback(() => {
+    if (partner) {
       navigation.push('UserPage', {
-        roomId: room.id,
+        userId: partner.id,
         from: 'chatRoom',
       });
     }
-  }, [navigation, room]);
+  }, [navigation, partner]);
 
   const [messages, setMessages] = useState<IMessage[]>(() => {
     if (selectedMessages && selectedMessages.length) {
@@ -69,7 +69,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
                 image={partner?.image}
                 size={'small'}
                 opacity={0}
-                onPress={navigateToProfile}
+                onPress={onAvatarPress}
               />
             ),
           },
@@ -109,7 +109,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
                   image={partner?.image}
                   size={'small'}
                   opacity={0}
-                  onPress={navigateToProfile}
+                  onPress={onAvatarPress}
                 />
               ),
             },
@@ -133,7 +133,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
     receivedMessage,
     room.id,
     partner?.image,
-    navigateToProfile,
+    onAvatarPress,
     room.messages,
     dispatch,
   ]);

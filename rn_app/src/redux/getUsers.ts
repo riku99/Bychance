@@ -58,6 +58,6 @@ export const selectAnotherUser = (
   if (user) {
     return user;
   } else {
-    throw new Error();
+    throw new Error('not found user');
   }
 };

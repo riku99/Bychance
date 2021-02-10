@@ -36,7 +36,7 @@ import {RootState} from '../../../redux/index';
 import {selectAllPosts} from '../../../redux/post';
 import {selectAllFlashes} from '../../../redux/flashes';
 import {selectAnotherUser} from '../../../redux/getUsers';
-import {selectPartner} from '../../../redux/rooms';
+import {selectChatPartner} from '../../../redux/chatPartners';
 import {PartiallyPartial} from '../../../constants/d';
 
 // BottomTabに渡される時のプロップス
@@ -53,33 +53,37 @@ type Props = {
 };
 
 export const UserPage = ({route, navigation}: Props) => {
-  // bottomタブではなくてスタックから呼び出される場合は値が存在する
+  // TabではなくてStackから呼び出される場合は値が存在する
   const routeParams = useMemo(() => route && route.params, [route]);
 
   const referenceId = useSelector(
     (state: RootState) => state.userReducer.user!.id,
   );
 
-  const anotherUser = useSelector((state: RootState) => {
-    if (routeParams) {
-      // どのページからこのページがpushされたかによってサブスクライブするreducerを指定
-      if (routeParams.from === 'searchUsers') {
-        return selectAnotherUser(state, routeParams.userId);
-      } else if (routeParams.from === 'chatRoom') {
-        return selectPartner(state, routeParams.roomId);
-      }
-    }
-  });
-
   const me = useSelector((state: RootState) => {
-    if (!anotherUser) {
-      return state.userReducer.user;
+    if (!route.params && !anotherUser) {
+      return state.userReducer.user!;
     }
   }, shallowEqual);
 
+  const anotherUser = useSelector((state: RootState) => {
+    if (!me) {
+      // どのページからこのページがpushされたかによってサブスクライブするreducerを指定
+      if (routeParams && routeParams!.from === 'searchUsers') {
+        return selectAnotherUser(state, routeParams.userId);
+      } else if (routeParams && routeParams!.from === 'chatRoom') {
+        return selectChatPartner(state, routeParams.userId);
+      } else {
+        throw new Error('ユーザーが見つかりません');
+      }
+    }
+  }, shallowEqual);
+
+  // meとanotherUserで共通して使えるものについてはわざわざmeであるかanotherUserであるか検証したくないのでuserとしてまとめる
+  // 別々のものとして使いたい時はme, anotherUserのどちらかを使う
   const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
 
-  const isMe = useMemo(() => referenceId === user.id, [referenceId, user.id]);
+  const isMe = useMemo(() => referenceId === user.id, [referenceId, user]);
 
   const myPosts = useSelector((state: RootState) => {
     if (!anotherUser) {
@@ -280,7 +284,7 @@ export const UserPage = ({route, navigation}: Props) => {
             transform: [{translateY: y}],
           },
         ]}>
-        {isMe ? <EditButton /> : <SendMessageButton user={user} />}
+        {isMe ? <EditButton /> : <SendMessageButton user={anotherUser!} />}
       </Animated.View>
       {showExpandButton ? (
         <Animated.View

@@ -57,7 +57,7 @@ export type ProfileScreensGroupParamList = {
         from: 'searchUsers';
       }
     | {
-        roomId: number;
+        userId: number;
         from: 'chatRoom';
       };
   Post: PostType;
