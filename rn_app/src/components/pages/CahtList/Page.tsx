@@ -3,16 +3,16 @@ import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {ChatList} from '../../components/chats/ChatList';
-import {RootState} from '../../redux/index';
-import {Room, selectAllRooms} from '../../redux/rooms';
-import {resetRecievedMessage} from '../../redux/otherSettings';
-import {selectChatPartnerEntities} from '../../redux/chatPartners';
-import {RootStackParamList} from '../../screens/Root';
+import {ChatList} from './ChatList';
+import {RootState} from '../../../redux/index';
+import {Room, selectAllRooms} from '../../../redux/rooms';
+import {resetRecievedMessage} from '../../../redux/otherSettings';
+import {selectChatPartnerEntities} from '../../../redux/chatPartners';
+import {RootStackParamList} from '../../../screens/Root';
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
-export const Container = () => {
+export const ChatListPage = () => {
   const dispatch = useDispatch();
   const rooms = useSelector(
     (state: RootState) => selectAllRooms(state),

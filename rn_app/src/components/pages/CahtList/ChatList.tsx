@@ -2,9 +2,9 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {ListItem, Badge} from 'react-native-elements';
 
-import {Room} from '../../redux/rooms';
-import {chatPartnerEntities} from '../../redux/chatPartners';
-import {UserAvatar} from '../utils/Avatar';
+import {Room} from '../../../redux/rooms';
+import {chatPartnerEntities} from '../../../redux/chatPartners';
+import {UserAvatar} from '../../utils/Avatar';
 
 type Props = {
   rooms: Room[];

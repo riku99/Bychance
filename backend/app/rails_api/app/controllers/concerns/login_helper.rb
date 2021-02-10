@@ -13,7 +13,6 @@ module LoginHelper
         chat_partners = room_arr.map do |room|
             partner = User.find_by(id: room.partner)
             if partner
-                puts partner
                 AnotherUserSerializer.new(partner, { user: user })
             end
         end

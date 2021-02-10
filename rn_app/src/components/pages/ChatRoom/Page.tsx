@@ -3,19 +3,19 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 
-import {ChatRoom} from '../../components/chats/ChatRoom';
-import {ChatRoomStackNavigationProp} from '../../screens/types';
-import {AppDispatch, RootState} from '../../redux/index';
-import {selectMessages} from '../../redux/messages';
-import {resetUnreadNumber, selectRoom} from '../../redux/rooms';
-import {selectChatPartner} from '../../redux/chatPartners';
-import {resetRecievedMessage} from '../../redux/otherSettings';
+import {ChatRoom} from './ChatRoom';
+import {ChatRoomStackNavigationProp} from '../../../screens/types';
+import {AppDispatch, RootState} from '../../../redux/index';
+import {selectMessages} from '../../../redux/messages';
+import {resetUnreadNumber, selectRoom} from '../../../redux/rooms';
+import {selectChatPartner} from '../../../redux/chatPartners';
+import {resetRecievedMessage} from '../../../redux/otherSettings';
 import {
   createMessageThunk,
   createReadMessagesThunk,
-} from '../../actions/messages';
-import {ChatRoomStackParamList} from '../../screens/ChatRoom';
-import {UserAvatar} from '../../components/utils/Avatar';
+} from '../../../actions/messages';
+import {ChatRoomStackParamList} from '../../../screens/ChatRoom';
+import {UserAvatar} from '../../utils/Avatar';
 
 type RootRouteProp = RouteProp<ChatRoomStackParamList, 'ChatRoom'>;
 
@@ -24,7 +24,7 @@ type Props = {
   navigation: ChatRoomStackNavigationProp<'ChatRoom'>;
 };
 
-export const Container = ({route, navigation}: Props) => {
+export const ChatRoomPage = ({route, navigation}: Props) => {
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
   const room = useSelector((state: RootState) => {
