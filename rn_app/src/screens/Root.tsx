@@ -18,7 +18,7 @@ import {
   FlashesStackScreen2,
 } from './Flash';
 import {ChatRoomStackParamList, ChatRoomStackScreen} from './ChatRoom';
-import {Container as TakeFlash} from '../containers/flashs/TakeFlash';
+import {TakeFlashPage} from '../components/pages/TakeFlash/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type RootStackParamList = {
@@ -78,7 +78,7 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="TakeFlash"
-        component={TakeFlash}
+        component={TakeFlashPage}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
