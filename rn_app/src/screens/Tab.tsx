@@ -5,9 +5,9 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {RootState} from '../redux/index';
 import {getAllUnreadMessagesNumber} from '../redux/rooms';
-import {PostStackScreen} from './Post';
-import {MyPageStackScreen} from './Profile';
-import {SearchStackScreen} from './Search';
+import {CreatePostStackScreen} from './CreatePost';
+import {MyPageStackScreen} from './UserPage';
+import {SearchUsersStackScreen} from './SearchUsers';
 import {ChatListStackScreen} from './ChatList';
 
 type TabList = {
@@ -34,7 +34,7 @@ export const Tabs = () => {
       }}>
       <RootTab.Screen
         name="Search"
-        component={SearchStackScreen}
+        component={SearchUsersStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <MIcon name="search" size={27} color={color} />
@@ -54,7 +54,7 @@ export const Tabs = () => {
       />
       <RootTab.Screen
         name="CreatePost"
-        component={PostStackScreen}
+        component={CreatePostStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <MIcon name="add-circle-outline" size={24} color={color} />

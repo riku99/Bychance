@@ -3,7 +3,7 @@ import {View, StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
 
-import {UserEditNavigationProp} from '../../containers/users/EditPage';
+import {UserEditNavigationProp} from '../../../screens/types';
 
 type Props = {
   name?: string;
@@ -18,7 +18,9 @@ type Props = {
     introduce?: string;
     statusMessage?: string;
   }) => void;
-  navigation: UserEditNavigationProp;
+  navigation: UserEditNavigationProp<
+    'IntroduceEdit' | 'NameEdit' | 'StatusMessageEdit'
+  >;
 };
 
 export const EditPage = ({

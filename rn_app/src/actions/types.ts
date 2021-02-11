@@ -4,7 +4,7 @@ import {Post} from '../redux/post';
 import {Room} from '../redux/rooms';
 import {Message} from '../redux/messages';
 import {Flash} from '../redux/flashes';
-import {AnotherUser} from '../redux/getUsers';
+import {AnotherUser} from '../redux/types';
 
 export type rejectPayload =
   | {errorType: 'loginError'}

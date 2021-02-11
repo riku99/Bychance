@@ -7,6 +7,7 @@ import {
 import {AnotherUser, ReceivedMessageData} from './types';
 import {RootState} from './index';
 import {receiveMessage} from './messages';
+import {User} from './user';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
@@ -15,6 +16,7 @@ import {
 import {logoutAction} from '../actions/sessions';
 import {SuccessfullLoginData} from '../actions/types';
 import {createRoomThunk} from '../actions/rooms';
+import {refreshUserThunk} from '../actions/users';
 
 const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
@@ -60,6 +62,19 @@ export const chatPartnersSlice = createSlice({
       action: PayloadAction<ReceivedMessageData>,
     ) => {
       chatPartnersAdapter.upsertOne(state, action.payload.sender);
+    },
+    [refreshUserThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<
+        {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
+      >,
+    ) => {
+      if (!action.payload.isMyData) {
+        return chatPartnersAdapter.updateOne(state, {
+          id: action.payload.data.id,
+          changes: action.payload.data,
+        });
+      }
     },
   },
 });

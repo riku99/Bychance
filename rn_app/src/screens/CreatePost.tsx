@@ -3,16 +3,16 @@ import {useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Button} from 'react-native-elements';
 
-import {CreatePost} from '../components/posts/CreatePost';
+import {CreatePost} from '../components/pages/CreatePost/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
-export type PostStackParamList = {
+export type CreatePostStackParamList = {
   CreatePostTable: undefined;
 };
 
-const Stack = createStackNavigator<PostStackParamList>();
+const Stack = createStackNavigator<CreatePostStackParamList>();
 
-export const PostStackScreen = () => {
+export const CreatePostStackScreen = () => {
   const navigation = useNavigation();
   return (
     <Stack.Navigator>

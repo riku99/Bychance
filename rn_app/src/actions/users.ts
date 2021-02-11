@@ -10,13 +10,13 @@ import {
   sampleLoginApi,
 } from '../apis/usersApi';
 import {User} from '../redux/user';
+import {AnotherUser} from '../redux/types';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError, handleBasicError} from '../helpers/error';
 import {rejectPayload, SuccessfullLoginData} from './types';
-import {AnotherUser} from '../components/users/SearchUsers';
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
   const response = await sampleLoginApi();

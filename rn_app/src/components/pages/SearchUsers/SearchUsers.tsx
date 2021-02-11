@@ -21,15 +21,8 @@ import {ListItem} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
-import {UserAvatarWithOuter} from '../utils/Avatar';
-import {User} from '../../redux/user';
-import {Post} from '../../redux/post';
-import {FlashesData} from '../pages/Flashes/ShowFlash';
-
-export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
-  posts: Post[];
-  flashes: FlashesData;
-};
+import {UserAvatarWithOuter} from '../../utils/Avatar';
+import {AnotherUser} from '../../../redux/types';
 
 type Props = {
   otherUsers: AnotherUser[];

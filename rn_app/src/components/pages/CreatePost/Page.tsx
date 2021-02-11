@@ -7,23 +7,18 @@ import {
   Dimensions,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
-import {useIsFocused, NavigationProp} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 
-import {AppDispatch} from '../../redux';
-import {creatingPost} from '../../redux/otherSettings';
-import {PostStackParamList} from '../../screens/Post';
-import {createPostAction} from '../../actions/posts';
-
-type CreatePostNavigationProp = NavigationProp<
-  PostStackParamList,
-  'CreatePostTable'
->;
+import {AppDispatch} from '../../../redux';
+import {creatingPost} from '../../../redux/otherSettings';
+import {createPostAction} from '../../../actions/posts';
+import {CreatePostStackNavigationProp} from '../../../screens/types';
 
 type Props = {
-  navigation: CreatePostNavigationProp;
+  navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
 };
 
 export const CreatePost = ({navigation}: Props) => {

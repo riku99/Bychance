@@ -26,8 +26,8 @@ import {SendMessageButton} from './SendMessageButton';
 import {FlashesDataAndUser} from '../Flashes/ShowFlash';
 import {
   MyPageStackParamList,
-  ProfileScreensGroupParamList,
-} from '../../../screens/Profile';
+  UserPageScreenGroupParamList,
+} from '../../../screens/UserPage';
 import {
   RootNavigationProp,
   UserPageNavigationProp,
@@ -37,13 +37,13 @@ import {selectAllPosts} from '../../../redux/post';
 import {selectAllFlashes} from '../../../redux/flashes';
 import {selectAnotherUser} from '../../../redux/getUsers';
 import {selectChatPartner} from '../../../redux/chatPartners';
-import {PartiallyPartial} from '../../../constants/d';
+import {PartiallyPartial} from '../../../constants/types';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
 // StackNavigationに渡される時のプロップス
 type ProfileStackScreenProp = RouteProp<
-  ProfileScreensGroupParamList,
+  UserPageScreenGroupParamList,
   'UserPage'
 >;
 

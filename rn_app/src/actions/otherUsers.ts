@@ -6,9 +6,9 @@ import {logoutAction} from './sessions';
 import {checkKeychain} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
 import {alertSomeError} from '../helpers/error';
-import {AnotherUser} from '../components/users/SearchUsers';
-import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
+import {origin} from '../constants/origin';
+import {AnotherUser} from '../redux/types';
 
 export const getOtherUsersThunk = createAsyncThunk<
   AnotherUser[],

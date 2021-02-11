@@ -1,8 +1,8 @@
 import React from 'react';
 import {Avatar} from 'react-native-elements';
 
-import {basicStyles} from '../../constants/styles';
-import {UserProfileOuter} from './AvatarOuter';
+import {basicStyles} from '../../../constants/styles';
+import {UserProfileOuter} from '../AvatarOuter';
 
 type Props = {
   image?: string | null;

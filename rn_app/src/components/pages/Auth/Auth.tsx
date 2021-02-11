@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from 'react-native-elements';
 
-const lineBase = require('../../assets/btn_login_base.png');
-const linePress = require('../../assets/btn_login_press.png');
+const lineBase = require('../../../assets/btn_login_base.png');
+const linePress = require('../../../assets/btn_login_press.png');
 
 type Props = {
   login: () => void;

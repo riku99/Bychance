@@ -2,7 +2,7 @@ import React from 'react';
 import {Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Container as Post} from '../containers/posts/Post';
+import {Container as Post} from '../components/pages/Post/Page';
 import {Post as PostType} from '../redux/post';
 import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
@@ -50,7 +50,7 @@ export const MyPageStackScreen = () => {
   );
 };
 
-export type ProfileScreensGroupParamList = {
+export type UserPageScreenGroupParamList = {
   UserPage:
     | {
         userId: number;
@@ -64,7 +64,7 @@ export type ProfileScreensGroupParamList = {
 };
 
 // stackで使われるscreenのグループ。Tabに渡されるMyPageStackScreenとは分けて使う
-export const profileScreens = {
+export const userPageScreensGroup = {
   UserPage: UserPage,
   Post: Post,
 };

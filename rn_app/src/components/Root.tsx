@@ -10,13 +10,13 @@ import {AppDispatch, RootState} from '../redux/index';
 import {receiveMessage} from '../redux/messages';
 import {ReceivedMessageData} from '../redux/types';
 import {RootStackScreen} from '../screens/Root';
-import {Container as Auth} from '../containers/auth/Auth';
-import {Container as Menu} from '../containers/utils/Menu';
+import {Container as Auth} from './pages/Auth/Page';
+import {Container as Menu} from './utils/Menu';
 import {updatePositionThunk} from '../actions/users';
 import {getCurrentPosition} from '../helpers/gelocation';
 import {checkKeychain} from '../helpers/keychain';
 import {subsequentLoginThunk} from '../actions/users';
-import {UserAvatar} from '../components/utils/Avatar';
+import {UserAvatar} from './utils/Avatar';
 
 const consumer = createConsumer('ws://localhost/cable');
 

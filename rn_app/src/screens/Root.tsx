@@ -23,7 +23,7 @@ import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type RootStackParamList = {
   Tab: undefined;
-  UserEdit: undefined;
+  UserEditStack: undefined;
   ChatRoomStack: NavigatorScreenParams<ChatRoomStackParamList>;
   TakeFlash: undefined;
   Flashes: NavigatorScreenParams<FlashStackParamList2>;
@@ -45,13 +45,13 @@ export const RootStackScreen = () => {
         options={{headerShown: false}}
       />
       <RootStack.Screen
-        name="UserEdit"
+        name="UserEditStack"
         component={UserEditStackScreen}
         options={({route, navigation}) => {
           return {
             headerLeft:
               getFocusedRouteNameFromRoute(route) === undefined ||
-              getFocusedRouteNameFromRoute(route) === 'EditContents'
+              getFocusedRouteNameFromRoute(route) === 'UserEdit'
                 ? undefined
                 : () => (
                     <Button
@@ -59,7 +59,7 @@ export const RootStackScreen = () => {
                       style={{marginBottom: 3}}
                       titleStyle={{color: '#5c94c8'}}
                       buttonStyle={{backgroundColor: 'transparent'}}
-                      onPress={() => navigation.navigate('EditContents')}
+                      onPress={() => navigation.navigate('UserEdit')}
                     />
                   ),
           };

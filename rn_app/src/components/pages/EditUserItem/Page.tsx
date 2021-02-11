@@ -1,27 +1,23 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
 
-import {EditPage} from '../../components/users/EditPage';
-import {UserEditStackParamList} from '../../screens/UserEdit';
-import {saveEditData} from '../../redux/user';
+import {EditPage} from './EditPage';
+import {
+  UserEditNavigationProp,
+  UserEditRouteProp,
+} from '../../../screens/types';
+import {saveEditData} from '../../../redux/user';
 
-type UserEditRouteProp = RouteProp<
-  UserEditStackParamList,
-  'NameEdit' | 'IntroduceEdit' | 'StatusMessageEdit'
->;
+type Props = {
+  route: UserEditRouteProp<'IntroduceEdit' | 'NameEdit' | 'StatusMessageEdit'>;
+};
 
-type Props = {route: UserEditRouteProp};
-
-export type UserEditNavigationProp = StackNavigationProp<
-  UserEditStackParamList,
-  'NameEdit' | 'IntroduceEdit' | 'StatusMessageEdit'
->;
-
-export const Container = ({route}: Props) => {
+export const EditUserItemPage = ({route}: Props) => {
   const dispatch = useDispatch();
-  const userEditNavigation = useNavigation<UserEditNavigationProp>();
+  const userEditNavigation = useNavigation<
+    UserEditNavigationProp<'IntroduceEdit' | 'NameEdit' | 'StatusMessageEdit'>
+  >();
 
   return (
     <EditPage

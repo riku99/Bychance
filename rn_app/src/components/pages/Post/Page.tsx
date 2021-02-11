@@ -1,15 +1,17 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {RouteProp} from '@react-navigation/native';
 
-import {Post} from '../../components/posts/Post';
-import {RootState} from '../../redux/index';
-import {ProfileStackParamList} from '../../screens/Profile';
-import {deletePostThunk} from '../../actions/posts';
+import {Post} from './Post';
+import {RootState} from '../../../redux/index';
+import {deletePostThunk} from '../../../actions/posts';
+import {
+  MyPageStackRouteProp,
+  UserPageStackRouteProp,
+} from '../../../screens/types';
 
-type screenRouteProp = RouteProp<ProfileStackParamList, 'Post'>;
-
-type Props = {route: screenRouteProp};
+type Props = {
+  route: MyPageStackRouteProp<'Post'> | UserPageStackRouteProp<'Post'>;
+};
 
 export const Container = ({route}: Props) => {
   const user = useSelector((state: RootState) => {

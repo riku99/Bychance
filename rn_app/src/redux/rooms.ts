@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from './index';
+import {AnotherUser} from './types';
 import {createRoomThunk} from '../actions/rooms';
 import {
   subsequentLoginThunk,
@@ -15,7 +16,6 @@ import {logoutAction} from '../actions/sessions';
 import {createMessageThunk} from '../actions/messages';
 import {Message, receiveMessage} from '../redux/messages';
 import {SuccessfullLoginData} from '../apis/usersApi';
-import {AnotherUser} from '../components/users/SearchUsers';
 
 export type Room = {
   id: number;

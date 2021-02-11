@@ -1,25 +1,19 @@
 import React, {useEffect} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 
-import {RootState, AppDispatch} from '../../redux/index';
-import {UserEdit} from '../../components/users/UserEdit';
-import {editProfileThunk} from '../../actions/users';
-import {resetEditData} from '../../redux/user';
-import {RootStackParamList} from '../../screens/Root';
-import {UserEditStackParamList} from '../../screens/UserEdit';
-import {displayShortMessage} from '../../helpers/shortMessage';
-import {alertSomeError} from '../../helpers/error';
+import {RootState, AppDispatch} from '../../../redux/index';
+import {UserEdit} from './UserEdit';
+import {editProfileThunk} from '../../../actions/users';
+import {resetEditData} from '../../../redux/user';
+import {
+  UserEditNavigationProp,
+  RootNavigationProp,
+} from '../../../screens/types';
+import {displayShortMessage} from '../../../helpers/shortMessage';
+import {alertSomeError} from '../../../helpers/error';
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'UserEdit'>;
-
-export type UserEditNavigationProp = StackNavigationProp<
-  UserEditStackParamList,
-  'EditContents'
->;
-
-export const Container = () => {
+export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {
     return {
       id: state.userReducer.user!.id,
@@ -35,8 +29,10 @@ export const Container = () => {
   }, shallowEqual);
 
   const dispatch: AppDispatch = useDispatch();
-  const navigation = useNavigation<NavigationProp>();
-  const userEditNavigation = useNavigation<UserEditNavigationProp>();
+  const navigation = useNavigation<RootNavigationProp<'UserEditStack'>>();
+  const userEditNavigation = useNavigation<
+    UserEditNavigationProp<'UserEdit'>
+  >();
 
   useEffect(() => {
     const unsbscribe = navigation.addListener('blur', () => {

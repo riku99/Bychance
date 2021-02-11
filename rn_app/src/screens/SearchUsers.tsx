@@ -1,17 +1,17 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Container as SearchOthers} from '../containers/users/SearchUsers';
+import {SearchUsersPage} from '../components/pages/SearchUsers/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
-import {ProfileScreensGroupParamList, profileScreens} from './Profile';
+import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 
-export type SearchStackParamList = {
-  SearchOthers: undefined;
-} & ProfileScreensGroupParamList;
+export type SearchUsersStackParamList = {
+  SearchUsers: undefined;
+} & UserPageScreenGroupParamList;
 
-const Stack = createStackNavigator<SearchStackParamList>();
+const Stack = createStackNavigator<SearchUsersStackParamList>();
 
-export const SearchStackScreen = () => {
+export const SearchUsersStackScreen = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -20,14 +20,14 @@ export const SearchStackScreen = () => {
         headerStatusBarHeight: headerStatusBarHeight(),
       }}>
       <Stack.Screen
-        name="SearchOthers"
-        component={SearchOthers}
+        name="SearchUsers"
+        component={SearchUsersPage}
         options={{title: 'ユーザーを見つける'}}
       />
-      {Object.entries(profileScreens).map(([name, component]) => (
+      {Object.entries(userPageScreensGroup).map(([name, component]) => (
         <Stack.Screen
           key={name}
-          name={name as keyof ProfileScreensGroupParamList}
+          name={name as keyof UserPageScreenGroupParamList}
           component={component}
           options={({route}) => ({
             headerTitle: route.name === 'Post' ? '投稿' : undefined,

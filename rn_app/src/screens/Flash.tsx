@@ -4,15 +4,15 @@ import {createStackNavigator} from '@react-navigation/stack';
 //import {Flashes} from '../components/flashes/Flashes';
 import {Flashes} from '../components/pages/Flashes/Page';
 import {Container as UserProfile} from '../containers/users/UserProfile';
-import {Container as Post} from '../containers/posts/Post';
-import {AnotherUser} from '../components/users/SearchUsers';
+import {Container as Post} from '../components/pages/Post/Page';
 import {
   FlashesWithUser,
   FlashesDataAndUser,
 } from '../components/pages/Flashes/ShowFlash';
-import {PartiallyPartial} from '../constants/d';
-import {Post as PostType} from '../redux/post';
+import {PartiallyPartial} from '../constants/types';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {Post as PostType} from '../redux/post';
+import {AnotherUser} from '../redux/types';
 
 export type FlashStackParamList = {
   showFlashes: {

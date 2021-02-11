@@ -14,9 +14,9 @@ import {unwrapResult} from '@reduxjs/toolkit';
 import {RootStackParamList} from '../../screens/Root';
 import {
   MyPageStackParamList,
-  ProfileScreensGroupParamList,
-} from '../../screens/Profile';
-import {SearchStackParamList} from '../../screens/Search';
+  UserPageScreenGroupParamList,
+} from '../../screens/UserPage';
+import {SearchUsersStackParamList} from '../../screens/SearchUsers';
 import {FlashStackParamList} from '../../screens/Flash';
 import {UserProfile} from '../../components/users/UserProfile';
 import {createRoomThunk} from '../../actions/rooms';
@@ -31,11 +31,11 @@ import {refreshUserThunk} from '../../actions/users';
 type MyPageStackScreenRouteProp = RouteProp<MyPageStackParamList, 'MyProfile'>;
 
 type ProfileStackScreenRouteProp = RouteProp<
-  ProfileScreensGroupParamList,
+  UserPageScreenGroupParamList,
   'UserPage'
 >;
 
-type SearchScreenRouteProp = RouteProp<SearchStackParamList, 'Profile'>;
+type SearchScreenRouteProp = RouteProp<SearchUsersStackParamList, 'Profile'>;
 
 type FlashStackScreenRouteProp = RouteProp<
   FlashStackParamList,

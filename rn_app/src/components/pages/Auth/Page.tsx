@@ -1,10 +1,10 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../redux/index';
-import {firstLoginThunk} from '../../actions/users';
-import {Auth} from '../../components/auth/Auth';
-import {sampleLogin} from '../../actions/users';
+import {AppDispatch} from '../../../redux/index';
+import {firstLoginThunk} from '../../../actions/users';
+import {Auth} from './Auth';
+import {sampleLogin} from '../../../actions/users';
 
 export const Container = () => {
   const dispatch: AppDispatch = useDispatch();

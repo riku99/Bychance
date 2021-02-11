@@ -2,26 +2,19 @@ import React, {useEffect, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 
-import {SearchUsers} from '../../components/users/SearchUsers';
-import {FlashesWithUser} from '../../components/pages/Flashes/ShowFlash';
-import {RootState} from '../../redux/index';
-import {AnotherUser} from '../../components/users/SearchUsers';
-import {AppDispatch} from '../../redux/index';
-import {selectGetUsersArray} from '../../redux/getUsers';
-import {getOtherUsersThunk} from '../../actions/otherUsers';
-import {RootStackParamList} from '../../screens/Root';
-import {SearchStackParamList} from '../../screens/Search';
+import {SearchUsers} from './SearchUsers';
+import {FlashesWithUser} from '../Flashes/ShowFlash';
+import {RootState, AppDispatch} from '../../../redux/index';
+import {AnotherUser} from '../../../redux/types';
+import {selectGetUsersArray} from '../../../redux/getUsers';
+import {getOtherUsersThunk} from '../../../actions/otherUsers';
+import {
+  SearchUsersStackNavigationProp,
+  RootNavigationProp,
+} from '../../../screens/types';
 
-type SearchNavigationProp = StackNavigationProp<
-  SearchStackParamList,
-  'SearchOthers'
->;
-
-type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
-
-export const Container = () => {
+export const SearchUsersPage = () => {
   const isFocused = useIsFocused();
 
   const position = useSelector((state: RootState) => {
@@ -79,9 +72,11 @@ export const Container = () => {
     }
   }, [otherUsers]);
 
-  const searchStackNavigation = useNavigation<SearchNavigationProp>();
+  const searchStackNavigation = useNavigation<
+    SearchUsersStackNavigationProp<'SearchUsers'>
+  >();
 
-  const rootStackNavigation = useNavigation<RootNavigationProp>();
+  const rootStackNavigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   const pushProfile = (user: AnotherUser) => {
     searchStackNavigation.push('UserPage', {

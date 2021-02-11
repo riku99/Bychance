@@ -234,6 +234,7 @@ const TabScene = React.memo(
     return (
       <Animated.ScrollView
         ref={tabViewRef}
+        scrollEventThrottle={1}
         style={{paddingTop: contentsPaddingTop + stickyTabHeight}}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(

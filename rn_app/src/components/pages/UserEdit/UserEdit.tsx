@@ -10,9 +10,9 @@ import {useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 
-import {UserAvatar} from '../utils/Avatar';
-import {basicStyles} from '../../constants/styles';
-import {UserEditNavigationProp} from '../../containers/users/UserEdit';
+import {UserAvatar} from '../../utils/Avatar';
+import {basicStyles} from '../../../constants/styles';
+import {UserEditNavigationProp} from '../../../screens/types';
 
 type Props = {
   user: {
@@ -47,7 +47,7 @@ type Props = {
     message: string;
     deleteImage: boolean;
   }) => void;
-  navigation: UserEditNavigationProp;
+  navigation: UserEditNavigationProp<'UserEdit'>;
 };
 
 const options: ImagePickerOptions = {
