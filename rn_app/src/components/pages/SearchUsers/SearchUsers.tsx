@@ -23,6 +23,7 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import {UserAvatarWithOuter} from '../../utils/Avatar';
 import {AnotherUser} from '../../../redux/types';
+import {FlashesData} from '../../../redux/types';
 
 type Props = {
   otherUsers: AnotherUser[];
@@ -30,190 +31,221 @@ type Props = {
   setRange: Dispatch<SetStateAction<number>>;
   refreshing: boolean;
   onRefresh: (range: number) => void;
-  navigateToProfile: (user: AnotherUser) => void;
-  navigateToFlashes: ({id}: {id: number; isAllAlreadyViewed?: boolean}) => void;
+  onListItemPress: (user: AnotherUser) => void;
+  onAvatarPress: ({
+    isAllAlreadyViewed,
+    userId,
+    flashesData,
+  }:
+    | {
+        isAllAlreadyViewed: true;
+        userId: number;
+        flashesData: FlashesData;
+      }
+    | {
+        isAllAlreadyViewed: false;
+        userId: number;
+        flashesData: undefined;
+      }) => void;
 };
 
-export const SearchUsers = ({
-  otherUsers,
-  refRange,
-  setRange,
-  refreshing,
-  onRefresh,
-  navigateToProfile,
-}: Props) => {
-  const [filteredUsers, setFilteredUsers] = useState(otherUsers);
-  const [keyword, setKeyword] = useState('');
+export const SearchUsers = React.memo(
+  ({
+    otherUsers,
+    refRange,
+    setRange,
+    refreshing,
+    onRefresh,
+    onListItemPress,
+    onAvatarPress,
+  }: Props) => {
+    const [filteredUsers, setFilteredUsers] = useState(otherUsers);
+    const [keyword, setKeyword] = useState('');
 
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const offsetY = useRef(0);
+    const scrollY = useRef(new Animated.Value(0)).current;
+    const offsetY = useRef(0);
 
-  const caluculateDuration = useCallback((n: number) => {
-    return n * 5;
-  }, []);
+    const caluculateDuration = useCallback((n: number) => {
+      return n * 5;
+    }, []);
 
-  const transformY = scrollY.interpolate({
-    inputRange: [0, SEARCH_TAB_HEIGHT],
-    outputRange: [0, -SEARCH_TAB_HEIGHT],
-    extrapolate: 'clamp',
-  });
+    const transformY = scrollY.interpolate({
+      inputRange: [0, SEARCH_TAB_HEIGHT],
+      outputRange: [0, -SEARCH_TAB_HEIGHT],
+      extrapolate: 'clamp',
+    });
 
-  useEffect(() => {
-    if (keyword === '') {
-      setFilteredUsers(otherUsers);
-    } else {
-      const matchedUsers = otherUsers.filter((u) => {
-        return (
-          u.name.toLowerCase().includes(keyword.toLowerCase()) ||
-          u.introduce.toLowerCase().includes(keyword.toLowerCase()) ||
-          u.message.toLowerCase().includes(keyword.toLowerCase())
-        );
-      });
-      setFilteredUsers(matchedUsers);
-    }
-  }, [keyword, otherUsers]);
+    useEffect(() => {
+      if (keyword === '') {
+        setFilteredUsers(otherUsers);
+      } else {
+        const matchedUsers = otherUsers.filter((u) => {
+          return (
+            u.name.toLowerCase().includes(keyword.toLowerCase()) ||
+            u.introduce.toLowerCase().includes(keyword.toLowerCase()) ||
+            u.message.toLowerCase().includes(keyword.toLowerCase())
+          );
+        });
+        setFilteredUsers(matchedUsers);
+      }
+    }, [keyword, otherUsers]);
 
-  return (
-    <View style={styles.container}>
-      <Animated.View
-        style={{
-          ...styles.displayOptionsContainer,
-          transform: [{translateY: transformY}],
-        }}>
-        <SearchBar
-          placeholder="キーワードを検索"
-          inputContainerStyle={styles.searchInputContainer}
-          containerStyle={styles.searchContainer}
-          lightTheme={true}
-          round={true}
-          value={keyword}
-          onChangeText={(text) => {
-            setKeyword(text);
-          }}
-        />
-      </Animated.View>
-      {filteredUsers.length ? (
-        <>
-          <ScrollView
-            contentInset={{top: SEARCH_TAB_HEIGHT}}
-            contentOffset={{y: -SEARCH_TAB_HEIGHT, x: 0}}
-            scrollEventThrottle={16}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => onRefresh(refRange.current)}
-              />
-            }
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollY}}}],
-              {
-                useNativeDriver: false,
-                listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-                  if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
-                    scrollY.setValue(SEARCH_TAB_HEIGHT);
-                  }
-                },
-              },
-            )}
-            onScrollEndDrag={(e) => {
-              if (e.nativeEvent.contentOffset.y > offsetY.current) {
-                offsetY.current = e.nativeEvent.contentOffset.y;
-              } else if (e.nativeEvent.contentOffset.y < offsetY.current) {
-                Animated.timing(scrollY, {
-                  toValue: 0,
-                  duration: caluculateDuration(
-                    offsetY.current > 80 ? 80 : offsetY.current,
-                  ),
-                  useNativeDriver: false,
-                }).start();
-                offsetY.current = e.nativeEvent.contentOffset.y;
+    return (
+      <View style={styles.container}>
+        <Animated.View
+          style={{
+            ...styles.displayOptionsContainer,
+            transform: [{translateY: transformY}],
+          }}>
+          <SearchBar
+            placeholder="キーワードを検索"
+            inputContainerStyle={styles.searchInputContainer}
+            containerStyle={styles.searchContainer}
+            lightTheme={true}
+            round={true}
+            value={keyword}
+            onChangeText={(text) => {
+              setKeyword(text);
+            }}
+          />
+        </Animated.View>
+        {filteredUsers.length ? (
+          <>
+            <ScrollView
+              contentInset={{top: SEARCH_TAB_HEIGHT}}
+              contentOffset={{y: -SEARCH_TAB_HEIGHT, x: 0}}
+              scrollEventThrottle={16}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={() => onRefresh(refRange.current)}
+                />
               }
-            }}>
-            <View>
-              {filteredUsers.map((u) => (
-                <ListItem
-                  containerStyle={{height: 75}}
-                  key={u.id}
-                  onPress={() => {
-                    navigateToProfile(u);
-                  }}>
-                  {u.flashes.entities.length &&
-                  !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
-                    <UserAvatarWithOuter
-                      image={u.image}
-                      size="medium"
-                      opacity={1}
-                      outerType="gradation"
-                    />
-                  ) : u.flashes.entities.length && u.flashes.alreadyViewed ? ( // アイテムは持っているが、全て閲覧されている場合
-                    <UserAvatarWithOuter
-                      image={u.image}
-                      size="medium"
-                      opacity={1}
-                      outerType="silver"
-                    />
-                  ) : (
-                    <UserAvatarWithOuter
-                      image={u.image}
-                      size="medium"
-                      opacity={1}
-                      outerType="none"
-                    />
-                  )}
-                  <ListItem.Content>
-                    <ListItem.Title>{u.name}</ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {u.message}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-            </View>
-          </ScrollView>
-        </>
-      ) : (
-        <View style={styles.noUser}>
-          <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
-        </View>
-      )}
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                {
+                  useNativeDriver: false,
+                  listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+                    if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
+                      scrollY.setValue(SEARCH_TAB_HEIGHT);
+                    }
+                  },
+                },
+              )}
+              onScrollEndDrag={(e) => {
+                if (e.nativeEvent.contentOffset.y > offsetY.current) {
+                  offsetY.current = e.nativeEvent.contentOffset.y;
+                } else if (e.nativeEvent.contentOffset.y < offsetY.current) {
+                  Animated.timing(scrollY, {
+                    toValue: 0,
+                    duration: caluculateDuration(
+                      offsetY.current > 80 ? 80 : offsetY.current,
+                    ),
+                    useNativeDriver: false,
+                  }).start();
+                  offsetY.current = e.nativeEvent.contentOffset.y;
+                }
+              }}>
+              <View>
+                {filteredUsers.map((u) => (
+                  <ListItem
+                    containerStyle={{height: 75}}
+                    key={u.id}
+                    onPress={() => {
+                      onListItemPress(u);
+                    }}>
+                    {u.flashes.entities.length &&
+                    !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
+                      <UserAvatarWithOuter
+                        image={u.image}
+                        size="medium"
+                        opacity={1}
+                        outerType="gradation"
+                        onPress={() => {
+                          onAvatarPress({
+                            userId: u.id,
+                            isAllAlreadyViewed: false,
+                            flashesData: undefined,
+                          });
+                        }}
+                      />
+                    ) : u.flashes.entities.length && u.flashes.alreadyViewed ? ( // アイテムは持っているが、全て閲覧されている場合
+                      <UserAvatarWithOuter
+                        image={u.image}
+                        size="medium"
+                        opacity={1}
+                        outerType="silver"
+                        onPress={() => {
+                          onAvatarPress({
+                            userId: u.id,
+                            isAllAlreadyViewed: true,
+                            flashesData: u.flashes,
+                          });
+                        }}
+                      />
+                    ) : (
+                      <UserAvatarWithOuter
+                        image={u.image}
+                        size="medium"
+                        opacity={1}
+                        outerType="none"
+                      />
+                    )}
+                    <ListItem.Content>
+                      <ListItem.Title>{u.name}</ListItem.Title>
+                      <ListItem.Subtitle style={styles.subtitle}>
+                        {u.message}
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+              </View>
+            </ScrollView>
+          </>
+        ) : (
+          <View style={styles.noUser}>
+            <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
+          </View>
+        )}
 
-      <RNPickerSelect
-        onValueChange={(value) => {
-          refRange.current = value;
-          setRange(refRange.current);
-        }}
-        items={[
-          {label: '100m', value: 0.1},
-          {label: '200m', value: 0.2},
-          {label: '300m', value: 0.3},
-          {label: '400m', value: 0.4},
-          {label: '500m', value: 0.5},
-          {label: '1km', value: 1},
-        ]}
-        placeholder={{}}
-        style={{
-          viewContainer: {
-            backgroundColor: '#4ba5fa',
-            width: 130,
-            height: 40,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 40,
-            position: 'absolute',
-            bottom: '3%',
-            right: '7%',
-          },
-          inputIOS: {
-            color: 'white',
-            fontSize: 15,
-            fontWeight: 'bold',
-          },
-        }}
-        doneText="完了"
-      />
-    </View>
-  );
-};
+        <RNPickerSelect
+          onValueChange={(value) => {
+            refRange.current = value;
+            setRange(refRange.current);
+          }}
+          items={[
+            {label: '100m', value: 0.1},
+            {label: '200m', value: 0.2},
+            {label: '300m', value: 0.3},
+            {label: '400m', value: 0.4},
+            {label: '500m', value: 0.5},
+            {label: '1km', value: 1},
+          ]}
+          placeholder={{}}
+          style={{
+            viewContainer: {
+              backgroundColor: '#4ba5fa',
+              width: 130,
+              height: 40,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 40,
+              position: 'absolute',
+              bottom: '3%',
+              right: '7%',
+            },
+            inputIOS: {
+              color: 'white',
+              fontSize: 15,
+              fontWeight: 'bold',
+            },
+          }}
+          doneText="完了"
+        />
+      </View>
+    );
+  },
+);
 
 const SEARCH_TAB_HEIGHT = 50;
 

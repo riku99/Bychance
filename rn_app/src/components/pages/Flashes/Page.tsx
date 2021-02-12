@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -56,12 +56,12 @@ export const FlashesPage = ({route, navigation}: Props) => {
   // 現在表示されているアイテム(displayManagementTableで値がtureになっているプロパティである番号)をRefで管理
   const currentDisplayedIndex = useRef(startingIndex);
 
-  const goBackScreen = () => {
+  const goBackScreen = useCallback(() => {
     navigation.goBack();
-  };
+  }, [navigation]);
 
   // アイテムがラストのものだったらバックスクリーン、次がある場合はscrollToindexで次のアイテムを表示(FlastListなのでここでレンダリング)
-  const scrollToNextOrBackScreen = () => {
+  const scrollToNextOrBackScreen = useCallback(() => {
     if (flatListRef.current) {
       if (currentDisplayedIndex.current < dataArray.length - 1) {
         flatListRef.current.scrollToIndex({
@@ -71,8 +71,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
         goBackScreen();
       }
     }
-  };
-
+  }, [dataArray.length, goBackScreen]);
   // statusBarの設定のためにデバイスがX以上であるかどうかを判定
   // 判断方法の正解がわからなかったのでとりあえずデバイスの大きさで判断
   const moreDeviceX = useMemo(() => {

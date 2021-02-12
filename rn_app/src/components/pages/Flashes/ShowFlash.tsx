@@ -47,7 +47,7 @@ export const ShowFlash = React.memo(
       flashesData.entities,
     ]);
 
-    const progressWidth = useMemo(() => {
+    const progressBarWidth = useMemo(() => {
       return MAX_PROGRESS_BAR / entityLength;
     }, [entityLength]);
 
@@ -56,6 +56,9 @@ export const ShowFlash = React.memo(
       [flashesData.alreadyViewed.length],
     );
 
+    // 実際に表示されているentity
+    // このコンポーネントがFlatListにより表示されて最初のレンダリングの際、既に見たものがある場合それを飛ばしている
+    // ただ、まだ何も見ていない、または全て見ている(alreadyViewedLengthとentityの数が同じ)場合は最初のものを指定
     const [currentFlash, setCurrentFlash] = useState(() => {
       if (alreadyViewedLength && alreadyViewedLength !== entityLength) {
         return flashesData.entities[alreadyViewedLength];
@@ -70,7 +73,7 @@ export const ShowFlash = React.memo(
     const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
 
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
-    const progressValue = useRef(-progressWidth);
+    const progressValue = useRef(-progressBarWidth);
     const currentProgressBar = useRef(
       alreadyViewedLength && alreadyViewedLength !== entityLength
         ? alreadyViewedLength
@@ -120,11 +123,11 @@ export const ShowFlash = React.memo(
             progressValue.current = e.value;
           });
           if (!restart) {
-            progressValue.current = -progressWidth;
+            progressValue.current = -progressBarWidth;
           }
           Animated.timing(progressAnim[progressNumber], {
             toValue: 0,
-            duration: -progressValue.current / (progressWidth / duration),
+            duration: -progressValue.current / (progressBarWidth / duration),
             useNativeDriver: true,
           }).start((e) => {
             createAlreadyViewdFlash({flashId: currentFlash.id});
@@ -148,7 +151,7 @@ export const ShowFlash = React.memo(
         entityLength,
         flashesData.entities,
         progressAnim,
-        progressWidth,
+        progressBarWidth,
         scrollToNextOrBackScreen,
       ],
     );
@@ -243,19 +246,19 @@ export const ShowFlash = React.memo(
     useEffect(() => {
       if (!isDisplayed) {
         progressAnim[currentProgressBar.current].stopAnimation();
-        progressAnim[currentProgressBar.current].setValue(-progressWidth);
+        progressAnim[currentProgressBar.current].setValue(-progressBarWidth);
         if (currentFlash.sourceType === 'video') {
           videoRef.current!.seek(0);
         }
         canStartVideo.current = true;
       }
-    }, [isDisplayed, progressAnim, progressWidth, currentFlash.sourceType]);
+    }, [isDisplayed, progressAnim, progressBarWidth, currentFlash.sourceType]);
 
     // profileに移動した時の責務
     useEffect(() => {
       if (isNavigatedToPofile) {
         progressAnim[currentProgressBar.current].stopAnimation();
-        progressAnim[currentProgressBar.current].setValue(-progressWidth);
+        progressAnim[currentProgressBar.current].setValue(-progressBarWidth);
         if (currentFlash.sourceType === 'video') {
           videoRef.current!.seek(0);
         }
@@ -264,7 +267,7 @@ export const ShowFlash = React.memo(
       isNavigatedToPofile,
       progressAnim,
       currentProgressBar,
-      progressWidth,
+      progressBarWidth,
       currentFlash.sourceType,
     ]);
 
@@ -311,17 +314,17 @@ export const ShowFlash = React.memo(
                   // プログレスバーの進行状況が1/7未満の場合
                   if (
                     -progressValue.current >
-                    progressWidth - progressWidth / 7
+                    progressBarWidth - progressBarWidth / 7
                   ) {
                     canStartVideo.current = true;
                     progressAnim[currentProgressBar.current].setValue(
-                      -progressWidth,
+                      -progressBarWidth,
                     );
                     // 進行しているプログレスバーが2個目以上の場合
                     if (currentProgressBar.current > 0) {
                       currentProgressBar.current -= 1;
                       progressAnim[currentProgressBar.current].setValue(
-                        -progressWidth,
+                        -progressBarWidth,
                       );
                       videoDuration.current = undefined;
                       setCurrentFlash(
@@ -343,7 +346,7 @@ export const ShowFlash = React.memo(
                   } else {
                     if (!onLoading) {
                       progressAnim[currentProgressBar.current].setValue(
-                        -progressWidth,
+                        -progressBarWidth,
                       );
                       if (currentFlash.sourceType === 'image') {
                         progressAnimation({
@@ -466,13 +469,13 @@ export const ShowFlash = React.memo(
                       ) {
                         progressAnim[i] = new Animated.Value(0);
                       } else {
-                        progressAnim[i] = new Animated.Value(-progressWidth);
+                        progressAnim[i] = new Animated.Value(-progressBarWidth);
                       }
                     }
                     // アイテムが追加された場合
                     if (entityLength > flashesLength.current) {
                       progressAnim[entityLength - 1] = new Animated.Value(
-                        -progressWidth,
+                        -progressBarWidth,
                       );
                     }
                     // アイテムが削除された場合
@@ -483,7 +486,7 @@ export const ShowFlash = React.memo(
                       }
                       // この要素(f)が削除されたアイテムよりも後にある場合
                       if (i >= currentProgressBar.current) {
-                        progressAnim[i] = new Animated.Value(-progressWidth);
+                        progressAnim[i] = new Animated.Value(-progressBarWidth);
                       }
                     }
                     return (
@@ -491,12 +494,12 @@ export const ShowFlash = React.memo(
                         key={f.id}
                         style={{
                           ...styles.progressBar,
-                          width: progressWidth,
+                          width: progressBarWidth,
                         }}>
                         <Animated.View
                           style={{
                             ...styles.animatedProgressBar,
-                            width: progressWidth,
+                            width: progressBarWidth,
                             transform: [
                               {
                                 translateX: progressAnim[i],

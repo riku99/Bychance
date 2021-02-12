@@ -1,10 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
 import {SearchUsers} from './SearchUsers';
-import {FlashesWithUser} from '../Flashes/ShowFlash';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {AnotherUser} from '../../../redux/types';
 import {selectGetUsersArray} from '../../../redux/getUsers';
@@ -13,6 +12,8 @@ import {
   SearchUsersStackNavigationProp,
   RootNavigationProp,
 } from '../../../screens/types';
+import {FlashesData} from '../Flashes/types';
+import {FlashesStackParamList} from '../../../screens/Flashes';
 
 export const SearchUsersPage = () => {
   const isFocused = useIsFocused();
@@ -27,20 +28,13 @@ export const SearchUsersPage = () => {
 
   const [range, setRange] = useState(_range.current);
 
-  const [flashesWithUser, setFlashesWithUser] = useState<FlashesWithUser[]>([]);
-
-  const [
-    containedNotAlreadyViewdFlashes,
-    setContainedNotAlreadyViewdFlashes,
-  ] = useState<FlashesWithUser[]>([]);
+  const getUsers = useSelector((state: RootState) => {
+    return selectGetUsersArray(state);
+  }, shallowEqual);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const dispatch: AppDispatch = useDispatch();
-
-  const otherUsers = useSelector((state: RootState) => {
-    return selectGetUsersArray(state);
-  }, shallowEqual);
 
   useEffect(() => {
     if (isFocused) {
@@ -50,86 +44,108 @@ export const SearchUsersPage = () => {
     }
   }, [dispatch, isFocused, position.lat, position.lng, range]);
 
-  useEffect(() => {
-    if (otherUsers.length) {
-      const otherUsersWithFlashes = otherUsers.filter(
-        (f) => f.flashes.entities.length,
-      );
-      if (otherUsersWithFlashes.length) {
-        const _flashesWithUser = otherUsersWithFlashes.map((user) => {
-          const {flashes, ...rest} = user;
-          return {
-            flashes,
-            user: rest,
-          };
-        });
-        const _containedNotAlreadyViewdFlashes = _flashesWithUser.filter(
-          (item) => !item.flashes.isAllAlreadyViewed,
-        );
-        setFlashesWithUser(_flashesWithUser);
-        setContainedNotAlreadyViewdFlashes(_containedNotAlreadyViewdFlashes);
-      }
-    }
-  }, [otherUsers]);
-
   const searchStackNavigation = useNavigation<
     SearchUsersStackNavigationProp<'SearchUsers'>
   >();
 
   const rootStackNavigation = useNavigation<RootNavigationProp<'Tab'>>();
 
-  const pushProfile = (user: AnotherUser) => {
-    searchStackNavigation.push('UserPage', {
-      userId: user.id,
-      from: 'searchUsers',
-    });
-  };
+  const onListItemPress = useCallback(
+    (user: AnotherUser) => {
+      searchStackNavigation.push('UserPage', {
+        userId: user.id,
+        from: 'searchUsers',
+      });
+    },
+    [searchStackNavigation],
+  );
 
-  const pushFlashes = ({
-    id,
-    isAllAlreadyViewed,
-  }: {
-    id: number;
-    isAllAlreadyViewed?: boolean;
-  }) => {
-    let index: number;
-    let singleEntity: FlashesWithUser[];
-    if (isAllAlreadyViewed) {
-      index = 0;
-      singleEntity = flashesWithUser.filter((item) => item.user.id === id);
-    } else {
-      index = containedNotAlreadyViewdFlashes!.findIndex(
-        (item) => item.user.id === id,
+  // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
+  const sequenceFlashesAndUserData = useMemo(() => {
+    if (getUsers.length) {
+      const haveFlashEntitiesAndNotAllAlreadyViewedUser = getUsers.filter(
+        (data) =>
+          data.flashes.entities.length && !data.flashes.isAllAlreadyViewed,
       );
+      const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
+        flashesData: user.flashes,
+        userData: {userId: user.id, from: 'searchUsers'} as const,
+      }));
+      return data;
     }
-    rootStackNavigation.push('Flashes', {
-      screen: 'showFlashes',
-      params: {
-        allFlashesWithUser: isAllAlreadyViewed
-          ? singleEntity!
-          : containedNotAlreadyViewdFlashes,
-        index,
-      },
-    });
-  };
+  }, [getUsers]);
 
-  const onRefresh = async (range: number) => {
-    setRefreshing(true);
-    await dispatch(
-      getOtherUsersThunk({lat: position.lat, lng: position.lng, range}),
-    );
-    setRefreshing(false);
-  };
+  const onAvatarPress = useCallback(
+    ({
+      isAllAlreadyViewed,
+      userId,
+      flashesData,
+    }:
+      | {
+          isAllAlreadyViewed: true;
+          userId: number;
+          flashesData: FlashesData;
+        }
+      | {
+          isAllAlreadyViewed: false;
+          userId: number;
+          flashesData: undefined;
+        }) => {
+      let navigationParams: FlashesStackParamList['Flashes'];
+      // isAllAlreadyViewedがtrueであれば連続して表示せずにそのユーザーのもののみ表示させる
+      // なのでこの場合はそのユーザーのデータを引数でうける
+      if (isAllAlreadyViewed && flashesData) {
+        navigationParams = {
+          isMyData: false,
+          startingIndex: 0,
+          dataArray: [
+            {
+              flashesData: flashesData,
+              userData: {userId: userId, from: 'searchUsers'},
+            },
+          ],
+        };
+        // isAllAlreadyViewedがfalseの場合他のユーザーのものも連続で表示させる必要があるのでsequenceFlashesAndUserDataを渡す
+      } else if (!isAllAlreadyViewed && sequenceFlashesAndUserData) {
+        const startingIndex = sequenceFlashesAndUserData!.findIndex(
+          (item) => item.userData.userId === userId,
+        );
+        navigationParams = {
+          isMyData: false,
+          startingIndex,
+          dataArray: sequenceFlashesAndUserData,
+        };
+      }
+      if (navigationParams!) {
+        rootStackNavigation.push('Flashes', {
+          screen: 'Flashes',
+          params: navigationParams!,
+        });
+      }
+    },
+    [rootStackNavigation, sequenceFlashesAndUserData],
+  );
+
+  const onRefresh = useCallback(
+    async (range: number) => {
+      setRefreshing(true);
+      await dispatch(
+        getOtherUsersThunk({lat: position.lat, lng: position.lng, range}),
+      );
+      setRefreshing(false);
+    },
+    [dispatch, position.lat, position.lng],
+  );
 
   return (
     <SearchUsers
-      otherUsers={otherUsers}
+      otherUsers={getUsers}
       refRange={_range}
       setRange={setRange}
       refreshing={refreshing}
       onRefresh={onRefresh}
-      navigateToProfile={pushProfile}
-      navigateToFlashes={pushFlashes}
+      onListItemPress={onListItemPress}
+      onAvatarPress={onAvatarPress}
     />
   );
 };
