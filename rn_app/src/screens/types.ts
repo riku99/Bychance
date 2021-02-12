@@ -7,7 +7,7 @@ import {ChatRoomStackParamList} from './ChatRoom';
 import {UserEditStackParamList} from './UserEdit';
 import {CreatePostStackParamList} from './CreatePost';
 import {SearchUsersStackParamList} from './SearchUsers';
-import {FlashesDataAndUser} from '../components/pages/Flashes/ShowFlash';
+import {FlashesStackParamList} from './Flashes';
 import {PartiallyPartial} from '../constants/types';
 
 // navigationの型たち
@@ -39,6 +39,10 @@ export type SearchUsersStackNavigationProp<
   T extends keyof SearchUsersStackParamList
 > = StackNavigationProp<SearchUsersStackParamList, T>;
 
+export type FlashStackNavigationProp<
+  T extends keyof FlashesStackParamList
+> = StackNavigationProp<FlashesStackParamList, T>;
+
 // routeの型たち
 export type MyPageStackRouteProp<
   T extends keyof MyPageStackParamList
@@ -51,6 +55,11 @@ export type UserPageStackRouteProp<
 export type UserEditRouteProp<
   T extends keyof UserEditStackParamList
 > = RouteProp<UserEditStackParamList, T>;
+
+export type FlashesRouteProp<T extends keyof FlashesStackParamList> = RouteProp<
+  FlashesStackParamList,
+  T
+>;
 
 // その他
 export type PartialFlashesDataAndUser = PartiallyPartial<

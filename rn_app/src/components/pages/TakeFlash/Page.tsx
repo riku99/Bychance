@@ -67,12 +67,12 @@ export const TakeFlashPage = () => {
   };
 
   const createFlash = async ({
-    content,
-    contentType,
+    source,
+    sourceType,
     uri,
   }: {
-    content?: string;
-    contentType: 'image' | 'video';
+    source?: string;
+    sourceType: 'image' | 'video';
     uri: string;
   }) => {
     dispatch(creatingFlash());
@@ -81,11 +81,11 @@ export const TakeFlashPage = () => {
     const ext = length !== -1 ? uri.slice(length + 1) : null;
     const result = await dispatch(
       createFlashThunk({
-        content:
-          contentType === 'image' && content
-            ? content
+        source:
+          sourceType === 'image' && source
+            ? source
             : await fs.readFile(uri, 'base64'),
-        contentType,
+        sourceType,
         ext: ext ? ext.toLowerCase() : null,
       }),
     );

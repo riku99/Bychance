@@ -1,4 +1,4 @@
-import {FlashStackParamList} from '../../../screens/Flash';
+import {FlashStackParamList} from '../../../screens/Flashes';
 import {Flash} from '../../../redux/flashes';
 import {FlashesWithUser} from '../Flashes/ShowFlash';
 

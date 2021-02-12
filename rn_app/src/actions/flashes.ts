@@ -11,18 +11,18 @@ import {Flash} from '../redux/flashes';
 
 export const createFlashThunk = createAsyncThunk<
   Flash,
-  {contentType: 'image' | 'video'; content: string; ext: string | null},
+  {sourceType: 'image' | 'video'; source: string; ext: string | null},
   {
     rejectValue: rejectPayload;
   }
->('flashes/createFlash', async ({contentType, content, ext}, thunkApi) => {
+>('flashes/createFlash', async ({sourceType, source, ext}, thunkApi) => {
   const keychain = await checkKeychain();
 
   if (keychain) {
     try {
       const response = await axios.post<Flash>(
         `${origin}/flashes`,
-        {id: keychain.id, content, contentType, ext},
+        {id: keychain.id, source, sourceType, ext},
         headers(keychain.token),
       );
 

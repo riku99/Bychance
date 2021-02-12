@@ -1,56 +1,53 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {View, StyleSheet, Dimensions, FlatList, StatusBar} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
-import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
-import {RootStackParamList} from '../../../screens/Root';
-import {FlashStackParamList} from '../../../screens/Flash';
+import {FlashesRouteProp, RootNavigationProp} from '../../../screens/types';
 import {X_HEIGHT} from '../../../constants/device';
 import {RootState} from '../../../redux/index';
 import {selectAllFlashes} from '../../../redux/flashes';
 
-type FlashRouteProp = RouteProp<FlashStackParamList, 'showFlashes'>;
-
-type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Flashes'>;
-
 type Props = {
-  route: FlashRouteProp;
-  navigation: RootNavigationProp;
+  route: FlashesRouteProp<'Flashes'>;
+  navigation: RootNavigationProp<'Flashes'>;
 };
 
-export const Flashes = ({route, navigation}: Props) => {
+export const FlashesPage = ({route, navigation}: Props) => {
   const routePrams = route.params;
 
-  // 自分のデータを表示する時のみtrue
-  const needSelector = routePrams.allFlashesWithUser[0].flashes ? false : true;
-
+  // Flash[] | undefiend
   const myFlashes = useSelector((state: RootState) => {
-    if (needSelector) {
-      return selectAllFlashes(state);
+    if (routePrams.isMyData) {
+      const flashes = selectAllFlashes(state);
+      if (flashes) {
+        return flashes;
+      } else {
+        throw new Error('存在しません');
+      }
     }
   }, shallowEqual);
 
   const [isDisplayedList, setIsDisplayedList] = useState(() => {
     let obj: {[key: number]: boolean} = {};
-    for (let i = 0; i < routePrams.allFlashesWithUser.length; i++) {
-      obj[i] = i === routePrams.index ? true : false;
+    if (!routePrams.isMyData) {
+      for (let i = 0; i < routePrams.data.length; i++) {
+        obj[i] = i === routePrams.startingIndex ? true : false;
+      }
+    } else {
+      obj[routePrams.startingIndex] = true;
     }
     return obj;
   });
 
   const flatListRef = useRef<FlatList>(null);
 
-  const currentDisplayedIndex = useRef(routePrams.index);
+  const currentDisplayedIndex = useRef(routePrams.startingIndex);
 
   const scrollToNextOrBackScreen = () => {
-    if (flatListRef.current) {
-      if (
-        currentDisplayedIndex.current <
-        routePrams.allFlashesWithUser.length - 1
-      ) {
+    if (flatListRef.current && !routePrams.isMyData) {
+      if (currentDisplayedIndex.current < routePrams.data.length - 1) {
         flatListRef.current.scrollToIndex({
           index: currentDisplayedIndex.current + 1,
         });
@@ -98,24 +95,22 @@ export const Flashes = ({route, navigation}: Props) => {
         {paddingTop: moreDeviceX ? top : 0, paddingBottom: bottom},
       ]}>
       <FlatList
-        keyExtractor={(item) => item.user.id.toString()}
         ref={flatListRef}
-        data={routePrams.allFlashesWithUser}
+        data={routePrams.data}
+        keyExtractor={(item) => item.userData.userId.toString()}
         renderItem={({item, index}) => (
           <View style={{height: safeAreaHeight, width}}>
             <ShowFlash
               flashData={
-                !needSelector
-                  ? item
+                !routePrams.isMyData
+                  ? item.flashesData
                   : {
-                      flashes: {
-                        entities: myFlashes,
-                        alreadyViewed: [],
-                        isAllAlreadyViewed: false,
-                      },
-                      user: item.user,
+                      entities: myFlashes,
+                      alreadyViewed: [],
+                      isAllAlreadyViewed: false,
                     }
               }
+              userData={{userId: routePrams.data[index].userData.userId}}
               isDisplayed={isDisplayedList[index]}
               scrollToNextOrBackScreen={scrollToNextOrBackScreen}
               goBackScreen={goBackScreen}
@@ -143,7 +138,7 @@ export const Flashes = ({route, navigation}: Props) => {
           offset: safeAreaHeight * index,
           index,
         })}
-        initialScrollIndex={routePrams.index}
+        initialScrollIndex={routePrams.isMyData ? routePrams.startingIndex : 0}
       />
     </View>
   );

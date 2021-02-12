@@ -16,8 +16,8 @@ import {SuccessfullLoginData} from '../apis/usersApi';
 
 export type Flash = {
   id: number;
-  content: string;
-  contentType: 'image' | 'video';
+  source: string;
+  sourceType: 'image' | 'video';
   timestamp: string;
 };
 

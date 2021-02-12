@@ -35,12 +35,12 @@ type Props = {
   goBack: () => void;
   saveDataToCameraRoll: (uri: string) => Promise<void>;
   createFlash: ({
-    content,
-    contentType,
+    source,
+    sourceType,
     uri,
   }: {
-    content?: string;
-    contentType: 'image' | 'video';
+    source?: string;
+    sourceType: 'image' | 'video';
     uri: string;
   }) => Promise<void>;
   pickImageOrVideo: () => void;
@@ -221,12 +221,12 @@ export const TakeFlash = React.memo(
                 onPress={() => {
                   if (targetPhoto) {
                     createFlash({
-                      content: targetPhoto.base64,
-                      contentType: 'image',
+                      source: targetPhoto.base64,
+                      sourceType: 'image',
                       uri: targetPhoto.uri,
                     });
                   } else if (targetVideo) {
-                    createFlash({contentType: 'video', uri: targetVideo.uri});
+                    createFlash({sourceType: 'video', uri: targetVideo.uri});
                   }
                 }}
               />

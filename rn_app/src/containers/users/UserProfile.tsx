@@ -17,7 +17,7 @@ import {
   UserPageScreenGroupParamList,
 } from '../../screens/UserPage';
 import {SearchUsersStackParamList} from '../../screens/SearchUsers';
-import {FlashStackParamList} from '../../screens/Flash';
+import {FlashStackParamList} from '../../screens/Flashes';
 import {UserProfile} from '../../components/users/UserProfile';
 import {createRoomThunk} from '../../actions/rooms';
 import {RootState, AppDispatch, store} from '../../redux/index';

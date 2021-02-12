@@ -1,8 +1,8 @@
 class FlashSerializer < ActiveModel::Serializer
-    attributes :id, :content, :contentType, :timestamp
+    attributes :id, :source, :sourceType, :timestamp
 
-    def contentType
-        object.content_type
+    def sourceType
+        object.source_type
     end
 
     def timestamp
