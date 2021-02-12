@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import {View, StyleSheet, Animated, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-
 import {shallowEqual, useSelector} from 'react-redux';
 
 import {

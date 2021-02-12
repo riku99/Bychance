@@ -17,7 +17,7 @@ export const Avatar = React.memo(({source, outerType}: AvatarProps) => {
       params: {
         isMyData: true,
         startingIndex: 0,
-        data: [{userData: {userId: 1}, flashesData: undefined}],
+        dataArray: [{userData: {userId: 1}, flashesData: undefined}],
       },
     });
   };

@@ -6,49 +6,12 @@ import {FlashesPage} from '../components/pages/Flashes/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {FlashesData} from '../redux/types';
 
-// export type FlashStackParamList = {
-//   showFlashes: {
-//     allFlashesWithUser: PartiallyPartial<FlashesWithUser, 'flashes'>[];
-//     index: number;
-//   };
-//   AnotherUserProfileFromFlash: AnotherUser;
-//   Post: PostType;
-// };
-
-// const Stack = createStackNavigator<FlashStackParamList>();
-
-// export const FlashesStackScreen = () => {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerBackTitleVisible: false,
-//         headerStatusBarHeight: headerStatusBarHeight(),
-//       }}>
-//       <Stack.Screen
-//         name="showFlashes"
-//         component={Flashes}
-//         options={() => ({
-//           headerShown: false,
-//         })}
-//       />
-//       <Stack.Screen
-//         name="AnotherUserProfileFromFlash"
-//         component={UserProfile}
-//         options={({}) => ({
-//           headerStyle: {shadowColor: 'transparent'},
-//         })}
-//       />
-//       <Stack.Screen name="Post" component={Post} />
-//     </Stack.Navigator>
-//   );
-// };
-
 export type FlashesStackParamList = {
   Flashes:
     | {
         isMyData: false;
         startingIndex: number;
-        data: {
+        dataArray: {
           flashesData: FlashesData;
           userData: {userId: number; from: 'searchUsers' | 'chatRoom'};
         }[];
@@ -56,7 +19,7 @@ export type FlashesStackParamList = {
     | {
         isMyData: true;
         startingIndex: 0;
-        data: {
+        dataArray: {
           flashesData: undefined;
           userData: {userId: number};
         }[];

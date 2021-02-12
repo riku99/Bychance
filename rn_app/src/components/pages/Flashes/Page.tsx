@@ -1,13 +1,23 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {View, StyleSheet, Dimensions, FlatList, StatusBar} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  StatusBar,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
 import {FlashesRouteProp, RootNavigationProp} from '../../../screens/types';
+import {FlashesStackParamList} from '../../../screens/Flashes';
 import {X_HEIGHT} from '../../../constants/device';
 import {RootState} from '../../../redux/index';
 import {selectAllFlashes} from '../../../redux/flashes';
+import {FlashesData} from './types';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;
@@ -15,11 +25,12 @@ type Props = {
 };
 
 export const FlashesPage = ({route, navigation}: Props) => {
-  const routePrams = route.params;
+  const {isMyData, startingIndex, dataArray} = route.params;
 
-  // Flash[] | undefiend
+  const flatListRef = useRef<FlatList>(null);
+
   const myFlashes = useSelector((state: RootState) => {
-    if (routePrams.isMyData) {
+    if (isMyData) {
       const flashes = selectAllFlashes(state);
       if (flashes) {
         return flashes;
@@ -29,51 +40,46 @@ export const FlashesPage = ({route, navigation}: Props) => {
     }
   }, shallowEqual);
 
-  const [isDisplayedList, setIsDisplayedList] = useState(() => {
+  // FlatListに渡される複数のアイテムのうち、どのアイテムが実際に画面に表示されているのかを管理るためのオブジェクト
+  const [displayManagementTable, setDisplayManagementTable] = useState(() => {
     let obj: {[key: number]: boolean} = {};
-    if (!routePrams.isMyData) {
-      for (let i = 0; i < routePrams.data.length; i++) {
-        obj[i] = i === routePrams.startingIndex ? true : false;
+    if (!isMyData) {
+      for (let i = 0; i < dataArray.length; i++) {
+        obj[i] = i === startingIndex ? true : false;
       }
     } else {
-      obj[routePrams.startingIndex] = true;
+      obj[startingIndex] = true;
     }
     return obj;
   });
 
-  const flatListRef = useRef<FlatList>(null);
-
-  const currentDisplayedIndex = useRef(routePrams.startingIndex);
-
-  const scrollToNextOrBackScreen = () => {
-    if (flatListRef.current && !routePrams.isMyData) {
-      if (currentDisplayedIndex.current < routePrams.data.length - 1) {
-        flatListRef.current.scrollToIndex({
-          index: currentDisplayedIndex.current + 1,
-        });
-      } else {
-        navigation.goBack();
-      }
-    }
-  };
-
-  const moreDeviceX = useMemo(() => {
-    return height >= X_HEIGHT ? true : false;
-  }, []);
+  // 現在表示されているアイテム(displayManagementTableで値がtureになっているプロパティである番号)をRefで管理
+  const currentDisplayedIndex = useRef(startingIndex);
 
   const goBackScreen = () => {
     navigation.goBack();
   };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      StatusBar.setHidden(false);
-      StatusBar.setBarStyle('default');
-    });
+  // アイテムがラストのものだったらバックスクリーン、次がある場合はscrollToindexで次のアイテムを表示(FlastListなのでここでレンダリング)
+  const scrollToNextOrBackScreen = () => {
+    if (flatListRef.current) {
+      if (currentDisplayedIndex.current < dataArray.length - 1) {
+        flatListRef.current.scrollToIndex({
+          index: currentDisplayedIndex.current + 1,
+        });
+      } else {
+        goBackScreen();
+      }
+    }
+  };
 
-    return unsubscribe;
-  }, [navigation]);
+  // statusBarの設定のためにデバイスがX以上であるかどうかを判定
+  // 判断方法の正解がわからなかったのでとりあえずデバイスの大きさで判断
+  const moreDeviceX = useMemo(() => {
+    return height >= X_HEIGHT ? true : false;
+  }, []);
 
+  // 個々の環境によってstatuBarの設定を変更
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       StatusBar.setHidden(!moreDeviceX ? true : false);
@@ -83,10 +89,64 @@ export const FlashesPage = ({route, navigation}: Props) => {
     return unsubscribe;
   }, [navigation, moreDeviceX]);
 
+  // このページではstatusBarの設定を環境によって変えるので、このページからブラーする時はその設定を元に戻す
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      StatusBar.setHidden(false);
+      StatusBar.setBarStyle('default');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  // そのデバイスのsafeareaのtopとbottomの高さを取得
   const {top, bottom} = useSafeAreaInsets();
+
+  // 取得したsafeareaのtopとbottomから実際に表示する要素のheightを取得
+  // UI表示までのプロセスの都合上、SafeAreaViewではなくこのようにして計算
   const safeAreaHeight = useMemo(() => {
     return moreDeviceX ? height - top - bottom : height;
   }, [top, bottom, moreDeviceX]);
+
+  // FlatListのdataに渡した配列(dataArray)の中のアイテムが{item}に渡される
+  // flashesDataが存在しない場合は自分のデータを表示する時なのでセレクタで取得したデータを使いオブジェクトを生成
+  // そうでない場合はそのまま返す
+  const getData = ({
+    item,
+  }: {
+    item: FlashesStackParamList['Flashes']['dataArray'][number];
+  }): {
+    flashesData: FlashesData;
+    userData: FlashesStackParamList['Flashes']['dataArray'][number]['userData'];
+  } => {
+    if (item.flashesData) {
+      return item;
+    } else {
+      return {
+        flashesData: {
+          entities: myFlashes!,
+          alreadyViewed: [],
+          isAllAlreadyViewed: false,
+        },
+        userData: item.userData,
+      };
+    }
+  };
+
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    // offset.yがheightで割り切れる、つまり画面内の要素が完全に切り替わった時
+    if (e.nativeEvent.contentOffset.y % safeAreaHeight === 0) {
+      const displayedElementIndex =
+        e.nativeEvent.contentOffset.y / safeAreaHeight; // 何番目のアイテムが表示されたかをoffsetから計算し取得
+      // 表示状態を切り替える
+      setDisplayManagementTable({
+        ...displayManagementTable,
+        [currentDisplayedIndex.current]: false,
+        [displayedElementIndex]: true,
+      });
+      currentDisplayedIndex.current = displayedElementIndex;
+    }
+  };
 
   return (
     <View
@@ -96,40 +156,21 @@ export const FlashesPage = ({route, navigation}: Props) => {
       ]}>
       <FlatList
         ref={flatListRef}
-        data={routePrams.data}
+        data={dataArray}
         keyExtractor={(item) => item.userData.userId.toString()}
         renderItem={({item, index}) => (
           <View style={{height: safeAreaHeight, width}}>
             <ShowFlash
-              flashData={
-                !routePrams.isMyData
-                  ? item.flashesData
-                  : {
-                      entities: myFlashes,
-                      alreadyViewed: [],
-                      isAllAlreadyViewed: false,
-                    }
-              }
-              userData={{userId: routePrams.data[index].userData.userId}}
-              isDisplayed={isDisplayedList[index]}
+              flashesData={getData({item}).flashesData}
+              userData={getData({item}).userData}
+              isDisplayed={displayManagementTable[index]}
               scrollToNextOrBackScreen={scrollToNextOrBackScreen}
               goBackScreen={goBackScreen}
             />
           </View>
         )}
         onScroll={(e) => {
-          // offset.yがheightで割り切れる、つまり画面内の要素が完全に切り替わった時
-          if (e.nativeEvent.contentOffset.y % safeAreaHeight === 0) {
-            const displayedElementIndex =
-              e.nativeEvent.contentOffset.y / safeAreaHeight; // 表示されている要素のインデックス
-            // 表示状態をpropsとして伝える
-            setIsDisplayedList({
-              ...isDisplayedList,
-              [currentDisplayedIndex.current]: false,
-              [displayedElementIndex]: true,
-            });
-            currentDisplayedIndex.current = displayedElementIndex;
-          }
+          onScroll(e);
         }}
         decelerationRate="fast"
         snapToInterval={safeAreaHeight}
@@ -138,7 +179,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
           offset: safeAreaHeight * index,
           index,
         })}
-        initialScrollIndex={routePrams.isMyData ? routePrams.startingIndex : 0}
+        initialScrollIndex={startingIndex}
       />
     </View>
   );
