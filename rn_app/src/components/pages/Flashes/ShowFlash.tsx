@@ -421,7 +421,7 @@ export const ShowFlash = React.memo(
                   {isDisplayed ? (
                     <Image
                       source={{
-                        uri: currentFlash.content,
+                        uri: currentFlash.source,
                       }}
                       style={{width: '100%', height: '100%'}}
                       onLoadStart={() => {
@@ -438,7 +438,7 @@ export const ShowFlash = React.memo(
                   ) : (
                     <Image
                       source={{
-                        uri: currentFlash.content + '?' + new Date(),
+                        uri: currentFlash.source + '?' + new Date(),
                       }}
                       style={{width: '100%', height: '100%'}}
                     />
@@ -448,7 +448,7 @@ export const ShowFlash = React.memo(
                 <View style={styles.soruceContainer}>
                   <Video
                     ref={videoRef}
-                    source={{uri: currentFlash.content}}
+                    source={{uri: currentFlash.source}}
                     style={{width: '100%', height: '100%'}}
                     resizeMode="cover"
                     paused={isPaused}
