@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  GestureResponderEvent,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, ListItem, Icon} from 'react-native-elements';
@@ -108,6 +109,7 @@ export const ShowFlash = React.memo(
       [dispatch],
     );
 
+    // プログレスバーのアニメーションに関して
     const progressAnimation = useCallback(
       ({
         progressNumber,
@@ -171,6 +173,7 @@ export const ShowFlash = React.memo(
       setIsNavigatedToProfile(true);
     }, [flashStackNavigation, userData]);
 
+    // 削除したりするためのモーダルリストコンポーネントを別に作る
     const deleteFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
         Alert.alert('本当に削除してもよろしいですか?', '', [
@@ -207,6 +210,7 @@ export const ShowFlash = React.memo(
       [dispatch],
     );
 
+    // 削除したりするためのモーダルリストコンポーネントを別に作る
     const modalList = useMemo(() => {
       return [
         {
@@ -287,94 +291,89 @@ export const ShowFlash = React.memo(
       return unsbscribe;
     }, [flashStackNavigation, isNavigatedToPofile, progressAnimation]);
 
+    const onScreenPres = (e: GestureResponderEvent) => {
+      // 画面右半分をプレスした、つまりアイテムをスキップした場合
+      if (e.nativeEvent.locationX > width / 2) {
+        progressAnim[currentProgressBar.current].setValue(0);
+        if (currentProgressBar.current < entityLength - 1) {
+          currentProgressBar.current += 1;
+          setCurrentFlash(flashesData.entities[currentProgressBar.current]);
+          videoDuration.current = undefined;
+          canStartVideo.current = true;
+        } else {
+          scrollToNextOrBackScreen();
+        }
+        // 画面左半分をプレスした場合
+      } else {
+        // プログレスバーの進行状況が1/7未満の場合
+        if (-progressValue.current > progressBarWidth - progressBarWidth / 7) {
+          canStartVideo.current = true;
+          progressAnim[currentProgressBar.current].setValue(-progressBarWidth);
+          // 進行しているプログレスバーが2個目以上の場合
+          if (currentProgressBar.current > 0) {
+            currentProgressBar.current -= 1;
+            progressAnim[currentProgressBar.current].setValue(
+              -progressBarWidth,
+            );
+            videoDuration.current = undefined;
+            setCurrentFlash(flashesData.entities[currentProgressBar.current]);
+          } else {
+            if (!onLoading) {
+              progressAnimation({
+                progressNumber: currentProgressBar.current,
+                duration: videoDuration.current
+                  ? videoDuration.current
+                  : undefined,
+              });
+            }
+            if (videoRef.current) {
+              videoRef.current.seek(0);
+            }
+          }
+          // 現在のプログレスバーのアニメーションが1/7以上の場合。そのプログレスバーのアニメーションを初めから実行させる
+        } else {
+          if (!onLoading) {
+            // まずアニメーションの値を初期値に戻す。(プログレスバーが白くなってない状態)
+            progressAnim[currentProgressBar.current].setValue(
+              -progressBarWidth,
+            );
+            if (currentFlash.sourceType === 'image') {
+              progressAnimation({
+                progressNumber: currentProgressBar.current,
+                duration: undefined,
+              });
+            } else {
+              if (videoRef.current) {
+                progressAnimation({
+                  progressNumber: currentProgressBar.current,
+                  duration: videoDuration.current,
+                });
+                videoRef.current.seek(0);
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const onScreenLongPress = () => {
+      progressAnim[currentProgressBar.current].stopAnimation();
+      setIsPaused(true);
+      // if (canStartVideo) {
+      // }
+      longPress.current = true;
+    };
+
     return (
       <>
         <View style={styles.container}>
           {entityLength ? (
             <TouchableOpacity
               activeOpacity={1}
-              delayLongPress={200}
+              delayLongPress={100}
               disabled={visibleModal}
-              onPress={(e) => {
-                // 画面右半分をプレスした、つまりアイテムをスキップした場合
-                if (e.nativeEvent.locationX > width / 2) {
-                  progressAnim[currentProgressBar.current].setValue(0);
-                  if (currentProgressBar.current < entityLength - 1) {
-                    currentProgressBar.current += 1;
-                    setCurrentFlash(
-                      flashesData.entities[currentProgressBar.current],
-                    );
-                    videoDuration.current = undefined;
-                    canStartVideo.current = true;
-                  } else {
-                    scrollToNextOrBackScreen();
-                  }
-                  // 画面左半分をプレスした場合
-                } else {
-                  // プログレスバーの進行状況が1/7未満の場合
-                  if (
-                    -progressValue.current >
-                    progressBarWidth - progressBarWidth / 7
-                  ) {
-                    canStartVideo.current = true;
-                    progressAnim[currentProgressBar.current].setValue(
-                      -progressBarWidth,
-                    );
-                    // 進行しているプログレスバーが2個目以上の場合
-                    if (currentProgressBar.current > 0) {
-                      currentProgressBar.current -= 1;
-                      progressAnim[currentProgressBar.current].setValue(
-                        -progressBarWidth,
-                      );
-                      videoDuration.current = undefined;
-                      setCurrentFlash(
-                        flashesData.entities[currentProgressBar.current],
-                      );
-                    } else {
-                      if (!onLoading) {
-                        progressAnimation({
-                          progressNumber: currentProgressBar.current,
-                          duration: videoDuration.current
-                            ? videoDuration.current
-                            : undefined,
-                        });
-                      }
-                      if (videoRef.current) {
-                        videoRef.current.seek(0);
-                      }
-                    }
-                  } else {
-                    if (!onLoading) {
-                      progressAnim[currentProgressBar.current].setValue(
-                        -progressBarWidth,
-                      );
-                      if (currentFlash.sourceType === 'image') {
-                        progressAnimation({
-                          progressNumber: currentProgressBar.current,
-                          duration: videoDuration.current
-                            ? videoDuration.current
-                            : undefined,
-                        });
-                      } else {
-                        if (videoRef.current) {
-                          progressAnimation({
-                            progressNumber: currentProgressBar.current,
-                            duration: videoDuration.current,
-                          });
-                          videoRef.current.seek(0);
-                        }
-                      }
-                    }
-                  }
-                }
-              }}
-              onLongPress={() => {
-                progressAnim[currentProgressBar.current].stopAnimation();
-                if (canStartVideo) {
-                  setIsPaused(true);
-                }
-                longPress.current = true;
-              }}
+              onPress={(e) => onScreenPres(e)}
+              onLongPress={onScreenLongPress}
               onPressOut={() => {
                 if (longPress.current) {
                   progressAnimation({
