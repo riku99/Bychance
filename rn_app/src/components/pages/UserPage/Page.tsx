@@ -22,7 +22,6 @@ import {EditButton} from './EditButton';
 import {ExpandButton} from './ExpandButton';
 import {TakeFlashButton} from './TakeFlashButton';
 import {SendMessageButton} from './SendMessageButton';
-import {FlashesDataAndUser} from '../Flashes/ShowFlash';
 import {
   MyPageStackParamList,
   UserPageScreenGroupParamList,
@@ -36,7 +35,6 @@ import {selectAllPosts} from '../../../redux/post';
 import {selectAllFlashes} from '../../../redux/flashes';
 import {selectAnotherUser} from '../../../redux/getUsers';
 import {selectChatPartner} from '../../../redux/chatPartners';
-import {PartiallyPartial} from '../../../constants/types';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -59,14 +57,20 @@ export const UserPage = ({route, navigation}: Props) => {
     (state: RootState) => state.userReducer.user!.id,
   );
 
+  // route.paramsが存在しない(Tabから呼び出された)またはuserIdがリファレンスIdと同じ(stackから自分のデータを渡して呼び出した)場合はtrue
+  const isMe = useMemo(
+    () => !routeParams || routeParams.userId === referenceId,
+    [routeParams, referenceId],
+  );
+
   const me = useSelector((state: RootState) => {
-    if (!route.params && !anotherUser) {
+    if (isMe) {
       return state.userReducer.user!;
     }
   }, shallowEqual);
 
   const anotherUser = useSelector((state: RootState) => {
-    if (!me) {
+    if (!isMe) {
       // どのページからこのページがpushされたかによってサブスクライブするreducerを指定
       if (routeParams && routeParams!.from === 'searchUsers') {
         return selectAnotherUser(state, routeParams.userId);
@@ -82,10 +86,8 @@ export const UserPage = ({route, navigation}: Props) => {
   // 別々のものとして使いたい時はme, anotherUserのどちらかを使う
   const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
 
-  const isMe = useMemo(() => referenceId === user.id, [referenceId, user]);
-
   const myPosts = useSelector((state: RootState) => {
-    if (!anotherUser) {
+    if (isMe) {
       return selectAllPosts(state);
     }
   });
@@ -101,41 +103,10 @@ export const UserPage = ({route, navigation}: Props) => {
   }, [anotherUser, myPosts]);
 
   const myFlashes = useSelector((state: RootState) => {
-    if (!anotherUser) {
+    if (isMe) {
       return selectAllFlashes(state);
     }
   }, shallowEqual);
-
-  const flashesDataAndUser = useMemo((): PartiallyPartial<
-    FlashesDataAndUser,
-    'flashesData'
-  > => {
-    if (me) {
-      return {
-        flashesData: undefined,
-        user: {
-          id: me.id,
-          name: me.name,
-          introduce: me.introduce,
-          image: me.image,
-          message: me.message,
-          posts: myPosts!,
-        },
-      };
-    } else {
-      return {
-        flashesData: anotherUser?.flashes!,
-        user: {
-          id: anotherUser!.id,
-          name: anotherUser!.name,
-          introduce: anotherUser!.introduce,
-          image: anotherUser!.image,
-          message: anotherUser!.message,
-          posts: anotherUser!.posts,
-        },
-      };
-    }
-  }, [anotherUser, me, myPosts]);
 
   const avatarOuterType: 'gradation' | 'silver' | 'none' = useMemo(() => {
     if (me) {
@@ -227,9 +198,36 @@ export const UserPage = ({route, navigation}: Props) => {
 
   useLayoutEffect(() => {
     if (route.name === 'UserPage') {
-      navigation.setOptions({headerTitle: anotherUser && anotherUser.name});
+      navigation.setOptions({headerTitle: user.name});
     }
-  }, [navigation, anotherUser, route.name]);
+  }, [navigation, user, route.name]);
+
+  const flashesNavigationParam = useMemo(() => {
+    if (me && isMe && myFlashes) {
+      return {
+        isMyData: true as const,
+        startingIndex: 0 as const,
+        dataArray: [
+          {
+            flashesData: undefined,
+            userData: {userId: me.id},
+          },
+        ],
+      };
+    }
+    if (anotherUser && !isMe && anotherUser.flashes.entities.length) {
+      return {
+        isMyData: false as const,
+        startingIndex: 0,
+        dataArray: [
+          {
+            flashesData: anotherUser.flashes,
+            userData: {userId: anotherUser.id, from: routeParams!.from},
+          },
+        ],
+      };
+    }
+  }, [anotherUser, isMe, me, myFlashes, routeParams]);
 
   return (
     <View
@@ -271,8 +269,8 @@ export const UserPage = ({route, navigation}: Props) => {
         ]}>
         <Avatar
           source={user.image}
-          flashesDataAndUser={flashesDataAndUser}
           outerType={avatarOuterType}
+          flashesNavigationParam={flashesNavigationParam}
         />
       </Animated.View>
       <Animated.View

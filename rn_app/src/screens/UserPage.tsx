@@ -51,15 +51,11 @@ export const MyPageStackScreen = () => {
 };
 
 export type UserPageScreenGroupParamList = {
-  UserPage:
-    | {
-        userId: number;
-        from: 'searchUsers';
-      }
-    | {
-        userId: number;
-        from: 'chatRoom';
-      };
+  UserPage: {
+    userId: number;
+    from: 'searchUsers' | 'chatRoom';
+  };
+
   Post: PostType;
 };
 
