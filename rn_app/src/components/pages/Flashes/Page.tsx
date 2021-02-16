@@ -147,6 +147,8 @@ export const FlashesPage = ({route, navigation}: Props) => {
     }
   };
 
+  const [scrolling, setScrolling] = useState(false);
+
   return (
     <View
       style={[
@@ -163,11 +165,14 @@ export const FlashesPage = ({route, navigation}: Props) => {
               flashesData={getData({item}).flashesData}
               userData={getData({item}).userData}
               isDisplayed={displayManagementTable[index]}
+              scrolling={scrolling}
               scrollToNextOrBackScreen={scrollToNextOrBackScreen}
               goBackScreen={goBackScreen}
             />
           </View>
         )}
+        onScrollBeginDrag={() => setScrolling(true)}
+        onScrollEndDrag={() => setScrolling(false)}
         onScroll={(e) => {
           onScroll(e);
         }}
@@ -179,6 +184,9 @@ export const FlashesPage = ({route, navigation}: Props) => {
           index,
         })}
         initialScrollIndex={startingIndex}
+        initialNumToRender={1}
+        maxToRenderPerBatch={1}
+        windowSize={1}
       />
     </View>
   );
