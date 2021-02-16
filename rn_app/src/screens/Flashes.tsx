@@ -13,7 +13,7 @@ export type FlashesStackParamList = {
         startingIndex: number;
         dataArray: {
           flashesData: FlashesData;
-          userData: {userId: number; from: 'searchUsers' | 'chatRoom'};
+          userData: {userId: number; from?: 'searchUsers' | 'chatRoom'};
         }[];
       }
     | {

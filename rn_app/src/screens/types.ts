@@ -8,7 +8,6 @@ import {UserEditStackParamList} from './UserEdit';
 import {CreatePostStackParamList} from './CreatePost';
 import {SearchUsersStackParamList} from './SearchUsers';
 import {FlashesStackParamList} from './Flashes';
-import {PartiallyPartial} from '../constants/types';
 
 // navigationの型たち
 export type RootNavigationProp<
@@ -62,7 +61,7 @@ export type FlashesRouteProp<T extends keyof FlashesStackParamList> = RouteProp<
 >;
 
 // その他
-export type PartialFlashesDataAndUser = PartiallyPartial<
-  FlashesDataAndUser,
-  'flashesData'
->;
+// export type PartialFlashesDataAndUser = PartiallyPartial<
+//   FlashesDataAndUser,
+//   'flashesData'
+// >;

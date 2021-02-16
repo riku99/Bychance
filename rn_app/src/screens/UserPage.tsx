@@ -53,7 +53,7 @@ export const MyPageStackScreen = () => {
 export type UserPageScreenGroupParamList = {
   UserPage: {
     userId: number;
-    from: 'searchUsers' | 'chatRoom';
+    from?: 'searchUsers' | 'chatRoom';
   };
 
   Post: PostType;

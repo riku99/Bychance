@@ -12,12 +12,12 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {Button, ListItem, Icon} from 'react-native-elements';
+import {ListItem, Icon} from 'react-native-elements';
 import Video from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 
-import {UserAvatar} from '../../utils/Avatar';
+import {InfoItems} from './InfoItems';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {FlashesData} from '../../../redux/types';
 import {FlashStackNavigationProp} from '../../../screens/types';
@@ -34,7 +34,6 @@ type Props = {
   isDisplayed: boolean;
   scrolling: boolean;
   scrollToNextOrBackScreen: () => void;
-  goBackScreen: () => void;
 };
 
 export const ShowFlash = React.memo(
@@ -44,7 +43,6 @@ export const ShowFlash = React.memo(
     isDisplayed,
     scrolling,
     scrollToNextOrBackScreen,
-    goBackScreen,
   }: Props) => {
     useEffect(() => console.log('render!' + userData.userId));
     const entityLength = useMemo(() => flashesData.entities.length, [
@@ -159,21 +157,6 @@ export const ShowFlash = React.memo(
         scrollToNextOrBackScreen,
       ],
     );
-
-    const getTimeDiff = useCallback((timestamp: string) => {
-      const now = new Date();
-      const createdAt = new Date(timestamp);
-      const diff = now.getTime() - createdAt.getTime();
-      return Math.floor(diff / (1000 * 60 * 60));
-    }, []);
-
-    const navigateToProfile = useCallback(() => {
-      flashStackNavigation.push('UserPage', {
-        userId: userData.userId,
-        from: userData.from,
-      });
-      setIsNavigatedToProfile(true);
-    }, [flashStackNavigation, userData]);
 
     // 削除したりするためのモーダルリストコンポーネントを別に作る
     const deleteFlash = useCallback(
@@ -547,34 +530,10 @@ export const ShowFlash = React.memo(
                     );
                   })}
                 </View>
-                {/* <View style={styles.infoItems}>
-                  <TouchableOpacity
-                    style={styles.userInfo}
-                    onPress={navigateToProfile}>
-                    <UserAvatar
-                      image={flashesData.user.image}
-                      size="small"
-                      opacity={1}
-                    />
-                    <Text style={styles.userName}>{flashesData.user.name}</Text>
-                    <Text style={styles.timestamp}>
-                      {getTimeDiff(
-                        flashesData.entities[currentProgressBar.current]
-                          .timestamp,
-                      ) < 24
-                        ? getTimeDiff(
-                            flashesData.entities[currentProgressBar.current]
-                              .timestamp,
-                          ).toString() + '時間前'
-                        : '1日前'}
-                    </Text>
-                  </TouchableOpacity>
-                  <Button
-                    icon={{name: 'close', color: 'white'}}
-                    buttonStyle={{backgroundColor: 'transparent'}}
-                    onPress={goBackScreen}
-                  />
-                </View> */}
+                <InfoItems
+                  userData={userData}
+                  timestamp={currentFlash.timestamp}
+                />
                 {/* {creatingFlash && referenceId === flashesData.user.id && (
                   <View style={styles.addMessageContainer}>
                     <ActivityIndicator color="white" />
@@ -701,29 +660,6 @@ const styles = StyleSheet.create({
     height: 3,
     borderRadius: 5,
     backgroundColor: 'white',
-  },
-  infoItems: {
-    width: '100%',
-    height: 45,
-    marginTop: 3,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  userInfo: {
-    height: 45,
-    marginTop: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  userName: {
-    marginLeft: 15,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  timestamp: {
-    marginLeft: 10,
-    color: 'white',
   },
   addMessageContainer: {
     flexDirection: 'row',
