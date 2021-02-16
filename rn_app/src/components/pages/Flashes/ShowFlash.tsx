@@ -112,7 +112,7 @@ export const ShowFlash = React.memo(
       [dispatch],
     );
 
-    // プログレスバーのアニメーションに関して
+    // プログレスバーのアニメーション
     const progressAnimation = useCallback(
       ({
         progressNumber,
@@ -406,12 +406,10 @@ export const ShowFlash = React.memo(
     };
 
     const onImageLoad = () => {
-      if (isDisplayed) {
-        setOnLoading(false);
-        progressAnimation({
-          progressNumber: currentProgressBar.current,
-        });
-      }
+      setOnLoading(false);
+      progressAnimation({
+        progressNumber: currentProgressBar.current,
+      });
     };
 
     const onVideoProgress = ({currentTime}: {currentTime: number}) => {
@@ -442,15 +440,7 @@ export const ShowFlash = React.memo(
               onPressOut={onScreenPressOut}>
               {currentFlash.sourceType === 'image' ? (
                 <View style={styles.soruceContainer}>
-                  <Image
-                    source={{
-                      uri: currentFlash.source,
-                    }}
-                    style={{width: '100%', height: '100%'}}
-                    onLoadStart={onImageLoadStart}
-                    onLoad={onImageLoad}
-                  />
-                  {/* {isDisplayed ? (
+                  {isDisplayed ? (
                     <Image
                       source={{
                         uri: currentFlash.source,
@@ -466,7 +456,7 @@ export const ShowFlash = React.memo(
                       }}
                       style={{width: '100%', height: '100%'}}
                     />
-                  )} */}
+                  )}
                 </View>
               ) : (
                 <View style={styles.soruceContainer}>
@@ -479,7 +469,6 @@ export const ShowFlash = React.memo(
                     onLoadStart={() => {
                       setOnLoading(true);
                       canStartVideo.current = true;
-                      console.log('start!');
                     }}
                     onLoad={(e) => {
                       if (!isDisplayed) {
