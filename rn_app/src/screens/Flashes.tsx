@@ -21,10 +21,12 @@ export type FlashesStackParamList = {
         startingIndex: 0;
         dataArray: {
           flashesData: undefined;
-          userData: {userId: number};
+          userData: {userId: number; from: undefined};
         }[];
       };
 } & UserPageScreenGroupParamList;
+
+export type FlashUserData = FlashesStackParamList['Flashes']['dataArray'][number]['userData'];
 
 const Stack = createStackNavigator<FlashesStackParamList>();
 

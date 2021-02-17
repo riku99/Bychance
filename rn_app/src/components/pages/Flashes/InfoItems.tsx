@@ -9,9 +9,10 @@ import {RootState} from '../../../redux/index';
 import {selectAnotherUser} from '../../../redux/getUsers';
 import {selectChatPartner} from '../../../redux/chatPartners';
 import {FlashStackNavigationProp} from '../../../screens/types';
+import {FlashUserData} from '../../../screens/Flashes';
 
 type Props = {
-  userData: {userId: number; from?: 'searchUsers' | 'chatRoom'};
+  userData: FlashUserData;
   timestamp: string;
 };
 

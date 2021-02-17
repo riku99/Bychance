@@ -71,13 +71,13 @@ export const UserPage = ({route, navigation}: Props) => {
 
   const anotherUser = useSelector((state: RootState) => {
     if (!isMe) {
-      // どのページからこのページがpushされたかによってサブスクライブするreducerを指定
-      if (routeParams && routeParams!.from === 'searchUsers') {
-        return selectAnotherUser(state, routeParams.userId);
-      } else if (routeParams && routeParams!.from === 'chatRoom') {
-        return selectChatPartner(state, routeParams.userId);
-      } else {
-        throw new Error('ユーザーが見つかりません');
+      if (routeParams) {
+        switch (routeParams.from) {
+          case 'chatRoom':
+            return selectChatPartner(state, routeParams.userId);
+          case 'searchUsers':
+            return selectAnotherUser(state, routeParams.userId);
+        }
       }
     }
   }, shallowEqual);

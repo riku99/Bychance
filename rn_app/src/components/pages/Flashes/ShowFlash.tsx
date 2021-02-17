@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {ListItem, Icon} from 'react-native-elements';
-import Video from 'react-native-video';
+import Video, {OnLoadData} from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 
@@ -21,6 +21,7 @@ import {InfoItems} from './InfoItems';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {FlashesData} from '../../../redux/types';
 import {FlashStackNavigationProp} from '../../../screens/types';
+import {FlashUserData} from '../../../screens/Flashes';
 import {
   deleteFlashThunk,
   createAlreadyViewdFlashThunk,
@@ -30,7 +31,7 @@ import {alertSomeError} from '../../../helpers/error';
 
 type Props = {
   flashesData: FlashesData;
-  userData: {userId: number; from?: 'searchUsers' | 'chatRoom'};
+  userData: FlashUserData;
   isDisplayed: boolean;
   scrolling: boolean;
   scrollToNextOrBackScreen: () => void;
@@ -88,10 +89,6 @@ export const ShowFlash = React.memo(
     const videoRef = useRef<Video>(null);
     const flashesLength = useRef(entityLength);
     const modalizeRef = useRef<Modalize>(null);
-
-    const referenceId = useSelector((state: RootState) => {
-      return state.userReducer.user!.id;
-    });
 
     const creatingFlash = useSelector((state: RootState) => {
       return state.otherSettingsReducer.creatingFlash;
@@ -395,6 +392,19 @@ export const ShowFlash = React.memo(
       });
     };
 
+    const onVideoLoadStart = () => {
+      setOnLoading(true);
+      canStartVideo.current = true;
+    };
+
+    const onVideoLoad = (e: OnLoadData) => {
+      if (!isDisplayed) {
+        setIsPaused(true);
+        setOnLoading(false);
+      }
+      videoDuration.current = e.duration * 1000;
+    };
+
     const onVideoProgress = ({currentTime}: {currentTime: number}) => {
       setOnLoading(false);
       // videoとアニメーションを合わせるためにvideoが始まり次第即座にプログレスバーのアニメーションを開始させている
@@ -408,6 +418,17 @@ export const ShowFlash = React.memo(
           canStartVideo.current = false;
         }
       }
+    };
+
+    const onVideoSeek = () => {
+      if (!isDisplayed || isNavigatedToPofile) {
+        setIsPaused(true);
+      }
+    };
+
+    const onVideoEnd = () => {
+      // ビデオの再生が終わったらまたビデオとアニメーションをリンクできるように値を変更
+      canStartVideo.current = true;
     };
 
     return (
@@ -449,30 +470,15 @@ export const ShowFlash = React.memo(
                     style={{width: '100%', height: '100%'}}
                     resizeMode="cover"
                     paused={isPaused}
-                    onLoadStart={() => {
-                      setOnLoading(true);
-                      canStartVideo.current = true;
-                    }}
+                    onLoadStart={onVideoLoadStart}
                     onLoad={(e) => {
-                      if (!isDisplayed) {
-                        setIsPaused(true);
-                        setOnLoading(false);
-                      }
-                      videoDuration.current = e.duration * 1000;
+                      onVideoLoad(e);
                     }}
                     onProgress={({currentTime}) => {
                       onVideoProgress({currentTime});
                     }}
-                    onSeek={() => {
-                      if (!isDisplayed || isNavigatedToPofile) {
-                        setIsPaused(true);
-                      }
-                    }}
-                    onEnd={() => {
-                      // ビデオの再生が終わったらまたビデオとアニメーションをリンクできるように値を変更
-                      canStartVideo.current = true;
-                      console.log('end!');
-                    }}
+                    onSeek={onVideoSeek}
+                    onEnd={onVideoEnd}
                   />
                 </View>
               )}
