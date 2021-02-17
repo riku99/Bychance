@@ -17,6 +17,7 @@ import Video, {OnLoadData} from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 
+import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {FlashesData} from '../../../redux/types';
@@ -82,7 +83,7 @@ export const ShowFlash = React.memo(
         ? alreadyViewedLength
         : 0,
     );
-    const finishFirstRender = useRef(false);
+
     const longPress = useRef(false);
     const videoDuration = useRef<number | undefined>(undefined);
     const canStartVideo = useRef(true);
@@ -205,10 +206,6 @@ export const ShowFlash = React.memo(
         },
       ];
     }, [deleteFlash]);
-
-    useEffect(() => {
-      finishFirstRender.current = true;
-    }, []);
 
     // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
@@ -484,58 +481,15 @@ export const ShowFlash = React.memo(
               )}
 
               <View style={styles.info}>
-                <View style={styles.progressBarConteiner}>
-                  {flashesData.entities.map((f, i) => {
-                    // 初回レンダリングの場合
-                    if (!finishFirstRender.current) {
-                      if (
-                        i < alreadyViewedLength &&
-                        alreadyViewedLength !== entityLength
-                      ) {
-                        progressAnim[i] = new Animated.Value(0);
-                      } else {
-                        progressAnim[i] = new Animated.Value(-progressBarWidth);
-                      }
-                    }
-                    // アイテムが追加された場合
-                    if (entityLength > flashesLength.current) {
-                      progressAnim[entityLength - 1] = new Animated.Value(
-                        -progressBarWidth,
-                      );
-                    }
-                    // アイテムが削除された場合
-                    if (entityLength < flashesLength.current) {
-                      // 削除されたアイテムが最後のものだった場合
-                      if (currentProgressBar.current === entityLength) {
-                        currentProgressBar.current -= 1;
-                      }
-                      // この要素(f)が削除されたアイテムよりも後にある場合
-                      if (i >= currentProgressBar.current) {
-                        progressAnim[i] = new Animated.Value(-progressBarWidth);
-                      }
-                    }
-                    return (
-                      <View
-                        key={f.id}
-                        style={{
-                          ...styles.progressBar,
-                          width: progressBarWidth,
-                        }}>
-                        <Animated.View
-                          style={{
-                            ...styles.animatedProgressBar,
-                            width: progressBarWidth,
-                            transform: [
-                              {
-                                translateX: progressAnim[i],
-                              },
-                            ],
-                          }}
-                        />
-                      </View>
-                    );
-                  })}
-                </View>
+                <ProgressBar
+                  flashesData={flashesData}
+                  entityLength={entityLength}
+                  alreadyViewedLength={alreadyViewedLength}
+                  progressAnim={progressAnim}
+                  progressBarWidth={progressBarWidth}
+                  currentProgressBar={currentProgressBar}
+                  flashesLength={flashesLength}
+                />
                 <InfoItems
                   userData={userData}
                   timestamp={currentFlash.timestamp}
@@ -649,23 +603,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     alignSelf: 'center',
-  },
-  progressBarConteiner: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  progressBar: {
-    width: MAX_PROGRESS_BAR,
-    height: 3,
-    marginTop: 8,
-    borderRadius: 5,
-    backgroundColor: '#bdbdbd',
-    overflow: 'hidden',
-  },
-  animatedProgressBar: {
-    height: 3,
-    borderRadius: 5,
-    backgroundColor: 'white',
   },
   addMessageContainer: {
     flexDirection: 'row',
