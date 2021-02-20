@@ -210,7 +210,7 @@ export const UserPage = ({route, navigation}: Props) => {
         dataArray: [
           {
             flashesData: undefined,
-            userData: {userId: me.id},
+            userData: {userId: me.id, from: undefined},
           },
         ],
       };

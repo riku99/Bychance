@@ -19,6 +19,8 @@ import {useNavigation} from '@react-navigation/native';
 
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
+import {ShowModalButton} from './ShowModalButton';
+import {Modal} from './Modal';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {FlashesData} from '../../../redux/types';
 import {FlashStackNavigationProp} from '../../../screens/types';
@@ -35,6 +37,8 @@ type Props = {
   userData: FlashUserData;
   isDisplayed: boolean;
   scrolling: boolean;
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   scrollToNextOrBackScreen: () => void;
 };
 
@@ -44,6 +48,8 @@ export const ShowFlash = React.memo(
     userData,
     isDisplayed,
     scrolling,
+    showModal,
+    setShowModal,
     scrollToNextOrBackScreen,
   }: Props) => {
     useEffect(() => console.log('render!' + userData.userId));
@@ -73,7 +79,6 @@ export const ShowFlash = React.memo(
 
     const [onLoading, setOnLoading] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
-    const [visibleModal, setvisibleModal] = useState(false);
     const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
 
     const progressAnim = useRef<{[key: number]: Animated.Value}>({}).current;
@@ -88,7 +93,7 @@ export const ShowFlash = React.memo(
     const videoDuration = useRef<number | undefined>(undefined);
     const canStartVideo = useRef(true);
     const videoRef = useRef<Video>(null);
-    const flashesLength = useRef(entityLength);
+    const firstEntitiesLength = useRef(entityLength);
     const modalizeRef = useRef<Modalize>(null);
 
     const creatingFlash = useSelector((state: RootState) => {
@@ -210,10 +215,10 @@ export const ShowFlash = React.memo(
     // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
       // アイテムが削除された場合
-      if (entityLength < flashesLength.current) {
+      if (entityLength < firstEntitiesLength.current) {
         setCurrentFlash(flashesData.entities[currentProgressBar.current]);
       }
-      flashesLength.current = entityLength;
+      firstEntitiesLength.current = entityLength;
     }, [entityLength, flashesData.entities]);
 
     // このコンポーネントが表示された、表示されている時の責務を定義
@@ -270,27 +275,33 @@ export const ShowFlash = React.memo(
       return unsbscribe;
     }, [flashStackNavigation, isNavigatedToPofile, progressAnimation]);
 
+    // スクロール中の処理
     useEffect(() => {
       if (scrolling) {
+        console.log('ok');
         progressAnim[currentProgressBar.current].stopAnimation();
         if (currentFlash.sourceType === 'video') {
           setIsPaused(true);
         }
         longPress.current = true;
-      } else {
-        if (longPress.current) {
-          progressAnimation({
-            progressNumber: currentProgressBar.current,
-            duration: videoDuration.current,
-            restart: true,
-          });
-          if (currentFlash.sourceType === 'video') {
-            setIsPaused(false);
-          }
-          longPress.current = false;
+      } else if (longPress.current) {
+        progressAnimation({
+          progressNumber: currentProgressBar.current,
+          duration: videoDuration.current,
+          restart: true,
+        });
+        if (currentFlash.sourceType === 'video') {
+          setIsPaused(false);
         }
+        longPress.current = false;
       }
-    }, [scrolling, currentFlash.sourceType, progressAnim, progressAnimation]);
+    }, [
+      scrolling,
+      currentFlash.sourceType,
+      progressAnim,
+      progressAnimation,
+      showModal,
+    ]);
 
     const onScreenPres = (e: GestureResponderEvent) => {
       // 画面右半分をプレスした、つまりアイテムをスキップした場合
@@ -432,53 +443,55 @@ export const ShowFlash = React.memo(
       <>
         <View style={styles.container}>
           {entityLength ? (
-            <TouchableOpacity
-              activeOpacity={1}
-              delayLongPress={100}
-              disabled={visibleModal}
-              onPress={(e) => onScreenPres(e)}
-              onLongPress={onScreenLongPress}
-              onPressOut={onScreenPressOut}>
-              {currentFlash.sourceType === 'image' ? (
-                <View style={styles.soruceContainer}>
-                  {isDisplayed ? (
-                    <Image
-                      source={{
-                        uri: currentFlash.source,
-                      }}
+            <>
+              <TouchableOpacity
+                activeOpacity={1}
+                delayLongPress={100}
+                disabled={showModal}
+                onPress={(e) => onScreenPres(e)}
+                onLongPress={onScreenLongPress}
+                onPressOut={onScreenPressOut}>
+                {currentFlash.sourceType === 'image' ? (
+                  <View style={styles.soruceContainer}>
+                    {isDisplayed ? (
+                      <Image
+                        source={{
+                          uri: currentFlash.source,
+                        }}
+                        style={{width: '100%', height: '100%'}}
+                        onLoadStart={onImageLoadStart}
+                        onLoad={onImageLoad}
+                      />
+                    ) : (
+                      <Image
+                        source={{
+                          uri: currentFlash.source + '?' + new Date(),
+                        }}
+                        style={{width: '100%', height: '100%'}}
+                      />
+                    )}
+                  </View>
+                ) : (
+                  <View style={styles.soruceContainer}>
+                    <Video
+                      ref={videoRef}
+                      source={{uri: currentFlash.source}}
                       style={{width: '100%', height: '100%'}}
-                      onLoadStart={onImageLoadStart}
-                      onLoad={onImageLoad}
-                    />
-                  ) : (
-                    <Image
-                      source={{
-                        uri: currentFlash.source + '?' + new Date(),
+                      resizeMode="cover"
+                      paused={isPaused}
+                      onLoadStart={onVideoLoadStart}
+                      onLoad={(e) => {
+                        onVideoLoad(e);
                       }}
-                      style={{width: '100%', height: '100%'}}
+                      onProgress={({currentTime}) => {
+                        onVideoProgress({currentTime});
+                      }}
+                      onSeek={onVideoSeek}
+                      onEnd={onVideoEnd}
                     />
-                  )}
-                </View>
-              ) : (
-                <View style={styles.soruceContainer}>
-                  <Video
-                    ref={videoRef}
-                    source={{uri: currentFlash.source}}
-                    style={{width: '100%', height: '100%'}}
-                    resizeMode="cover"
-                    paused={isPaused}
-                    onLoadStart={onVideoLoadStart}
-                    onLoad={(e) => {
-                      onVideoLoad(e);
-                    }}
-                    onProgress={({currentTime}) => {
-                      onVideoProgress({currentTime});
-                    }}
-                    onSeek={onVideoSeek}
-                    onEnd={onVideoEnd}
-                  />
-                </View>
-              )}
+                  </View>
+                )}
+              </TouchableOpacity>
 
               <View style={styles.info}>
                 <ProgressBar
@@ -488,7 +501,7 @@ export const ShowFlash = React.memo(
                   progressAnim={progressAnim}
                   progressBarWidth={progressBarWidth}
                   currentProgressBar={currentProgressBar}
-                  flashesLength={flashesLength}
+                  firstEntitiesLength={firstEntitiesLength}
                 />
                 <InfoItems
                   userData={userData}
@@ -501,78 +514,27 @@ export const ShowFlash = React.memo(
                   </View>
                 )} */}
               </View>
-              {/* {flashesData.user.id === referenceId && (
-                <Button
-                  title="..."
-                  titleStyle={{fontSize: 30}}
-                  containerStyle={{
-                    position: 'absolute',
-                    bottom: '4%',
-                    right: 30,
-                  }}
-                  buttonStyle={{backgroundColor: 'transparent'}}
-                  onPress={() => {
-                    modalizeRef.current?.open();
-                    setvisibleModal(true);
-                    setIsPaused(true);
-                    progressAnim[currentProgressBar.current].stopAnimation();
-                  }}
+              <View style={styles.showModalButtonContainer}>
+                <ShowModalButton
+                  modalizeRef={modalizeRef}
+                  setShowModal={setShowModal}
+                  setIsPaused={setIsPaused}
+                  currentProgressBar={currentProgressBar}
+                  progressAnim={progressAnim}
                 />
-              )} */}
+              </View>
               {onLoading && (
                 <ActivityIndicator size="large" style={styles.indicator} />
               )}
-
-              <Modalize
-                ref={modalizeRef}
-                modalHeight={140}
-                onClosed={() => {
-                  setIsPaused(false);
-                  progressAnimation({
-                    progressNumber: currentProgressBar.current,
-                    duration: videoDuration ? videoDuration.current : undefined,
-                    restart: true,
-                  });
-                  setvisibleModal(false);
-                }}>
-                <View style={styles.modalListContainer}>
-                  {modalList.map((item, i) => {
-                    return (
-                      <ListItem
-                        key={i}
-                        style={{marginTop: 10}}
-                        onPress={() => {
-                          if (item.title === '削除') {
-                            item.onPress({flashId: currentFlash.id});
-                          }
-                        }}>
-                        {item.icon && (
-                          <Icon
-                            name={item.icon}
-                            color={item.titleStyle.color}
-                          />
-                        )}
-                        <ListItem.Content>
-                          <ListItem.Title style={item.titleStyle}>
-                            {item.title}
-                          </ListItem.Title>
-                        </ListItem.Content>
-                      </ListItem>
-                    );
-                  })}
-                  <TouchableOpacity
-                    style={styles.modalCancel}
-                    onPress={() => {
-                      modalizeRef.current?.close();
-                      setvisibleModal(false);
-                    }}>
-                    <Text style={{fontSize: 18, color: '#575757'}}>
-                      キャンセル
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </Modalize>
-            </TouchableOpacity>
+              <Modal
+                modalizeRef={modalizeRef}
+                setShowModal={setShowModal}
+                setIsPaused={setIsPaused}
+                currentProgressBar={currentProgressBar}
+                videoDuration={videoDuration}
+                progressAnimation={progressAnimation}
+              />
+            </>
           ) : (
             creatingFlash && (
               <View style={styles.creatingFlashContainer}>
@@ -624,6 +586,11 @@ const styles = StyleSheet.create({
     top: height / 2,
     left: width / 2,
     transform: [{translateX: -20}, {translateY: -20}],
+  },
+  showModalButtonContainer: {
+    position: 'absolute',
+    bottom: '4%',
+    right: 30,
   },
   modalListContainer: {
     width: '97%',

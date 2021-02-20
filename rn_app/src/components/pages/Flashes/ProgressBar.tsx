@@ -10,7 +10,7 @@ type Props = {
   progressAnim: {[key: number]: Animated.Value};
   progressBarWidth: number;
   currentProgressBar: React.MutableRefObject<number>;
-  flashesLength: React.MutableRefObject<number>;
+  firstEntitiesLength: React.MutableRefObject<number>;
 };
 
 export const ProgressBar = ({
@@ -20,41 +20,44 @@ export const ProgressBar = ({
   progressAnim,
   progressBarWidth,
   currentProgressBar,
-  flashesLength,
+  firstEntitiesLength,
 }: Props) => {
   const finishFirstRender = useRef(false);
 
   useEffect(() => {
     finishFirstRender.current = true;
   });
+
+  const setAnimValue = (i: number) => {
+    // 初回レンダリングの場合
+    if (!finishFirstRender.current) {
+      if (i < alreadyViewedLength && alreadyViewedLength !== entityLength) {
+        progressAnim[i] = new Animated.Value(0);
+      } else {
+        progressAnim[i] = new Animated.Value(-progressBarWidth);
+      }
+    }
+    // アイテムが追加された場合
+    if (entityLength > firstEntitiesLength.current) {
+      progressAnim[entityLength - 1] = new Animated.Value(-progressBarWidth);
+    }
+    // アイテムが削除された場合
+    if (entityLength < firstEntitiesLength.current) {
+      // 削除されたアイテムが最後のものだった場合
+      if (currentProgressBar.current === entityLength) {
+        currentProgressBar.current -= 1;
+      }
+      // この要素(f)が削除されたアイテムよりも後にある場合
+      if (i >= currentProgressBar.current) {
+        progressAnim[i] = new Animated.Value(-progressBarWidth);
+      }
+    }
+  };
+
   return (
     <View style={styles.progressBarConteiner}>
       {flashesData.entities.map((f, i) => {
-        // 初回レンダリングの場合
-        if (!finishFirstRender.current) {
-          if (i < alreadyViewedLength && alreadyViewedLength !== entityLength) {
-            progressAnim[i] = new Animated.Value(0);
-          } else {
-            progressAnim[i] = new Animated.Value(-progressBarWidth);
-          }
-        }
-        // アイテムが追加された場合
-        if (entityLength > flashesLength.current) {
-          progressAnim[entityLength - 1] = new Animated.Value(
-            -progressBarWidth,
-          );
-        }
-        // アイテムが削除された場合
-        if (entityLength < flashesLength.current) {
-          // 削除されたアイテムが最後のものだった場合
-          if (currentProgressBar.current === entityLength) {
-            currentProgressBar.current -= 1;
-          }
-          // この要素(f)が削除されたアイテムよりも後にある場合
-          if (i >= currentProgressBar.current) {
-            progressAnim[i] = new Animated.Value(-progressBarWidth);
-          }
-        }
+        setAnimValue(i);
         return (
           <View
             key={f.id}
