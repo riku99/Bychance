@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Animated} from 'react-native';
+import {Animated} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
 

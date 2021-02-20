@@ -8,11 +8,9 @@ import {
   Animated,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   GestureResponderEvent,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {ListItem, Icon} from 'react-native-elements';
 import Video, {OnLoadData} from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
@@ -25,12 +23,7 @@ import {RootState, AppDispatch} from '../../../redux/index';
 import {FlashesData} from '../../../redux/types';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
-import {
-  deleteFlashThunk,
-  createAlreadyViewdFlashThunk,
-} from '../../../actions/flashes';
-import {displayShortMessage} from '../../../helpers/shortMessage';
-import {alertSomeError} from '../../../helpers/error';
+import {createAlreadyViewdFlashThunk} from '../../../actions/flashes';
 
 type Props = {
   flashesData: FlashesData;
@@ -52,6 +45,10 @@ export const ShowFlash = React.memo(
     setShowModal,
     scrollToNextOrBackScreen,
   }: Props) => {
+    const referenceId = useSelector(
+      (state: RootState) => state.userReducer.user!.id,
+    );
+
     useEffect(() => console.log('render!' + userData.userId));
     const entityLength = useMemo(() => flashesData.entities.length, [
       flashesData.entities,
@@ -160,57 +157,6 @@ export const ShowFlash = React.memo(
         scrollToNextOrBackScreen,
       ],
     );
-
-    // 削除したりするためのモーダルリストコンポーネントを別に作る
-    const deleteFlash = useCallback(
-      async ({flashId}: {flashId: number}) => {
-        Alert.alert('本当に削除してもよろしいですか?', '', [
-          {
-            text: 'はい',
-            onPress: async () => {
-              const result = await dispatch(deleteFlashThunk({flashId}));
-              if (deleteFlashThunk.fulfilled.match(result)) {
-                displayShortMessage('削除しました', 'success');
-                modalizeRef.current?.close();
-              } else {
-                if (
-                  result.payload &&
-                  result.payload.errorType === 'invalidError'
-                ) {
-                  displayShortMessage(result.payload.message, 'danger');
-                } else if (
-                  result.payload &&
-                  result.payload.errorType === 'someError'
-                ) {
-                  alertSomeError();
-                }
-              }
-            },
-          },
-          {
-            text: 'いいえ',
-            onPress: () => {
-              return;
-            },
-          },
-        ]);
-      },
-      [dispatch],
-    );
-
-    // 削除したりするためのモーダルリストコンポーネントを別に作る
-    const modalList = useMemo(() => {
-      return [
-        {
-          title: '削除',
-          icon: 'delete-outline',
-          titleStyle: {fontSize: 18, color: '#f74a4a'},
-          onPress: ({flashId}: {flashId: number}) => {
-            deleteFlash({flashId});
-          },
-        },
-      ];
-    }, [deleteFlash]);
 
     // アイテムが追加、削除された時の責務を定義
     useEffect(() => {
@@ -514,19 +460,22 @@ export const ShowFlash = React.memo(
                   </View>
                 )} */}
               </View>
-              <View style={styles.showModalButtonContainer}>
-                <ShowModalButton
-                  modalizeRef={modalizeRef}
-                  setShowModal={setShowModal}
-                  setIsPaused={setIsPaused}
-                  currentProgressBar={currentProgressBar}
-                  progressAnim={progressAnim}
-                />
-              </View>
+              {referenceId === userData.userId && (
+                <View style={styles.showModalButtonContainer}>
+                  <ShowModalButton
+                    modalizeRef={modalizeRef}
+                    setShowModal={setShowModal}
+                    setIsPaused={setIsPaused}
+                    currentProgressBar={currentProgressBar}
+                    progressAnim={progressAnim}
+                  />
+                </View>
+              )}
               {onLoading && (
                 <ActivityIndicator size="large" style={styles.indicator} />
               )}
               <Modal
+                flashId={currentFlash.id}
                 modalizeRef={modalizeRef}
                 setShowModal={setShowModal}
                 setIsPaused={setIsPaused}
