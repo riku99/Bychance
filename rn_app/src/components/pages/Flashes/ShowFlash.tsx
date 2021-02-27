@@ -186,7 +186,6 @@ export const ShowFlash = React.memo(
         if (currentFlash.sourceType === 'video') {
           videoRef.current!.seek(0);
         }
-        // canStartVideo.current = true;
       }
     }, [isDisplayed, progressAnim, progressBarWidth, currentFlash.sourceType]);
 
@@ -207,7 +206,7 @@ export const ShowFlash = React.memo(
       currentFlash.sourceType,
     ]);
 
-    // profileから戻ってきた時のリスナー
+    // profileから戻ってきた時のリスナーを定義する副作用
     useEffect(() => {
       const unsbscribe = flashStackNavigation.addListener('focus', () => {
         if (isNavigatedToPofile) {
@@ -456,6 +455,7 @@ export const ShowFlash = React.memo(
                 <InfoItems
                   userData={userData}
                   timestamp={currentFlash.timestamp}
+                  setIsNavigatedToProfile={setIsNavigatedToProfile}
                 />
                 {creatingFlash && referenceId === userData.userId && (
                   <View style={styles.addMessageContainer}>

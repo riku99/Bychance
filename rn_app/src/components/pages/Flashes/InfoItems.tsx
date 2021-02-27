@@ -14,9 +14,14 @@ import {FlashUserData} from '../../../screens/Flashes';
 type Props = {
   userData: FlashUserData;
   timestamp: string;
+  setIsNavigatedToProfile: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const InfoItems = ({userData, timestamp}: Props) => {
+export const InfoItems = ({
+  userData,
+  timestamp,
+  setIsNavigatedToProfile,
+}: Props) => {
   const referenceId = useSelector(
     (state: RootState) => state.userReducer.user!.id,
   );
@@ -44,6 +49,7 @@ export const InfoItems = ({userData, timestamp}: Props) => {
   }, [timestamp]);
 
   const onUserPress = () => {
+    setIsNavigatedToProfile(true);
     navigation.push('UserPage', {userId: userData.userId, from: userData.from});
   };
 
