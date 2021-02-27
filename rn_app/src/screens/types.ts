@@ -59,9 +59,3 @@ export type FlashesRouteProp<T extends keyof FlashesStackParamList> = RouteProp<
   FlashesStackParamList,
   T
 >;
-
-// その他
-// export type PartialFlashesDataAndUser = PartiallyPartial<
-//   FlashesDataAndUser,
-//   'flashesData'
-// >;

@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 import {FlashesPage} from '../components/pages/Flashes/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
-import {FlashesData} from '../redux/types';
+import {FlashesData} from '../components/pages/Flashes/types';
 
 export type FlashesStackParamList = {
   Flashes:
