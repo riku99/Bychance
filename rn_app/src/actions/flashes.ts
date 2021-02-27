@@ -108,23 +108,23 @@ export const deleteFlashThunk = createAsyncThunk<
 });
 
 export const createAlreadyViewdFlashThunk = createAsyncThunk<
-  {result: true},
-  {flashId: number},
+  {userId: number; flashId: number},
+  {flashId: number; userId: number},
   {
     rejectValue: rejectPayload;
   }
->('flashes/createAlreadyViewdFlash', async ({flashId}, thunkApi) => {
-  const keychain = await checkKeychain();
+>('flashes/createAlreadyViewdFlash', async ({flashId, userId}, thunkApi) => {
+  const credentials = await checkKeychain();
 
-  if (keychain) {
+  if (credentials) {
     try {
-      const response = await axios.post<{result: true}>(
+      await axios.post(
         `${origin}/user_flash_viewing`,
-        {id: keychain.id, flashId},
-        headers(keychain.token),
+        {id: credentials.id, flashId},
+        headers(credentials.token),
       );
 
-      return response.data;
+      return {userId, flashId};
     } catch (e) {
       if (e && e.response) {
         const axiosError = e as basicAxiosError;

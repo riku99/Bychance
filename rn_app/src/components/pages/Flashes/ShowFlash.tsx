@@ -24,6 +24,7 @@ import {FlashesData} from '../../../redux/types';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
 import {createAlreadyViewdFlashThunk} from '../../../actions/flashes';
+import {selectUserAlreadyViewed} from '../../../redux/getUsers';
 
 type Props = {
   flashesData: FlashesData;
@@ -49,7 +50,6 @@ export const ShowFlash = React.memo(
       (state: RootState) => state.userReducer.user!.id,
     );
 
-    useEffect(() => console.log('render!' + userData.userId));
     const entityLength = useMemo(() => flashesData.entities.length, [
       flashesData.entities,
     ]);
@@ -58,10 +58,10 @@ export const ShowFlash = React.memo(
       return MAX_PROGRESS_BAR / entityLength;
     }, [entityLength]);
 
-    const alreadyViewedLength = useMemo(
-      () => flashesData.alreadyViewed.length,
-      [flashesData.alreadyViewed.length],
-    );
+    // flashesData.alreadyViewedLengthでデータは取れるが、storeの更新を即座に反映させるためにセレクタを使いstoreから取得
+    const alreadyViewedLength = useSelector((state: RootState) => {
+      return selectUserAlreadyViewed(state, userData.userId).length;
+    });
 
     // 実際に表示されているentity
     // このコンポーネントがFlatListにより表示されて最初のレンダリングの際、既に見たものがある場合それを飛ばしている
@@ -105,9 +105,11 @@ export const ShowFlash = React.memo(
 
     const createAlreadyViewdFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
-        await dispatch(createAlreadyViewdFlashThunk({flashId}));
+        await dispatch(
+          createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
+        );
       },
-      [dispatch],
+      [dispatch, userData.userId],
     );
 
     // プログレスバーのアニメーション
@@ -221,16 +223,16 @@ export const ShowFlash = React.memo(
       return unsbscribe;
     }, [flashStackNavigation, isNavigatedToPofile, progressAnimation]);
 
-    // スクロール中の処理
+    const scrollRef = useRef(false);
+    // スクロールした時の処理
     useEffect(() => {
       if (scrolling) {
-        console.log('ok');
         progressAnim[currentProgressBar.current].stopAnimation();
         if (currentFlash.sourceType === 'video') {
           setIsPaused(true);
         }
-        longPress.current = true;
-      } else if (longPress.current) {
+        scrollRef.current = true;
+      } else if (scrollRef.current && isDisplayed && !onLoading) {
         progressAnimation({
           progressNumber: currentProgressBar.current,
           duration: videoDuration.current,
@@ -239,7 +241,7 @@ export const ShowFlash = React.memo(
         if (currentFlash.sourceType === 'video') {
           setIsPaused(false);
         }
-        longPress.current = false;
+        scrollRef.current = false;
       }
     }, [
       scrolling,
@@ -247,6 +249,8 @@ export const ShowFlash = React.memo(
       progressAnim,
       progressAnimation,
       showModal,
+      isDisplayed,
+      onLoading,
     ]);
 
     const onScreenPres = (e: GestureResponderEvent) => {
@@ -453,12 +457,12 @@ export const ShowFlash = React.memo(
                   userData={userData}
                   timestamp={currentFlash.timestamp}
                 />
-                {/* {creatingFlash && referenceId === flashesData.user.id && (
+                {creatingFlash && referenceId === userData.userId && (
                   <View style={styles.addMessageContainer}>
                     <ActivityIndicator color="white" />
                     <Text style={styles.addMessage}>新しく追加しています</Text>
                   </View>
-                )} */}
+                )}
               </View>
               {referenceId === userData.userId && (
                 <View style={styles.showModalButtonContainer}>

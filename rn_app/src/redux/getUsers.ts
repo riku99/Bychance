@@ -9,6 +9,7 @@ import {User} from './user';
 import {AnotherUser} from './types';
 import {getOtherUsersThunk} from '../actions/otherUsers';
 import {refreshUserThunk} from '../actions/users';
+import {createAlreadyViewdFlashThunk} from '../actions/flashes';
 
 export type GetUsers = AnotherUser[];
 
@@ -40,6 +41,31 @@ const getUsersSlice = createSlice({
         });
       }
     },
+    [createAlreadyViewdFlashThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<{userId: number; flashId: number}>,
+    ) => {
+      const user = state.entities[action.payload.userId];
+      if (user) {
+        const viewdId = user.flashes.alreadyViewed.includes(
+          action.payload.flashId,
+        );
+        if (!viewdId) {
+          const f = user.flashes;
+          const viewed = f.alreadyViewed;
+          return getUsersAdapter.updateOne(state, {
+            id: action.payload.userId,
+            changes: {
+              ...user,
+              flashes: {
+                ...f,
+                alreadyViewed: [...viewed, action.payload.flashId],
+              },
+            },
+          });
+        }
+      }
+    },
   },
 });
 
@@ -57,6 +83,15 @@ export const selectAnotherUser = (
   const user = getUsersSelectors.selectById(state.getUsersReducer, userId);
   if (user) {
     return user;
+  } else {
+    throw new Error('not found user');
+  }
+};
+
+export const selectUserAlreadyViewed = (state: RootState, userId: number) => {
+  const user = getUsersSelectors.selectById(state.getUsersReducer, userId);
+  if (user) {
+    return user.flashes.alreadyViewed;
   } else {
     throw new Error('not found user');
   }

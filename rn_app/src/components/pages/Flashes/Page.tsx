@@ -133,6 +133,9 @@ export const FlashesPage = ({route, navigation}: Props) => {
   };
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!scrolling) {
+      setScrolling(true);
+    }
     // offset.yがheightで割り切れる、つまり画面内の要素が完全に切り替わった時
     if (e.nativeEvent.contentOffset.y % safeAreaHeight === 0) {
       const displayedElementIndex =
@@ -170,11 +173,9 @@ export const FlashesPage = ({route, navigation}: Props) => {
             />
           </View>
         )}
-        onScrollBeginDrag={() => setScrolling(true)}
         onScrollEndDrag={() => setScrolling(false)}
-        onScroll={(e) => {
-          onScroll(e);
-        }}
+        onMomentumScrollEnd={() => setScrolling(false)}
+        onScroll={(e) => onScroll(e)}
         decelerationRate="fast"
         snapToInterval={safeAreaHeight}
         getItemLayout={(data, index) => ({
@@ -184,8 +185,8 @@ export const FlashesPage = ({route, navigation}: Props) => {
         })}
         scrollEnabled={!showModal}
         initialScrollIndex={startingIndex}
-        initialNumToRender={2}
-        maxToRenderPerBatch={2}
+        initialNumToRender={1}
+        maxToRenderPerBatch={1}
         windowSize={1}
       />
     </View>
