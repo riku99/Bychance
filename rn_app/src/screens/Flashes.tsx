@@ -1,7 +1,11 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
+import {
+  UserPageScreenGroupParamList,
+  userPageScreensGroup,
+  UserPageFrom,
+} from './UserPage';
 import {FlashesPage} from '../components/pages/Flashes/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {FlashesData} from '../components/pages/Flashes/types';
@@ -13,7 +17,7 @@ export type FlashesStackParamList = {
         startingIndex: number;
         dataArray: {
           flashesData: FlashesData;
-          userData: {userId: number; from: 'searchUsers' | 'chatRoom'};
+          userData: {userId: number; from: UserPageFrom};
         }[];
       }
     | {

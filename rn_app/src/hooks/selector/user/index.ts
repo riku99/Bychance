@@ -3,12 +3,13 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {RootState} from '../../../redux/index';
 import {selectAnotherUser} from '../../../redux/getUsers';
 import {selectChatPartner} from '../../../redux/chatPartners';
+import {UserPageFrom} from '../../../screens/UserPage';
 
 export const useMyId = () =>
   useSelector((state: RootState) => state.userReducer.user!.id, shallowEqual);
 
 type AnotherUserProps = {
-  from?: 'searchUsers' | 'chatRoom';
+  from?: UserPageFrom;
   userId?: number;
 };
 
@@ -25,7 +26,7 @@ export const useAnotherUser = ({from, userId}: AnotherUserProps) =>
   }, shallowEqual);
 
 type UserProps = {
-  from?: 'searchUsers' | 'chatRoom';
+  from?: UserPageFrom;
 };
 
 export const useUser = ({from}: UserProps) =>

@@ -6,7 +6,6 @@ import {Container as Post} from '../components/pages/Post/Page';
 import {Post as PostType} from '../redux/post';
 import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
-
 import {UserPage} from '../components/pages/UserPage/Page';
 
 export type MyPageStackParamList = {
@@ -50,12 +49,13 @@ export const MyPageStackScreen = () => {
   );
 };
 
+export type UserPageFrom = 'searchUsers' | 'chatRoom';
+
 export type UserPageScreenGroupParamList = {
   UserPage: {
     userId: number;
-    from?: 'searchUsers' | 'chatRoom';
+    from?: UserPageFrom;
   };
-
   Post: PostType;
 };
 
