@@ -33,8 +33,7 @@ import {
 import {RootState} from '../../../redux/index';
 import {selectAllPosts} from '../../../redux/post';
 import {selectAllFlashes} from '../../../redux/flashes';
-import {selectAnotherUser} from '../../../redux/getUsers';
-import {selectChatPartner} from '../../../redux/chatPartners';
+import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -53,9 +52,7 @@ export const UserPage = ({route, navigation}: Props) => {
   // TabではなくてStackから呼び出される場合は値が存在する
   const routeParams = useMemo(() => route && route.params, [route]);
 
-  const referenceId = useSelector(
-    (state: RootState) => state.userReducer.user!.id,
-  );
+  const referenceId = useMyId();
 
   // route.paramsが存在しない(Tabから呼び出された)またはuserIdがリファレンスIdと同じ(stackから自分のデータを渡して呼び出した)場合はtrue
   const isMe = useMemo(
@@ -63,24 +60,12 @@ export const UserPage = ({route, navigation}: Props) => {
     [routeParams, referenceId],
   );
 
-  const me = useSelector((state: RootState) => {
-    if (isMe) {
-      return state.userReducer.user!;
-    }
-  }, shallowEqual);
+  const me = useUser({from: routeParams?.from});
 
-  const anotherUser = useSelector((state: RootState) => {
-    if (!isMe) {
-      if (routeParams) {
-        switch (routeParams.from) {
-          case 'chatRoom':
-            return selectChatPartner(state, routeParams.userId);
-          case 'searchUsers':
-            return selectAnotherUser(state, routeParams.userId);
-        }
-      }
-    }
-  }, shallowEqual);
+  const anotherUser = useAnotherUser({
+    from: routeParams?.from,
+    userId: routeParams?.userId,
+  });
 
   // meとanotherUserで共通して使えるものについてはわざわざmeであるかanotherUserであるか検証したくないのでuserとしてまとめる
   // 別々のものとして使いたい時はme, anotherUserのどちらかを使う
@@ -222,7 +207,7 @@ export const UserPage = ({route, navigation}: Props) => {
         dataArray: [
           {
             flashesData: anotherUser.flashes,
-            userData: {userId: anotherUser.id, from: routeParams!.from},
+            userData: {userId: anotherUser.id, from: routeParams!.from!},
           },
         ],
       };

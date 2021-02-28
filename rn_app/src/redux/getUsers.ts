@@ -84,6 +84,7 @@ export const selectAnotherUser = (
   if (user) {
     return user;
   } else {
+    // エラーのスローではなくてAlertで対応させる
     throw new Error('not found user');
   }
 };

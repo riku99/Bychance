@@ -12,12 +12,12 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
+import {FlashesData} from './types';
 import {FlashesRouteProp, RootNavigationProp} from '../../../screens/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
-import {X_HEIGHT} from '../../../constants/device';
 import {RootState} from '../../../redux/index';
 import {selectAllFlashes} from '../../../redux/flashes';
-import {FlashesData} from './types';
+import {useMoreDeviceX} from '../../../hooks/device/index';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;
@@ -70,9 +70,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
   }, [dataArray.length, navigation]);
   // statusBarの設定のためにデバイスがX以上であるかどうかを判定
   // 判断方法の正解がわからなかったのでとりあえずデバイスの大きさで判断
-  const moreDeviceX = useMemo(() => {
-    return height >= X_HEIGHT ? true : false;
-  }, []);
+  const moreDeviceX = useMoreDeviceX();
 
   const [scrolling, setScrolling] = useState(false);
 

@@ -25,6 +25,8 @@ import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
 import {createAlreadyViewdFlashThunk} from '../../../actions/flashes';
 import {selectUserAlreadyViewed} from '../../../redux/getUsers';
+import {selectChatPartnerAlreadyViewed} from '../../../redux/chatPartners';
+import {useMyId} from '../../../hooks/selector/user';
 
 type Props = {
   flashesData: FlashesData;
@@ -46,9 +48,7 @@ export const ShowFlash = React.memo(
     setShowModal,
     scrollToNextOrBackScreen,
   }: Props) => {
-    const referenceId = useSelector(
-      (state: RootState) => state.userReducer.user!.id,
-    );
+    const referenceId = useMyId();
 
     const entityLength = useMemo(() => flashesData.entities.length, [
       flashesData.entities,
@@ -60,7 +60,17 @@ export const ShowFlash = React.memo(
 
     // flashesData.alreadyViewedLengthでデータは取れるが、storeの更新を即座に反映させるためにセレクタを使いstoreから取得
     const alreadyViewedLength = useSelector((state: RootState) => {
-      return selectUserAlreadyViewed(state, userData.userId).length;
+      if (userData.from && userData.userId) {
+        switch (userData.from) {
+          case 'searchUsers':
+            return selectUserAlreadyViewed(state, userData.userId).length;
+          case 'chatRoom':
+            return selectChatPartnerAlreadyViewed(state, userData.userId)
+              .length;
+        }
+      } else {
+        0;
+      }
     });
 
     // 実際に表示されているentity
@@ -446,7 +456,9 @@ export const ShowFlash = React.memo(
                 <ProgressBar
                   flashesData={flashesData}
                   entityLength={entityLength}
-                  alreadyViewedLength={alreadyViewedLength}
+                  alreadyViewedLength={
+                    alreadyViewedLength ? alreadyViewedLength : 0
+                  }
                   progressAnim={progressAnim}
                   progressBarWidth={progressBarWidth}
                   currentProgressBar={currentProgressBar}

@@ -17,6 +17,7 @@ import {logoutAction} from '../actions/sessions';
 import {SuccessfullLoginData} from '../actions/types';
 import {createRoomThunk} from '../actions/rooms';
 import {refreshUserThunk} from '../actions/users';
+import {createAlreadyViewdFlashThunk} from '../actions/flashes';
 
 const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
@@ -76,6 +77,31 @@ export const chatPartnersSlice = createSlice({
         });
       }
     },
+    [createAlreadyViewdFlashThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<{userId: number; flashId: number}>,
+    ) => {
+      const user = state.entities[action.payload.userId];
+      if (user) {
+        const viewdId = user.flashes.alreadyViewed.includes(
+          action.payload.flashId,
+        );
+        if (!viewdId) {
+          const f = user.flashes;
+          const viewed = f.alreadyViewed;
+          return chatPartnersAdapter.updateOne(state, {
+            id: action.payload.userId,
+            changes: {
+              ...user,
+              flashes: {
+                ...f,
+                alreadyViewed: [...viewed, action.payload.flashId],
+              },
+            },
+          });
+        }
+      }
+    },
   },
 });
 
@@ -85,7 +111,32 @@ export const selectChatPartnerEntities = (state: RootState) => {
   return chatPartnersSelector.selectEntities(state.chatPartnersReducer);
 };
 
-export const selectChatPartner = (state: RootState, partnerId: number) =>
-  chatPartnersSelector.selectById(state.chatPartnersReducer, partnerId);
+export const selectChatPartner = (state: RootState, partnerId: number) => {
+  const user = chatPartnersSelector.selectById(
+    state.chatPartnersReducer,
+    partnerId,
+  );
+  if (user) {
+    return user;
+  } else {
+    // エラーのスローではなくてAlertで対応できるようにする
+    throw new Error();
+  }
+};
+
+export const selectChatPartnerAlreadyViewed = (
+  state: RootState,
+  userId: number,
+) => {
+  const user = chatPartnersSelector.selectById(
+    state.chatPartnersReducer,
+    userId,
+  );
+  if (user) {
+    return user.flashes.alreadyViewed;
+  } else {
+    throw new Error('not found user');
+  }
+};
 
 export const chatPartnersReducer = chatPartnersSlice.reducer;

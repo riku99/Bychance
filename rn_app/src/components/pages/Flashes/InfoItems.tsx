@@ -2,14 +2,12 @@ import React, {useMemo} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
-import {useSelector} from 'react-redux';
 
 import {UserAvatar} from '../../utils/Avatar';
-import {RootState} from '../../../redux/index';
-import {selectAnotherUser} from '../../../redux/getUsers';
-import {selectChatPartner} from '../../../redux/chatPartners';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
+import {useTimeDiff} from '../../../hooks/time';
+import {useAnotherUser, useUser} from '../../../hooks/selector/user';
 
 type Props = {
   userData: FlashUserData;
@@ -22,31 +20,18 @@ export const InfoItems = ({
   timestamp,
   setIsNavigatedToProfile,
 }: Props) => {
-  const referenceId = useSelector(
-    (state: RootState) => state.userReducer.user!.id,
-  );
+  const me = useUser({from: userData.from});
 
-  const user = useSelector((state: RootState) => {
-    switch (userData.from) {
-      case 'chatRoom':
-        return selectChatPartner(state, userData.userId);
-      case 'searchUsers':
-        return selectAnotherUser(state, userData.userId);
-      default:
-        if (!userData.from && referenceId === userData.userId) {
-          return state.userReducer.user;
-        }
-    }
+  const anotherUser = useAnotherUser({
+    from: userData.from,
+    userId: userData.userId,
   });
+
+  const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
 
   const navigation = useNavigation<FlashStackNavigationProp<'Flashes'>>();
 
-  const timeDiff = useMemo(() => {
-    const now = new Date();
-    const createdAt = new Date(timestamp);
-    const diff = now.getTime() - createdAt.getTime();
-    return Math.floor(diff / (1000 * 60 * 60));
-  }, [timestamp]);
+  const timeDiff = useTimeDiff({timestamp});
 
   const onUserPress = () => {
     setIsNavigatedToProfile(true);
