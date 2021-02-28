@@ -7,7 +7,7 @@ import {
 import {RootState} from './index';
 import {User} from './user';
 import {AnotherUser} from './types';
-import {getOtherUsersThunk} from '../actions/otherUsers';
+import {getNearbyUsersThunk} from '../actions/nearbyUsers';
 import {refreshUserThunk} from '../actions/users';
 import {createAlreadyViewdFlashThunk} from '../actions/flashes';
 
@@ -18,11 +18,11 @@ type NearbyUsers = AnotherUser[];
 const nearbyUsersAdapter = createEntityAdapter<AnotherUser>();
 
 const nearbyUsersSlice = createSlice({
-  name: 'otherUsers',
+  name: 'nearbyUsers',
   initialState: nearbyUsersAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
-    [getOtherUsersThunk.fulfilled.type]: (
+    [getNearbyUsersThunk.fulfilled.type]: (
       state,
       action: PayloadAction<NearbyUsers>,
     ) => {

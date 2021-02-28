@@ -7,7 +7,7 @@ import {SearchUsers} from './SearchUsers';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {AnotherUser} from '../../../redux/types';
 import {selectNearbyUsersArray} from '../../../redux/nearbyUsers';
-import {getOtherUsersThunk} from '../../../actions/otherUsers';
+import {getNearbyUsersThunk} from '../../../actions/nearbyUsers';
 import {
   SearchUsersStackNavigationProp,
   RootNavigationProp,
@@ -39,7 +39,7 @@ export const SearchUsersPage = () => {
   useEffect(() => {
     if (isFocused) {
       dispatch(
-        getOtherUsersThunk({lat: position.lat, lng: position.lng, range}),
+        getNearbyUsersThunk({lat: position.lat, lng: position.lng, range}),
       );
     }
   }, [dispatch, isFocused, position.lat, position.lng, range]);
@@ -130,7 +130,7 @@ export const SearchUsersPage = () => {
     async (range: number) => {
       setRefreshing(true);
       await dispatch(
-        getOtherUsersThunk({lat: position.lat, lng: position.lng, range}),
+        getNearbyUsersThunk({lat: position.lat, lng: position.lng, range}),
       );
       setRefreshing(false);
     },

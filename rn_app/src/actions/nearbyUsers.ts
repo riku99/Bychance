@@ -10,13 +10,13 @@ import {headers} from '../helpers/headers';
 import {origin} from '../constants/origin';
 import {AnotherUser} from '../redux/types';
 
-export const getOtherUsersThunk = createAsyncThunk<
+export const getNearbyUsersThunk = createAsyncThunk<
   AnotherUser[],
   {lat: number | null; lng: number | null; range: number},
   {
     rejectValue: rejectPayload;
   }
->('others/getOtherUsersThunk', async ({lat, lng, range}, thunkAPI) => {
+>('others/getNearbyUsersThunk', async ({lat, lng, range}, thunkAPI) => {
   const keychain = await checkKeychain();
 
   if (keychain) {
