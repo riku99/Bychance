@@ -12,12 +12,14 @@ import {
   subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
+  refreshUserThunk,
 } from '../actions/users';
 import {logoutAction} from '../actions/sessions';
 import {SuccessfullLoginData} from '../actions/types';
 import {createRoomThunk} from '../actions/rooms';
-import {refreshUserThunk} from '../actions/users';
 import {createAlreadyViewdFlashThunk} from '../actions/flashes';
+import {getNearbyUsersThunk} from '../actions/nearbyUsers';
+import {ReturnGetNearbyUsersThunk} from '../actions/nearbyUsers/types';
 
 const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
@@ -102,6 +104,22 @@ export const chatPartnersSlice = createSlice({
         }
       }
     },
+    [getNearbyUsersThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<ReturnGetNearbyUsersThunk>,
+    ) => {
+      const result = action.payload;
+      const forUpdateArray: {id: number; changes: AnotherUser}[] = [];
+      const ids = selectIds(state);
+      ids.forEach((n) => {
+        const target = result.find((data) => data.id === n);
+        if (target) {
+          const updateObj = {id: target.id, changes: target};
+          forUpdateArray.push(updateObj);
+        }
+      });
+      chatPartnersAdapter.updateMany(state, forUpdateArray);
+    },
   },
 });
 
@@ -138,5 +156,8 @@ export const selectChatPartnerAlreadyViewed = (
     throw new Error('not found user');
   }
 };
+
+const selectIds = (state: RootState['chatPartnersReducer']) =>
+  chatPartnersSelector.selectIds(state);
 
 export const chatPartnersReducer = chatPartnersSlice.reducer;

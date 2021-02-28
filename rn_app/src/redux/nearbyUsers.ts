@@ -8,10 +8,11 @@ import {RootState} from './index';
 import {User} from './user';
 import {AnotherUser} from './types';
 import {getNearbyUsersThunk} from '../actions/nearbyUsers';
+import {ReturnGetNearbyUsersThunk} from '../actions/nearbyUsers/types';
 import {refreshUserThunk} from '../actions/users';
 import {createAlreadyViewdFlashThunk} from '../actions/flashes';
 
-type NearbyUsers = AnotherUser[];
+export type NearbyUsers = AnotherUser[];
 
 // entityのユニークなプロパテがidの場合は指定する必要ない
 // ソート方法もAPIから送られてきた通りなので指定しない
@@ -24,7 +25,7 @@ const nearbyUsersSlice = createSlice({
   extraReducers: {
     [getNearbyUsersThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<NearbyUsers>,
+      action: PayloadAction<ReturnGetNearbyUsersThunk>,
     ) => {
       return nearbyUsersAdapter.setAll(state, action.payload);
     },

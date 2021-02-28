@@ -1,14 +1,15 @@
 import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-import {rejectPayload, basicAxiosError} from './types';
-import {logoutAction} from './sessions';
-import {checkKeychain} from '../helpers/keychain';
-import {requestLogin} from '../helpers/login';
-import {alertSomeError} from '../helpers/error';
-import {headers} from '../helpers/headers';
-import {origin} from '../constants/origin';
-import {AnotherUser} from '../redux/types';
+import {ReturnGetNearbyUsersThunk} from './types';
+import {rejectPayload, basicAxiosError} from '../types';
+import {logoutAction} from '../sessions';
+import {checkKeychain} from '../../helpers/keychain';
+import {requestLogin} from '../../helpers/login';
+import {alertSomeError} from '../../helpers/error';
+import {headers} from '../../helpers/headers';
+import {origin} from '../../constants/origin';
+import {AnotherUser} from '../../redux/types';
 
 export const getNearbyUsersThunk = createAsyncThunk<
   AnotherUser[],
@@ -21,10 +22,13 @@ export const getNearbyUsersThunk = createAsyncThunk<
 
   if (keychain) {
     try {
-      const response = await axios.get<AnotherUser[]>(`${origin}/users`, {
-        params: {id: keychain.id, lat, lng, range},
-        ...headers(keychain.token),
-      });
+      const response = await axios.get<ReturnGetNearbyUsersThunk>(
+        `${origin}/users`,
+        {
+          params: {id: keychain.id, lat, lng, range},
+          ...headers(keychain.token),
+        },
+      );
 
       return response.data;
     } catch (e) {
