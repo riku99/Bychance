@@ -1,7 +1,7 @@
 import {shallowEqual, useSelector} from 'react-redux';
 
 import {RootState} from '../../../redux/index';
-import {selectAnotherUser} from '../../../redux/getUsers';
+import {selectNearbyUser} from '../../../redux/nearbyUsers';
 import {selectChatPartner} from '../../../redux/chatPartners';
 import {UserPageFrom} from '../../../screens/UserPage';
 
@@ -18,7 +18,7 @@ export const useAnotherUser = ({from, userId}: AnotherUserProps) =>
     if (from && userId) {
       switch (from) {
         case 'searchUsers':
-          return selectAnotherUser(state, userId);
+          return selectNearbyUser(state, userId);
         case 'chatRoom':
           return selectChatPartner(state, userId);
       }

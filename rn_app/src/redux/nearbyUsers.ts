@@ -11,22 +11,22 @@ import {getOtherUsersThunk} from '../actions/otherUsers';
 import {refreshUserThunk} from '../actions/users';
 import {createAlreadyViewdFlashThunk} from '../actions/flashes';
 
-export type GetUsers = AnotherUser[];
+type NearbyUsers = AnotherUser[];
 
 // entityのユニークなプロパテがidの場合は指定する必要ない
 // ソート方法もAPIから送られてきた通りなので指定しない
-const getUsersAdapter = createEntityAdapter<AnotherUser>();
+const nearbyUsersAdapter = createEntityAdapter<AnotherUser>();
 
-const getUsersSlice = createSlice({
+const nearbyUsersSlice = createSlice({
   name: 'otherUsers',
-  initialState: getUsersAdapter.getInitialState(),
+  initialState: nearbyUsersAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
     [getOtherUsersThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<GetUsers>,
+      action: PayloadAction<NearbyUsers>,
     ) => {
-      return getUsersAdapter.setAll(state, action.payload);
+      return nearbyUsersAdapter.setAll(state, action.payload);
     },
     [refreshUserThunk.fulfilled.type]: (
       state,
@@ -35,7 +35,7 @@ const getUsersSlice = createSlice({
       >,
     ) => {
       if (!action.payload.isMyData) {
-        return getUsersAdapter.updateOne(state, {
+        return nearbyUsersAdapter.updateOne(state, {
           id: action.payload.data.id,
           changes: action.payload.data,
         });
@@ -53,7 +53,7 @@ const getUsersSlice = createSlice({
         if (!viewdId) {
           const f = user.flashes;
           const viewed = f.alreadyViewed;
-          return getUsersAdapter.updateOne(state, {
+          return nearbyUsersAdapter.updateOne(state, {
             id: action.payload.userId,
             changes: {
               ...user,
@@ -69,18 +69,18 @@ const getUsersSlice = createSlice({
   },
 });
 
-export const getUsersReducer = getUsersSlice.reducer;
+export const nearbyUsersReducer = nearbyUsersSlice.reducer;
 
-const getUsersSelectors = getUsersAdapter.getSelectors();
+const nearbyUsersSelector = nearbyUsersAdapter.getSelectors();
 
-export const selectGetUsersArray = (state: RootState) =>
-  getUsersSelectors.selectAll(state.getUsersReducer);
+export const selectNearbyUsersArray = (state: RootState) =>
+  nearbyUsersSelector.selectAll(state.nearbyUsersReducer);
 
-export const selectAnotherUser = (
+export const selectNearbyUser = (
   state: RootState,
   userId: number,
 ): AnotherUser => {
-  const user = getUsersSelectors.selectById(state.getUsersReducer, userId);
+  const user = nearbyUsersSelector.selectById(state.nearbyUsersReducer, userId);
   if (user) {
     return user;
   } else {
@@ -89,8 +89,11 @@ export const selectAnotherUser = (
   }
 };
 
-export const selectUserAlreadyViewed = (state: RootState, userId: number) => {
-  const user = getUsersSelectors.selectById(state.getUsersReducer, userId);
+export const selectNearbyUserAlreadyViewed = (
+  state: RootState,
+  userId: number,
+) => {
+  const user = nearbyUsersSelector.selectById(state.nearbyUsersReducer, userId);
   if (user) {
     return user.flashes.alreadyViewed;
   } else {

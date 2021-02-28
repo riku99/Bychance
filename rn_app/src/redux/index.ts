@@ -8,7 +8,7 @@ import {roomsReducer} from './rooms';
 import {chatPartnersReducer} from './chatPartners';
 import {messagesReducer} from './messages';
 import {flashesReducer} from './flashes';
-import {getUsersReducer} from './getUsers';
+import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';
 
 const rootReducer = combineReducers({
@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   chatPartnersReducer,
   messagesReducer,
   flashesReducer,
-  getUsersReducer,
+  nearbyUsersReducer,
   otherSettingsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

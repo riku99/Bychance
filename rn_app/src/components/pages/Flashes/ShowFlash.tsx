@@ -24,7 +24,7 @@ import {RootState, AppDispatch} from '../../../redux/index';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
 import {createAlreadyViewdFlashThunk} from '../../../actions/flashes';
-import {selectUserAlreadyViewed} from '../../../redux/getUsers';
+import {selectNearbyUserAlreadyViewed} from '../../../redux/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../redux/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
 
@@ -63,7 +63,7 @@ export const ShowFlash = React.memo(
       if (userData.from && userData.userId) {
         switch (userData.from) {
           case 'searchUsers':
-            return selectUserAlreadyViewed(state, userData.userId).length;
+            return selectNearbyUserAlreadyViewed(state, userData.userId).length;
           case 'chatRoom':
             return selectChatPartnerAlreadyViewed(state, userData.userId)
               .length;

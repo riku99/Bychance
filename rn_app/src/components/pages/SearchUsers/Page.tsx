@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {SearchUsers} from './SearchUsers';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {AnotherUser} from '../../../redux/types';
-import {selectGetUsersArray} from '../../../redux/getUsers';
+import {selectNearbyUsersArray} from '../../../redux/nearbyUsers';
 import {getOtherUsersThunk} from '../../../actions/otherUsers';
 import {
   SearchUsersStackNavigationProp,
@@ -29,7 +29,7 @@ export const SearchUsersPage = () => {
   const [range, setRange] = useState(_range.current);
 
   const getUsers = useSelector((state: RootState) => {
-    return selectGetUsersArray(state);
+    return selectNearbyUsersArray(state);
   }, shallowEqual);
 
   const [refreshing, setRefreshing] = useState(false);
