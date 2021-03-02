@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import {View, StyleSheet, Animated, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {shallowEqual, useSelector} from 'react-redux';
+import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 
 import {
   Profile,
@@ -34,6 +34,7 @@ import {RootState} from '../../../redux/index';
 import {selectAllPosts} from '../../../redux/post';
 import {selectAllFlashes} from '../../../redux/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
+import {refreshUserThunk} from '../../../actions/users';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -213,6 +214,14 @@ export const UserPage = ({route, navigation}: Props) => {
       };
     }
   }, [anotherUser, isMe, me, myFlashes, routeParams]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isMe && anotherUser?.id) {
+      dispatch(refreshUserThunk({userId: anotherUser.id}));
+    }
+  }, [anotherUser?.id, dispatch, isMe]);
 
   return (
     <View
