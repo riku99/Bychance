@@ -4,19 +4,20 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {RootState} from './index';
-import {User} from './user';
-import {AnotherUser} from './types';
-import {getNearbyUsersThunk} from '../actions/nearbyUsers';
-import {ReturnGetNearbyUsersThunk} from '../actions/nearbyUsers/types';
-import {refreshUserThunk} from '../actions/users';
-import {createAlreadyViewdFlashThunk} from '../actions/flashes';
+import {RootState} from '../index';
+import {User} from '../user';
+import {AnotherUser} from '../types';
+import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
+import {getNearbyUsersThunk} from '../../actions/nearbyUsers';
+import {ReturnGetNearbyUsersThunk} from '../../actions/nearbyUsers/types';
+import {refreshUserThunk} from '../../actions/users';
+import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
 
 export type NearbyUsers = AnotherUser[];
 
 // entityのユニークなプロパテがidの場合は指定する必要ない
 // ソート方法もAPIから送られてきた通りなので指定しない
-const nearbyUsersAdapter = createEntityAdapter<AnotherUser>();
+export const nearbyUsersAdapter = createEntityAdapter<AnotherUser>();
 
 const nearbyUsersSlice = createSlice({
   name: 'nearbyUsers',
@@ -42,34 +43,7 @@ const nearbyUsersSlice = createSlice({
         });
       }
     },
-    [createAlreadyViewdFlashThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<{userId: number; flashId: number}>,
-    ) => {
-      const user = state.entities[action.payload.userId];
-      if (user) {
-        const viewdId = user.flashes.alreadyViewed.includes(
-          action.payload.flashId,
-        );
-        if (!viewdId) {
-          const f = user.flashes;
-          const alreadyAllViewed =
-            f.alreadyViewed.length + 1 === f.entities.length;
-          const viewed = f.alreadyViewed;
-          return nearbyUsersAdapter.updateOne(state, {
-            id: action.payload.userId,
-            changes: {
-              ...user,
-              flashes: {
-                ...f,
-                alreadyViewed: [...viewed, action.payload.flashId],
-                isAllAlreadyViewed: alreadyAllViewed,
-              },
-            },
-          });
-        }
-      }
-    },
+    [createAlreadyViewdFlashThunk.fulfilled.type]: updateAlreadyViewed,
   },
 });
 

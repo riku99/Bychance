@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import {origin} from '../constants/origin';
 import {User} from '../redux/user';
-import {Post} from '../redux/post';
+import {Post} from '../redux/posts';
 import {Room} from '../redux/rooms';
 import {Message} from '../redux/messages';
 import {Flash} from '../redux/flashes';

@@ -31,7 +31,7 @@ import {
   UserPageNavigationProp,
 } from '../../../screens/types';
 import {RootState} from '../../../redux/index';
-import {selectAllPosts} from '../../../redux/post';
+import {selectAllPosts} from '../../../redux/posts';
 import {selectAllFlashes} from '../../../redux/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../actions/users';

@@ -4,8 +4,8 @@ import {
   firstLoginThunk,
   subsequentLoginThunk,
   sampleLogin,
-} from '../actions/users';
-import {logoutAction} from '../actions/sessions';
+} from '../../actions/users';
+import {logoutAction} from '../../actions/sessions';
 
 type initialState = {login: boolean};
 

@@ -4,18 +4,18 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {RootState} from './index';
-import {AnotherUser} from './types';
-import {createRoomThunk} from '../actions/rooms';
+import {RootState} from '../index';
+import {AnotherUser} from '../types';
+import {createRoomThunk} from '../../actions/rooms';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
-} from '../actions/users';
-import {logoutAction} from '../actions/sessions';
-import {createMessageThunk} from '../actions/messages';
-import {Message, receiveMessage} from '../redux/messages';
-import {SuccessfullLoginData} from '../apis/usersApi';
+} from '../../actions/users';
+import {logoutAction} from '../../actions/sessions';
+import {createMessageThunk} from '../../actions/messages';
+import {Message, receiveMessage} from '../messages';
+import {SuccessfullLoginData} from '../../apis/usersApi';
 
 export type Room = {
   id: number;

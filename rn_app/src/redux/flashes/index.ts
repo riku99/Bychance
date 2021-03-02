@@ -4,15 +4,15 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {RootState} from './index';
-import {createFlashThunk, deleteFlashThunk} from '../actions/flashes';
+import {RootState} from '../index';
+import {createFlashThunk, deleteFlashThunk} from '../../actions/flashes';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
   //sampleLogin,
-} from '../actions/users';
-import {logoutAction} from '../actions/sessions';
-import {SuccessfullLoginData} from '../apis/usersApi';
+} from '../../actions/users';
+import {logoutAction} from '../../actions/sessions';
+import {SuccessfullLoginData} from '../../apis/usersApi';
 
 export type Flash = {
   id: number;

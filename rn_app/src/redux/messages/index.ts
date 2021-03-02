@@ -4,16 +4,16 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {createMessageThunk} from '../actions/messages';
+import {createMessageThunk} from '../../actions/messages';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
-} from '../actions/users';
-import {logoutAction} from '../actions/sessions';
-import {SuccessfullLoginData} from '../apis/usersApi';
-import {RootState} from './index';
-import {ReceivedMessageData} from './types';
+} from '../../actions/users';
+import {logoutAction} from '../../actions/sessions';
+import {SuccessfullLoginData} from '../../apis/usersApi';
+import {RootState} from '../index';
+import {ReceivedMessageData} from '../types';
 
 export type Message = {
   id: number;

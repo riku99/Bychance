@@ -4,11 +4,11 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {createPostAction, deletePostThunk} from '../actions/posts';
-import {firstLoginThunk, sampleLogin} from '../actions/users';
-import {logoutAction} from '../actions/sessions';
-import {SuccessfullLoginData} from '../apis/usersApi';
-import {RootState} from '.';
+import {createPostAction, deletePostThunk} from '../../actions/posts';
+import {firstLoginThunk, sampleLogin} from '../../actions/users';
+import {logoutAction} from '../../actions/sessions';
+import {SuccessfullLoginData} from '../../apis/usersApi';
+import {RootState} from '..';
 
 export type Post = {
   id: number;

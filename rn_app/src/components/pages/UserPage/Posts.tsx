@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import {Post} from '../../../redux/post';
+import {Post} from '../../../redux/posts';
 import {basicStyles} from '../../../constants/styles';
 import {
   UserPageNavigationProp,

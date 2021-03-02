@@ -4,24 +4,25 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {AnotherUser, ReceivedMessageData} from './types';
-import {RootState} from './index';
-import {receiveMessage} from './messages';
-import {User} from './user';
+import {AnotherUser, ReceivedMessageData} from '../types';
+import {RootState} from '../index';
+import {receiveMessage} from '../messages';
+import {User} from '../user';
+import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
   refreshUserThunk,
-} from '../actions/users';
-import {logoutAction} from '../actions/sessions';
-import {SuccessfullLoginData} from '../actions/types';
-import {createRoomThunk} from '../actions/rooms';
-import {createAlreadyViewdFlashThunk} from '../actions/flashes';
-import {getNearbyUsersThunk} from '../actions/nearbyUsers';
-import {ReturnGetNearbyUsersThunk} from '../actions/nearbyUsers/types';
+} from '../../actions/users';
+import {logoutAction} from '../../actions/sessions';
+import {SuccessfullLoginData} from '../../actions/types';
+import {createRoomThunk} from '../../actions/rooms';
+import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
+import {getNearbyUsersThunk} from '../../actions/nearbyUsers';
+import {ReturnGetNearbyUsersThunk} from '../../actions/nearbyUsers/types';
 
-const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
+export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
 export type chatPartnerEntities = ReturnType<
   typeof chatPartnersAdapter['getInitialState']
@@ -79,34 +80,7 @@ export const chatPartnersSlice = createSlice({
         });
       }
     },
-    [createAlreadyViewdFlashThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<{userId: number; flashId: number}>,
-    ) => {
-      const user = state.entities[action.payload.userId];
-      if (user) {
-        const viewdId = user.flashes.alreadyViewed.includes(
-          action.payload.flashId,
-        );
-        if (!viewdId) {
-          const f = user.flashes;
-          const alreadyAllViewed =
-            f.alreadyViewed.length + 1 === f.entities.length;
-          const viewed = f.alreadyViewed;
-          return chatPartnersAdapter.updateOne(state, {
-            id: action.payload.userId,
-            changes: {
-              ...user,
-              flashes: {
-                ...f,
-                alreadyViewed: [...viewed, action.payload.flashId],
-                isAllAlreadyViewed: alreadyAllViewed,
-              },
-            },
-          });
-        }
-      }
-    },
+    [createAlreadyViewdFlashThunk.fulfilled.type]: updateAlreadyViewed,
     [getNearbyUsersThunk.fulfilled.type]: (
       state,
       action: PayloadAction<ReturnGetNearbyUsersThunk>,

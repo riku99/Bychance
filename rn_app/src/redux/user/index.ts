@@ -8,9 +8,9 @@ import {
   updatePositionThunk,
   refreshUserThunk,
   sampleLogin,
-} from '../actions/users';
-import {logoutAction} from '../actions/sessions';
-import {SuccessfullLoginData} from '../apis/usersApi';
+} from '../../actions/users';
+import {logoutAction} from '../../actions/sessions';
+import {SuccessfullLoginData} from '../../apis/usersApi';
 
 type initialStateType = {
   user?: {

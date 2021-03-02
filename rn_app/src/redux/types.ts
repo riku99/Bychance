@@ -1,5 +1,5 @@
 import {User} from './user';
-import {Post} from './post';
+import {Post} from './posts';
 import {Room} from './rooms';
 import {Message} from './messages';
 import {FlashesData} from '../components/pages/Flashes/types';

@@ -3,7 +3,7 @@ import {Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as Post} from '../components/pages/Post/Page';
-import {Post as PostType} from '../redux/post';
+import {Post as PostType} from '../redux/posts';
 import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {UserPage} from '../components/pages/UserPage/Page';

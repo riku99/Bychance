@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
-import {Post} from '../redux/post';
+import {Post} from '../redux/posts';
 import {Credentials} from '../helpers/keychain';
 
 export const sendPost: ({

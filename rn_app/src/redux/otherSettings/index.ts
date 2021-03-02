@@ -1,9 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {logoutAction} from '../actions/sessions';
-import {Message, receiveMessage} from './messages';
-import {ReceivedMessageData} from './types';
-import {Room} from './rooms';
+import {logoutAction} from '../../actions/sessions';
+import {Message, receiveMessage} from '../messages';
+import {ReceivedMessageData} from '../types';
 
 type InitialState = {
   displayedMenu?: boolean;
