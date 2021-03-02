@@ -11,15 +11,18 @@ type ChatPartnersAdapter = ReturnType<
 export const updateAlreadyViewed = (
   state: NearbyUsersState | ChatPartnersAdapter,
   action: PayloadAction<{userId: number; flashId: number}>,
+  {slice}: {slice: 'nearbyUsers' | 'chatPartners'},
 ) => {
   const user = state.entities[action.payload.userId];
   if (user) {
-    const viewdId = user.flashes.alreadyViewed.includes(action.payload.flashId);
-    if (!viewdId) {
+    const viewedId = user.flashes.alreadyViewed.includes(
+      action.payload.flashId,
+    );
+    if (!viewedId) {
       const f = user.flashes;
       const alreadyAllViewed = f.alreadyViewed.length + 1 === f.entities.length;
       const viewed = f.alreadyViewed;
-      return nearbyUsersAdapter.updateOne(state, {
+      const updateObj = {
         id: action.payload.userId,
         changes: {
           ...user,
@@ -29,7 +32,13 @@ export const updateAlreadyViewed = (
             isAllAlreadyViewed: alreadyAllViewed,
           },
         },
-      });
+      };
+      switch (slice) {
+        case 'chatPartners':
+          return chatPartnersAdapter.updateOne(state, updateObj);
+        case 'nearbyUsers':
+          return nearbyUsersAdapter.updateOne(state, updateObj);
+      }
     }
   }
 };

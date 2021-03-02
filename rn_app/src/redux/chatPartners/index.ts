@@ -80,7 +80,12 @@ export const chatPartnersSlice = createSlice({
         });
       }
     },
-    [createAlreadyViewdFlashThunk.fulfilled.type]: updateAlreadyViewed,
+    [createAlreadyViewdFlashThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<{userId: number; flashId: number}>,
+    ) => {
+      updateAlreadyViewed(state, action, {slice: chatPartnersSlice.name});
+    },
     [getNearbyUsersThunk.fulfilled.type]: (
       state,
       action: PayloadAction<ReturnGetNearbyUsersThunk>,

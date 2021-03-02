@@ -43,7 +43,12 @@ const nearbyUsersSlice = createSlice({
         });
       }
     },
-    [createAlreadyViewdFlashThunk.fulfilled.type]: updateAlreadyViewed,
+    [createAlreadyViewdFlashThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<{userId: number; flashId: number}>,
+    ) => {
+      updateAlreadyViewed(state, action, {slice: nearbyUsersSlice.name});
+    },
   },
 });
 
