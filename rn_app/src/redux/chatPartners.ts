@@ -90,6 +90,8 @@ export const chatPartnersSlice = createSlice({
         );
         if (!viewdId) {
           const f = user.flashes;
+          const alreadyAllViewed =
+            f.alreadyViewed.length + 1 === f.entities.length;
           const viewed = f.alreadyViewed;
           return chatPartnersAdapter.updateOne(state, {
             id: action.payload.userId,
@@ -98,6 +100,7 @@ export const chatPartnersSlice = createSlice({
               flashes: {
                 ...f,
                 alreadyViewed: [...viewed, action.payload.flashId],
+                isAllAlreadyViewed: alreadyAllViewed,
               },
             },
           });

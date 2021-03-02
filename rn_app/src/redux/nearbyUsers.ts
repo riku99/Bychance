@@ -53,6 +53,8 @@ const nearbyUsersSlice = createSlice({
         );
         if (!viewdId) {
           const f = user.flashes;
+          const alreadyAllViewed =
+            f.alreadyViewed.length + 1 === f.entities.length;
           const viewed = f.alreadyViewed;
           return nearbyUsersAdapter.updateOne(state, {
             id: action.payload.userId,
@@ -61,6 +63,7 @@ const nearbyUsersSlice = createSlice({
               flashes: {
                 ...f,
                 alreadyViewed: [...viewed, action.payload.flashId],
+                isAllAlreadyViewed: alreadyAllViewed,
               },
             },
           });
