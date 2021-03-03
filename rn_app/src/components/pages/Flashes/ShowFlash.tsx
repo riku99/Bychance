@@ -188,7 +188,7 @@ export const ShowFlash = React.memo(
       }
     }, [currentFlash, isDisplayed]);
 
-    // このコンポーネントがスクリーンにおさまった、おさまっている時の責務を定義
+    // このコンポーネントがスクリーンから外れた場合の責務
     useEffect(() => {
       if (!isDisplayed) {
         progressAnim[currentProgressBar.current].stopAnimation();

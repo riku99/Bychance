@@ -130,8 +130,12 @@ export const FlashesPage = ({route, navigation}: Props) => {
     }
   };
 
+  // Top以外からスタートの時(startingIndexが0以外)その画面から始まるが、内部的にはスクロールされることになる
+  // そのスクロールが完了したかのデータを保持
+  const initialScrollToStartingIndex = useRef(startingIndex ? true : false);
+
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (!scrolling) {
+    if (!scrolling && !initialScrollToStartingIndex.current) {
       setScrolling(true);
     }
     // offset.yがheightで割り切れる、つまり画面内の要素が完全に切り替わった時
@@ -145,6 +149,10 @@ export const FlashesPage = ({route, navigation}: Props) => {
         [displayedElementIndex]: true,
       });
       currentDisplayedIndex.current = displayedElementIndex;
+    }
+
+    if (initialScrollToStartingIndex.current) {
+      initialScrollToStartingIndex.current = false;
     }
   };
 

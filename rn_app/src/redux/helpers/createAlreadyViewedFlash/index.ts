@@ -4,12 +4,10 @@ import {nearbyUsersAdapter} from '../../nearbyUsers';
 import {chatPartnersAdapter} from '../../chatPartners';
 
 type NearbyUsersState = ReturnType<typeof nearbyUsersAdapter.getInitialState>;
-type ChatPartnersAdapter = ReturnType<
-  typeof chatPartnersAdapter.getInitialState
->;
+type ChatPartnersState = ReturnType<typeof chatPartnersAdapter.getInitialState>;
 
 export const updateAlreadyViewed = (
-  state: NearbyUsersState | ChatPartnersAdapter,
+  state: NearbyUsersState | ChatPartnersState,
   action: PayloadAction<{userId: number; flashId: number}>,
   {slice}: {slice: 'nearbyUsers' | 'chatPartners'},
 ) => {
