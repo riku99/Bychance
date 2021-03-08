@@ -5,12 +5,10 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from '../index';
-import {User} from '../user';
 import {AnotherUser} from '../types';
 import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
 import {getNearbyUsersThunk} from '../../actions/nearbyUsers';
 import {ReturnGetNearbyUsersThunk} from '../../actions/nearbyUsers/types';
-import {refreshUserThunk} from '../../actions/users';
 import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
 
 export type NearbyUsers = AnotherUser[];
@@ -18,6 +16,10 @@ export type NearbyUsers = AnotherUser[];
 // entityのユニークなプロパテがidの場合は指定する必要ない
 // ソート方法もAPIから送られてきた通りなので指定しない
 export const nearbyUsersAdapter = createEntityAdapter<AnotherUser>();
+
+export type NearbyUsersState = ReturnType<
+  typeof nearbyUsersAdapter.getInitialState
+>;
 
 const nearbyUsersSlice = createSlice({
   name: 'nearbyUsers',
@@ -28,20 +30,7 @@ const nearbyUsersSlice = createSlice({
       state,
       action: PayloadAction<ReturnGetNearbyUsersThunk>,
     ) => {
-      return nearbyUsersAdapter.setAll(state, action.payload);
-    },
-    [refreshUserThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<
-        {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
-      >,
-    ) => {
-      if (!action.payload.isMyData) {
-        return nearbyUsersAdapter.updateOne(state, {
-          id: action.payload.data.id,
-          changes: action.payload.data,
-        });
-      }
+      nearbyUsersAdapter.setAll(state, action.payload);
     },
     [createAlreadyViewdFlashThunk.fulfilled.type]: (
       state,

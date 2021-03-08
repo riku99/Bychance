@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+import {refreshUser} from '../helpers/refreshUser';
+import {AnotherUser} from '../types';
 import {
   firstLoginThunk,
   subsequentLoginThunk,
@@ -12,7 +14,7 @@ import {
 import {logoutAction} from '../../actions/sessions';
 import {SuccessfullLoginData} from '../../apis/usersApi';
 
-type initialStateType = {
+export type UserState = {
   user?: {
     id: number;
     name: string;
@@ -30,9 +32,9 @@ type initialStateType = {
   };
 };
 
-export type User = NonNullable<initialStateType['user']>;
+export type User = NonNullable<UserState['user']>;
 
-const initialState: initialStateType = {};
+const initialState: UserState = {};
 
 const userSlice = createSlice({
   name: 'user',
@@ -40,7 +42,7 @@ const userSlice = createSlice({
   reducers: {
     saveEditData: (
       state,
-      action: PayloadAction<initialStateType['temporarilySavedData']>,
+      action: PayloadAction<UserState['temporarilySavedData']>,
     ) => {
       if (action.payload?.name) {
         return {
@@ -133,16 +135,11 @@ const userSlice = createSlice({
     }),
     [refreshUserThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{isMyData: boolean; data: User}>,
+      action: PayloadAction<
+        {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
+      >,
     ) => {
-      if (action.payload.isMyData) {
-        return {
-          ...state,
-          user: action.payload.data,
-        };
-      } else {
-        return state;
-      }
+      return refreshUser({slice: userSlice.name, state, action});
     },
   },
 });

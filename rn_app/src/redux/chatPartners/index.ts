@@ -9,6 +9,7 @@ import {RootState} from '../index';
 import {receiveMessage} from '../messages';
 import {User} from '../user';
 import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
+import {refreshUser} from '../helpers/refreshUser';
 import {
   subsequentLoginThunk,
   firstLoginThunk,
@@ -24,9 +25,9 @@ import {ReturnGetNearbyUsersThunk} from '../../actions/nearbyUsers/types';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
-export type chatPartnerEntities = ReturnType<
-  typeof chatPartnersAdapter['getInitialState']
->['entities'];
+export type ChatPartnersState = ReturnType<
+  typeof chatPartnersAdapter.getInitialState
+>;
 
 export const chatPartnersSlice = createSlice({
   name: 'chatPartners',
@@ -73,12 +74,11 @@ export const chatPartnersSlice = createSlice({
         {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
       >,
     ) => {
-      if (!action.payload.isMyData) {
-        return chatPartnersAdapter.updateOne(state, {
-          id: action.payload.data.id,
-          changes: action.payload.data,
-        });
-      }
+      refreshUser({
+        slice: chatPartnersSlice.name,
+        state,
+        action,
+      });
     },
     [createAlreadyViewdFlashThunk.fulfilled.type]: (
       state,
