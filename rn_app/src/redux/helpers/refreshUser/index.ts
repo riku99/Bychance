@@ -1,8 +1,8 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 
 import {chatPartnersAdapter, ChatPartnersState} from '../../chatPartners';
-import {User, UserState} from '../../user';
-import {AnotherUser} from '../../types';
+import {UserState} from '../../user';
+import {RefreshUserThunkPaylaod} from '../../../actions/user/refreshUser';
 
 type State =
   | {
@@ -15,9 +15,7 @@ type State =
     };
 
 type Action = {
-  action: PayloadAction<
-    {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
-  >;
+  action: PayloadAction<RefreshUserThunkPaylaod>;
 };
 
 export const refreshUser = (arg: State & Action) => {

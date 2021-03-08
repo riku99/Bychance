@@ -14,8 +14,8 @@ import {
   subsequentLoginThunk,
   firstLoginThunk,
   sampleLogin,
-  refreshUserThunk,
 } from '../../actions/users';
+import {refreshUserThunk} from '../../actions/user/refreshUser';
 import {logoutAction} from '../../actions/sessions';
 import {SuccessfullLoginData} from '../../actions/types';
 import {createRoomThunk} from '../../actions/rooms';

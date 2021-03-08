@@ -1,16 +1,18 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {refreshUser} from '../helpers/refreshUser';
-import {AnotherUser} from '../types';
 import {
   firstLoginThunk,
   subsequentLoginThunk,
   editProfileThunk,
   editUserDisplayThunk,
   updatePositionThunk,
-  refreshUserThunk,
   sampleLogin,
 } from '../../actions/users';
+import {
+  refreshUserThunk,
+  RefreshUserThunkPaylaod,
+} from '../../actions/user/refreshUser';
 import {logoutAction} from '../../actions/sessions';
 import {SuccessfullLoginData} from '../../apis/usersApi';
 
@@ -135,11 +137,13 @@ const userSlice = createSlice({
     }),
     [refreshUserThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<
-        {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
-      >,
-    ) => {
-      return refreshUser({slice: userSlice.name, state, action});
+      action: PayloadAction<RefreshUserThunkPaylaod>,
+    ): UserState => {
+      return refreshUser({
+        slice: userSlice.name,
+        state,
+        action,
+      }) as UserState;
     },
   },
 });

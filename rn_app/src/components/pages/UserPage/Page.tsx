@@ -34,7 +34,7 @@ import {RootState} from '../../../redux/index';
 import {selectAllPosts} from '../../../redux/posts';
 import {selectAllFlashes} from '../../../redux/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
-import {refreshUserThunk} from '../../../actions/users';
+import {refreshUserThunk} from '../../../actions/user/refreshUser';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
