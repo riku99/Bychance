@@ -4,11 +4,7 @@ import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
 
 import {logoutAction} from './sessions';
-import {
-  sendRequestToChangeDisplay,
-  sendPosition,
-  sampleLoginApi,
-} from '../apis/usersApi';
+import {sendPosition, sampleLoginApi} from '../apis/usersApi';
 import {User} from '../redux/user';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
@@ -150,44 +146,6 @@ export const updatePositionThunk = createAsyncThunk(
 
       if (response.type === 'success') {
         return {lat, lng};
-      }
-
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(logoutAction);
-        };
-        requestLogin(callback);
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
-
-      if (response.type === 'someError') {
-        console.log(response.message);
-        alertSomeError();
-        return thunkAPI.rejectWithValue({someError: true});
-      }
-    } else {
-      const callback = () => {
-        thunkAPI.dispatch(logoutAction);
-      };
-      requestLogin(callback);
-      return thunkAPI.rejectWithValue({loginError: true});
-    }
-  },
-);
-
-export const editUserDisplayThunk = createAsyncThunk(
-  'users/editUserDisplay',
-  async (display: boolean, thunkAPI) => {
-    const keychain = await checkKeychain();
-    if (keychain) {
-      const response = await sendRequestToChangeDisplay({
-        display,
-        id: keychain.id,
-        token: keychain.token,
-      });
-
-      if (response.type === 'success') {
-        return display;
       }
 
       if (response.type === 'loginError') {

@@ -5,7 +5,6 @@ import {
   firstLoginThunk,
   subsequentLoginThunk,
   editProfileThunk,
-  editUserDisplayThunk,
   updatePositionThunk,
   sampleLogin,
 } from '../../actions/users';
@@ -13,6 +12,10 @@ import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
 } from '../../actions/user/refreshUser';
+import {
+  editUserDisplayThunk,
+  EidtUserDisplayThunk,
+} from '../../actions/user/editUserDisplay';
 import {logoutAction} from '../../actions/sessions';
 import {SuccessfullLoginData} from '../../apis/usersApi';
 
@@ -123,7 +126,7 @@ const userSlice = createSlice({
     }),
     [editUserDisplayThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<boolean>,
+      action: PayloadAction<EidtUserDisplayThunk>,
     ) => ({
       ...state,
       user: {...state.user!, display: action.payload},

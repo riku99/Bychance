@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Menu} from './Menu';
 import {RootState} from '../../../redux/index';
 import {displayMenu} from '../../../redux/otherSettings';
-import {editUserDisplayThunk} from '../../../actions/users';
+import {editUserDisplayThunk} from '../../../actions/user/editUserDisplay';
 
 export const Container = () => {
   const isVisible = useSelector((state: RootState) => {
