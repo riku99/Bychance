@@ -4,9 +4,12 @@ import {refreshUser} from '../helpers/refreshUser';
 import {
   firstLoginThunk,
   subsequentLoginThunk,
-  editProfileThunk,
   sampleLogin,
 } from '../../actions/users';
+import {
+  editProfileThunk,
+  EdiProfilePayload,
+} from '../../actions/user/editProfile';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
@@ -20,7 +23,7 @@ import {
   UpdateLocationThunkPaylaod,
 } from '../../actions/user/updateLocation';
 import {logoutAction} from '../../actions/sessions';
-import {SuccessfullLoginData} from '../../apis/usersApi';
+import {SuccessfullLoginData} from '../../actions/types';
 
 export type UserState = {
   user?: {
@@ -116,7 +119,7 @@ const userSlice = createSlice({
     [logoutAction.type]: () => initialState,
     [editProfileThunk.fulfilled.type]: (
       state,
-      actions: PayloadAction<User>,
+      actions: PayloadAction<EdiProfilePayload>,
     ) => ({
       ...state,
       user: {

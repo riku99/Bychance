@@ -3,12 +3,9 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
 
-import {logoutAction} from './sessions';
-import {User} from '../redux/user';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
-import {checkKeychain, Credentials} from '../helpers/keychain';
-import {requestLogin} from '../helpers/login';
+import {Credentials} from '../helpers/keychain';
 import {handleBasicError} from '../helpers/error';
 import {rejectPayload, SuccessfullLoginData} from './types';
 
@@ -86,52 +83,3 @@ export const subsequentLoginThunk = createAsyncThunk<
     return rejectWithValue(result);
   }
 });
-
-export const editProfileThunk = createAsyncThunk<
-  Pick<User, 'id' | 'name' | 'introduce' | 'image' | 'message'>,
-  {
-    name: string;
-    introduce: string;
-    image: string | undefined;
-    message: string;
-    deleteImage: boolean;
-  },
-  {
-    rejectValue: rejectPayload;
-  }
->(
-  'users/editProfile',
-  async (
-    {name, introduce, image, message, deleteImage},
-    {rejectWithValue, dispatch},
-  ) => {
-    const keychain = await checkKeychain();
-
-    if (keychain) {
-      try {
-        const response = await axios.patch<
-          Pick<User, 'id' | 'name' | 'introduce' | 'image' | 'message'>
-        >(
-          `${origin}/user`,
-          {
-            id: keychain.id,
-            name,
-            introduce,
-            image,
-            message,
-            deleteImage,
-          },
-          headers(keychain.token),
-        );
-
-        return response.data;
-      } catch (e) {
-        const result = handleBasicError({e, dispatch});
-        return rejectWithValue(result);
-      }
-    } else {
-      requestLogin(() => dispatch(logoutAction));
-      return rejectWithValue({errorType: 'loginError'});
-    }
-  },
-);
