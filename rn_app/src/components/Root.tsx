@@ -15,7 +15,7 @@ import {Container as Menu} from './utils/Menu';
 import {updateLocationThunk} from '../actions/user/updateLocation';
 import {getCurrentPosition} from '../helpers/gelocation';
 import {checkKeychain} from '../helpers/keychain';
-import {subsequentLoginThunk} from '../actions/users';
+import {sessionLoginThunk} from '../actions/session/sessionLogin';
 import {UserAvatar} from './utils/Avatar';
 
 const consumer = createConsumer('ws://localhost/cable');
@@ -49,7 +49,7 @@ const Root = () => {
     const loginProcess = async () => {
       const keychain = await checkKeychain();
       if (keychain) {
-        await dispatch(subsequentLoginThunk(keychain));
+        await dispatch(sessionLoginThunk(keychain));
         setLoad(false);
       } else {
         setLoad(false);

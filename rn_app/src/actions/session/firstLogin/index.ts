@@ -1,28 +1,19 @@
-import axios from 'axios';
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import * as Keychain from 'react-native-keychain';
+import {
+  axios,
+  createAsyncThunk,
+  origin,
+  headers,
+  handleBasicError,
+  rejectPayload,
+  SuccessfullLoginData,
+} from '../../utils/modules';
 import LineLogin from '@xmartlabs/react-native-line';
+import * as Keychain from 'react-native-keychain';
 
-import {origin} from '../constants/origin';
-import {headers} from '../helpers/headers';
-import {Credentials} from '../helpers/keychain';
-import {handleBasicError} from '../helpers/error';
-import {rejectPayload, SuccessfullLoginData} from './types';
-
-export const sampleLogin = createAsyncThunk('sample/login', async () => {
-  const response = await axios.post<SuccessfullLoginData & {token: string}>(
-    `${origin}/sample_login`,
-  );
-  await Keychain.resetGenericPassword();
-  await Keychain.setGenericPassword(
-    String(response.data.user.id),
-    response.data.token,
-  );
-  return response.data;
-});
+export type FirstLoginThunkPayload = SuccessfullLoginData;
 
 export const firstLoginThunk = createAsyncThunk<
-  SuccessfullLoginData | void,
+  FirstLoginThunkPayload | void,
   undefined,
   {rejectValue: rejectPayload}
 >('users/firstLogin', async (dummy, {dispatch, rejectWithValue}) => {
@@ -62,24 +53,5 @@ export const firstLoginThunk = createAsyncThunk<
       const result = handleBasicError({e, dispatch});
       return rejectWithValue(result);
     }
-  }
-});
-
-export const subsequentLoginThunk = createAsyncThunk<
-  SuccessfullLoginData,
-  Credentials,
-  {rejectValue: rejectPayload}
->('users/subsequentLogin', async ({id, token}, {dispatch, rejectWithValue}) => {
-  try {
-    const response = await axios.post<SuccessfullLoginData>(
-      `${origin}/subsequent_login`,
-      {id},
-      headers(token),
-    );
-
-    return response.data;
-  } catch (e) {
-    const result = handleBasicError({e, dispatch});
-    return rejectWithValue(result);
   }
 });

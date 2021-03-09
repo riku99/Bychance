@@ -6,12 +6,15 @@ import {
 
 import {createMessageThunk} from '../../actions/messages';
 import {
-  subsequentLoginThunk,
   firstLoginThunk,
-  sampleLogin,
-} from '../../actions/users';
+  FirstLoginThunkPayload,
+} from '../../actions/session/firstLogin';
+import {
+  sessionLoginThunk,
+  SessionLoginThunkPayload,
+} from '../../actions/session/sessionLogin';
+import {sampleLogin} from '../../actions/session/sampleLogin';
 import {logoutAction} from '../../actions/sessions';
-import {SuccessfullLoginData} from '../../apis/usersApi';
 import {RootState} from '../index';
 import {ReceivedMessageData} from '../types';
 
@@ -47,13 +50,13 @@ const messagesSlice = createSlice({
     },
     [firstLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<FirstLoginThunkPayload>,
     ) => {
       messagesAdapter.addMany(state, action.payload.messages);
     },
-    [subsequentLoginThunk.fulfilled.type]: (
+    [sessionLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
       messagesAdapter.addMany(state, action.payload.messages);
     },

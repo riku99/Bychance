@@ -5,9 +5,16 @@ import {
 } from '@reduxjs/toolkit';
 
 import {createPostAction, deletePostThunk} from '../../actions/posts';
-import {firstLoginThunk, sampleLogin} from '../../actions/users';
 import {logoutAction} from '../../actions/sessions';
-import {SuccessfullLoginData} from '../../apis/usersApi';
+import {
+  firstLoginThunk,
+  FirstLoginThunkPayload,
+} from '../../actions/session/firstLogin';
+import {
+  sessionLoginThunk,
+  SessionLoginThunkPayload,
+} from '../../actions/session/sessionLogin';
+import {sampleLogin} from '../../actions/session/sampleLogin';
 import {RootState} from '..';
 
 export type Post = {
@@ -36,14 +43,14 @@ const postSlice = createSlice({
     },
     [firstLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<FirstLoginThunkPayload>,
     ) => {
       postsAdaper.addMany(state, action.payload.posts);
     },
     // ExceptionsManager.js:179 Invariant Violation: Module AppRegistry is not a registered callable moduleが解決できないので文字列で直接指定
-    'users/subsequentLogin/fulfilled': (
+    [sessionLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
       postsAdaper.addMany(state, action.payload.posts);
     },

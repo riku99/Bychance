@@ -6,16 +6,19 @@ import {
 
 import {RootState} from '../index';
 import {AnotherUser} from '../types';
-import {createRoomThunk} from '../../actions/rooms';
 import {
-  subsequentLoginThunk,
   firstLoginThunk,
-  sampleLogin,
-} from '../../actions/users';
+  FirstLoginThunkPayload,
+} from '../../actions/session/firstLogin';
+import {
+  sessionLoginThunk,
+  SessionLoginThunkPayload,
+} from '../../actions/session/sessionLogin';
+import {sampleLogin} from '../../actions/session/sampleLogin';
+import {createRoomThunk} from '../../actions/rooms';
 import {logoutAction} from '../../actions/sessions';
 import {createMessageThunk} from '../../actions/messages';
 import {Message, receiveMessage} from '../messages';
-import {SuccessfullLoginData} from '../../apis/usersApi';
 
 export type Room = {
   id: number;
@@ -54,13 +57,13 @@ export const RoomsSlice = createSlice({
     },
     [firstLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<FirstLoginThunkPayload>,
     ) => {
       roomsAdapter.addMany(state, action.payload.rooms);
     },
-    [subsequentLoginThunk.fulfilled.type]: (
+    [sessionLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
       roomsAdapter.addMany(state, action.payload.rooms);
     },

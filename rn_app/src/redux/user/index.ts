@@ -3,9 +3,12 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {refreshUser} from '../helpers/refreshUser';
 import {
   firstLoginThunk,
-  subsequentLoginThunk,
-  sampleLogin,
-} from '../../actions/users';
+  FirstLoginThunkPayload,
+} from '../../actions/session/firstLogin';
+import {
+  sessionLoginThunk,
+  SessionLoginThunkPayload,
+} from '../../actions/session/sessionLogin';
 import {
   editProfileThunk,
   EdiProfilePayload,
@@ -22,8 +25,8 @@ import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
 } from '../../actions/user/updateLocation';
+import {sampleLogin} from '../../actions/session/sampleLogin';
 import {logoutAction} from '../../actions/sessions';
-import {SuccessfullLoginData} from '../../actions/types';
 
 export type UserState = {
   user?: {
@@ -100,16 +103,16 @@ const userSlice = createSlice({
     },
     [firstLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<FirstLoginThunkPayload>,
     ) => {
       return {
         ...state,
         user: action.payload.user,
       };
     },
-    [subsequentLoginThunk.fulfilled.type]: (
+    [sessionLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
       return {
         ...state,

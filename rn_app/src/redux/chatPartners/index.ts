@@ -11,13 +11,19 @@ import {User} from '../user';
 import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
 import {refreshUser} from '../helpers/refreshUser';
 import {
-  subsequentLoginThunk,
+  sessionLoginThunk,
+  SessionLoginThunkPayload,
+} from '../../actions/session/sessionLogin';
+import {
   firstLoginThunk,
+  FirstLoginThunkPayload,
+} from '../../actions/session/firstLogin';
+import {
   sampleLogin,
-} from '../../actions/users';
+  SampleLoginThunkPayload,
+} from '../../actions/session/sampleLogin';
 import {refreshUserThunk} from '../../actions/user/refreshUser';
 import {logoutAction} from '../../actions/sessions';
-import {SuccessfullLoginData} from '../../actions/types';
 import {createRoomThunk} from '../../actions/rooms';
 import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
 import {getNearbyUsersThunk} from '../../actions/nearbyUsers';
@@ -36,18 +42,18 @@ export const chatPartnersSlice = createSlice({
   extraReducers: {
     [sampleLogin.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SampleLoginThunkPayload>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [logoutAction.type]: () => {
       chatPartnersAdapter.getInitialState();
     },
     [firstLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<FirstLoginThunkPayload>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
-    [subsequentLoginThunk.fulfilled.type]: (
+    [sessionLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<SuccessfullLoginData>,
+      action: PayloadAction<SessionLoginThunkPayload>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [createRoomThunk.fulfilled.type]: (
       state,
