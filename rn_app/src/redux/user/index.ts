@@ -5,7 +5,6 @@ import {
   firstLoginThunk,
   subsequentLoginThunk,
   editProfileThunk,
-  updatePositionThunk,
   sampleLogin,
 } from '../../actions/users';
 import {
@@ -16,6 +15,10 @@ import {
   editUserDisplayThunk,
   EidtUserDisplayThunk,
 } from '../../actions/user/editUserDisplay';
+import {
+  updateLocationThunk,
+  UpdateLocationThunkPaylaod,
+} from '../../actions/user/updateLocation';
 import {logoutAction} from '../../actions/sessions';
 import {SuccessfullLoginData} from '../../apis/usersApi';
 
@@ -131,9 +134,9 @@ const userSlice = createSlice({
       ...state,
       user: {...state.user!, display: action.payload},
     }),
-    [updatePositionThunk.fulfilled.type]: (
+    [updateLocationThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{lat: number; lng: number}>,
+      action: PayloadAction<UpdateLocationThunkPaylaod>,
     ) => ({
       ...state,
       user: {...state.user!, lat: action.payload.lat, lng: action.payload.lng},

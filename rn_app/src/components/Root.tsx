@@ -12,7 +12,7 @@ import {ReceivedMessageData} from '../redux/types';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './pages/Auth/Page';
 import {Container as Menu} from './utils/Menu';
-import {updatePositionThunk} from '../actions/users';
+import {updateLocationThunk} from '../actions/user/updateLocation';
 import {getCurrentPosition} from '../helpers/gelocation';
 import {checkKeychain} from '../helpers/keychain';
 import {subsequentLoginThunk} from '../actions/users';
@@ -97,7 +97,7 @@ const Root = () => {
         if (nextAppState === 'active') {
           const position = await getCurrentPosition();
           dispatch(
-            updatePositionThunk({
+            updateLocationThunk({
               lat: position ? position.coords.latitude : null,
               lng: position ? position.coords.longitude : null,
             }),

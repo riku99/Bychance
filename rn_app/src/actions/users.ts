@@ -4,20 +4,24 @@ import * as Keychain from 'react-native-keychain';
 import LineLogin from '@xmartlabs/react-native-line';
 
 import {logoutAction} from './sessions';
-import {sendPosition, sampleLoginApi} from '../apis/usersApi';
 import {User} from '../redux/user';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {checkKeychain, Credentials} from '../helpers/keychain';
 import {requestLogin} from '../helpers/login';
-import {alertSomeError, handleBasicError} from '../helpers/error';
+import {handleBasicError} from '../helpers/error';
 import {rejectPayload, SuccessfullLoginData} from './types';
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
-  const response = await sampleLoginApi();
+  const response = await axios.post<SuccessfullLoginData & {token: string}>(
+    `${origin}/sample_login`,
+  );
   await Keychain.resetGenericPassword();
-  await Keychain.setGenericPassword(String(response.user.id), response.token);
-  return response;
+  await Keychain.setGenericPassword(
+    String(response.data.user.id),
+    response.data.token,
+  );
+  return response.data;
 });
 
 export const firstLoginThunk = createAsyncThunk<
@@ -128,45 +132,6 @@ export const editProfileThunk = createAsyncThunk<
     } else {
       requestLogin(() => dispatch(logoutAction));
       return rejectWithValue({errorType: 'loginError'});
-    }
-  },
-);
-
-export const updatePositionThunk = createAsyncThunk(
-  'users/updatePosition',
-  async ({lat, lng}: {lat: number | null; lng: number | null}, thunkAPI) => {
-    const keychain = await checkKeychain();
-    if (keychain) {
-      const response = await sendPosition({
-        id: keychain.id,
-        token: keychain.token,
-        lat,
-        lng,
-      });
-
-      if (response.type === 'success') {
-        return {lat, lng};
-      }
-
-      if (response.type === 'loginError') {
-        const callback = () => {
-          thunkAPI.dispatch(logoutAction);
-        };
-        requestLogin(callback);
-        return thunkAPI.rejectWithValue({loginError: true});
-      }
-
-      if (response.type === 'someError') {
-        console.log(response.message);
-        alertSomeError();
-        return thunkAPI.rejectWithValue({someError: true});
-      }
-    } else {
-      const callback = () => {
-        thunkAPI.dispatch(logoutAction);
-      };
-      requestLogin(callback);
-      return thunkAPI.rejectWithValue({loginError: true});
     }
   },
 );

@@ -10,22 +10,30 @@ import {
   rejectPayload,
 } from '../../utils/modules';
 
-export type EidtUserDisplayThunk = boolean;
+export type UpdateLocationThunkPaylaod = {
+  lat: number | null;
+  lng: number | null;
+};
 
-export const editUserDisplayThunk = createAsyncThunk<
-  EidtUserDisplayThunk,
-  boolean,
+export type UpdateLocationThunkArg = {
+  lat: number | null;
+  lng: number | null;
+};
+
+export const updateLocationThunk = createAsyncThunk<
+  UpdateLocationThunkPaylaod,
+  UpdateLocationThunkArg,
   {rejectValue: rejectPayload}
->('users/editUserDisplay', async (display, {dispatch, rejectWithValue}) => {
+>('users/updateLocation', async ({lat, lng}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
   if (credentials) {
     try {
-      await axios.patch(
-        `${origin}/user/display`,
-        {accessId: credentials.id, display},
+      await axios.patch<{succless: boolean}>(
+        `${origin}/user/position`,
+        {accessId: credentials.id, lat, lng},
         headers(credentials.token),
       );
-      return display;
+      return {lat, lng};
     } catch (e) {
       const result = handleBasicError({e, dispatch});
       return rejectWithValue(result);
