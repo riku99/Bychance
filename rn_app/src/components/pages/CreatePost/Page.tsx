@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -14,8 +14,9 @@ import ImagePicker from 'react-native-image-picker';
 
 import {AppDispatch} from '../../../redux';
 import {creatingPost} from '../../../redux/otherSettings';
-import {createPostAction} from '../../../actions/posts';
+import {createPostThunk} from '../../../actions/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../screens/types';
+import {displayShortMessage} from '../../../helpers/shortMessage';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -29,14 +30,20 @@ export const CreatePost = ({navigation}: Props) => {
 
   const dispatch: AppDispatch = useDispatch();
 
-  useEffect(() => {
-    const createPost = async (data: {text: string; image: string}) => {
+  const createPost = useCallback(
+    async (data: {text: string; source: string}) => {
       dispatch(creatingPost());
       navigation.goBack();
-      await dispatch(createPostAction(data));
+      const resullt = await dispatch(createPostThunk(data));
+      if (createPostThunk.fulfilled.match(resullt)) {
+        displayShortMessage('投稿しました', 'success');
+      }
       dispatch(creatingPost());
-    };
+    },
+    [dispatch, navigation],
+  );
 
+  useEffect(() => {
     navigation.setOptions({
       headerRight: selectedImage
         ? () => (
@@ -44,12 +51,12 @@ export const CreatePost = ({navigation}: Props) => {
               title="投稿"
               buttonStyle={{backgroundColor: 'transparent'}}
               titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
-              onPress={() => createPost({text, image: selectedImage})}
+              onPress={() => createPost({text, source: selectedImage})}
             />
           )
         : undefined,
     });
-  }, [navigation, selectedImage, text, dispatch]);
+  }, [navigation, selectedImage, text, dispatch, createPost]);
 
   useEffect(() => {
     if (isFocused) {

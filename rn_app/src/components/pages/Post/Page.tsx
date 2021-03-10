@@ -2,12 +2,13 @@ import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {Post} from './Post';
-import {RootState} from '../../../redux/index';
-import {deletePostThunk} from '../../../actions/posts';
+import {RootState, AppDispatch} from '../../../redux/index';
+import {deletePostThunk} from '../../../actions/posts/deletePost';
 import {
   MyPageStackRouteProp,
   UserPageStackRouteProp,
 } from '../../../screens/types';
+import {displayShortMessage} from '../../../helpers/shortMessage';
 
 type Props = {
   route: MyPageStackRouteProp<'Post'> | UserPageStackRouteProp<'Post'>;
@@ -17,9 +18,12 @@ export const Container = ({route}: Props) => {
   const user = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
-  const dispatch = useDispatch();
-  const deletePost = (id: number) => {
-    dispatch(deletePostThunk(id));
+  const dispatch: AppDispatch = useDispatch();
+  const deletePost = async (postId: number) => {
+    const result = await dispatch(deletePostThunk({postId}));
+    if (deletePostThunk.fulfilled.match(result)) {
+      displayShortMessage('削除しました', 'success');
+    }
   };
   return <Post post={route.params} user={user} deletePost={deletePost} />;
 };

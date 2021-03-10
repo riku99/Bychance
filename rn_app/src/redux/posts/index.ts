@@ -4,7 +4,14 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {createPostAction, deletePostThunk} from '../../actions/posts';
+import {
+  createPostThunk,
+  CreatePostThunkPayload,
+} from '../../actions/posts/createPost';
+import {
+  deletePostThunk,
+  DeletePostThunkPaylaod,
+} from '../../actions/posts/deletePost';
 import {logoutAction} from '../../actions/sessions';
 import {
   firstLoginThunk,
@@ -54,12 +61,15 @@ const postSlice = createSlice({
     ) => {
       postsAdaper.addMany(state, action.payload.posts);
     },
-    [createPostAction.fulfilled.type]: (state, action: PayloadAction<Post>) => {
+    [createPostThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<CreatePostThunkPayload>,
+    ) => {
       postsAdaper.addOne(state, action.payload);
     },
     [deletePostThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<number>,
+      action: PayloadAction<DeletePostThunkPaylaod>,
     ) => {
       postsAdaper.removeOne(state, action.payload);
     },
