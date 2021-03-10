@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {logoutAction} from '../../actions/sessions';
+import {logoutAction} from '../../actions/session/logout';
 import {Message, receiveMessage} from '../messages';
 import {ReceivedMessageData} from '../types';
 

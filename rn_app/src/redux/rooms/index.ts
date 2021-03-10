@@ -16,7 +16,7 @@ import {
 } from '../../actions/session/sessionLogin';
 import {sampleLogin} from '../../actions/session/sampleLogin';
 import {createRoomThunk} from '../../actions/rooms';
-import {logoutAction} from '../../actions/sessions';
+import {logoutAction} from '../../actions/session/logout';
 import {createMessageThunk} from '../../actions/messages';
 import {Message, receiveMessage} from '../messages';
 

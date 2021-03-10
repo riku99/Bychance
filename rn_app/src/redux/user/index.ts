@@ -26,7 +26,7 @@ import {
   UpdateLocationThunkPaylaod,
 } from '../../actions/user/updateLocation';
 import {sampleLogin} from '../../actions/session/sampleLogin';
-import {logoutAction} from '../../actions/sessions';
+import {logoutAction} from '../../actions/session/logout';
 
 export type UserState = {
   user?: {

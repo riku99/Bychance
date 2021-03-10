@@ -4,7 +4,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {User} from '../../../redux/user';
 import {AnotherUser} from '../../../redux/types';
 import {rejectPayload} from '../../types';
-import {logoutAction} from '../../sessions';
+import {logoutAction} from '../../session/logout';
 import {checkKeychain} from '../../../helpers/keychain';
 import {headers} from '../../../helpers/headers';
 import {origin} from '../../../constants/origin';

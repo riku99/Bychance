@@ -22,12 +22,14 @@ import {
   sampleLogin,
   SampleLoginThunkPayload,
 } from '../../actions/session/sampleLogin';
+import {
+  getNearbyUsersThunk,
+  GetNearbyUsersPayload,
+} from '../../actions/nearbyUsers/getNearbyUsers';
 import {refreshUserThunk} from '../../actions/user/refreshUser';
-import {logoutAction} from '../../actions/sessions';
+import {logoutAction} from '../../actions/session/logout';
 import {createRoomThunk} from '../../actions/rooms';
 import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
-import {getNearbyUsersThunk} from '../../actions/nearbyUsers';
-import {ReturnGetNearbyUsersThunk} from '../../actions/nearbyUsers/types';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
@@ -94,7 +96,7 @@ export const chatPartnersSlice = createSlice({
     },
     [getNearbyUsersThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<ReturnGetNearbyUsersThunk>,
+      action: PayloadAction<GetNearbyUsersPayload>,
     ) => {
       const result = action.payload;
       const forUpdateArray: {id: number; changes: AnotherUser}[] = [];

@@ -7,8 +7,10 @@ import {
 import {RootState} from '../index';
 import {AnotherUser} from '../types';
 import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
-import {getNearbyUsersThunk} from '../../actions/nearbyUsers';
-import {ReturnGetNearbyUsersThunk} from '../../actions/nearbyUsers/types';
+import {
+  getNearbyUsersThunk,
+  GetNearbyUsersPayload,
+} from '../../actions/nearbyUsers/getNearbyUsers';
 import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
 
 export type NearbyUsers = AnotherUser[];
@@ -28,7 +30,7 @@ const nearbyUsersSlice = createSlice({
   extraReducers: {
     [getNearbyUsersThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<ReturnGetNearbyUsersThunk>,
+      action: PayloadAction<GetNearbyUsersPayload>,
     ) => {
       nearbyUsersAdapter.setAll(state, action.payload);
     },

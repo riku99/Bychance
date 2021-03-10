@@ -12,7 +12,7 @@ import {
   deletePostThunk,
   DeletePostThunkPaylaod,
 } from '../../actions/posts/deletePost';
-import {logoutAction} from '../../actions/sessions';
+import {logoutAction} from '../../actions/session/logout';
 import {
   firstLoginThunk,
   FirstLoginThunkPayload,

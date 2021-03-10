@@ -7,7 +7,7 @@ import {SearchUsers} from './SearchUsers';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {AnotherUser} from '../../../redux/types';
 import {selectNearbyUsersArray} from '../../../redux/nearbyUsers';
-import {getNearbyUsersThunk} from '../../../actions/nearbyUsers';
+import {getNearbyUsersThunk} from '../../../actions/nearbyUsers/getNearbyUsers';
 import {
   SearchUsersStackNavigationProp,
   RootNavigationProp,

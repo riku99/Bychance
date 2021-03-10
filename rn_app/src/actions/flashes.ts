@@ -2,7 +2,7 @@ import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
 import {rejectPayload, basicAxiosError} from './types';
-import {logoutAction} from './sessions';
+import {logoutAction} from './session/logout';
 import {origin} from '../constants/origin';
 import {headers} from '../helpers/headers';
 import {checkKeychain} from '../helpers/keychain';

@@ -15,7 +15,7 @@ import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
 } from '../../actions/session/sessionLogin';
-import {logoutAction} from '../../actions/sessions';
+import {logoutAction} from '../../actions/session/logout';
 
 export type Flash = {
   id: number;

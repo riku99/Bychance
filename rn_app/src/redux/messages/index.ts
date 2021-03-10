@@ -14,7 +14,7 @@ import {
   SessionLoginThunkPayload,
 } from '../../actions/session/sessionLogin';
 import {sampleLogin} from '../../actions/session/sampleLogin';
-import {logoutAction} from '../../actions/sessions';
+import {logoutAction} from '../../actions/session/logout';
 import {RootState} from '../index';
 import {ReceivedMessageData} from '../types';
 

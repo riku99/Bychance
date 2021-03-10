@@ -3,7 +3,7 @@ import {ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
 
 import {rejectPayload, basicAxiosError} from '../actions/types';
 import {requestLogin} from '../helpers/login';
-import {logoutAction} from '../actions/sessions';
+import {logoutAction} from '../actions/session/logout';
 
 export const alertSomeError = () => {
   Alert.alert(
