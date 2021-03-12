@@ -15,9 +15,12 @@ import {
   SessionLoginThunkPayload,
 } from '../../actions/session/sessionLogin';
 import {sampleLogin} from '../../actions/session/sampleLogin';
+import {
+  createMessageThunk,
+  CreateMessageThunkPayload,
+} from '../../actions/messages/createMessage';
 import {createRoomThunk} from '../../actions/rooms';
 import {logoutAction} from '../../actions/session/logout';
-import {createMessageThunk} from '../../actions/messages';
 import {Message, receiveMessage} from '../messages';
 
 export type Room = {
@@ -93,7 +96,7 @@ export const RoomsSlice = createSlice({
     },
     [createMessageThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{message: Message; roomId: number}>,
+      action: PayloadAction<CreateMessageThunkPayload>,
     ) => {
       const relatedRoom = state.entities[action.payload.roomId];
       if (relatedRoom) {

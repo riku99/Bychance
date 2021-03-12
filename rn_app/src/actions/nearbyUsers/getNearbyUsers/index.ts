@@ -1,14 +1,15 @@
-import axios from 'axios';
-import {createAsyncThunk} from '@reduxjs/toolkit';
-
-import {rejectPayload} from '../../types';
-import {logoutAction} from '../../session/logout';
-import {checkKeychain} from '../../../helpers/keychain';
-import {requestLogin} from '../../../helpers/login';
-import {handleBasicError} from '../../../helpers/error';
-import {headers} from '../../../helpers/headers';
-import {origin} from '../../../constants/origin';
 import {NearbyUsers} from '../../../redux/nearbyUsers';
+import {
+  axios,
+  createAsyncThunk,
+  rejectPayload,
+  logoutAction,
+  checkKeychain,
+  requestLogin,
+  handleBasicError,
+  headers,
+  origin,
+} from '../../utils/modules';
 
 export type GetNearbyUsersPayload = NearbyUsers;
 

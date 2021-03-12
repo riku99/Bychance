@@ -10,10 +10,8 @@ import {selectMessages} from '../../../redux/messages';
 import {resetUnreadNumber, selectRoom} from '../../../redux/rooms';
 import {selectChatPartner} from '../../../redux/chatPartners';
 import {resetRecievedMessage} from '../../../redux/otherSettings';
-import {
-  createMessageThunk,
-  createReadMessagesThunk,
-} from '../../../actions/messages';
+import {createReadMessagesThunk} from '../../../actions/messages';
+import {createMessageThunk} from '../../../actions/messages/createMessage';
 import {ChatRoomStackParamList} from '../../../screens/ChatRoom';
 import {UserAvatar} from '../../utils/Avatar';
 
