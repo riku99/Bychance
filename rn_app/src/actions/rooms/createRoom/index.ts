@@ -8,7 +8,7 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../utils/modules';
+} from '../../re-modules';
 import {AnotherUser} from '../../../redux/types';
 
 export type CreateRoomThunkPayload = {

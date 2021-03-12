@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   origin,
   SuccessfullLoginData,
-} from '../../utils/modules';
+} from '../../re-modules';
 import * as Keychain from 'react-native-keychain';
 
 export type SampleLoginThunkPayload = SuccessfullLoginData & {token: string};

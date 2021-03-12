@@ -8,7 +8,7 @@ import {
   checkKeychain,
   requestLogin,
   logoutAction,
-} from '../../utils/modules';
+} from '../../re-modules';
 import {Post} from '../../../redux/posts';
 
 export type CreatePostThunkPayload = Post;

@@ -1,7 +1,7 @@
 class Api::V1::PostsController < ApplicationController
   before_action :check_access_token
   def create
-    if @user
+    if !@user
       text = post_params['text']
       image = post_params['image']
       image_url = create_s3_object_path(image, 'post', "#{@user.id}")

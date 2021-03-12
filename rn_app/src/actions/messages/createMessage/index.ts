@@ -8,7 +8,7 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../utils/modules';
+} from '../../re-modules';
 import {Message} from '../../../redux/messages';
 
 export type CreateMessageThunkPayload = {message: Message; roomId: number};

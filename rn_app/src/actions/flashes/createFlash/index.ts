@@ -8,7 +8,7 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../utils/modules';
+} from '../../re-modules';
 import {Flash} from '../../../redux/flashes';
 
 export type CreateFlashThunkPaylaod = Flash;

@@ -7,7 +7,7 @@ import {
   rejectPayload,
   SuccessfullLoginData,
   Credentials,
-} from '../../utils/modules';
+} from '../../re-modules';
 
 export type SessionLoginThunkPayload = SuccessfullLoginData;
 

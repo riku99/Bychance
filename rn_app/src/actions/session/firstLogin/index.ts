@@ -6,7 +6,7 @@ import {
   handleBasicError,
   rejectPayload,
   SuccessfullLoginData,
-} from '../../utils/modules';
+} from '../../re-modules';
 import LineLogin from '@xmartlabs/react-native-line';
 import * as Keychain from 'react-native-keychain';
 

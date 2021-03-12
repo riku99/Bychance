@@ -8,7 +8,7 @@ import {
   requestLogin,
   handleBasicError,
   rejectPayload,
-} from '../../utils/modules';
+} from '../../re-modules';
 
 export type UpdateLocationThunkPaylaod = {
   lat: number | null;

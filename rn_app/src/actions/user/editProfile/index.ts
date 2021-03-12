@@ -8,7 +8,7 @@ import {
   requestLogin,
   handleBasicError,
   rejectPayload,
-} from '../../utils/modules';
+} from '../../re-modules';
 import {User} from '../../../redux/user';
 
 export type EdiProfilePayload = Pick<
