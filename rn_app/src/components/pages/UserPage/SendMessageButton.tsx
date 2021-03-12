@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import {AppDispatch} from '../../../redux/index';
 import {resetRecievedMessage} from '../../../redux/otherSettings';
 import {AnotherUser} from '../../../redux/types';
-import {createRoomThunk} from '../../../actions/rooms';
+import {createRoomThunk} from '../../../actions/rooms/createRoom';
 import {RootNavigationProp} from '../../../screens/types';
 
 type Props = {

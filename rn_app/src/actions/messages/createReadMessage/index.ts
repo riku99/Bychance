@@ -1,17 +1,17 @@
-import axios from 'axios';
-import {createAsyncThunk} from '@reduxjs/toolkit';
-
-import {logoutAction} from './session/logout';
-import {rejectPayload} from './types';
-import {checkKeychain} from '../helpers/keychain';
-import {requestLogin} from '../helpers/login';
-import {headers} from '../helpers/headers';
-import {Message} from '../redux/messages';
-import {handleBasicError} from '../helpers/error';
-import {origin} from '../constants/origin';
+import {
+  axios,
+  createAsyncThunk,
+  rejectPayload,
+  logoutAction,
+  checkKeychain,
+  requestLogin,
+  handleBasicError,
+  headers,
+  origin,
+} from '../../utils/modules';
 
 export const createReadMessagesThunk = createAsyncThunk<
-  undefined,
+  void,
   {roomId: number; unreadNumber: number},
   {
     rejectValue: rejectPayload;
@@ -19,18 +19,18 @@ export const createReadMessagesThunk = createAsyncThunk<
 >(
   'messages/createReadMessages',
   async ({roomId, unreadNumber}, {dispatch, rejectWithValue}) => {
-    const keychain = await checkKeychain();
+    const credentials = await checkKeychain();
 
-    if (keychain) {
+    if (credentials) {
       try {
         axios.post(
           `${origin}/user_room_message_reads`,
           {
             roomId,
             unreadNumber,
-            id: keychain.id,
+            id: credentials.id,
           },
-          headers(keychain.token),
+          headers(credentials.token),
         );
       } catch (e) {
         // axioserror

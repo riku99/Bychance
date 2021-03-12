@@ -5,7 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from '../index';
-import {AnotherUser} from '../types';
 import {
   firstLoginThunk,
   FirstLoginThunkPayload,
@@ -19,7 +18,10 @@ import {
   createMessageThunk,
   CreateMessageThunkPayload,
 } from '../../actions/messages/createMessage';
-import {createRoomThunk} from '../../actions/rooms';
+import {
+  createRoomThunk,
+  CreateRoomThunkPayload,
+} from '../../actions/rooms/createRoom';
 import {logoutAction} from '../../actions/session/logout';
 import {Message, receiveMessage} from '../messages';
 
@@ -72,12 +74,7 @@ export const RoomsSlice = createSlice({
     },
     [createRoomThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{
-        presence: boolean;
-        roomId: number;
-        partner: AnotherUser;
-        timestamp: string;
-      }>,
+      action: PayloadAction<CreateRoomThunkPayload>,
     ) => {
       // const room = state.entities[action.payload.roomId];
       // roomが存在する場合は何もしなくていい。upsertOneの必要ない

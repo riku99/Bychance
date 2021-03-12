@@ -28,7 +28,10 @@ import {
 } from '../../actions/nearbyUsers/getNearbyUsers';
 import {refreshUserThunk} from '../../actions/user/refreshUser';
 import {logoutAction} from '../../actions/session/logout';
-import {createRoomThunk} from '../../actions/rooms';
+import {
+  createRoomThunk,
+  CreateRoomThunkPayload,
+} from '../../actions/rooms/createRoom';
 import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
@@ -59,12 +62,7 @@ export const chatPartnersSlice = createSlice({
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [createRoomThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{
-        presence: boolean;
-        roomId: number;
-        partner: AnotherUser;
-        timestamp: string;
-      }>,
+      action: PayloadAction<CreateRoomThunkPayload>,
     ) => {
       if (!action.payload.presence) {
         chatPartnersAdapter.addOne(state, action.payload.partner);
