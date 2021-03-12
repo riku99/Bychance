@@ -6,7 +6,7 @@ import {ListItem, Icon} from 'react-native-elements';
 
 import {deleteFlashThunk} from '../../../actions/flashes/deleteFlash';
 import {AppDispatch} from '../../../redux/index';
-import {displayShortMessage} from '../../../helpers/shortMessage';
+import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 
 type Props = {
   flashId: number;

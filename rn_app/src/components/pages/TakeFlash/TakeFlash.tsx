@@ -17,7 +17,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import Video from 'react-native-video';
 
-import {displayShortMessage} from '../../../helpers/shortMessage';
+import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;

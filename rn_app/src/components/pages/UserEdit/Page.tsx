@@ -10,8 +10,8 @@ import {
   UserEditNavigationProp,
   RootNavigationProp,
 } from '../../../screens/types';
-import {displayShortMessage} from '../../../helpers/shortMessage';
-import {alertSomeError} from '../../../helpers/error';
+import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
+import {alertSomeError} from '../../../helpers/errors/alertSomeError';
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {

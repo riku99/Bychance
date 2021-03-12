@@ -1,15 +1,16 @@
-import axios from 'axios';
-import {createAsyncThunk} from '@reduxjs/toolkit';
-
+import {
+  axios,
+  createAsyncThunk,
+  logoutAction,
+  origin,
+  headers,
+  checkKeychain,
+  requestLogin,
+  handleBasicError,
+  rejectPayload,
+} from '../../re-modules';
 import {User} from '../../../redux/user';
 import {AnotherUser} from '../../../redux/types';
-import {rejectPayload} from '../../types';
-import {logoutAction} from '../../session/logout';
-import {checkKeychain} from '../../../helpers/keychain';
-import {headers} from '../../../helpers/headers';
-import {origin} from '../../../constants/origin';
-import {handleBasicError} from '../../../helpers/error';
-import {requestLogin} from '../../../helpers/login';
 
 export type RefreshUserThunkPaylaod =
   | {isMyData: true; data: User}

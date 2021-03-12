@@ -1,8 +1,8 @@
-import {ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
+import {ThunkDispatch} from '@reduxjs/toolkit';
 
 import {rejectPayload, basicAxiosError} from '~/actions/types';
-import {requestLogin} from '~/helpers/login';
-import {alertSomeError} from '~/helpers/error';
+import {requestLogin} from '~/actions/helpers/errors/requestLogin';
+import {alertSomeError} from '~/helpers/errors/alertSomeError';
 import {logoutAction} from '~/actions/session/logout';
 
 export const handleBasicError = ({
@@ -10,7 +10,7 @@ export const handleBasicError = ({
   dispatch,
 }: {
   e: any;
-  dispatch: ThunkDispatch<unknown, unknown, AnyAction>;
+  dispatch: ThunkDispatch<unknown, unknown, any>;
 }): rejectPayload => {
   if (e && e.response) {
     const axiosError = e as basicAxiosError;

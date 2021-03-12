@@ -1,7 +1,7 @@
 import Geolocation from 'react-native-geolocation-service';
 import {Alert} from 'react-native';
 
-import {alertSomeError} from '../helpers/error';
+import {alertSomeError} from '../../errors/alertSomeError';
 
 export const getCurrentPosition = (): Promise<Geolocation.GeoPosition | null> => {
   return new Promise(async (resolve) => {

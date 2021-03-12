@@ -13,8 +13,8 @@ import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './pages/Auth/Page';
 import {Container as Menu} from './utils/Menu';
 import {updateLocationThunk} from '../actions/user/updateLocation';
-import {getCurrentPosition} from '../helpers/gelocation';
-import {checkKeychain} from '../helpers/keychain';
+import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
+import {checkKeychain} from '../helpers/credentials/checkKeychain';
 import {sessionLoginThunk} from '../actions/session/sessionLogin';
 import {UserAvatar} from './utils/Avatar';
 
@@ -47,9 +47,9 @@ const Root = () => {
 
   useEffect(() => {
     const loginProcess = async () => {
-      const keychain = await checkKeychain();
-      if (keychain) {
-        await dispatch(sessionLoginThunk(keychain));
+      const credentials = await checkKeychain();
+      if (credentials) {
+        await dispatch(sessionLoginThunk(credentials));
         setLoad(false);
       } else {
         setLoad(false);

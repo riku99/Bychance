@@ -16,7 +16,7 @@ import {AppDispatch} from '../../../redux';
 import {creatingPost} from '../../../redux/otherSettings';
 import {createPostThunk} from '../../../actions/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../screens/types';
-import {displayShortMessage} from '../../../helpers/shortMessage';
+import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;

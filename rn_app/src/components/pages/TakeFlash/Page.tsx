@@ -10,8 +10,8 @@ import {TakeFlash} from './TakeFlash';
 import {AppDispatch} from '../../../redux/index';
 import {creatingFlash} from '../../../redux/otherSettings';
 import {createFlashThunk} from '../../../actions/flashes/createFlash';
-import {displayShortMessage} from '../../../helpers/shortMessage';
-import {alertSomeError} from '../../../helpers/error';
+import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
+import {alertSomeError} from '../../../helpers/errors/alertSomeError';
 
 export const TakeFlashPage = () => {
   const [firstCameraRollPhoto, setFirstCameraRollPhoto] = useState<
