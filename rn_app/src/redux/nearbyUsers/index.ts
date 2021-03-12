@@ -11,7 +11,10 @@ import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
 } from '../../actions/nearbyUsers/getNearbyUsers';
-import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
+import {
+  createAlreadyViewdFlashThunk,
+  CreateAlreadyViewdFlashThunkPayload,
+} from '../../actions/flashes/createAlreadyViewedFlash';
 
 export type NearbyUsers = AnotherUser[];
 
@@ -36,7 +39,7 @@ const nearbyUsersSlice = createSlice({
     },
     [createAlreadyViewdFlashThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{userId: number; flashId: number}>,
+      action: PayloadAction<CreateAlreadyViewdFlashThunkPayload>,
     ) => {
       updateAlreadyViewed(state, action, {slice: nearbyUsersSlice.name});
     },

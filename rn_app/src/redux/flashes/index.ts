@@ -5,7 +5,14 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from '../index';
-import {createFlashThunk, deleteFlashThunk} from '../../actions/flashes';
+import {
+  deleteFlashThunk,
+  DeleteFlashThunkPayload,
+} from '../../actions/flashes/deleteFlash';
+import {
+  createFlashThunk,
+  CreateFlashThunkPaylaod,
+} from '../../actions/flashes/createFlash';
 import {
   firstLoginThunk,
   FirstLoginThunkPayload,
@@ -44,10 +51,14 @@ const flashesSlice = createSlice({
       state,
       action: PayloadAction<FirstLoginThunkPayload>,
     ) => flashesAdapter.addMany(state, action.payload.flashes),
-    [createFlashThunk.fulfilled.type]: (state, action: PayloadAction<Flash>) =>
-      flashesAdapter.addOne(state, action.payload),
-    [deleteFlashThunk.fulfilled.type]: (state, action: PayloadAction<number>) =>
-      flashesAdapter.removeOne(state, action.payload),
+    [createFlashThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<CreateFlashThunkPaylaod>,
+    ) => flashesAdapter.addOne(state, action.payload),
+    [deleteFlashThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<DeleteFlashThunkPayload>,
+    ) => flashesAdapter.removeOne(state, action.payload),
   },
 });
 

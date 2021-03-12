@@ -9,7 +9,7 @@ import {RNCamera} from 'react-native-camera';
 import {TakeFlash} from './TakeFlash';
 import {AppDispatch} from '../../../redux/index';
 import {creatingFlash} from '../../../redux/otherSettings';
-import {createFlashThunk} from '../../../actions/flashes';
+import {createFlashThunk} from '../../../actions/flashes/createFlash';
 import {displayShortMessage} from '../../../helpers/shortMessage';
 import {alertSomeError} from '../../../helpers/error';
 

@@ -23,7 +23,7 @@ import {FlashesData} from './types';
 import {RootState, AppDispatch} from '../../../redux/index';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
-import {createAlreadyViewdFlashThunk} from '../../../actions/flashes';
+import {createAlreadyViewdFlashThunk} from '../../../actions/flashes/createAlreadyViewedFlash';
 import {selectNearbyUserAlreadyViewed} from '../../../redux/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../redux/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';

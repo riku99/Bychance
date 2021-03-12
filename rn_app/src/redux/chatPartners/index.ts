@@ -32,7 +32,10 @@ import {
   createRoomThunk,
   CreateRoomThunkPayload,
 } from '../../actions/rooms/createRoom';
-import {createAlreadyViewdFlashThunk} from '../../actions/flashes';
+import {
+  createAlreadyViewdFlashThunk,
+  CreateAlreadyViewdFlashThunkPayload,
+} from '../../actions/flashes/createAlreadyViewedFlash';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
@@ -88,7 +91,7 @@ export const chatPartnersSlice = createSlice({
     },
     [createAlreadyViewdFlashThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<{userId: number; flashId: number}>,
+      action: PayloadAction<CreateAlreadyViewdFlashThunkPayload>,
     ) => {
       updateAlreadyViewed(state, action, {slice: chatPartnersSlice.name});
     },

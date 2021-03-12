@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
 
-import {deleteFlashThunk} from '../../../actions/flashes';
+import {deleteFlashThunk} from '../../../actions/flashes/deleteFlash';
 import {AppDispatch} from '../../../redux/index';
 import {displayShortMessage} from '../../../helpers/shortMessage';
 
