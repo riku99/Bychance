@@ -54,7 +54,7 @@ export const SearchUsersPage = () => {
     (user: AnotherUser) => {
       searchStackNavigation.push('UserPage', {
         userId: user.id,
-        from: 'searchUsers',
+        from: 'nearbyUsers',
       });
     },
     [searchStackNavigation],
@@ -69,7 +69,7 @@ export const SearchUsersPage = () => {
       );
       const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
         flashesData: user.flashes,
-        userData: {userId: user.id, from: 'searchUsers'} as const,
+        userData: {userId: user.id, from: 'nearbyUsers'} as const,
       }));
       return data;
     }
@@ -101,7 +101,7 @@ export const SearchUsersPage = () => {
           dataArray: [
             {
               flashesData: flashesData,
-              userData: {userId: userId, from: 'searchUsers'},
+              userData: {userId: userId, from: 'nearbyUsers'},
             },
           ],
         };

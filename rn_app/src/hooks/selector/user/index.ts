@@ -17,7 +17,7 @@ export const useAnotherUser = ({from, userId}: AnotherUserProps) =>
   useSelector((state: RootState) => {
     if (from && userId) {
       switch (from) {
-        case 'searchUsers':
+        case 'nearbyUsers':
           return selectNearbyUser(state, userId);
         case 'chatRoom':
           return selectChatPartner(state, userId);

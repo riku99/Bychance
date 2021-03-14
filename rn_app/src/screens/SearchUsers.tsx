@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {SearchUsersPage} from '../components/pages/SearchUsers/Page';
+import {SearchUsersPage} from '../components/pages/NearbyUsers/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 

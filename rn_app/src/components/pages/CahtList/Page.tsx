@@ -20,7 +20,6 @@ export const ChatListPage = () => {
   );
 
   const chatPartnerEntities = useSelector((state: RootState) => {
-    console.log(selectChatPartnerEntities(state));
     return selectChatPartnerEntities(state);
   });
 

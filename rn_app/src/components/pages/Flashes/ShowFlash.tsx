@@ -62,7 +62,7 @@ export const ShowFlash = React.memo(
     const alreadyViewedLength = useSelector((state: RootState) => {
       if (userData.from && userData.userId) {
         switch (userData.from) {
-          case 'searchUsers':
+          case 'nearbyUsers':
             return selectNearbyUserAlreadyViewed(state, userData.userId).length;
           case 'chatRoom':
             return selectChatPartnerAlreadyViewed(state, userData.userId)
