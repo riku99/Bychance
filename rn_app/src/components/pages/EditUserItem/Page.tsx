@@ -7,7 +7,7 @@ import {
   UserEditNavigationProp,
   UserEditRouteProp,
 } from '../../../screens/types';
-import {saveEditData} from '../../../redux/user';
+import {saveEditData} from '../../../stores/user';
 
 type Props = {
   route: UserEditRouteProp<'IntroduceEdit' | 'NameEdit' | 'StatusMessageEdit'>;

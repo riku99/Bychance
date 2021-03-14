@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-import {AppDispatch} from '../../../redux/index';
-import {resetRecievedMessage} from '../../../redux/otherSettings';
-import {AnotherUser} from '../../../redux/types';
+import {AppDispatch} from '../../../stores/index';
+import {resetRecievedMessage} from '../../../stores/otherSettings';
+import {AnotherUser} from '../../../stores/types';
 import {createRoomThunk} from '../../../actions/rooms/createRoom';
 import {RootNavigationProp} from '../../../screens/types';
 

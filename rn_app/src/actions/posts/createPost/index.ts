@@ -9,7 +9,7 @@ import {
   requestLogin,
   logoutAction,
 } from '../../re-modules';
-import {Post} from '../../../redux/posts';
+import {Post} from '../../../stores/posts';
 
 export type CreatePostThunkPayload = Post;
 

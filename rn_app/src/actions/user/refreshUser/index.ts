@@ -9,8 +9,8 @@ import {
   handleBasicError,
   rejectPayload,
 } from '../../re-modules';
-import {User} from '../../../redux/user';
-import {AnotherUser} from '../../../redux/types';
+import {User} from '../../../stores/user';
+import {AnotherUser} from '../../../stores/types';
 
 export type RefreshUserThunkPaylaod =
   | {isMyData: true; data: User}

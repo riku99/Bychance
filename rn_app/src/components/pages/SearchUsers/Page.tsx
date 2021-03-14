@@ -4,9 +4,9 @@ import {useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
 import {SearchUsers} from './SearchUsers';
-import {RootState, AppDispatch} from '../../../redux/index';
-import {AnotherUser} from '../../../redux/types';
-import {selectNearbyUsersArray} from '../../../redux/nearbyUsers';
+import {RootState, AppDispatch} from '../../../stores/index';
+import {AnotherUser} from '../../../stores/types';
+import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
 import {getNearbyUsersThunk} from '../../../actions/nearbyUsers/getNearbyUsers';
 import {
   SearchUsersStackNavigationProp,

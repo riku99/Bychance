@@ -2,13 +2,13 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {ListItem, Badge} from 'react-native-elements';
 
-import {Room} from '../../../redux/rooms';
-import {chatPartnerEntities} from '../../../redux/chatPartners';
+import {Room} from '../../../stores/rooms';
 import {UserAvatar} from '../../utils/Avatar';
+import {ReturnTypeOfSelectChatPartnerEntities} from '../../../stores/chatPartners';
 
 type Props = {
   rooms: Room[];
-  chatPartnerEntites: chatPartnerEntities;
+  chatPartnerEntites: ReturnTypeOfSelectChatPartnerEntities;
   pushChatRoom: ({room, partnerId}: {room: Room; partnerId: number}) => void;
 };
 
@@ -33,7 +33,9 @@ export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {
                 />
                 <ListItem.Content>
                   <ListItem.Title>
-                    {chatPartnerEntites[r.partner]?.name}
+                    {chatPartnerEntites[r.partner]?.name
+                      ? chatPartnerEntites[r.partner]?.name
+                      : 'ユーザーがいません'}
                   </ListItem.Title>
                   <ListItem.Subtitle style={styles.subtitle}>
                     {r.latestMessage && r.latestMessage}

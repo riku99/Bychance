@@ -56,15 +56,8 @@ export const selectNearbyUsersArray = (state: RootState) =>
 export const selectNearbyUser = (
   state: RootState,
   userId: number,
-): AnotherUser => {
-  const user = nearbyUsersSelector.selectById(state.nearbyUsersReducer, userId);
-  if (user) {
-    return user;
-  } else {
-    // エラーのスローではなくてAlertで対応させる
-    throw new Error('not found user');
-  }
-};
+): AnotherUser | undefined =>
+  nearbyUsersSelector.selectById(state.nearbyUsersReducer, userId);
 
 export const selectNearbyUserAlreadyViewed = (
   state: RootState,
@@ -74,6 +67,6 @@ export const selectNearbyUserAlreadyViewed = (
   if (user) {
     return user.flashes.alreadyViewed;
   } else {
-    throw new Error('not found user');
+    return [];
   }
 };

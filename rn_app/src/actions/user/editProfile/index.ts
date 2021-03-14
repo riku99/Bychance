@@ -9,7 +9,7 @@ import {
   handleBasicError,
   rejectPayload,
 } from '../../re-modules';
-import {User} from '../../../redux/user';
+import {User} from '../../../stores/user';
 
 export type EdiProfilePayload = Pick<
   User,

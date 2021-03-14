@@ -17,8 +17,8 @@ import {
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../redux/index';
-import {Post} from '../../../redux/posts';
+import {AppDispatch} from '../../../stores/index';
+import {Post} from '../../../stores/posts';
 import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../actions/user/refreshUser';
 

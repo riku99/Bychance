@@ -116,21 +116,15 @@ export const chatPartnersSlice = createSlice({
 
 const chatPartnersSelector = chatPartnersAdapter.getSelectors();
 
+export type ReturnTypeOfSelectChatPartnerEntities = ReturnType<
+  typeof selectChatPartnerEntities
+>;
 export const selectChatPartnerEntities = (state: RootState) => {
   return chatPartnersSelector.selectEntities(state.chatPartnersReducer);
 };
 
 export const selectChatPartner = (state: RootState, partnerId: number) => {
-  const user = chatPartnersSelector.selectById(
-    state.chatPartnersReducer,
-    partnerId,
-  );
-  if (user) {
-    return user;
-  } else {
-    // エラーのスローではなくてAlertで対応できるようにする
-    throw new Error();
-  }
+  return chatPartnersSelector.selectById(state.chatPartnersReducer, partnerId);
 };
 
 export const selectChatPartnerAlreadyViewed = (
@@ -144,7 +138,9 @@ export const selectChatPartnerAlreadyViewed = (
   if (user) {
     return user.flashes.alreadyViewed;
   } else {
-    throw new Error('not found user');
+    // ユーザーがいない場合はそもそもselectChatPartnerAlreadyViewedが実行されない
+    // なのでこのブロックが実行されることは基本的にない
+    return [];
   }
 };
 

@@ -3,8 +3,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useSelector} from 'react-redux';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {RootState} from '../redux/index';
-import {getAllUnreadMessagesNumber} from '../redux/rooms';
+import {RootState} from '../stores/index';
+import {getAllUnreadMessagesNumber} from '../stores/rooms';
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
 import {SearchUsersStackScreen} from './SearchUsers';

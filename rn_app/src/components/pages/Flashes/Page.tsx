@@ -15,8 +15,8 @@ import {ShowFlash} from './ShowFlash';
 import {FlashesData} from './types';
 import {FlashesRouteProp, RootNavigationProp} from '../../../screens/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
-import {RootState} from '../../../redux/index';
-import {selectAllFlashes} from '../../../redux/flashes';
+import {RootState} from '../../../stores/index';
+import {selectAllFlashes} from '../../../stores/flashes';
 import {useMoreDeviceX} from '../../../hooks/device/index';
 
 type Props = {

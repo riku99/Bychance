@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react';
-import {View, StyleSheet, Animated, ScrollView} from 'react-native';
+import {View, StyleSheet, Animated, ScrollView, Text} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 
@@ -30,9 +30,9 @@ import {
   RootNavigationProp,
   UserPageNavigationProp,
 } from '../../../screens/types';
-import {RootState} from '../../../redux/index';
-import {selectAllPosts} from '../../../redux/posts';
-import {selectAllFlashes} from '../../../redux/flashes';
+import {RootState} from '../../../stores/index';
+import {selectAllPosts} from '../../../stores/posts';
+import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../actions/user/refreshUser';
 
@@ -70,7 +70,7 @@ export const UserPage = ({route, navigation}: Props) => {
 
   // meとanotherUserで共通して使えるものについてはわざわざmeであるかanotherUserであるか検証したくないのでuserとしてまとめる
   // 別々のものとして使いたい時はme, anotherUserのどちらかを使う
-  const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
+  const user = useMemo(() => (me ? me : anotherUser), [me, anotherUser]);
 
   const myPosts = useSelector((state: RootState) => {
     if (isMe) {
@@ -163,10 +163,10 @@ export const UserPage = ({route, navigation}: Props) => {
 
   const lineNumber = useMemo(
     () =>
-      user.introduce?.split(/\n|\r\n|\r/).length
+      user?.introduce?.split(/\n|\r\n|\r/).length
         ? user.introduce?.split(/\n|\r\n|\r/).length
         : 0,
-    [user.introduce],
+    [user?.introduce],
   );
 
   const showExpandButton = useMemo(() => {
@@ -184,7 +184,9 @@ export const UserPage = ({route, navigation}: Props) => {
 
   useLayoutEffect(() => {
     if (route.name === 'UserPage') {
-      navigation.setOptions({headerTitle: user.name});
+      navigation.setOptions({
+        headerTitle: user?.name ? user?.name : 'ユーザーがいません',
+      });
     }
   }, [navigation, user, route.name]);
 
@@ -224,82 +226,94 @@ export const UserPage = ({route, navigation}: Props) => {
   }, [anotherUser?.id, dispatch, isMe]);
 
   return (
-    <View
-      style={styles.container}
-      onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}>
-      <Animated.View
-        style={[styles.profileContaienr, {transform: [{translateY: y}]}]}
-        onLayout={(e) =>
-          setProfileContainerHeight(e.nativeEvent.layout.height)
-        }>
-        <Profile
-          user={{name: user.name, introduce: user.introduce, image: user.image}}
-          avatarOuterType={avatarOuterType}
-          setUserAvatarAndNameContainerHeight={
-            setUserAvatarAndNameContainerHeight
-          }
-          expandedIntroduceContainer={expandedIntroduceContainer}
-          setAvatarToIntroduceHeight={setAvatarToIntroduceHeight}
-        />
-      </Animated.View>
-      <UserTabView
-        userId={user.id}
-        containerHeight={containerHeight}
-        profileContainerHeight={profileContainerHeight}
-        defaultProfileContainerHeight={defaultProfileContainerHeight}
-        posts={posts}
-        scrollY={scrollY}
-        postsTabViewRef={postsTabViewRef}
-        userInformationTabViewRef={userInformationTabViewRef}
-      />
-      <Animated.View
-        style={[
-          styles.animatedElement,
-          {
-            top: userAvatarTop,
-            height: userAvatarHeight,
-            transform: [{translateY: y}],
-          },
-        ]}>
-        <Avatar
-          source={user.image}
-          outerType={avatarOuterType}
-          flashesNavigationParam={flashesNavigationParam}
-        />
-      </Animated.View>
-      <Animated.View
-        style={[
-          styles.animatedElement,
-          {
-            top: editContainerTop + userAvatarAndNameContainerHeight,
-            transform: [{translateY: y}],
-          },
-        ]}>
-        {isMe ? <EditButton /> : <SendMessageButton user={anotherUser!} />}
-      </Animated.View>
-      {showExpandButton ? (
-        <Animated.View
-          style={[
-            styles.animatedElement,
-            {
-              top: avatarToIntroduceHeight,
-              transform: [{translateY: y}],
-            },
-          ]}>
-          <ExpandButton
-            expandedIntroduceContainer={expandedIntroduceContainer}
-            setExpandedIntroduceContainer={setExpandedIntroduceContainer}
+    <>
+      {user ? (
+        <View
+          style={styles.container}
+          onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}>
+          <Animated.View
+            style={[styles.profileContaienr, {transform: [{translateY: y}]}]}
+            onLayout={(e) =>
+              setProfileContainerHeight(e.nativeEvent.layout.height)
+            }>
+            <Profile
+              user={{
+                name: user.name,
+                introduce: user.introduce,
+                image: user.image,
+              }}
+              avatarOuterType={avatarOuterType}
+              setUserAvatarAndNameContainerHeight={
+                setUserAvatarAndNameContainerHeight
+              }
+              expandedIntroduceContainer={expandedIntroduceContainer}
+              setAvatarToIntroduceHeight={setAvatarToIntroduceHeight}
+            />
+          </Animated.View>
+          <UserTabView
+            userId={user.id}
+            containerHeight={containerHeight}
+            profileContainerHeight={profileContainerHeight}
+            defaultProfileContainerHeight={defaultProfileContainerHeight}
+            posts={posts}
+            scrollY={scrollY}
             postsTabViewRef={postsTabViewRef}
             userInformationTabViewRef={userInformationTabViewRef}
           />
-        </Animated.View>
-      ) : undefined}
-      {isMe && (
-        <View style={styles.takeFlashContainer}>
-          <TakeFlashButton />
+          <Animated.View
+            style={[
+              styles.animatedElement,
+              {
+                top: userAvatarTop,
+                height: userAvatarHeight,
+                transform: [{translateY: y}],
+              },
+            ]}>
+            <Avatar
+              source={user.image}
+              outerType={avatarOuterType}
+              flashesNavigationParam={flashesNavigationParam}
+            />
+          </Animated.View>
+          <Animated.View
+            style={[
+              styles.animatedElement,
+              {
+                top: editContainerTop + userAvatarAndNameContainerHeight,
+                transform: [{translateY: y}],
+              },
+            ]}>
+            {isMe ? <EditButton /> : <SendMessageButton user={anotherUser!} />}
+          </Animated.View>
+          {showExpandButton ? (
+            <Animated.View
+              style={[
+                styles.animatedElement,
+                {
+                  top: avatarToIntroduceHeight,
+                  transform: [{translateY: y}],
+                },
+              ]}>
+              <ExpandButton
+                expandedIntroduceContainer={expandedIntroduceContainer}
+                setExpandedIntroduceContainer={setExpandedIntroduceContainer}
+                postsTabViewRef={postsTabViewRef}
+                userInformationTabViewRef={userInformationTabViewRef}
+              />
+            </Animated.View>
+          ) : undefined}
+          {isMe && (
+            <View style={styles.takeFlashContainer}>
+              <TakeFlashButton />
+            </View>
+          )}
+        </View>
+      ) : (
+        <View>
+          <Text>ユーザーがいません</Text>
         </View>
       )}
-    </View>
+    </>
   );
 };
 

@@ -6,9 +6,9 @@ import FlashMessage, {showMessage} from 'react-native-flash-message';
 // @ts-ignore
 import {createConsumer} from '@rails/actioncable';
 
-import {AppDispatch, RootState} from '../redux/index';
-import {receiveMessage} from '../redux/messages';
-import {ReceivedMessageData} from '../redux/types';
+import {AppDispatch, RootState} from '../stores/index';
+import {receiveMessage} from '../stores/messages';
+import {ReceivedMessageData} from '../stores/types';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './pages/Auth/Page';
 import {Container as Menu} from './utils/Menu';

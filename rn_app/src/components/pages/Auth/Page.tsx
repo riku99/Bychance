@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../redux/index';
+import {AppDispatch} from '../../../stores/index';
 import {firstLoginThunk} from '../../../actions/session/firstLogin';
 import {Auth} from './Auth';
 import {sampleLogin} from '../../../actions/session/sampleLogin';

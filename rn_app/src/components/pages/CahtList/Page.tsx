@@ -4,10 +4,10 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ChatList} from './ChatList';
-import {RootState} from '../../../redux/index';
-import {Room, selectAllRooms} from '../../../redux/rooms';
-import {resetRecievedMessage} from '../../../redux/otherSettings';
-import {selectChatPartnerEntities} from '../../../redux/chatPartners';
+import {RootState} from '../../../stores/index';
+import {Room, selectAllRooms} from '../../../stores/rooms';
+import {resetRecievedMessage} from '../../../stores/otherSettings';
+import {selectChatPartnerEntities} from '../../../stores/chatPartners';
 import {RootStackParamList} from '../../../screens/Root';
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
@@ -20,6 +20,7 @@ export const ChatListPage = () => {
   );
 
   const chatPartnerEntities = useSelector((state: RootState) => {
+    console.log(selectChatPartnerEntities(state));
     return selectChatPartnerEntities(state);
   });
 

@@ -9,7 +9,7 @@ import {
   headers,
   origin,
 } from '../../re-modules';
-import {Message} from '../../../redux/messages';
+import {Message} from '../../../stores/messages';
 
 export type CreateMessageThunkPayload = {message: Message; roomId: number};
 

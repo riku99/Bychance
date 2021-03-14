@@ -1,4 +1,4 @@
-import {NearbyUsers} from '../../../redux/nearbyUsers';
+import {NearbyUsers} from '../../../stores/nearbyUsers';
 import {
   axios,
   createAsyncThunk,

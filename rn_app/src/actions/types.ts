@@ -1,10 +1,10 @@
 import {AxiosError} from 'axios';
-import {User} from '../redux/user';
-import {Post} from '../redux/posts';
-import {Room} from '../redux/rooms';
-import {Message} from '../redux/messages';
-import {Flash} from '../redux/flashes';
-import {AnotherUser} from '../redux/types';
+import {User} from '../stores/user';
+import {Post} from '../stores/posts';
+import {Room} from '../stores/rooms';
+import {Message} from '../stores/messages';
+import {Flash} from '../stores/flashes';
+import {AnotherUser} from '../stores/types';
 
 export type rejectPayload =
   | {errorType: 'loginError'}

@@ -20,12 +20,12 @@ import {InfoItems} from './InfoItems';
 import {ShowModalButton} from './ShowModalButton';
 import {Modal} from './Modal';
 import {FlashesData} from './types';
-import {RootState, AppDispatch} from '../../../redux/index';
+import {RootState, AppDispatch} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
 import {createAlreadyViewdFlashThunk} from '../../../actions/flashes/createAlreadyViewedFlash';
-import {selectNearbyUserAlreadyViewed} from '../../../redux/nearbyUsers';
-import {selectChatPartnerAlreadyViewed} from '../../../redux/chatPartners';
+import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
+import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
 
 type Props = {

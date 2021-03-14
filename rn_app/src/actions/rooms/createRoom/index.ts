@@ -9,7 +9,7 @@ import {
   headers,
   origin,
 } from '../../re-modules';
-import {AnotherUser} from '../../../redux/types';
+import {AnotherUser} from '../../../stores/types';
 
 export type CreateRoomThunkPayload = {
   presence: boolean;

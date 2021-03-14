@@ -2,10 +2,10 @@ import React, {useEffect} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-import {RootState, AppDispatch} from '../../../redux/index';
+import {RootState, AppDispatch} from '../../../stores/index';
 import {UserEdit} from './UserEdit';
 import {editProfileThunk} from '../../../actions/user/editProfile';
-import {resetEditData} from '../../../redux/user';
+import {resetEditData} from '../../../stores/user';
 import {
   UserEditNavigationProp,
   RootNavigationProp,

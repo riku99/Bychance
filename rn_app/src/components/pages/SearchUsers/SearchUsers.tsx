@@ -22,8 +22,8 @@ import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
 import {UserAvatarWithOuter} from '../../utils/Avatar';
-import {AnotherUser} from '../../../redux/types';
-import {FlashesData} from '../../../redux/types';
+import {AnotherUser} from '../../../stores/types';
+import {FlashesData} from '../../../stores/types';
 
 type Props = {
   otherUsers: AnotherUser[];

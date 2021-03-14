@@ -12,8 +12,8 @@ import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 
-import {AppDispatch} from '../../../redux';
-import {creatingPost} from '../../../redux/otherSettings';
+import {AppDispatch} from '../../../stores';
+import {creatingPost} from '../../../stores/otherSettings';
 import {createPostThunk} from '../../../actions/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';

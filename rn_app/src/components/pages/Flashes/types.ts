@@ -1,4 +1,4 @@
-import {Flash} from '../../../redux/flashes';
+import {Flash} from '../../../stores/flashes';
 
 export type FlashesData = {
   entities: Flash[];

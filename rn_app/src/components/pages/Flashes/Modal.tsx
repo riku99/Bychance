@@ -5,7 +5,7 @@ import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
 
 import {deleteFlashThunk} from '../../../actions/flashes/deleteFlash';
-import {AppDispatch} from '../../../redux/index';
+import {AppDispatch} from '../../../stores/index';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 
 type Props = {

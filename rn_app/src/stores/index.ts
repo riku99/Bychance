@@ -1,6 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
-import {combineReducers} from '@reduxjs/toolkit';
-
+import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import {sessionReducer} from './session';
 import {userReducer} from './user';
 import {postsReducer} from './posts';

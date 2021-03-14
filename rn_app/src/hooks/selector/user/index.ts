@@ -1,8 +1,8 @@
 import {shallowEqual, useSelector} from 'react-redux';
 
-import {RootState} from '../../../redux/index';
-import {selectNearbyUser} from '../../../redux/nearbyUsers';
-import {selectChatPartner} from '../../../redux/chatPartners';
+import {RootState} from '../../../stores/index';
+import {selectNearbyUser} from '../../../stores/nearbyUsers';
+import {selectChatPartner} from '../../../stores/chatPartners';
 import {UserPageFrom} from '../../../screens/UserPage';
 
 export const useMyId = () =>

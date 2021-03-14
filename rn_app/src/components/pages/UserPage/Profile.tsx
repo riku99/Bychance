@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {RootState} from '../../../redux/index';
-import {User} from '../../../redux/user';
+import {RootState} from '../../../stores/index';
+import {User} from '../../../stores/user';
 import {basicStyles} from '../../../constants/styles';
 
 type Props = {

@@ -9,7 +9,7 @@ import {
   headers,
   origin,
 } from '../../re-modules';
-import {Flash} from '../../../redux/flashes';
+import {Flash} from '../../../stores/flashes';
 
 export type CreateFlashThunkPaylaod = Flash;
 

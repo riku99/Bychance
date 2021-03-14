@@ -2,8 +2,8 @@ import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {Menu} from './Menu';
-import {RootState} from '../../../redux/index';
-import {displayMenu} from '../../../redux/otherSettings';
+import {RootState} from '../../../stores/index';
+import {displayMenu} from '../../../stores/otherSettings';
 import {editUserDisplayThunk} from '../../../actions/user/editUserDisplay';
 
 export const Container = () => {
