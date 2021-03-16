@@ -15,6 +15,7 @@ import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
 import {ChatRoomStackParamList, ChatRoomStackScreen} from './ChatRoom';
 import {TakeFlashPage} from '../components/pages/TakeFlash/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {normalStyles} from '~/constants/styles/normal';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -52,7 +53,7 @@ export const RootStackScreen = () => {
                     <Button
                       title="キャンセル"
                       style={{marginBottom: 3}}
-                      titleStyle={{color: '#5c94c8'}}
+                      titleStyle={{color: normalStyles.headerTitleColor}}
                       buttonStyle={{backgroundColor: 'transparent'}}
                       onPress={() => navigation.navigate('UserEdit')}
                     />

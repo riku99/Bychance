@@ -1,7 +1,7 @@
 import React from 'react';
 import {Avatar} from 'react-native-elements';
 
-import {basicStyles} from '../../../constants/styles';
+import {normalStyles} from '../../../constants/styles/normal';
 import {UserProfileOuter} from '../AvatarOuter';
 
 type Props = {
@@ -19,7 +19,7 @@ export const UserAvatar = ({image, size, opacity, onPress}: Props) => {
       icon={!image ? {name: 'user', type: 'font-awesome'} : undefined}
       containerStyle={!image ? {backgroundColor: '#BDBDBD'} : undefined}
       placeholderStyle={{
-        backgroundColor: basicStyles.imageBackGroundColor,
+        backgroundColor: normalStyles.imageBackGroundColor,
       }}
       size={size}
       activeOpacity={opacity ? opacity : undefined}

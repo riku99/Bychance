@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
 import {RootNavigationProp} from '../../../screens/types';
+import {normalStyles} from '~/constants/styles/normal';
 
 export const EditButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
@@ -27,11 +28,11 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 30,
     alignSelf: 'center',
-    borderColor: '#4ba5fa',
+    borderColor: normalStyles.mainTextColor,
     borderWidth: 1,
   },
   editButtonTitle: {
-    color: '#4ba5fa',
+    color: normalStyles.mainTextColor,
     fontWeight: 'bold',
     fontSize: 14,
   },

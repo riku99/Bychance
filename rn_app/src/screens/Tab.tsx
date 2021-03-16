@@ -9,6 +9,7 @@ import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
 import {SearchUsersStackScreen} from './SearchUsers';
 import {ChatListStackScreen} from './ChatList';
+import {normalStyles} from '~/constants/styles/normal';
 
 type TabList = {
   Profile: undefined;
@@ -29,7 +30,7 @@ export const Tabs = () => {
       initialRouteName="Profile"
       tabBarOptions={{
         showLabel: false,
-        activeTintColor: '#5c94c8',
+        activeTintColor: normalStyles.mainColor,
         inactiveTintColor: '#b8b8b8',
       }}>
       <RootTab.Screen

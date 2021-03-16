@@ -6,7 +6,7 @@ import {selectChatPartner} from '../../../stores/chatPartners';
 import {UserPageFrom} from '../../../screens/UserPage';
 
 export const useMyId = () =>
-  useSelector((state: RootState) => state.userReducer.user!.id, shallowEqual);
+  useSelector((state: RootState) => state.userReducer.user!.id);
 
 type AnotherUserProps = {
   from?: UserPageFrom;

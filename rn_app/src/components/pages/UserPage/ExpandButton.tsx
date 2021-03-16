@@ -32,7 +32,7 @@ export const ExpandButton = React.memo(
           <MIcon
             name={!expandedIntroduceContainer ? 'expand-more' : 'expand-less'}
             size={30}
-            style={{color: '#5c94c8'}}
+            style={{color: '#bdbdbd', opacity: 0.9}}
           />
         }
         buttonStyle={{backgroundColor: 'transparent'}}

@@ -23,7 +23,8 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import {UserAvatarWithOuter} from '../../utils/Avatar';
 import {AnotherUser} from '../../../stores/types';
-import {FlashesData} from '../../../stores/types';
+import {FlashesData} from '~/components/pages/Flashes/types';
+import {normalStyles} from '~/constants/styles/normal';
 
 type Props = {
   otherUsers: AnotherUser[];
@@ -224,7 +225,7 @@ export const SearchUsers = React.memo(
           placeholder={{}}
           style={{
             viewContainer: {
-              backgroundColor: '#4ba5fa',
+              backgroundColor: normalStyles.mainColor,
               width: 130,
               height: 40,
               alignItems: 'center',

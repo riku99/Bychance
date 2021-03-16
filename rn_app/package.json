@@ -31,6 +31,7 @@
     "react-native": "0.63.3",
     "react-native-camera": "^3.40.0",
     "react-native-elements": "^2.3.2",
+    "react-native-emoji": "^1.8.0",
     "react-native-flash-message": "^0.1.17",
     "react-native-fs": "^2.16.6",
     "react-native-geolocation-service": "^5.0.0",

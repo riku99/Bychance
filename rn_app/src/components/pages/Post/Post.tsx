@@ -5,7 +5,7 @@ import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 
 import {Post as PostType} from '../../../stores/posts';
-import {basicStyles} from '../../../constants/styles';
+import {normalStyles} from '../../../constants/styles/normal';
 
 type Props = {
   post: PostType;
@@ -17,7 +17,7 @@ export const Post = ({post, user, deletePost}: Props) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <View style={{backgroundColor: basicStyles.imageBackGroundColor}}>
+      <View style={{backgroundColor: normalStyles.imageBackGroundColor}}>
         <Image source={{uri: post.image}} style={styles.image} />
       </View>
       <View style={styles.upperBox}>

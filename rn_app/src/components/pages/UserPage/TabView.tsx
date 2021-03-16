@@ -21,6 +21,7 @@ import {AppDispatch} from '../../../stores/index';
 import {Post} from '../../../stores/posts';
 import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../actions/user/refreshUser';
+import {normalStyles} from '~/constants/styles/normal';
 
 type PostsRouteProps = {
   posts: Post[];
@@ -415,7 +416,7 @@ export const UserTabView = React.memo(
           style={[styles.tabBarContainer, {transform: [{translateY: y}]}]}>
           <TabBar
             {...props}
-            indicatorStyle={{backgroundColor: '#4ba5fa'}}
+            indicatorStyle={{backgroundColor: '#ff6e7f'}}
             style={{backgroundColor: 'white'}}
             renderLabel={() => null}
             renderIcon={({route, focused}) => {
@@ -423,13 +424,13 @@ export const UserTabView = React.memo(
                 <MIcon
                   name="apps"
                   size={25}
-                  color={focused ? '#4ba5fa' : 'lightgray'}
+                  color={focused ? normalStyles.mainColor : 'lightgray'}
                 />
               ) : (
                 <MIcon
                   name="wysiwyg"
                   size={25}
-                  color={focused ? '#4ba5fa' : 'lightgray'}
+                  color={focused ? normalStyles.mainColor : 'lightgray'}
                 />
               );
             }}
@@ -472,7 +473,8 @@ const styles = StyleSheet.create({
   comingSoon: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: '#a6c6f7',
+    color: normalStyles.mainColor,
+    opacity: 0.5,
     marginTop: 40,
     marginBottom: 40,
     alignSelf: 'center',

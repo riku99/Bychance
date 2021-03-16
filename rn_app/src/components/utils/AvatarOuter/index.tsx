@@ -8,11 +8,13 @@ const gradientConfig: {
   end: {x: number; y: number};
   baseStyle: ViewStyle;
 } = {
-  colors: ['#00FFFF', '#17C8FF', '#329BFF', '#4C64FF', '#6536FF', '#8000FF'],
+  colors: ['#faa0ab', '#ffb86b', '#fc8392', '#fc8392'],
   start: {x: 0.0, y: 1.0},
   end: {x: 1.0, y: 1.0},
   baseStyle: {alignItems: 'center', justifyContent: 'center'},
 };
+
+//'#00FFFF', '#17C8FF', '#329BFF', '#4C64FF', '#6536FF', '#8000FF'
 
 type Props = {
   children: Element;

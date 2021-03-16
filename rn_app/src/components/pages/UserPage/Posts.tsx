@@ -9,7 +9,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 
 import {Post} from '../../../stores/posts';
-import {basicStyles} from '../../../constants/styles';
+import {normalStyles} from '../../../constants/styles/normal';
 import {
   UserPageNavigationProp,
   MyPageNavigationProp,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   postWrapper: {
-    backgroundColor: basicStyles.imageBackGroundColor,
+    backgroundColor: normalStyles.imageBackGroundColor,
     borderRadius: 10,
     marginBottom: 2,
   },

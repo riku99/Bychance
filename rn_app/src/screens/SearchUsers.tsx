@@ -1,9 +1,12 @@
 import React from 'react';
+import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {SearchUsersPage} from '../components/pages/NearbyUsers/Page';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
+import {normalStyles} from '~/constants/styles/normal';
+import Emoji from 'react-native-emoji';
 
 export type SearchUsersStackParamList = {
   SearchUsers: undefined;
@@ -22,7 +25,21 @@ export const SearchUsersStackScreen = () => {
       <Stack.Screen
         name="SearchUsers"
         component={SearchUsersPage}
-        options={{title: 'ユーザーを見つける'}}
+        options={{
+          headerTitle: () => (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  color: normalStyles.headerTitleColor,
+                }}>
+                ユーザーを見つける
+              </Text>
+              <Emoji name="eyes" />
+            </View>
+          ),
+        }}
       />
       {Object.entries(userPageScreensGroup).map(([name, component]) => (
         <Stack.Screen

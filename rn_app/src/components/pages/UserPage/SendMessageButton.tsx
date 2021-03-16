@@ -10,6 +10,7 @@ import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {AnotherUser} from '../../../stores/types';
 import {createRoomThunk} from '../../../actions/rooms/createRoom';
 import {RootNavigationProp} from '../../../screens/types';
+import {normalStyles} from '~/constants/styles/normal';
 
 type Props = {
   user: AnotherUser;
@@ -40,7 +41,7 @@ export const SendMessageButton = React.memo(({user}: Props) => {
         <Icon
           name="send-o"
           size={15}
-          color="#2c3e50"
+          color={normalStyles.mainTextColor}
           style={{marginRight: 8}}
         />
       }
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: '#2c3e50',
+    color: normalStyles.mainTextColor,
   },
   button: {
     width: '90%',

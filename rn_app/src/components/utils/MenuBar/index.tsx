@@ -4,12 +4,13 @@ import {Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 
 import {displayMenu} from '../../../stores/otherSettings';
+import {normalStyles} from '~/constants/styles/normal';
 
 export const MenuBar = () => {
   const dispatch = useDispatch();
   return (
     <Button
-      icon={{name: 'menu', color: '#64a0d9', size: 25}}
+      icon={{name: 'menu', size: 25, color: normalStyles.headerTitleColor}}
       buttonStyle={styles.button}
       onPress={() => {
         dispatch(displayMenu());

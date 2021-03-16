@@ -10,7 +10,7 @@ import {useSelector} from 'react-redux';
 
 import {RootState} from '../../../stores/index';
 import {User} from '../../../stores/user';
-import {basicStyles} from '../../../constants/styles';
+import {normalStyles} from '../../../constants/styles/normal';
 
 type Props = {
   user: Pick<User, 'name' | 'introduce' | 'image'>;
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     marginTop: 3,
-    color: basicStyles.mainTextColor,
+    color: normalStyles.mainTextColor,
     fontWeight: '500',
   },
   editContainer: {
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   introduce: {
-    color: basicStyles.mainTextColor,
+    color: normalStyles.mainTextColor,
     lineHeight: oneIntroduceTextLineHeght,
   },
   creatingPost: {

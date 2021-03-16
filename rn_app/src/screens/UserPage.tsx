@@ -1,12 +1,14 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
+import Emoji from 'react-native-emoji';
 
 import {Container as Post} from '../components/pages/Post/Page';
 import {Post as PostType} from '../stores/posts';
 import {MenuBar} from '../components/utils/MenuBar';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {UserPage} from '../components/pages/UserPage/Page';
+import {normalStyles} from '~/constants/styles/normal';
 
 export type MyPageStackParamList = {
   MyPage: undefined;
@@ -31,15 +33,18 @@ export const MyPageStackScreen = () => {
         options={{
           headerTitle: () => null,
           headerLeft: () => (
-            <Text
-              style={{
-                marginLeft: 20,
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: '#5c94c8',
-              }}>
-              マイページ
-            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={{
+                  marginLeft: 20,
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: normalStyles.headerTitleColor,
+                }}>
+                マイページ
+              </Text>
+              <Emoji name="open_hands" style={{fontSize: 30}} />
+            </View>
           ),
           headerRight: () => <MenuBar />,
         }}

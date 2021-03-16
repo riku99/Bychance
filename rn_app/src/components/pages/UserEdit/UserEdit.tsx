@@ -11,7 +11,7 @@ import {Button} from 'react-native-elements';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 
 import {UserAvatar} from '../../utils/Avatar';
-import {basicStyles} from '../../../constants/styles';
+import {normalStyles} from '../../../constants/styles/normal';
 import {UserEditNavigationProp} from '../../../screens/types';
 
 type Props = {
@@ -107,8 +107,8 @@ export const UserEdit = ({
           !loading ? (
             <Button
               title="完了"
-              titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
-              buttonStyle={{backgroundColor: 'transparent'}}
+              titleStyle={styles.completeButtonTitle}
+              buttonStyle={styles.completeButton}
               onPress={() => {
                 setLoding(true);
                 editProfile({
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 100,
     fontSize: 16,
-    color: basicStyles.mainTextColor,
+    color: normalStyles.mainTextColor,
   },
   image: {
     display: 'flex',
@@ -267,11 +267,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   completeButton: {
-    marginTop: 20,
     backgroundColor: 'transparent',
   },
-  completeTitle: {
-    color: '#4fa9ff',
+  completeButtonTitle: {
+    color: normalStyles.blueText,
     fontWeight: 'bold',
   },
 });

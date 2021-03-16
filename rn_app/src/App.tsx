@@ -5,6 +5,7 @@ import {store} from './stores/index';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 
 import Root from './components/Root';
+import {normalStyles} from '~/constants/styles/normal';
 
 const App: () => React.ReactNode = () => {
   return (
@@ -20,8 +21,8 @@ export const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#5c94c8',
-    text: '#5c94c8',
+    text: normalStyles.headerTitleColor,
+    primary: normalStyles.headerTitleColor,
     background: 'white',
   },
 };
