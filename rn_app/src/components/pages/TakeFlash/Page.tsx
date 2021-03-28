@@ -145,6 +145,6 @@ export const TakeFlashPage = () => {
       />
     );
   } else if (targetPhoto && !targetVideo && !recordingVideo) {
-    return <EditImage source={targetPhoto.uri} />;
+    return <EditImage source={targetPhoto} />;
   }
 };

@@ -12,9 +12,6 @@ target 'rn_app' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
-
-  pod 'react-native-photo-view-ex', :path => '../node_modules/react-native-photo-view-ex'
-
   target 'rn_appTests' do
     inherit! :complete
     # Pods for testing

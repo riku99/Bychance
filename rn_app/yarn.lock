@@ -6152,6 +6152,11 @@ react-native-gifted-chat@^0.16.3:
     react-native-typing-animation "^0.1.7"
     uuid "3.4.0"
 
+react-native-image-colors@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-image-colors/-/react-native-image-colors-1.2.5.tgz#9ef185d0d2157ce0a975c2a17b62b405e647d0f5"
+  integrity sha512-fuNLWhKqeXldLuWjKcoSHbR+QIqRs3EcK5mkJVviKNlRKNNZl0GGYZDSFA5KW/xr2LchSS2+jqqsZaO+GeisgQ==
+
 react-native-image-picker@^2.3.4:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-2.3.4.tgz#1c31dbe9872ade17e2ed6457b0c669d63c322590"

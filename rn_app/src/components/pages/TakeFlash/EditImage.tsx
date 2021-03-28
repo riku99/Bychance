@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, View, Animated, Dimensions} from 'react-native';
 import {
   PanGestureHandler,
@@ -8,9 +8,13 @@ import {
   PinchGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
+import ImageColors from 'react-native-image-colors';
 
 type Props = {
-  source: string;
+  source: {
+    base64: string;
+    uri: string;
+  };
 };
 
 export const EditImage = ({source}: Props) => {
@@ -26,6 +30,20 @@ export const EditImage = ({source}: Props) => {
 
   const panGestureDiffY = useRef(0);
   const panGestureDiffX = useRef(0);
+
+  const [backGroundColor, setBackGroundColor] = useState<undefined | string>();
+
+  useEffect(() => {
+    const g = async () => {
+      const result = await ImageColors.getColors(
+        'data:image/jpeg;base64,' + source.base64,
+      );
+      if (result.platform === 'ios') {
+        setBackGroundColor(result.background);
+      }
+    };
+    g();
+  }, [source.base64]);
 
   const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
     const _scale = e.nativeEvent.scale;
@@ -66,12 +84,16 @@ export const EditImage = ({source}: Props) => {
       <PinchGestureHandler
         onHandlerStateChange={onPinchHandlerStateChange}
         onGestureEvent={onPinchGestureEvent}>
-        <View style={styles.pinchView}>
+        <View
+          style={[
+            styles.pinchView,
+            {backgroundColor: backGroundColor ? backGroundColor : undefined},
+          ]}>
           <PanGestureHandler
             onGestureEvent={onPanGesture}
             onHandlerStateChange={onPanGestureStateChange}>
             <Animated.Image
-              source={{uri: source}}
+              source={{uri: source.uri}}
               style={[
                 styles.photoStyle,
                 {transform: [{scale}, {translateX}, {translateY}]},
