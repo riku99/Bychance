@@ -7,6 +7,7 @@ import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 
 import {TakeFlash} from './TakeFlash';
+import {EditImage} from './EditImage';
 import {AppDispatch} from '../../../stores/index';
 import {creatingFlash} from '../../../stores/otherSettings';
 import {createFlashThunk} from '../../../actions/flashes/createFlash';
@@ -22,6 +23,7 @@ export const TakeFlashPage = () => {
     uri: string;
   } | null>(null);
   const [targetVideo, setTargetVideo] = useState<{uri: string} | null>(null);
+  const [recordingVideo, setRecordingVideo] = useState(false);
 
   const cameraRef = useRef<RNCamera>(null);
 
@@ -124,19 +126,25 @@ export const TakeFlashPage = () => {
     );
   };
 
-  return (
-    <TakeFlash
-      cameraRef={cameraRef}
-      targetPhoto={targetPhoto}
-      targetVideo={targetVideo}
-      takePhoto={takePhoto}
-      takeVideo={takeVideo}
-      stopVideo={stopVideo}
-      firstCameraRollPhoto={firstCameraRollPhoto}
-      goBack={backScreen}
-      saveDataToCameraRoll={saveDataToCameraRoll}
-      createFlash={createFlash}
-      pickImageOrVideo={pickImageOrVideo}
-    />
-  );
+  if (!targetPhoto && !targetVideo) {
+    return (
+      <TakeFlash
+        cameraRef={cameraRef}
+        targetPhoto={targetPhoto}
+        targetVideo={targetVideo}
+        takePhoto={takePhoto}
+        takeVideo={takeVideo}
+        stopVideo={stopVideo}
+        firstCameraRollPhoto={firstCameraRollPhoto}
+        goBack={backScreen}
+        saveDataToCameraRoll={saveDataToCameraRoll}
+        createFlash={createFlash}
+        pickImageOrVideo={pickImageOrVideo}
+        recordingVideo={recordingVideo}
+        setRecordingVideo={setRecordingVideo}
+      />
+    );
+  } else if (targetPhoto && !targetVideo && !recordingVideo) {
+    return <EditImage source={targetPhoto.uri} />;
+  }
 };

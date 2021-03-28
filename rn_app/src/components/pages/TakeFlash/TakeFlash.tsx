@@ -6,7 +6,6 @@ import {
   Dimensions,
   LayoutAnimation,
   ViewStyle,
-  Image,
   ActivityIndicator,
   TouchableOpacity,
   ImageBackground,
@@ -44,6 +43,8 @@ type Props = {
     uri: string;
   }) => Promise<void>;
   pickImageOrVideo: () => void;
+  recordingVideo: boolean;
+  setRecordingVideo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const TakeFlash = React.memo(
@@ -59,9 +60,10 @@ export const TakeFlash = React.memo(
     saveDataToCameraRoll,
     createFlash,
     pickImageOrVideo,
+    recordingVideo,
+    setRecordingVideo,
   }: Props) => {
     const [backPhotoMode, setBackPhotoMode] = useState(true);
-    const [recordingVideo, setRecordingVideo] = useState(false);
     const [savingData, setSavingData] = useState(false);
 
     const shootButtonFlexstyle: ViewStyle = {
@@ -166,12 +168,7 @@ export const TakeFlash = React.memo(
         ) : (
           <>
             {targetPhoto && !targetVideo && !recordingVideo ? (
-              <>
-                <Image
-                  source={{uri: targetPhoto.uri}}
-                  style={{width: '100%', height: '100%'}}
-                />
-              </>
+              <></>
             ) : (
               !targetPhoto &&
               !recordingVideo &&

@@ -1416,6 +1416,14 @@
   resolved "https://registry.yarnpkg.com/@types/rails-actioncable/-/rails-actioncable-0.0.21.tgz#36b2b9ccae318fc11baa02b58e753eefdd370d5d"
   integrity sha1-NrK5zK4xj8EbqgK1jnU+7903DV0=
 
+"@types/react-native-photo-view@^1.5.3":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@types/react-native-photo-view/-/react-native-photo-view-1.5.3.tgz#ada480d353c4653b242ed38a00285e9deceb428e"
+  integrity sha512-fIyC/O4+nlraVvyuLcObbpvP27GSdoGNCluv61cmGwCRFf9XPzFN2kYuZuOsy9hrPEtiVyZ66n+Xi/k7B3noVg==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-native-vector-icons@^6.4.5":
   version "6.4.6"
   resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.6.tgz#848e3b14572def56212cafbf5cb1254b445bfb41"
