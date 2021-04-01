@@ -208,6 +208,8 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.1.9):
     - React-Core
+  - react-native-slider (3.0.3):
+    - React
   - react-native-video (5.1.0-alpha8):
     - React
     - react-native-video/Video (= 5.1.0-alpha8)
@@ -283,6 +285,8 @@ PODS:
     - React
   - RNImageColors (1.2.5):
     - React
+  - RNImageEditor (0.8.3):
+    - React
   - RNKeychain (6.2.0):
     - React
   - RNLine (2.1.0):
@@ -321,6 +325,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-video (from `../node_modules/react-native-video`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -337,6 +342,7 @@ DEPENDENCIES:
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageColors (from `../node_modules/react-native-image-colors`)
+  - "RNImageEditor (from `../node_modules/@wwimmo/react-native-sketch-canvas`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - "RNLine (from `../node_modules/@xmartlabs/react-native-line`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -394,6 +400,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-resizer"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-video:
     :path: "../node_modules/react-native-video"
   React-RCTActionSheet:
@@ -426,6 +434,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageColors:
     :path: "../node_modules/react-native-image-colors"
+  RNImageEditor:
+    :path: "../node_modules/@wwimmo/react-native-sketch-canvas"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNLine:
@@ -464,6 +474,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: c6d75c4ab2cf46f9289f341242b219cb3c1180d3
   react-native-image-resizer: 4999a7dff8fc7fed5ed7d7c7dbfa5facbd345861
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
+  react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
   react-native-video: dbb8df4f0bbdf80de6797c90fcad8bc12b19401d
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
@@ -480,6 +491,7 @@ SPEC CHECKSUMS:
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNImageColors: f55f90cc27ef799c80e6b9a5798c9405919d328e
+  RNImageEditor: 43f5f80bbfcb66dd9fff2399a22f3500514617e2
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
   RNLine: b9b67a03a9228832b3ba6c40f5015169fdb264a5
   RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476

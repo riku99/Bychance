@@ -9,6 +9,10 @@ import {
   State,
 } from 'react-native-gesture-handler';
 import ImageColors from 'react-native-image-colors';
+import {Button} from 'react-native-elements';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {SketchCanvas} from './SketchCanvas';
 
 type Props = {
   source: {
@@ -32,6 +36,8 @@ export const EditImage = ({source}: Props) => {
   const panGestureDiffX = useRef(0);
 
   const [backGroundColor, setBackGroundColor] = useState<undefined | string>();
+
+  const [sketchMode, setSketchMode] = useState(false);
 
   useEffect(() => {
     const g = async () => {
@@ -79,8 +85,29 @@ export const EditImage = ({source}: Props) => {
     }
   };
 
+  const {top} = useSafeAreaInsets();
+
   return (
     <View style={styles.container}>
+      {!sketchMode && (
+        <View style={[styles.buttonItemsContainer, {top}]}>
+          <Button
+            icon={{name: 'close', color: 'white', size: 30}}
+            buttonStyle={{backgroundColor: 'transparent'}}
+          />
+          <View style={{flexDirection: 'row'}}>
+            <Button
+              icon={{name: 'create', color: 'white', size: 30}}
+              buttonStyle={{backgroundColor: 'transparent'}}
+              onPress={() => setSketchMode(true)}
+            />
+            <Button
+              icon={{name: 'text-fields', color: 'white', size: 30}}
+              buttonStyle={{backgroundColor: 'transparent'}}
+            />
+          </View>
+        </View>
+      )}
       <PinchGestureHandler
         onHandlerStateChange={onPinchHandlerStateChange}
         onGestureEvent={onPinchGestureEvent}>
@@ -103,6 +130,7 @@ export const EditImage = ({source}: Props) => {
           </PanGestureHandler>
         </View>
       </PinchGestureHandler>
+      <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
     </View>
   );
 };
@@ -113,6 +141,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  buttonItemsContainer: {
+    width: '95%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    zIndex: 10,
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+  },
   pinchView: {
     width,
     height: '100%',
@@ -120,5 +157,13 @@ const styles = StyleSheet.create({
   photoStyle: {
     width,
     height: '100%',
+  },
+  canvas: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
   },
 });

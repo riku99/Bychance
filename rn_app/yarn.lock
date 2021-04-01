@@ -1193,6 +1193,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/picker/-/picker-1.8.1.tgz#94f14f0aad98fa7592967b941be97deec95c3805"
   integrity sha512-Sj9DzX1CSnmYiuEQ5fQhExoo4XjSKoZkqLPAAybycq6RHtCuWppf+eJXRMCOJki25BlKSSt+qVqg0fIe//ujNQ==
 
+"@react-native-community/slider@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-3.0.3.tgz#830167fd757ba70ac638747ba3169b2dbae60330"
+  integrity sha512-8IeHfDwJ9/CTUwFs6x90VlobV3BfuPgNLjTgC6dRZovfCWigaZwVNIFFJnHBakK3pW2xErAPwhdvNR4JeNoYbw==
+
 "@react-native-picker/picker@^1.8.3":
   version "1.9.8"
   resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.9.8.tgz#7272ec9957e2234bc23aeeee2b25db1ede9d1ffc"
@@ -1570,6 +1575,10 @@
   dependencies:
     invariant "^2.2.4"
     lodash "^4.5.0"
+
+"@wwimmo/react-native-sketch-canvas@git+https://github.com/riku99/react-native-sketch-image.git":
+  version "0.8.3"
+  resolved "git+https://github.com/riku99/react-native-sketch-image.git#919643a43de3f614ed8002e5732427541eeaa72f"
 
 "@xmartlabs/react-native-line@^2.1.0":
   version "2.1.0"
