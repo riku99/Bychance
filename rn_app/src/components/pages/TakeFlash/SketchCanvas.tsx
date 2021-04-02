@@ -15,9 +15,12 @@ export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
   const {top} = useSafeAreaInsets();
 
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      pointerEvents={!sketchMode ? 'none' : undefined}>
       <RNImageEditor
         ref={canvasRef}
+        pointerEvents="box-none"
         touchEnabled={sketchMode}
         containerStyle={styles.canvasContainer}
         canvasStyle={styles.canvas}
@@ -30,10 +33,9 @@ export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
                   style={[
                     {
                       backgroundColor: color,
-                      borderWidth: 3,
-                      borderColor: 'white',
                     },
                     styles.strokeColorButton,
+                    styles.strokeComponent,
                   ]}
                 />
               )}
@@ -127,6 +129,10 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
     backgroundColor: 'red',
+  },
+  strokeComponent: {
+    borderWidth: 3,
+    borderColor: 'white',
   },
   strokeColorButton: {
     marginHorizontal: 5,

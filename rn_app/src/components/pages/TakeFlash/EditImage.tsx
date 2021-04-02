@@ -135,7 +135,7 @@ export const EditImage = ({source}: Props) => {
   );
 };
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
