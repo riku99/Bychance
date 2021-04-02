@@ -13,6 +13,7 @@ import {Button} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {SketchCanvas} from './SketchCanvas';
+import {BackButton} from '~/components/utils/BackButton';
 
 type Props = {
   source: {
@@ -91,7 +92,7 @@ export const EditImage = ({source}: Props) => {
     <View style={styles.container}>
       {!sketchMode && (
         <View style={[styles.buttonItemsContainer, {top}]}>
-          <Button
+          <BackButton
             icon={{name: 'close', color: 'white', size: 30}}
             buttonStyle={{backgroundColor: 'transparent'}}
           />
@@ -135,7 +136,7 @@ export const EditImage = ({source}: Props) => {
   );
 };
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {

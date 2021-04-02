@@ -1,13 +1,13 @@
 import React, {useMemo} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Button} from 'react-native-elements';
 
 import {UserAvatar} from '../../utils/Avatar';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
 import {useTimeDiff} from '../../../hooks/time';
 import {useAnotherUser, useUser} from '../../../hooks/selector/user';
+import {BackButton} from '~/components/utils/BackButton';
 
 type Props = {
   userData: FlashUserData;
@@ -38,10 +38,6 @@ export const InfoItems = ({
     navigation.push('UserPage', {userId: userData.userId, from: userData.from});
   };
 
-  const onCloseButtonPress = () => {
-    navigation.goBack();
-  };
-
   return (
     <View style={styles.infoItems}>
       <TouchableOpacity style={styles.userInfo} onPress={onUserPress}>
@@ -53,10 +49,9 @@ export const InfoItems = ({
           {timeDiff < 24 ? timeDiff.toString() + '時間前' : '1日前'}
         </Text>
       </TouchableOpacity>
-      <Button
+      <BackButton
         icon={{name: 'close', color: 'white'}}
         buttonStyle={{backgroundColor: 'transparent'}}
-        onPress={onCloseButtonPress}
       />
     </View>
   );
