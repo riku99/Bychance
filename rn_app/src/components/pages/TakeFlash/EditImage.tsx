@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {StyleSheet, View, Animated, Dimensions} from 'react-native';
 import {
   PanGestureHandler,
@@ -8,12 +8,12 @@ import {
   PinchGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
-import ImageColors from 'react-native-image-colors';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {SketchCanvas} from './SketchCanvas';
 import {EditImageTopButtonItems} from './EditImageButtonTopButtonItems';
+import {ColorPicker} from './ColorPicker';
 
 type Props = {
   source: {
@@ -40,6 +40,7 @@ export const EditImage = ({source}: Props) => {
   const [bottomBackGroundColor, setBottomBackGroundColor] = useState('black');
 
   const [sketchMode, setSketchMode] = useState(false);
+  const [colorPickerMode, setColorPickerMode] = useState(false);
 
   const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
     const _scale = e.nativeEvent.scale;
@@ -81,12 +82,11 @@ export const EditImage = ({source}: Props) => {
     <LinearGradient
       style={styles.container}
       colors={[topBackGroundColor, bottomBackGroundColor]}>
-      {!sketchMode && (
+      {!sketchMode && !colorPickerMode && (
         <View style={[styles.buttonItemsContainer, {top}]}>
           <EditImageTopButtonItems
             setSketchMode={setSketchMode}
-            setTopBackGroundColor={setTopBackGroundColor}
-            setBottomBackGroundColor={setBottomBackGroundColor}
+            setColorPickerMode={setColorPickerMode}
           />
         </View>
       )}
@@ -109,6 +109,15 @@ export const EditImage = ({source}: Props) => {
         </View>
       </PinchGestureHandler>
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
+      {colorPickerMode && (
+        <ColorPicker
+          setTopBackGroundColor={setTopBackGroundColor}
+          setBottomBackGroundColor={setBottomBackGroundColor}
+          setColorPickerMode={setColorPickerMode}
+          topBackGroundColor={topBackGroundColor}
+          bottomBackGroundColor={bottomBackGroundColor}
+        />
+      )}
     </LinearGradient>
   );
 };
