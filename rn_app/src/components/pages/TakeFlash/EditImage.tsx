@@ -9,11 +9,10 @@ import {
   State,
 } from 'react-native-gesture-handler';
 import ImageColors from 'react-native-image-colors';
-import {Button} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {SketchCanvas} from './SketchCanvas';
-import {BackButton} from '~/components/utils/BackButton';
+import {EditImageTopButtonItems} from './EditImageButtonTopButtonItems';
 
 type Props = {
   source: {
@@ -46,6 +45,7 @@ export const EditImage = ({source}: Props) => {
         'data:image/jpeg;base64,' + source.base64,
       );
       if (result.platform === 'ios') {
+        console.log(result);
         setBackGroundColor(result.background);
       }
     };
@@ -92,21 +92,7 @@ export const EditImage = ({source}: Props) => {
     <View style={styles.container}>
       {!sketchMode && (
         <View style={[styles.buttonItemsContainer, {top}]}>
-          <BackButton
-            icon={{name: 'close', color: 'white', size: 30}}
-            buttonStyle={{backgroundColor: 'transparent'}}
-          />
-          <View style={{flexDirection: 'row'}}>
-            <Button
-              icon={{name: 'create', color: 'white', size: 30}}
-              buttonStyle={{backgroundColor: 'transparent'}}
-              onPress={() => setSketchMode(true)}
-            />
-            <Button
-              icon={{name: 'text-fields', color: 'white', size: 30}}
-              buttonStyle={{backgroundColor: 'transparent'}}
-            />
-          </View>
+          <EditImageTopButtonItems setSketchMode={setSketchMode} />
         </View>
       )}
       <PinchGestureHandler
@@ -143,13 +129,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonItemsContainer: {
-    width: '95%',
-    flexDirection: 'row',
-    alignItems: 'center',
     position: 'absolute',
     zIndex: 10,
-    alignSelf: 'center',
-    justifyContent: 'space-between',
+    width: '95%',
   },
   pinchView: {
     width,
