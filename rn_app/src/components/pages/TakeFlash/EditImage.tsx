@@ -10,6 +10,7 @@ import {
 } from 'react-native-gesture-handler';
 import ImageColors from 'react-native-image-colors';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {SketchCanvas} from './SketchCanvas';
 import {EditImageTopButtonItems} from './EditImageButtonTopButtonItems';
@@ -35,22 +36,10 @@ export const EditImage = ({source}: Props) => {
   const panGestureDiffY = useRef(0);
   const panGestureDiffX = useRef(0);
 
-  const [backGroundColor, setBackGroundColor] = useState<undefined | string>();
+  const [topBackGroundColor, setTopBackGroundColor] = useState('black');
+  const [bottomBackGroundColor, setBottomBackGroundColor] = useState('black');
 
   const [sketchMode, setSketchMode] = useState(false);
-
-  useEffect(() => {
-    const g = async () => {
-      const result = await ImageColors.getColors(
-        'data:image/jpeg;base64,' + source.base64,
-      );
-      if (result.platform === 'ios') {
-        console.log(result);
-        setBackGroundColor(result.background);
-      }
-    };
-    g();
-  }, [source.base64]);
 
   const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
     const _scale = e.nativeEvent.scale;
@@ -89,20 +78,22 @@ export const EditImage = ({source}: Props) => {
   const {top} = useSafeAreaInsets();
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      style={styles.container}
+      colors={[topBackGroundColor, bottomBackGroundColor]}>
       {!sketchMode && (
         <View style={[styles.buttonItemsContainer, {top}]}>
-          <EditImageTopButtonItems setSketchMode={setSketchMode} />
+          <EditImageTopButtonItems
+            setSketchMode={setSketchMode}
+            setTopBackGroundColor={setTopBackGroundColor}
+            setBottomBackGroundColor={setBottomBackGroundColor}
+          />
         </View>
       )}
       <PinchGestureHandler
         onHandlerStateChange={onPinchHandlerStateChange}
         onGestureEvent={onPinchGestureEvent}>
-        <View
-          style={[
-            styles.pinchView,
-            {backgroundColor: backGroundColor ? backGroundColor : undefined},
-          ]}>
+        <View style={[styles.pinchView]}>
           <PanGestureHandler
             onGestureEvent={onPanGesture}
             onHandlerStateChange={onPanGestureStateChange}>
@@ -118,7 +109,7 @@ export const EditImage = ({source}: Props) => {
         </View>
       </PinchGestureHandler>
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
-    </View>
+    </LinearGradient>
   );
 };
 
