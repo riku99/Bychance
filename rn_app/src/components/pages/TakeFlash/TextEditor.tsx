@@ -10,12 +10,14 @@ import {
 
 export const TextEditor = () => {
   const inputRef = useRef<null | TextInput>(null);
-  const defaultMarginTop = useRef<null | number>(null);
-  const defaultInputHeight = useRef<number>(0);
-  const [inputMarginTop, setInputMarginTop] = useState(0);
-  const [fontSize, setFontSize] = useState(35);
-  const [inputHeight, setInputHeight] = useState(35);
+
   const [text, setText] = useState('');
+  const [fontSize, setFontSize] = useState(35);
+
+  const defaultMarginTop = useRef<null | number>(null);
+  const [inputMarginTop, setInputMarginTop] = useState(0);
+
+  const [inputHeight, setInputHeight] = useState(0);
 
   const keyBoardWillShow = (e: KeyboardEvent) => {
     const top = (height - e.endCoordinates.height) / 2;
@@ -37,8 +39,6 @@ export const TextEditor = () => {
     return () => Keyboard.removeListener('keyboardWillShow', keyBoardWillShow);
   }, [inputMarginTop]);
 
-  console.log(`最新のmarginTopは${inputMarginTop}です`);
-
   return (
     <View style={styles.container}>
       <TextInput
@@ -49,19 +49,12 @@ export const TextEditor = () => {
           {
             fontSize,
             marginTop: inputMarginTop,
-            height: Math.max(defaultInputHeight.current, inputHeight),
           },
         ]}
         onContentSizeChange={(e) => {
-          console.log(
-            `コンテンツのサイズが${e.nativeEvent.contentSize.height}になりました`,
-          );
-          if (e.nativeEvent.contentSize.height !== inputHeight) {
-            console.log('高さが変化したので更新します');
-            setInputHeight(e.nativeEvent.contentSize.height);
-          }
+          console.log(e.nativeEvent.contentSize);
+          setInputHeight(e.nativeEvent.contentSize.height);
           if (e.nativeEvent.contentSize.height > inputHeight) {
-            console.log('それまでのinputHeightより高くなりました');
             // heightが高くなった = margontopが少なくなる
             // どれくらい少なくなるかというと、増加したheight分
             // 増加したheightをどうやってとるか。contentsize.height - inputheight
@@ -83,14 +76,6 @@ export const TextEditor = () => {
           }
         }}
         onChangeText={(t) => setText(t)}
-        onLayout={(e) => {
-          if (!defaultInputHeight.current) {
-            console.log(
-              `デフォルトの高さを${e.nativeEvent.layout.height}で設定します`,
-            );
-            defaultInputHeight.current = e.nativeEvent.layout.height;
-          }
-        }}
         value={text}
       />
     </View>
@@ -108,7 +93,7 @@ const styles = StyleSheet.create({
   },
   input: {
     maxWidth: width,
-    borderColor: 'gray',
+    borderColor: 'transparent',
     borderWidth: 1,
     color: 'white',
     fontWeight: 'bold',
