@@ -14,6 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {SketchCanvas} from './SketchCanvas';
 import {EditImageTopButtonItems} from './EditImageButtonTopButtonItems';
 import {ColorPicker} from './ColorPicker';
+import {TextEditor} from './TextEditor';
 
 type Props = {
   source: {
@@ -118,6 +119,10 @@ export const EditImage = ({source}: Props) => {
           bottomBackGroundColor={bottomBackGroundColor}
         />
       )}
+      <View
+        style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
+        <TextEditor />
+      </View>
     </LinearGradient>
   );
 };

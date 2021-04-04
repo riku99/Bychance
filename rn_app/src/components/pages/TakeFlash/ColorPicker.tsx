@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    zIndex: 20,
+    zIndex: 30,
   },
   colorPicker: {
     width: 180,

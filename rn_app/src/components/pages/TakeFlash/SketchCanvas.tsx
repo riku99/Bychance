@@ -20,7 +20,6 @@ export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
       pointerEvents={!sketchMode ? 'none' : undefined}>
       <RNImageEditor
         ref={canvasRef}
-        pointerEvents="box-none"
         touchEnabled={sketchMode}
         containerStyle={styles.canvasContainer}
         canvasStyle={styles.canvas}
