@@ -1,4 +1,10 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   TextInput,
@@ -6,6 +12,8 @@ import {
   Dimensions,
   Keyboard,
   KeyboardEvent,
+  NativeSyntheticEvent,
+  TextInputContentSizeChangeEventData,
 } from 'react-native';
 
 export const TextEditor = () => {
@@ -19,13 +27,24 @@ export const TextEditor = () => {
 
   const [inputHeight, setInputHeight] = useState(0);
 
-  const keyBoardWillShow = (e: KeyboardEvent) => {
-    const top = (height - e.endCoordinates.height) / 2;
-    setInputMarginTop(top);
-    if (!defaultMarginTop.current) {
-      defaultMarginTop.current = top;
-    }
-  };
+  const keyBoardWillShow = useCallback(
+    (e: KeyboardEvent) => {
+      const top = (height - e.endCoordinates.height) / 2;
+      if (!inputMarginTop) {
+        setInputMarginTop(top);
+      }
+      if (!defaultMarginTop.current) {
+        defaultMarginTop.current = top;
+      }
+    },
+    [inputMarginTop],
+  );
+
+  useLayoutEffect(() => {
+    Keyboard.addListener('keyboardWillShow', keyBoardWillShow);
+
+    return () => Keyboard.removeListener('keyboardWillShow', keyBoardWillShow);
+  }, [inputMarginTop, keyBoardWillShow]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -33,11 +52,27 @@ export const TextEditor = () => {
     }
   }, []);
 
-  useLayoutEffect(() => {
-    Keyboard.addListener('keyboardWillShow', keyBoardWillShow);
-
-    return () => Keyboard.removeListener('keyboardWillShow', keyBoardWillShow);
-  }, [inputMarginTop]);
+  const onContentSizeChange = (
+    e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>,
+  ) => {
+    setInputHeight(e.nativeEvent.contentSize.height);
+    if (e.nativeEvent.contentSize.height > inputHeight) {
+      // heightが高くなった = margontopが少なくなる。 どれくらい少なくなるかというと、増加したheight分
+      const diff = e.nativeEvent.contentSize.height - inputHeight; // heightの増加分
+      const nextMarginTop = inputMarginTop - diff; // 変化するmarigの値
+      // 変化の結果が safeAreaのtop + 上部にあるボタン群 の高さ以下にならない場合のみmarginTopの値を更新。100はとりあえずの値。あとで変える。
+      if (nextMarginTop >= 100) {
+        setInputMarginTop(nextMarginTop);
+      }
+    } else {
+      const diff = inputHeight - e.nativeEvent.contentSize.height;
+      const nextMarginTop = inputMarginTop + diff;
+      // marginTopが最初の位置よりは下にならないようにする
+      if (nextMarginTop <= defaultMarginTop.current!) {
+        setInputMarginTop(nextMarginTop);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -51,30 +86,7 @@ export const TextEditor = () => {
             marginTop: inputMarginTop,
           },
         ]}
-        onContentSizeChange={(e) => {
-          console.log(e.nativeEvent.contentSize);
-          setInputHeight(e.nativeEvent.contentSize.height);
-          if (e.nativeEvent.contentSize.height > inputHeight) {
-            // heightが高くなった = margontopが少なくなる
-            // どれくらい少なくなるかというと、増加したheight分
-            // 増加したheightをどうやってとるか。contentsize.height - inputheight
-            const diff = e.nativeEvent.contentSize.height - inputHeight;
-            const nextMarginTop = inputMarginTop - diff;
-            if (nextMarginTop >= 100) {
-              // 100はとりあえずの仮定
-              setInputMarginTop(nextMarginTop);
-            }
-          } else {
-            // heigtが低くなった。= marginTopが増える
-            // どれくらい? 減少したheight分
-            // 減少分をどうやってとるか inputHeight - contentSize.height
-            const diff = inputHeight - e.nativeEvent.contentSize.height;
-            const nextMarginTop = inputMarginTop + diff;
-            if (nextMarginTop <= defaultMarginTop.current!) {
-              setInputMarginTop(nextMarginTop);
-            }
-          }
-        }}
+        onContentSizeChange={(e) => onContentSizeChange(e)}
         onChangeText={(t) => setText(t)}
         value={text}
       />
@@ -87,16 +99,16 @@ const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: 'black',
-    //opacity: 0.4,
     alignItems: 'center',
   },
   input: {
     maxWidth: width,
-    borderColor: 'transparent',
+    borderColor: 'red',
+    //borderColor: 'transparent',
     borderWidth: 1,
     color: 'white',
     fontWeight: 'bold',
     alignItems: 'center',
+    textAlign: 'center',
   },
 });
