@@ -26,10 +26,14 @@ export const TextEditor = () => {
   const [inputMarginTop, setInputMarginTop] = useState(0);
 
   const [inputHeight, setInputHeight] = useState(0);
+  const [maxHeight, setMaxHeight] = useState(0);
 
   const keyBoardWillShow = useCallback(
     (e: KeyboardEvent) => {
       const top = (height - e.endCoordinates.height) / 2;
+      if (!maxHeight) {
+        setMaxHeight(height - (100 + e.endCoordinates.height));
+      }
       if (!inputMarginTop) {
         setInputMarginTop(top);
       }
@@ -37,7 +41,7 @@ export const TextEditor = () => {
         defaultMarginTop.current = top;
       }
     },
-    [inputMarginTop],
+    [inputMarginTop, maxHeight],
   );
 
   useLayoutEffect(() => {
@@ -84,6 +88,7 @@ export const TextEditor = () => {
           {
             fontSize,
             marginTop: inputMarginTop,
+            maxHeight,
           },
         ]}
         onContentSizeChange={(e) => onContentSizeChange(e)}
