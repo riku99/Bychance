@@ -15,12 +15,13 @@ import {
   NativeSyntheticEvent,
   TextInputContentSizeChangeEventData,
 } from 'react-native';
+import Slider from '@react-native-community/slider';
 
 export const TextEditor = () => {
   const inputRef = useRef<null | TextInput>(null);
 
   const [text, setText] = useState('');
-  const [fontSize, setFontSize] = useState(35);
+  const [fontSize, setFontSize] = useState(30);
 
   const defaultMarginTop = useRef<null | number>(null);
   const [inputMarginTop, setInputMarginTop] = useState(0);
@@ -95,6 +96,16 @@ export const TextEditor = () => {
         onChangeText={(t) => setText(t)}
         value={text}
       />
+      <View style={styles.sliderContainer}>
+        <Slider
+          style={{width: 200, height: 20}}
+          value={35}
+          minimumValue={10}
+          maximumValue={50}
+          maximumTrackTintColor="#FFFFFF"
+          onValueChange={(v) => setFontSize(v)}
+        />
+      </View>
     </View>
   );
 };
@@ -108,12 +119,18 @@ const styles = StyleSheet.create({
   },
   input: {
     maxWidth: width,
-    borderColor: 'red',
-    //borderColor: 'transparent',
+    //borderColor: 'red',
+    borderColor: 'transparent',
     borderWidth: 1,
     color: 'white',
     fontWeight: 'bold',
     alignItems: 'center',
     textAlign: 'center',
+  },
+  sliderContainer: {
+    transform: [{rotate: '-90deg'}],
+    position: 'absolute',
+    top: '45%',
+    left: -70,
   },
 });
