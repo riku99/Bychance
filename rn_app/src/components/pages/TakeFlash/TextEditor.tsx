@@ -14,13 +14,21 @@ import {
   KeyboardEvent,
   NativeSyntheticEvent,
   TextInputContentSizeChangeEventData,
+  Text,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
+import {Button} from 'react-native-elements';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-export const TextEditor = () => {
+type Props = {
+  setTextEditMode: (v: boolean) => void;
+};
+
+export const TextEditor = ({setTextEditMode}: Props) => {
   const inputRef = useRef<null | TextInput>(null);
 
   const [text, setText] = useState('');
+  const textClone = useRef('');
   const [fontSize, setFontSize] = useState(30);
 
   const defaultMarginTop = useRef<null | number>(null);
@@ -28,6 +36,8 @@ export const TextEditor = () => {
 
   const [inputHeight, setInputHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
+
+  const [onSlide, setOnSlide] = useState(false);
 
   const keyBoardWillShow = useCallback(
     (e: KeyboardEvent) => {
@@ -79,6 +89,10 @@ export const TextEditor = () => {
     }
   };
 
+  const {top} = useSafeAreaInsets();
+
+  // TextInputのfontSizeとかスタイルに関するプロパティがローマ字以外だと動的に設定できないというバグがある
+  // issue見ても解決されていないっぽいので、それらに対応するためにややこしめなことしている
   return (
     <View style={styles.container}>
       <TextInput
@@ -87,15 +101,36 @@ export const TextEditor = () => {
         style={[
           styles.input,
           {
-            fontSize,
             marginTop: inputMarginTop,
             maxHeight,
+            fontSize,
+            color: !onSlide ? 'white' : 'transparent',
           },
         ]}
-        onContentSizeChange={(e) => onContentSizeChange(e)}
-        onChangeText={(t) => setText(t)}
         value={text}
+        onContentSizeChange={(e) => onContentSizeChange(e)}
+        selectionColor={!onSlide ? undefined : 'transparent'}
+        onChangeText={(t) => {
+          setText(t);
+          textClone.current = t;
+        }}
       />
+
+      {onSlide && (
+        <Text
+          style={[
+            styles.input,
+            styles.slideText,
+            {
+              top: inputMarginTop,
+              maxHeight,
+              fontSize,
+            },
+          ]}>
+          {text}
+        </Text>
+      )}
+
       <View style={styles.sliderContainer}>
         <Slider
           style={{width: 200, height: 20}}
@@ -103,7 +138,33 @@ export const TextEditor = () => {
           minimumValue={10}
           maximumValue={50}
           maximumTrackTintColor="#FFFFFF"
-          onValueChange={(v) => setFontSize(v)}
+          onSlidingStart={() => {
+            setText((t) => t + ' ');
+            setTimeout(() => {
+              setOnSlide(true);
+              setText(textClone.current);
+            }, 1);
+          }}
+          onValueChange={(v) => {
+            setFontSize(v);
+          }}
+          onSlidingComplete={(v) => {
+            setText((t) => t + ' ');
+            setTimeout(() => {
+              setFontSize(v);
+              setText(textClone.current);
+            }, 1);
+            setOnSlide(false);
+          }}
+        />
+      </View>
+      <View style={[styles.topButtonContaienr, {top}]}>
+        <Button
+          title="完了"
+          titleStyle={{fontSize: 22, fontWeight: '500'}}
+          buttonStyle={{backgroundColor: 'transparent'}}
+          style={{alignSelf: 'flex-end'}}
+          onPress={() => setTextEditMode(false)}
         />
       </View>
     </View>
@@ -132,5 +193,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '45%',
     left: -70,
+  },
+  topButtonContaienr: {
+    position: 'absolute',
+    width: '95%',
+  },
+  slideText: {
+    position: 'absolute',
+    color: 'white',
   },
 });

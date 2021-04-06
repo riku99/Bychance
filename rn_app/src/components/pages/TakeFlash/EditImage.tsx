@@ -12,7 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {SketchCanvas} from './SketchCanvas';
-import {EditImageTopButtonItems} from './EditImageButtonTopButtonItems';
+import {EditImageTopButtonItems} from './EditImageTopButtonItems';
 import {ColorPicker} from './ColorPicker';
 import {TextEditor} from './TextEditor';
 
@@ -42,6 +42,7 @@ export const EditImage = ({source}: Props) => {
 
   const [sketchMode, setSketchMode] = useState(false);
   const [colorPickerMode, setColorPickerMode] = useState(false);
+  const [textEditMode, setTextEditMode] = useState(false);
 
   const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
     const _scale = e.nativeEvent.scale;
@@ -83,11 +84,12 @@ export const EditImage = ({source}: Props) => {
     <LinearGradient
       style={styles.container}
       colors={[topBackGroundColor, bottomBackGroundColor]}>
-      {!sketchMode && !colorPickerMode && (
+      {!sketchMode && !colorPickerMode && !textEditMode && (
         <View style={[styles.buttonItemsContainer, {top}]}>
           <EditImageTopButtonItems
             setSketchMode={setSketchMode}
             setColorPickerMode={setColorPickerMode}
+            setTextEditMode={setTextEditMode}
           />
         </View>
       )}
@@ -119,10 +121,12 @@ export const EditImage = ({source}: Props) => {
           bottomBackGroundColor={bottomBackGroundColor}
         />
       )}
-      <View
-        style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
-        <TextEditor />
-      </View>
+      {textEditMode && (
+        <View
+          style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
+          <TextEditor setTextEditMode={setTextEditMode} />
+        </View>
+      )}
     </LinearGradient>
   );
 };

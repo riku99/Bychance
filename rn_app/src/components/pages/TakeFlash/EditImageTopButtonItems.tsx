@@ -7,6 +7,7 @@ import {BackButton} from '~/components/utils/BackButton';
 type Props = {
   setSketchMode: (v: boolean) => void;
   setColorPickerMode: (v: boolean) => void;
+  setTextEditMode: (v: boolean) => void;
 };
 
 type HsvColor = {h: number; s: number; v: number};
@@ -14,6 +15,7 @@ type HsvColor = {h: number; s: number; v: number};
 export const EditImageTopButtonItems = ({
   setSketchMode,
   setColorPickerMode,
+  setTextEditMode,
 }: Props) => {
   return (
     <View style={styles.container}>
@@ -35,6 +37,7 @@ export const EditImageTopButtonItems = ({
         <Button
           icon={{name: 'text-fields', color: 'white', size: 30}}
           buttonStyle={{backgroundColor: 'transparent'}}
+          onPress={() => setTextEditMode(true)}
         />
       </View>
     </View>
