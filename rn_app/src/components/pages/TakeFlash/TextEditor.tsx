@@ -41,20 +41,27 @@ export const TextEditor = ({setTextEditMode}: Props) => {
 
   const [onSlide, setOnSlide] = useState(false);
 
+  const {top} = useSafeAreaInsets();
+  const [safeAreaAndTopButtonHeight, setSafeAreaAndTopButtonHeight] = useState(
+    0,
+  );
+
   const keyBoardWillShow = useCallback(
     (e: KeyboardEvent) => {
-      const top = (height - e.endCoordinates.height) / 2;
+      const _top = (height - e.endCoordinates.height) / 2;
       if (!maxHeight) {
-        setMaxHeight(height - (100 + e.endCoordinates.height));
+        setMaxHeight(
+          height - (safeAreaAndTopButtonHeight + e.endCoordinates.height),
+        );
       }
       if (!inputMarginTop) {
-        setInputMarginTop(top);
+        setInputMarginTop(_top);
       }
       if (!defaultMarginTop.current) {
-        defaultMarginTop.current = top;
+        defaultMarginTop.current = _top;
       }
     },
-    [inputMarginTop, maxHeight],
+    [inputMarginTop, maxHeight, safeAreaAndTopButtonHeight],
   );
 
   useLayoutEffect(() => {
@@ -69,8 +76,6 @@ export const TextEditor = ({setTextEditMode}: Props) => {
     }
   }, []);
 
-  const {top} = useSafeAreaInsets();
-
   const onLayout = (e: LayoutChangeEvent) => {
     const {height} = e.nativeEvent.layout;
     // 文字入力でheightは変化してないのに発火してしまうことがあるので、変化してない場合は処理を行わない
@@ -83,8 +88,8 @@ export const TextEditor = ({setTextEditMode}: Props) => {
       if (height > inputHeight) {
         // heightが高くなった = margontopが少なくなる。 どれくらい少なくなるかというと、増加したheight分
         const nextMarginTop = inputMarginTop - diff; // 変化するmarigの値
-        // 変化の結果が safeAreaのtop + 上部にあるボタン群 の高さ以下にならない場合のみmarginTopの値を更新。100はとりあえずの値。あとで変える。
-        if (nextMarginTop >= 100) {
+        // 変化の結果が safeAreaのtop + 上部にあるボタン群 の高さ以下にならない場合のみmarginTopの値を更新。
+        if (nextMarginTop >= safeAreaAndTopButtonHeight) {
           setInputMarginTop(nextMarginTop);
         }
       } else {
@@ -174,10 +179,19 @@ export const TextEditor = ({setTextEditMode}: Props) => {
           }}
         />
       </View>
-      <View style={{width: '92%', position: 'absolute', top: 500}}>
+      <View
+        style={{
+          width: '92%',
+          position: 'absolute',
+          top: 500,
+        }}>
         <HorizontalColorPalette onSelect={onSelectColor} />
       </View>
-      <View style={[styles.topButtonContaienr, {top}]}>
+      <View
+        style={[styles.topButtonContaienr, {top}]}
+        onLayout={(e) =>
+          setSafeAreaAndTopButtonHeight(e.nativeEvent.layout.height + top)
+        }>
         <Button
           title="完了"
           titleStyle={{fontSize: 22, fontWeight: '500'}}
