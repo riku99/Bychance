@@ -12,9 +12,8 @@ import {
   Dimensions,
   Keyboard,
   KeyboardEvent,
-  NativeSyntheticEvent,
-  TextInputContentSizeChangeEventData,
   Text,
+  LayoutChangeEvent,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import {Button} from 'react-native-elements';
@@ -67,27 +66,31 @@ export const TextEditor = ({setTextEditMode}: Props) => {
     }
   }, []);
 
-  const onContentSizeChange = (
-    e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>,
-  ) => {
-    console.log('change');
-    setInputHeight(e.nativeEvent.contentSize.height);
-    if (e.nativeEvent.contentSize.height > inputHeight) {
-      // heightが高くなった = margontopが少なくなる。 どれくらい少なくなるかというと、増加したheight分
-      const diff = e.nativeEvent.contentSize.height - inputHeight; // heightの増加分
-      const nextMarginTop = inputMarginTop - diff; // 変化するmarigの値
-      // 変化の結果が safeAreaのtop + 上部にあるボタン群 の高さ以下にならない場合のみmarginTopの値を更新。100はとりあえずの値。あとで変える。
-      if (nextMarginTop >= 100) {
-        setInputMarginTop(nextMarginTop);
-      }
-    } else {
-      const diff = inputHeight - e.nativeEvent.contentSize.height;
-      const nextMarginTop = inputMarginTop + diff;
-      // marginTopが最初の位置よりは下にならないようにする
-      if (nextMarginTop <= defaultMarginTop.current!) {
-        setInputMarginTop(nextMarginTop);
+  const onLayout = (e: LayoutChangeEvent) => {
+    const {height} = e.nativeEvent.layout;
+    // 文字入力でheightは変化してないのに発火してしまうことがあるので、変化してない場合は処理を行わない
+    if (height === inputHeight) {
+      return;
+    }
+    const diff = Math.abs(height - inputHeight);
+    // diffがfontSizeよりでかい、つまり行数が変化したかどうかを条件にして分岐。これないとfontSizeの変化のたび常に新しいmtが設定されてしまう。
+    if (diff > fontSize) {
+      if (height > inputHeight) {
+        // heightが高くなった = margontopが少なくなる。 どれくらい少なくなるかというと、増加したheight分
+        const nextMarginTop = inputMarginTop - diff; // 変化するmarigの値
+        // 変化の結果が safeAreaのtop + 上部にあるボタン群 の高さ以下にならない場合のみmarginTopの値を更新。100はとりあえずの値。あとで変える。
+        if (nextMarginTop >= 100) {
+          setInputMarginTop(nextMarginTop);
+        }
+      } else {
+        const nextMarginTop = inputMarginTop + diff;
+        // marginTopが最初の位置よりは下にならないようにする
+        if (nextMarginTop <= defaultMarginTop.current!) {
+          setInputMarginTop(nextMarginTop);
+        }
       }
     }
+    setInputHeight(height);
   };
 
   const {top} = useSafeAreaInsets();
@@ -97,43 +100,16 @@ export const TextEditor = ({setTextEditMode}: Props) => {
   return (
     <View style={styles.container}>
       <TextInput
-        onLayout={(e) => {
-          const {height} = e.nativeEvent.layout;
-          console.log('それまでの高さ' + inputHeight);
-          console.log('イベントが起こったことによる高さ' + height);
-          if (height !== inputHeight) {
-            console.log('change');
-            setInputHeight(height);
-            if (height > inputHeight) {
-              // heightが高くなった = margontopが少なくなる。 どれくらい少なくなるかというと、増加したheight分
-              const diff = height - inputHeight; // heightの増加分
-              const nextMarginTop = inputMarginTop - diff; // 変化するmarigの値
-              // 変化の結果が safeAreaのtop + 上部にあるボタン群 の高さ以下にならない場合のみmarginTopの値を更新。100はとりあえずの値。あとで変える。
-              if (nextMarginTop >= 100) {
-                setInputMarginTop(nextMarginTop);
-              }
-            } else {
-              const diff = inputHeight - height;
-              const nextMarginTop = inputMarginTop + diff;
-              // marginTopが最初の位置よりは下にならないようにする
-              if (nextMarginTop <= defaultMarginTop.current!) {
-                setInputMarginTop(nextMarginTop);
-              }
-            }
-          }
-        }}
         ref={inputRef}
         multiline={true}
         style={[
           styles.input,
           {
-            //marginTop: inputMarginTop,
             position: 'absolute',
             top: inputMarginTop,
             maxHeight,
             fontSize,
             color: !onSlide ? 'white' : 'transparent',
-            //backgroundColor: 'red',
           },
         ]}
         value={text}
@@ -146,9 +122,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
 
       {onSlide && (
         <Text
-          onLayout={(e) =>
-            console.log('Textのheight' + e.nativeEvent.layout.height)
-          }
+          onLayout={(e) => onLayout(e)}
           style={[
             styles.input,
             styles.slideText,
@@ -156,7 +130,6 @@ export const TextEditor = ({setTextEditMode}: Props) => {
               top: inputMarginTop,
               maxHeight,
               fontSize,
-              //backgroundColor: 'gray',
             },
           ]}>
           {text}
