@@ -13,7 +13,6 @@ import {
   Keyboard,
   KeyboardEvent,
   Text,
-  LayoutChangeEvent,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import {Button} from 'react-native-elements';
@@ -33,75 +32,42 @@ export const TextEditor = ({setTextEditMode}: Props) => {
   const [fontSize, setFontSize] = useState(30);
   const [fontColor, setFontColor] = useState('white');
 
-  const defaultMarginTop = useRef<null | number>(null);
-  const [inputMarginTop, setInputMarginTop] = useState(0);
-
-  const [inputHeight, setInputHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
 
   const [onSlide, setOnSlide] = useState(false);
 
   const {top} = useSafeAreaInsets();
-  const [safeAreaAndTopButtonHeight, setSafeAreaAndTopButtonHeight] = useState(
-    0,
-  );
+  const [topButtonHeight, setTopButtonHeight] = useState(0);
+
+  const [strokeColorPaletteBottom, setStrokeColorPaletteBottom] = useState(0);
+  const [strokeColorPaletteHeight, setStrokeColorPaletteHeight] = useState(0);
+
+  const [keyBoardHeight, setKeyBoardHeight] = useState(0);
 
   const keyBoardWillShow = useCallback(
     (e: KeyboardEvent) => {
-      const _top = (height - e.endCoordinates.height) / 2;
-      if (!maxHeight) {
-        setMaxHeight(
-          height - (safeAreaAndTopButtonHeight + e.endCoordinates.height),
-        );
-      }
-      if (!inputMarginTop) {
-        setInputMarginTop(_top);
-      }
-      if (!defaultMarginTop.current) {
-        defaultMarginTop.current = _top;
+      1;
+      setStrokeColorPaletteBottom(
+        e.endCoordinates.height + addStrokeColorPaletteBottom,
+      );
+      if (!keyBoardHeight) {
+        setKeyBoardHeight(e.endCoordinates.height);
       }
     },
-    [inputMarginTop, maxHeight, safeAreaAndTopButtonHeight],
+    [keyBoardHeight],
   );
 
   useLayoutEffect(() => {
     Keyboard.addListener('keyboardWillShow', keyBoardWillShow);
 
     return () => Keyboard.removeListener('keyboardWillShow', keyBoardWillShow);
-  }, [inputMarginTop, keyBoardWillShow]);
+  }, [keyBoardWillShow]);
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
-
-  const onLayout = (e: LayoutChangeEvent) => {
-    const {height} = e.nativeEvent.layout;
-    // 文字入力でheightは変化してないのに発火してしまうことがあるので、変化してない場合は処理を行わない
-    if (height === inputHeight) {
-      return;
-    }
-    const diff = Math.abs(height - inputHeight);
-    // diffがfontSizeよりでかい、つまり行数が変化したかどうかを条件にして分岐。これないとfontSizeの変化のたび常に新しいmtが設定されてしまう。
-    if (diff > fontSize) {
-      if (height > inputHeight) {
-        // heightが高くなった = margontopが少なくなる。 どれくらい少なくなるかというと、増加したheight分
-        const nextMarginTop = inputMarginTop - diff; // 変化するmarigの値
-        // 変化の結果が safeAreaのtop + 上部にあるボタン群 の高さ以下にならない場合のみmarginTopの値を更新。
-        if (nextMarginTop >= safeAreaAndTopButtonHeight) {
-          setInputMarginTop(nextMarginTop);
-        }
-      } else {
-        const nextMarginTop = inputMarginTop + diff;
-        // marginTopが最初の位置よりは下にならないようにする
-        if (nextMarginTop <= defaultMarginTop.current!) {
-          setInputMarginTop(nextMarginTop);
-        }
-      }
-    }
-    setInputHeight(height);
-  };
 
   const onSelectColor = (color: string) => {
     setText((t) => t + ' ');
@@ -111,46 +77,70 @@ export const TextEditor = ({setTextEditMode}: Props) => {
     }, 1);
   };
 
+  const [textAreaTop, setTextAreaTop] = useState(0);
+
+  useEffect(() => {
+    setTextAreaTop(topButtonHeight + top);
+  }, [topButtonHeight, top]);
+
+  useEffect(() => {
+    setMaxHeight(
+      height -
+        (top +
+          topButtonHeight +
+          +keyBoardHeight +
+          strokeColorPaletteHeight +
+          addStrokeColorPaletteBottom),
+    );
+  }, [top, topButtonHeight, keyBoardHeight, strokeColorPaletteHeight]);
+
   // TextInputのfontSizeとかスタイルに関するプロパティがローマ字以外だと動的に設定できないというバグがある
   // issue見ても解決されていないっぽいので、それらに対応するためにややこしめなことしている
   return (
     <View style={styles.container}>
-      <TextInput
-        ref={inputRef}
-        multiline={true}
+      <View
         style={[
-          styles.input,
+          styles.textArea,
           {
-            top: inputMarginTop,
-            maxHeight,
-            fontSize,
-            color: !onSlide ? fontColor : 'transparent',
+            top: textAreaTop,
+            width,
+            height: maxHeight,
           },
-        ]}
-        value={text}
-        selectionColor={!onSlide ? undefined : 'transparent'}
-        onLayout={(e) => onLayout(e)}
-        onChangeText={(t) => {
-          setText(t);
-          textClone.current = t;
-        }}
-      />
-
-      {onSlide && (
-        <Text
+        ]}>
+        <TextInput
+          ref={inputRef}
+          multiline={true}
           style={[
             styles.input,
-            styles.slideText,
             {
-              top: inputMarginTop,
-              maxHeight,
               fontSize,
-              color: fontColor,
+              maxHeight,
+              color: !onSlide ? fontColor : 'transparent',
             },
-          ]}>
-          {text}
-        </Text>
-      )}
+          ]}
+          value={text}
+          selectionColor={!onSlide ? undefined : 'transparent'}
+          onChangeText={(t) => {
+            setText(t);
+            textClone.current = t;
+          }}
+        />
+
+        {onSlide && (
+          <Text
+            style={[
+              styles.input,
+              styles.slideText,
+              {
+                fontSize,
+                maxHeight,
+                color: fontColor,
+              },
+            ]}>
+            {text}
+          </Text>
+        )}
+      </View>
 
       <View style={styles.sliderContainer}>
         <Slider
@@ -180,18 +170,20 @@ export const TextEditor = ({setTextEditMode}: Props) => {
         />
       </View>
       <View
-        style={{
-          width: '92%',
-          position: 'absolute',
-          top: 500,
-        }}>
+        style={[
+          styles.strokeColorPalette,
+          {
+            bottom: strokeColorPaletteBottom,
+          },
+        ]}
+        onLayout={(e) =>
+          setStrokeColorPaletteHeight(e.nativeEvent.layout.height)
+        }>
         <HorizontalColorPalette onSelect={onSelectColor} />
       </View>
       <View
         style={[styles.topButtonContaienr, {top}]}
-        onLayout={(e) =>
-          setSafeAreaAndTopButtonHeight(e.nativeEvent.layout.height + top)
-        }>
+        onLayout={(e) => setTopButtonHeight(e.nativeEvent.layout.height)}>
         <Button
           title="完了"
           titleStyle={{fontSize: 22, fontWeight: '500'}}
@@ -206,10 +198,17 @@ export const TextEditor = ({setTextEditMode}: Props) => {
 
 const {width, height} = Dimensions.get('window');
 
+const addStrokeColorPaletteBottom = 10;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  textArea: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {
     maxWidth: width,
@@ -218,7 +217,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
-    position: 'absolute',
   },
   sliderContainer: {
     transform: [{rotate: '-90deg'}],
@@ -235,7 +233,10 @@ const styles = StyleSheet.create({
     width: '95%',
   },
   slideText: {
-    position: 'absolute',
     color: 'white',
+  },
+  strokeColorPalette: {
+    width: '92%',
+    position: 'absolute',
   },
 });
