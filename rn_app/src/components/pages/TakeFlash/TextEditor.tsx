@@ -19,6 +19,8 @@ import Slider from '@react-native-community/slider';
 import {Button} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {HorizontalColorPalette} from '~/components/utils/ColorPalette';
+
 type Props = {
   setTextEditMode: (v: boolean) => void;
 };
@@ -29,6 +31,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
   const [text, setText] = useState('');
   const textClone = useRef('');
   const [fontSize, setFontSize] = useState(30);
+  const [fontColor, setFontColor] = useState('white');
 
   const defaultMarginTop = useRef<null | number>(null);
   const [inputMarginTop, setInputMarginTop] = useState(0);
@@ -109,11 +112,12 @@ export const TextEditor = ({setTextEditMode}: Props) => {
             top: inputMarginTop,
             maxHeight,
             fontSize,
-            color: !onSlide ? 'white' : 'transparent',
+            color: !onSlide ? fontColor : 'transparent',
           },
         ]}
         value={text}
         selectionColor={!onSlide ? undefined : 'transparent'}
+        onLayout={(e) => onLayout(e)}
         onChangeText={(t) => {
           setText(t);
           textClone.current = t;
@@ -122,7 +126,6 @@ export const TextEditor = ({setTextEditMode}: Props) => {
 
       {onSlide && (
         <Text
-          onLayout={(e) => onLayout(e)}
           style={[
             styles.input,
             styles.slideText,
@@ -130,6 +133,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
               top: inputMarginTop,
               maxHeight,
               fontSize,
+              color: fontColor,
             },
           ]}>
           {text}
@@ -138,7 +142,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
 
       <View style={styles.sliderContainer}>
         <Slider
-          style={{width: 200, height: 20}}
+          style={styles.slider}
           value={35}
           minimumValue={10}
           maximumValue={50}
@@ -162,6 +166,9 @@ export const TextEditor = ({setTextEditMode}: Props) => {
             setOnSlide(false);
           }}
         />
+      </View>
+      <View style={{width: '92%', position: 'absolute', top: 500}}>
+        <HorizontalColorPalette onSelect={(color) => setFontColor(color)} />
       </View>
       <View style={[styles.topButtonContaienr, {top}]}>
         <Button
@@ -194,8 +201,12 @@ const styles = StyleSheet.create({
   sliderContainer: {
     transform: [{rotate: '-90deg'}],
     position: 'absolute',
-    top: '45%',
+    top: '40%',
     left: -70,
+  },
+  slider: {
+    width: 200,
+    height: 20,
   },
   topButtonContaienr: {
     position: 'absolute',
