@@ -69,6 +69,8 @@ export const TextEditor = ({setTextEditMode}: Props) => {
     }
   }, []);
 
+  const {top} = useSafeAreaInsets();
+
   const onLayout = (e: LayoutChangeEvent) => {
     const {height} = e.nativeEvent.layout;
     // 文字入力でheightは変化してないのに発火してしまうことがあるので、変化してない場合は処理を行わない
@@ -96,7 +98,13 @@ export const TextEditor = ({setTextEditMode}: Props) => {
     setInputHeight(height);
   };
 
-  const {top} = useSafeAreaInsets();
+  const onSelectColor = (color: string) => {
+    setText((t) => t + ' ');
+    setTimeout(() => {
+      setFontColor(color);
+      setText(textClone.current);
+    }, 1);
+  };
 
   // TextInputのfontSizeとかスタイルに関するプロパティがローマ字以外だと動的に設定できないというバグがある
   // issue見ても解決されていないっぽいので、それらに対応するためにややこしめなことしている
@@ -108,7 +116,6 @@ export const TextEditor = ({setTextEditMode}: Props) => {
         style={[
           styles.input,
           {
-            position: 'absolute',
             top: inputMarginTop,
             maxHeight,
             fontSize,
@@ -168,7 +175,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
         />
       </View>
       <View style={{width: '92%', position: 'absolute', top: 500}}>
-        <HorizontalColorPalette onSelect={(color) => setFontColor(color)} />
+        <HorizontalColorPalette onSelect={onSelectColor} />
       </View>
       <View style={[styles.topButtonContaienr, {top}]}>
         <Button
@@ -197,6 +204,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    position: 'absolute',
   },
   sliderContainer: {
     transform: [{rotate: '-90deg'}],
