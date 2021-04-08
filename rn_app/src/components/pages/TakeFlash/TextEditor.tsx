@@ -114,7 +114,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
             styles.input,
             {
               fontSize,
-              maxHeight,
+              maxHeight: !onSlide ? maxHeight : 0,
               color: !onSlide ? fontColor : 'transparent',
             },
           ]}
