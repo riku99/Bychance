@@ -122,10 +122,12 @@ export const EditImage = ({source}: Props) => {
         />
       )}
       {textEditMode && (
-        <View
-          style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
-          <TextEditor setTextEditMode={setTextEditMode} />
-        </View>
+        <>
+          <View style={[styles.textEditContainer, styles.textEditorOverlay]} />
+          <View style={styles.textEditContainer}>
+            <TextEditor setTextEditMode={setTextEditMode} />
+          </View>
+        </>
       )}
     </LinearGradient>
   );
@@ -157,5 +159,16 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
+  },
+  textEditContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  textEditorOverlay: {
+    backgroundColor: 'black',
+    opacity: 0.5,
   },
 });
