@@ -121,6 +121,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
           value={text}
           selectionColor={!onSlide ? undefined : 'transparent'}
           keyboardAppearance="dark"
+          scrollEnabled={false}
           onChangeText={(t) => {
             setText(t);
             textClone.current = t;
