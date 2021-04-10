@@ -26,11 +26,15 @@ export type TextInfo = {
 
 type Props = {
   setTextEditMode: (v: boolean) => void;
-  setTextInfo: React.Dispatch<React.SetStateAction<TextInfo[]>>;
+  setAllTextInfo: React.Dispatch<React.SetStateAction<TextInfo[]>>;
   textInfo?: TextInfo;
 };
 
-export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
+export const TextEditor = ({
+  setTextEditMode,
+  setAllTextInfo,
+  textInfo,
+}: Props) => {
   const inputRef = useRef<null | TextInput>(null);
   const {top} = useSafeAreaInsets();
 
@@ -101,7 +105,7 @@ export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
 
   const onCompleteButtonPress = () => {
     if (offset && value) {
-      setTextInfo((t) => {
+      setAllTextInfo((t) => {
         let id: number;
         if (t.length) {
           id = t[t.length - 1].id + 1;

@@ -81,27 +81,65 @@ export const EditImage = ({source}: Props) => {
 
   const {top} = useSafeAreaInsets();
 
-  const [textInfo, setTextInfo] = useState<TextInfo[]>([]);
+  const [allTextInfo, setAllTextInfo] = useState<TextInfo[]>([]);
   const [selectedText, setSelectedText] = useState<TextInfo>();
-
-  useEffect(() => {
-    console.log(textInfo);
-  }, [textInfo]);
 
   useEffect(() => {
     if (selectedText) {
       // 編集的な意味合いにするので選択されたテキストはいったん削除する
-      const _text = textInfo.filter((t) => t.id !== selectedText.id);
+      const _text = allTextInfo.filter((t) => t.id !== selectedText.id);
       setTextEditMode(true);
-      setTextInfo(_text);
+      setAllTextInfo(_text);
     }
-  }, [selectedText, textInfo]);
+  }, [selectedText, allTextInfo]);
 
   useEffect(() => {
     if (textEditMode) {
       setSelectedText(undefined);
     }
   }, [textEditMode]);
+
+  const textTranslate = useRef<{
+    [key: string]: {x: Animated.Value; y: Animated.Value};
+  }>({});
+
+  const lastTextInfoId = useRef(0);
+
+  useEffect(() => {
+    // どっちもない。つまり初回レンダリングなどで実行された場合
+    if (!lastTextInfoId.current && !allTextInfo.length) {
+      console.log('初回');
+      return;
+    }
+    // データが存在する場合
+    if (allTextInfo.length) {
+      const newId = allTextInfo[allTextInfo.length - 1].id;
+      // 前回から追加された場合
+      if (newId > lastTextInfoId.current) {
+        console.log('追加');
+        textTranslate.current[`${newId}`] = {
+          x: new Animated.Value(0),
+          y: new Animated.Value(0),
+        };
+        console.log(textTranslate.current);
+      } else {
+        // 前回から削除された場合
+        console.log('削除');
+        if (selectedText) {
+          const num = selectedText.id;
+          const {[`${num}`]: n, ...rest} = textTranslate.current;
+          textTranslate.current = rest;
+          console.log(n);
+          console.log(rest);
+        }
+      }
+      lastTextInfoId.current = newId;
+    } else {
+      console.log('データなくなりました');
+      textTranslate.current = {};
+      lastTextInfoId.current = 0;
+    }
+  }, [allTextInfo, selectedText]);
 
   return (
     <LinearGradient
@@ -135,15 +173,15 @@ export const EditImage = ({source}: Props) => {
         </View>
       </PinchGestureHandler>
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
-      {!!textInfo.length &&
-        textInfo.map((data, index) => (
+      {!!allTextInfo.length &&
+        allTextInfo.map((data, index) => (
           <View
             style={[styles.textContainer, {top: data.y, left: data.x}]}
             key={index}>
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
-                setSelectedText(textInfo[index]);
+                setSelectedText(allTextInfo[index]);
               }}>
               <Text
                 style={[
@@ -174,7 +212,7 @@ export const EditImage = ({source}: Props) => {
           <View style={styles.textEditContainer}>
             <TextEditor
               setTextEditMode={setTextEditMode}
-              setTextInfo={setTextInfo}
+              setAllTextInfo={setAllTextInfo}
               textInfo={selectedText && selectedText}
             />
           </View>
