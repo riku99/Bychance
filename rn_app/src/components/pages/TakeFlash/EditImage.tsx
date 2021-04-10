@@ -70,6 +70,15 @@ export const EditImage = ({source}: Props) => {
     panGestureDiffY.current = translationY;
   };
 
+  const onTextPanGesture = (e: PanGestureHandlerGestureEvent, id: number) => {
+    const {translationX, translationY} = e.nativeEvent;
+    const targetTranslate = textTranslate.current[id];
+    if (targetTranslate) {
+      targetTranslate.x.setValue(translationX);
+      targetTranslate.y.setValue(translationY);
+    }
+  };
+
   const onPanGestureStateChange = (e: PanGestureHandlerGestureEvent) => {
     if (e.nativeEvent.state === State.END || State.CANCELLED) {
       offsetX.current += panGestureDiffX.current;
@@ -175,40 +184,43 @@ export const EditImage = ({source}: Props) => {
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
       {!!allTextInfo.length &&
         allTextInfo.map((data, index) => (
-          <Animated.View
-            style={[
-              styles.textContainer,
-              {top: data.y, left: data.x},
-              {
-                transform: [
-                  {
-                    translateX: textTranslate.current[data.id].x,
-                  },
-                  {
-                    translateY: textTranslate.current[data.id].y,
-                  },
-                ],
-              },
-            ]}
-            key={index}>
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => {
-                setSelectedText(allTextInfo[index]);
-              }}>
-              <Text
-                style={[
-                  styles.text,
-                  {
-                    fontSize: data.fontSize,
-                    color: data.fontColor,
-                    width: data.width,
-                  },
-                ]}>
-                {data.value}
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
+          <PanGestureHandler
+            onGestureEvent={(e) => onTextPanGesture(e, data.id)}>
+            <Animated.View
+              style={[
+                styles.textContainer,
+                {top: data.y, left: data.x},
+                {
+                  transform: [
+                    {
+                      translateX: textTranslate.current[data.id].x,
+                    },
+                    {
+                      translateY: textTranslate.current[data.id].y,
+                    },
+                  ],
+                },
+              ]}
+              key={data.id}>
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => {
+                  setSelectedText(allTextInfo[index]);
+                }}>
+                <Text
+                  style={[
+                    styles.text,
+                    {
+                      fontSize: data.fontSize,
+                      color: data.fontColor,
+                      width: data.width,
+                    },
+                  ]}>
+                  {data.value}
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </PanGestureHandler>
         ))}
       {colorPickerMode && (
         <ColorPicker
