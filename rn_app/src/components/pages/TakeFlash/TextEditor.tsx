@@ -22,6 +22,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {HorizontalColorPalette} from '~/components/utils/ColorPalette';
 
 export type TextInfo = {
+  id: number;
   x: number;
   y: number;
   width: number;
@@ -36,16 +37,20 @@ type Props = {
   textInfo?: TextInfo;
 };
 
-export const TextEditor = ({setTextEditMode, setTextInfo}: Props) => {
+export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
   const inputRef = useRef<null | TextInput>(null);
 
-  const [value, setValue] = useState('');
-  const valueClone = useRef('');
+  const [value, setValue] = useState(textInfo ? textInfo.value : '');
+  const valueClone = useRef(textInfo ? textInfo.value : '');
 
-  const [fontSize, setFontSize] = useState(defaultFontSize);
-  const [fontColor, setFontColor] = useState('white');
+  const [fontSize, setFontSize] = useState(
+    textInfo ? textInfo.fontSize : defaultFontSize,
+  );
+  const [fontColor, setFontColor] = useState(
+    textInfo ? textInfo.fontColor : defaultFontColor,
+  );
 
-  const [textAreaTop, setValueAreaTop] = useState(0);
+  const [textAreaTop, setTextAreaTop] = useState(0);
   const [offset, setOffset] = useState<{x: number; y: number} | null>(null);
   const [textAreaWidth, setTextAreaWidth] = useState(0);
 
@@ -80,14 +85,15 @@ export const TextEditor = ({setTextEditMode, setTextInfo}: Props) => {
     return () => Keyboard.removeListener('keyboardWillShow', keyBoardWillShow);
   }, [keyBoardWillShow]);
 
-  useEffect(() => {
+  // layoutEffectの方が表示される時良さげなのでいったんlayoutEffect
+  useLayoutEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
 
   useEffect(() => {
-    setValueAreaTop(topButtonHeight + top);
+    setTextAreaTop(topButtonHeight + top);
   }, [topButtonHeight, top]);
 
   useEffect(() => {
@@ -144,17 +150,26 @@ export const TextEditor = ({setTextEditMode, setTextInfo}: Props) => {
 
   const onCompleteButtonPress = () => {
     if (offset && value) {
-      setTextInfo((t) => [
-        ...t,
-        {
-          x: offset.x,
-          y: offset.y + textAreaTop,
-          fontSize,
-          value,
-          fontColor,
-          width: textAreaWidth,
-        },
-      ]);
+      setTextInfo((t) => {
+        let id: number;
+        if (t.length) {
+          id = t[t.length - 1].id + 1;
+        } else {
+          id = 1;
+        }
+        return [
+          ...t,
+          {
+            id,
+            x: offset.x,
+            y: offset.y + textAreaTop,
+            fontSize,
+            value,
+            fontColor,
+            width: textAreaWidth,
+          },
+        ];
+      });
     }
     setTextEditMode(false);
   };
@@ -213,7 +228,7 @@ export const TextEditor = ({setTextEditMode, setTextInfo}: Props) => {
       <View style={styles.sliderContainer}>
         <Slider
           style={styles.slider}
-          value={35}
+          value={textInfo ? textInfo.fontSize : defaultFontSize}
           minimumValue={10}
           maximumValue={50}
           maximumTrackTintColor="#FFFFFF"
@@ -256,6 +271,10 @@ const {width, height} = Dimensions.get('window');
 const addStrokeColorPaletteBottom = 10;
 
 const defaultFontSize = 30;
+
+const defaultFontColor = '#FFFFFF';
+
+const defaultTextAreaTop = 88;
 
 const styles = StyleSheet.create({
   container: {

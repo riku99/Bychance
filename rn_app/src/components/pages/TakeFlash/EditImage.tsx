@@ -82,10 +82,26 @@ export const EditImage = ({source}: Props) => {
   const {top} = useSafeAreaInsets();
 
   const [textInfo, setTextInfo] = useState<TextInfo[]>([]);
+  const [selectedText, setSelectedText] = useState<TextInfo>();
 
   useEffect(() => {
     console.log(textInfo);
   }, [textInfo]);
+
+  useEffect(() => {
+    if (selectedText) {
+      // 編集的な意味合いにするので選択されたテキストはいったん削除する
+      const _text = textInfo.filter((t) => t.id !== selectedText.id);
+      setTextInfo(_text);
+      setTextEditMode(true);
+    }
+  }, [selectedText, textInfo]);
+
+  useEffect(() => {
+    if (textEditMode) {
+      setSelectedText(undefined);
+    }
+  }, [textEditMode]);
 
   return (
     <LinearGradient
@@ -126,7 +142,9 @@ export const EditImage = ({source}: Props) => {
             key={index}>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => console.log('ok')}>
+              onPress={() => {
+                setSelectedText(textInfo[index]);
+              }}>
               <Text
                 style={[
                   styles.text,
@@ -157,6 +175,7 @@ export const EditImage = ({source}: Props) => {
             <TextEditor
               setTextEditMode={setTextEditMode}
               setTextInfo={setTextInfo}
+              textInfo={selectedText && selectedText}
             />
           </View>
         </>
