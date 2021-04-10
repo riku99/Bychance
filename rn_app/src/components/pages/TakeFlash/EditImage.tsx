@@ -205,10 +205,9 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     position: 'absolute',
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   text: {
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

@@ -95,7 +95,7 @@ export const TextEditor = ({setTextEditMode, setTextInfo}: Props) => {
       height -
         (top +
           topButtonHeight +
-          +keyBoardHeight +
+          keyBoardHeight +
           strokeColorPaletteHeight +
           addStrokeColorPaletteBottom),
     );
