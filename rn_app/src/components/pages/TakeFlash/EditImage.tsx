@@ -92,8 +92,8 @@ export const EditImage = ({source}: Props) => {
     if (selectedText) {
       // 編集的な意味合いにするので選択されたテキストはいったん削除する
       const _text = textInfo.filter((t) => t.id !== selectedText.id);
-      setTextInfo(_text);
       setTextEditMode(true);
+      setTextInfo(_text);
     }
   }, [selectedText, textInfo]);
 

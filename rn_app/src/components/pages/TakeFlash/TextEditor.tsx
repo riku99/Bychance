@@ -39,6 +39,8 @@ export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
   const [fontSize, setFontSize] = useState(
     textInfo ? textInfo.fontSize : defaultFontSize,
   );
+  // 初回のfontSizeだけとりたい
+  const firstFontSize = useMemo(() => fontSize, []); // eslint-disable-line
   const [fontColor, setFontColor] = useState(
     textInfo ? textInfo.fontColor : defaultFontColor,
   );
@@ -143,7 +145,7 @@ export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
               fontSize,
               // sliderでフォントサイズを変更する際、TextInputがあるとslider動かしている時に表示されるTextの表示位置がずれてしまうのでheightを0にする
               // 演算子でTextInputそのものを消すと、それまでの情報も消えてしまうのでheight: 0で対応
-              maxHeight: !onSlide ? textAreaHeight : 0,
+              maxHeight: !onSlide ? '100%' : 0,
               color: !onSlide ? fontColor : 'transparent',
             },
           ]}
@@ -163,7 +165,6 @@ export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
               styles.slideText,
               {
                 fontSize,
-                maxHeight: textAreaHeight,
                 color: fontColor,
               },
             ]}>
@@ -175,7 +176,7 @@ export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
       <View style={[styles.sliderContainer]}>
         <Slider
           style={styles.slider}
-          value={textInfo ? textInfo.fontSize : defaultFontSize}
+          value={firstFontSize}
           minimumValue={10}
           maximumValue={50}
           maximumTrackTintColor="#FFFFFF"
@@ -259,6 +260,7 @@ const styles = StyleSheet.create({
   },
   slideText: {
     color: 'white',
+    maxHeight: '100%',
   },
   strokeColorPalette: {
     width: '92%',
