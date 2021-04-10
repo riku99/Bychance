@@ -1,4 +1,5 @@
 export const strokeColors = [
+  {color: '#FFFFFF'},
   {color: '#000000'},
   {color: '#FF0000'},
   {color: '#00FFFF'},
@@ -9,7 +10,6 @@ export const strokeColors = [
   {color: '#FFFF00'},
   {color: '#00FF00'},
   {color: '#FF00FF'},
-  {color: '#FFFFFF'},
   {color: '#C0C0C0'},
   {color: '#808080'},
   {color: '#FFA500'},

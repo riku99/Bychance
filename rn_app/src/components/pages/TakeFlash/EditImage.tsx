@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import {StyleSheet, View, Animated, Dimensions} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, View, Animated, Dimensions, Text} from 'react-native';
 import {
   PanGestureHandler,
   PinchGestureHandler,
@@ -14,7 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {SketchCanvas} from './SketchCanvas';
 import {EditImageTopButtonItems} from './EditImageTopButtonItems';
 import {ColorPicker} from './ColorPicker';
-import {TextEditor} from './TextEditor';
+import {TextEditor, TextInfo} from './TextEditor';
 
 type Props = {
   source: {
@@ -80,6 +80,12 @@ export const EditImage = ({source}: Props) => {
 
   const {top} = useSafeAreaInsets();
 
+  const [text, setText] = useState<TextInfo[]>([]);
+
+  useEffect(() => {
+    console.log(text);
+  }, [text]);
+
   return (
     <LinearGradient
       style={styles.container}
@@ -112,6 +118,23 @@ export const EditImage = ({source}: Props) => {
         </View>
       </PinchGestureHandler>
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
+      {!!text.length &&
+        text.map((data, index) => (
+          <View
+            style={{position: 'absolute', top: data.y, left: data.x}}
+            key={index}>
+            <Text
+              style={{
+                fontSize: data.fontSize,
+                color: data.fontColor,
+                width: data.width,
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+              {data.value}
+            </Text>
+          </View>
+        ))}
       {colorPickerMode && (
         <ColorPicker
           setTopBackGroundColor={setTopBackGroundColor}
@@ -125,7 +148,7 @@ export const EditImage = ({source}: Props) => {
         <>
           <View style={[styles.textEditContainer, styles.textEditorOverlay]} />
           <View style={styles.textEditContainer}>
-            <TextEditor setTextEditMode={setTextEditMode} />
+            <TextEditor setTextEditMode={setTextEditMode} setText={setText} />
           </View>
         </>
       )}

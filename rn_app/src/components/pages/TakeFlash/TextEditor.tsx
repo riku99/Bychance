@@ -13,6 +13,7 @@ import {
   Keyboard,
   KeyboardEvent,
   Text,
+  LayoutChangeEvent,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import {Button} from 'react-native-elements';
@@ -20,17 +21,32 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {HorizontalColorPalette} from '~/components/utils/ColorPalette';
 
-type Props = {
-  setTextEditMode: (v: boolean) => void;
+export type TextInfo = {
+  x: number;
+  y: number;
+  width: number;
+  fontSize: number;
+  value: string;
+  fontColor: string;
 };
 
-export const TextEditor = ({setTextEditMode}: Props) => {
+type Props = {
+  setTextEditMode: (v: boolean) => void;
+  setText: React.Dispatch<React.SetStateAction<TextInfo[]>>;
+};
+
+export const TextEditor = ({setTextEditMode, setText}: Props) => {
   const inputRef = useRef<null | TextInput>(null);
 
-  const [text, setText] = useState('');
-  const textClone = useRef('');
-  const [fontSize, setFontSize] = useState(30);
+  const [value, setValue] = useState('');
+  const valueClone = useRef('');
+
+  const [fontSize, setFontSize] = useState(defaultFontSize);
   const [fontColor, setFontColor] = useState('white');
+
+  const [textAreaTop, setValueAreaTop] = useState(0);
+  const [offset, setOffset] = useState<{x: number; y: number} | null>(null);
+  const [textAreaWidth, setTextAreaWidth] = useState(0);
 
   const [maxHeight, setMaxHeight] = useState(0);
 
@@ -69,18 +85,8 @@ export const TextEditor = ({setTextEditMode}: Props) => {
     }
   }, []);
 
-  const onSelectColor = (color: string) => {
-    setText((t) => t + ' ');
-    setTimeout(() => {
-      setFontColor(color);
-      setText(textClone.current);
-    }, 1);
-  };
-
-  const [textAreaTop, setTextAreaTop] = useState(0);
-
   useEffect(() => {
-    setTextAreaTop(topButtonHeight + top);
+    setValueAreaTop(topButtonHeight + top);
   }, [topButtonHeight, top]);
 
   useEffect(() => {
@@ -93,6 +99,64 @@ export const TextEditor = ({setTextEditMode}: Props) => {
           addStrokeColorPaletteBottom),
     );
   }, [top, topButtonHeight, keyBoardHeight, strokeColorPaletteHeight]);
+
+  const onSelectColor = (color: string) => {
+    setValue((t) => t + ' ');
+    setTimeout(() => {
+      setFontColor(color);
+      setValue(valueClone.current);
+    }, 1);
+  };
+
+  const onSlidingStart = () => {
+    setValue((t) => t + ' ');
+    setTimeout(() => {
+      setOnSlide(true);
+      setValue(valueClone.current);
+    }, 1);
+  };
+
+  const onSlidingComplete = async (v: number) => {
+    // useStateのセッターは内部的には非同期で値が更新される
+    // なので直後にstateを使ってもイベントループの性質上基本的にまだ変更が反映されていない
+    // そのため直後にsetValue(valueClone.current)を実行すると前回のものと同じなので、再レンダリングされない
+    // setTimeoutで非同期にしてあげることで、キューに渡された順番的に最初にstateの更新作業が行われる
+    // その後にsetValue(valueClone.current)を行うことで再レンダリングを起こしている
+    setValue((t) => t + ' ');
+    setTimeout(() => {
+      setFontSize(v);
+      setValue(valueClone.current);
+    }, 1);
+    setOnSlide(false);
+  };
+
+  const onTextAreaLayout = (e: LayoutChangeEvent) => {
+    const {x, y, width} = e.nativeEvent.layout;
+    setOffset({x, y});
+    setTextAreaWidth(width);
+  };
+
+  const onChangeText = (t: string) => {
+    setValue(t);
+    valueClone.current = t;
+  };
+
+  const onCompleteButtonPress = () => {
+    if (offset && value) {
+      setText((t) => [
+        ...t,
+        {
+          x: offset.x,
+          y: offset.y + textAreaTop,
+          fontSize,
+          value,
+          fontColor,
+          width: textAreaWidth,
+        },
+      ]);
+    }
+    setTextEditMode(false);
+  };
 
   // TextInputのfontSizeとかスタイルに関するプロパティがローマ字以外だと動的に設定できないというバグがある
   // issue見ても解決されていないっぽいので、それらに対応するためにややこしめなことしている
@@ -114,20 +178,21 @@ export const TextEditor = ({setTextEditMode}: Props) => {
             styles.input,
             {
               fontSize,
+              // sliderでフォントサイズを変更する際、TextInputがあるとslider動かしている時に表示されるTextの表示位置がずれてしまうのでheightを0にする
+              // 演算子でTextInputそのものを消すと、それまでの情報も消えてしまうのでheight: 0で対応
               maxHeight: !onSlide ? maxHeight : 0,
               color: !onSlide ? fontColor : 'transparent',
             },
           ]}
-          value={text}
+          value={value}
           selectionColor={!onSlide ? undefined : 'transparent'}
           keyboardAppearance="dark"
           scrollEnabled={false}
-          onChangeText={(t) => {
-            setText(t);
-            textClone.current = t;
-          }}
+          onLayout={onTextAreaLayout}
+          onChangeText={onChangeText}
         />
 
+        {/* TextInputのスタイルがローマ字以外だと反映されないので、fontSizeの変更はTextで対応 */}
         {onSlide && (
           <Text
             style={[
@@ -139,7 +204,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
                 color: fontColor,
               },
             ]}>
-            {text}
+            {value}
           </Text>
         )}
       </View>
@@ -151,24 +216,11 @@ export const TextEditor = ({setTextEditMode}: Props) => {
           minimumValue={10}
           maximumValue={50}
           maximumTrackTintColor="#FFFFFF"
-          onSlidingStart={() => {
-            setText((t) => t + ' ');
-            setTimeout(() => {
-              setOnSlide(true);
-              setText(textClone.current);
-            }, 1);
-          }}
+          onSlidingStart={onSlidingStart}
           onValueChange={(v) => {
             setFontSize(v);
           }}
-          onSlidingComplete={(v) => {
-            setText((t) => t + ' ');
-            setTimeout(() => {
-              setFontSize(v);
-              setText(textClone.current);
-            }, 1);
-            setOnSlide(false);
-          }}
+          onSlidingComplete={(v) => onSlidingComplete(v)}
         />
       </View>
       <View
@@ -191,7 +243,7 @@ export const TextEditor = ({setTextEditMode}: Props) => {
           titleStyle={{fontSize: 22, fontWeight: '500'}}
           buttonStyle={{backgroundColor: 'transparent'}}
           style={{alignSelf: 'flex-end'}}
-          onPress={() => setTextEditMode(false)}
+          onPress={onCompleteButtonPress}
         />
       </View>
     </View>
@@ -201,6 +253,8 @@ export const TextEditor = ({setTextEditMode}: Props) => {
 const {width, height} = Dimensions.get('window');
 
 const addStrokeColorPaletteBottom = 10;
+
+const defaultFontSize = 30;
 
 const styles = StyleSheet.create({
   container: {
