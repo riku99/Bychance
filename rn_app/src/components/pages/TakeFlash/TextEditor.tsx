@@ -12,6 +12,7 @@ import {Button} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {HorizontalColorPalette} from '~/components/utils/ColorPalette';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export type TextInfo = {
   id: number;
@@ -136,26 +137,31 @@ export const TextEditor = ({setTextEditMode, setTextInfo, textInfo}: Props) => {
             width,
           },
         ]}>
-        <TextInput
-          ref={inputRef}
-          multiline={true}
-          style={[
-            styles.input,
-            {
-              fontSize,
-              // sliderでフォントサイズを変更する際、TextInputがあるとslider動かしている時に表示されるTextの表示位置がずれてしまうのでheightを0にする
-              // 演算子でTextInputそのものを消すと、それまでの情報も消えてしまうのでheight: 0で対応
-              maxHeight: !onSlide ? '100%' : 0,
-              color: !onSlide ? fontColor : 'transparent',
-            },
-          ]}
-          value={value}
-          selectionColor={!onSlide ? undefined : 'transparent'}
-          keyboardAppearance="dark"
-          scrollEnabled={false}
-          onLayout={onTextAreaLayout}
-          onChangeText={onChangeText}
-        />
+        <TouchableOpacity
+          style={[styles.textAreaTouchEnabled, {height: !onSlide ? '100%' : 0}]}
+          activeOpacity={1}
+          onPress={onCompleteButtonPress}>
+          <TextInput
+            ref={inputRef}
+            multiline={true}
+            style={[
+              styles.input,
+              {
+                fontSize,
+                // sliderでフォントサイズを変更する際、TextInputがあるとslider動かしている時に表示されるTextの表示位置がずれてしまうのでheightを0にする
+                // 演算子でTextInputそのものを消すと、それまでの情報も消えてしまうのでheight: 0で対応
+                maxHeight: !onSlide ? '100%' : 0,
+                color: !onSlide ? fontColor : 'transparent',
+              },
+            ]}
+            value={value}
+            selectionColor={!onSlide ? undefined : 'transparent'}
+            keyboardAppearance="dark"
+            scrollEnabled={false}
+            onLayout={onTextAreaLayout}
+            onChangeText={onChangeText}
+          />
+        </TouchableOpacity>
 
         {/* TextInputのスタイルがローマ字以外だと反映されないので、fontSizeの変更はTextで対応 */}
         {onSlide && (
@@ -235,6 +241,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: textAreaHeight,
+  },
+  textAreaTouchEnabled: {
+    width,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
   input: {
     maxWidth: width,
