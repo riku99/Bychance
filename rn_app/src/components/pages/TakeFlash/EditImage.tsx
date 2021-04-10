@@ -7,6 +7,7 @@ import {
   PinchGestureHandlerGestureEvent,
   PinchGestureHandlerStateChangeEvent,
   State,
+  TouchableOpacity,
 } from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -80,11 +81,11 @@ export const EditImage = ({source}: Props) => {
 
   const {top} = useSafeAreaInsets();
 
-  const [text, setText] = useState<TextInfo[]>([]);
+  const [textInfo, setTextInfo] = useState<TextInfo[]>([]);
 
   useEffect(() => {
-    console.log(text);
-  }, [text]);
+    console.log(textInfo);
+  }, [textInfo]);
 
   return (
     <LinearGradient
@@ -118,21 +119,26 @@ export const EditImage = ({source}: Props) => {
         </View>
       </PinchGestureHandler>
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
-      {!!text.length &&
-        text.map((data, index) => (
+      {!!textInfo.length &&
+        textInfo.map((data, index) => (
           <View
-            style={{position: 'absolute', top: data.y, left: data.x}}
+            style={[styles.textContainer, {top: data.y, left: data.x}]}
             key={index}>
-            <Text
-              style={{
-                fontSize: data.fontSize,
-                color: data.fontColor,
-                width: data.width,
-                fontWeight: 'bold',
-                textAlign: 'center',
-              }}>
-              {data.value}
-            </Text>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => console.log('ok')}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    fontSize: data.fontSize,
+                    color: data.fontColor,
+                    width: data.width,
+                  },
+                ]}>
+                {data.value}
+              </Text>
+            </TouchableOpacity>
           </View>
         ))}
       {colorPickerMode && (
@@ -148,7 +154,10 @@ export const EditImage = ({source}: Props) => {
         <>
           <View style={[styles.textEditContainer, styles.textEditorOverlay]} />
           <View style={styles.textEditContainer}>
-            <TextEditor setTextEditMode={setTextEditMode} setText={setText} />
+            <TextEditor
+              setTextEditMode={setTextEditMode}
+              setTextInfo={setTextInfo}
+            />
           </View>
         </>
       )}
@@ -193,5 +202,13 @@ const styles = StyleSheet.create({
   textEditorOverlay: {
     backgroundColor: 'black',
     opacity: 0.5,
+  },
+  textContainer: {
+    position: 'absolute',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  text: {
+    fontWeight: 'bold',
   },
 });
