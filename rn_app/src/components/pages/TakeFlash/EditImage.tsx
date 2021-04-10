@@ -117,10 +117,10 @@ export const EditImage = ({source}: Props) => {
       // 前回から追加された場合
       if (newId > lastTextInfoId.current) {
         console.log('追加');
-        textTranslate.current[`${newId}`] = {
-          x: new Animated.Value(0),
-          y: new Animated.Value(0),
-        };
+        // textTranslate.current[`${newId}`] = {
+        //   x: new Animated.Value(0),
+        //   y: new Animated.Value(0),
+        // };
         console.log(textTranslate.current);
       } else {
         // 前回から削除された場合
@@ -175,8 +175,21 @@ export const EditImage = ({source}: Props) => {
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
       {!!allTextInfo.length &&
         allTextInfo.map((data, index) => (
-          <View
-            style={[styles.textContainer, {top: data.y, left: data.x}]}
+          <Animated.View
+            style={[
+              styles.textContainer,
+              {top: data.y, left: data.x},
+              {
+                transform: [
+                  {
+                    translateX: textTranslate.current[data.id].x,
+                  },
+                  {
+                    translateY: textTranslate.current[data.id].y,
+                  },
+                ],
+              },
+            ]}
             key={index}>
             <TouchableOpacity
               activeOpacity={1}
@@ -195,7 +208,7 @@ export const EditImage = ({source}: Props) => {
                 {data.value}
               </Text>
             </TouchableOpacity>
-          </View>
+          </Animated.View>
         ))}
       {colorPickerMode && (
         <ColorPicker
@@ -214,6 +227,7 @@ export const EditImage = ({source}: Props) => {
               setTextEditMode={setTextEditMode}
               setAllTextInfo={setAllTextInfo}
               textInfo={selectedText && selectedText}
+              textTranslate={textTranslate}
             />
           </View>
         </>

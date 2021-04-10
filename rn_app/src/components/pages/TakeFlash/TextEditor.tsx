@@ -6,6 +6,7 @@ import {
   Dimensions,
   Text,
   LayoutChangeEvent,
+  Animated,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import {Button} from 'react-native-elements';
@@ -28,12 +29,19 @@ type Props = {
   setTextEditMode: (v: boolean) => void;
   setAllTextInfo: React.Dispatch<React.SetStateAction<TextInfo[]>>;
   textInfo?: TextInfo;
+  textTranslate: React.MutableRefObject<{
+    [key: string]: {
+      x: Animated.Value;
+      y: Animated.Value;
+    };
+  }>;
 };
 
 export const TextEditor = ({
   setTextEditMode,
   setAllTextInfo,
   textInfo,
+  textTranslate,
 }: Props) => {
   const inputRef = useRef<null | TextInput>(null);
   const {top} = useSafeAreaInsets();
@@ -109,8 +117,16 @@ export const TextEditor = ({
         let id: number;
         if (t.length) {
           id = t[t.length - 1].id + 1;
+          textTranslate.current[String(id)] = {
+            x: new Animated.Value(0),
+            y: new Animated.Value(0),
+          };
         } else {
           id = 1;
+          textTranslate.current[String(id)] = {
+            x: new Animated.Value(0),
+            y: new Animated.Value(0),
+          };
         }
         return [
           ...t,
