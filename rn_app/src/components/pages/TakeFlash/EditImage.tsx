@@ -70,21 +70,21 @@ export const EditImage = ({source}: Props) => {
     panGestureDiffY.current = translationY;
   };
 
-  const onTextPanGesture = (e: PanGestureHandlerGestureEvent, id: number) => {
-    const {translationX, translationY} = e.nativeEvent;
-    const targetTranslate = textTranslate.current[id];
-    if (targetTranslate) {
-      targetTranslate.x.setValue(translationX);
-      targetTranslate.y.setValue(translationY);
-    }
-  };
-
   const onPanGestureStateChange = (e: PanGestureHandlerGestureEvent) => {
     if (e.nativeEvent.state === State.END || State.CANCELLED) {
       offsetX.current += panGestureDiffX.current;
       offsetY.current += panGestureDiffY.current;
       panGestureDiffX.current = 0;
       panGestureDiffY.current = 0;
+    }
+  };
+
+  const onTextPanGesture = (e: PanGestureHandlerGestureEvent, id: number) => {
+    const {translationX, translationY} = e.nativeEvent;
+    const targetTranslate = textTranslate.current[id];
+    if (targetTranslate) {
+      targetTranslate.x.setValue(translationX);
+      targetTranslate.y.setValue(translationY);
     }
   };
 
@@ -95,6 +95,9 @@ export const EditImage = ({source}: Props) => {
 
   const textTranslate = useRef<{
     [key: string]: {x: Animated.Value; y: Animated.Value};
+  }>({});
+  const textOffset = useRef<{
+    [key: string]: {x: number; y: number};
   }>({});
 
   useEffect(() => {
@@ -107,7 +110,12 @@ export const EditImage = ({source}: Props) => {
         if (allTextInfo.length) {
           const num = selectedText.id;
           const {[`${num}`]: n, ...rest} = textTranslate.current; // eslint-disable-line
-          textTranslate.current = rest; //
+          const {
+            [`${num}`]: selectedOffset, // eslint-disable-line
+            ...restOffset
+          } = textOffset.current;
+          textTranslate.current = rest;
+          textOffset.current = restOffset;
         } else {
           textTranslate.current = {};
         }
@@ -116,6 +124,8 @@ export const EditImage = ({source}: Props) => {
   }, [selectedText, allTextInfo]);
 
   useEffect(() => {
+    console.log(textTranslate.current);
+    console.log(textOffset.current);
     if (textEditMode) {
       setSelectedText(undefined);
     }
@@ -215,6 +225,7 @@ export const EditImage = ({source}: Props) => {
               setAllTextInfo={setAllTextInfo}
               textInfo={selectedText && selectedText}
               textTranslate={textTranslate}
+              textOffset={textOffset}
             />
           </View>
         </>

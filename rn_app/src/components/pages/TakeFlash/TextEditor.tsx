@@ -35,6 +35,12 @@ type Props = {
       y: Animated.Value;
     };
   }>;
+  textOffset: React.MutableRefObject<{
+    [key: string]: {
+      x: number;
+      y: number;
+    };
+  }>;
 };
 
 export const TextEditor = ({
@@ -42,6 +48,7 @@ export const TextEditor = ({
   setAllTextInfo,
   textInfo,
   textTranslate,
+  textOffset,
 }: Props) => {
   const inputRef = useRef<null | TextInput>(null);
   const {top} = useSafeAreaInsets();
@@ -125,6 +132,10 @@ export const TextEditor = ({
         textTranslate.current[String(id)] = {
           x: new Animated.Value(0),
           y: new Animated.Value(0),
+        };
+        textOffset.current[String(id)] = {
+          x: 0,
+          y: 0,
         };
         return [
           ...t,
