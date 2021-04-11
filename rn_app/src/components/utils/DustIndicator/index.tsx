@@ -5,7 +5,7 @@ import Emoji from 'react-native-emoji';
 import {normalStyles} from '~/constants/styles/normal';
 
 type Props = {
-  onAnimationEnd?: () => any;
+  onAnimationEnd?: () => void;
 };
 
 export const DustIndicator = ({onAnimationEnd}: Props) => {
@@ -14,7 +14,7 @@ export const DustIndicator = ({onAnimationEnd}: Props) => {
   useEffect(() => {
     Animated.timing(translateX, {
       toValue: 0,
-      duration: 3000,
+      duration: 2000,
       useNativeDriver: true,
     }).start((e) => {
       if (onAnimationEnd && e.finished) {

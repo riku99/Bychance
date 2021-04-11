@@ -148,7 +148,6 @@ export const EditImage = ({source}: Props) => {
     }
   }, [textEditMode]);
 
-  // テキスト削除できるようにする
   // 未読のカラー変更
   // ファイル分割
   const onTextPress = ({index, id}: {index: number; id: number}) => {
@@ -163,9 +162,15 @@ export const EditImage = ({source}: Props) => {
     setSelectedText(changedOffsetObj);
   };
 
-  const [dustIndicator, setDustIndcator] = useState(false);
-  const onDustAnimationEnd = () => {
-    console.log('end');
+  const [dustIndicator, setDustIndcator] = useState<number>();
+  const onDustAnimationEnd = ({id}: {id: number}) => {
+    const _text = allTextInfo.filter((t) => t.id !== id);
+    setAllTextInfo(_text);
+    const {[String(id)]: n, ...textTranslateRest} = textTranslate.current; // eslint-disable-line
+    const {[String(id)]: nn, ...textOffsetRest} = textOffset.current; // eslint-disable-line
+    textTranslate.current = textTranslateRest;
+    textOffset.current = textOffsetRest;
+    setDustIndcator(undefined);
   };
 
   return (
@@ -226,10 +231,10 @@ export const EditImage = ({source}: Props) => {
               <TouchableOpacity
                 activeOpacity={1}
                 //delayLongPress={1000}
-                onLongPress={() => setDustIndcator(true)}
+                onLongPress={() => setDustIndcator(data.id)}
                 onPressOut={() => {
                   if (dustIndicator) {
-                    setDustIndcator(false);
+                    setDustIndcator(undefined);
                   }
                 }}
                 onPress={() => {
@@ -276,7 +281,9 @@ export const EditImage = ({source}: Props) => {
 
       {dustIndicator && (
         <View style={styles.dustIndicatorContainer}>
-          <DustIndicator onAnimationEnd={onDustAnimationEnd} />
+          <DustIndicator
+            onAnimationEnd={() => onDustAnimationEnd({id: dustIndicator})}
+          />
         </View>
       )}
     </LinearGradient>
