@@ -117,17 +117,15 @@ export const TextEditor = ({
         let id: number;
         if (t.length) {
           id = t[t.length - 1].id + 1;
-          textTranslate.current[String(id)] = {
-            x: new Animated.Value(0),
-            y: new Animated.Value(0),
-          };
         } else {
           id = 1;
-          textTranslate.current[String(id)] = {
-            x: new Animated.Value(0),
-            y: new Animated.Value(0),
-          };
         }
+        // 要素のレンダリングの関係でtextInfoの変化で再レンダリングが起きる前にtextTranslate.currentにデータを入れたい。
+        // データにはtextInfoのidが必要なのでここでcurrentにデータを入れている
+        textTranslate.current[String(id)] = {
+          x: new Animated.Value(0),
+          y: new Animated.Value(0),
+        };
         return [
           ...t,
           {

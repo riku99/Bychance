@@ -10,8 +10,6 @@ type Props = {
   setTextEditMode: (v: boolean) => void;
 };
 
-type HsvColor = {h: number; s: number; v: number};
-
 export const EditImageTopButtonItems = ({
   setSketchMode,
   setColorPickerMode,

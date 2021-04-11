@@ -93,12 +93,69 @@ export const EditImage = ({source}: Props) => {
   const [allTextInfo, setAllTextInfo] = useState<TextInfo[]>([]);
   const [selectedText, setSelectedText] = useState<TextInfo>();
 
+  const textTranslate = useRef<{
+    [key: string]: {x: Animated.Value; y: Animated.Value};
+  }>({});
+
+  const lastTextInfoId = useRef(0);
+
+  // useEffect(() => {
+  //   // テキストが選択したらまず何したいか
+  //   // その選択した
+  // }, [selectedText]);
+
+  // useEffect(() => {
+  //   if (textEditMode) {
+  //     setSelectedText(undefined);
+  //   }
+  // }, [textEditMode]);
+
+  // useEffect(() => {
+  //   // どっちもない。つまり初回レンダリングなどで実行された場合
+  //   if (!lastTextInfoId.current && !allTextInfo.length) {
+  //     return;
+  //   }
+
+  //   // ① textがプレスされてselectedTextがtrueになるのでここが
+  //   // if (selectedText) {
+  //   //   // 編集的な意味合いにするので選択されたテキストはいったん削除する
+  //   //   const _text = allTextInfo.filter((t) => t.id !== selectedText.id);
+  //   //   setTextEditMode(true);
+  //   //   setAllTextInfo(_text);
+  //   // }
+
+  //   // データが存在する場合
+  //   if (allTextInfo.length) {
+  //     console.log('データが存在する場合');
+  //     const lastDataId = allTextInfo[allTextInfo.length - 1].id;
+  //     // データは存在するが前回から一番新しいデータのidが増加していない。つまり追加でなはなく削除された場合
+  //     // 「データが追加された場合」の処理はこのEffectではとりあえず行っていない。追加される場合の処理は再レンダリングされる前、つまりeffectより前に実行したいため。effectは再レンダリングされた後に実行される
+  //     if (lastDataId <= lastTextInfoId.current && selectedText) {
+  //       const num = selectedText.id;
+  //       const {[`${num}`]: n, ...rest} = textTranslate.current; // eslint-disable-line
+  //       textTranslate.current = rest; //
+  //     }
+  //     lastTextInfoId.current = lastDataId;
+  //   } else {
+  //     textTranslate.current = {};
+  //     lastTextInfoId.current = 0;
+  //   }
+  // }, [allTextInfo, selectedText]);
+
+  // const textLength = useRef(0);
+
+  // useEffect(() => {
+  //   textLength.current = allTextInfo.length;
+  // }, [allTextInfo.length]);
+
   useEffect(() => {
     if (selectedText) {
-      // 編集的な意味合いにするので選択されたテキストはいったん削除する
-      const _text = allTextInfo.filter((t) => t.id !== selectedText.id);
       setTextEditMode(true);
-      setAllTextInfo(_text);
+      const _text = allTextInfo.filter((t) => t.id !== selectedText.id);
+      if (_text.length !== allTextInfo.length) {
+        setAllTextInfo(_text);
+      }
+      //lastTextInfoId.current = _text[_text.length - 1].id;
     }
   }, [selectedText, allTextInfo]);
 
@@ -108,47 +165,10 @@ export const EditImage = ({source}: Props) => {
     }
   }, [textEditMode]);
 
-  const textTranslate = useRef<{
-    [key: string]: {x: Animated.Value; y: Animated.Value};
-  }>({});
-
-  const lastTextInfoId = useRef(0);
-
-  useEffect(() => {
-    // どっちもない。つまり初回レンダリングなどで実行された場合
-    if (!lastTextInfoId.current && !allTextInfo.length) {
-      console.log('初回');
-      return;
-    }
-    // データが存在する場合
-    if (allTextInfo.length) {
-      const newId = allTextInfo[allTextInfo.length - 1].id;
-      // 前回から追加された場合
-      if (newId > lastTextInfoId.current) {
-        console.log('追加');
-        // textTranslate.current[`${newId}`] = {
-        //   x: new Animated.Value(0),
-        //   y: new Animated.Value(0),
-        // };
-        console.log(textTranslate.current);
-      } else {
-        // 前回から削除された場合
-        console.log('削除');
-        if (selectedText) {
-          const num = selectedText.id;
-          const {[`${num}`]: n, ...rest} = textTranslate.current;
-          textTranslate.current = rest;
-          console.log(n);
-          console.log(rest);
-        }
-      }
-      lastTextInfoId.current = newId;
-    } else {
-      console.log('データなくなりました');
-      textTranslate.current = {};
-      lastTextInfoId.current = 0;
-    }
-  }, [allTextInfo, selectedText]);
+  const _onPress = (index: number) => {
+    //const id = allTextInfo[index].id;
+    setSelectedText(allTextInfo[index]);
+  };
 
   return (
     <LinearGradient
@@ -205,7 +225,7 @@ export const EditImage = ({source}: Props) => {
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => {
-                  setSelectedText(allTextInfo[index]);
+                  _onPress(index);
                 }}>
                 <Text
                   style={[
