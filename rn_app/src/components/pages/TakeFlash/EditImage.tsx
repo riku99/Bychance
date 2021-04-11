@@ -79,12 +79,31 @@ export const EditImage = ({source}: Props) => {
     }
   };
 
+  const textPanGestureDiffX = useRef(0);
+  const textPanGestureDiffY = useRef(0);
+
   const onTextPanGesture = (e: PanGestureHandlerGestureEvent, id: number) => {
     const {translationX, translationY} = e.nativeEvent;
     const targetTranslate = textTranslate.current[id];
-    if (targetTranslate) {
-      targetTranslate.x.setValue(translationX);
-      targetTranslate.y.setValue(translationY);
+    const targetOffset = textOffset.current[id];
+    if (targetTranslate && targetOffset) {
+      targetTranslate.x.setValue(translationX + targetOffset.x);
+      targetTranslate.y.setValue(translationY + targetOffset.y);
+    }
+    textPanGestureDiffX.current = translationX;
+    textPanGestureDiffY.current = translationY;
+  };
+
+  const onTextPanGestureStateChange = (
+    e: PanGestureHandlerGestureEvent,
+    id: number,
+  ) => {
+    if (e.nativeEvent.state === State.END || State.CANCELLED) {
+      const targetOffset = textOffset.current[id];
+      targetOffset.x += textPanGestureDiffX.current;
+      targetOffset.y += textPanGestureDiffY.current;
+      textPanGestureDiffX.current = 0;
+      textPanGestureDiffY.current = 0;
     }
   };
 
@@ -170,7 +189,10 @@ export const EditImage = ({source}: Props) => {
       {!!allTextInfo.length &&
         allTextInfo.map((data, index) => (
           <PanGestureHandler
-            onGestureEvent={(e) => onTextPanGesture(e, data.id)}>
+            onGestureEvent={(e) => onTextPanGesture(e, data.id)}
+            onHandlerStateChange={(e) =>
+              onTextPanGestureStateChange(e, data.id)
+            }>
             <Animated.View
               style={[
                 styles.textContainer,
