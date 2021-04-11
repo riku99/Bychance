@@ -163,6 +163,11 @@ export const EditImage = ({source}: Props) => {
     setSelectedText(changedOffsetObj);
   };
 
+  const [dustIndicator, setDustIndcator] = useState(false);
+  const onDustAnimationEnd = () => {
+    console.log('end');
+  };
+
   return (
     <LinearGradient
       style={styles.container}
@@ -220,8 +225,13 @@ export const EditImage = ({source}: Props) => {
               ]}>
               <TouchableOpacity
                 activeOpacity={1}
-                delayLongPress={1000}
-                onLongPress={() => console.log('longPress!')}
+                //delayLongPress={1000}
+                onLongPress={() => setDustIndcator(true)}
+                onPressOut={() => {
+                  if (dustIndicator) {
+                    setDustIndcator(false);
+                  }
+                }}
                 onPress={() => {
                   onTextPress({index, id: data.id});
                 }}>
@@ -264,9 +274,11 @@ export const EditImage = ({source}: Props) => {
         </>
       )}
 
-      <View style={styles.dustIndicatorContainer}>
-        <DustIndicator />
-      </View>
+      {dustIndicator && (
+        <View style={styles.dustIndicatorContainer}>
+          <DustIndicator onAnimationEnd={onDustAnimationEnd} />
+        </View>
+      )}
     </LinearGradient>
   );
 };
@@ -318,8 +330,7 @@ const styles = StyleSheet.create({
   },
   dustIndicatorContainer: {
     position: 'absolute',
-    top: 170,
-    width: '50%',
     alignSelf: 'center',
+    top: 170,
   },
 });

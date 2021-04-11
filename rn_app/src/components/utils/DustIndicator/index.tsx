@@ -4,7 +4,11 @@ import Emoji from 'react-native-emoji';
 
 import {normalStyles} from '~/constants/styles/normal';
 
-export const DustIndicator = () => {
+type Props = {
+  onAnimationEnd?: () => any;
+};
+
+export const DustIndicator = ({onAnimationEnd}: Props) => {
   const translateX = useRef(new Animated.Value(-barWidth)).current;
 
   useEffect(() => {
@@ -12,8 +16,12 @@ export const DustIndicator = () => {
       toValue: 0,
       duration: 3000,
       useNativeDriver: true,
-    }).start();
-  }, [translateX]);
+    }).start((e) => {
+      if (onAnimationEnd && e.finished) {
+        onAnimationEnd();
+      }
+    });
+  }, [translateX, onAnimationEnd]);
 
   return (
     <View style={styles.container}>
