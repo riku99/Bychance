@@ -118,6 +118,8 @@ export const TextEditor = ({
     valueClone.current = t;
   };
 
+  const off = useMemo(() => textInfo && {x: textInfo.x, y: textInfo.y}, []);
+
   const onCompleteButtonPress = () => {
     if (offset && value) {
       setAllTextInfo((t) => {
@@ -137,12 +139,13 @@ export const TextEditor = ({
           x: 0,
           y: 0,
         };
+        console.log(off);
         return [
           ...t,
           {
             id,
-            x: offset.x,
-            y: offset.y + textAreaTop,
+            x: off ? off.x : offset.x,
+            y: off ? off.y : offset.y + textAreaTop,
             fontSize,
             value,
             fontColor,

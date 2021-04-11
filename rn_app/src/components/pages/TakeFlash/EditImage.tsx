@@ -123,7 +123,6 @@ export const EditImage = ({source}: Props) => {
     if (selectedText) {
       setTextEditMode(true);
       const _text = allTextInfo.filter((t) => t.id !== selectedText.id);
-
       if (_text.length !== allTextInfo.length) {
         setAllTextInfo(_text);
         if (allTextInfo.length) {
@@ -143,15 +142,19 @@ export const EditImage = ({source}: Props) => {
   }, [selectedText, allTextInfo]);
 
   useEffect(() => {
-    console.log(textTranslate.current);
-    console.log(textOffset.current);
     if (textEditMode) {
       setSelectedText(undefined);
     }
   }, [textEditMode]);
 
-  const _onPress = (index: number) => {
-    setSelectedText(allTextInfo[index]);
+  const _onPress = ({index, id}: {index: number; id: number}) => {
+    const selected = allTextInfo[index];
+    const changedOffsetObj = {
+      ...selected,
+      x: selected.x + textOffset.current[id].x,
+      y: selected.y + textOffset.current[id].y,
+    };
+    setSelectedText(changedOffsetObj);
   };
 
   return (
@@ -212,7 +215,7 @@ export const EditImage = ({source}: Props) => {
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => {
-                  _onPress(index);
+                  _onPress({index, id: data.id});
                 }}>
                 <Text
                   style={[
