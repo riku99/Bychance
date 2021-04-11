@@ -16,6 +16,7 @@ import {SketchCanvas} from './SketchCanvas';
 import {EditImageTopButtonItems} from './EditImageTopButtonItems';
 import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
+import {DustIndicator} from '~/components/utils/DustIndicator';
 
 type Props = {
   source: {
@@ -147,10 +148,15 @@ export const EditImage = ({source}: Props) => {
     }
   }, [textEditMode]);
 
-  const _onPress = ({index, id}: {index: number; id: number}) => {
+  // テキスト削除できるようにする
+  // 未読のカラー変更
+  // ファイル分割
+  const onTextPress = ({index, id}: {index: number; id: number}) => {
+    // データの取得はindexでできるが、アニメーションに関する情報との関連はidで行われているのでindex, idどちらも受け取る
     const selected = allTextInfo[index];
     const changedOffsetObj = {
       ...selected,
+      // textEditorに渡すx, yの情報はその時点でのoffsetにする。textOffsetを渡して上げないと編集完了したらデフォルトのoffsetに戻ってしまう
       x: selected.x + textOffset.current[id].x,
       y: selected.y + textOffset.current[id].y,
     };
@@ -195,7 +201,8 @@ export const EditImage = ({source}: Props) => {
             onGestureEvent={(e) => onTextPanGesture(e, data.id)}
             onHandlerStateChange={(e) =>
               onTextPanGestureStateChange(e, data.id)
-            }>
+            }
+            key={data.id}>
             <Animated.View
               style={[
                 styles.textContainer,
@@ -210,12 +217,13 @@ export const EditImage = ({source}: Props) => {
                     },
                   ],
                 },
-              ]}
-              key={data.id}>
+              ]}>
               <TouchableOpacity
                 activeOpacity={1}
+                delayLongPress={1000}
+                onLongPress={() => console.log('longPress!')}
                 onPress={() => {
-                  _onPress({index, id: data.id});
+                  onTextPress({index, id: data.id});
                 }}>
                 <Text
                   style={[
@@ -255,6 +263,10 @@ export const EditImage = ({source}: Props) => {
           </View>
         </>
       )}
+
+      <View style={styles.dustIndicatorContainer}>
+        <DustIndicator />
+      </View>
     </LinearGradient>
   );
 };
@@ -303,5 +315,11 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  dustIndicatorContainer: {
+    position: 'absolute',
+    top: 170,
+    width: '50%',
+    alignSelf: 'center',
   },
 });
