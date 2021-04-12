@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Animated, Dimensions, Text} from 'react-native';
+import {StyleSheet, View, Animated, Dimensions} from 'react-native';
 import {
   PanGestureHandler,
   PinchGestureHandler,
@@ -7,7 +7,6 @@ import {
   PinchGestureHandlerGestureEvent,
   PinchGestureHandlerStateChangeEvent,
   State,
-  TouchableOpacity,
 } from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,6 +16,7 @@ import {EditImageTopButtonItems} from './EditImageTopButtonItems';
 import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
+import {AnimatedText} from './AnimatedText';
 
 type Props = {
   source: {
@@ -148,8 +148,6 @@ export const EditImage = ({source}: Props) => {
     }
   }, [textEditMode]);
 
-  // 未読のカラー変更
-  // ファイル分割
   const onTextPress = ({index, id}: {index: number; id: number}) => {
     // データの取得はindexでできるが、アニメーションに関する情報との関連はidで行われているのでindex, idどちらも受け取る
     const selected = allTextInfo[index];
@@ -207,53 +205,22 @@ export const EditImage = ({source}: Props) => {
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
       {!!allTextInfo.length &&
         allTextInfo.map((data, index) => (
-          <PanGestureHandler
-            onGestureEvent={(e) => onTextPanGesture(e, data.id)}
-            onHandlerStateChange={(e) =>
+          <AnimatedText
+            data={data}
+            onPanGestureEvent={(e) => onTextPanGesture(e, data.id)}
+            onPanHandlerStateChange={(e) =>
               onTextPanGestureStateChange(e, data.id)
             }
-            key={data.id}>
-            <Animated.View
-              style={[
-                styles.textContainer,
-                {top: data.y, left: data.x},
-                {
-                  transform: [
-                    {
-                      translateX: textTranslate.current[data.id].x,
-                    },
-                    {
-                      translateY: textTranslate.current[data.id].y,
-                    },
-                  ],
-                },
-              ]}>
-              <TouchableOpacity
-                activeOpacity={1}
-                //delayLongPress={1000}
-                onLongPress={() => setDustIndcator(data.id)}
-                onPressOut={() => {
-                  if (dustIndicator) {
-                    setDustIndcator(undefined);
-                  }
-                }}
-                onPress={() => {
-                  onTextPress({index, id: data.id});
-                }}>
-                <Text
-                  style={[
-                    styles.text,
-                    {
-                      fontSize: data.fontSize,
-                      color: data.fontColor,
-                      width: data.width,
-                    },
-                  ]}>
-                  {data.value}
-                </Text>
-              </TouchableOpacity>
-            </Animated.View>
-          </PanGestureHandler>
+            translateX={textTranslate.current[data.id].x}
+            translateY={textTranslate.current[data.id].y}
+            onLongPress={() => setDustIndcator(data.id)}
+            onPressOut={() => {
+              if (dustIndicator) {
+                setDustIndcator(undefined);
+              }
+            }}
+            onPress={() => onTextPress({index, id: data.id})}
+          />
         ))}
       {colorPickerMode && (
         <ColorPicker
