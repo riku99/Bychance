@@ -17,7 +17,7 @@ import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
 import {AnimatedText} from './AnimatedText';
-import {setTranslateAndOffset} from '~/helpers/Translation';
+import {setTranslateAndDiff, setOffsetAndDiff} from '~/helpers/Translation';
 
 type Props = {
   source: {
@@ -66,7 +66,7 @@ export const EditImage = ({source}: Props) => {
   };
 
   const onPanGesture = (e: PanGestureHandlerGestureEvent) => {
-    setTranslateAndOffset({
+    setTranslateAndDiff({
       e,
       translateX,
       translateY,
@@ -78,12 +78,13 @@ export const EditImage = ({source}: Props) => {
   };
 
   const onPanGestureStateChange = (e: PanGestureHandlerGestureEvent) => {
-    if (e.nativeEvent.state === State.END || State.CANCELLED) {
-      offsetX.current += panGestureDiffX.current;
-      offsetY.current += panGestureDiffY.current;
-      panGestureDiffX.current = 0;
-      panGestureDiffY.current = 0;
-    }
+    setOffsetAndDiff({
+      e,
+      offsetX,
+      offsetY,
+      diffX: panGestureDiffX,
+      diffY: panGestureDiffY,
+    });
   };
 
   // テキスト関連
@@ -101,7 +102,7 @@ export const EditImage = ({source}: Props) => {
   const onTextPanGesture = (e: PanGestureHandlerGestureEvent, id: number) => {
     const {x, y} = textTranslate.current[id];
     const {x: _x, y: _y} = textOffset.current[id];
-    setTranslateAndOffset({
+    setTranslateAndDiff({
       e,
       translateX: x,
       translateY: y,
@@ -116,13 +117,12 @@ export const EditImage = ({source}: Props) => {
     e: PanGestureHandlerGestureEvent,
     id: number,
   ) => {
-    if (e.nativeEvent.state === State.END || State.CANCELLED) {
-      const targetOffset = textOffset.current[id];
-      targetOffset.x += textPanGestureDiffX.current;
-      targetOffset.y += textPanGestureDiffY.current;
-      textPanGestureDiffX.current = 0;
-      textPanGestureDiffY.current = 0;
-    }
+    setOffsetAndDiff({
+      e,
+      offsetObj: textOffset.current[id],
+      diffX: textPanGestureDiffX,
+      diffY: textPanGestureDiffY,
+    });
   };
 
   const onTextPress = ({index, id}: {index: number; id: number}) => {
