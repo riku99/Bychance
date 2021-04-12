@@ -139,7 +139,6 @@ export const TextEditor = ({
           x: 0,
           y: 0,
         };
-        console.log(off);
         return [
           ...t,
           {

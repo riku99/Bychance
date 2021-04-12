@@ -26,6 +26,11 @@ type Props = {
 };
 
 export const EditImage = ({source}: Props) => {
+  const {top} = useSafeAreaInsets();
+  const [sketchMode, setSketchMode] = useState(false);
+  const [colorPickerMode, setColorPickerMode] = useState(false);
+  const [textEditMode, setTextEditMode] = useState(false);
+  // 画像関連
   const scale = useRef(new Animated.Value(1)).current;
   const totalScaleDiff = useRef(0);
   const imageScale = useRef(1);
@@ -41,10 +46,6 @@ export const EditImage = ({source}: Props) => {
 
   const [topBackGroundColor, setTopBackGroundColor] = useState('black');
   const [bottomBackGroundColor, setBottomBackGroundColor] = useState('black');
-
-  const [sketchMode, setSketchMode] = useState(false);
-  const [colorPickerMode, setColorPickerMode] = useState(false);
-  const [textEditMode, setTextEditMode] = useState(false);
 
   const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
     const _scale = e.nativeEvent.scale;
@@ -80,6 +81,15 @@ export const EditImage = ({source}: Props) => {
     }
   };
 
+  // テキスト関連
+  const [allTextInfo, setAllTextInfo] = useState<TextInfo[]>([]);
+  const [selectedText, setSelectedText] = useState<TextInfo>();
+  const textTranslate = useRef<{
+    [key: string]: {x: Animated.Value; y: Animated.Value};
+  }>({});
+  const textOffset = useRef<{
+    [key: string]: {x: number; y: number};
+  }>({});
   const textPanGestureDiffX = useRef(0);
   const textPanGestureDiffY = useRef(0);
 
@@ -108,17 +118,17 @@ export const EditImage = ({source}: Props) => {
     }
   };
 
-  const {top} = useSafeAreaInsets();
-
-  const [allTextInfo, setAllTextInfo] = useState<TextInfo[]>([]);
-  const [selectedText, setSelectedText] = useState<TextInfo>();
-
-  const textTranslate = useRef<{
-    [key: string]: {x: Animated.Value; y: Animated.Value};
-  }>({});
-  const textOffset = useRef<{
-    [key: string]: {x: number; y: number};
-  }>({});
+  const onTextPress = ({index, id}: {index: number; id: number}) => {
+    // データの取得はindexでできるが、アニメーションに関する情報との関連はidで行われているのでindex, idどちらも受け取る
+    const selected = allTextInfo[index];
+    const changedOffsetObj = {
+      ...selected,
+      // textEditorに渡すx, yの情報はその時点でのoffsetにする。textOffsetを渡して上げないと編集完了したらデフォルトのoffsetに戻ってしまう
+      x: selected.x + textOffset.current[id].x,
+      y: selected.y + textOffset.current[id].y,
+    };
+    setSelectedText(changedOffsetObj);
+  };
 
   useEffect(() => {
     if (selectedText) {
@@ -148,18 +158,7 @@ export const EditImage = ({source}: Props) => {
     }
   }, [textEditMode]);
 
-  const onTextPress = ({index, id}: {index: number; id: number}) => {
-    // データの取得はindexでできるが、アニメーションに関する情報との関連はidで行われているのでindex, idどちらも受け取る
-    const selected = allTextInfo[index];
-    const changedOffsetObj = {
-      ...selected,
-      // textEditorに渡すx, yの情報はその時点でのoffsetにする。textOffsetを渡して上げないと編集完了したらデフォルトのoffsetに戻ってしまう
-      x: selected.x + textOffset.current[id].x,
-      y: selected.y + textOffset.current[id].y,
-    };
-    setSelectedText(changedOffsetObj);
-  };
-
+  // 削除関連(テキスト関連だけれども)
   const [dustIndicator, setDustIndcator] = useState<number>();
   const onDustAnimationEnd = ({id}: {id: number}) => {
     const _text = allTextInfo.filter((t) => t.id !== id);
@@ -220,6 +219,7 @@ export const EditImage = ({source}: Props) => {
               }
             }}
             onPress={() => onTextPress({index, id: data.id})}
+            key={data.id}
           />
         ))}
       {colorPickerMode && (
