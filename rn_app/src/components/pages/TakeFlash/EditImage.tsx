@@ -6,7 +6,6 @@ import {
   PanGestureHandlerGestureEvent,
   PinchGestureHandlerGestureEvent,
   PinchGestureHandlerStateChangeEvent,
-  State,
 } from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,7 +16,11 @@ import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
 import {AnimatedText} from './AnimatedText';
-import {setTranslateAndDiff, setOffsetAndDiff} from '~/helpers/Translation';
+import {
+  setTranslateAndDiff,
+  setOffsetAndDiff,
+} from '~/helpers/animation/translate';
+import {setScale, setTotalScale} from '~/helpers/animation/scale';
 
 type Props = {
   source: {
@@ -49,20 +52,22 @@ export const EditImage = ({source}: Props) => {
   const [bottomBackGroundColor, setBottomBackGroundColor] = useState('black');
 
   const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
-    const _scale = e.nativeEvent.scale;
-    const diff = (1 - _scale) / 3;
-    totalScaleDiff.current = diff;
-    const value = imageScale.current - diff;
-    scale.setValue(value);
+    setScale({
+      e,
+      scale,
+      totalDiff: totalScaleDiff,
+      totalScale: imageScale,
+    });
   };
 
   const onPinchHandlerStateChange = (
     e: PinchGestureHandlerStateChangeEvent,
   ) => {
-    if (e.nativeEvent.state === State.END || State.CANCELLED) {
-      imageScale.current -= totalScaleDiff.current;
-      totalScaleDiff.current = 0;
-    }
+    setTotalScale({
+      e,
+      totalScale: imageScale,
+      totalDiff: totalScaleDiff,
+    });
   };
 
   const onPanGesture = (e: PanGestureHandlerGestureEvent) => {
