@@ -17,6 +17,7 @@ import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
 import {AnimatedText} from './AnimatedText';
+import {setTranslateAndOffset} from '~/helpers/Translation';
 
 type Props = {
   source: {
@@ -65,11 +66,15 @@ export const EditImage = ({source}: Props) => {
   };
 
   const onPanGesture = (e: PanGestureHandlerGestureEvent) => {
-    const {translationX, translationY} = e.nativeEvent;
-    translateX.setValue(offsetX.current + translationX);
-    translateY.setValue(offsetY.current + translationY);
-    panGestureDiffX.current = translationX;
-    panGestureDiffY.current = translationY;
+    setTranslateAndOffset({
+      e,
+      translateX,
+      translateY,
+      offsetX: offsetX.current,
+      offsetY: offsetY.current,
+      diffX: panGestureDiffX,
+      diffY: panGestureDiffY,
+    });
   };
 
   const onPanGestureStateChange = (e: PanGestureHandlerGestureEvent) => {
@@ -94,15 +99,17 @@ export const EditImage = ({source}: Props) => {
   const textPanGestureDiffY = useRef(0);
 
   const onTextPanGesture = (e: PanGestureHandlerGestureEvent, id: number) => {
-    const {translationX, translationY} = e.nativeEvent;
-    const targetTranslate = textTranslate.current[id];
-    const targetOffset = textOffset.current[id];
-    if (targetTranslate && targetOffset) {
-      targetTranslate.x.setValue(translationX + targetOffset.x);
-      targetTranslate.y.setValue(translationY + targetOffset.y);
-    }
-    textPanGestureDiffX.current = translationX;
-    textPanGestureDiffY.current = translationY;
+    const {x, y} = textTranslate.current[id];
+    const {x: _x, y: _y} = textOffset.current[id];
+    setTranslateAndOffset({
+      e,
+      translateX: x,
+      translateY: y,
+      offsetX: _x,
+      offsetY: _y,
+      diffX: textPanGestureDiffX,
+      diffY: textPanGestureDiffY,
+    });
   };
 
   const onTextPanGestureStateChange = (
