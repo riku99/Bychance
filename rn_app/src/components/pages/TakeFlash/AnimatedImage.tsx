@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {Animated, StyleSheet, View, Dimensions} from 'react-native';
 import {
   PanGestureHandler,
@@ -9,29 +9,70 @@ import {
 } from 'react-native-gesture-handler';
 
 import {Source} from './EditImage';
+import {
+  setTranslateAndDiff,
+  setOffsetAndDiff,
+} from '~/helpers/animation/translate';
+import {setScale, setTotalScale} from '~/helpers/animation/scale';
 
 type Props = {
   source: Source;
-  scale: Animated.Value;
-  translateX: Animated.Value;
-  translateY: Animated.Value;
-  onPinchGestureEvent: (e: PinchGestureHandlerGestureEvent) => void;
-  onPinchHandlerStateChange: (e: PinchGestureHandlerStateChangeEvent) => void;
-  onPanGesture: (e: PanGestureHandlerGestureEvent) => void;
-  onPanGestureStateChange: (e: PanGestureHandlerGestureEvent) => void;
 };
 
-// containerのない状態で一回やってみる
-export const AnimatedImage = ({
-  source,
-  translateX,
-  translateY,
-  scale,
-  onPinchGestureEvent,
-  onPinchHandlerStateChange,
-  onPanGesture,
-  onPanGestureStateChange,
-}: Props) => {
+export const AnimatedImage = ({source}: Props) => {
+  const scale = useRef(new Animated.Value(1)).current;
+  const totalScale = useRef(1);
+  const totalScaleDiff = useRef(0);
+
+  const translateX = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  const offsetX = useRef(0);
+  const offsetY = useRef(0);
+
+  const panGestureDiffY = useRef(0);
+  const panGestureDiffX = useRef(0);
+
+  const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
+    setScale({
+      e,
+      scale,
+      totalDiff: totalScaleDiff,
+      totalScale,
+    });
+  };
+
+  const onPinchHandlerStateChange = (
+    e: PinchGestureHandlerStateChangeEvent,
+  ) => {
+    setTotalScale({
+      e,
+      totalScale: totalScale,
+      totalDiff: totalScaleDiff,
+    });
+  };
+
+  const onPanGesture = (e: PanGestureHandlerGestureEvent) => {
+    setTranslateAndDiff({
+      e,
+      translateX,
+      translateY,
+      offsetX: offsetX.current,
+      offsetY: offsetY.current,
+      diffX: panGestureDiffX,
+      diffY: panGestureDiffY,
+    });
+  };
+
+  const onPanGestureStateChange = (e: PanGestureHandlerGestureEvent) => {
+    setOffsetAndDiff({
+      e,
+      offsetX,
+      offsetY,
+      diffX: panGestureDiffX,
+      diffY: panGestureDiffY,
+    });
+  };
   return (
     <View style={styles.container}>
       <PinchGestureHandler

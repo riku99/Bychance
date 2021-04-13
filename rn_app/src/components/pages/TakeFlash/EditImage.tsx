@@ -1,10 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Animated, Dimensions} from 'react-native';
-import {
-  PanGestureHandlerGestureEvent,
-  PinchGestureHandlerGestureEvent,
-  PinchGestureHandlerStateChangeEvent,
-} from 'react-native-gesture-handler';
+import {StyleSheet, View, Animated} from 'react-native';
+import {PanGestureHandlerGestureEvent} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -19,7 +15,6 @@ import {
   setTranslateAndDiff,
   setOffsetAndDiff,
 } from '~/helpers/animation/translate';
-import {setScale, setTotalScale} from '~/helpers/animation/scale';
 
 export type Source = {
   base64: string;
@@ -35,65 +30,13 @@ export const EditImage = ({source}: Props) => {
   const [sketchMode, setSketchMode] = useState(false);
   const [colorPickerMode, setColorPickerMode] = useState(false);
   const [textEditMode, setTextEditMode] = useState(false);
-  // 画像関連
-  const scale = useRef(new Animated.Value(1)).current;
-  const totalScaleDiff = useRef(0);
-  const totalImageScale = useRef(1);
-
-  const translateX = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(0)).current;
-
-  const offsetX = useRef(0);
-  const offsetY = useRef(0);
-
-  const panGestureDiffY = useRef(0);
-  const panGestureDiffX = useRef(0);
 
   const [topBackGroundColor, setTopBackGroundColor] = useState('black');
   const [bottomBackGroundColor, setBottomBackGroundColor] = useState('black');
 
-  const onPinchGestureEvent = (e: PinchGestureHandlerGestureEvent) => {
-    setScale({
-      e,
-      scale,
-      totalDiff: totalScaleDiff,
-      totalScale: totalImageScale,
-    });
-  };
-
-  const onPinchHandlerStateChange = (
-    e: PinchGestureHandlerStateChangeEvent,
-  ) => {
-    setTotalScale({
-      e,
-      totalScale: totalImageScale,
-      totalDiff: totalScaleDiff,
-    });
-  };
-
-  const onPanGesture = (e: PanGestureHandlerGestureEvent) => {
-    setTranslateAndDiff({
-      e,
-      translateX,
-      translateY,
-      offsetX: offsetX.current,
-      offsetY: offsetY.current,
-      diffX: panGestureDiffX,
-      diffY: panGestureDiffY,
-    });
-  };
-
-  const onPanGestureStateChange = (e: PanGestureHandlerGestureEvent) => {
-    setOffsetAndDiff({
-      e,
-      offsetX,
-      offsetY,
-      diffX: panGestureDiffX,
-      diffY: panGestureDiffY,
-    });
-  };
-
   // テキスト関連
+  // 画像のアニメーション関連のstateや関数は他のAnimatedImage以外か現時点で使われることがないのでそのコンポーネントにまとめている
+  // テキスト関連のものはAnimatedText以外のコンポーネントやここのEffectでも使う必要があるので呼び出し側となるこちらで定義
   const [allTextInfo, setAllTextInfo] = useState<TextInfo[]>([]);
   const [selectedText, setSelectedText] = useState<TextInfo>();
   const textTranslate = useRef<{
@@ -196,16 +139,7 @@ export const EditImage = ({source}: Props) => {
           />
         </View>
       )}
-      <AnimatedImage
-        source={source}
-        translateX={translateX}
-        translateY={translateY}
-        scale={scale}
-        onPinchGestureEvent={onPinchGestureEvent}
-        onPinchHandlerStateChange={onPinchHandlerStateChange}
-        onPanGesture={onPanGesture}
-        onPanGestureStateChange={onPanGestureStateChange}
-      />
+      <AnimatedImage source={source} />
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
       {!!allTextInfo.length &&
         allTextInfo.map((data, index) => (
@@ -262,8 +196,6 @@ export const EditImage = ({source}: Props) => {
   );
 };
 
-const {width} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -272,14 +204,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     width: '95%',
-  },
-  pinchView: {
-    width,
-    height: '100%',
-  },
-  photoStyle: {
-    width,
-    height: '100%',
   },
   canvas: {
     position: 'absolute',
