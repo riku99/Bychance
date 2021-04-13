@@ -1,8 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, View, Animated, Dimensions} from 'react-native';
 import {
-  PanGestureHandler,
-  PinchGestureHandler,
   PanGestureHandlerGestureEvent,
   PinchGestureHandlerGestureEvent,
   PinchGestureHandlerStateChangeEvent,
@@ -16,17 +14,20 @@ import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
 import {AnimatedText} from './AnimatedText';
+import {AnimatedImage} from './AnimatedImage';
 import {
   setTranslateAndDiff,
   setOffsetAndDiff,
 } from '~/helpers/animation/translate';
 import {setScale, setTotalScale} from '~/helpers/animation/scale';
 
+export type Source = {
+  base64: string;
+  uri: string;
+};
+
 type Props = {
-  source: {
-    base64: string;
-    uri: string;
-  };
+  source: Source;
 };
 
 export const EditImage = ({source}: Props) => {
@@ -37,7 +38,7 @@ export const EditImage = ({source}: Props) => {
   // 画像関連
   const scale = useRef(new Animated.Value(1)).current;
   const totalScaleDiff = useRef(0);
-  const imageScale = useRef(1);
+  const totalImageScale = useRef(1);
 
   const translateX = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(0)).current;
@@ -56,7 +57,7 @@ export const EditImage = ({source}: Props) => {
       e,
       scale,
       totalDiff: totalScaleDiff,
-      totalScale: imageScale,
+      totalScale: totalImageScale,
     });
   };
 
@@ -65,7 +66,7 @@ export const EditImage = ({source}: Props) => {
   ) => {
     setTotalScale({
       e,
-      totalScale: imageScale,
+      totalScale: totalImageScale,
       totalDiff: totalScaleDiff,
     });
   };
@@ -195,24 +196,16 @@ export const EditImage = ({source}: Props) => {
           />
         </View>
       )}
-      <PinchGestureHandler
-        onHandlerStateChange={onPinchHandlerStateChange}
-        onGestureEvent={onPinchGestureEvent}>
-        <View style={[styles.pinchView]}>
-          <PanGestureHandler
-            onGestureEvent={onPanGesture}
-            onHandlerStateChange={onPanGestureStateChange}>
-            <Animated.Image
-              source={{uri: source.uri}}
-              style={[
-                styles.photoStyle,
-                {transform: [{scale}, {translateX}, {translateY}]},
-              ]}
-              resizeMode="contain"
-            />
-          </PanGestureHandler>
-        </View>
-      </PinchGestureHandler>
+      <AnimatedImage
+        source={source}
+        translateX={translateX}
+        translateY={translateY}
+        scale={scale}
+        onPinchGestureEvent={onPinchGestureEvent}
+        onPinchHandlerStateChange={onPinchHandlerStateChange}
+        onPanGesture={onPanGesture}
+        onPanGestureStateChange={onPanGestureStateChange}
+      />
       <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
       {!!allTextInfo.length &&
         allTextInfo.map((data, index) => (
