@@ -174,6 +174,19 @@ export const TextEditor = ({
     setTextEditMode(false);
   };
 
+  const onSelectTextBackGroundColorBottunPress = () => {
+    if (selectTextBackGroundColor) {
+      setTextBackGroundColor('');
+    }
+    setSelectTextBackGroundColor(true);
+    setSelectFontColor(false);
+  };
+
+  const onSelectFontColorButtonPress = () => {
+    setSelectFontColor(true);
+    setSelectTextBackGroundColor(false);
+  };
+
   // TextInputのfontSizeとかスタイルに関するプロパティがローマ字以外だと動的に設定できないというバグがある
   // issue見ても解決されていないっぽいので、それらに対応するためにややこしめなことしている
   return (
@@ -283,10 +296,7 @@ export const TextEditor = ({
                     : 'white',
                 },
               ]}
-              onPress={() => {
-                setSelectTextBackGroundColor(true);
-                setSelectFontColor(false);
-              }}>
+              onPress={onSelectTextBackGroundColorBottunPress}>
               <Text
                 style={[
                   styles.middleButtonTitle,
@@ -309,10 +319,7 @@ export const TextEditor = ({
             }}>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => {
-                setSelectFontColor(true);
-                setSelectTextBackGroundColor(false);
-              }}>
+              onPress={onSelectFontColorButtonPress}>
               <Text style={[styles.middleButtonTitle, {color: fontColor}]}>
                 A
               </Text>
