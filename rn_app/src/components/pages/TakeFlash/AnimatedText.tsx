@@ -60,6 +60,9 @@ export const AnimatedText = React.memo(
                   fontSize: data.fontSize,
                   color: data.fontColor,
                   width: data.width,
+                  backgroundColor: data.backGroundColor
+                    ? data.backGroundColor
+                    : undefined,
                 },
               ]}>
               {data.value}

@@ -23,6 +23,7 @@ export type TextInfo = {
   fontSize: number;
   value: string;
   fontColor: string;
+  backGroundColor?: string;
 };
 
 type Props = {
@@ -66,7 +67,9 @@ export const TextEditor = ({
   );
   const [selectFortColor, setSelectFontColor] = useState(true);
 
-  const [textBackGroundColor, setTextBackGroundColor] = useState('');
+  const [textBackGroundColor, setTextBackGroundColor] = useState(
+    textInfo ? textInfo.backGroundColor : '',
+  );
   const [selectTextBackGroundColor, setSelectTextBackGroundColor] = useState(
     false,
   );
@@ -159,6 +162,7 @@ export const TextEditor = ({
             value,
             fontColor,
             width: textAreaWidth,
+            backGroundColor: textBackGroundColor,
           },
         ];
       });
