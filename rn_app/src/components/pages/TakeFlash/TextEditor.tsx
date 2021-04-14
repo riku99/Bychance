@@ -131,7 +131,11 @@ export const TextEditor = ({
     valueClone.current = t;
   };
 
-  const off = useMemo(() => textInfo && {x: textInfo.x, y: textInfo.y}, []); // eslint-disable-line
+  // textInfoが再レンダリングでundefidedになっても値を更新させたくないので eslint-disable-line
+  const defaultOffset = useMemo(
+    () => textInfo && {x: textInfo.x, y: textInfo.y},
+    [], // eslint-disable-line
+  );
 
   const onCompleteButtonPress = () => {
     if (offset && value) {
@@ -156,8 +160,8 @@ export const TextEditor = ({
           ...t,
           {
             id,
-            x: off ? off.x : offset.x,
-            y: off ? off.y : offset.y + textAreaTop,
+            x: defaultOffset ? defaultOffset.x : offset.x,
+            y: defaultOffset ? defaultOffset.y : offset.y + textAreaTop,
             fontSize,
             value,
             fontColor,
@@ -197,8 +201,10 @@ export const TextEditor = ({
                 // 演算子でTextInputそのものを消すと、それまでの情報も消えてしまうのでheight: 0で対応
                 maxHeight: !onSlide ? '100%' : 0,
                 color: !onSlide ? fontColor : 'transparent',
-                backgroundColor: textBackGroundColor
+                backgroundColor: !onSlide
                   ? textBackGroundColor
+                    ? textBackGroundColor
+                    : undefined
                   : undefined,
               },
             ]}
