@@ -235,14 +235,30 @@ export const TextEditor = ({
       </View>
       <View
         style={[
-          styles.topButtonContaienr,
-          {top, height: completeButtonHeight},
+          styles.topButtonContainer,
+          {
+            top,
+            height: completeButtonHeight,
+          },
         ]}>
+        <View style={styles.leftBottonContainer} />
+        <View style={styles.middleButtonContainer}>
+          <TouchableOpacity
+            style={[styles.middleButton, {backgroundColor: fontColor}]}>
+            <Text
+              style={[
+                styles.middleButtonTitle,
+                {color: fontColor === defaultFontColor ? 'black' : 'white'},
+              ]}>
+              A
+            </Text>
+          </TouchableOpacity>
+        </View>
         <Button
           title="完了"
+          containerStyle={styles.rightButtonContainer}
           titleStyle={{fontSize: 22, fontWeight: '500'}}
           buttonStyle={{backgroundColor: 'transparent'}}
-          style={{alignSelf: 'flex-end'}}
           onPress={onCompleteButtonPress}
         />
       </View>
@@ -258,7 +274,7 @@ const defaultFontSize = 30;
 
 const defaultFontColor = '#FFFFFF';
 
-const completeButtonHeight = 40;
+const completeButtonHeight = 45;
 
 const textAreaHeight = '46%';
 
@@ -297,9 +313,36 @@ const styles = StyleSheet.create({
     width: 200,
     height: 20,
   },
-  topButtonContaienr: {
+  topButtonContainer: {
     position: 'absolute',
     width: '95%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  leftBottonContainer: {
+    flex: 1,
+    height: '100%',
+  },
+  middleButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  middleButton: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  middleButtonTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  rightButtonContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
   },
   slideText: {
     color: 'white',
