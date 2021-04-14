@@ -64,6 +64,12 @@ export const TextEditor = ({
   const [fontColor, setFontColor] = useState(
     textInfo ? textInfo.fontColor : defaultFontColor,
   );
+  const [selectFortColor, setSelectFontColor] = useState(true);
+
+  const [textBackGroundColor, setTextBackGroundColor] = useState('');
+  const [selectTextBackGroundColor, setSelectTextBackGroundColor] = useState(
+    false,
+  );
 
   const textAreaTop = useMemo(() => completeButtonHeight + top, [top]);
   const [offset, setOffset] = useState<{x: number; y: number} | null>(null);
@@ -80,7 +86,11 @@ export const TextEditor = ({
   const onSelectColor = (color: string) => {
     setValue((t) => t + ' ');
     setTimeout(() => {
-      setFontColor(color);
+      if (selectFortColor) {
+        setFontColor(color);
+      } else if (selectTextBackGroundColor) {
+        setTextBackGroundColor(color);
+      }
       setValue(valueClone.current);
     }, 1);
   };
@@ -118,7 +128,7 @@ export const TextEditor = ({
     valueClone.current = t;
   };
 
-  const off = useMemo(() => textInfo && {x: textInfo.x, y: textInfo.y}, []);
+  const off = useMemo(() => textInfo && {x: textInfo.x, y: textInfo.y}, []); // eslint-disable-line
 
   const onCompleteButtonPress = () => {
     if (offset && value) {
@@ -183,6 +193,9 @@ export const TextEditor = ({
                 // 演算子でTextInputそのものを消すと、それまでの情報も消えてしまうのでheight: 0で対応
                 maxHeight: !onSlide ? '100%' : 0,
                 color: !onSlide ? fontColor : 'transparent',
+                backgroundColor: textBackGroundColor
+                  ? textBackGroundColor
+                  : undefined,
               },
             ]}
             value={value}
@@ -203,6 +216,9 @@ export const TextEditor = ({
               {
                 fontSize,
                 color: fontColor,
+                backgroundColor: textBackGroundColor
+                  ? textBackGroundColor
+                  : undefined,
               },
             ]}>
             {value}
@@ -243,16 +259,55 @@ export const TextEditor = ({
         ]}>
         <View style={styles.leftBottonContainer} />
         <View style={styles.middleButtonContainer}>
-          <TouchableOpacity
-            style={[styles.middleButton, {backgroundColor: fontColor}]}>
-            <Text
+          <View
+            style={{
+              opacity: selectTextBackGroundColor ? 1 : defaultTopButtonOpacity,
+            }}>
+            <TouchableOpacity
+              activeOpacity={1}
               style={[
-                styles.middleButtonTitle,
-                {color: fontColor === defaultFontColor ? 'black' : 'white'},
-              ]}>
-              A
-            </Text>
-          </TouchableOpacity>
+                styles.middleButton,
+                {
+                  backgroundColor: textBackGroundColor
+                    ? textBackGroundColor
+                    : 'white',
+                },
+              ]}
+              onPress={() => {
+                setSelectTextBackGroundColor(true);
+                setSelectFontColor(false);
+              }}>
+              <Text
+                style={[
+                  styles.middleButtonTitle,
+                  {
+                    color:
+                      fontColor === defaultFontColor &&
+                      (textBackGroundColor === defaultFontColor ||
+                        !textBackGroundColor)
+                        ? 'black'
+                        : fontColor,
+                  },
+                ]}>
+                A
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              opacity: selectFortColor ? 1 : defaultTopButtonOpacity,
+            }}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                setSelectFontColor(true);
+                setSelectTextBackGroundColor(false);
+              }}>
+              <Text style={[styles.middleButtonTitle, {color: fontColor}]}>
+                A
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <Button
           title="完了"
@@ -277,6 +332,8 @@ const defaultFontColor = '#FFFFFF';
 const completeButtonHeight = 45;
 
 const textAreaHeight = '46%';
+
+const defaultTopButtonOpacity = 0.2;
 
 const styles = StyleSheet.create({
   container: {
@@ -326,17 +383,19 @@ const styles = StyleSheet.create({
   },
   middleButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flex: 1,
   },
   middleButton: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
   },
   middleButtonTitle: {
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: 'bold',
     color: 'white',
   },
