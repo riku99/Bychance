@@ -5,6 +5,7 @@ import {ListItem, Badge} from 'react-native-elements';
 import {Room} from '../../../stores/rooms';
 import {UserAvatar} from '../../utils/Avatar';
 import {ReturnTypeOfSelectChatPartnerEntities} from '../../../stores/chatPartners';
+import {normalStyles} from '~/constants/styles/normal';
 
 type Props = {
   rooms: Room[];
@@ -45,7 +46,12 @@ export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {
                   <Badge
                     value={r.unreadNumber}
                     textStyle={{fontSize: 15}}
-                    badgeStyle={{width: 25, height: 25, borderRadius: 25 / 2}}
+                    badgeStyle={{
+                      width: 25,
+                      height: 25,
+                      borderRadius: 25 / 2,
+                      backgroundColor: normalStyles.mainColor,
+                    }}
                   />
                 )}
               </ListItem>

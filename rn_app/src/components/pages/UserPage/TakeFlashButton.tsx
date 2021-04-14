@@ -15,6 +15,7 @@ export const TakeFlashButton = React.memo(() => {
   };
   return (
     <Button
+      activeOpacity={1}
       icon={<MIcon name="flash-on" size={27} style={styles.buttonIcon} />}
       buttonStyle={styles.button}
       onPress={onPress}
