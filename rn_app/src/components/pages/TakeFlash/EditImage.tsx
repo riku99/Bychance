@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Animated} from 'react-native';
+import {StyleSheet, View, Animated, Dimensions} from 'react-native';
 import {PanGestureHandlerGestureEvent} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -141,7 +141,7 @@ export const EditImage = ({source}: Props) => {
 
   return (
     <View style={styles.container}>
-      <ViewShot ref={viewShotRef}>
+      <ViewShot ref={viewShotRef} options={{quality: 1}}>
         <LinearGradient
           style={{height: '100%', width: '100%'}}
           colors={[topBackGroundColor, bottomBackGroundColor]}>
@@ -215,6 +215,8 @@ export const EditImage = ({source}: Props) => {
     </View>
   );
 };
+
+const {} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {

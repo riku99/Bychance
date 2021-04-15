@@ -8,7 +8,7 @@ type Props = {
   setSketchMode: (v: boolean) => void;
   setColorPickerMode: (v: boolean) => void;
   setTextEditMode: (v: boolean) => void;
-  onSaveButtonPress: () => void;
+  onSaveButtonPress?: () => void;
 };
 
 export const EditImageTopButtonItems = ({

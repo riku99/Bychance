@@ -417,9 +417,10 @@ export const ShowFlash = React.memo(
                         source={{
                           uri: currentFlash.source,
                         }}
-                        style={{width: '100%', height: '100%'}}
+                        style={{width, height}}
                         onLoadStart={onImageLoadStart}
                         onLoad={onImageLoad}
+                        resizeMode="contain"
                       />
                     ) : (
                       <Image
@@ -542,7 +543,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   soruceContainer: {
-    backgroundColor: '#1f1f1f',
+    //backgroundColor: '#1f1f1f',
+    backgroundColor: 'black',
   },
   indicator: {
     width: 40,

@@ -20,7 +20,7 @@ module AwsHelper
     pure_data = data.sub %r{data:((image|application)\/.{3,}),}, ''
     decoded_data = Base64.decode64(pure_data)
     image = MiniMagick::Image.read(decoded_data)
-    image.resize("1000x1000")
+    #image.resize("1000x1000") スクショを投稿する形にしてからは画質担保の関係でリサイズしない
     image.write("tmp/image/#{file_name}")
     s3 =
       Aws::S3::Resource.new(
