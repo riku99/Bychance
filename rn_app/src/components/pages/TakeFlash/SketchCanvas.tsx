@@ -4,6 +4,7 @@ import {Button} from 'react-native-elements';
 import RNImageEditor from '@wwimmo/react-native-sketch-canvas';
 import Slider from '@react-native-community/slider';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {} from 'react-native-view-shot';
 
 type Props = {
   sketchMode: boolean;
@@ -63,7 +64,7 @@ export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
             <Button
               title="1つ戻す"
               buttonStyle={styles.topButton}
-              titleStyle={{fontSize: 20}}
+              titleStyle={{fontSize: 20, fontWeight: 'bold'}}
               onPress={() => {
                 if (canvasRef.current) {
                   canvasRef.current.undo();
@@ -73,7 +74,7 @@ export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
             <Button
               title="完了"
               buttonStyle={styles.topButton}
-              titleStyle={{fontSize: 20}}
+              titleStyle={{fontSize: 20, fontWeight: 'bold'}}
               onPress={() => setScetchMode(false)}
             />
           </View>
@@ -88,6 +89,7 @@ export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
               maximumTrackTintColor="#000000"
               onValueChange={(v) => {
                 if (canvasRef.current) {
+                  // @ts-ignore ._nextStrokeWidthはライブラリforkして作成したオリジナル(?)メソッド
                   canvasRef.current._nextStrokeWidth(v);
                 }
               }}

@@ -15,6 +15,7 @@ import {
   setTranslateAndDiff,
   setOffsetAndDiff,
 } from '~/helpers/animation/translate';
+import ViewShot from 'react-native-view-shot';
 
 export type Source = {
   base64: string;
@@ -126,65 +127,70 @@ export const EditImage = ({source}: Props) => {
     setDustIndcator(undefined);
   };
 
-  return (
-    <LinearGradient
-      style={styles.container}
-      colors={[topBackGroundColor, bottomBackGroundColor]}>
-      {!sketchMode && !colorPickerMode && !textEditMode && (
-        <View style={[styles.buttonItemsContainer, {top}]}>
-          <EditImageTopButtonItems
-            setSketchMode={setSketchMode}
-            setColorPickerMode={setColorPickerMode}
-            setTextEditMode={setTextEditMode}
-          />
-        </View>
-      )}
-      <AnimatedImage source={source} />
-      <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
-      {!!allTextInfo.length &&
-        allTextInfo.map((data, index) => (
-          <AnimatedText
-            data={data}
-            onPanGestureEvent={(e) => onTextPanGesture(e, data.id)}
-            onPanHandlerStateChange={(e) =>
-              onTextPanGestureStateChange(e, data.id)
-            }
-            translateX={textTranslate.current[data.id].x}
-            translateY={textTranslate.current[data.id].y}
-            onLongPress={() => setDustIndcator(data.id)}
-            onPressOut={() => {
-              if (dustIndicator) {
-                setDustIndcator(undefined);
-              }
-            }}
-            onPress={() => onTextPress({index, id: data.id})}
-            key={data.id}
-          />
-        ))}
-      {colorPickerMode && (
-        <ColorPicker
-          setTopBackGroundColor={setTopBackGroundColor}
-          setBottomBackGroundColor={setBottomBackGroundColor}
-          setColorPickerMode={setColorPickerMode}
-          topBackGroundColor={topBackGroundColor}
-          bottomBackGroundColor={bottomBackGroundColor}
-        />
-      )}
-      {textEditMode && (
-        <>
-          <View style={[styles.textEditContainer, styles.textEditorOverlay]} />
-          <View style={styles.textEditContainer}>
-            <TextEditor
-              setTextEditMode={setTextEditMode}
-              setAllTextInfo={setAllTextInfo}
-              textInfo={selectedText && selectedText}
-              textTranslate={textTranslate}
-              textOffset={textOffset}
-            />
-          </View>
-        </>
-      )}
+  // viewshot
+  const viewShotRef = useRef<ViewShot>(null);
+  const onSaveBottunPress = async () => {
+    if (viewShotRef.current && viewShotRef.current.capture) {
+      const result = await viewShotRef.current.capture();
+      console.log(result);
+    }
+  };
 
+  return (
+    <View style={styles.container}>
+      <ViewShot ref={viewShotRef}>
+        <LinearGradient
+          style={{height: '100%', width: '100%'}}
+          colors={[topBackGroundColor, bottomBackGroundColor]}>
+          <AnimatedImage source={source} />
+          <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
+          {!!allTextInfo.length &&
+            allTextInfo.map((data, index) => (
+              <AnimatedText
+                data={data}
+                onPanGestureEvent={(e) => onTextPanGesture(e, data.id)}
+                onPanHandlerStateChange={(e) =>
+                  onTextPanGestureStateChange(e, data.id)
+                }
+                translateX={textTranslate.current[data.id].x}
+                translateY={textTranslate.current[data.id].y}
+                onLongPress={() => setDustIndcator(data.id)}
+                onPressOut={() => {
+                  if (dustIndicator) {
+                    setDustIndcator(undefined);
+                  }
+                }}
+                onPress={() => onTextPress({index, id: data.id})}
+                key={data.id}
+              />
+            ))}
+          {colorPickerMode && (
+            <ColorPicker
+              setTopBackGroundColor={setTopBackGroundColor}
+              setBottomBackGroundColor={setBottomBackGroundColor}
+              setColorPickerMode={setColorPickerMode}
+              topBackGroundColor={topBackGroundColor}
+              bottomBackGroundColor={bottomBackGroundColor}
+            />
+          )}
+          {textEditMode && (
+            <>
+              <View
+                style={[styles.textEditContainer, styles.textEditorOverlay]}
+              />
+              <View style={styles.textEditContainer}>
+                <TextEditor
+                  setTextEditMode={setTextEditMode}
+                  setAllTextInfo={setAllTextInfo}
+                  textInfo={selectedText && selectedText}
+                  textTranslate={textTranslate}
+                  textOffset={textOffset}
+                />
+              </View>
+            </>
+          )}
+        </LinearGradient>
+      </ViewShot>
       {dustIndicator && (
         <View style={styles.dustIndicatorContainer}>
           <DustIndicator
@@ -192,7 +198,18 @@ export const EditImage = ({source}: Props) => {
           />
         </View>
       )}
-    </LinearGradient>
+
+      {!sketchMode && !colorPickerMode && !textEditMode && (
+        <View style={[styles.buttonItemsContainer, {top}]}>
+          <EditImageTopButtonItems
+            setSketchMode={setSketchMode}
+            setColorPickerMode={setColorPickerMode}
+            setTextEditMode={setTextEditMode}
+            onSaveButtonPress={onSaveBottunPress}
+          />
+        </View>
+      )}
+    </View>
   );
 };
 
