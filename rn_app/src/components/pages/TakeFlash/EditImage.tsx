@@ -3,6 +3,7 @@ import {StyleSheet, View, Animated} from 'react-native';
 import {PanGestureHandlerGestureEvent} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
+import ViewShot from 'react-native-view-shot';
 
 import {SketchCanvas} from './SketchCanvas';
 import {EditImageTopButtonItems} from './EditImageTopButtonItems';
@@ -15,7 +16,7 @@ import {
   setTranslateAndDiff,
   setOffsetAndDiff,
 } from '~/helpers/animation/translate';
-import ViewShot from 'react-native-view-shot';
+import {useCreateFlash} from '~/hooks/flashes/useCreateFlash';
 
 export type Source = {
   base64: string;
@@ -128,11 +129,13 @@ export const EditImage = ({source}: Props) => {
   };
 
   // viewshot
+  const create = useCreateFlash();
   const viewShotRef = useRef<ViewShot>(null);
   const onSaveBottunPress = async () => {
     if (viewShotRef.current && viewShotRef.current.capture) {
-      const result = await viewShotRef.current.capture();
-      console.log(result);
+      const uri = await viewShotRef.current.capture();
+      console.log(uri);
+      create({sourceType: 'image', uri});
     }
   };
 
