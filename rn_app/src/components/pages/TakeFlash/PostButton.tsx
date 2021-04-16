@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
-import {Button} from 'react-native-elements';
 import Emoji from 'react-native-emoji';
 
 type Props = {
@@ -11,14 +10,10 @@ type Props = {
 // 多くの条件に関するpropsを受けて処理を記述するよりも関数そのものを受けた方が多分やりやすいので関数をそのものをもらうようにしている
 export const PostFlashButton = React.memo(({onPress}: Props) => {
   return (
-    // <Button
-    //   activeOpacity={1}
-    //   title="のせる"
-    //   buttonStyle={styles.buttonStyle}
-    //   titleStyle={styles.titleStyle}
-    //   onPress={onPress}
-    // />
-    <TouchableOpacity style={styles.buttonStyle}>
+    <TouchableOpacity
+      style={styles.buttonStyle}
+      onPress={onPress}
+      activeOpacity={1}>
       <Text style={styles.titleStyle}>のせる</Text>
       <Emoji name="balloon" />
     </TouchableOpacity>
