@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useState, useRef, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import CameraRoll from '@react-native-community/cameraroll';
@@ -15,9 +15,6 @@ import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMe
 import {alertSomeError} from '../../../helpers/errors/alertSomeError';
 
 export const TakeFlashPage = () => {
-  const [firstCameraRollPhoto, setFirstCameraRollPhoto] = useState<
-    string | null
-  >(null);
   const [targetPhoto, setTargetPhoto] = useState<{
     base64: string;
     uri: string;
@@ -26,14 +23,6 @@ export const TakeFlashPage = () => {
   const [recordingVideo, setRecordingVideo] = useState(false);
 
   const cameraRef = useRef<RNCamera>(null);
-
-  useEffect(() => {
-    const getPhoto = async () => {
-      const photo = await CameraRoll.getPhotos({first: 1});
-      setFirstCameraRollPhoto(photo.edges[0].node.image.uri);
-    };
-    getPhoto();
-  }, []);
 
   const navigaiton = useNavigation();
 
@@ -110,9 +99,9 @@ export const TakeFlashPage = () => {
     } catch {}
   };
 
-  const pickImageOrVideo = () => {
+  const pickImageOrVideo = useCallback(() => {
     ImagePicker.launchImageLibrary(
-      {mediaType: 'mixed', quality: 0.1},
+      {mediaType: 'mixed', quality: 1}, // 画像選択から表示まで遅いの気になったらquality変える
       (response) => {
         if (response.didCancel) {
           return;
@@ -124,7 +113,7 @@ export const TakeFlashPage = () => {
         }
       },
     );
-  };
+  }, []);
 
   if (!targetPhoto && !targetVideo) {
     return (
@@ -135,7 +124,6 @@ export const TakeFlashPage = () => {
         takePhoto={takePhoto}
         takeVideo={takeVideo}
         stopVideo={stopVideo}
-        firstCameraRollPhoto={firstCameraRollPhoto}
         goBack={backScreen}
         saveDataToCameraRoll={saveDataToCameraRoll}
         createFlash={createFlash}

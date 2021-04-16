@@ -7,16 +7,16 @@ import {
   LayoutAnimation,
   ViewStyle,
   ActivityIndicator,
-  TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import Video from 'react-native-video';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
+import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -27,7 +27,6 @@ type Props = {
   targetVideo: {
     uri: string;
   } | null;
-  firstCameraRollPhoto: string | null;
   takePhoto: () => Promise<void>;
   takeVideo: () => Promise<void>;
   stopVideo: () => void;
@@ -52,7 +51,6 @@ export const TakeFlash = React.memo(
     cameraRef,
     targetPhoto,
     targetVideo,
-    firstCameraRollPhoto,
     takePhoto,
     takeVideo,
     stopVideo,
@@ -69,6 +67,8 @@ export const TakeFlash = React.memo(
     const shootButtonFlexstyle: ViewStyle = {
       justifyContent: !recordingVideo ? 'space-evenly' : 'center',
     };
+
+    const {bottom} = useSafeAreaInsets();
 
     return (
       <View style={styles.container}>
@@ -147,23 +147,9 @@ export const TakeFlash = React.memo(
                 }}
               />
             </View>
-            <TouchableOpacity
-              style={styles.accessCamerarollContainer}
-              activeOpacity={1}
-              onPress={() => {
-                pickImageOrVideo();
-              }}>
-              {firstCameraRollPhoto && (
-                <ImageBackground
-                  source={{uri: firstCameraRollPhoto}}
-                  style={{
-                    width: styles.accessCamerarollContainer.width,
-                    height: styles.accessCamerarollContainer.height,
-                  }}
-                  imageStyle={styles.accessCamerarollImage}
-                />
-              )}
-            </TouchableOpacity>
+            <View style={[styles.firstPhotoContainer, {bottom}]}>
+              <FirstCameraRollPhoto onPress={pickImageOrVideo} />
+            </View>
           </>
         ) : (
           <>
@@ -280,19 +266,11 @@ const styles = StyleSheet.create({
   backButton: {
     backgroundColor: 'transparent',
   },
-  accessCamerarollContainer: {
+  firstPhotoContainer: {
     position: 'absolute',
-    bottom: '3%',
-    left: 25,
-    width: 35,
-    height: 35,
-    borderRadius: 10,
-    backgroundColor: '#e0e0e0',
-  },
-  accessCamerarollImage: {
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: 'white',
+    left: '10%',
+    height: 38,
+    width: 38,
   },
   shootButtonBox: {
     width: '80%',
