@@ -101,19 +101,20 @@ export const TakeFlash = React.memo(
             {targetPhoto && !targetVideo && !recordingVideo ? (
               <></>
             ) : (
-              !targetPhoto &&
-              !recordingVideo &&
-              targetVideo && (
-                <>
-                  <Video
-                    source={{
-                      uri: targetVideo.uri,
-                    }}
-                    style={styles.backGroundVideo}
-                    repeat={true}
-                  />
-                </>
-              )
+              <></>
+              // !targetPhoto &&
+              // !recordingVideo &&
+              // targetVideo && (
+              //   <>
+              //     <Video
+              //       source={{
+              //         uri: targetVideo.uri,
+              //       }}
+              //       style={styles.backGroundVideo}
+              //       repeat={true}
+              //     />
+              //   </>
+              // )
             )}
             <View style={styles.saveDataContainer}>
               <Button
