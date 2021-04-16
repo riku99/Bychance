@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View, Animated, Dimensions} from 'react-native';
 import {PanGestureHandlerGestureEvent} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -12,6 +12,7 @@ import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
 import {AnimatedText} from './AnimatedText';
 import {AnimatedImage} from './AnimatedImage';
+import {PostFlashButton} from './PostButton';
 import {
   setTranslateAndDiff,
   setOffsetAndDiff,
@@ -132,12 +133,14 @@ export const EditImage = ({source}: Props) => {
   const create = useCreateFlash();
   const viewShotRef = useRef<ViewShot>(null);
   const onSaveBottunPress = async () => {
+    // デバイスに保存する処理
+  };
+  const onCreateBottunPress = useCallback(async () => {
     if (viewShotRef.current && viewShotRef.current.capture) {
       const uri = await viewShotRef.current.capture();
-      console.log(uri);
       create({sourceType: 'image', uri});
     }
-  };
+  }, [create]);
 
   return (
     <View style={styles.container}>
@@ -203,14 +206,19 @@ export const EditImage = ({source}: Props) => {
       )}
 
       {!sketchMode && !colorPickerMode && !textEditMode && (
-        <View style={[styles.buttonItemsContainer, {top}]}>
-          <EditImageTopButtonItems
-            setSketchMode={setSketchMode}
-            setColorPickerMode={setColorPickerMode}
-            setTextEditMode={setTextEditMode}
-            onSaveButtonPress={onSaveBottunPress}
-          />
-        </View>
+        <>
+          <View style={[styles.buttonItemsContainer, {top}]}>
+            <EditImageTopButtonItems
+              setSketchMode={setSketchMode}
+              setColorPickerMode={setColorPickerMode}
+              setTextEditMode={setTextEditMode}
+              onSaveButtonPress={onSaveBottunPress}
+            />
+          </View>
+          <View style={{position: 'absolute', bottom: '7%', right: 30}}>
+            <PostFlashButton onPress={onCreateBottunPress} />
+          </View>
+        </>
       )}
     </View>
   );
