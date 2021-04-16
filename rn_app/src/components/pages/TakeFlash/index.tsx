@@ -1,5 +1,4 @@
 import React, {useState, useRef, useCallback} from 'react';
-import {useNavigation} from '@react-navigation/native';
 import CameraRoll from '@react-native-community/cameraroll';
 import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
@@ -16,8 +15,6 @@ export const TakeFlashPage = () => {
   const [recordingVideo, setRecordingVideo] = useState(false);
 
   const cameraRef = useRef<RNCamera>(null);
-
-  const navigaiton = useNavigation();
 
   const takePhoto = async () => {
     if (cameraRef.current) {
@@ -42,10 +39,6 @@ export const TakeFlashPage = () => {
     if (cameraRef.current) {
       cameraRef.current.stopRecording();
     }
-  };
-
-  const backScreen = () => {
-    navigaiton.goBack();
   };
 
   const saveDataToCameraRoll = async (uri: string) => {
@@ -80,7 +73,6 @@ export const TakeFlashPage = () => {
         takePhoto={takePhoto}
         takeVideo={takeVideo}
         stopVideo={stopVideo}
-        goBack={backScreen}
         saveDataToCameraRoll={saveDataToCameraRoll}
         pickImageOrVideo={pickImageOrVideo}
         recordingVideo={recordingVideo}

@@ -17,7 +17,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
-import {BackButton} from '~/components/utils/BackButton';
+import {TakeFlashTopButtonGroup} from './TakeFlashTopButtonGroup';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -31,7 +31,6 @@ type Props = {
   takePhoto: () => Promise<void>;
   takeVideo: () => Promise<void>;
   stopVideo: () => void;
-  goBack: () => void;
   saveDataToCameraRoll: (uri: string) => Promise<void>;
   pickImageOrVideo: () => void;
   recordingVideo: boolean;
@@ -46,7 +45,6 @@ export const TakeFlash = React.memo(
     takePhoto,
     takeVideo,
     stopVideo,
-    goBack,
     saveDataToCameraRoll,
     pickImageOrVideo,
     recordingVideo,
@@ -59,7 +57,7 @@ export const TakeFlash = React.memo(
       justifyContent: !recordingVideo ? 'space-evenly' : 'center',
     };
 
-    const {bottom} = useSafeAreaInsets();
+    const {top, bottom} = useSafeAreaInsets();
 
     const onPartyModePress = () => {
       backPhotoMode ? setBackPhotoMode(false) : setBackPhotoMode(true);
@@ -79,20 +77,9 @@ export const TakeFlash = React.memo(
               }
               keepAudioSession={true}
             />
-            <View style={styles.backButtonContainer}>
-              <BackButton
-                icon={{name: 'chevron-right', size: 45, color: 'white'}}
-                buttonStyle={{backgroundColor: 'transparent'}}
-              />
+            <View style={[styles.topButtonGroupContainer, {top}]}>
+              <TakeFlashTopButtonGroup onPartyModePress={onPartyModePress} />
             </View>
-            <Button
-              icon={
-                <MIcon name="party-mode" style={{color: 'white'}} size={35} />
-              }
-              containerStyle={styles.changePhotoModeButtonContainer}
-              buttonStyle={styles.changePhotoModeButton}
-              onPress={onPartyModePress}
-            />
             <View style={{...styles.shootButtonBox, ...shootButtonFlexstyle}}>
               {!recordingVideo && (
                 <Button
@@ -132,7 +119,7 @@ export const TakeFlash = React.memo(
                 }}
               />
             </View>
-            <View style={[styles.firstPhotoContainer, {bottom}]}>
+            <View style={[styles.firstPhotoContainer, {bottom: bottom + 10}]}>
               <FirstCameraRollPhoto onPress={pickImageOrVideo} />
             </View>
           </>
@@ -189,7 +176,7 @@ export const TakeFlash = React.memo(
               />
               <Text style={styles.addFlashText}>フラッシュに追加</Text>
             </View>
-            <Button
+            {/* <Button
               icon={
                 <MIcon
                   name={'chevron-right'}
@@ -200,7 +187,7 @@ export const TakeFlash = React.memo(
               containerStyle={styles.backButtonContainer}
               buttonStyle={styles.backButton}
               onPress={goBack}
-            />
+            /> */}
             {savingData && (
               <ActivityIndicator style={styles.load} color="white" />
             )}
@@ -222,27 +209,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  changePhotoModeButtonContainer: {
-    width: '15%',
+  topButtonGroupContainer: {
     position: 'absolute',
-    top: '9%',
-    left: 27,
-  },
-  changePhotoModeButton: {
-    backgroundColor: 'transparent',
-  },
-  backButtonContainer: {
-    width: '13%',
-    position: 'absolute',
-    top: '9%',
-    right: '5%',
-  },
-  backButton: {
-    backgroundColor: 'transparent',
+    width: '90%',
+    alignSelf: 'center',
   },
   firstPhotoContainer: {
     position: 'absolute',
-    left: '10%',
+    left: '4%',
     height: 38,
     width: 38,
   },
