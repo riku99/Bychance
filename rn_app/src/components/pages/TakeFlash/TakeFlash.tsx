@@ -3,21 +3,19 @@ import {
   View,
   StyleSheet,
   Text,
-  Dimensions,
   LayoutAnimation,
-  ViewStyle,
   ActivityIndicator,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import FIcon from 'react-native-vector-icons/FontAwesome';
 import Video from 'react-native-video';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 import {TakeFlashTopButtonGroup} from './TakeFlashTopButtonGroup';
+import {ShootButtonGroup} from './ShootButtonGroup';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -53,14 +51,21 @@ export const TakeFlash = React.memo(
     const [backPhotoMode, setBackPhotoMode] = useState(true);
     const [savingData, setSavingData] = useState(false);
 
-    const shootButtonFlexstyle: ViewStyle = {
-      justifyContent: !recordingVideo ? 'space-evenly' : 'center',
-    };
-
     const {top, bottom} = useSafeAreaInsets();
 
     const onPartyModePress = () => {
       backPhotoMode ? setBackPhotoMode(false) : setBackPhotoMode(true);
+    };
+
+    const onVideoButtonPress = () => {
+      if (!recordingVideo) {
+        LayoutAnimation.easeInEaseOut();
+        setRecordingVideo(true);
+        takeVideo();
+      } else {
+        stopVideo();
+        setRecordingVideo(false);
+      }
     };
 
     return (
@@ -80,43 +85,11 @@ export const TakeFlash = React.memo(
             <View style={[styles.topButtonGroupContainer, {top}]}>
               <TakeFlashTopButtonGroup onPartyModePress={onPartyModePress} />
             </View>
-            <View style={{...styles.shootButtonBox, ...shootButtonFlexstyle}}>
-              {!recordingVideo && (
-                <Button
-                  icon={
-                    <MIcon
-                      name="enhance-photo-translate"
-                      size={25}
-                      style={{color: 'white'}}
-                    />
-                  }
-                  buttonStyle={styles.shootButton}
-                  onPress={takePhoto}
-                />
-              )}
-              <Button
-                icon={
-                  recordingVideo ? (
-                    <FIcon name="square" style={{color: 'red'}} size={25} />
-                  ) : (
-                    <MIcon
-                      name="video-call"
-                      size={25}
-                      style={{color: 'white'}}
-                    />
-                  )
-                }
-                buttonStyle={styles.shootButton}
-                onPress={() => {
-                  if (!recordingVideo) {
-                    LayoutAnimation.easeInEaseOut();
-                    setRecordingVideo(true);
-                    takeVideo();
-                  } else {
-                    stopVideo();
-                    setRecordingVideo(false);
-                  }
-                }}
+            <View style={styles.shootButtonContainer}>
+              <ShootButtonGroup
+                recordingVideo={recordingVideo}
+                onPhotoButtonPress={takePhoto}
+                onVideoButtonPress={onVideoButtonPress}
               />
             </View>
             <View style={[styles.firstPhotoContainer, {bottom: bottom + 10}]}>
@@ -198,8 +171,6 @@ export const TakeFlash = React.memo(
   },
 );
 
-const {width} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -220,22 +191,12 @@ const styles = StyleSheet.create({
     height: 38,
     width: 38,
   },
-  shootButtonBox: {
-    width: '80%',
+  shootButtonContainer: {
+    width: '55%',
     height: '10%',
     position: 'absolute',
     bottom: '8%',
     alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  shootButton: {
-    width: width / 6,
-    height: width / 6,
-    borderRadius: width / 6,
-    borderColor: 'white',
-    borderWidth: 2,
-    backgroundColor: 'transparent',
   },
   backGroundVideo: {
     position: 'absolute',

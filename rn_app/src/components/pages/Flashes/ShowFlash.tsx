@@ -420,7 +420,7 @@ export const ShowFlash = React.memo(
                         style={{width, height}}
                         onLoadStart={onImageLoadStart}
                         onLoad={onImageLoad}
-                        resizeMode="contain"
+                        resizeMode="cover"
                       />
                     ) : (
                       <Image
