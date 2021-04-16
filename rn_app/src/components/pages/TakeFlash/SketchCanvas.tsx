@@ -11,7 +11,7 @@ type Props = {
   setScetchMode: (s: boolean) => void;
 };
 
-export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
+export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
   const canvasRef = useRef<RNImageEditor>(null);
   const {top} = useSafeAreaInsets();
 
@@ -99,7 +99,7 @@ export const SketchCanvas = ({sketchMode, setScetchMode}: Props) => {
       )}
     </View>
   );
-};
+});
 
 const {width} = Dimensions.get('window');
 

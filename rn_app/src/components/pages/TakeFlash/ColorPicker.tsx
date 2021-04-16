@@ -16,57 +16,61 @@ type Props = {
   bottomBackGroundColor: string;
 };
 
-export const ColorPicker = ({
-  setTopBackGroundColor,
-  setBottomBackGroundColor,
-  setColorPickerMode,
-  topBackGroundColor,
-  bottomBackGroundColor,
-}: Props) => {
-  const onPickerColorChange = ({
-    color,
-    which,
-  }: {
-    color: HsvColor;
-    which: 'top' | 'bottom';
-  }) => {
-    const result = hsv2rgb(color.h, color.s, color.v);
-    const rgb = result.rgb;
-    switch (which) {
-      case 'top':
-        setTopBackGroundColor(`rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
-        return;
-      case 'bottom':
-        setBottomBackGroundColor(`rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
-    }
-  };
+export const ColorPicker = React.memo(
+  ({
+    setTopBackGroundColor,
+    setBottomBackGroundColor,
+    setColorPickerMode,
+    topBackGroundColor,
+    bottomBackGroundColor,
+  }: Props) => {
+    const onPickerColorChange = ({
+      color,
+      which,
+    }: {
+      color: HsvColor;
+      which: 'top' | 'bottom';
+    }) => {
+      const result = hsv2rgb(color.h, color.s, color.v);
+      const rgb = result.rgb;
+      switch (which) {
+        case 'top':
+          setTopBackGroundColor(`rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
+          return;
+        case 'bottom':
+          setBottomBackGroundColor(`rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
+      }
+    };
 
-  const {top} = useSafeAreaInsets();
+    const {top} = useSafeAreaInsets();
 
-  return (
-    <View style={styles.container}>
-      <TriangleColorPicker
-        style={styles.colorPicker}
-        defaultColor={topBackGroundColor}
-        onColorChange={(color) => onPickerColorChange({color, which: 'top'})}
-      />
-      <TriangleColorPicker
-        style={styles.colorPicker}
-        defaultColor={bottomBackGroundColor}
-        onColorChange={(color) => onPickerColorChange({color, which: 'bottom'})}
-      />
-      <View style={[styles.topButtonContaienr, {top}]}>
-        <Button
-          title="完了"
-          titleStyle={{fontSize: 25}}
-          buttonStyle={{backgroundColor: 'transparent'}}
-          style={{alignSelf: 'flex-end'}}
-          onPress={() => setColorPickerMode(false)}
+    return (
+      <View style={styles.container}>
+        <TriangleColorPicker
+          style={styles.colorPicker}
+          defaultColor={topBackGroundColor}
+          onColorChange={(color) => onPickerColorChange({color, which: 'top'})}
         />
+        <TriangleColorPicker
+          style={styles.colorPicker}
+          defaultColor={bottomBackGroundColor}
+          onColorChange={(color) =>
+            onPickerColorChange({color, which: 'bottom'})
+          }
+        />
+        <View style={[styles.topButtonContaienr, {top}]}>
+          <Button
+            title="完了"
+            titleStyle={{fontSize: 25}}
+            buttonStyle={{backgroundColor: 'transparent'}}
+            style={{alignSelf: 'flex-end'}}
+            onPress={() => setColorPickerMode(false)}
+          />
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+);
 
 const {width, height} = Dimensions.get('window');
 

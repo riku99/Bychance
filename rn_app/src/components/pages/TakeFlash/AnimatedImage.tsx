@@ -19,7 +19,7 @@ type Props = {
   source: Source;
 };
 
-export const AnimatedImage = ({source}: Props) => {
+export const AnimatedImage = React.memo(({source}: Props) => {
   const scale = useRef(new Animated.Value(1)).current;
   const totalScale = useRef(1);
   const totalScaleDiff = useRef(0);
@@ -95,7 +95,7 @@ export const AnimatedImage = ({source}: Props) => {
       </PinchGestureHandler>
     </View>
   );
-};
+});
 
 const {width} = Dimensions.get('window');
 

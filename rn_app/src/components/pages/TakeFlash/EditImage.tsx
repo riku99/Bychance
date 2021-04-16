@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Animated, Dimensions} from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 import {PanGestureHandlerGestureEvent} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import ViewShot from 'react-native-view-shot';
 
 import {SketchCanvas} from './SketchCanvas';
-import {EditImageTopButtonItems} from './EditImageTopButtonItems';
+import {TopButtonGroup} from './TopButtonGroup';
 import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
@@ -28,7 +28,7 @@ type Props = {
   source: Source;
 };
 
-export const EditImage = ({source}: Props) => {
+export const EditImage = React.memo(({source}: Props) => {
   const {top} = useSafeAreaInsets();
   const [sketchMode, setSketchMode] = useState(false);
   const [colorPickerMode, setColorPickerMode] = useState(false);
@@ -208,7 +208,7 @@ export const EditImage = ({source}: Props) => {
       {!sketchMode && !colorPickerMode && !textEditMode && (
         <>
           <View style={[styles.buttonItemsContainer, {top}]}>
-            <EditImageTopButtonItems
+            <TopButtonGroup
               setSketchMode={setSketchMode}
               setColorPickerMode={setColorPickerMode}
               setTextEditMode={setTextEditMode}
@@ -222,9 +222,7 @@ export const EditImage = ({source}: Props) => {
       )}
     </View>
   );
-};
-
-const {} = Dimensions.get('window');
+});
 
 const styles = StyleSheet.create({
   container: {
