@@ -17,6 +17,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
+import {BackButton} from '~/components/utils/BackButton';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -32,15 +33,6 @@ type Props = {
   stopVideo: () => void;
   goBack: () => void;
   saveDataToCameraRoll: (uri: string) => Promise<void>;
-  createFlash: ({
-    source,
-    sourceType,
-    uri,
-  }: {
-    source?: string;
-    sourceType: 'image' | 'video';
-    uri: string;
-  }) => Promise<void>;
   pickImageOrVideo: () => void;
   recordingVideo: boolean;
   setRecordingVideo: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +48,6 @@ export const TakeFlash = React.memo(
     stopVideo,
     goBack,
     saveDataToCameraRoll,
-    createFlash,
     pickImageOrVideo,
     recordingVideo,
     setRecordingVideo,
@@ -69,6 +60,10 @@ export const TakeFlash = React.memo(
     };
 
     const {bottom} = useSafeAreaInsets();
+
+    const onPartyModePress = () => {
+      backPhotoMode ? setBackPhotoMode(false) : setBackPhotoMode(true);
+    };
 
     return (
       <View style={styles.container}>
@@ -84,29 +79,19 @@ export const TakeFlash = React.memo(
               }
               keepAudioSession={true}
             />
-            <Button
-              icon={
-                <MIcon
-                  name={'chevron-right'}
-                  style={{color: 'white'}}
-                  size={45}
-                />
-              }
-              containerStyle={styles.backButtonContainer}
-              buttonStyle={styles.backButton}
-              onPress={goBack}
-            />
+            <View style={styles.backButtonContainer}>
+              <BackButton
+                icon={{name: 'chevron-right', size: 45, color: 'white'}}
+                buttonStyle={{backgroundColor: 'transparent'}}
+              />
+            </View>
             <Button
               icon={
                 <MIcon name="party-mode" style={{color: 'white'}} size={35} />
               }
               containerStyle={styles.changePhotoModeButtonContainer}
               buttonStyle={styles.changePhotoModeButton}
-              onPress={() => {
-                backPhotoMode
-                  ? setBackPhotoMode(false)
-                  : setBackPhotoMode(true);
-              }}
+              onPress={onPartyModePress}
             />
             <View style={{...styles.shootButtonBox, ...shootButtonFlexstyle}}>
               {!recordingVideo && (
@@ -201,17 +186,6 @@ export const TakeFlash = React.memo(
                   />
                 }
                 buttonStyle={styles.addFlashButton}
-                onPress={() => {
-                  if (targetPhoto) {
-                    createFlash({
-                      source: targetPhoto.base64,
-                      sourceType: 'image',
-                      uri: targetPhoto.uri,
-                    });
-                  } else if (targetVideo) {
-                    createFlash({sourceType: 'video', uri: targetVideo.uri});
-                  }
-                }}
               />
               <Text style={styles.addFlashText}>フラッシュに追加</Text>
             </View>
