@@ -8,7 +8,7 @@ type Props = {
   onAnimationEnd?: () => void;
 };
 
-export const DustIndicator = ({onAnimationEnd}: Props) => {
+export const DustIndicator = React.memo(({onAnimationEnd}: Props) => {
   const translateX = useRef(new Animated.Value(-barWidth)).current;
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const DustIndicator = ({onAnimationEnd}: Props) => {
       </View>
     </View>
   );
-};
+});
 
 const barWidth = 120;
 

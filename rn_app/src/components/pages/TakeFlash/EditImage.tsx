@@ -51,43 +51,49 @@ export const EditImage = React.memo(({source}: Props) => {
   const textPanGestureDiffX = useRef(0);
   const textPanGestureDiffY = useRef(0);
 
-  const onTextPanGesture = (e: PanGestureHandlerGestureEvent, id: number) => {
-    const {x, y} = textTranslate.current[id];
-    const {x: _x, y: _y} = textOffset.current[id];
-    setTranslateAndDiff({
-      e,
-      translateX: x,
-      translateY: y,
-      offsetX: _x,
-      offsetY: _y,
-      diffX: textPanGestureDiffX,
-      diffY: textPanGestureDiffY,
-    });
-  };
+  const onTextPanGesture = useCallback(
+    (e: PanGestureHandlerGestureEvent, id: number) => {
+      const {x, y} = textTranslate.current[id];
+      const {x: _x, y: _y} = textOffset.current[id];
+      setTranslateAndDiff({
+        e,
+        translateX: x,
+        translateY: y,
+        offsetX: _x,
+        offsetY: _y,
+        diffX: textPanGestureDiffX,
+        diffY: textPanGestureDiffY,
+      });
+    },
+    [],
+  );
 
-  const onTextPanGestureStateChange = (
-    e: PanGestureHandlerGestureEvent,
-    id: number,
-  ) => {
-    setOffsetAndDiff({
-      e,
-      offsetObj: textOffset.current[id],
-      diffX: textPanGestureDiffX,
-      diffY: textPanGestureDiffY,
-    });
-  };
+  const onTextPanGestureStateChange = useCallback(
+    (e: PanGestureHandlerGestureEvent, id: number) => {
+      setOffsetAndDiff({
+        e,
+        offsetObj: textOffset.current[id],
+        diffX: textPanGestureDiffX,
+        diffY: textPanGestureDiffY,
+      });
+    },
+    [],
+  );
 
-  const onTextPress = ({index, id}: {index: number; id: number}) => {
-    // データの取得はindexでできるが、アニメーションに関する情報との関連はidで行われているのでindex, idどちらも受け取る
-    const selected = allTextInfo[index];
-    const changedOffsetObj = {
-      ...selected,
-      // textEditorに渡すx, yの情報はその時点でのoffsetにする。textOffsetを渡して上げないと編集完了したらデフォルトのoffsetに戻ってしまう
-      x: selected.x + textOffset.current[id].x,
-      y: selected.y + textOffset.current[id].y,
-    };
-    setSelectedText(changedOffsetObj);
-  };
+  const onTextPress = useCallback(
+    ({index, id}: {index: number; id: number}) => {
+      // データの取得はindexでできるが、アニメーションに関する情報との関連はidで行われているのでindex, idどちらも受け取る
+      const selected = allTextInfo[index];
+      const changedOffsetObj = {
+        ...selected,
+        // textEditorに渡すx, yの情報はその時点でのoffsetにする。textOffsetを渡して上げないと編集完了したらデフォルトのoffsetに戻ってしまう
+        x: selected.x + textOffset.current[id].x,
+        y: selected.y + textOffset.current[id].y,
+      };
+      setSelectedText(changedOffsetObj);
+    },
+    [allTextInfo],
+  );
 
   useEffect(() => {
     if (selectedText) {
@@ -119,15 +125,18 @@ export const EditImage = React.memo(({source}: Props) => {
 
   // 削除関連(テキスト関連だけれども)
   const [dustIndicator, setDustIndcator] = useState<number>();
-  const onDustAnimationEnd = ({id}: {id: number}) => {
-    const _text = allTextInfo.filter((t) => t.id !== id);
-    setAllTextInfo(_text);
-    const {[String(id)]: n, ...textTranslateRest} = textTranslate.current; // eslint-disable-line
-    const {[String(id)]: nn, ...textOffsetRest} = textOffset.current; // eslint-disable-line
-    textTranslate.current = textTranslateRest;
-    textOffset.current = textOffsetRest;
-    setDustIndcator(undefined);
-  };
+  const onDustAnimationEnd = useCallback(
+    ({id}: {id: number}) => {
+      const _text = allTextInfo.filter((t) => t.id !== id);
+      setAllTextInfo(_text);
+      const {[String(id)]: n, ...textTranslateRest} = textTranslate.current; // eslint-disable-line
+      const {[String(id)]: nn, ...textOffsetRest} = textOffset.current; // eslint-disable-line
+      textTranslate.current = textTranslateRest;
+      textOffset.current = textOffsetRest;
+      setDustIndcator(undefined);
+    },
+    [allTextInfo],
+  );
 
   // viewshot
   const create = useCreateFlash();
