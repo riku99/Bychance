@@ -7,6 +7,7 @@ import {
   PinchGestureHandlerGestureEvent,
   PinchGestureHandlerStateChangeEvent,
 } from 'react-native-gesture-handler';
+import Video from 'react-native-video';
 
 import {Source} from './EditImage';
 import {
@@ -82,14 +83,24 @@ export const AnimatedImage = React.memo(({source}: Props) => {
           <PanGestureHandler
             onGestureEvent={onPanGesture}
             onHandlerStateChange={onPanGestureStateChange}>
-            <Animated.Image
-              source={{uri: source.uri}}
-              style={[
-                styles.photoStyle,
-                {transform: [{scale}, {translateX}, {translateY}]},
-              ]}
-              resizeMode="contain"
-            />
+            {source.type === 'image' ? (
+              <Animated.Image
+                source={{uri: source.uri}}
+                style={[
+                  styles.photoStyle,
+                  {transform: [{scale}, {translateX}, {translateY}]},
+                ]}
+                resizeMode="contain"
+              />
+            ) : (
+              <Animated.View
+                style={[
+                  styles.photoStyle,
+                  {transform: [{scale}, {translateX}, {translateY}]},
+                ]}>
+                <Video source={{uri: source.uri}} />
+              </Animated.View>
+            )}
           </PanGestureHandler>
         </View>
       </PinchGestureHandler>

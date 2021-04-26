@@ -20,6 +20,7 @@ import {
 import {useCreateFlash} from '~/hooks/flashes/useCreateFlash';
 
 export type Source = {
+  type: 'image' | 'video';
   base64: string;
   uri: string;
 };

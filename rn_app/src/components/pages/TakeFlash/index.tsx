@@ -81,8 +81,8 @@ export const TakeFlashPage = () => {
       />
     );
   } else if (targetPhoto && !targetVideo && !recordingVideo) {
-    return <EditImage source={targetPhoto} />;
+    return <EditImage source={{type: 'image', ...targetPhoto}} />;
   } else if (!targetPhoto && targetVideo && !recordingVideo) {
-    return <View></View>;
+    return <EditImage source={{type: 'video', ...targetVideo}} />; // videoのソース型かえる
   }
 };
