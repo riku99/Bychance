@@ -15,8 +15,8 @@ import {
   SessionLoginThunkPayload,
 } from '../../actions/session/sessionLogin';
 import {
-  firstLoginThunk,
-  FirstLoginThunkPayload,
+  lineLoginThunk,
+  LineLoginThunkPayload,
 } from '../../actions/session/lineLogin';
 import {
   sampleLogin,
@@ -55,9 +55,9 @@ export const chatPartnersSlice = createSlice({
     [logoutAction.type]: () => {
       chatPartnersAdapter.getInitialState();
     },
-    [firstLoginThunk.fulfilled.type]: (
+    [lineLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<FirstLoginThunkPayload>,
+      action: PayloadAction<LineLoginThunkPayload>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [sessionLoginThunk.fulfilled.type]: (
       state,

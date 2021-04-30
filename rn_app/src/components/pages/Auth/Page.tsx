@@ -2,7 +2,7 @@ import React from 'react';
 import {useDispatch} from 'react-redux';
 
 import {AppDispatch} from '../../../stores/index';
-import {firstLoginThunk} from '../../../actions/session/lineLogin';
+import {lineLoginThunk} from '../../../actions/session/lineLogin';
 import {Auth} from './Auth';
 import {sampleLogin} from '../../../actions/session/sampleLogin';
 
@@ -10,7 +10,7 @@ export const Container = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const login = (): void => {
-    dispatch(firstLoginThunk());
+    dispatch(lineLoginThunk());
   };
 
   const _sampleLogin = () => {

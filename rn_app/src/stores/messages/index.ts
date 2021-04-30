@@ -9,8 +9,8 @@ import {
   CreateMessageThunkPayload,
 } from '../../actions/messages/createMessage';
 import {
-  firstLoginThunk,
-  FirstLoginThunkPayload,
+  lineLoginThunk,
+  LineLoginThunkPayload,
 } from '../../actions/session/lineLogin';
 import {
   sessionLoginThunk,
@@ -51,9 +51,9 @@ const messagesSlice = createSlice({
     [sampleLogin.fulfilled.type]: (state, action) => {
       messagesAdapter.addMany(state, action.payload.messages);
     },
-    [firstLoginThunk.fulfilled.type]: (
+    [lineLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<FirstLoginThunkPayload>,
+      action: PayloadAction<LineLoginThunkPayload>,
     ) => {
       messagesAdapter.addMany(state, action.payload.messages);
     },

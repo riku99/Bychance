@@ -2,8 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {refreshUser} from '../helpers/refreshUser';
 import {
-  firstLoginThunk,
-  FirstLoginThunkPayload,
+  lineLoginThunk,
+  LineLoginThunkPayload,
 } from '../../actions/session/lineLogin';
 import {
   sessionLoginThunk,
@@ -101,9 +101,9 @@ const userSlice = createSlice({
         user: action.payload.user,
       };
     },
-    [firstLoginThunk.fulfilled.type]: (
+    [lineLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<FirstLoginThunkPayload>,
+      action: PayloadAction<LineLoginThunkPayload>,
     ) => {
       return {
         ...state,

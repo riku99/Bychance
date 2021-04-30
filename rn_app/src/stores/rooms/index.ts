@@ -6,8 +6,8 @@ import {
 
 import {RootState} from '../index';
 import {
-  firstLoginThunk,
-  FirstLoginThunkPayload,
+  lineLoginThunk,
+  LineLoginThunkPayload,
 } from '../../actions/session/lineLogin';
 import {
   sessionLoginThunk,
@@ -60,9 +60,9 @@ export const RoomsSlice = createSlice({
     [logoutAction.type]: () => {
       return roomsAdapter.getInitialState();
     },
-    [firstLoginThunk.fulfilled.type]: (
+    [lineLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<FirstLoginThunkPayload>,
+      action: PayloadAction<LineLoginThunkPayload>,
     ) => {
       roomsAdapter.addMany(state, action.payload.rooms);
     },

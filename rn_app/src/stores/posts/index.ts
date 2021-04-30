@@ -14,8 +14,8 @@ import {
 } from '../../actions/posts/deletePost';
 import {logoutAction} from '../../actions/session/logout';
 import {
-  firstLoginThunk,
-  FirstLoginThunkPayload,
+  lineLoginThunk,
+  LineLoginThunkPayload,
 } from '../../actions/session/lineLogin';
 import {
   sessionLoginThunk,
@@ -48,9 +48,9 @@ const postSlice = createSlice({
     [logoutAction.type]: () => {
       return postsAdaper.getInitialState();
     },
-    [firstLoginThunk.fulfilled.type]: (
+    [lineLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<FirstLoginThunkPayload>,
+      action: PayloadAction<LineLoginThunkPayload>,
     ) => {
       postsAdaper.addMany(state, action.payload.posts);
     },

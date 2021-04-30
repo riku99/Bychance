@@ -14,8 +14,8 @@ import {
   CreateFlashThunkPaylaod,
 } from '../../actions/flashes/createFlash';
 import {
-  firstLoginThunk,
-  FirstLoginThunkPayload,
+  lineLoginThunk,
+  LineLoginThunkPayload,
   //sampleLogin,
 } from '../../actions/session/lineLogin';
 import {
@@ -47,9 +47,9 @@ const flashesSlice = createSlice({
       state,
       action: PayloadAction<SessionLoginThunkPayload>,
     ) => flashesAdapter.addMany(state, action.payload.flashes),
-    [firstLoginThunk.fulfilled.type]: (
+    [lineLoginThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<FirstLoginThunkPayload>,
+      action: PayloadAction<LineLoginThunkPayload>,
     ) => flashesAdapter.addMany(state, action.payload.flashes),
     [createFlashThunk.fulfilled.type]: (
       state,

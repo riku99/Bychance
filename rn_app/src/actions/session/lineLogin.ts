@@ -10,10 +10,10 @@ import {
 import LineLogin from '@xmartlabs/react-native-line';
 import * as Keychain from 'react-native-keychain';
 
-export type FirstLoginThunkPayload = SuccessfullLoginData;
+export type LineLoginThunkPayload = SuccessfullLoginData;
 
-export const firstLoginThunk = createAsyncThunk<
-  FirstLoginThunkPayload | void,
+export const lineLoginThunk = createAsyncThunk<
+  LineLoginThunkPayload | void,
   undefined,
   {rejectValue: rejectPayload}
 >('users/lineLogin', async (dummy, {dispatch, rejectWithValue}) => {
@@ -38,8 +38,6 @@ export const firstLoginThunk = createAsyncThunk<
       {},
       idToken && headers(idToken as string),
     );
-
-    console.log(response.data);
 
     // 成功したらキーチェーンにcredentialsを保存
     await Keychain.resetGenericPassword();
