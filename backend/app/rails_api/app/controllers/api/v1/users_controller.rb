@@ -79,6 +79,7 @@ class Api::V1::UsersController < ApplicationController
 
   def first_login
     token = getToken(request.headers)
+    
     body = {
       id_token: token, client_id: Rails.application.credentials.line[:client_id]
     }

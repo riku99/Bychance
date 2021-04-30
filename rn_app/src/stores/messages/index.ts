@@ -11,7 +11,7 @@ import {
 import {
   firstLoginThunk,
   FirstLoginThunkPayload,
-} from '../../actions/session/firstLogin';
+} from '../../actions/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,

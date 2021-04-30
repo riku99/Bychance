@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-import {firstLoginThunk} from '../../actions/session/firstLogin';
+import {firstLoginThunk} from '../../actions/session/lineLogin';
 import {sessionLoginThunk} from '../../actions/session/sessionLogin';
 import {logoutAction} from '../../actions/session/logout';
 import {sampleLogin} from '../../actions/session/sampleLogin';

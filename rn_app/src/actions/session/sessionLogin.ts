@@ -7,7 +7,7 @@ import {
   rejectPayload,
   SuccessfullLoginData,
   Credentials,
-} from '../../re-modules';
+} from '../re-modules';
 
 export type SessionLoginThunkPayload = SuccessfullLoginData;
 
@@ -17,9 +17,8 @@ export const sessionLoginThunk = createAsyncThunk<
   {rejectValue: rejectPayload}
 >('users/sessionLogin', async ({id, token}, {dispatch, rejectWithValue}) => {
   try {
-    const response = await axios.post<SuccessfullLoginData>(
-      `${origin}/subsequent_login`,
-      {id},
+    const response = await axios.get<SuccessfullLoginData>(
+      `${origin}/sessions?id=${id}`,
       headers(token),
     );
 

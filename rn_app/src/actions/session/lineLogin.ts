@@ -6,7 +6,7 @@ import {
   handleBasicError,
   rejectPayload,
   SuccessfullLoginData,
-} from '../../re-modules';
+} from '../re-modules';
 import LineLogin from '@xmartlabs/react-native-line';
 import * as Keychain from 'react-native-keychain';
 
@@ -16,7 +16,7 @@ export const firstLoginThunk = createAsyncThunk<
   FirstLoginThunkPayload | void,
   undefined,
   {rejectValue: rejectPayload}
->('users/firstLogin', async (dummy, {dispatch, rejectWithValue}) => {
+>('users/lineLogin', async (dummy, {dispatch, rejectWithValue}) => {
   try {
     const loginResult = await LineLogin.login({
       // @ts-ignore ドキュメント通りにやっても直らなかったのでignore
@@ -31,20 +31,24 @@ export const firstLoginThunk = createAsyncThunk<
     // コンポーネントがマウントされたらで良くない?
     //const position = await getCurrentPosition();
 
-    const response = await axios.post<SuccessfullLoginData & {token: string}>(
-      `${origin}/first_login`,
+    const response = await axios.post<
+      SuccessfullLoginData & {accessToken: string}
+    >(
+      `${origin}/sessions/lineLogin`,
       {},
       idToken && headers(idToken as string),
     );
+
+    console.log(response.data);
 
     // 成功したらキーチェーンにcredentialsを保存
     await Keychain.resetGenericPassword();
     await Keychain.setGenericPassword(
       String(response.data.user.id),
-      response.data.token,
+      response.data.accessToken,
     );
 
-    const {token, ...restData} = response.data; // eslint-disable-line
+    const {accessToken, ...restData} = response.data; // eslint-disable-line
     return restData;
   } catch (e) {
     if (e.message === 'User cancelled or interrupted the login process.') {
