@@ -24,7 +24,7 @@ export const EditButton = React.memo(() => {
 const styles = StyleSheet.create({
   editButton: {
     backgroundColor: 'white',
-    width: '90%',
+    width: '100%',
     height: 32,
     borderRadius: 30,
     alignSelf: 'center',

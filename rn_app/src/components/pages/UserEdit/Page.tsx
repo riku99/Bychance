@@ -11,7 +11,7 @@ import {
   RootNavigationProp,
 } from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
-import {alertSomeError} from '../../../helpers/errors/alertSomeError';
+import {alertSomeError} from '../../../helpers/errors';
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {

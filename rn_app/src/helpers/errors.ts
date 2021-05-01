@@ -14,3 +14,14 @@ export const alertSomeError = () => {
     ],
   );
 };
+
+export const alertInvalidError = (message: string) => {
+  Alert.alert(message, '', [
+    {
+      text: 'OK',
+      onPress: () => {
+        return;
+      },
+    },
+  ]);
+};

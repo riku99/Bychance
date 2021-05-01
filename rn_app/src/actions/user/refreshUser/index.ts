@@ -28,10 +28,11 @@ export const refreshUserThunk = createAsyncThunk<
       const response = await axios.patch<
         {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
       >(
-        `${origin}/user/refresh`,
-        {userId, id: credentials.id},
+        `${origin}/users/refresh?id=${credentials.id}`,
+        {userId},
         headers(credentials.token),
       );
+
       return response.data;
     } catch (e) {
       // axiosエラー

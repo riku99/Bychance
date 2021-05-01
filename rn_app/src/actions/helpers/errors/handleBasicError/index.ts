@@ -2,7 +2,7 @@ import {ThunkDispatch} from '@reduxjs/toolkit';
 
 import {rejectPayload, basicAxiosError} from '~/actions/types';
 import {requestLogin} from '~/actions/helpers/errors/requestLogin';
-import {alertSomeError} from '~/helpers/errors/alertSomeError';
+import {alertSomeError, alertInvalidError} from '~/helpers/errors';
 import {logoutAction} from '~/actions/session/logout';
 
 export const handleBasicError = ({
@@ -19,6 +19,7 @@ export const handleBasicError = ({
         requestLogin(() => dispatch(logoutAction));
         return {errorType: 'loginError'};
       case 'invalidError':
+        alertInvalidError(axiosError.response.data.message);
         return {
           errorType: 'invalidError',
           message: axiosError.response.data.message,
