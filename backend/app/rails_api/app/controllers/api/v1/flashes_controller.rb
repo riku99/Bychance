@@ -7,9 +7,7 @@ class Api::V1::FlashesController < ApplicationController
             source = params[:source]
             ext = params[:ext]
                 url = create_s3_object_path(source, "flash", "#{@user.id}", ext)
-                puts "Okokokokoko"
                 flash = @user.flashes.new(source: url, source_type: source_type)
-                puts flash.source
                 if (flash.save)
                     render json: flash
                 else

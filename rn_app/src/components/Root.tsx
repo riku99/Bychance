@@ -77,7 +77,7 @@ const Root = () => {
               renderFlashMessageIcon: () => {
                 return (
                   <View style={{marginRight: 5}}>
-                    <UserAvatar size={40} image={data.sender.image} />
+                    <UserAvatar size={40} image={data.sender.avatar} />
                   </View>
                 );
               },

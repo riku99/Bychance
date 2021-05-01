@@ -19,7 +19,7 @@ export const UserEditPage = () => {
       id: state.userReducer.user!.id,
       name: state.userReducer.user!.name,
       introduce: state.userReducer.user!.introduce,
-      image: state.userReducer.user!.image,
+      avatar: state.userReducer.user!.avatar,
       message: state.userReducer.user!.message,
     };
   }, shallowEqual);
@@ -58,7 +58,7 @@ export const UserEditPage = () => {
       editProfileThunk({
         name,
         introduce,
-        image: selectedImage,
+        avatar: selectedImage,
         message,
         deleteImage,
       }),

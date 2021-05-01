@@ -240,7 +240,7 @@ export const UserPage = ({route, navigation}: Props) => {
               user={{
                 name: user.name,
                 introduce: user.introduce,
-                image: user.image,
+                image: user.avatar,
               }}
               avatarOuterType={avatarOuterType}
               setUserAvatarAndNameContainerHeight={
@@ -270,7 +270,7 @@ export const UserPage = ({route, navigation}: Props) => {
               },
             ]}>
             <Avatar
-              source={user.image}
+              source={user.avatar}
               outerType={avatarOuterType}
               flashesNavigationParam={flashesNavigationParam}
             />

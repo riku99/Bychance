@@ -28,7 +28,7 @@ export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {
                   });
                 }}>
                 <UserAvatar
-                  image={chatPartnerEntites[r.partner]?.image}
+                  image={chatPartnerEntites[r.partner]?.avatar}
                   size="medium"
                   opacity={1}
                 />

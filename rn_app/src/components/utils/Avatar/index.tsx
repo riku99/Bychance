@@ -1,4 +1,5 @@
 import React from 'react';
+import {Image} from 'react-native';
 import {Avatar} from 'react-native-elements';
 
 import {normalStyles} from '../../../constants/styles/normal';
@@ -11,22 +12,24 @@ type Props = {
   onPress?: () => any;
 };
 
-export const UserAvatar = ({image, size, opacity, onPress}: Props) => {
-  return (
-    <Avatar
-      rounded
-      source={image ? {uri: image} : undefined}
-      icon={!image ? {name: 'user', type: 'font-awesome'} : undefined}
-      containerStyle={!image ? {backgroundColor: '#BDBDBD'} : undefined}
-      placeholderStyle={{
-        backgroundColor: normalStyles.imageBackGroundColor,
-      }}
-      size={size}
-      activeOpacity={opacity ? opacity : undefined}
-      onPress={onPress && onPress}
-    />
-  );
-};
+export const UserAvatar = React.memo(
+  ({image, size, opacity, onPress}: Props) => {
+    return (
+      <Avatar
+        rounded
+        source={image ? {uri: image} : undefined}
+        icon={!image ? {name: 'user', type: 'font-awesome'} : undefined}
+        containerStyle={!image ? {backgroundColor: '#BDBDBD'} : undefined}
+        placeholderStyle={{
+          backgroundColor: normalStyles.imageBackGroundColor,
+        }}
+        size={size}
+        activeOpacity={opacity ? opacity : undefined}
+        onPress={onPress && onPress}
+      />
+    );
+  },
+);
 
 type _Props = Props & {outerType: 'gradation' | 'silver' | 'none'};
 

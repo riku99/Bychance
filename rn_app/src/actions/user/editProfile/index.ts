@@ -13,7 +13,7 @@ import {User} from '../../../stores/user';
 
 export type EdiProfilePayload = Pick<
   User,
-  'id' | 'name' | 'introduce' | 'image' | 'message'
+  'id' | 'name' | 'introduce' | 'avatar' | 'message'
 >;
 
 export const editProfileThunk = createAsyncThunk<
@@ -21,7 +21,7 @@ export const editProfileThunk = createAsyncThunk<
   {
     name: string;
     introduce: string;
-    image: string | undefined;
+    avatar: string | undefined;
     message: string;
     deleteImage: boolean;
   },
@@ -31,7 +31,7 @@ export const editProfileThunk = createAsyncThunk<
 >(
   'users/editProfile',
   async (
-    {name, introduce, image, message, deleteImage},
+    {name, introduce, avatar, message, deleteImage},
     {rejectWithValue, dispatch},
   ) => {
     const keychain = await checkKeychain();
@@ -39,15 +39,14 @@ export const editProfileThunk = createAsyncThunk<
     if (keychain) {
       try {
         const response = await axios.patch<
-          Pick<User, 'id' | 'name' | 'introduce' | 'image' | 'message'>
+          Pick<User, 'id' | 'name' | 'introduce' | 'avatar' | 'message'>
         >(
-          `${origin}/user`,
+          `${origin}/users?id=${keychain.id}`,
           {
-            id: keychain.id,
             name,
             introduce,
-            image,
-            message,
+            avatar,
+            statusMessage: message,
             deleteImage,
           },
           headers(keychain.token),

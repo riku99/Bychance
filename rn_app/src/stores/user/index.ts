@@ -30,9 +30,9 @@ import {logoutAction} from '../../actions/session/logout';
 
 export type UserState = {
   user?: {
-    id: number;
+    id: string;
     name: string;
-    image: string | null;
+    avatar: string | null;
     introduce: string;
     message: string;
     display: boolean;
@@ -129,7 +129,7 @@ const userSlice = createSlice({
         ...state.user!,
         name: actions.payload.name,
         introduce: actions.payload.introduce,
-        image: actions.payload.image,
+        avatar: actions.payload.avatar,
         message: actions.payload.message,
       },
     }),

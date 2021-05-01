@@ -16,10 +16,10 @@ import {UserEditNavigationProp} from '../../../screens/types';
 
 type Props = {
   user: {
-    id: number;
+    id: string;
     name: string;
     introduce: string | null;
-    image: string | null;
+    avatar: string | null;
     message: string | null;
   };
   savedEditData?: {
@@ -159,7 +159,7 @@ export const UserEdit = ({
         <View style={styles.image}>
           <UserAvatar
             image={
-              selectedImage ? selectedImage : !deleteImage ? user.image : null
+              selectedImage ? selectedImage : !deleteImage ? user.avatar : null
             }
             size="large"
             opacity={1}
