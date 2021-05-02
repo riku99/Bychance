@@ -8,7 +8,7 @@ import {
   requestLogin,
   handleBasicError,
   rejectPayload,
-} from '../../re-modules';
+} from '../re-modules';
 
 export type UpdateLocationThunkPaylaod = {
   lat: number | null;
@@ -24,13 +24,14 @@ export const updateLocationThunk = createAsyncThunk<
   UpdateLocationThunkPaylaod,
   UpdateLocationThunkArg,
   {rejectValue: rejectPayload}
->('users/updateLocation', async ({lat, lng}, {dispatch, rejectWithValue}) => {
+>('users/location', async ({lat, lng}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
+
   if (credentials) {
     try {
       await axios.patch<{succless: boolean}>(
-        `${origin}/user/position`,
-        {accessId: credentials.id, lat, lng},
+        `${origin}/users/location?id=${credentials.id}`,
+        {lat, lng},
         headers(credentials.token),
       );
       return {lat, lng};

@@ -8,8 +8,8 @@ import {
   requestLogin,
   handleBasicError,
   rejectPayload,
-} from '../../re-modules';
-import {User} from '../../../stores/user';
+} from '../re-modules';
+import {User} from '../../stores/user';
 
 export type EdiProfilePayload = Pick<
   User,

@@ -20,7 +20,7 @@ import {
 import {
   editUserDisplayThunk,
   EidtUserDisplayThunk,
-} from '../../actions/user/editUserDisplay';
+} from '../../actions/user/changeUserDisplay';
 import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,

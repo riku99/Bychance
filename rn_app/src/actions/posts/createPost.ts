@@ -8,8 +8,8 @@ import {
   checkKeychain,
   requestLogin,
   logoutAction,
-} from '../../re-modules';
-import {Post} from '../../../stores/posts';
+} from '../re-modules';
+import {Post} from '../../stores/posts';
 
 export type CreatePostThunkPayload = Post;
 
@@ -22,10 +22,11 @@ export const createPostThunk = createAsyncThunk<
   if (credentials) {
     try {
       const response = await axios.post<Post>(
-        `${origin}/post`,
-        {text, image: source, accessId: credentials.id},
+        `${origin}/posts?id=${credentials.id}`,
+        {text, image: source},
         headers(credentials.token),
       );
+
       return response.data;
     } catch (e) {
       const result = handleBasicError({e, dispatch});

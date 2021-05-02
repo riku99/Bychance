@@ -8,7 +8,7 @@ import {
   requestLogin,
   handleBasicError,
   rejectPayload,
-} from '../../re-modules';
+} from '../re-modules';
 
 export type EidtUserDisplayThunk = boolean;
 
@@ -21,10 +21,11 @@ export const editUserDisplayThunk = createAsyncThunk<
   if (credentials) {
     try {
       await axios.patch(
-        `${origin}/user/display`,
-        {accessId: credentials.id, display},
+        `${origin}/users/display?id=${credentials.id}`,
+        {display},
         headers(credentials.token),
       );
+
       return display;
     } catch (e) {
       const result = handleBasicError({e, dispatch});
