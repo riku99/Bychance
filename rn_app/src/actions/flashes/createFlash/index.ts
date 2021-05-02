@@ -22,14 +22,14 @@ export const createFlashThunk = createAsyncThunk<
 >(
   'flashes/createFlash',
   async ({sourceType, source, ext}, {dispatch, rejectWithValue}) => {
-    const keychain = await checkKeychain();
+    const credentials = await checkKeychain();
 
-    if (keychain) {
+    if (credentials) {
       try {
         const response = await axios.post<Flash>(
-          `${origin}/flashes`,
-          {id: keychain.id, source, sourceType, ext},
-          headers(keychain.token),
+          `${origin}/flashes?id=${credentials.id}`,
+          {source, sourceType, ext},
+          headers(credentials.token),
         );
 
         return response.data;

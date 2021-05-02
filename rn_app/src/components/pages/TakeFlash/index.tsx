@@ -2,7 +2,6 @@ import React, {useState, useRef, useCallback} from 'react';
 import CameraRoll from '@react-native-community/cameraroll';
 import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
-import {View} from 'react-native';
 
 import {TakeFlash} from './TakeFlash';
 import {EditImage} from './EditImage';

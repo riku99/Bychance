@@ -7,7 +7,6 @@ import {createFlashThunk} from '~/actions/flashes/createFlash';
 import {creatingFlash} from '~/stores/otherSettings';
 import {AppDispatch} from '~/stores/index';
 import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
-import {alertSomeError} from '~/helpers/errors';
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
@@ -25,6 +24,8 @@ export const useCreateFlash = () => {
     }) => {
       dispatch(creatingFlash());
       navigation.goBack();
+      const a = await fs.readFile(uri, 'base64');
+      console.log(a.slice(0, 10));
       const length = uri.lastIndexOf('.'); // 拡張子の有無。なければ-1が返される
       const ext = length !== -1 ? uri.slice(length + 1) : null; // あれば拡張子('.'以降)を取得
       const result = await dispatch(
@@ -34,17 +35,11 @@ export const useCreateFlash = () => {
               ? source
               : await fs.readFile(uri, 'base64'),
           sourceType,
-          ext: ext ? ext.toLowerCase() : null,
+          ext,
         }),
       );
       if (createFlashThunk.fulfilled.match(result)) {
         displayShortMessage('追加しました', 'success');
-      } else {
-        if (result.payload?.errorType === 'invalidError') {
-          displayShortMessage(result.payload.message, 'danger');
-        } else if (result.payload?.errorType === 'someError') {
-          alertSomeError();
-        }
       }
       dispatch(creatingFlash());
     },

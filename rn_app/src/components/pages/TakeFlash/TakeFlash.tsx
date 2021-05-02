@@ -9,7 +9,6 @@ import {
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import Video from 'react-native-video';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';

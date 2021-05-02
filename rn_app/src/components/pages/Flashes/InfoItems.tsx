@@ -41,7 +41,7 @@ export const InfoItems = ({
   return (
     <View style={styles.infoItems}>
       <TouchableOpacity style={styles.userInfo} onPress={onUserPress}>
-        <UserAvatar image={user?.image} size="small" opacity={1} />
+        <UserAvatar image={user?.avatar} size="small" opacity={1} />
         <Text style={styles.userName}>
           {user ? user.name : 'ユーザーが存在しません'}
         </Text>
