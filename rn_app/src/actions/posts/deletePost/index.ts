@@ -20,12 +20,13 @@ export const deletePostThunk = createAsyncThunk<
   const credentials = await checkKeychain();
   if (credentials) {
     try {
-      await axios.request<{success: true}>({
+      await axios.request({
         method: 'delete',
-        url: `${origin}/post`,
-        data: {accessId: credentials.id, postId},
+        url: `${origin}/posts?id=${credentials.id}`,
+        data: {postId},
         ...headers(credentials.token),
       });
+
       return postId;
     } catch (e) {
       const result = handleBasicError({e, dispatch});

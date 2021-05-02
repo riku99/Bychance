@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, Dimensions, Alert} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, Alert} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 import {Post as PostType} from '../../../stores/posts';
 import {normalStyles} from '../../../constants/styles/normal';
@@ -18,7 +19,7 @@ export const Post = ({post, user, deletePost}: Props) => {
   return (
     <View style={styles.container}>
       <View style={{backgroundColor: normalStyles.imageBackGroundColor}}>
-        <Image source={{uri: post.image}} style={styles.image} />
+        <FastImage source={{uri: post.image}} style={styles.image} />
       </View>
       <View style={styles.upperBox}>
         <Text style={styles.date}>{post.date}</Text>

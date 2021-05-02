@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 import {Post} from '../../../stores/posts';
 import {normalStyles} from '../../../constants/styles/normal';
@@ -48,7 +49,7 @@ export const Posts = React.memo(({posts}: Props) => {
                 styles.postWrapper,
                 {marginHorizontal: checkMiddleItem(i + 1) ? createGap() : 0},
               ]}>
-              <Image source={{uri: p.image}} style={styles.post} />
+              <FastImage source={{uri: p.image}} style={styles.post} />
             </View>
           </TouchableOpacity>
         );
