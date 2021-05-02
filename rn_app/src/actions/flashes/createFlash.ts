@@ -8,8 +8,8 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../re-modules';
-import {Flash} from '../../../stores/flashes';
+} from '../re-modules';
+import {Flash} from '../../stores/flashes';
 
 export type CreateFlashThunkPaylaod = Flash;
 

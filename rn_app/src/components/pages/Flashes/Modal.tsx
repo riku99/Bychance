@@ -46,10 +46,6 @@ export const Modal = ({
           if (deleteFlashThunk.fulfilled.match(result)) {
             displayShortMessage('削除しました', 'success');
             modalizeRef.current?.close();
-          } else {
-            if (result.payload && result.payload.errorType === 'invalidError') {
-              displayShortMessage(result.payload.message, 'danger');
-            }
           }
         },
       },

@@ -8,7 +8,7 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../re-modules';
+} from '../re-modules';
 
 export type DeleteFlashThunkPayload = number;
 
@@ -23,12 +23,11 @@ export const deleteFlashThunk = createAsyncThunk<
 
   if (credentials) {
     try {
-      await axios.request<{success: true}>({
-        method: 'delete',
-        url: `${origin}/flashes`,
-        data: {id: credentials.id, flashId},
-        ...headers(credentials.token),
-      });
+      await axios.delete(
+        `${origin}/flashes/${flashId}?id=${credentials.id}`,
+        headers(credentials.token),
+      );
+
       return flashId;
     } catch (e) {
       const result = handleBasicError({e, dispatch});

@@ -6,7 +6,7 @@ import {
   userPageScreensGroup,
   UserPageFrom,
 } from './UserPage';
-import {FlashesPage} from '../components/pages/Flashes/Page';
+import {FlashesPage} from '../components/pages/Flashes';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {FlashesData} from '../components/pages/Flashes/types';
 

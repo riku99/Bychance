@@ -8,7 +8,7 @@ import {
   checkKeychain,
   requestLogin,
   logoutAction,
-} from '../../re-modules';
+} from '../re-modules';
 
 export type DeletePostThunkPaylaod = number;
 

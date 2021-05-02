@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  Image,
   Animated,
   TouchableOpacity,
   ActivityIndicator,
@@ -14,6 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Video, {OnLoadData} from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
@@ -413,7 +413,7 @@ export const ShowFlash = React.memo(
                 {currentFlash.sourceType === 'image' ? (
                   <View style={styles.soruceContainer}>
                     {isDisplayed ? (
-                      <Image
+                      <FastImage
                         source={{
                           uri: currentFlash.source,
                         }}
@@ -423,7 +423,7 @@ export const ShowFlash = React.memo(
                         resizeMode="cover"
                       />
                     ) : (
-                      <Image
+                      <FastImage
                         source={{
                           uri: currentFlash.source + '?' + new Date(),
                         }}
