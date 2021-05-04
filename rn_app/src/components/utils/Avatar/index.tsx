@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const UserAvatar = React.memo(
-  ({image, size, opacity, onPress}: Props) => {
+  ({image, size, onPress, opacity = 1}: Props) => {
     return (
       <Avatar
         rounded
@@ -33,7 +33,7 @@ export const UserAvatar = React.memo(
 type _Props = Props & {outerType: 'gradation' | 'silver' | 'none'};
 
 export const UserAvatarWithOuter = React.memo(
-  ({image, size, opacity, onPress, outerType}: _Props) => {
+  ({image, size, onPress, outerType, opacity = 1}: _Props) => {
     return (
       <UserProfileOuter avatarSize={size} outerType={outerType}>
         <UserAvatar

@@ -1,5 +1,4 @@
 import React, {
-  MutableRefObject,
   Dispatch,
   SetStateAction,
   useState,
@@ -19,19 +18,20 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
-import RNPickerSelect from 'react-native-picker-select';
+import {useDispatch} from 'react-redux';
 
 import {AnotherUser} from '../../../stores/types';
 import {FlashesData} from '~/components/pages/Flashes/types';
-import {normalStyles} from '~/constants/styles/normal';
 import {Avatar} from './Avatar';
+import {RangeSelector} from './RangeSelector';
+import {AppDispatch} from '../../../stores/index';
+import {getNearbyUsersThunk} from '../../../actions/nearbyUsers/getNearbyUsers';
 
 type Props = {
   otherUsers: AnotherUser[];
-  refRange: MutableRefObject<number>;
+  range: number;
   setRange: Dispatch<SetStateAction<number>>;
-  refreshing: boolean;
-  onRefresh: (range: number) => void;
+  position: {lat: number | null; lng: number | null};
   onListItemPress: (user: AnotherUser) => void;
   onAvatarPress: ({
     isAllAlreadyViewed,
@@ -53,10 +53,9 @@ type Props = {
 export const SearchUsers = React.memo(
   ({
     otherUsers,
-    refRange,
+    range,
     setRange,
-    refreshing,
-    onRefresh,
+    position,
     onListItemPress,
     onAvatarPress,
   }: Props) => {
@@ -91,6 +90,20 @@ export const SearchUsers = React.memo(
       }
     }, [keyword, otherUsers]);
 
+    const dispatch: AppDispatch = useDispatch();
+
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(
+      async (range: number) => {
+        setRefreshing(true);
+        await dispatch(
+          getNearbyUsersThunk({lat: position.lat, lng: position.lng, range}),
+        );
+        setRefreshing(false);
+      },
+      [dispatch, position.lat, position.lng],
+    );
+
     return (
       <View style={styles.container}>
         <Animated.View
@@ -119,7 +132,7 @@ export const SearchUsers = React.memo(
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
-                  onRefresh={() => onRefresh(refRange.current)}
+                  onRefresh={() => onRefresh(range)}
                 />
               }
               onScroll={Animated.event(
@@ -155,44 +168,7 @@ export const SearchUsers = React.memo(
                     onPress={() => {
                       onListItemPress(u);
                     }}>
-                    <Avatar user={u} />
-                    {/* {u.flashes.entities.length &&
-                    !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
-                      <UserAvatarWithOuter
-                        image={u.avatar}
-                        size="medium"
-                        opacity={1}
-                        outerType="gradation"
-                        onPress={() => {
-                          onAvatarPress({
-                            userId: u.id,
-                            isAllAlreadyViewed: false,
-                            flashesData: undefined,
-                          });
-                        }}
-                      />
-                    ) : u.flashes.entities.length && u.flashes.alreadyViewed ? ( // アイテムは持っているが、全て閲覧されている場合
-                      <UserAvatarWithOuter
-                        image={u.avatar}
-                        size="medium"
-                        opacity={1}
-                        outerType="silver"
-                        onPress={() => {
-                          onAvatarPress({
-                            userId: u.id,
-                            isAllAlreadyViewed: true,
-                            flashesData: u.flashes,
-                          });
-                        }}
-                      />
-                    ) : (
-                      <UserAvatarWithOuter
-                        image={u.statusMessage}
-                        size="medium"
-                        opacity={1}
-                        outerType="none"
-                      />
-                    )} */}
+                    <Avatar user={u} onAvatarPress={onAvatarPress} />
                     <ListItem.Content>
                       <ListItem.Title>{u.name}</ListItem.Title>
                       <ListItem.Subtitle style={styles.subtitle}>
@@ -210,40 +186,9 @@ export const SearchUsers = React.memo(
           </View>
         )}
 
-        <RNPickerSelect
-          onValueChange={(value) => {
-            refRange.current = value;
-            setRange(refRange.current);
-          }}
-          items={[
-            {label: '100m', value: 0.1},
-            {label: '200m', value: 0.2},
-            {label: '300m', value: 0.3},
-            {label: '400m', value: 0.4},
-            {label: '500m', value: 0.5},
-            {label: '1km', value: 1},
-          ]}
-          placeholder={{}}
-          style={{
-            viewContainer: {
-              backgroundColor: normalStyles.mainColor,
-              width: 130,
-              height: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 40,
-              position: 'absolute',
-              bottom: '3%',
-              right: '7%',
-            },
-            inputIOS: {
-              color: 'white',
-              fontSize: 15,
-              fontWeight: 'bold',
-            },
-          }}
-          doneText="完了"
-        />
+        <View style={styles.pcikerContainer}>
+          <RangeSelector setRange={setRange} />
+        </View>
       </View>
     );
   },
@@ -294,9 +239,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#999999',
   },
-  selectButtonContainer: {
-    backgroundColor: 'gray',
-    width: 170,
-    justifyContent: 'center',
+  pcikerContainer: {
+    position: 'absolute',
+    bottom: '3%',
+    right: '7%',
+    width: 130,
+    height: 40,
   },
 });

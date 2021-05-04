@@ -11,13 +11,13 @@ import {
 } from '../re-modules';
 
 export type CreateAlreadyViewdFlashThunkPayload = {
-  userId: number;
+  userId: string;
   flashId: number;
 };
 
 export const createAlreadyViewdFlashThunk = createAsyncThunk<
   CreateAlreadyViewdFlashThunkPayload,
-  {flashId: number; userId: number},
+  {flashId: number; userId: string},
   {
     rejectValue: rejectPayload;
   }

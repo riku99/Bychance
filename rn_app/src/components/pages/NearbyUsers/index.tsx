@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
@@ -24,15 +24,11 @@ export const SearchUsersPage = () => {
     return {lat, lng};
   }, shallowEqual);
 
-  const _range = useRef(0.1);
+  const [range, setRange] = useState(0.1);
 
-  const [range, setRange] = useState(_range.current);
-
-  const getUsers = useSelector((state: RootState) => {
+  const nearbyUsers = useSelector((state: RootState) => {
     return selectNearbyUsersArray(state);
   }, shallowEqual);
-
-  const [refreshing, setRefreshing] = useState(false);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -50,7 +46,7 @@ export const SearchUsersPage = () => {
 
   const rootStackNavigation = useNavigation<RootNavigationProp<'Tab'>>();
 
-  const onListItemPress = useCallback(
+  const navigateToUserPage = useCallback(
     (user: AnotherUser) => {
       searchStackNavigation.push('UserPage', {
         userId: user.id,
@@ -62,8 +58,8 @@ export const SearchUsersPage = () => {
 
   // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
   const sequenceFlashesAndUserData = useMemo(() => {
-    if (getUsers.length) {
-      const haveFlashEntitiesAndNotAllAlreadyViewedUser = getUsers.filter(
+    if (nearbyUsers.length) {
+      const haveFlashEntitiesAndNotAllAlreadyViewedUser = nearbyUsers.filter(
         (data) =>
           data.flashes.entities.length && !data.flashes.isAllAlreadyViewed,
       );
@@ -73,7 +69,7 @@ export const SearchUsersPage = () => {
       }));
       return data;
     }
-  }, [getUsers]);
+  }, [nearbyUsers]);
 
   const onAvatarPress = useCallback(
     ({
@@ -126,25 +122,13 @@ export const SearchUsersPage = () => {
     [rootStackNavigation, sequenceFlashesAndUserData],
   );
 
-  const onRefresh = useCallback(
-    async (range: number) => {
-      setRefreshing(true);
-      await dispatch(
-        getNearbyUsersThunk({lat: position.lat, lng: position.lng, range}),
-      );
-      setRefreshing(false);
-    },
-    [dispatch, position.lat, position.lng],
-  );
-
   return (
     <SearchUsers
-      otherUsers={getUsers}
-      refRange={_range}
+      otherUsers={nearbyUsers}
+      range={range}
       setRange={setRange}
-      refreshing={refreshing}
-      onRefresh={onRefresh}
-      onListItemPress={onListItemPress}
+      position={position}
+      onListItemPress={navigateToUserPage}
       onAvatarPress={onAvatarPress}
     />
   );
