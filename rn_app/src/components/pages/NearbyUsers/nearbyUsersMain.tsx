@@ -170,7 +170,9 @@ export const NearbyUsersList = React.memo(
                     }}>
                     <Avatar user={u} onAvatarPress={onAvatarPress} />
                     <ListItem.Content>
-                      <ListItem.Title>{u.name}</ListItem.Title>
+                      <ListItem.Title style={{fontWeight: '500'}}>
+                        {u.name}
+                      </ListItem.Title>
                       <ListItem.Subtitle style={styles.subtitle}>
                         {u.statusMessage}
                       </ListItem.Subtitle>

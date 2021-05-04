@@ -13,7 +13,7 @@ import {User} from '../../../stores/user';
 import {normalStyles} from '../../../constants/styles/normal';
 
 type Props = {
-  user: Pick<User, 'name' | 'introduce' | 'image'>;
+  user: Pick<User, 'name' | 'introduce' | 'avatar'>;
   avatarOuterType: 'gradation' | 'silver' | 'none';
   setUserAvatarAndNameContainerHeight: React.Dispatch<
     React.SetStateAction<number>
@@ -30,14 +30,14 @@ export const Profile = React.memo(
     expandedIntroduceContainer,
     setAvatarToIntroduceHeight,
   }: Props) => {
-    const {nameContainerTop, editContainerTop} = useMemo(() => {
-      switch (avatarOuterType) {
-        case 'none':
-          return {nameContainerTop: 20, editContainerTop: 29};
-        default:
-          return {nameContainerTop: 24, editContainerTop: 24};
-      }
-    }, [avatarOuterType]);
+    // const {nameContainerTop, editContainerTop} = useMemo(() => {
+    //   switch (avatarOuterType) {
+    //     case 'none':
+    //       return {nameContainerTop: 20, editContainerTop: 29};
+    //     default:
+    //       return {nameContainerTop: 24, editContainerTop: 24};
+    //   }
+    // }, [avatarOuterType]);
 
     const lineNumber = useMemo(
       () =>
@@ -70,11 +70,11 @@ export const Profile = React.memo(
               setUserAvatarAndNameContainerHeight(e.nativeEvent.layout.height)
             }>
             <View style={styles.avatarContainer} />
-            <View style={[styles.nameContainer, {marginTop: nameContainerTop}]}>
+            {/* <View style={[styles.nameContainer, {marginTop: nameContainerTop}]}>
               <Text style={styles.name}>{user.name}</Text>
-            </View>
+            </View> */}
           </View>
-          <View style={[styles.editContainer, {marginTop: editContainerTop}]} />
+          <View style={[styles.editContainer]} />
           <View
             style={[
               styles.introduceContainer,

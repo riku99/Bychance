@@ -5,7 +5,14 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react';
-import {View, StyleSheet, Animated, ScrollView, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Animated,
+  ScrollView,
+  Text,
+  Dimensions,
+} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 
@@ -123,15 +130,15 @@ export const UserPage = ({route, navigation}: Props) => {
   }, [me, myFlashes, anotherUser]);
 
   const [containerHeight, setContainerHeight] = useState(0);
-  const [profileContainerHeight, setProfileContainerHeight] = useState(0);
-  const [
-    userAvatarAndNameContainerHeight,
-    setUserAvatarAndNameContainerHeight,
-  ] = useState(0);
-  const [
-    defaultProfileContainerHeight,
-    setDefaultProfileContainerHeight,
-  ] = useState(0);
+  //const [profileContainerHeight, setProfileContainerHeight] = useState(0);
+  // const [
+  //   userAvatarAndNameContainerHeight,
+  //   setUserAvatarAndNameContainerHeight,
+  // ] = useState(0);
+  // const [
+  //   defaultProfileContainerHeight,
+  //   setDefaultProfileContainerHeight,
+  // ] = useState(0);
   const getDefaultContainerHeight = useRef(false);
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -142,12 +149,12 @@ export const UserPage = ({route, navigation}: Props) => {
     extrapolateRight: 'clamp',
   });
 
-  useEffect(() => {
-    if (!getDefaultContainerHeight.current && profileContainerHeight !== 0) {
-      setDefaultProfileContainerHeight(profileContainerHeight);
-      getDefaultContainerHeight.current = true;
-    }
-  }, [profileContainerHeight]);
+  // useEffect(() => {
+  //   if (!getDefaultContainerHeight.current && profileContainerHeight !== 0) {
+  //     setDefaultProfileContainerHeight(profileContainerHeight);
+  //     getDefaultContainerHeight.current = true;
+  //   }
+  // }, [profileContainerHeight]);
 
   // 2つの子コンポーネントで必要なrefなのでこのコンポーネントから渡す
   const postsTabViewRef = useRef<ScrollView>(null);
@@ -232,6 +239,17 @@ export const UserPage = ({route, navigation}: Props) => {
           style={styles.container}
           onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}>
           <Animated.View
+            style={{
+              position: 'absolute',
+              backgroundColor: 'gray',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '20%',
+              transform: [{translateY: y}],
+            }}
+          />
+          {/* <Animated.View
             style={[styles.profileContaienr, {transform: [{translateY: y}]}]}
             onLayout={(e) =>
               setProfileContainerHeight(e.nativeEvent.layout.height)
@@ -240,7 +258,7 @@ export const UserPage = ({route, navigation}: Props) => {
               user={{
                 name: user.name,
                 introduce: user.introduce,
-                image: user.avatar,
+                avatar: user.avatar,
               }}
               avatarOuterType={avatarOuterType}
               setUserAvatarAndNameContainerHeight={
@@ -249,12 +267,27 @@ export const UserPage = ({route, navigation}: Props) => {
               expandedIntroduceContainer={expandedIntroduceContainer}
               setAvatarToIntroduceHeight={setAvatarToIntroduceHeight}
             />
+          </Animated.View> */}
+
+          <Animated.View
+            style={{
+              position: 'absolute',
+              top: '35%',
+              //backgroundColor: 'red',
+              width: '100%',
+              paddingHorizontal: 25,
+              transform: [{translateY: y}],
+              //backgroundColor: 'red',
+            }}>
+            <Text style={{lineHeight: oneIntroduceTextLineHeght}}>
+              {user.introduce}
+            </Text>
           </Animated.View>
+
           <UserTabView
             userId={user.id}
             containerHeight={containerHeight}
             profileContainerHeight={profileContainerHeight}
-            defaultProfileContainerHeight={defaultProfileContainerHeight}
             posts={posts}
             scrollY={scrollY}
             postsTabViewRef={postsTabViewRef}
@@ -264,26 +297,37 @@ export const UserPage = ({route, navigation}: Props) => {
             style={[
               styles.animatedElement,
               {
-                top: userAvatarTop,
-                height: userAvatarHeight,
+                top: '15%', //userAvatarTop,
+                //left: 20,
+                //height: userAvatarHeight,
                 transform: [{translateY: y}],
+                //backgroundColor: 'red',
+                flexDirection: 'row',
+                //backgroundColor: 'red',
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+                width: '95%',
               },
             ]}>
-            <Avatar
-              source={user.avatar}
-              outerType={avatarOuterType}
-              flashesNavigationParam={flashesNavigationParam}
-            />
-          </Animated.View>
-          <Animated.View
-            style={[
-              styles.animatedElement,
-              {
-                top: editContainerTop + userAvatarAndNameContainerHeight,
-                transform: [{translateY: y}],
-              },
-            ]}>
-            {isMe ? <EditButton /> : <SendMessageButton user={anotherUser!} />}
+            <View style={{alignItems: 'center'}}>
+              <Avatar
+                source={user.avatar}
+                outerType={avatarOuterType}
+                flashesNavigationParam={flashesNavigationParam}
+              />
+              <View style={{marginTop: 15}}>
+                <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                  {user.name}
+                </Text>
+              </View>
+            </View>
+            <View style={{width: '40%'}}>
+              {isMe ? (
+                <EditButton />
+              ) : (
+                <SendMessageButton user={anotherUser!} />
+              )}
+            </View>
           </Animated.View>
           {showExpandButton ? (
             <Animated.View
@@ -316,6 +360,10 @@ export const UserPage = ({route, navigation}: Props) => {
     </>
   );
 };
+
+const {height} = Dimensions.get('screen');
+
+const profileContainerHeight = height / 2.3;
 
 const styles = StyleSheet.create({
   container: {

@@ -27,7 +27,6 @@ type PostsRouteProps = {
   posts: Post[];
   containerHeight: number;
   profileContainerHeight: number;
-  defaultProfileContainerHeight: number;
   mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
 };
 
@@ -36,7 +35,6 @@ const PostsRoute = React.memo(
     posts,
     containerHeight,
     profileContainerHeight,
-    defaultProfileContainerHeight,
     mostRecentlyScrolledView,
   }: PostsRouteProps) => {
     const [contentsHeight, setContentsHeight] = useState(0);
@@ -46,59 +44,76 @@ const PostsRoute = React.memo(
     );
 
     const scrollableHeight = useMemo(() => {
-      // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
-      if (profileContainerHeight === defaultProfileContainerHeight) {
-        switch (mostRecentlyScrolledView) {
-          case 'Posts':
-            return paddingTopHeight;
-          case 'UserInformation':
-            return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-        }
-      }
-
-      // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
-      if (
-        profileContainerHeight > defaultProfileContainerHeight &&
-        paddingTopHeight <= containerHeight
-      ) {
-        switch (mostRecentlyScrolledView) {
-          case 'Posts':
-            return paddingTopHeight;
-          case 'UserInformation':
-            return containerHeight + profileContainerHeight - contentsHeight;
-        }
-      }
-
-      // paddingTopの値がContainerを超えている場合
-      if (paddingTopHeight > containerHeight) {
-        switch (mostRecentlyScrolledView) {
-          case 'Posts':
-            return (
-              profileContainerHeight +
-              stickyTabHeight +
-              (paddingTopHeight - containerHeight)
-            );
-          case 'UserInformation':
-            return (
-              containerHeight +
-              profileContainerHeight -
-              contentsHeight +
-              (paddingTopHeight - containerHeight)
-            );
-        }
+      switch (mostRecentlyScrolledView) {
+        case 'Posts':
+          return paddingTopHeight;
+        case 'UserInformation':
+          return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
       }
     }, [
-      mostRecentlyScrolledView,
       containerHeight,
-      profileContainerHeight,
-      defaultProfileContainerHeight,
-      paddingTopHeight,
       contentsHeight,
+      mostRecentlyScrolledView,
+      paddingTopHeight,
+      profileContainerHeight,
     ]);
+
+    // const scrollableHeight = useMemo(() => {
+    //   // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
+    //   if (profileContainerHeight === defaultProfileContainerHeight) {
+    //     switch (mostRecentlyScrolledView) {
+    //       case 'Posts':
+    //         return paddingTopHeight;
+    //       case 'UserInformation':
+    //         return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
+    //     }
+    //   }
+
+    //   // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
+    //   if (
+    //     profileContainerHeight > defaultProfileContainerHeight &&
+    //     paddingTopHeight <= containerHeight
+    //   ) {
+    //     switch (mostRecentlyScrolledView) {
+    //       case 'Posts':
+    //         return paddingTopHeight;
+    //       case 'UserInformation':
+    //         return containerHeight + profileContainerHeight - contentsHeight;
+    //     }
+    //   }
+
+    //   // paddingTopの値がContainerを超えている場合
+    //   if (paddingTopHeight > containerHeight) {
+    //     switch (mostRecentlyScrolledView) {
+    //       case 'Posts':
+    //         return (
+    //           profileContainerHeight +
+    //           stickyTabHeight +
+    //           (paddingTopHeight - containerHeight)
+    //         );
+    //       case 'UserInformation':
+    //         return (
+    //           containerHeight +
+    //           profileContainerHeight -
+    //           contentsHeight +
+    //           (paddingTopHeight - containerHeight)
+    //         );
+    //     }
+    //   }
+    // }, [
+    //   mostRecentlyScrolledView,
+    //   containerHeight,
+    //   profileContainerHeight,
+    //   paddingTopHeight,
+    //   contentsHeight,
+    // ]);
 
     return (
       <>
-        <View onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
+        <View
+          onLayout={(e) => {
+            setContentsHeight(e.nativeEvent.layout.height);
+          }}>
           <Posts posts={posts} />
           <View />
         </View>
@@ -110,7 +125,6 @@ const PostsRoute = React.memo(
 
 type UserInformationProps = {
   containerHeight: number;
-  defaultProfileContainerHeight: number;
   profileContainerHeight: number;
   mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
 };
@@ -118,7 +132,6 @@ type UserInformationProps = {
 const UserInformationRoute = React.memo(
   ({
     containerHeight,
-    defaultProfileContainerHeight,
     profileContainerHeight,
     mostRecentlyScrolledView,
   }: UserInformationProps) => {
@@ -128,64 +141,77 @@ const UserInformationRoute = React.memo(
       () => profileContainerHeight + stickyTabHeight,
       [profileContainerHeight],
     );
+
     const scrollableHeight = useMemo(() => {
-      // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
-      if (profileContainerHeight === defaultProfileContainerHeight) {
-        switch (mostRecentlyScrolledView) {
-          case 'UserInformation':
-            return paddingTopHeight;
-          case 'Posts':
-            return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-        }
-      }
-
-      // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
-      if (
-        profileContainerHeight > defaultProfileContainerHeight &&
-        paddingTopHeight <= containerHeight
-      ) {
-        switch (mostRecentlyScrolledView) {
-          case 'UserInformation':
-            return paddingTopHeight;
-          case 'Posts':
-            return containerHeight + profileContainerHeight - contentsHeight;
-        }
-      }
-
-      // paddingTopの値がContainerを超えている場合
-      if (paddingTopHeight > containerHeight) {
-        switch (mostRecentlyScrolledView) {
-          case 'UserInformation':
-            return (
-              profileContainerHeight +
-              stickyTabHeight +
-              (paddingTopHeight - containerHeight)
-            );
-          case 'Posts':
-            return (
-              containerHeight +
-              profileContainerHeight -
-              contentsHeight +
-              (paddingTopHeight - containerHeight)
-            );
-        }
+      switch (mostRecentlyScrolledView) {
+        case 'UserInformation':
+          return paddingTopHeight;
+        case 'Posts':
+          return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
       }
     }, [
-      mostRecentlyScrolledView,
       containerHeight,
-      profileContainerHeight,
-      defaultProfileContainerHeight,
-      paddingTopHeight,
       contentsHeight,
+      mostRecentlyScrolledView,
+      paddingTopHeight,
+      profileContainerHeight,
     ]);
+    // const scrollableHeight = useMemo(() => {
+    //   // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
+    //   if (profileContainerHeight === defaultProfileContainerHeight) {
+    //     switch (mostRecentlyScrolledView) {
+    //       case 'UserInformation':
+    //         return paddingTopHeight;
+    //       case 'Posts':
+    //         return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
+    //     }
+    //   }
+
+    //   // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
+    //   if (
+    //     profileContainerHeight > defaultProfileContainerHeight &&
+    //     paddingTopHeight <= containerHeight
+    //   ) {
+    //     switch (mostRecentlyScrolledView) {
+    //       case 'UserInformation':
+    //         return paddingTopHeight;
+    //       case 'Posts':
+    //         return containerHeight + profileContainerHeight - contentsHeight;
+    //     }
+    //   }
+
+    //   // paddingTopの値がContainerを超えている場合
+    //   if (paddingTopHeight > containerHeight) {
+    //     switch (mostRecentlyScrolledView) {
+    //       case 'UserInformation':
+    //         return (
+    //           profileContainerHeight +
+    //           stickyTabHeight +
+    //           (paddingTopHeight - containerHeight)
+    //         );
+    //       case 'Posts':
+    //         return (
+    //           containerHeight +
+    //           profileContainerHeight -
+    //           contentsHeight +
+    //           (paddingTopHeight - containerHeight)
+    //         );
+    //     }
+    //   }
+    // }, [
+    //   mostRecentlyScrolledView,
+    //   containerHeight,
+    //   profileContainerHeight,
+    //   paddingTopHeight,
+    //   contentsHeight,
+    // ]);
 
     return (
       <>
         <View
           style={{
             minHeight:
-              containerHeight -
-              (defaultProfileContainerHeight + stickyTabHeight),
+              containerHeight - (profileContainerHeight + stickyTabHeight),
             justifyContent: 'center',
           }}
           onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
@@ -261,7 +287,6 @@ const TabScene = React.memo(
 type Props = {
   userId: string;
   containerHeight: number;
-  defaultProfileContainerHeight: number;
   profileContainerHeight: number;
   posts: Post[];
   scrollY: Animated.Value;
@@ -274,7 +299,6 @@ export const UserTabView = React.memo(
     userId,
     containerHeight,
     profileContainerHeight,
-    defaultProfileContainerHeight,
     posts,
     scrollY,
     postsTabViewRef,
@@ -360,7 +384,6 @@ export const UserTabView = React.memo(
                 posts={posts}
                 containerHeight={containerHeight}
                 profileContainerHeight={profileContainerHeight}
-                defaultProfileContainerHeight={defaultProfileContainerHeight}
                 mostRecentlyScrolledView={mostRecentlyScrolledView}
               />
             </TabScene>
@@ -390,7 +413,6 @@ export const UserTabView = React.memo(
               <UserInformationRoute
                 containerHeight={containerHeight}
                 profileContainerHeight={profileContainerHeight}
-                defaultProfileContainerHeight={defaultProfileContainerHeight}
                 mostRecentlyScrolledView={mostRecentlyScrolledView}
               />
             </TabScene>
