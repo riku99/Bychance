@@ -129,7 +129,7 @@ export const selectChatPartner = (state: RootState, partnerId: string) => {
 
 export const selectChatPartnerAlreadyViewed = (
   state: RootState,
-  userId: number,
+  userId: string,
 ) => {
   const user = chatPartnersSelector.selectById(
     state.chatPartnersReducer,

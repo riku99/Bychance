@@ -10,7 +10,7 @@ import {normalStyles} from '../../../constants/styles/normal';
 
 type Props = {
   post: PostType;
-  user: number;
+  user: string;
   deletePost: (id: number) => void;
 };
 

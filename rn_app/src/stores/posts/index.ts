@@ -29,7 +29,7 @@ export type Post = {
   text: string;
   image: string;
   date: string;
-  userId: number;
+  userId: string;
 };
 
 const postsAdaper = createEntityAdapter<Post>({

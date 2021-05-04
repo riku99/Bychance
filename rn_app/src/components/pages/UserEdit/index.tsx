@@ -20,7 +20,7 @@ export const UserEditPage = () => {
       name: state.userReducer.user!.name,
       introduce: state.userReducer.user!.introduce,
       avatar: state.userReducer.user!.avatar,
-      message: state.userReducer.user!.message,
+      message: state.userReducer.user!.statusMessage,
     };
   }, shallowEqual);
 
