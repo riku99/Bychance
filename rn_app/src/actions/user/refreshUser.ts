@@ -18,7 +18,7 @@ export type RefreshUserThunkPaylaod =
 
 export const refreshUserThunk = createAsyncThunk<
   RefreshUserThunkPaylaod,
-  {userId: number},
+  {userId: string},
   {rejectValue: rejectPayload}
 >('users/refreshUser', async ({userId}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();

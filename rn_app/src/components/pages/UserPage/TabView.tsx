@@ -199,7 +199,7 @@ const UserInformationRoute = React.memo(
 
 type TabSceneProps = {
   children: Element;
-  userId: number;
+  userId: string;
   contentsPaddingTop: number;
   scrollY: Animated.Value;
   tabViewRef: React.RefObject<ScrollView>;
@@ -259,7 +259,7 @@ const TabScene = React.memo(
 );
 
 type Props = {
-  userId: number;
+  userId: string;
   containerHeight: number;
   defaultProfileContainerHeight: number;
   profileContainerHeight: number;

@@ -10,7 +10,7 @@ export const useMyId = () =>
 
 type AnotherUserProps = {
   from?: UserPageFrom;
-  userId?: number;
+  userId?: string;
 };
 
 export const useAnotherUser = ({from, userId}: AnotherUserProps) =>

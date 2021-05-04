@@ -55,13 +55,13 @@ export const selectNearbyUsersArray = (state: RootState) =>
 
 export const selectNearbyUser = (
   state: RootState,
-  userId: number,
+  userId: string,
 ): AnotherUser | undefined =>
   nearbyUsersSelector.selectById(state.nearbyUsersReducer, userId);
 
 export const selectNearbyUserAlreadyViewed = (
   state: RootState,
-  userId: number,
+  userId: string,
 ) => {
   const user = nearbyUsersSelector.selectById(state.nearbyUsersReducer, userId);
   if (user) {

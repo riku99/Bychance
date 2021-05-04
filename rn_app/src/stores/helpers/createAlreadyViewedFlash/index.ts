@@ -5,7 +5,7 @@ import {chatPartnersAdapter, ChatPartnersState} from '../../chatPartners';
 
 export const updateAlreadyViewed = (
   state: NearbyUsersState | ChatPartnersState,
-  action: PayloadAction<{userId: number; flashId: number}>,
+  action: PayloadAction<{userId: string; flashId: number}>,
   {slice}: {slice: 'nearbyUsers' | 'chatPartners'},
 ) => {
   const user = state.entities[action.payload.userId];

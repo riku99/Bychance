@@ -100,7 +100,7 @@ export const chatPartnersSlice = createSlice({
       action: PayloadAction<GetNearbyUsersPayload>,
     ) => {
       const result = action.payload;
-      const forUpdateArray: {id: number; changes: AnotherUser}[] = [];
+      const forUpdateArray: {id: string; changes: AnotherUser}[] = [];
       const ids = selectIds(state);
       ids.forEach((n) => {
         const target = result.find((data) => data.id === n);
@@ -123,7 +123,7 @@ export const selectChatPartnerEntities = (state: RootState) => {
   return chatPartnersSelector.selectEntities(state.chatPartnersReducer);
 };
 
-export const selectChatPartner = (state: RootState, partnerId: number) => {
+export const selectChatPartner = (state: RootState, partnerId: string) => {
   return chatPartnersSelector.selectById(state.chatPartnersReducer, partnerId);
 };
 

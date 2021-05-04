@@ -50,7 +50,7 @@ type Props = {
       }) => void;
 };
 
-export const SearchUsers = React.memo(
+export const NearbyUsersList = React.memo(
   ({
     otherUsers,
     range,
