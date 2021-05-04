@@ -58,7 +58,7 @@ export type UserPageFrom = 'nearbyUsers' | 'chatRoom';
 
 export type UserPageScreenGroupParamList = {
   UserPage: {
-    userId: number;
+    userId: string;
     from?: UserPageFrom;
   };
   Post: PostType;

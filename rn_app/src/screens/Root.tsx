@@ -13,7 +13,7 @@ import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
 import {ChatRoomStackParamList, ChatRoomStackScreen} from './ChatRoom';
-import {TakeFlashPage} from '../components/pages/TakeFlash';
+import {TakeFlashPage} from '~/components/pages/TakeFlash';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {normalStyles} from '~/constants/styles/normal';
 

@@ -83,12 +83,12 @@ export const SearchUsersPage = () => {
     }:
       | {
           isAllAlreadyViewed: true;
-          userId: number;
+          userId: string;
           flashesData: FlashesData;
         }
       | {
           isAllAlreadyViewed: false;
-          userId: number;
+          userId: string;
           flashesData: undefined;
         }) => {
       let navigationParams: FlashesStackParamList['Flashes'];

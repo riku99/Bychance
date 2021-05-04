@@ -17,7 +17,7 @@ export type FlashesStackParamList = {
         startingIndex: number;
         dataArray: {
           flashesData: FlashesData;
-          userData: {userId: number; from: UserPageFrom};
+          userData: {userId: string; from: UserPageFrom};
         }[];
       }
     | {
@@ -25,7 +25,7 @@ export type FlashesStackParamList = {
         startingIndex: 0;
         dataArray: {
           flashesData: undefined;
-          userData: {userId: number; from: undefined};
+          userData: {userId: string; from: undefined};
         }[];
       };
 } & UserPageScreenGroupParamList;

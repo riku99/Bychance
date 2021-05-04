@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {SearchUsersPage} from '../components/pages/NearbyUsers/Page';
+import {SearchUsersPage} from '../components/pages/NearbyUsers';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 import {normalStyles} from '~/constants/styles/normal';

@@ -40,12 +40,12 @@ type Props = {
   }:
     | {
         isAllAlreadyViewed: true;
-        userId: number;
+        userId: string;
         flashesData: FlashesData;
       }
     | {
         isAllAlreadyViewed: false;
-        userId: number;
+        userId: string;
         flashesData: undefined;
       }) => void;
 };
@@ -84,7 +84,7 @@ export const SearchUsers = React.memo(
           return (
             u.name.toLowerCase().includes(keyword.toLowerCase()) ||
             u.introduce.toLowerCase().includes(keyword.toLowerCase()) ||
-            u.message.toLowerCase().includes(keyword.toLowerCase())
+            u.statusMessage.toLowerCase().includes(keyword.toLowerCase())
           );
         });
         setFilteredUsers(matchedUsers);
@@ -158,7 +158,7 @@ export const SearchUsers = React.memo(
                     {u.flashes.entities.length &&
                     !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
                       <UserAvatarWithOuter
-                        image={u.image}
+                        image={u.avatar}
                         size="medium"
                         opacity={1}
                         outerType="gradation"
@@ -172,7 +172,7 @@ export const SearchUsers = React.memo(
                       />
                     ) : u.flashes.entities.length && u.flashes.alreadyViewed ? ( // アイテムは持っているが、全て閲覧されている場合
                       <UserAvatarWithOuter
-                        image={u.image}
+                        image={u.avatar}
                         size="medium"
                         opacity={1}
                         outerType="silver"
@@ -186,7 +186,7 @@ export const SearchUsers = React.memo(
                       />
                     ) : (
                       <UserAvatarWithOuter
-                        image={u.image}
+                        image={u.statusMessage}
                         size="medium"
                         opacity={1}
                         outerType="none"
@@ -195,7 +195,7 @@ export const SearchUsers = React.memo(
                     <ListItem.Content>
                       <ListItem.Title>{u.name}</ListItem.Title>
                       <ListItem.Subtitle style={styles.subtitle}>
-                        {u.message}
+                        {u.statusMessage}
                       </ListItem.Subtitle>
                     </ListItem.Content>
                   </ListItem>

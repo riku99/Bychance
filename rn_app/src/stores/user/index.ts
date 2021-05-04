@@ -34,7 +34,7 @@ export type UserState = {
     name: string;
     avatar: string | null;
     introduce: string;
-    message: string;
+    statusMessage: string;
     display: boolean;
     lat: number | null;
     lng: number | null;
@@ -130,7 +130,7 @@ const userSlice = createSlice({
         name: actions.payload.name,
         introduce: actions.payload.introduce,
         avatar: actions.payload.avatar,
-        message: actions.payload.message,
+        statusMessage: actions.payload.statusMessage,
       },
     }),
     [editUserDisplayThunk.fulfilled.type]: (

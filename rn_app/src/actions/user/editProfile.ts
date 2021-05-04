@@ -13,7 +13,7 @@ import {User} from '../../stores/user';
 
 export type EdiProfilePayload = Pick<
   User,
-  'id' | 'name' | 'introduce' | 'avatar' | 'message'
+  'id' | 'name' | 'introduce' | 'avatar' | 'statusMessage'
 >;
 
 export const editProfileThunk = createAsyncThunk<
@@ -39,7 +39,7 @@ export const editProfileThunk = createAsyncThunk<
     if (keychain) {
       try {
         const response = await axios.patch<
-          Pick<User, 'id' | 'name' | 'introduce' | 'avatar' | 'message'>
+          Pick<User, 'id' | 'name' | 'introduce' | 'avatar' | 'statusMessage'>
         >(
           `${origin}/users?id=${keychain.id}`,
           {
