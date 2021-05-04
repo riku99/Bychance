@@ -3,7 +3,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
-import {SearchUsers} from './SearchUsers';
+import {SearchUsers} from './nearbyUsersMain';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {AnotherUser} from '../../../stores/types';
 import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
