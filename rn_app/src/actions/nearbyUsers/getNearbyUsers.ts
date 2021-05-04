@@ -1,4 +1,4 @@
-import {NearbyUsers} from '../../../stores/nearbyUsers';
+import {NearbyUsers} from '../../stores/nearbyUsers';
 import {
   axios,
   createAsyncThunk,
@@ -9,7 +9,7 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../re-modules';
+} from '../re-modules';
 
 export type GetNearbyUsersPayload = NearbyUsers;
 
@@ -22,15 +22,12 @@ export const getNearbyUsersThunk = createAsyncThunk<
 >(
   'others/getNearbyUsersThunk',
   async ({lat, lng, range}, {dispatch, rejectWithValue}) => {
-    const keychain = await checkKeychain();
-    if (keychain) {
+    const credentials = await checkKeychain();
+    if (credentials) {
       try {
         const response = await axios.get<GetNearbyUsersPayload>(
-          `${origin}/users`,
-          {
-            params: {id: keychain.id, lat, lng, range},
-            ...headers(keychain.token),
-          },
+          `${origin}/nearbyUsers?id=${credentials.id}&lat=${lat}&lng=${lng}&range=${range}`,
+          headers(credentials.token),
         );
 
         return response.data;
