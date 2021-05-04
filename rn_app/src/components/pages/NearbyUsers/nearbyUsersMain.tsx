@@ -21,10 +21,10 @@ import {ListItem} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 
-import {UserAvatarWithOuter} from '../../utils/Avatar';
 import {AnotherUser} from '../../../stores/types';
 import {FlashesData} from '~/components/pages/Flashes/types';
 import {normalStyles} from '~/constants/styles/normal';
+import {Avatar} from './Avatar';
 
 type Props = {
   otherUsers: AnotherUser[];
@@ -155,7 +155,8 @@ export const SearchUsers = React.memo(
                     onPress={() => {
                       onListItemPress(u);
                     }}>
-                    {u.flashes.entities.length &&
+                    <Avatar user={u} />
+                    {/* {u.flashes.entities.length &&
                     !u.flashes.isAllAlreadyViewed ? ( // 閲覧していないアイテムが残っている場合
                       <UserAvatarWithOuter
                         image={u.avatar}
@@ -191,7 +192,7 @@ export const SearchUsers = React.memo(
                         opacity={1}
                         outerType="none"
                       />
-                    )}
+                    )} */}
                     <ListItem.Content>
                       <ListItem.Title>{u.name}</ListItem.Title>
                       <ListItem.Subtitle style={styles.subtitle}>
