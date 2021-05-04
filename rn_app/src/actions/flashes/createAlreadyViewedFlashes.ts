@@ -8,7 +8,7 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../re-modules';
+} from '../re-modules';
 
 export type CreateAlreadyViewdFlashThunkPayload = {
   userId: number;
@@ -29,8 +29,8 @@ export const createAlreadyViewdFlashThunk = createAsyncThunk<
     if (credentials) {
       try {
         await axios.post(
-          `${origin}/user_flash_viewing`,
-          {id: credentials.id, flashId},
+          `${origin}/viewedFlashes?id=${credentials.id}`,
+          {flashId},
           headers(credentials.token),
         );
 

@@ -23,7 +23,7 @@ import {FlashesData} from './types';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
-import {createAlreadyViewdFlashThunk} from '../../../actions/flashes/createAlreadyViewedFlash';
+import {createAlreadyViewdFlashThunk} from '../../../actions/flashes/createAlreadyViewedFlashes';
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';

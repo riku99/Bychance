@@ -35,7 +35,7 @@ import {
 import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
-} from '../../actions/flashes/createAlreadyViewedFlash';
+} from '../../actions/flashes/createAlreadyViewedFlashes';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
