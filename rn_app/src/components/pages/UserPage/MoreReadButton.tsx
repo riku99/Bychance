@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 
 type Props = {
-  onPress?: () => {};
+  onPress?: () => void;
 };
 
 export const MoreReadBottun = ({onPress}: Props) => {

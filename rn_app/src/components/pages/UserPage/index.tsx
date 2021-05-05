@@ -22,6 +22,7 @@ import {EditButton} from './EditButton';
 import {TakeFlashButton} from './TakeFlashButton';
 import {SendMessageButton} from './SendMessageButton';
 import {MoreReadBottun} from './MoreReadButton';
+import {IntroduceModal} from './IntoduceModal';
 import {
   MyPageStackParamList,
   UserPageScreenGroupParamList,
@@ -180,6 +181,7 @@ export const UserPage = ({route, navigation}: Props) => {
   }, [anotherUser?.id, dispatch, isMe]);
 
   const [introduceHeight, setIntroduceHeight] = useState(0);
+  const [introduceModal, setIntroduceModal] = useState(false);
   const [moreReadButton, setMoreReadButton] = useState(false);
   useEffect(() => {
     if (introduceHeight) {
@@ -215,11 +217,9 @@ export const UserPage = ({route, navigation}: Props) => {
             style={{
               position: 'absolute',
               top: '35%',
-              //backgroundColor: 'red',
               width: '100%',
               paddingHorizontal: 25,
               transform: [{translateY: y}],
-              //backgroundColor: 'red',
               height: '18%',
             }}>
             <Text style={{lineHeight: oneIntroduceTextLineHeght}}>
@@ -268,15 +268,25 @@ export const UserPage = ({route, navigation}: Props) => {
               )}
             </View>
           </Animated.View>
+
           {moreReadButton && (
             <Animated.View
               style={[
                 styles.moreReadButtonContainer,
                 {transform: [{translateY: y}]},
               ]}>
-              <MoreReadBottun />
+              <MoreReadBottun onPress={() => setIntroduceModal(true)} />
             </Animated.View>
           )}
+
+          {introduceModal && (
+            <IntroduceModal
+              show={introduceModal}
+              introduce={user.introduce}
+              onClose={() => setIntroduceModal(false)}
+            />
+          )}
+
           {isMe && (
             <View style={styles.takeFlashContainer}>
               <TakeFlashButton />
