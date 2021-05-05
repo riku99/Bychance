@@ -8,8 +8,8 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../re-modules';
-import {AnotherUser} from '../../../stores/types';
+} from '../re-modules';
+import {AnotherUser} from '../../stores/types';
 
 export type CreateRoomThunkPayload = {
   presence: boolean;
@@ -32,8 +32,8 @@ export const createRoomThunk = createAsyncThunk<
         roomId: number;
         timestamp: string;
       }>(
-        `${origin}/rooms`,
-        {accessId: credentials.id, partnerId: partner.id},
+        `${origin}/talkRooms?id=${credentials.id}`,
+        {partnerId: partner.id},
         headers(credentials.token),
       );
 

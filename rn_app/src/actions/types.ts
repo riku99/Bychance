@@ -1,7 +1,7 @@
 import {AxiosError} from 'axios';
 import {User} from '../stores/user';
 import {Post} from '../stores/posts';
-import {Room} from '../stores/rooms';
+import {TalkRoom} from '../stores/talkRooms';
 import {Message} from '../stores/messages';
 import {Flash} from '../stores/flashes';
 import {AnotherUser} from '../stores/types';
@@ -18,7 +18,7 @@ export type basicAxiosError = AxiosError<
 export type SuccessfullLoginData = {
   user: User;
   posts: Post[];
-  rooms: Room[];
+  rooms: TalkRoom[];
   chatPartners: AnotherUser[];
   messages: Message[];
   flashes: Flash[];

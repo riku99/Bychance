@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {RootState} from '../stores/index';
-import {getAllUnreadMessagesNumber} from '../stores/rooms';
+import {getAllUnreadMessagesNumber} from '../stores/talkRooms';
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
 import {SearchUsersStackScreen} from './SearchUsers';

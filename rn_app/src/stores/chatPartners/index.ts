@@ -31,7 +31,7 @@ import {logoutAction} from '../../actions/session/logout';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
-} from '../../actions/rooms/createRoom';
+} from '../../actions/rooms/createTalkRoom';
 import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,

@@ -10,7 +10,7 @@ import {
 
 type Props = {
   messages: IMessage[];
-  userId: number;
+  userId: string;
   onSend: (text: string) => void;
 };
 

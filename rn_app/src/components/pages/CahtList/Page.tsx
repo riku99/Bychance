@@ -5,7 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ChatList} from './ChatList';
 import {RootState} from '../../../stores/index';
-import {Room, selectAllRooms} from '../../../stores/rooms';
+import {Room, selectAllRooms} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {selectChatPartnerEntities} from '../../../stores/chatPartners';
 import {RootStackParamList} from '../../../screens/Root';

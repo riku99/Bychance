@@ -5,7 +5,7 @@ import {ChatRoomPage} from '../components/pages/ChatRoom/Page';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 
 export type ChatRoomStackParamList = {
-  ChatRoom: {roomId: number; partnerId: number};
+  ChatRoom: {roomId: number; partnerId: string};
 } & UserPageScreenGroupParamList;
 
 const Stack = createStackNavigator<ChatRoomStackParamList>();

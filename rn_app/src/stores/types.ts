@@ -1,6 +1,6 @@
 import {User} from './user';
 import {Post} from './posts';
-import {Room} from './rooms';
+import {TalkRoom} from './talkRooms';
 import {Message} from './messages';
 import {FlashesData} from '../components/pages/Flashes/types';
 
@@ -10,7 +10,7 @@ export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
 };
 
 export type ReceivedMessageData = {
-  room: Room;
+  room: TalkRoom;
   sender: AnotherUser;
   message: Message;
 };

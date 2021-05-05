@@ -7,7 +7,7 @@ import {ChatRoom} from './ChatRoom';
 import {ChatRoomStackNavigationProp} from '../../../screens/types';
 import {AppDispatch, RootState} from '../../../stores/index';
 import {selectMessages} from '../../../stores/messages';
-import {resetUnreadNumber, selectRoom} from '../../../stores/rooms';
+import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
 import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {createMessageThunk} from '../../../actions/messages/createMessage';
@@ -64,7 +64,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
             _id: m.userId,
             avatar: () => (
               <UserAvatar
-                image={partner?.image}
+                image={partner?.avatar}
                 size={'small'}
                 opacity={0}
                 onPress={onAvatarPress}
@@ -106,7 +106,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
               _id: receivedMessage.userId,
               avatar: () => (
                 <UserAvatar
-                  image={partner?.image}
+                  image={partner?.avatar}
                   size={'small'}
                   opacity={0}
                   onPress={onAvatarPress}
@@ -132,7 +132,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
   }, [
     receivedMessage,
     room.id,
-    partner?.image,
+    partner?.avatar,
     onAvatarPress,
     room.messages,
     dispatch,

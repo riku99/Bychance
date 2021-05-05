@@ -21,20 +21,20 @@ import {
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
-} from '../../actions/rooms/createRoom';
+} from '../../actions/rooms/createTalkRoom';
 import {logoutAction} from '../../actions/session/logout';
 import {Message, receiveMessage} from '../messages';
 
-export type Room = {
+export type TalkRoom = {
   id: number;
-  partner: number;
+  partner: string;
   timestamp: string;
   messages: number[];
   unreadNumber: number;
   latestMessage: string | null;
 };
 
-const roomsAdapter = createEntityAdapter<Room>({
+const talkRoomsAdapter = createEntityAdapter<TalkRoom>({
   selectId: (room) => room.id,
   sortComparer: (a, b) =>
     new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1, // 更新日時を基準に降順
@@ -42,10 +42,10 @@ const roomsAdapter = createEntityAdapter<Room>({
 
 export const RoomsSlice = createSlice({
   name: 'rooms',
-  initialState: roomsAdapter.getInitialState(),
+  initialState: talkRoomsAdapter.getInitialState(),
   reducers: {
     resetUnreadNumber: (state, actions: PayloadAction<{roomId: number}>) => {
-      roomsAdapter.updateOne(state, {
+      talkRoomsAdapter.updateOne(state, {
         id: actions.payload.roomId,
         changes: {
           unreadNumber: 0,
@@ -55,22 +55,22 @@ export const RoomsSlice = createSlice({
   },
   extraReducers: {
     [sampleLogin.fulfilled.type]: (state, action) => {
-      roomsAdapter.addMany(state, action.payload.rooms);
+      talkRoomsAdapter.addMany(state, action.payload.rooms);
     },
     [logoutAction.type]: () => {
-      return roomsAdapter.getInitialState();
+      return talkRoomsAdapter.getInitialState();
     },
     [lineLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<LineLoginThunkPayload>,
     ) => {
-      roomsAdapter.addMany(state, action.payload.rooms);
+      talkRoomsAdapter.addMany(state, action.payload.rooms);
     },
     [sessionLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
-      roomsAdapter.addMany(state, action.payload.rooms);
+      talkRoomsAdapter.addMany(state, action.payload.rooms);
     },
     [createRoomThunk.fulfilled.type]: (
       state,
@@ -81,7 +81,7 @@ export const RoomsSlice = createSlice({
       // なかったら新しくaddする。messageとunreadNumberとlatestMessageはなしで。
       if (!action.payload.presence) {
         const data = action.payload;
-        roomsAdapter.addOne(state, {
+        talkRoomsAdapter.addOne(state, {
           id: data.roomId,
           partner: data.partner.id,
           timestamp: data.timestamp,
@@ -97,7 +97,7 @@ export const RoomsSlice = createSlice({
     ) => {
       const relatedRoom = state.entities[action.payload.roomId];
       if (relatedRoom) {
-        roomsAdapter.updateOne(state, {
+        talkRoomsAdapter.updateOne(state, {
           id: action.payload.roomId,
           changes: {
             messages: [action.payload.message.id, ...relatedRoom.messages],
@@ -109,16 +109,16 @@ export const RoomsSlice = createSlice({
     },
     [receiveMessage.type]: (
       state,
-      action: PayloadAction<{room: Room; message: Message}>,
+      action: PayloadAction<{room: TalkRoom; message: Message}>,
     ) => {
-      roomsAdapter.upsertOne(state, action.payload.room);
+      talkRoomsAdapter.upsertOne(state, action.payload.room);
     },
   },
 });
 
 export const {resetUnreadNumber} = RoomsSlice.actions;
 
-export const roomSelectors = roomsAdapter.getSelectors();
+export const roomSelectors = talkRoomsAdapter.getSelectors();
 
 export const selectRoom = (state: RootState, roomId: number) => {
   return roomSelectors.selectById(state.roomsReducer, roomId);

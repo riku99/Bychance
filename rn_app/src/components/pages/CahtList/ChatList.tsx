@@ -2,15 +2,21 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {ListItem, Badge} from 'react-native-elements';
 
-import {Room} from '../../../stores/rooms';
+import {TalkRoom} from '../../../stores/talkRooms';
 import {UserAvatar} from '../../utils/Avatar';
 import {ReturnTypeOfSelectChatPartnerEntities} from '../../../stores/chatPartners';
 import {normalStyles} from '~/constants/styles/normal';
 
 type Props = {
-  rooms: Room[];
+  rooms: TalkRoom[];
   chatPartnerEntites: ReturnTypeOfSelectChatPartnerEntities;
-  pushChatRoom: ({room, partnerId}: {room: Room; partnerId: number}) => void;
+  pushChatRoom: ({
+    room,
+    partnerId,
+  }: {
+    room: TalkRoom;
+    partnerId: string;
+  }) => void;
 };
 
 export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {

@@ -15,7 +15,7 @@ export type CreateMessageThunkPayload = {message: Message; roomId: number};
 
 export const createMessageThunk = createAsyncThunk<
   CreateMessageThunkPayload,
-  {roomId: number; userId: number; text: string},
+  {roomId: number; userId: string; text: string},
   {
     rejectValue: rejectPayload;
   }
