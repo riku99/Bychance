@@ -6,16 +6,18 @@ import {
 } from '../re-modules';
 import * as Keychain from 'react-native-keychain';
 
-export type SampleLoginThunkPayload = SuccessfullLoginData & {token: string};
+export type SampleLoginThunkPayload = SuccessfullLoginData & {
+  accessToken: string;
+};
 
 export const sampleLogin = createAsyncThunk('sample/login', async () => {
-  const response = await axios.post<SampleLoginThunkPayload>(
-    `${origin}/sample_login`,
+  const response = await axios.get<SampleLoginThunkPayload>(
+    `${origin}/sampleLogin`,
   );
   await Keychain.resetGenericPassword();
   await Keychain.setGenericPassword(
-    String(response.data.user.id),
-    response.data.token,
+    response.data.user.id,
+    response.data.accessToken,
   );
   return response.data;
 });

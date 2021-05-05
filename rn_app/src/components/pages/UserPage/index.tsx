@@ -36,6 +36,7 @@ import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../actions/user/refreshUser';
+import {X_HEIGHT} from '~/constants/device';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -185,7 +186,6 @@ export const UserPage = ({route, navigation}: Props) => {
   const [moreReadButton, setMoreReadButton] = useState(false);
   useEffect(() => {
     if (introduceHeight) {
-      // lineNumber * 行の高さ > introduceHeight の場合もっと読むを表示
       if (lineNumber * oneIntroduceTextLineHeght > introduceHeight) {
         setMoreReadButton(true);
       } else {
@@ -216,7 +216,7 @@ export const UserPage = ({route, navigation}: Props) => {
             onLayout={(e) => setIntroduceHeight(e.nativeEvent.layout.height)}
             style={{
               position: 'absolute',
-              top: '35%',
+              top: height > X_HEIGHT ? '35%' : '40%',
               width: '100%',
               paddingHorizontal: 25,
               transform: [{translateY: y}],
@@ -236,6 +236,7 @@ export const UserPage = ({route, navigation}: Props) => {
             postsTabViewRef={postsTabViewRef}
             userInformationTabViewRef={userInformationTabViewRef}
           />
+
           <Animated.View
             style={[
               styles.animatedElement,
@@ -254,7 +255,7 @@ export const UserPage = ({route, navigation}: Props) => {
                 outerType={avatarOuterType}
                 flashesNavigationParam={flashesNavigationParam}
               />
-              <View style={{marginTop: 15}}>
+              <View style={{marginTop: height > X_HEIGHT ? '25%' : '20%'}}>
                 <Text style={{fontWeight: 'bold', fontSize: 16}}>
                   {user.name}
                 </Text>
