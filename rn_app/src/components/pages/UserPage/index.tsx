@@ -16,18 +16,12 @@ import {
 import {RouteProp} from '@react-navigation/native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 
-import {
-  Profile,
-  userAvatarTop,
-  userAvatarHeight,
-  introduceMaxAndMinHight,
-} from './Profile';
 import {UserTabView} from './TabView';
 import {Avatar} from './Avatar';
 import {EditButton} from './EditButton';
-import {ExpandButton} from './ExpandButton';
 import {TakeFlashButton} from './TakeFlashButton';
 import {SendMessageButton} from './SendMessageButton';
+import {MoreReadBottun} from './MoreReadButton';
 import {
   MyPageStackParamList,
   UserPageScreenGroupParamList,
@@ -41,7 +35,6 @@ import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../actions/user/refreshUser';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -121,25 +114,7 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, [anotherUser?.flashes, myFlashes, me]);
 
-  const isNeedOuter = useMemo(() => {
-    if (me) {
-      return !!myFlashes && !!myFlashes.length;
-    } else {
-      return !!anotherUser && !!anotherUser.flashes.entities.length;
-    }
-  }, [me, myFlashes, anotherUser]);
-
   const [containerHeight, setContainerHeight] = useState(0);
-  //const [profileContainerHeight, setProfileContainerHeight] = useState(0);
-  // const [
-  //   userAvatarAndNameContainerHeight,
-  //   setUserAvatarAndNameContainerHeight,
-  // ] = useState(0);
-  // const [
-  //   defaultProfileContainerHeight,
-  //   setDefaultProfileContainerHeight,
-  // ] = useState(0);
-  const getDefaultContainerHeight = useRef(false);
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -149,24 +124,9 @@ export const UserPage = ({route, navigation}: Props) => {
     extrapolateRight: 'clamp',
   });
 
-  // useEffect(() => {
-  //   if (!getDefaultContainerHeight.current && profileContainerHeight !== 0) {
-  //     setDefaultProfileContainerHeight(profileContainerHeight);
-  //     getDefaultContainerHeight.current = true;
-  //   }
-  // }, [profileContainerHeight]);
-
   // 2つの子コンポーネントで必要なrefなのでこのコンポーネントから渡す
   const postsTabViewRef = useRef<ScrollView>(null);
   const userInformationTabViewRef = useRef<ScrollView>(null);
-
-  const editContainerTop = useMemo(() => {
-    if (isNeedOuter) {
-      return 24;
-    } else {
-      return 29;
-    }
-  }, [isNeedOuter]);
 
   const lineNumber = useMemo(
     () =>
@@ -175,19 +135,6 @@ export const UserPage = ({route, navigation}: Props) => {
         : 0,
     [user?.introduce],
   );
-
-  const showExpandButton = useMemo(() => {
-    if (lineNumber * oneIntroduceTextLineHeght > introduceMaxAndMinHight) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [lineNumber]);
-
-  const [expandedIntroduceContainer, setExpandedIntroduceContainer] = useState(
-    false,
-  );
-  const [avatarToIntroduceHeight, setAvatarToIntroduceHeight] = useState(0);
 
   useLayoutEffect(() => {
     if (route.name === 'UserPage') {
@@ -238,16 +185,12 @@ export const UserPage = ({route, navigation}: Props) => {
     if (introduceHeight) {
       // lineNumber * 行の高さ > introduceHeight の場合もっと読むを表示
       if (lineNumber * oneIntroduceTextLineHeght > introduceHeight) {
-        console.log('もっと読む');
         setMoreReadButton(true);
       } else {
         setMoreReadButton(false);
       }
     }
   }, [introduceHeight, lineNumber]);
-
-  console.log(lineNumber * oneIntroduceTextLineHeght);
-  console.log(introduceHeight);
 
   return (
     <>
@@ -266,25 +209,6 @@ export const UserPage = ({route, navigation}: Props) => {
               transform: [{translateY: y}],
             }}
           />
-          {/* <Animated.View
-            style={[styles.profileContaienr, {transform: [{translateY: y}]}]}
-            onLayout={(e) =>
-              setProfileContainerHeight(e.nativeEvent.layout.height)
-            }>
-            <Profile
-              user={{
-                name: user.name,
-                introduce: user.introduce,
-                avatar: user.avatar,
-              }}
-              avatarOuterType={avatarOuterType}
-              setUserAvatarAndNameContainerHeight={
-                setUserAvatarAndNameContainerHeight
-              }
-              expandedIntroduceContainer={expandedIntroduceContainer}
-              setAvatarToIntroduceHeight={setAvatarToIntroduceHeight}
-            />
-          </Animated.View> */}
 
           <Animated.View
             onLayout={(e) => setIntroduceHeight(e.nativeEvent.layout.height)}
@@ -316,13 +240,9 @@ export const UserPage = ({route, navigation}: Props) => {
             style={[
               styles.animatedElement,
               {
-                top: '15%', //userAvatarTop,
-                //left: 20,
-                //height: userAvatarHeight,
+                top: '15%',
                 transform: [{translateY: y}],
-                //backgroundColor: 'red',
                 flexDirection: 'row',
-                //backgroundColor: 'red',
                 justifyContent: 'space-between',
                 alignItems: 'flex-end',
                 width: '95%',
@@ -350,34 +270,13 @@ export const UserPage = ({route, navigation}: Props) => {
           </Animated.View>
           {moreReadButton && (
             <Animated.View
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '2%',
-                transform: [{translateY: y}],
-              }}>
-              <TouchableOpacity onPress={() => console.log('press')}>
-                <Text style={{color: 'gray'}}>もっと読む</Text>
-              </TouchableOpacity>
+              style={[
+                styles.moreReadButtonContainer,
+                {transform: [{translateY: y}]},
+              ]}>
+              <MoreReadBottun />
             </Animated.View>
           )}
-          {/* {showExpandButton ? (
-            <Animated.View
-              style={[
-                styles.animatedElement,
-                {
-                  top: avatarToIntroduceHeight,
-                  transform: [{translateY: y}],
-                },
-              ]}>
-              <ExpandButton
-                expandedIntroduceContainer={expandedIntroduceContainer}
-                setExpandedIntroduceContainer={setExpandedIntroduceContainer}
-                postsTabViewRef={postsTabViewRef}
-                userInformationTabViewRef={userInformationTabViewRef}
-              />
-            </Animated.View>
-          ) : undefined} */}
           {isMe && (
             <View style={styles.takeFlashContainer}>
               <TakeFlashButton />
@@ -416,5 +315,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: '3%',
     right: '7%',
+  },
+  moreReadButtonContainer: {
+    position: 'absolute',
+    top: '50%',
+    right: '2%',
   },
 });
