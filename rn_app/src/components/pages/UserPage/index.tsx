@@ -147,7 +147,7 @@ export const UserPage = ({route, navigation}: Props) => {
   }, [navigation, user, route.name]);
 
   const flashesNavigationParam = useMemo(() => {
-    if (me && isMe && myFlashes) {
+    if (me && isMe && myFlashes?.length) {
       return {
         isMyData: true as const,
         startingIndex: 0 as const,
