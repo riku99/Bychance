@@ -20,7 +20,6 @@ import {
   Profile,
   userAvatarTop,
   userAvatarHeight,
-  oneIntroduceTextLineHeght,
   introduceMaxAndMinHight,
 } from './Profile';
 import {UserTabView} from './TabView';
@@ -42,6 +41,7 @@ import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../actions/user/refreshUser';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -232,6 +232,23 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, [anotherUser?.id, dispatch, isMe]);
 
+  const [introduceHeight, setIntroduceHeight] = useState(0);
+  const [moreReadButton, setMoreReadButton] = useState(false);
+  useEffect(() => {
+    if (introduceHeight) {
+      // lineNumber * 行の高さ > introduceHeight の場合もっと読むを表示
+      if (lineNumber * oneIntroduceTextLineHeght > introduceHeight) {
+        console.log('もっと読む');
+        setMoreReadButton(true);
+      } else {
+        setMoreReadButton(false);
+      }
+    }
+  }, [introduceHeight, lineNumber]);
+
+  console.log(lineNumber * oneIntroduceTextLineHeght);
+  console.log(introduceHeight);
+
   return (
     <>
       {user ? (
@@ -270,6 +287,7 @@ export const UserPage = ({route, navigation}: Props) => {
           </Animated.View> */}
 
           <Animated.View
+            onLayout={(e) => setIntroduceHeight(e.nativeEvent.layout.height)}
             style={{
               position: 'absolute',
               top: '35%',
@@ -278,6 +296,7 @@ export const UserPage = ({route, navigation}: Props) => {
               paddingHorizontal: 25,
               transform: [{translateY: y}],
               //backgroundColor: 'red',
+              height: '18%',
             }}>
             <Text style={{lineHeight: oneIntroduceTextLineHeght}}>
               {user.introduce}
@@ -329,7 +348,20 @@ export const UserPage = ({route, navigation}: Props) => {
               )}
             </View>
           </Animated.View>
-          {showExpandButton ? (
+          {moreReadButton && (
+            <Animated.View
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '2%',
+                transform: [{translateY: y}],
+              }}>
+              <TouchableOpacity onPress={() => console.log('press')}>
+                <Text style={{color: 'gray'}}>もっと読む</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          )}
+          {/* {showExpandButton ? (
             <Animated.View
               style={[
                 styles.animatedElement,
@@ -345,7 +377,7 @@ export const UserPage = ({route, navigation}: Props) => {
                 userInformationTabViewRef={userInformationTabViewRef}
               />
             </Animated.View>
-          ) : undefined}
+          ) : undefined} */}
           {isMe && (
             <View style={styles.takeFlashContainer}>
               <TakeFlashButton />
@@ -364,6 +396,8 @@ export const UserPage = ({route, navigation}: Props) => {
 const {height} = Dimensions.get('screen');
 
 const profileContainerHeight = height / 2.3;
+
+export const oneIntroduceTextLineHeght = 19.7;
 
 const styles = StyleSheet.create({
   container: {
