@@ -1,33 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
 
-import {AppDispatch, RootState} from '../stores/index';
+import {RootState} from '../stores/index';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './pages/Auth/Page';
 import {Container as Menu} from './utils/Menu';
 import {updateLocationThunk} from '../actions/user/updateLocation';
 import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
-import {checkKeychain} from '../helpers/credentials/checkKeychain';
-import {sessionLoginThunk} from '../actions/session/sessionLogin';
 import {useSokcetio} from '~/hooks/socketio/connectionSocket';
 import {useRecieveTalkRoomMessage} from '~/hooks/talkRoomMessages/recieveTalkRoomMessage';
+import {useUserSelect} from '~/hooks/users/selector';
+import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useLoginSelect} from '~/hooks/sessions/selector';
+import {useSessionLoginProcess} from '~/hooks/sessions/login';
 
 const Root = () => {
   const [load, setLoad] = useState(true);
 
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useCustomDispatch();
 
-  const login = useSelector((state: RootState) => {
-    return state.sessionReducer.login;
-  });
+  const login = useLoginSelect();
 
-  const id = useSelector((state: RootState) => {
-    if (state.userReducer.user) {
-      return state.userReducer.user.id;
-    }
-  });
+  const id = useUserSelect()?.id;
 
   const displayedMenu = useSelector((state: RootState) => {
     return state.otherSettingsReducer.displayedMenu;
@@ -36,18 +32,7 @@ const Root = () => {
   const socket = useSokcetio({id});
   useRecieveTalkRoomMessage({socket});
 
-  useEffect(() => {
-    const loginProcess = async () => {
-      const credentials = await checkKeychain();
-      if (credentials) {
-        await dispatch(sessionLoginThunk(credentials));
-        setLoad(false);
-      } else {
-        setLoad(false);
-      }
-    };
-    loginProcess();
-  }, [dispatch]);
+  useSessionLoginProcess({endSessionLogin: () => setLoad(false)});
 
   useEffect(() => {
     if (login) {
