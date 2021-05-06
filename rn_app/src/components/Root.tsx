@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
 import {useSelector} from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
@@ -32,7 +32,8 @@ const Root = () => {
   const socket = useSokcetio({id});
   useRecieveTalkRoomMessage({socket});
 
-  useSessionLoginProcess({endSessionLogin: () => setLoad(false)});
+  const onEndSessionLogin = useCallback(() => setLoad(false), []);
+  useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
 
   useEffect(() => {
     if (login) {
