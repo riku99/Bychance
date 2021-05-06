@@ -120,7 +120,6 @@ export type ReturnTypeOfSelectChatPartnerEntities = ReturnType<
   typeof selectChatPartnerEntities
 >;
 export const selectChatPartnerEntities = (state: RootState) => {
-  console.log(state.chatPartnersReducer);
   return chatPartnersSelector.selectEntities(state.chatPartnersReducer);
 };
 

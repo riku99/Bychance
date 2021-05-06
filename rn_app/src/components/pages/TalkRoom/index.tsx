@@ -175,7 +175,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
         const result = await dispatch(
           createMessageThunk({
             roomId: room.id,
-            userId: myId,
+            partnerId: route.params.partnerId,
             text,
           }),
         );
@@ -196,7 +196,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
         }
       }
     },
-    [room, dispatch, myId, messages],
+    [room, dispatch, route.params.partnerId, messages],
   );
 
   return <ChatRoom messages={messages} userId={myId} onSend={onSend} />;

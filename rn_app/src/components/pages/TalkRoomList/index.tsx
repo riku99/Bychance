@@ -23,8 +23,6 @@ export const TalkRoomListPage = () => {
     return selectChatPartnerEntities(state);
   });
 
-  console.log(chatPartnerEntities);
-
   const navigationToChatRoom = useNavigation<RootNavigationProp>();
 
   const pushChatRoom = ({

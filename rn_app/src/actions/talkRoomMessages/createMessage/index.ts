@@ -15,13 +15,13 @@ export type CreateMessageThunkPayload = {message: Message; roomId: number};
 
 export const createMessageThunk = createAsyncThunk<
   CreateMessageThunkPayload,
-  {roomId: number; userId: string; text: string},
+  {roomId: number; partnerId: string; text: string},
   {
     rejectValue: rejectPayload;
   }
 >(
   'messages/createMessage',
-  async ({roomId, userId, text}, {dispatch, rejectWithValue}) => {
+  async ({roomId, partnerId, text}, {dispatch, rejectWithValue}) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
@@ -31,6 +31,7 @@ export const createMessageThunk = createAsyncThunk<
           {
             talkRoomId: roomId,
             text,
+            partnerId,
           },
           headers(credentials.token),
         );

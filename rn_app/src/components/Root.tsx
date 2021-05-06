@@ -27,12 +27,6 @@ import {origin} from '~/constants/origin';
 // // @ts-ignore
 // global.removeEventListener = () => {};
 
-const socket = io('http://localhost:4001');
-
-socket.on('connect', () => {
-  console.log('connect!');
-});
-
 const Root = () => {
   const [load, setLoad] = useState(true);
 
@@ -53,6 +47,32 @@ const Root = () => {
   });
 
   useEffect(() => {
+    if (id) {
+      const socket = io('http://localhost:4001', {query: {id}});
+      socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
+        console.log('レシーブ');
+        dispatch(receiveMessage(data));
+        showMessage({
+          message: data.sender.name,
+          description: data.message.text,
+          style: {backgroundColor: '#00163b'},
+          titleStyle: {color: 'white', marginLeft: 10},
+          textStyle: {color: 'white', marginLeft: 10},
+          icon: 'default',
+          renderFlashMessageIcon: () => {
+            return (
+              <View style={{marginRight: 5}}>
+                <UserAvatar size={40} image={data.sender.avatar} />
+              </View>
+            );
+          },
+          duration: 2500,
+        });
+      });
+    }
+  }, [id, dispatch]);
+
+  useEffect(() => {
     const loginProcess = async () => {
       const credentials = await checkKeychain();
       if (credentials) {
@@ -65,8 +85,11 @@ const Root = () => {
     loginProcess();
   }, [dispatch]);
 
-  // wsでメッセージを受け取ったときに関する処理
-  // useEffect(() => {
+  // wsでメッセージを受け取った時の処理。あとでカスタムフックでまとめる
+  useEffect(() => {});
+
+  //wsでメッセージを受け取ったときに関する処理
+  //useEffect(() => {
   //   if (login) {
   //     consumer.subscriptions.create(
   //       {channel: 'MessagesChannel', id: id},
