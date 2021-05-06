@@ -84,42 +84,6 @@ const Root = () => {
     loginProcess();
   }, [dispatch]);
 
-  // wsでメッセージを受け取った時の処理。あとでカスタムフックでまとめる
-  useEffect(() => {});
-
-  //wsでメッセージを受け取ったときに関する処理
-  //useEffect(() => {
-  //   if (login) {
-  //     consumer.subscriptions.create(
-  //       {channel: 'MessagesChannel', id: id},
-  //       {
-  //         connected: () => {},
-  //         received: (data: ReceivedMessageData) => {
-  //           dispatch(receiveMessage(data));
-  //           showMessage({
-  //             message: data.sender.name,
-  //             description: data.message.text,
-  //             style: {backgroundColor: '#00163b'},
-  //             titleStyle: {color: 'white', marginLeft: 10},
-  //             textStyle: {color: 'white', marginLeft: 10},
-  //             icon: 'default',
-  //             renderFlashMessageIcon: () => {
-  //               return (
-  //                 <View style={{marginRight: 5}}>
-  //                   <UserAvatar size={40} image={data.sender.avatar} />
-  //                 </View>
-  //               );
-  //             },
-  //             duration: 2500,
-  //           });
-  //         },
-  //       },
-  //     );
-  //   } else {
-  //     consumer.disconnect();
-  //   }
-  // }, [login, id, dispatch]);
-
   useEffect(() => {
     if (login) {
       const _handleAppStateChange = async (nextAppState: AppStateStatus) => {

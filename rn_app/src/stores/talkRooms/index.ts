@@ -113,7 +113,27 @@ export const RoomsSlice = createSlice({
       action: PayloadAction<ReceivedMessageData>,
     ) => {
       if (action.payload.isFirstMessage) {
+        // wsで受け取ったのが最初のメッセージだったらトークルームも存在しない状態なのでトークルームを追加
         talkRoomsAdapter.upsertOne(state, action.payload.room);
+      } else {
+        const {roomId, message} = action.payload;
+        const targetRoom = state.entities[roomId];
+
+        // 対象のルームないことは現在のところ基本的にないが、もし何らかの理由がなくてない場合stateは変えないでそのまま返す
+        // ルームの削除機能作ったりしたら対象のルームがないことあるかも
+        if (!targetRoom) {
+          return state;
+        }
+
+        talkRoomsAdapter.updateOne(state, {
+          id: action.payload.roomId,
+          changes: {
+            ...targetRoom,
+            messages: [message.id, ...targetRoom.messages],
+            unreadNumber: targetRoom.unreadNumber += 1,
+            latestMessage: message.text,
+          },
+        });
       }
     },
   },
