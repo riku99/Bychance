@@ -1,14 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
-// 型定義ファイルが存在しないまたは見つけられなかったのでignore
-// @ts-ignore
-import io from 'socket.io-client';
+import FlashMessage from 'react-native-flash-message';
 
 import {AppDispatch, RootState} from '../stores/index';
-import {receiveMessage} from '../stores/messages';
-import {ReceivedMessageData} from '../stores/types';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './pages/Auth/Page';
 import {Container as Menu} from './utils/Menu';
@@ -16,15 +11,8 @@ import {updateLocationThunk} from '../actions/user/updateLocation';
 import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {checkKeychain} from '../helpers/credentials/checkKeychain';
 import {sessionLoginThunk} from '../actions/session/sessionLogin';
-import {UserAvatar} from './utils/Avatar';
-
-// const consumer = createConsumer('ws://localhost/cable');
-
-// // @ts-ignore
-// // actioncableで必要なので記述
-// global.addEventListener = () => {};
-// // @ts-ignore
-// global.removeEventListener = () => {};
+import {useSokcetio} from '~/hooks/socketio/connectionSocket';
+import {useRecieveTalkRoomMessage} from '~/hooks/talkRoomMessages/recieveTalkRoomMessage';
 
 const Root = () => {
   const [load, setLoad] = useState(true);
@@ -45,31 +33,8 @@ const Root = () => {
     return state.otherSettingsReducer.displayedMenu;
   });
 
-  useEffect(() => {
-    if (id) {
-      const socket = io('http://localhost:4001', {query: {id}});
-      socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
-        console.log(data);
-        dispatch(receiveMessage(data));
-        showMessage({
-          message: data.sender.name,
-          description: data.message.text,
-          style: {backgroundColor: '#00163b'},
-          titleStyle: {color: 'white', marginLeft: 10},
-          textStyle: {color: 'white', marginLeft: 10},
-          icon: 'default',
-          renderFlashMessageIcon: () => {
-            return (
-              <View style={{marginRight: 5}}>
-                <UserAvatar size={40} image={data.sender.avatar} />
-              </View>
-            );
-          },
-          duration: 2500,
-        });
-      });
-    }
-  }, [id, dispatch]);
+  const socket = useSokcetio({id});
+  useRecieveTalkRoomMessage({socket});
 
   useEffect(() => {
     const loginProcess = async () => {
