@@ -10,7 +10,7 @@ import {selectMessages} from '../../../stores/messages';
 import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
 import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
-import {createMessageThunk} from '../../../actions/talkRoomMessages/createMessage';
+import {createMessageThunk} from '../../../actions/talkRoomMessages/createTalkRoomMessage';
 import {createReadMessagesThunk} from '../../../actions/talkRoomMessages/createReadMessage';
 import {ChatRoomStackParamList} from '../../../screens/ChatRoom';
 import {UserAvatar} from '../../utils/Avatar';
@@ -177,6 +177,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
             roomId: room.id,
             partnerId: route.params.partnerId,
             text,
+            isFirstMessage: room.messages.length ? false : true,
           }),
         );
         if (createMessageThunk.fulfilled.match(result)) {

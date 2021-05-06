@@ -9,8 +9,15 @@ export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
   flashes: FlashesData;
 };
 
-export type ReceivedMessageData = {
-  room: TalkRoom;
-  sender: AnotherUser;
-  message: Message;
-};
+export type ReceivedMessageData =
+  | {
+      isFirstMessage: true;
+      room: TalkRoom;
+      sender: AnotherUser;
+      message: Message;
+    }
+  | {
+      isFirstMessage: false;
+      sender: {name: string; avatar: string | null};
+      message: Message;
+    };

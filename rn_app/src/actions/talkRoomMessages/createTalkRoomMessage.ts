@@ -8,20 +8,23 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../re-modules';
-import {Message} from '../../../stores/messages';
+} from '../re-modules';
+import {Message} from '../../stores/messages';
 
 export type CreateMessageThunkPayload = {message: Message; roomId: number};
 
 export const createMessageThunk = createAsyncThunk<
   CreateMessageThunkPayload,
-  {roomId: number; partnerId: string; text: string},
+  {roomId: number; partnerId: string; text: string; isFirstMessage: boolean},
   {
     rejectValue: rejectPayload;
   }
 >(
   'messages/createMessage',
-  async ({roomId, partnerId, text}, {dispatch, rejectWithValue}) => {
+  async (
+    {roomId, partnerId, text, isFirstMessage},
+    {dispatch, rejectWithValue},
+  ) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
@@ -32,6 +35,7 @@ export const createMessageThunk = createAsyncThunk<
             talkRoomId: roomId,
             text,
             partnerId,
+            isFirstMessage,
           },
           headers(credentials.token),
         );

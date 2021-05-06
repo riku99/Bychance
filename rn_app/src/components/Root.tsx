@@ -17,7 +17,6 @@ import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {checkKeychain} from '../helpers/credentials/checkKeychain';
 import {sessionLoginThunk} from '../actions/session/sessionLogin';
 import {UserAvatar} from './utils/Avatar';
-import {origin} from '~/constants/origin';
 
 // const consumer = createConsumer('ws://localhost/cable');
 
@@ -50,7 +49,7 @@ const Root = () => {
     if (id) {
       const socket = io('http://localhost:4001', {query: {id}});
       socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
-        console.log('レシーブ');
+        console.log(data);
         dispatch(receiveMessage(data));
         showMessage({
           message: data.sender.name,

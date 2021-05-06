@@ -24,7 +24,6 @@ export const useCreateFlash = () => {
     }) => {
       dispatch(creatingFlash());
       navigation.goBack();
-      const a = await fs.readFile(uri, 'base64');
       const length = uri.lastIndexOf('.'); // 拡張子の有無。なければ-1が返される
       const ext = length !== -1 ? uri.slice(length + 1) : null; // あれば拡張子('.'以降)を取得
       const result = await dispatch(

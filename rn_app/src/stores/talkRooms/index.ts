@@ -17,13 +17,14 @@ import {sampleLogin} from '../../actions/session/sampleLogin';
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../../actions/talkRoomMessages/createMessage';
+} from '../../actions/talkRoomMessages/createTalkRoomMessage';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
 } from '../../actions/rooms/createTalkRoom';
 import {logoutAction} from '../../actions/session/logout';
-import {Message, receiveMessage} from '../messages';
+import {receiveMessage} from '../messages';
+import {ReceivedMessageData} from '~/stores/types';
 
 export type TalkRoom = {
   id: number;
@@ -109,9 +110,11 @@ export const RoomsSlice = createSlice({
     },
     [receiveMessage.type]: (
       state,
-      action: PayloadAction<{room: TalkRoom; message: Message}>,
+      action: PayloadAction<ReceivedMessageData>,
     ) => {
-      talkRoomsAdapter.upsertOne(state, action.payload.room);
+      if (action.payload.isFirstMessage) {
+        talkRoomsAdapter.upsertOne(state, action.payload.room);
+      }
     },
   },
 });

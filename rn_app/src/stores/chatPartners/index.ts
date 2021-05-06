@@ -75,7 +75,9 @@ export const chatPartnersSlice = createSlice({
       state,
       action: PayloadAction<ReceivedMessageData>,
     ) => {
-      chatPartnersAdapter.upsertOne(state, action.payload.sender);
+      if (action.payload.isFirstMessage) {
+        chatPartnersAdapter.upsertOne(state, action.payload.sender);
+      }
     },
     [refreshUserThunk.fulfilled.type]: (
       state,
