@@ -17,7 +17,7 @@ import {sampleLogin} from '../../actions/session/sampleLogin';
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../../actions/messages/createMessage';
+} from '../../actions/talkRoomMessages/createMessage';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
@@ -118,14 +118,14 @@ export const RoomsSlice = createSlice({
 
 export const {resetUnreadNumber} = RoomsSlice.actions;
 
-export const roomSelectors = talkRoomsAdapter.getSelectors();
+export const talkRoomSelectors = talkRoomsAdapter.getSelectors();
 
 export const selectRoom = (state: RootState, roomId: number) => {
-  return roomSelectors.selectById(state.roomsReducer, roomId);
+  return talkRoomSelectors.selectById(state.talkRoomsReducer, roomId);
 };
 
 export const selectAllRooms = (state: RootState) => {
-  return roomSelectors.selectAll(state.roomsReducer);
+  return talkRoomSelectors.selectAll(state.talkRoomsReducer);
 };
 
 export const getAllUnreadMessagesNumber = (state: RootState) => {
@@ -138,7 +138,8 @@ export const getAllUnreadMessagesNumber = (state: RootState) => {
 };
 
 export const selectPartner = (state: RootState, roomId: number) => {
-  const user = roomSelectors.selectById(state.roomsReducer, roomId)?.partner;
+  const user = talkRoomSelectors.selectById(state.talkRoomsReducer, roomId)
+    ?.partner;
   if (user) {
     return user;
   } else {
@@ -146,4 +147,4 @@ export const selectPartner = (state: RootState, roomId: number) => {
   }
 };
 
-export const roomsReducer = RoomsSlice.reducer;
+export const talkRoomsReducer = RoomsSlice.reducer;

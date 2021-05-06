@@ -7,7 +7,7 @@ import {
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../../actions/messages/createMessage';
+} from '../../actions/talkRoomMessages/createMessage';
 import {
   lineLoginThunk,
   LineLoginThunkPayload,

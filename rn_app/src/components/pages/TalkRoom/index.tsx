@@ -10,8 +10,8 @@ import {selectMessages} from '../../../stores/messages';
 import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
 import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
-import {createMessageThunk} from '../../../actions/messages/createMessage';
-import {createReadMessagesThunk} from '../../../actions/messages/createReadMessage';
+import {createMessageThunk} from '../../../actions/talkRoomMessages/createMessage';
+import {createReadMessagesThunk} from '../../../actions/talkRoomMessages/createReadMessage';
 import {ChatRoomStackParamList} from '../../../screens/ChatRoom';
 import {UserAvatar} from '../../utils/Avatar';
 
@@ -126,6 +126,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
         createReadMessagesThunk({
           roomId: room.id,
           unreadNumber: 1,
+          partnerId: route.params.partnerId,
         }),
       );
     }
@@ -136,6 +137,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
     onAvatarPress,
     room.messages,
     dispatch,
+    route.params.partnerId,
   ]);
 
   useEffect(() => {
@@ -148,6 +150,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
             createReadMessagesThunk({
               roomId: room.id,
               unreadNumber: room.unreadNumber,
+              partnerId: route.params.partnerId,
             }),
           );
         }
@@ -155,7 +158,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
 
       return unsubscribe;
     }
-  }, [navigation, room, dispatch]);
+  }, [navigation, room, dispatch, route.params.partnerId]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {

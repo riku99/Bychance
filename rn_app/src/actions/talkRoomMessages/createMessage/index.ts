@@ -9,29 +9,33 @@ import {
   headers,
   origin,
 } from '../../re-modules';
+import {Message} from '../../../stores/messages';
 
-export const createReadMessagesThunk = createAsyncThunk<
-  void,
-  {roomId: number; unreadNumber: number},
+export type CreateMessageThunkPayload = {message: Message; roomId: number};
+
+export const createMessageThunk = createAsyncThunk<
+  CreateMessageThunkPayload,
+  {roomId: number; userId: string; text: string},
   {
     rejectValue: rejectPayload;
   }
 >(
-  'messages/createReadMessages',
-  async ({roomId, unreadNumber}, {dispatch, rejectWithValue}) => {
+  'messages/createMessage',
+  async ({roomId, userId, text}, {dispatch, rejectWithValue}) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
       try {
-        axios.post(
-          `${origin}/user_room_message_reads`,
+        const response = await axios.post<Message>(
+          `${origin}/talkRoomMessages?id=${credentials.id}`,
           {
-            roomId,
-            unreadNumber,
-            id: credentials.id,
+            talkRoomId: roomId,
+            text,
           },
           headers(credentials.token),
         );
+
+        return {message: response.data, roomId};
       } catch (e) {
         // axioserror
         const result = handleBasicError({e, dispatch});

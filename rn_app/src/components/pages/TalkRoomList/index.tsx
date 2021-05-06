@@ -5,14 +5,14 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ChatList} from './ChatList';
 import {RootState} from '../../../stores/index';
-import {Room, selectAllRooms} from '../../../stores/talkRooms';
+import {TalkRoom, selectAllRooms} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {selectChatPartnerEntities} from '../../../stores/chatPartners';
 import {RootStackParamList} from '../../../screens/Root';
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
-export const ChatListPage = () => {
+export const TalkRoomListPage = () => {
   const dispatch = useDispatch();
   const rooms = useSelector(
     (state: RootState) => selectAllRooms(state),
@@ -23,9 +23,17 @@ export const ChatListPage = () => {
     return selectChatPartnerEntities(state);
   });
 
+  console.log(chatPartnerEntities);
+
   const navigationToChatRoom = useNavigation<RootNavigationProp>();
 
-  const pushChatRoom = ({room, partnerId}: {room: Room; partnerId: number}) => {
+  const pushChatRoom = ({
+    room,
+    partnerId,
+  }: {
+    room: TalkRoom;
+    partnerId: string;
+  }) => {
     dispatch(resetRecievedMessage());
     navigationToChatRoom.push('ChatRoomStack', {
       screen: 'ChatRoom',

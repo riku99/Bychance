@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 // 型定義ファイルが存在しないまたは見つけられなかったのでignore
 // @ts-ignore
-import {createConsumer} from '@rails/actioncable';
+import io from 'socket.io-client';
 
 import {AppDispatch, RootState} from '../stores/index';
 import {receiveMessage} from '../stores/messages';
@@ -17,14 +17,21 @@ import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {checkKeychain} from '../helpers/credentials/checkKeychain';
 import {sessionLoginThunk} from '../actions/session/sessionLogin';
 import {UserAvatar} from './utils/Avatar';
+import {origin} from '~/constants/origin';
 
-const consumer = createConsumer('ws://localhost/cable');
+// const consumer = createConsumer('ws://localhost/cable');
 
-// @ts-ignore
-// actioncableで必要なので記述
-global.addEventListener = () => {};
-// @ts-ignore
-global.removeEventListener = () => {};
+// // @ts-ignore
+// // actioncableで必要なので記述
+// global.addEventListener = () => {};
+// // @ts-ignore
+// global.removeEventListener = () => {};
+
+const socket = io('http://localhost:4001');
+
+socket.on('connect', () => {
+  console.log('connect!');
+});
 
 const Root = () => {
   const [load, setLoad] = useState(true);
@@ -59,37 +66,37 @@ const Root = () => {
   }, [dispatch]);
 
   // wsでメッセージを受け取ったときに関する処理
-  useEffect(() => {
-    if (login) {
-      consumer.subscriptions.create(
-        {channel: 'MessagesChannel', id: id},
-        {
-          connected: () => {},
-          received: (data: ReceivedMessageData) => {
-            dispatch(receiveMessage(data));
-            showMessage({
-              message: data.sender.name,
-              description: data.message.text,
-              style: {backgroundColor: '#00163b'},
-              titleStyle: {color: 'white', marginLeft: 10},
-              textStyle: {color: 'white', marginLeft: 10},
-              icon: 'default',
-              renderFlashMessageIcon: () => {
-                return (
-                  <View style={{marginRight: 5}}>
-                    <UserAvatar size={40} image={data.sender.avatar} />
-                  </View>
-                );
-              },
-              duration: 2500,
-            });
-          },
-        },
-      );
-    } else {
-      consumer.disconnect();
-    }
-  }, [login, id, dispatch]);
+  // useEffect(() => {
+  //   if (login) {
+  //     consumer.subscriptions.create(
+  //       {channel: 'MessagesChannel', id: id},
+  //       {
+  //         connected: () => {},
+  //         received: (data: ReceivedMessageData) => {
+  //           dispatch(receiveMessage(data));
+  //           showMessage({
+  //             message: data.sender.name,
+  //             description: data.message.text,
+  //             style: {backgroundColor: '#00163b'},
+  //             titleStyle: {color: 'white', marginLeft: 10},
+  //             textStyle: {color: 'white', marginLeft: 10},
+  //             icon: 'default',
+  //             renderFlashMessageIcon: () => {
+  //               return (
+  //                 <View style={{marginRight: 5}}>
+  //                   <UserAvatar size={40} image={data.sender.avatar} />
+  //                 </View>
+  //               );
+  //             },
+  //             duration: 2500,
+  //           });
+  //         },
+  //       },
+  //     );
+  //   } else {
+  //     consumer.disconnect();
+  //   }
+  // }, [login, id, dispatch]);
 
   useEffect(() => {
     if (login) {

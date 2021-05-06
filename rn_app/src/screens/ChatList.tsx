@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {ChatListPage} from '../components/pages/CahtList/Page';
+import {TalkRoomListPage} from '../components/pages/TalkRoomList';
 import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
 
 export type ChatListStackParamList = {
@@ -20,7 +20,7 @@ export const ChatListStackScreen = () => {
       }}>
       <Stack.Screen
         name="ChatList"
-        component={ChatListPage}
+        component={TalkRoomListPage}
         options={{headerTitle: 'メッセージ'}}
       />
     </Stack.Navigator>

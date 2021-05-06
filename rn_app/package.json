@@ -10,7 +10,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@rails/actioncable": "^6.0.3-4",
     "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/picker": "^1.8.1",
@@ -58,7 +57,8 @@
     "react-native-video": "^5.1.0-alpha8",
     "react-native-view-shot": "^3.1.2",
     "react-redux": "^7.2.1",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "socket.io-client": "^4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.5",
