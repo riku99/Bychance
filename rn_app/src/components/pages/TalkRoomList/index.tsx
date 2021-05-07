@@ -3,7 +3,7 @@ import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {ChatList} from './ChatList';
+import {ChatList} from './TalkRoomList';
 import {RootState} from '../../../stores/index';
 import {TalkRoom, selectAllRooms} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';

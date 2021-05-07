@@ -165,7 +165,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
       <FlatList
         ref={flatListRef}
         data={dataArray}
-        keyExtractor={(item) => item.userData.userId.toString()}
+        keyExtractor={(item) => item.userData.userId}
         renderItem={({item, index}) => (
           <View style={{height: safeAreaHeight, width}}>
             <ShowFlash
