@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
@@ -37,14 +36,6 @@ export const SendMessageButton = React.memo(({user}: Props) => {
   return (
     <Button
       title="メッセージを送る"
-      icon={
-        <Icon
-          name="send-o"
-          size={15}
-          color={normalStyles.mainTextColor}
-          style={{marginRight: 8}}
-        />
-      }
       titleStyle={styles.title}
       buttonStyle={styles.button}
       onPress={onPress}

@@ -201,27 +201,20 @@ export const UserPage = ({route, navigation}: Props) => {
           style={styles.container}
           onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}>
           <Animated.View
-            style={{
-              position: 'absolute',
-              backgroundColor: 'gray',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '20%',
-              transform: [{translateY: y}],
-            }}
+            style={[
+              styles.backGroundImageContainer,
+              {transform: [{translateY: y}]},
+            ]}
           />
 
           <Animated.View
             onLayout={(e) => setIntroduceHeight(e.nativeEvent.layout.height)}
-            style={{
-              position: 'absolute',
-              top: height > X_HEIGHT ? '35%' : '40%',
-              width: '100%',
-              paddingHorizontal: 25,
-              transform: [{translateY: y}],
-              height: '18%',
-            }}>
+            style={[
+              styles.introduceContainer,
+              {
+                transform: [{translateY: y}],
+              },
+            ]}>
             <Text style={{lineHeight: oneIntroduceTextLineHeght}}>
               {user.introduce}
             </Text>
@@ -240,13 +233,9 @@ export const UserPage = ({route, navigation}: Props) => {
           <Animated.View
             style={[
               styles.animatedElement,
+              styles.avatarAndNameContainer,
               {
-                top: '15%',
                 transform: [{translateY: y}],
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                width: '95%',
               },
             ]}>
             <View style={{alignItems: 'center'}}>
@@ -255,7 +244,7 @@ export const UserPage = ({route, navigation}: Props) => {
                 outerType={avatarOuterType}
                 flashesNavigationParam={flashesNavigationParam}
               />
-              <View style={{marginTop: height > X_HEIGHT ? '25%' : '20%'}}>
+              <View style={styles.nameContainer}>
                 <Text style={{fontWeight: 'bold', fontSize: 16}}>
                   {user.name}
                 </Text>
@@ -313,10 +302,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  profileContaienr: {
+  backGroundImageContainer: {
     position: 'absolute',
+    backgroundColor: 'gray',
     top: 0,
+    left: 0,
     width: '100%',
+    height: '20%',
+  },
+  introduceContainer: {
+    position: 'absolute',
+    top: height > X_HEIGHT ? '35%' : '40%',
+    width: '100%',
+    paddingHorizontal: 25,
+    height: '18%',
+  },
+  avatarAndNameContainer: {
+    top: '15%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: '95%',
+  },
+  nameContainer: {
+    marginTop: height > X_HEIGHT ? '25%' : '20%',
   },
   animatedElement: {
     position: 'absolute',
@@ -329,7 +338,7 @@ const styles = StyleSheet.create({
   },
   moreReadButtonContainer: {
     position: 'absolute',
-    top: '50%',
+    top: height / 2.52,
     right: '2%',
   },
 });

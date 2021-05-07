@@ -2,6 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import {Text, Dimensions, View, StyleSheet} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 
+import {oneIntroduceTextLineHeght} from './index';
+
 type Props = {
   show: boolean;
   introduce: string;
@@ -20,7 +22,7 @@ export const IntroduceModal = ({show, introduce, onClose}: Props) => {
   return (
     <Modalize ref={modalRef} onClose={onClose} modalHeight={height / 2}>
       <View style={styles.textContainer}>
-        <Text>{introduce}</Text>
+        <Text style={{lineHeight: oneIntroduceTextLineHeght}}>{introduce}</Text>
       </View>
     </Modalize>
   );

@@ -145,6 +145,7 @@ export const RoomsSlice = createSlice({
       action: PayloadAction<CreateDeleteRoomThunkPayload>,
     ) => {
       talkRoomsAdapter.removeOne(state, action.payload.talkRoomId);
+      // cahtPartners, talkRoomMessagesは削除このdispatchの時点で削除しないが、次回ロードの時には含まれないのでとりあえずそれでいい。
     },
   },
 });
