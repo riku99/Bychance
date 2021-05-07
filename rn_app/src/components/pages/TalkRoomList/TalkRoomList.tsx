@@ -9,6 +9,8 @@ import {ReturnTypeOfSelectChatPartnerEntities} from '../../../stores/chatPartner
 import {normalStyles} from '~/constants/styles/normal';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
+import {SwipeHiddenItems} from './SwipeHiddenItems';
+
 type Props = {
   rooms: TalkRoom[];
   chatPartnerEntites: ReturnTypeOfSelectChatPartnerEntities;
@@ -60,24 +62,7 @@ export const ChatList = ({rooms, chatPartnerEntites, pushChatRoom}: Props) => {
             )}
           </ListItem>
         )}
-        renderHiddenItem={() => (
-          <View>
-            <TouchableOpacity
-              activeOpacity={1}
-              style={{
-                backgroundColor: '#f54542',
-                height: '100%',
-                width: width / 4,
-                alignSelf: 'flex-end',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{fontSize: 17, fontWeight: '400', color: 'white'}}>
-                削除
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        renderHiddenItem={() => <SwipeHiddenItems />}
         rightOpenValue={-(width / 4)}
       />
     </View>
