@@ -22,6 +22,10 @@ import {
   createRoomThunk,
   CreateRoomThunkPayload,
 } from '../../apis/rooms/createTalkRoom';
+import {
+  createDeleteRoomThunk,
+  CreateDeleteRoomThunkPayload,
+} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
 import {logoutAction} from '../../apis/session/logout';
 import {receiveMessage} from '../messages';
 import {ReceivedMessageData} from '~/stores/types';
@@ -135,6 +139,12 @@ export const RoomsSlice = createSlice({
           },
         });
       }
+    },
+    [createDeleteRoomThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<CreateDeleteRoomThunkPayload>,
+    ) => {
+      talkRoomsAdapter.removeOne(state, action.payload.talkRoomId);
     },
   },
 });

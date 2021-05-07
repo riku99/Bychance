@@ -13,6 +13,7 @@ import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {useSelectAllRooms} from '~/hooks/talkRooms/selector';
 import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
 import {createDeleteRoomThunk} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
+import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
@@ -44,7 +45,12 @@ export const TalkRoomListPage = () => {
       Alert.alert('トークルームを削除', '本当に削除してもよろしいですか?', [
         {
           text: 'はい',
-          onPress: () => dispatch(createDeleteRoomThunk({talkRoomId})),
+          onPress: async () => {
+            const result = await dispatch(createDeleteRoomThunk({talkRoomId}));
+            if (createDeleteRoomThunk.fulfilled.match(result)) {
+              displayShortMessage('削除しました', 'success');
+            }
+          },
         },
         {
           text: 'いいえ',
