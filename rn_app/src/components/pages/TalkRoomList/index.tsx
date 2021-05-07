@@ -1,9 +1,12 @@
 import React from 'react';
+import {View} from 'react-native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {SwipeListView} from 'react-native-swipe-list-view';
 
-import {ChatList} from './TalkRoomList';
+import {TalkRoomListItem} from './TalkRoomListItem';
+import {SwipeHiddenItems, hiddenRowItemWidth} from './SwipeHiddenItems';
 import {RootState} from '../../../stores/index';
 import {TalkRoom, selectAllRooms} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
@@ -40,10 +43,26 @@ export const TalkRoomListPage = () => {
   };
 
   return (
-    <ChatList
-      rooms={rooms}
-      chatPartnerEntites={chatPartnerEntities}
-      pushChatRoom={pushChatRoom}
-    />
+    <View>
+      <SwipeListView
+        data={rooms}
+        keyExtractor={(room) => room.id.toString()}
+        renderItem={(room) => (
+          <TalkRoomListItem
+            room={room.item}
+            avatar={chatPartnerEntities[room.item.partner]?.avatar}
+            name={chatPartnerEntities[room.item.partner]?.name}
+            onPress={() =>
+              pushChatRoom({
+                room: room.item,
+                partnerId: room.item.partner,
+              })
+            }
+          />
+        )}
+        renderHiddenItem={() => <SwipeHiddenItems />}
+        rightOpenValue={-hiddenRowItemWidth}
+      />
+    </View>
   );
 };

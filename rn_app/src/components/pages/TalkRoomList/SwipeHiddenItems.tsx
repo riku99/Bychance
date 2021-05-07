@@ -21,7 +21,7 @@ export const SwipeHiddenItems = React.memo(() => {
 
 const {width} = Dimensions.get('screen');
 
-const rowItemWidth = width / 4;
+export const hiddenRowItemWidth = width / 4;
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   rowContainer: {
     backgroundColor: '#f54542',
     height: '100%',
-    width: rowItemWidth,
+    width: hiddenRowItemWidth,
     alignSelf: 'flex-end',
     justifyContent: 'center',
     alignItems: 'center',
