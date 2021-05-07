@@ -2,7 +2,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 
 import {chatPartnersAdapter, ChatPartnersState} from '../../chatPartners';
 import {UserState} from '../../user';
-import {RefreshUserThunkPaylaod} from '../../../actions/user/refreshUser';
+import {RefreshUserThunkPaylaod} from '../../../apis/user/refreshUser';
 
 type State =
   | {

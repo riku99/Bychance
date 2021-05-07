@@ -7,7 +7,7 @@ import {NearbyUsersList} from './nearbyUsersMain';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {AnotherUser} from '../../../stores/types';
 import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
-import {getNearbyUsersThunk} from '../../../actions/nearbyUsers/getNearbyUsers';
+import {getNearbyUsersThunk} from '../../../apis/nearbyUsers/getNearbyUsers';
 import {
   SearchUsersStackNavigationProp,
   RootNavigationProp,

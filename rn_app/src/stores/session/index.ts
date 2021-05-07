@@ -1,9 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-import {lineLoginThunk} from '../../actions/session/lineLogin';
-import {sessionLoginThunk} from '../../actions/session/sessionLogin';
-import {logoutAction} from '../../actions/session/logout';
-import {sampleLogin} from '../../actions/session/sampleLogin';
+import {lineLoginThunk} from '../../apis/session/lineLogin';
+import {sessionLoginThunk} from '../../apis/session/sessionLogin';
+import {logoutAction} from '../../apis/session/logout';
+import {sampleLogin} from '../../apis/session/sampleLogin';
 
 type initialState = {login: boolean};
 

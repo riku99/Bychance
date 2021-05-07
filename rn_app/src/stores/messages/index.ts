@@ -7,17 +7,17 @@ import {
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../../actions/talkRoomMessages/createTalkRoomMessage';
+} from '../../apis/talkRoomMessages/createTalkRoomMessage';
 import {
   lineLoginThunk,
   LineLoginThunkPayload,
-} from '../../actions/session/lineLogin';
+} from '../../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../actions/session/sessionLogin';
-import {sampleLogin} from '../../actions/session/sampleLogin';
-import {logoutAction} from '../../actions/session/logout';
+} from '../../apis/session/sessionLogin';
+import {sampleLogin} from '../../apis/session/sampleLogin';
+import {logoutAction} from '../../apis/session/logout';
 import {RootState} from '../index';
 import {ReceivedMessageData} from '../types';
 

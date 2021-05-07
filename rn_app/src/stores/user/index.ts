@@ -4,29 +4,26 @@ import {refreshUser} from '../helpers/refreshUser';
 import {
   lineLoginThunk,
   LineLoginThunkPayload,
-} from '../../actions/session/lineLogin';
+} from '../../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../actions/session/sessionLogin';
-import {
-  editProfileThunk,
-  EdiProfilePayload,
-} from '../../actions/user/editProfile';
+} from '../../apis/session/sessionLogin';
+import {editProfileThunk, EdiProfilePayload} from '../../apis/user/editProfile';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '../../actions/user/refreshUser';
+} from '../../apis/user/refreshUser';
 import {
   editUserDisplayThunk,
   EidtUserDisplayThunk,
-} from '../../actions/user/changeUserDisplay';
+} from '../../apis/user/changeUserDisplay';
 import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
-} from '../../actions/user/updateLocation';
-import {sampleLogin} from '../../actions/session/sampleLogin';
-import {logoutAction} from '../../actions/session/logout';
+} from '../../apis/user/updateLocation';
+import {sampleLogin} from '../../apis/session/sampleLogin';
+import {logoutAction} from '../../apis/session/logout';
 
 export type UserState = {
   user?: {

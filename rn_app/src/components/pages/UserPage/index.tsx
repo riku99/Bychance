@@ -35,7 +35,7 @@ import {RootState} from '../../../stores/index';
 import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
-import {refreshUserThunk} from '../../../actions/user/refreshUser';
+import {refreshUserThunk} from '../../../apis/user/refreshUser';
 import {X_HEIGHT} from '~/constants/device';
 
 // BottomTabに渡される時のプロップス

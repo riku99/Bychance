@@ -20,7 +20,7 @@ import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../../stores/index';
 import {Post} from '../../../stores/posts';
 import {Posts} from './Posts';
-import {refreshUserThunk} from '../../../actions/user/refreshUser';
+import {refreshUserThunk} from '../../../apis/user/refreshUser';
 import {normalStyles} from '~/constants/styles/normal';
 
 type PostsRouteProps = {

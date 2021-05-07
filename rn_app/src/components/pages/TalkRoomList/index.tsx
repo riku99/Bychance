@@ -1,5 +1,5 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useCallback} from 'react';
+import {View, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {SwipeListView} from 'react-native-swipe-list-view';
@@ -12,6 +12,7 @@ import {RootStackParamList} from '../../../screens/Root';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {useSelectAllRooms} from '~/hooks/talkRooms/selector';
 import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
+import {createDeleteRoomThunk} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
@@ -38,6 +39,21 @@ export const TalkRoomListPage = () => {
     });
   };
 
+  const onDeletePress = useCallback(
+    ({talkRoomId}: {talkRoomId: number}) => {
+      Alert.alert('トークルームを削除', '本当に削除してもよろしいですか?', [
+        {
+          text: 'はい',
+          onPress: () => dispatch(createDeleteRoomThunk({talkRoomId})),
+        },
+        {
+          text: 'いいえ',
+        },
+      ]);
+    },
+    [dispatch],
+  );
+
   return (
     <View>
       <SwipeListView
@@ -56,7 +72,11 @@ export const TalkRoomListPage = () => {
             }
           />
         )}
-        renderHiddenItem={() => <SwipeHiddenItems />}
+        renderHiddenItem={(room) => (
+          <SwipeHiddenItems
+            onDeletePress={() => onDeletePress({talkRoomId: room.item.id})}
+          />
+        )}
         rightOpenValue={-hiddenRowItemWidth}
       />
     </View>

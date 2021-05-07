@@ -7,21 +7,21 @@ import {
 import {
   createPostThunk,
   CreatePostThunkPayload,
-} from '../../actions/posts/createPost';
+} from '../../apis/posts/createPost';
 import {
   deletePostThunk,
   DeletePostThunkPaylaod,
-} from '../../actions/posts/deletePost';
-import {logoutAction} from '../../actions/session/logout';
+} from '../../apis/posts/deletePost';
+import {logoutAction} from '../../apis/session/logout';
 import {
   lineLoginThunk,
   LineLoginThunkPayload,
-} from '../../actions/session/lineLogin';
+} from '../../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../actions/session/sessionLogin';
-import {sampleLogin} from '../../actions/session/sampleLogin';
+} from '../../apis/session/sessionLogin';
+import {sampleLogin} from '../../apis/session/sampleLogin';
 import {RootState} from '..';
 
 export type Post = {

@@ -10,11 +10,11 @@ import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
-} from '../../actions/nearbyUsers/getNearbyUsers';
+} from '../../apis/nearbyUsers/getNearbyUsers';
 import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
-} from '../../actions/flashes/createAlreadyViewedFlashes';
+} from '../../apis/flashes/createAlreadyViewedFlashes';
 
 export type NearbyUsers = AnotherUser[];
 

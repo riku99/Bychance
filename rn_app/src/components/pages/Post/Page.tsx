@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {Post} from './Post';
 import {RootState, AppDispatch} from '../../../stores/index';
-import {deletePostThunk} from '../../../actions/posts/deletePost';
+import {deletePostThunk} from '../../../apis/posts/deletePost';
 import {
   MyPageStackRouteProp,
   UserPageStackRouteProp,

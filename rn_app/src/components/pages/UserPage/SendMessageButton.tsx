@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import {AppDispatch} from '../../../stores/index';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {AnotherUser} from '../../../stores/types';
-import {createRoomThunk} from '../../../actions/rooms/createTalkRoom';
+import {createRoomThunk} from '../../../apis/rooms/createTalkRoom';
 import {RootNavigationProp} from '../../../screens/types';
 import {normalStyles} from '~/constants/styles/normal';
 

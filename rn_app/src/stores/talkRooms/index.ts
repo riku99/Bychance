@@ -8,21 +8,21 @@ import {RootState} from '../index';
 import {
   lineLoginThunk,
   LineLoginThunkPayload,
-} from '../../actions/session/lineLogin';
+} from '../../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../actions/session/sessionLogin';
-import {sampleLogin} from '../../actions/session/sampleLogin';
+} from '../../apis/session/sessionLogin';
+import {sampleLogin} from '../../apis/session/sampleLogin';
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../../actions/talkRoomMessages/createTalkRoomMessage';
+} from '../../apis/talkRoomMessages/createTalkRoomMessage';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
-} from '../../actions/rooms/createTalkRoom';
-import {logoutAction} from '../../actions/session/logout';
+} from '../../apis/rooms/createTalkRoom';
+import {logoutAction} from '../../apis/session/logout';
 import {receiveMessage} from '../messages';
 import {ReceivedMessageData} from '~/stores/types';
 

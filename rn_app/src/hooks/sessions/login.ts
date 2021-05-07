@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {checkKeychain} from '~/helpers/credentials/checkKeychain';
-import {sessionLoginThunk} from '~/actions/session/sessionLogin';
+import {sessionLoginThunk} from '~/apis/session/sessionLogin';
 
 type Arg = {
   endSessionLogin: () => void;

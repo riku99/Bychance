@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {RootState, AppDispatch} from '../../../stores/index';
 import {UserEdit} from './UserEdit';
-import {editProfileThunk} from '../../../actions/user/editProfile';
+import {editProfileThunk} from '../../../apis/user/editProfile';
 import {resetEditData} from '../../../stores/user';
 import {
   UserEditNavigationProp,

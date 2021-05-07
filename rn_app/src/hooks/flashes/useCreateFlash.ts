@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
 
-import {createFlashThunk} from '~/actions/flashes/createFlash';
+import {createFlashThunk} from '~/apis/flashes/createFlash';
 import {creatingFlash} from '~/stores/otherSettings';
 import {AppDispatch} from '~/stores/index';
 import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';

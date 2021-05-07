@@ -25,7 +25,7 @@ import {FlashesData} from '~/components/pages/Flashes/types';
 import {Avatar} from './Avatar';
 import {RangeSelector} from './RangeSelector';
 import {AppDispatch} from '../../../stores/index';
-import {getNearbyUsersThunk} from '../../../actions/nearbyUsers/getNearbyUsers';
+import {getNearbyUsersThunk} from '../../../apis/nearbyUsers/getNearbyUsers';
 
 type Props = {
   otherUsers: AnotherUser[];

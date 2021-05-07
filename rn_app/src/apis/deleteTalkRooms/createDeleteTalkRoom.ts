@@ -8,37 +8,38 @@ import {
   handleBasicError,
   headers,
   origin,
-} from '../../re-modules';
+} from '../re-modules';
 
-export const createReadMessagesThunk = createAsyncThunk<
-  void,
-  {roomId: number; unreadNumber: number; partnerId: string},
-  {
-    rejectValue: rejectPayload;
-  }
+export type CreateDeleteRoomThunkPayload = {
+  talkRoomId: number;
+};
+
+export const createDeleteRoomThunk = createAsyncThunk<
+  CreateDeleteRoomThunkPayload,
+  {talkRoomId: number},
+  {rejectValue: rejectPayload}
 >(
-  'messages/createReadMessages',
-  async ({roomId, unreadNumber, partnerId}, {dispatch, rejectWithValue}) => {
+  'deleteTalkRoom/createDeleteRoom',
+  async ({talkRoomId}, {dispatch, rejectWithValue}) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
       try {
-        axios.post(
-          `${origin}/readTalkRoomMessages?id=${credentials.id}`,
+        await axios.post(
+          `${origin}/deleteTalkRooms?id=${credentials.id}`,
           {
-            talkRoomId: roomId,
-            partnerId,
-            unreadNumber,
+            talkRoomId,
           },
           headers(credentials.token),
         );
+
+        return {talkRoomId};
       } catch (e) {
-        // axioserror
         const result = handleBasicError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {
-      // loginerror
+      // credentials存在しないエラー
       requestLogin(() => dispatch(logoutAction));
       return rejectWithValue({errorType: 'loginError'});
     }

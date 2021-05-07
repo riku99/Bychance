@@ -10,8 +10,8 @@ import {selectMessages} from '../../../stores/messages';
 import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
 import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
-import {createMessageThunk} from '../../../actions/talkRoomMessages/createTalkRoomMessage';
-import {createReadMessagesThunk} from '../../../actions/talkRoomMessages/createReadMessage';
+import {createMessageThunk} from '../../../apis/talkRoomMessages/createTalkRoomMessage';
+import {createReadMessagesThunk} from '../../../apis/talkRoomMessages/createReadTalkRoomMessage';
 import {ChatRoomStackParamList} from '../../../screens/ChatRoom';
 import {UserAvatar} from '../../utils/Avatar';
 

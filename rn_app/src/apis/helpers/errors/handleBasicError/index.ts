@@ -1,9 +1,9 @@
 import {ThunkDispatch} from '@reduxjs/toolkit';
 
-import {rejectPayload, basicAxiosError} from '~/actions/types';
-import {requestLogin} from '~/actions/helpers/errors/requestLogin';
+import {rejectPayload, basicAxiosError} from '~/apis/types';
+import {requestLogin} from '~/apis/helpers/errors/requestLogin';
 import {alertSomeError} from '~/helpers/errors';
-import {logoutAction} from '~/actions/session/logout';
+import {logoutAction} from '~/apis/session/logout';
 import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
 
 export const handleBasicError = ({

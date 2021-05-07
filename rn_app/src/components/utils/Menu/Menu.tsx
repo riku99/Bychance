@@ -5,7 +5,7 @@ import {ListItem, Icon} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
 import * as Keychain from 'react-native-keychain';
 
-import {logoutAction} from '../../../actions/session/logout';
+import {logoutAction} from '../../../apis/session/logout';
 
 type Props = {
   isVisble: boolean;
