@@ -14,8 +14,6 @@ const gradientConfig: {
   baseStyle: {alignItems: 'center', justifyContent: 'center'},
 };
 
-//'#00FFFF', '#17C8FF', '#329BFF', '#4C64FF', '#6536FF', '#8000FF'
-
 type Props = {
   children: Element;
   avatarSize: number | 'large' | 'medium' | 'small';

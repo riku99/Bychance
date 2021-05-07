@@ -250,7 +250,7 @@ export const UserPage = ({route, navigation}: Props) => {
                 </Text>
               </View>
             </View>
-            <View style={{width: '40%'}}>
+            <View style={{width: '55%'}}>
               {isMe ? (
                 <EditButton />
               ) : (
