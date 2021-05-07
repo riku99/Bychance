@@ -147,12 +147,12 @@ export const selectRoom = (state: RootState, roomId: number) => {
   return talkRoomSelectors.selectById(state.talkRoomsReducer, roomId);
 };
 
-export const selectAllRooms = (state: RootState) => {
+export const selectAllTalkRooms = (state: RootState) => {
   return talkRoomSelectors.selectAll(state.talkRoomsReducer);
 };
 
 export const getAllUnreadMessagesNumber = (state: RootState) => {
-  const rooms = selectAllRooms(state);
+  const rooms = selectAllTalkRooms(state);
   let allunreadMessagesNumber = 0;
   for (let room of rooms) {
     allunreadMessagesNumber! += room.unreadNumber;

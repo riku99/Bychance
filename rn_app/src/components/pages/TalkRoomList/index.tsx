@@ -1,30 +1,26 @@
 import React from 'react';
 import {View} from 'react-native';
-import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
 import {TalkRoomListItem} from './TalkRoomListItem';
 import {SwipeHiddenItems, hiddenRowItemWidth} from './SwipeHiddenItems';
-import {RootState} from '../../../stores/index';
-import {TalkRoom, selectAllRooms} from '../../../stores/talkRooms';
+import {TalkRoom} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
-import {selectChatPartnerEntities} from '../../../stores/chatPartners';
 import {RootStackParamList} from '../../../screens/Root';
+import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useSelectAllRooms} from '~/hooks/talkRooms/selector';
+import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
 
 type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 export const TalkRoomListPage = () => {
-  const dispatch = useDispatch();
-  const rooms = useSelector(
-    (state: RootState) => selectAllRooms(state),
-    shallowEqual,
-  );
+  const dispatch = useCustomDispatch();
 
-  const chatPartnerEntities = useSelector((state: RootState) => {
-    return selectChatPartnerEntities(state);
-  });
+  const rooms = useSelectAllRooms();
+
+  const chatPartnerEntities = useSelectChatPartnerEntities();
 
   const navigationToChatRoom = useNavigation<RootNavigationProp>();
 
