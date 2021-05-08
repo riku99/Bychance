@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
@@ -155,6 +156,11 @@ export const UserEditPage = () => {
     undefined,
   );
   const [deleteAvatar, setDeleteAvatar] = useState(false);
+  const displayedAvatar = useMemo(
+    () => (deleteAvatar ? null : selectedAvatar ? selectedAvatar : user.avatar),
+    [deleteAvatar, selectedAvatar, user.avatar],
+  );
+
   const pickAvatarImage = useCallback(() => {
     ImagePicker.showImagePicker(options, (response) => {
       if (response.customButton === 'delete') {
@@ -170,10 +176,6 @@ export const UserEditPage = () => {
       }
     });
   }, [deleteAvatar]);
-  const displayedAvatar = useMemo(
-    () => (deleteAvatar ? null : selectedAvatar ? selectedAvatar : user.avatar),
-    [deleteAvatar, selectedAvatar, user.avatar],
-  );
 
   useLayoutEffect(() => {
     if (isFocused) {
@@ -213,12 +215,51 @@ export const UserEditPage = () => {
     loading,
   ]);
 
+  const [backGroundItem, setBackGroundItem] = useState(user.backGroundItem);
+  const [backGroundItemType, setBackGroundType] = useState(
+    user.backGroundItemType,
+  );
+  const pickBackGraoundItem = useCallback(() => {
+    ImagePicker.launchImageLibrary(
+      {mediaType: 'mixed', quality: 0.3},
+      (response) => {
+        if (response.didCancel) {
+          return;
+        }
+
+        setBackGroundItem(response.uri);
+
+        if (response.type) {
+          setBackGroundType('image');
+        } else {
+          setBackGroundType('video');
+        }
+      },
+    );
+  }, []);
+  const deleteBackGroundItem = useCallback(() => {
+    Alert.alert('背景を削除', '削除してよろしいですか?', [
+      {
+        text: 'はい',
+        onPress: () => {
+          setBackGroundItem(null);
+          setBackGroundType(null);
+        },
+      },
+      {
+        text: 'いいえ',
+      },
+    ]);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.backGraondItemContainer}>
         <BackGroundItem
-          source={user.backGroundItem}
-          type={user.backGroundItemType}
+          source={backGroundItem}
+          type={backGroundItemType}
+          onPress={pickBackGraoundItem}
+          onDeletePress={deleteBackGroundItem}
         />
       </View>
       <View style={styles.avatarContainer}>
