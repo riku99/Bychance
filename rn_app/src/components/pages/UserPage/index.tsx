@@ -36,7 +36,7 @@ import {RootState} from '../../../stores/index';
 import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
-import {refreshUserThunk} from '../../../apis/user/refreshUser';
+import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {X_HEIGHT} from '~/constants/device';
 
 // BottomTabに渡される時のプロップス
@@ -299,7 +299,7 @@ export const UserPage = ({route, navigation}: Props) => {
 
 const {height} = Dimensions.get('screen');
 
-const profileContainerHeight = height / 2.3;
+const profileContainerHeight = height / 2;
 
 export const oneIntroduceTextLineHeght = 19.7;
 
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     top: height > X_HEIGHT ? '35%' : '40%',
     width: '100%',
     paddingHorizontal: 25,
-    height: '18%',
+    height: '20%',
   },
   avatarAndNameContainer: {
     top: '15%',
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   },
   moreReadButtonContainer: {
     position: 'absolute',
-    top: height / 2.52,
+    top: height > X_HEIGHT ? height / 2.3 : height / 2.2,
     right: '2%',
   },
 });

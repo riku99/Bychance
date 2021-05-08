@@ -9,19 +9,22 @@ import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
 } from '../../apis/session/sessionLogin';
-import {editProfileThunk, EdiProfilePayload} from '../../apis/user/editProfile';
+import {
+  editProfileThunk,
+  EdiProfilePayload,
+} from '../../apis/users/editProfile';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '../../apis/user/refreshUser';
+} from '../../apis/users/refreshUser';
 import {
   editUserDisplayThunk,
   EidtUserDisplayThunk,
-} from '../../apis/user/changeUserDisplay';
+} from '../../apis/users/changeUserDisplay';
 import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
-} from '../../apis/user/updateLocation';
+} from '../../apis/users/updateLocation';
 import {sampleLogin} from '../../apis/session/sampleLogin';
 import {logoutAction} from '../../apis/session/logout';
 

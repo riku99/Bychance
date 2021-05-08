@@ -7,7 +7,7 @@ import {RootState} from '../stores/index';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './pages/Auth/Page';
 import {Container as Menu} from './utils/Menu';
-import {updateLocationThunk} from '../apis/user/updateLocation';
+import {updateLocationThunk} from '../apis/users/updateLocation';
 import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {useSokcetio} from '~/hooks/socketio/connectionSocket';
 import {useRecieveTalkRoomMessage} from '~/hooks/talkRoomMessages/recieveTalkRoomMessage';

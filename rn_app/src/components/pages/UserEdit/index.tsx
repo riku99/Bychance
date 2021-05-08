@@ -20,7 +20,7 @@ import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 
 import {RootState} from '../../../stores/index';
-import {editProfileThunk} from '../../../apis/user/editProfile';
+import {editProfileThunk} from '../../../apis/users/editProfile';
 import {resetEditData} from '../../../stores/user';
 import {
   UserEditNavigationProp,
@@ -174,6 +174,7 @@ export const UserEditPage = () => {
           return;
         }
 
+        // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。画像の場合は uri.data でbase64のエンコードデータを取れる
         if (response.type) {
           setSelectedBackGroundItem({
             sourceType: 'image',
@@ -181,7 +182,6 @@ export const UserEditPage = () => {
             uri: response.uri,
           });
         } else {
-          //setBackGroundType('video');
           setSelectedBackGroundItem({
             sourceType: 'video',
             uri: response.uri,
@@ -190,6 +190,7 @@ export const UserEditPage = () => {
       },
     );
   }, []);
+
   const onDeleteBackGroundItem = useCallback(() => {
     Alert.alert('背景を削除', '削除してよろしいですか?', [
       {
@@ -225,6 +226,7 @@ export const UserEditPage = () => {
                     ? selectedBackGroundItem?.uri.slice(length + 1)
                     : undefined;
 
+                // 画像の場合はカメラロールから取得した時点でエンコードされたデータを取得できているが、動画の場合はできていないので、uriを元にエンコードデータを作成し、それを送信する
                 const base64 =
                   selectedBackGroundItem &&
                   (selectedBackGroundItem.sourceType === 'image'

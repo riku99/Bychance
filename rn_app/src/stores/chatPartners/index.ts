@@ -26,7 +26,7 @@ import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
 } from '../../apis/nearbyUsers/getNearbyUsers';
-import {refreshUserThunk} from '../../apis/user/refreshUser';
+import {refreshUserThunk} from '../../apis/users/refreshUser';
 import {logoutAction} from '../../apis/session/logout';
 import {
   createRoomThunk,
