@@ -35,6 +35,8 @@ export type UserState = {
     display: boolean;
     lat: number | null;
     lng: number | null;
+    backGroundItem: string | null;
+    backGroundItemType: 'image' | 'video' | null;
   };
   temporarilySavedData?: {
     name?: string;

@@ -1,4 +1,10 @@
-import React, {useEffect, useState, useLayoutEffect, useCallback} from 'react';
+import React, {
+  useEffect,
+  useState,
+  useLayoutEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,6 +15,7 @@ import {
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
+import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 
 import {RootState} from '../../../stores/index';
 import {editProfileThunk} from '../../../apis/user/editProfile';
@@ -22,7 +29,22 @@ import {alertSomeError} from '../../../helpers/errors';
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {normalStyles} from '~/constants/styles/normal';
-import {UserAvatar} from '~/components/utils/Avatar';
+import {Avatar} from './Avatar';
+import {BackGroundItem} from './BackGroundItem';
+
+const options: ImagePickerOptions = {
+  title: 'プロフィール画像を変更',
+  cancelButtonTitle: 'キャンセル',
+  takePhotoButtonTitle: '写真をとる',
+  chooseFromLibraryButtonTitle: 'ライブラリから選択',
+  customButtons: [{title: '現在の写真を削除', name: 'delete'}],
+  quality: 0.3,
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+  allowsEditing: true,
+};
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {
@@ -32,6 +54,8 @@ export const UserEditPage = () => {
       introduce: state.userReducer.user!.introduce,
       avatar: state.userReducer.user!.avatar,
       message: state.userReducer.user!.statusMessage,
+      backGroundItem: state.userReducer.user!.backGroundItem,
+      backGroundItemType: state.userReducer.user!.backGroundItemType,
     };
   }, shallowEqual);
 
@@ -54,23 +78,23 @@ export const UserEditPage = () => {
     async ({
       name,
       introduce,
-      selectedImage,
+      selectedAvatar,
       message,
-      deleteImage,
+      deleteAvatar,
     }: {
       name: string;
       introduce: string;
-      selectedImage: string | undefined;
+      selectedAvatar: string | undefined;
       message: string;
-      deleteImage: boolean;
+      deleteAvatar: boolean;
     }) => {
       const result = await dispatch(
         editProfileThunk({
           name,
           introduce,
-          avatar: selectedImage,
+          avatar: selectedAvatar,
           message,
-          deleteImage,
+          deleteAvatar,
         }),
       );
       if (editProfileThunk.fulfilled.match(result)) {
@@ -111,12 +135,45 @@ export const UserEditPage = () => {
   );
   const [message, setMessage] = useState(user.message ? user.message : '');
   const [loading, setLoding] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(
-    undefined,
-  );
-  const [deleteImage, setDeleteImage] = useState(false);
 
   const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (savedEditData?.name) {
+      setName(savedEditData?.name);
+    }
+    if (savedEditData?.introduce || savedEditData?.introduce === '') {
+      const _data = savedEditData.introduce.replace(/\n{2,}/g, '\n');
+      setIntroduce(_data);
+    }
+    if (savedEditData?.statusMessage || savedEditData?.statusMessage === '') {
+      setMessage(savedEditData.statusMessage);
+    }
+  }, [savedEditData]);
+
+  const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>(
+    undefined,
+  );
+  const [deleteAvatar, setDeleteAvatar] = useState(false);
+  const pickAvatarImage = useCallback(() => {
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.customButton === 'delete') {
+        setDeleteAvatar(true);
+        return;
+      }
+      if (response.uri) {
+        const source = 'data:image/jpeg;base64,' + response.data;
+        setSelectedAvatar(source);
+        if (deleteAvatar) {
+          setDeleteAvatar(false);
+        }
+      }
+    });
+  }, [deleteAvatar]);
+  const displayedAvatar = useMemo(
+    () => (deleteAvatar ? null : selectedAvatar ? selectedAvatar : user.avatar),
+    [deleteAvatar, selectedAvatar, user.avatar],
+  );
 
   useLayoutEffect(() => {
     if (isFocused) {
@@ -133,9 +190,9 @@ export const UserEditPage = () => {
                 editProfile({
                   name,
                   introduce,
-                  selectedImage,
+                  selectedAvatar,
                   message,
-                  deleteImage,
+                  deleteAvatar,
                 });
               }}
             />
@@ -150,37 +207,29 @@ export const UserEditPage = () => {
     name,
     introduce,
     message,
-    selectedImage,
-    deleteImage,
+    selectedAvatar,
+    deleteAvatar,
     isFocused,
     loading,
   ]);
 
   return (
     <View style={styles.container}>
+      <View style={styles.backGraondItemContainer}>
+        <BackGroundItem
+          source={user.backGroundItem}
+          type={user.backGroundItemType}
+        />
+      </View>
+      <View style={styles.avatarContainer}>
+        <Avatar avatar={displayedAvatar} onPress={pickAvatarImage} />
+      </View>
       <View style={styles.mainEditContainer}>
-        <View style={styles.image}>
-          <UserAvatar
-            image={
-              selectedImage ? selectedImage : !deleteImage ? user.avatar : null
-            }
-            size="large"
-            opacity={1}
-          />
-          <Button
-            title="プロフィール画像を変更"
-            titleStyle={styles.imageButtonTitle}
-            buttonStyle={styles.imageButton}
-            onPress={() => {
-              pickImage();
-            }}
-          />
-        </View>
         <View style={styles.profileContainer}>
           <TouchableOpacity
             style={styles.editElenentContainer}
             onPress={() => {
-              navigateToNameEdit({
+              navigateToNameEditPage({
                 name,
               });
             }}>
@@ -190,7 +239,7 @@ export const UserEditPage = () => {
           <TouchableOpacity
             style={styles.editElenentContainer}
             onPress={() => {
-              navigateToIntroduceEdit({
+              navigateToIntroduceEditPage({
                 introduce,
               });
             }}>
@@ -206,7 +255,7 @@ export const UserEditPage = () => {
           <TouchableOpacity
             style={styles.editElenentContainer}
             onPress={() =>
-              navigateToStatusMessageEdit({
+              navigateToStatusMessageEditPage({
                 statusMessage: message,
               })
             }>
@@ -225,13 +274,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  backGraondItemContainer: {
+    width: '100%',
+    height: '20%',
+  },
+  avatarContainer: {
+    width: 80,
+    height: 80,
+    position: 'absolute',
+    top: '15%',
+    left: '5%',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   mainEditContainer: {
     width: '90%',
     height: '90%',
     display: 'flex',
     alignItems: 'center',
+    marginTop: '15%',
   },
   profileContainer: {
     width: '100%',
@@ -253,21 +315,6 @@ const styles = StyleSheet.create({
     left: 100,
     fontSize: 16,
     color: normalStyles.mainTextColor,
-  },
-  image: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 130,
-    width: '80%',
-  },
-  imageButton: {
-    backgroundColor: 'transparent',
-  },
-  imageButtonTitle: {
-    color: '#4fa9ff',
-    fontWeight: 'bold',
-    fontSize: 15,
   },
   completeButton: {
     backgroundColor: 'transparent',
