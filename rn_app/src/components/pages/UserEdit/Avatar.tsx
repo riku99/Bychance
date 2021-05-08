@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 
-import {UserAvatar} from '~/components/utils/Avatar';
+import {UserAvatarWithOuter} from '~/components/utils/Avatar';
 
 type Props = {
   avatar: string | null;
@@ -11,7 +11,12 @@ type Props = {
 export const Avatar = React.memo(({avatar, onPress}: Props) => {
   return (
     <TouchableOpacity activeOpacity={1} onPress={onPress}>
-      <UserAvatar image={avatar ? avatar : null} size="large" opacity={1} />
+      <UserAvatarWithOuter
+        image={avatar ? avatar : null}
+        size="large"
+        opacity={1}
+        outerType="none"
+      />
     </TouchableOpacity>
   );
 });

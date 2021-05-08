@@ -130,6 +130,8 @@ const userSlice = createSlice({
         introduce: actions.payload.introduce,
         avatar: actions.payload.avatar,
         statusMessage: actions.payload.statusMessage,
+        backGroundItem: actions.payload.backGroundItem,
+        backGroundItemType: actions.payload.backGroundItemType,
       },
     }),
     [editUserDisplayThunk.fulfilled.type]: (

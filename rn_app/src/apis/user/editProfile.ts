@@ -13,7 +13,13 @@ import {User} from '../../stores/user';
 
 export type EdiProfilePayload = Pick<
   User,
-  'id' | 'name' | 'introduce' | 'avatar' | 'statusMessage'
+  | 'id'
+  | 'name'
+  | 'introduce'
+  | 'avatar'
+  | 'statusMessage'
+  | 'backGroundItem'
+  | 'backGroundItemType'
 >;
 
 export const editProfileThunk = createAsyncThunk<
@@ -22,8 +28,12 @@ export const editProfileThunk = createAsyncThunk<
     name: string;
     introduce: string;
     avatar: string | undefined;
+    deleteAvatar: boolean;
     message: string;
-    deleteImage: boolean;
+    backGroundItem?: string;
+    backGroundItemType?: 'image' | 'video';
+    deleteBackGroundItem: boolean;
+    backGroundItemExt?: string;
   },
   {
     rejectValue: rejectPayload;
@@ -31,7 +41,17 @@ export const editProfileThunk = createAsyncThunk<
 >(
   'users/editProfile',
   async (
-    {name, introduce, avatar, message, deleteImage},
+    {
+      name,
+      introduce,
+      avatar,
+      message,
+      deleteAvatar,
+      backGroundItem,
+      backGroundItemType,
+      deleteBackGroundItem,
+      backGroundItemExt,
+    },
     {rejectWithValue, dispatch},
   ) => {
     const keychain = await checkKeychain();
@@ -39,15 +59,28 @@ export const editProfileThunk = createAsyncThunk<
     if (keychain) {
       try {
         const response = await axios.patch<
-          Pick<User, 'id' | 'name' | 'introduce' | 'avatar' | 'statusMessage'>
+          Pick<
+            User,
+            | 'id'
+            | 'name'
+            | 'introduce'
+            | 'avatar'
+            | 'statusMessage'
+            | 'backGroundItem'
+            | 'backGroundItemType'
+          >
         >(
           `${origin}/users?id=${keychain.id}`,
           {
             name,
             introduce,
             avatar,
+            deleteAvatar,
             statusMessage: message,
-            deleteImage,
+            backGroundItem,
+            backGroundItemType,
+            deleteBackGroundItem,
+            backGroundItemExt,
           },
           headers(keychain.token),
         );

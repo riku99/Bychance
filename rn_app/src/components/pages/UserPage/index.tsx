@@ -206,7 +206,10 @@ export const UserPage = ({route, navigation}: Props) => {
               styles.backGroundImageContainer,
               {transform: [{translateY: y}]},
             ]}>
-            <BackGroundItem soruce={user.avatar} sorceType="image" />
+            <BackGroundItem
+              soruce={user.backGroundItem}
+              sorceType={user.backGroundItemType}
+            />
           </Animated.View>
 
           <Animated.View

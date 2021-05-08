@@ -17,6 +17,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
+import fs from 'react-native-fs';
 
 import {RootState} from '../../../stores/index';
 import {editProfileThunk} from '../../../apis/user/editProfile';
@@ -26,7 +27,6 @@ import {
   RootNavigationProp,
 } from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
-import {alertSomeError} from '../../../helpers/errors';
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {normalStyles} from '~/constants/styles/normal';
@@ -74,45 +74,6 @@ export const UserEditPage = () => {
     });
     return unsbscribe;
   }, [navigation, dispatch]);
-
-  const editProfile = useCallback(
-    async ({
-      name,
-      introduce,
-      selectedAvatar,
-      message,
-      deleteAvatar,
-    }: {
-      name: string;
-      introduce: string;
-      selectedAvatar: string | undefined;
-      message: string;
-      deleteAvatar: boolean;
-    }) => {
-      const result = await dispatch(
-        editProfileThunk({
-          name,
-          introduce,
-          avatar: selectedAvatar,
-          message,
-          deleteAvatar,
-        }),
-      );
-      if (editProfileThunk.fulfilled.match(result)) {
-        displayShortMessage('編集しました', 'success');
-      } else {
-        switch (result.payload?.errorType) {
-          case 'invalidError':
-            displayShortMessage(result.payload.message, 'danger');
-            break;
-          case 'someError':
-            alertSomeError();
-        }
-      }
-      navigation.goBack();
-    },
-    [dispatch, navigation],
-  );
 
   const navigateToNameEditPage = ({name}: {name: string}) =>
     userEditNavigation.push('NameEdit', {type: 'name', name});
@@ -177,6 +138,73 @@ export const UserEditPage = () => {
     });
   }, [deleteAvatar]);
 
+  const [selectedBackGroundItem, setSelectedBackGroundItem] = useState<
+    | {
+        sourceType: 'image' | 'video';
+        uri: string;
+        base64?: string;
+      }
+    | undefined
+  >();
+  const [deleteBackGroundItem, setDeleteBackGroundItem] = useState(false);
+  const displayedBackGroundItem = useMemo(() => {
+    return deleteBackGroundItem
+      ? null
+      : selectedBackGroundItem
+      ? {
+          uri: selectedBackGroundItem.uri,
+          sourceType: selectedBackGroundItem.sourceType,
+        }
+      : {
+          uri: user.backGroundItem,
+          sourceType: user.backGroundItemType,
+        };
+  }, [
+    deleteBackGroundItem,
+    selectedBackGroundItem,
+    user.backGroundItem,
+    user.backGroundItemType,
+  ]);
+
+  const pickBackGraoundItem = useCallback(() => {
+    ImagePicker.launchImageLibrary(
+      {mediaType: 'mixed', quality: 0.3},
+      (response) => {
+        if (response.didCancel) {
+          return;
+        }
+
+        if (response.type) {
+          setSelectedBackGroundItem({
+            sourceType: 'image',
+            base64: response.data,
+            uri: response.uri,
+          });
+        } else {
+          //setBackGroundType('video');
+          setSelectedBackGroundItem({
+            sourceType: 'video',
+            uri: response.uri,
+          });
+        }
+      },
+    );
+  }, []);
+  const onDeleteBackGroundItem = useCallback(() => {
+    Alert.alert('背景を削除', '削除してよろしいですか?', [
+      {
+        text: 'はい',
+        onPress: () => {
+          setSelectedBackGroundItem(undefined);
+          setDeleteBackGroundItem(true);
+        },
+      },
+      {
+        text: 'いいえ',
+      },
+    ]);
+  }, []);
+
   useLayoutEffect(() => {
     if (isFocused) {
       navigation.dangerouslyGetParent()?.setOptions({
@@ -187,15 +215,40 @@ export const UserEditPage = () => {
               title="完了"
               titleStyle={styles.completeButtonTitle}
               buttonStyle={styles.completeButton}
-              onPress={() => {
+              onPress={async () => {
                 setLoding(true);
-                editProfile({
-                  name,
-                  introduce,
-                  selectedAvatar,
-                  message,
-                  deleteAvatar,
-                });
+                const length =
+                  selectedBackGroundItem &&
+                  selectedBackGroundItem.uri.lastIndexOf('.');
+                const ext =
+                  length && length !== -1
+                    ? selectedBackGroundItem?.uri.slice(length + 1)
+                    : undefined;
+
+                const base64 =
+                  selectedBackGroundItem &&
+                  (selectedBackGroundItem.sourceType === 'image'
+                    ? selectedBackGroundItem.base64
+                    : await fs.readFile(selectedBackGroundItem.uri, 'base64'));
+
+                const result = await dispatch(
+                  editProfileThunk({
+                    name,
+                    introduce,
+                    avatar: selectedAvatar,
+                    message,
+                    deleteAvatar,
+                    backGroundItem: base64,
+                    backGroundItemType: selectedBackGroundItem?.sourceType,
+                    deleteBackGroundItem,
+                    backGroundItemExt: ext,
+                  }),
+                );
+
+                if (editProfileThunk.fulfilled.match(result)) {
+                  displayShortMessage('更新しました', 'success');
+                }
+                navigation.goBack();
               }}
             />
           ) : (
@@ -205,7 +258,6 @@ export const UserEditPage = () => {
     }
   }, [
     navigation,
-    editProfile,
     name,
     introduce,
     message,
@@ -213,53 +265,21 @@ export const UserEditPage = () => {
     deleteAvatar,
     isFocused,
     loading,
+    deleteBackGroundItem,
+    selectedBackGroundItem,
+    dispatch,
   ]);
-
-  const [backGroundItem, setBackGroundItem] = useState(user.backGroundItem);
-  const [backGroundItemType, setBackGroundType] = useState(
-    user.backGroundItemType,
-  );
-  const pickBackGraoundItem = useCallback(() => {
-    ImagePicker.launchImageLibrary(
-      {mediaType: 'mixed', quality: 0.3},
-      (response) => {
-        if (response.didCancel) {
-          return;
-        }
-
-        setBackGroundItem(response.uri);
-
-        if (response.type) {
-          setBackGroundType('image');
-        } else {
-          setBackGroundType('video');
-        }
-      },
-    );
-  }, []);
-  const deleteBackGroundItem = useCallback(() => {
-    Alert.alert('背景を削除', '削除してよろしいですか?', [
-      {
-        text: 'はい',
-        onPress: () => {
-          setBackGroundItem(null);
-          setBackGroundType(null);
-        },
-      },
-      {
-        text: 'いいえ',
-      },
-    ]);
-  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.backGraondItemContainer}>
         <BackGroundItem
-          source={backGroundItem}
-          type={backGroundItemType}
+          source={displayedBackGroundItem ? displayedBackGroundItem.uri : null}
+          type={
+            displayedBackGroundItem ? displayedBackGroundItem.sourceType : null
+          }
           onPress={pickBackGraoundItem}
-          onDeletePress={deleteBackGroundItem}
+          onDeletePress={onDeleteBackGroundItem}
         />
       </View>
       <View style={styles.avatarContainer}>
