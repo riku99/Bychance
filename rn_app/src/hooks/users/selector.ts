@@ -9,3 +9,10 @@ export const useUserSelect = () => {
   );
   return user;
 };
+
+export const useSelectTamporarilySavedUserEditData = () => {
+  const savedEditData = useSelector((state: RootState) => {
+    return state.userReducer.temporarilySavedData;
+  }, shallowEqual);
+  return savedEditData;
+};

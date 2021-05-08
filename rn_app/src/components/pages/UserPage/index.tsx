@@ -23,6 +23,7 @@ import {TakeFlashButton} from './TakeFlashButton';
 import {SendMessageButton} from './SendMessageButton';
 import {MoreReadBottun} from './MoreReadButton';
 import {IntroduceModal} from './IntoduceModal';
+import {BackGroundItem} from './BackGroundItem';
 import {
   MyPageStackParamList,
   UserPageScreenGroupParamList,
@@ -204,8 +205,9 @@ export const UserPage = ({route, navigation}: Props) => {
             style={[
               styles.backGroundImageContainer,
               {transform: [{translateY: y}]},
-            ]}
-          />
+            ]}>
+            <BackGroundItem soruce={user.avatar} sorceType="image" />
+          </Animated.View>
 
           <Animated.View
             onLayout={(e) => setIntroduceHeight(e.nativeEvent.layout.height)}
