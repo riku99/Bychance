@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
 import {useSelector} from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
+import messaging from '@react-native-firebase/messaging';
 
 import {RootState} from '../stores/index';
 import {RootStackScreen} from '../screens/Root';
@@ -55,6 +56,32 @@ const Root = () => {
       };
     }
   }, [dispatch, login]);
+
+  useEffect(() => {
+    if (login) {
+      async function requestUserPermission() {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+        if (enabled) {
+          console.log('Authorization status:', authStatus);
+        }
+      }
+      requestUserPermission();
+
+      messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+        console.log('backgroundでメッセージを受け取りました: ' + remoteMessage);
+      });
+
+      const getDeviceToken = async () => {
+        const devicetoken = await messaging().getToken();
+        console.log('これがトークンです: ' + devicetoken);
+      };
+      getDeviceToken();
+    }
+  }, [login]);
 
   if (load) {
     return null;
