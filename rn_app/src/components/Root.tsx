@@ -40,6 +40,7 @@ const Root = () => {
   const onEndSessionLogin = useCallback(() => setLoad(false), []);
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
 
+  // 位置情報取得のためのeffect。あとでカスタムフックにまとめる
   useEffect(() => {
     if (login) {
       const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
