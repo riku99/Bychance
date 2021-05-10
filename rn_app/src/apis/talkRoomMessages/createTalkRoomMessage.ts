@@ -9,9 +9,12 @@ import {
   headers,
   origin,
 } from '../re-modules';
-import {Message} from '../../stores/messages';
+import {TalkRoomMessage} from '../../stores/messages';
 
-export type CreateMessageThunkPayload = {message: Message; roomId: number};
+export type CreateMessageThunkPayload = {
+  message: TalkRoomMessage;
+  roomId: number;
+};
 
 export const createMessageThunk = createAsyncThunk<
   CreateMessageThunkPayload,
@@ -29,7 +32,7 @@ export const createMessageThunk = createAsyncThunk<
 
     if (credentials) {
       try {
-        const response = await axios.post<Message>(
+        const response = await axios.post<TalkRoomMessage>(
           `${origin}/talkRoomMessages?id=${credentials.id}`,
           {
             talkRoomId: roomId,

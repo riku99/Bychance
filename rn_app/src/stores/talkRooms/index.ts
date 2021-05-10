@@ -27,7 +27,7 @@ import {
   CreateDeleteRoomThunkPayload,
 } from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
 import {logoutAction} from '../../apis/session/logout';
-import {receiveMessage} from '../messages';
+import {receiveTalkRoomMessage} from '../messages';
 import {ReceivedMessageData} from '~/stores/types';
 
 export type TalkRoom = {
@@ -112,7 +112,7 @@ export const RoomsSlice = createSlice({
         });
       }
     },
-    [receiveMessage.type]: (
+    [receiveTalkRoomMessage.type]: (
       state,
       action: PayloadAction<ReceivedMessageData>,
     ) => {

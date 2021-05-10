@@ -4,7 +4,7 @@ import {userReducer} from './user';
 import {postsReducer} from './posts';
 import {talkRoomsReducer} from './talkRooms';
 import {chatPartnersReducer} from './chatPartners';
-import {messagesReducer} from './messages';
+import {talkRoomMessageReducer} from './messages';
 import {flashesReducer} from './flashes';
 import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   postsReducer,
   talkRoomsReducer,
   chatPartnersReducer,
-  messagesReducer,
+  talkRoomMessageReducer,
   flashesReducer,
   nearbyUsersReducer,
   otherSettingsReducer,

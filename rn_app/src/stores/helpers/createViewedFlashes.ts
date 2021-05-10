@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 
-import {nearbyUsersAdapter, NearbyUsersState} from '../../nearbyUsers';
-import {chatPartnersAdapter, ChatPartnersState} from '../../chatPartners';
+import {nearbyUsersAdapter, NearbyUsersState} from '../nearbyUsers';
+import {chatPartnersAdapter, ChatPartnersState} from '../chatPartners';
 
 export const updateAlreadyViewed = (
   state: NearbyUsersState | ChatPartnersState,

@@ -21,7 +21,6 @@ export const createDeviceToken = createAsyncThunk<
 
     if (credentials) {
       try {
-        console.log('go');
         await axios.post(
           `${origin}/deviceToken?id=${credentials.id}`,
           {token},

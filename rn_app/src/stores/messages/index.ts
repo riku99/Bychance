@@ -21,7 +21,7 @@ import {logoutAction} from '../../apis/session/logout';
 import {RootState} from '../index';
 import {ReceivedMessageData} from '../types';
 
-export type Message = {
+export type TalkRoomMessage = {
   id: number;
   roomId: number;
   userId: number;
@@ -30,59 +30,71 @@ export type Message = {
   read: boolean;
 };
 
-const messagesAdapter = createEntityAdapter<Message>({
+const talkRoomMessagesAdapter = createEntityAdapter<TalkRoomMessage>({
   selectId: (message) => message.id,
   sortComparer: (a, b) =>
     new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1,
 });
 
-const messagesSlice = createSlice({
+const talkRoomMessagesSlice = createSlice({
   name: 'messages',
-  initialState: messagesAdapter.getInitialState(),
+  initialState: talkRoomMessagesAdapter.getInitialState(),
   reducers: {
-    receiveMessage: (state, action: PayloadAction<ReceivedMessageData>) => {
-      messagesAdapter.addOne(state, action.payload.message);
+    receiveTalkRoomMessage: (
+      state,
+      action: PayloadAction<ReceivedMessageData>,
+    ) => {
+      const existingMessage = talkRoomMessageSelectors.selectById(
+        state,
+        action.payload.message.id,
+      );
+      if (!existingMessage) {
+        talkRoomMessagesAdapter.addOne(state, action.payload.message);
+      }
     },
   },
   extraReducers: {
     [logoutAction.type]: () => {
-      return messagesAdapter.getInitialState();
+      return talkRoomMessagesAdapter.getInitialState();
     },
     [sampleLogin.fulfilled.type]: (state, action) => {
-      messagesAdapter.addMany(state, action.payload.messages);
+      talkRoomMessagesAdapter.addMany(state, action.payload.messages);
     },
     [lineLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<LineLoginThunkPayload>,
     ) => {
-      messagesAdapter.addMany(state, action.payload.messages);
+      talkRoomMessagesAdapter.addMany(state, action.payload.messages);
     },
     [sessionLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
-      messagesAdapter.addMany(state, action.payload.messages);
+      talkRoomMessagesAdapter.addMany(state, action.payload.messages);
     },
     [createMessageThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateMessageThunkPayload>,
     ) => {
-      messagesAdapter.addOne(state, action.payload.message);
+      talkRoomMessagesAdapter.addOne(state, action.payload.message);
     },
   },
 });
 
-const messagesSelectors = messagesAdapter.getSelectors();
+const talkRoomMessageSelectors = talkRoomMessagesAdapter.getSelectors();
 
 export const selectMessages = (state: RootState, messageIds: number[]) => {
   const _ms = [];
   for (let i of messageIds) {
-    const message = messagesSelectors.selectById(state.messagesReducer, i);
+    const message = talkRoomMessageSelectors.selectById(
+      state.talkRoomMessageReducer,
+      i,
+    );
     message && _ms.push(message);
   }
   return _ms;
 };
 
-export const {receiveMessage} = messagesSlice.actions;
+export const {receiveTalkRoomMessage} = talkRoomMessagesSlice.actions;
 
-export const messagesReducer = messagesSlice.reducer;
+export const talkRoomMessageReducer = talkRoomMessagesSlice.reducer;

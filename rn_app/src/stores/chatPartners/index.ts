@@ -6,9 +6,9 @@ import {
 
 import {AnotherUser, ReceivedMessageData} from '../types';
 import {RootState} from '../index';
-import {receiveMessage} from '../messages';
+import {receiveTalkRoomMessage} from '../messages';
 import {User} from '../user';
-import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
+import {updateAlreadyViewed} from '../helpers/createViewedFlashes';
 import {refreshUser} from '../helpers/refreshUser';
 import {
   sessionLoginThunk,
@@ -71,7 +71,7 @@ export const chatPartnersSlice = createSlice({
         chatPartnersAdapter.addOne(state, action.payload.partner);
       }
     },
-    [receiveMessage.type]: (
+    [receiveTalkRoomMessage.type]: (
       state,
       action: PayloadAction<ReceivedMessageData>,
     ) => {

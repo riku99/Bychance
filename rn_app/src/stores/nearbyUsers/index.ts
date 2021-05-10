@@ -6,7 +6,7 @@ import {
 
 import {RootState} from '../index';
 import {AnotherUser} from '../types';
-import {updateAlreadyViewed} from '../helpers/createAlreadyViewedFlash';
+import {updateAlreadyViewed} from '../helpers/createViewedFlashes';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,

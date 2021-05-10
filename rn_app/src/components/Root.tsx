@@ -10,7 +10,7 @@ import {Container as Menu} from './utils/Menu';
 import {updateLocationThunk} from '../apis/users/updateLocation';
 import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {useSokcetio} from '~/hooks/socketio/connectionSocket';
-import {useRecieveTalkRoomMessage} from '~/hooks/talkRoomMessages/recieveTalkRoomMessage';
+import {useRecieveTalkRoomMessage} from '~/hooks/socketio/talkRoomMessages';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {useLoginSelect} from '~/hooks/sessions/selector';
