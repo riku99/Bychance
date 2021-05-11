@@ -6,7 +6,7 @@ import {
 
 import {AnotherUser, ReceivedMessageData} from '../types';
 import {RootState} from '../index';
-import {receiveTalkRoomMessage} from '../messages';
+import {receiveTalkRoomMessage} from '../talkRoomMessages';
 import {User} from '../user';
 import {updateAlreadyViewed} from '../helpers/createViewedFlashes';
 import {refreshUser} from '../helpers/refreshUser';

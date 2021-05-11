@@ -6,7 +6,7 @@ import {RouteProp} from '@react-navigation/native';
 import {ChatRoom} from './ChatRoom';
 import {ChatRoomStackNavigationProp} from '../../../screens/types';
 import {AppDispatch, RootState} from '../../../stores/index';
-import {selectMessages} from '../../../stores/messages';
+import {selectMessages} from '../../../stores/talkRoomMessages';
 import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
 import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';

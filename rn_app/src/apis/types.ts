@@ -2,7 +2,7 @@ import {AxiosError} from 'axios';
 import {User} from '../stores/user';
 import {Post} from '../stores/posts';
 import {TalkRoom} from '../stores/talkRooms';
-import {Message} from '../stores/messages';
+import {Message} from '../stores/talkRoomMessages';
 import {Flash} from '../stores/flashes';
 import {AnotherUser} from '../stores/types';
 

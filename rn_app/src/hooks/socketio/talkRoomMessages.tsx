@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 
 import {ReceivedMessageData} from '~/stores/types';
-import {receiveTalkRoomMessage} from '~/stores/messages';
+import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {UserAvatar} from '~/components/utils/Avatar';
 
 // メッセージの反映にはとりあえずpush通知ではなくてsocketで行う(push通知自体はある)
@@ -16,7 +16,7 @@ export const useRecieveTalkRoomMessage = ({socket}: {socket?: Socket}) => {
   useEffect(() => {
     if (socket) {
       socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
-        dispatch(receiveTalkRoomMessage(data));
+        //dispatch(receiveTalkRoomMessage(data));
         if (AppState.currentState === 'active') {
           showMessage({
             message: data.sender.name,

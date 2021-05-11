@@ -4,7 +4,7 @@ import {userReducer} from './user';
 import {postsReducer} from './posts';
 import {talkRoomsReducer} from './talkRooms';
 import {chatPartnersReducer} from './chatPartners';
-import {talkRoomMessageReducer} from './messages';
+import {talkRoomMessageReducer} from './talkRoomMessages';
 import {flashesReducer} from './flashes';
 import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';

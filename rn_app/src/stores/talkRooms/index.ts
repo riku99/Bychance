@@ -27,7 +27,7 @@ import {
   CreateDeleteRoomThunkPayload,
 } from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
 import {logoutAction} from '../../apis/session/logout';
-import {receiveTalkRoomMessage} from '../messages';
+import {receiveTalkRoomMessage} from '../talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
 
 export type TalkRoom = {

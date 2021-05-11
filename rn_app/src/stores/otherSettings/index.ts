@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {logoutAction} from '../../apis/session/logout';
-import {TalkRoomMessage, receiveTalkRoomMessage} from '../messages';
+import {TalkRoomMessage, receiveTalkRoomMessage} from '../talkRoomMessages';
 import {ReceivedMessageData} from '../types';
 
 type InitialState = {
@@ -58,10 +58,15 @@ const otherSettingsSlice = createSlice({
       state,
       action: PayloadAction<ReceivedMessageData>,
     ) => {
-      return {
-        ...state,
-        receivedMessage: action.payload.message,
-      };
+      if (
+        state.receivedMessage &&
+        state.receivedMessage.id !== action.payload.message.id
+      ) {
+        return {
+          ...state,
+          receivedMessage: action.payload.message,
+        };
+      }
     },
   },
 });

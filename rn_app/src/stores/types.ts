@@ -1,7 +1,7 @@
 import {User} from './user';
 import {Post} from './posts';
 import {TalkRoom} from './talkRooms';
-import {TalkRoomMessage} from './messages';
+import {TalkRoomMessage} from './talkRoomMessages';
 import {FlashesData} from '../components/pages/Flashes/types';
 
 export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {

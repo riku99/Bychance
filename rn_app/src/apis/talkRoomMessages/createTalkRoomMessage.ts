@@ -9,7 +9,7 @@ import {
   headers,
   origin,
 } from '../re-modules';
-import {TalkRoomMessage} from '../../stores/messages';
+import {TalkRoomMessage} from '../../stores/talkRoomMessages';
 
 export type CreateMessageThunkPayload = {
   message: TalkRoomMessage;
