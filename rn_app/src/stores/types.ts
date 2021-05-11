@@ -19,6 +19,6 @@ export type ReceivedMessageData =
   | {
       isFirstMessage: false;
       roomId: number;
-      sender: {name: string; avatar: string | null};
+      sender: {id: string; name: string; avatar: string | null};
       message: TalkRoomMessage;
     };

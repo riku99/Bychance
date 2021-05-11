@@ -4,6 +4,7 @@ import messaging from '@react-native-firebase/messaging';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
+import {refreshUserThunk} from '~/apis/users/refreshUser';
 
 export const useRegisterRecieveTalkRoomMessages = ({
   login,
@@ -15,10 +16,13 @@ export const useRegisterRecieveTalkRoomMessages = ({
     if (login) {
       //backgroundで通知を受け取った時の処理;
       messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-        const data = remoteMessage.data as unknown;
+        const _data = remoteMessage.data as unknown;
+        const data = _data as ReceivedMessageData;
+
         console.log(data);
-        // dispatch(メッセージの反映)はsocketで行うが、socketがダメだった場合を考えてこっちでもdispatchする。ただ、今の状態ですると多分ダブるのでダブらないようにする
-        dispatch(receiveTalkRoomMessage(data as ReceivedMessageData));
+        // dispatch(メッセージの反映)はsocketで行うが、socketがダメだった場合を考えてこっちでもdispatchする
+        dispatch(receiveTalkRoomMessage(data));
+        dispatch(refreshUserThunk({userId: data.sender.id}));
       });
 
       //backgroundで通知を受け取ってその通知をタップした時の処理;
