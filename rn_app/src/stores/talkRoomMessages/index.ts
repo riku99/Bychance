@@ -48,6 +48,7 @@ const talkRoomMessagesSlice = createSlice({
         state,
         action.payload.message.id,
       );
+      // socketとFCMで2回dispatchされるので、ダブりを防ぐために既にメッセージが存在するかどうか検証
       if (!existingMessage) {
         talkRoomMessagesAdapter.addOne(state, action.payload.message);
       }

@@ -124,8 +124,11 @@ export const RoomsSlice = createSlice({
         const targetRoom = state.entities[roomId];
 
         // 対象のルームないことは現在のところ基本的にないが、もし何らかの理由がなくてない場合stateは変えないでそのまま返す
-        // ルームの削除機能作ったりしたら対象のルームがないことあるかも
-        if (!targetRoom) {
+        // socketでの通信とFCMによる通信で2回dispatchがあるので、ダブらないようにメッセージが既に存在する場合は更新処理を行わずリターン
+        if (
+          !targetRoom ||
+          (targetRoom.messages.length && targetRoom.messages[0] === message.id)
+        ) {
           return state;
         }
 
