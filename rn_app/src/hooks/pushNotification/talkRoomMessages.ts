@@ -15,15 +15,15 @@ export const useRegisterRecieveTalkRoomMessages = ({
   useEffect(() => {
     if (login) {
       //backgroundで通知を受け取った時の処理;
-      messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-        const _data = remoteMessage.data as unknown;
-        const data = _data as ReceivedMessageData;
-
-        console.log(data);
-        // dispatch(メッセージの反映)はsocketで行うが、socketがダメだった場合を考えてこっちでもdispatchする
-        dispatch(receiveTalkRoomMessage(data));
-        dispatch(refreshUserThunk({userId: data.sender.id}));
-      });
+      // messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      //   const _data = remoteMessage.data as unknown;
+      //   const data = _data as ReceivedMessageData;
+      //   console.log('recieve');
+      //   // dispatch(メッセージの反映)はsocketで行うが、socketがダメだった場合を考えてこっちでもdispatchする
+      //   //dispatch(receiveTalkRoomMessage(data));
+      //   // push通知でデータ最大量の問題があるので全てのデータpush通知では送らない。なので残りの分をrefreshUserで取得
+      //   //dispatch(refreshUserThunk({userId: data.sender.id}));
+      // });
 
       //backgroundで通知を受け取ってその通知をタップした時の処理;
       messaging().onNotificationOpenedApp(async () => {

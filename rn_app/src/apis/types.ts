@@ -1,10 +1,5 @@
 import {AxiosError} from 'axios';
-import {User} from '../stores/user';
-import {Post} from '../stores/posts';
-import {TalkRoom} from '../stores/talkRooms';
-import {Message} from '../stores/talkRoomMessages';
-import {Flash} from '../stores/flashes';
-import {AnotherUser} from '../stores/types';
+import {ClientData} from '~/stores/types';
 
 export type rejectPayload =
   | {errorType: 'loginError'}
@@ -15,11 +10,4 @@ export type basicAxiosError = AxiosError<
   {errorType: 'invalidError'; message: string} | {errorType: 'loginError'}
 >;
 
-export type SuccessfullLoginData = {
-  user: User;
-  posts: Post[];
-  rooms: TalkRoom[];
-  chatPartners: AnotherUser[];
-  messages: Message[];
-  flashes: Flash[];
-};
+export type SuccessfullLoginData = ClientData;

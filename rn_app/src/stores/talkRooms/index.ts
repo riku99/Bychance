@@ -117,7 +117,16 @@ export const RoomsSlice = createSlice({
       action: PayloadAction<ReceivedMessageData>,
     ) => {
       if (action.payload.isFirstMessage) {
-        // wsで受け取ったのが最初のメッセージだったらトークルームも存在しない状態なのでトークルームを追加
+        const existingRoom = talkRoomSelectors.selectById(
+          state,
+          action.payload.room.id,
+        );
+
+        if (existingRoom) {
+          return state;
+        }
+
+        // 受け取ったのが最初のメッセージだったらトークルームも存在しない状態なのでトークルームを追加
         talkRoomsAdapter.upsertOne(state, action.payload.room);
       } else {
         const {roomId, message} = action.payload;

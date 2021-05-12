@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
@@ -79,6 +85,8 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
     }
   });
 
+  const messageIds = useMemo(() => messages.map((m) => m._id), [messages]);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: partner?.name ? partner.name : 'ユーザーが存在しません',
@@ -87,15 +95,19 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
 
   const dispatch: AppDispatch = useDispatch();
 
-  // チャットルームを開いている時にwsでメッセージを受け取った時のためのセレクタ
+  // チャットルームを開いている時にメッセージを受け取った時のためのセレクタ
   const receivedMessage = useSelector((state: RootState) => {
     return state.otherSettingsReducer.receivedMessage;
-  });
+  }, shallowEqual);
 
-  // チャットルームを開いている時にwsでメッセージを受け取った場合のためのeffect
-  // wsでメッセージを受け取り、そのメッセージがこのルーム宛のものであれば表示
+  // チャットルームを開いている時にでメッセージを受け取った場合のためのeffect
+  // メッセージを受け取り、そのメッセージがこのルーム宛のものであれば表示
   useEffect(() => {
-    if (receivedMessage && receivedMessage.roomId === room.id) {
+    if (
+      receivedMessage &&
+      receivedMessage.roomId === room.id &&
+      !messageIds.includes(receivedMessage.id)
+    ) {
       setMessages((m) => {
         return [
           {
@@ -117,8 +129,6 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
           ...m,
         ];
       });
-      // 追加した時点でもう必要ないのでリセット
-      dispatch(resetRecievedMessage());
       // ルームを開いている状態で取得したメッセージなので未読数を0にする
       dispatch(resetUnreadNumber({roomId: room.id}));
       // 既読データをサーバの方で作成
@@ -135,9 +145,9 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
     room.id,
     partner?.avatar,
     onAvatarPress,
-    room.messages,
     dispatch,
     route.params.partnerId,
+    messageIds,
   ]);
 
   useEffect(() => {

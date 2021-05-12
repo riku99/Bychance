@@ -35,12 +35,10 @@ export const refreshUserThunk = createAsyncThunk<
 
       return response.data;
     } catch (e) {
-      // axiosエラー
       const result = handleBasicError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {
-    // credentialsなしのログインエラー
     requestLogin(() => dispatch(logoutAction));
     return rejectWithValue({errorType: 'loginError'});
   }

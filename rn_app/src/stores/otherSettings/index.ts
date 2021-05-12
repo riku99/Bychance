@@ -59,7 +59,7 @@ const otherSettingsSlice = createSlice({
       action: PayloadAction<ReceivedMessageData>,
     ) => {
       if (
-        state.receivedMessage &&
+        !state.receivedMessage ||
         state.receivedMessage.id !== action.payload.message.id
       ) {
         return {

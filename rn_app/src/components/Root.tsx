@@ -20,6 +20,7 @@ import {
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification/setup';
 import {useRegisterRecieveTalkRoomMessages} from '~/hooks/pushNotification/talkRoomMessages';
+import {refreshUserThunk} from '~/apis/users/refreshUser';
 
 const Root = () => {
   const [load, setLoad] = useState(true);
@@ -45,6 +46,9 @@ const Root = () => {
     if (login) {
       const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
         if (nextAppState === 'active') {
+          if (id) {
+            dispatch(refreshUserThunk({userId: id}));
+          }
           const position = await getCurrentPosition();
           dispatch(
             updateLocationThunk({
@@ -60,7 +64,7 @@ const Root = () => {
         AppState.removeEventListener('change', _handleAppStateChange);
       };
     }
-  }, [dispatch, login]);
+  }, [dispatch, login, id]);
 
   usePushNotificationReqest({login});
   useRegisterDeviceToken({login});
