@@ -16,7 +16,8 @@ export const useRecieveTalkRoomMessage = ({socket}: {socket?: Socket}) => {
   useEffect(() => {
     if (socket) {
       socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
-        //dispatch(receiveTalkRoomMessage(data));
+        console.log('socket!');
+        dispatch(receiveTalkRoomMessage(data));
         if (AppState.currentState === 'active') {
           showMessage({
             message: data.sender.name,
