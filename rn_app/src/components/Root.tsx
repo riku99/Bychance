@@ -9,8 +9,7 @@ import {Container as Auth} from './pages/Auth/Page';
 import {Container as Menu} from './utils/Menu';
 import {updateLocationThunk} from '../apis/users/updateLocation';
 import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
-import {useSokcetio} from '~/hooks/socketio/connectionSocket';
-import {useRecieveTalkRoomMessage} from '~/hooks/socketio/talkRoomMessages';
+import {useTalkRoomMessagesIo} from '~/hooks/socketio/talkRoomMessages';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {useLoginSelect} from '~/hooks/sessions/selector';
@@ -35,8 +34,7 @@ const Root = () => {
     return state.otherSettingsReducer.displayedMenu;
   });
 
-  const socket = useSokcetio({id});
-  useRecieveTalkRoomMessage({socket});
+  useTalkRoomMessagesIo({id});
 
   const onEndSessionLogin = useCallback(() => setLoad(false), []);
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
