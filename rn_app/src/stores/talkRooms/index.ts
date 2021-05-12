@@ -81,7 +81,6 @@ export const RoomsSlice = createSlice({
       state,
       action: PayloadAction<CreateRoomThunkPayload>,
     ) => {
-      // const room = state.entities[action.payload.roomId];
       // roomが存在する場合は何もしなくていい。upsertOneの必要ない
       // なかったら新しくaddする。messageとunreadNumberとlatestMessageはなしで。
       if (!action.payload.presence) {
@@ -117,15 +116,6 @@ export const RoomsSlice = createSlice({
       action: PayloadAction<ReceivedMessageData>,
     ) => {
       if (action.payload.isFirstMessage) {
-        const existingRoom = talkRoomSelectors.selectById(
-          state,
-          action.payload.room.id,
-        );
-
-        if (existingRoom) {
-          return state;
-        }
-
         // 受け取ったのが最初のメッセージだったらトークルームも存在しない状態なのでトークルームを追加
         talkRoomsAdapter.upsertOne(state, action.payload.room);
       } else {
@@ -133,11 +123,7 @@ export const RoomsSlice = createSlice({
         const targetRoom = state.entities[roomId];
 
         // 対象のルームないことは現在のところ基本的にないが、もし何らかの理由がなくてない場合stateは変えないでそのまま返す
-        // socketでの通信とFCMによる通信で2回dispatchがあるので、ダブらないようにメッセージが既に存在する場合は更新処理を行わずリターン
-        if (
-          !targetRoom ||
-          (targetRoom.messages.length && targetRoom.messages[0] === message.id)
-        ) {
+        if (!targetRoom) {
           return state;
         }
 
