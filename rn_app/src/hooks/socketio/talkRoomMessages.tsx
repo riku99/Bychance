@@ -38,7 +38,7 @@ export const useTalkRoomMessagesIo = ({id}: {id?: string}) => {
               titleStyle: {color: 'white', marginLeft: 10},
               textStyle: {color: 'white', marginLeft: 10},
               icon: 'default',
-              duration: 2500,
+              duration: 2000,
               renderFlashMessageIcon: () => {
                 return (
                   <View style={{marginRight: 5}}>

@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
@@ -22,7 +28,7 @@ type Props = {
   navigation: TalkRoomStackNavigationProp<'ChatRoom'>;
 };
 
-export const ChatRoomPage = ({route, navigation}: Props) => {
+export const TalkRoom = ({route, navigation}: Props) => {
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
   const room = useSelector((state: RootState) => {
@@ -36,12 +42,15 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
 
   const selectedMessages = useSelector((state: RootState) => {
     if (room) {
-      return selectMessages(state, room?.messages);
+      return selectMessages(state, room.messages);
+    } else {
+      return [];
     }
   }, shallowEqual);
 
-  const partner = useSelector((state: RootState) =>
-    selectChatPartner(state, route.params.partnerId),
+  const partner = useSelector(
+    (state: RootState) => selectChatPartner(state, route.params.partnerId),
+    shallowEqual,
   );
 
   const onAvatarPress = useCallback(() => {
@@ -78,6 +87,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
       return [];
     }
   });
+  const messageIds = useMemo(() => messages.map((m) => m._id), [messages]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -92,9 +102,15 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
     return state.otherSettingsReducer.receivedMessage;
   }, shallowEqual);
 
+  console.log(receivedMessage);
+
   // チャットルームを開いている時にでメッセージを受け取った場合のためのeffect。メッセージを受け取り、そのメッセージがこのルーム宛のものであれば表示
   useEffect(() => {
-    if (receivedMessage && receivedMessage.roomId === room.id) {
+    if (
+      receivedMessage &&
+      receivedMessage.roomId === room.id &&
+      !messageIds.includes(receivedMessage.id)
+    ) {
       setMessages((m) => {
         return [
           {
@@ -116,6 +132,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
           ...m,
         ];
       });
+      dispatch(resetRecievedMessage());
       // ルームを開いている状態で取得したメッセージなので未読数を0にする
       dispatch(resetUnreadNumber({roomId: room.id}));
       // 既読データをサーバの方で作成
@@ -134,6 +151,7 @@ export const ChatRoomPage = ({route, navigation}: Props) => {
     route.params.partnerId,
     onAvatarPress,
     dispatch,
+    messageIds,
   ]);
 
   useEffect(() => {
