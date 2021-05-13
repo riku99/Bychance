@@ -38,8 +38,22 @@ export const useTalkRoomMessagesPushNotification = () => {
     // quit状態(アプリがbackgroundで動いてない場合やデバイスが起動してない場合)できた通知をタップした時の処理
     messaging()
       .getInitialNotification()
-      .then(() => {
-        console.log('quit状態からアプリが開かれました');
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          console.log('quit状態からアプリが開かれました');
+          const {
+            talkRoomId,
+            partnerId,
+          } = remoteMessage.data as TalkRoomMessagesNotificationData;
+
+          navigation.navigate('TalkRoomStack', {
+            screen: 'ChatRoom',
+            params: {
+              roomId: Number(talkRoomId),
+              partnerId: partnerId,
+            },
+          });
+        }
       });
   }, [dispatch, navigation]);
 };

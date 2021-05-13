@@ -7,6 +7,7 @@ import {
   Animated,
   ScrollView,
   RefreshControl,
+  Linking,
 } from 'react-native';
 import {
   TabView,
@@ -16,6 +17,7 @@ import {
 } from 'react-native-tab-view';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch} from 'react-redux';
+import {SocialIcon} from 'react-native-elements';
 
 import {AppDispatch} from '../../../stores/index';
 import {Post} from '../../../stores/posts';
@@ -206,6 +208,17 @@ const UserInformationRoute = React.memo(
     //   contentsHeight,
     // ]);
 
+    const handleUrlPress = useCallback(async () => {
+      const url = 'https://www.instagram.com/';
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.log('インストールされていません');
+      }
+    }, []);
+
     return (
       <>
         <View
@@ -215,7 +228,11 @@ const UserInformationRoute = React.memo(
             justifyContent: 'center',
           }}
           onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
-          <Text style={styles.comingSoon}>coming soon...</Text>
+          <View style={{flexDirection: 'row'}}>
+            <SocialIcon type="instagram" onPress={handleUrlPress} />
+            <SocialIcon type="twitter" onPress={() => console.log('ok')} />
+            <SocialIcon type="youtube" onPress={() => console.log('ok')} />
+          </View>
         </View>
         <View style={{height: scrollableHeight}} />
       </>
@@ -491,14 +508,5 @@ const styles = StyleSheet.create({
     top: 0,
     width: '100%',
     zIndex: 1,
-  },
-  comingSoon: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: normalStyles.mainColor,
-    opacity: 0.5,
-    marginTop: 40,
-    marginBottom: 40,
-    alignSelf: 'center',
   },
 });

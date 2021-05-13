@@ -247,6 +247,7 @@ export const UserPage = ({route, navigation}: Props) => {
                 outerType={avatarOuterType}
                 flashesNavigationParam={flashesNavigationParam}
               />
+
               <View style={styles.nameContainer}>
                 <Text style={{fontWeight: 'bold', fontSize: 16}}>
                   {user.name}

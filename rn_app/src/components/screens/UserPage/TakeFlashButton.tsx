@@ -19,6 +19,7 @@ export const TakeFlashButton = React.memo(() => {
       icon={<MIcon name="flash-on" size={27} style={styles.buttonIcon} />}
       buttonStyle={styles.button}
       onPress={onPress}
+      raised
     />
   );
 });

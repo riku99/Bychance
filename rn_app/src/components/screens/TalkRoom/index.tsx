@@ -102,8 +102,6 @@ export const TalkRoom = ({route, navigation}: Props) => {
     return state.otherSettingsReducer.receivedMessage;
   }, shallowEqual);
 
-  console.log(receivedMessage);
-
   // チャットルームを開いている時にでメッセージを受け取った場合のためのeffect。メッセージを受け取り、そのメッセージがこのルーム宛のものであれば表示
   useEffect(() => {
     if (
