@@ -1,21 +1,18 @@
 import React, {useCallback} from 'react';
 import {View, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
 import {TalkRoomListItem} from './TalkRoomListItem';
 import {SwipeHiddenItems, hiddenRowItemWidth} from './SwipeHiddenItems';
 import {TalkRoom} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
-import {RootStackParamList} from '../../../screens/Root';
+import {RootNavigationProp} from '../../../screens/Root';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {useSelectAllRooms} from '~/hooks/talkRooms/selector';
 import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
 import {createDeleteRoomThunk} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
 import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
-
-type RootNavigationProp = StackNavigationProp<RootStackParamList, 'Tab'>;
 
 export const TalkRoomListPage = () => {
   const dispatch = useCustomDispatch();
@@ -24,7 +21,7 @@ export const TalkRoomListPage = () => {
 
   const chatPartnerEntities = useSelectChatPartnerEntities();
 
-  const navigationToChatRoom = useNavigation<RootNavigationProp>();
+  const navigationToChatRoom = useNavigation<RootNavigationProp<'Tab'>>();
 
   const pushChatRoom = ({
     room,
@@ -34,7 +31,7 @@ export const TalkRoomListPage = () => {
     partnerId: string;
   }) => {
     dispatch(resetRecievedMessage());
-    navigationToChatRoom.push('ChatRoomStack', {
+    navigationToChatRoom.push('TalkRoomStack', {
       screen: 'ChatRoom',
       params: {roomId: room.id, partnerId},
     });

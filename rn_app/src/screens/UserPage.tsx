@@ -9,6 +9,7 @@ import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPage} from '../components/pages/UserPage';
 import {normalStyles} from '~/constants/styles/normal';
+import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
 
 export type MyPageStackParamList = {
   MyPage: undefined;
@@ -19,6 +20,7 @@ const Stack = createStackNavigator<MyPageStackParamList>();
 
 // Tabに渡されるstack
 export const MyPageStackScreen = () => {
+  useTalkRoomMessagesPushNotification();
   return (
     <Stack.Navigator
       initialRouteName={'MyPage'}

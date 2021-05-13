@@ -4,13 +4,13 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {ChatRoomPage} from '../components/pages/TalkRoom';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 
-export type ChatRoomStackParamList = {
+export type TalkRoomStackParamList = {
   ChatRoom: {roomId: number; partnerId: string};
 } & UserPageScreenGroupParamList;
 
-const Stack = createStackNavigator<ChatRoomStackParamList>();
+const Stack = createStackNavigator<TalkRoomStackParamList>();
 
-export const ChatRoomStackScreen = () => {
+export const TalkRoomStackScreen = () => {
   return (
     <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
       <Stack.Screen name="ChatRoom" component={ChatRoomPage} />

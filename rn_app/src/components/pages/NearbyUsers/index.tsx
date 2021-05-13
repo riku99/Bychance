@@ -8,12 +8,10 @@ import {RootState, AppDispatch} from '../../../stores/index';
 import {AnotherUser} from '../../../stores/types';
 import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
 import {getNearbyUsersThunk} from '../../../apis/nearbyUsers/getNearbyUsers';
-import {
-  SearchUsersStackNavigationProp,
-  RootNavigationProp,
-} from '../../../screens/types';
+import {SearchUsersStackNavigationProp} from '../../../screens/types';
 import {FlashesData} from '../Flashes/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
+import {RootNavigationProp} from '~/screens/Root';
 
 export const SearchUsersPage = () => {
   const isFocused = useIsFocused();

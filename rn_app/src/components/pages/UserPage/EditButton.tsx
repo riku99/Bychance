@@ -3,8 +3,8 @@ import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
-import {RootNavigationProp} from '../../../screens/types';
 import {normalStyles} from '~/constants/styles/normal';
+import {RootNavigationProp} from '~/screens/Root';
 
 export const EditButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();

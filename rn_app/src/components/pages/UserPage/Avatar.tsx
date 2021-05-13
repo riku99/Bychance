@@ -1,9 +1,9 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-import {RootNavigationProp} from '../../../screens/types';
 import {UserAvatarWithOuter} from '../../utils/Avatar';
 import {FlashesStackParamList} from '../../../screens/Flashes';
+import {RootNavigationProp} from '~/screens/Root';
 
 type AvatarProps = {
   source: string | null;

@@ -28,16 +28,14 @@ import {
   MyPageStackParamList,
   UserPageScreenGroupParamList,
 } from '../../../screens/UserPage';
-import {
-  RootNavigationProp,
-  UserPageNavigationProp,
-} from '../../../screens/types';
+import {UserPageNavigationProp} from '../../../screens/types';
 import {RootState} from '../../../stores/index';
 import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {X_HEIGHT} from '~/constants/device';
+import {RootNavigationProp} from '~/screens/Root';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;

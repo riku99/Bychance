@@ -1,19 +1,14 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 
-import {RootStackParamList} from './Root';
 import {MyPageStackParamList, UserPageScreenGroupParamList} from './UserPage';
-import {ChatRoomStackParamList} from './ChatRoom';
+import {TalkRoomStackParamList} from './ChatRoom';
 import {UserEditStackParamList} from './UserEdit';
 import {CreatePostStackParamList} from './CreatePost';
 import {SearchUsersStackParamList} from './SearchUsers';
 import {FlashesStackParamList} from './Flashes';
 
-// navigationの型たち
-export type RootNavigationProp<
-  T extends keyof RootStackParamList
-> = StackNavigationProp<RootStackParamList, T>;
-
+// navigationの型たち 順次修正していく
 export type MyPageNavigationProp<
   T extends keyof MyPageStackParamList
 > = StackNavigationProp<MyPageStackParamList, T>;
@@ -22,9 +17,9 @@ export type UserPageNavigationProp<
   T extends keyof UserPageScreenGroupParamList
 > = StackNavigationProp<UserPageScreenGroupParamList, T>;
 
-export type ChatRoomStackNavigationProp<
-  T extends keyof ChatRoomStackParamList
-> = StackNavigationProp<ChatRoomStackParamList, T>;
+export type TalkRoomStackNavigationProp<
+  T extends keyof TalkRoomStackParamList
+> = StackNavigationProp<TalkRoomStackParamList, T>;
 
 export type UserEditNavigationProp<
   T extends keyof UserEditStackParamList

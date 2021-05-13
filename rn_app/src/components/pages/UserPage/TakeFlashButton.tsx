@@ -4,7 +4,7 @@ import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 
-import {RootNavigationProp} from '../../../screens/types';
+import {RootNavigationProp} from '~/screens/Root';
 import {normalStyles} from '~/constants/styles/normal';
 
 export const TakeFlashButton = React.memo(() => {

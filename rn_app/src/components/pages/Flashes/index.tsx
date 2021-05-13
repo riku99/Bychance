@@ -13,11 +13,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
 import {FlashesData} from './types';
-import {FlashesRouteProp, RootNavigationProp} from '../../../screens/types';
+import {FlashesRouteProp} from '../../../screens/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
 import {RootState} from '../../../stores/index';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMoreDeviceX} from '../../../hooks/device/index';
+import {RootNavigationProp} from '~/screens/Root';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;

@@ -22,16 +22,14 @@ import fs from 'react-native-fs';
 import {RootState} from '../../../stores/index';
 import {editProfileThunk} from '../../../apis/users/editProfile';
 import {resetEditData} from '../../../stores/user';
-import {
-  UserEditNavigationProp,
-  RootNavigationProp,
-} from '../../../screens/types';
+import {UserEditNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {normalStyles} from '~/constants/styles/normal';
 import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';
+import {RootNavigationProp} from '~/screens/Root';
 
 const options: ImagePickerOptions = {
   title: 'プロフィール画像を変更',

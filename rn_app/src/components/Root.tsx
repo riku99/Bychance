@@ -64,7 +64,7 @@ const Root = () => {
   // push通知周り
   usePushNotificationReqest({login});
   useRegisterDeviceToken({login});
-  useTalkRoomMessagesPushNotification({login});
+  // useTalkRoomMessagesPushNotification({login});
 
   if (load) {
     return null;

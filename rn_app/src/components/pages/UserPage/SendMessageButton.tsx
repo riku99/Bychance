@@ -9,7 +9,7 @@ import {AppDispatch} from '../../../stores/index';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {AnotherUser} from '../../../stores/types';
 import {createRoomThunk} from '../../../apis/rooms/createTalkRoom';
-import {RootNavigationProp} from '../../../screens/types';
+import {RootNavigationProp} from '~/screens/Root';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const gradientConfig: {
@@ -37,7 +37,7 @@ export const SendMessageButton = React.memo(({user}: Props) => {
     const result = await dispatch(createRoomThunk({partner: user}));
     if (createRoomThunk.fulfilled.match(result)) {
       dispatch(resetRecievedMessage());
-      navigation.push('ChatRoomStack', {
+      navigation.push('TalkRoomStack', {
         screen: 'ChatRoom',
         params: {
           roomId: result.payload.roomId,

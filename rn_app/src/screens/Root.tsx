@@ -6,25 +6,31 @@ import {
 import {
   CardStyleInterpolators,
   createStackNavigator,
+  StackNavigationProp,
 } from '@react-navigation/stack';
 import {Button} from 'react-native-elements';
 
 import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
-import {ChatRoomStackParamList, ChatRoomStackScreen} from './ChatRoom';
+import {TalkRoomStackParamList, TalkRoomStackScreen} from './ChatRoom';
 import {TakeFlashPage} from '~/components/pages/TakeFlash';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {normalStyles} from '~/constants/styles/normal';
+import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
 
 export type RootStackParamList = {
   Tab: undefined;
   UserEditStack: undefined;
-  ChatRoomStack: NavigatorScreenParams<ChatRoomStackParamList>;
+  TalkRoomStack: NavigatorScreenParams<TalkRoomStackParamList>;
   TakeFlash: undefined;
   Flashes: NavigatorScreenParams<FlashesStackParamList>;
 };
 
+// Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
+export type RootNavigationProp<
+  T extends keyof RootStackParamList
+> = StackNavigationProp<RootStackParamList, T>;
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = () => {
@@ -62,8 +68,8 @@ export const RootStackScreen = () => {
         }}
       />
       <RootStack.Screen
-        name="ChatRoomStack"
-        component={ChatRoomStackScreen}
+        name="TalkRoomStack"
+        component={TalkRoomStackScreen}
         options={() => {
           return {
             headerShown: false,
