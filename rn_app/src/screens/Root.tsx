@@ -14,7 +14,7 @@ import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
 import {ChatRoomStackParamList, ChatRoomStackScreen} from './ChatRoom';
 import {TakeFlashPage} from '~/components/pages/TakeFlash';
-import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {normalStyles} from '~/constants/styles/normal';
 
 export type RootStackParamList = {
@@ -33,7 +33,7 @@ export const RootStackScreen = () => {
       mode="modal"
       screenOptions={{
         headerBackTitleVisible: false,
-        headerStatusBarHeight: headerStatusBarHeight(),
+        headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
       <RootStack.Screen
         name="Tab"

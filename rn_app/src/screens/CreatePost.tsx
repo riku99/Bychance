@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Button} from 'react-native-elements';
 
 import {CreatePost} from '../components/pages/CreatePost/Page';
-import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {getHeaderStatusBarHeight} from '~/helpers/header';
 
 export type CreatePostStackParamList = {
   CreatePostTable: undefined;
@@ -32,7 +32,7 @@ export const CreatePostStackScreen = () => {
               }}
             />
           ),
-          headerStatusBarHeight: headerStatusBarHeight(),
+          headerStatusBarHeight: getHeaderStatusBarHeight(),
         }}
       />
     </Stack.Navigator>

@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {TalkRoomListPage} from '../components/pages/TalkRoomList';
-import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {getHeaderStatusBarHeight} from '~/helpers/header';
 
 export type ChatListStackParamList = {
   ChatList: undefined;
@@ -16,7 +16,7 @@ export const ChatListStackScreen = () => {
       initialRouteName="ChatList"
       screenOptions={{
         headerBackTitleVisible: false,
-        headerStatusBarHeight: headerStatusBarHeight(),
+        headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
       <Stack.Screen
         name="ChatList"

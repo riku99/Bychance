@@ -3,7 +3,7 @@ import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {SearchUsersPage} from '../components/pages/NearbyUsers';
-import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 import {normalStyles} from '~/constants/styles/normal';
 import Emoji from 'react-native-emoji';
@@ -20,7 +20,7 @@ export const SearchUsersStackScreen = () => {
       screenOptions={{
         headerStyle: {shadowColor: 'transparent'},
         headerBackTitleVisible: false,
-        headerStatusBarHeight: headerStatusBarHeight(),
+        headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
       <Stack.Screen
         name="SearchUsers"

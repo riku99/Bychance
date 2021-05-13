@@ -18,23 +18,17 @@ import {
   usePushNotificationReqest,
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification/setup';
-import {useRegisterRecieveTalkRoomMessages} from '~/hooks/pushNotification/talkRoomMessages';
+import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
 import {refreshUserThunk} from '~/apis/users/refreshUser';
 
 const Root = () => {
   const [load, setLoad] = useState(true);
-
   const dispatch = useCustomDispatch();
-
   const login = useLoginSelect();
-
   const id = useUserSelect()?.id;
-
   const displayedMenu = useSelector((state: RootState) => {
     return state.otherSettingsReducer.displayedMenu;
   });
-
-  useTalkRoomMessagesIo({id});
 
   const onEndSessionLogin = useCallback(() => setLoad(false), []);
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
@@ -64,9 +58,13 @@ const Root = () => {
     }
   }, [dispatch, login, id]);
 
+  // socket周り
+  useTalkRoomMessagesIo({id});
+
+  // push通知周り
   usePushNotificationReqest({login});
   useRegisterDeviceToken({login});
-  useRegisterRecieveTalkRoomMessages({login});
+  useTalkRoomMessagesPushNotification({login});
 
   if (load) {
     return null;

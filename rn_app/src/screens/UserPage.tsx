@@ -6,7 +6,7 @@ import Emoji from 'react-native-emoji';
 import {Container as Post} from '../components/pages/Post/Page';
 import {Post as PostType} from '../stores/posts';
 import {MenuBar} from '../components/utils/MenuBar';
-import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPage} from '../components/pages/UserPage';
 import {normalStyles} from '~/constants/styles/normal';
 
@@ -24,7 +24,7 @@ export const MyPageStackScreen = () => {
       initialRouteName={'MyPage'}
       screenOptions={{
         headerBackTitleVisible: false,
-        headerStatusBarHeight: headerStatusBarHeight(),
+        headerStatusBarHeight: getHeaderStatusBarHeight(),
         headerStyle: {shadowColor: 'transparent'},
       }}>
       <Stack.Screen

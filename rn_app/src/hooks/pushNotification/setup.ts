@@ -4,7 +4,7 @@ import messaging from '@react-native-firebase/messaging';
 import {createDeviceToken} from '~/apis/deviceToken/createDeviceToken';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 
-// push通知のリクエスト
+// push通知の許可リクエスト
 export const usePushNotificationReqest = ({login}: {login: boolean}) => {
   useEffect(() => {
     if (login) {
@@ -30,7 +30,6 @@ export const useRegisterDeviceToken = ({login}: {login: boolean}) => {
     if (login) {
       const getDeviceToken = async () => {
         const token = await messaging().getToken();
-        console.log('token: ' + token);
         dispatch(createDeviceToken({token}));
       };
       getDeviceToken();

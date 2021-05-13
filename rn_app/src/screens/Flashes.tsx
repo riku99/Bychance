@@ -7,7 +7,7 @@ import {
   UserPageFrom,
 } from './UserPage';
 import {FlashesPage} from '../components/pages/Flashes';
-import {headerStatusBarHeight} from '../constants/headerStatusBarHeight';
+import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {FlashesData} from '../components/pages/Flashes/types';
 
 export type FlashesStackParamList = {
@@ -39,7 +39,7 @@ export const FlashesStackScreen = () => {
     <Stack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
-        headerStatusBarHeight: headerStatusBarHeight(),
+        headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
       <Stack.Screen
         name="Flashes"
