@@ -54,6 +54,7 @@
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.11.0",
+    "react-native-svg": "^12.1.1",
     "react-native-swipe-list-view": "^3.2.7",
     "react-native-tab-view": "^2.15.2",
     "react-native-unimodules": "^0.11.0",
@@ -77,6 +78,7 @@
     "eslint": "^7.8.1",
     "jest": "^26.4.2",
     "metro-react-native-babel-preset": "^0.63.0",
+    "react-native-svg-transformer": "^0.14.3",
     "react-test-renderer": "16.13.1",
     "typescript": "^4.0.2"
   },

@@ -1,7 +1,6 @@
 import React, {useMemo, useState, useRef, useEffect, useCallback} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   Animated,
@@ -24,6 +23,7 @@ import {Post} from '../../../stores/posts';
 import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {normalStyles} from '~/constants/styles/normal';
+import TikTok from '~/assets/tiktok_logo.svg';
 
 type PostsRouteProps = {
   posts: Post[];
@@ -59,56 +59,6 @@ const PostsRoute = React.memo(
       paddingTopHeight,
       profileContainerHeight,
     ]);
-
-    // const scrollableHeight = useMemo(() => {
-    //   // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
-    //   if (profileContainerHeight === defaultProfileContainerHeight) {
-    //     switch (mostRecentlyScrolledView) {
-    //       case 'Posts':
-    //         return paddingTopHeight;
-    //       case 'UserInformation':
-    //         return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-    //     }
-    //   }
-
-    //   // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
-    //   if (
-    //     profileContainerHeight > defaultProfileContainerHeight &&
-    //     paddingTopHeight <= containerHeight
-    //   ) {
-    //     switch (mostRecentlyScrolledView) {
-    //       case 'Posts':
-    //         return paddingTopHeight;
-    //       case 'UserInformation':
-    //         return containerHeight + profileContainerHeight - contentsHeight;
-    //     }
-    //   }
-
-    //   // paddingTopの値がContainerを超えている場合
-    //   if (paddingTopHeight > containerHeight) {
-    //     switch (mostRecentlyScrolledView) {
-    //       case 'Posts':
-    //         return (
-    //           profileContainerHeight +
-    //           stickyTabHeight +
-    //           (paddingTopHeight - containerHeight)
-    //         );
-    //       case 'UserInformation':
-    //         return (
-    //           containerHeight +
-    //           profileContainerHeight -
-    //           contentsHeight +
-    //           (paddingTopHeight - containerHeight)
-    //         );
-    //     }
-    //   }
-    // }, [
-    //   mostRecentlyScrolledView,
-    //   containerHeight,
-    //   profileContainerHeight,
-    //   paddingTopHeight,
-    //   contentsHeight,
-    // ]);
 
     return (
       <>
@@ -158,55 +108,6 @@ const UserInformationRoute = React.memo(
       paddingTopHeight,
       profileContainerHeight,
     ]);
-    // const scrollableHeight = useMemo(() => {
-    //   // profileの高さが最初と同じ、つまりintoroduceが拡張されていない場合
-    //   if (profileContainerHeight === defaultProfileContainerHeight) {
-    //     switch (mostRecentlyScrolledView) {
-    //       case 'UserInformation':
-    //         return paddingTopHeight;
-    //       case 'Posts':
-    //         return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-    //     }
-    //   }
-
-    //   // profileの高さが最初より高い、つまりintroduceが拡張されているがpaddingTopの分がContainerを超えていない場合
-    //   if (
-    //     profileContainerHeight > defaultProfileContainerHeight &&
-    //     paddingTopHeight <= containerHeight
-    //   ) {
-    //     switch (mostRecentlyScrolledView) {
-    //       case 'UserInformation':
-    //         return paddingTopHeight;
-    //       case 'Posts':
-    //         return containerHeight + profileContainerHeight - contentsHeight;
-    //     }
-    //   }
-
-    //   // paddingTopの値がContainerを超えている場合
-    //   if (paddingTopHeight > containerHeight) {
-    //     switch (mostRecentlyScrolledView) {
-    //       case 'UserInformation':
-    //         return (
-    //           profileContainerHeight +
-    //           stickyTabHeight +
-    //           (paddingTopHeight - containerHeight)
-    //         );
-    //       case 'Posts':
-    //         return (
-    //           containerHeight +
-    //           profileContainerHeight -
-    //           contentsHeight +
-    //           (paddingTopHeight - containerHeight)
-    //         );
-    //     }
-    //   }
-    // }, [
-    //   mostRecentlyScrolledView,
-    //   containerHeight,
-    //   profileContainerHeight,
-    //   paddingTopHeight,
-    //   contentsHeight,
-    // ]);
 
     const handleUrlPress = useCallback(async () => {
       const url = 'https://www.instagram.com/';
@@ -232,6 +133,7 @@ const UserInformationRoute = React.memo(
             <SocialIcon type="instagram" onPress={handleUrlPress} />
             <SocialIcon type="twitter" onPress={() => console.log('ok')} />
             <SocialIcon type="youtube" onPress={() => console.log('ok')} />
+            <TikTok width={120} height={40} />
           </View>
         </View>
         <View style={{height: scrollableHeight}} />
