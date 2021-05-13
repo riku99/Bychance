@@ -3,11 +3,11 @@ import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Emoji from 'react-native-emoji';
 
-import {Container as Post} from '../components/pages/Post/Page';
+import {Container as Post} from '../components/screens/Post/Page';
 import {Post as PostType} from '../stores/posts';
 import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {UserPage} from '../components/pages/UserPage';
+import {UserPage} from '../components/screens/UserPage';
 import {normalStyles} from '~/constants/styles/normal';
 
 export type MyPageStackParamList = {

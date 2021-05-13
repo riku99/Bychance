@@ -14,7 +14,7 @@ import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
 import {TalkRoomStackParamList, TalkRoomStackScreen} from './ChatRoom';
-import {TakeFlashPage} from '~/components/pages/TakeFlash';
+import {TakeFlashPage} from '~/components/screens/TakeFlash';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {normalStyles} from '~/constants/styles/normal';
 

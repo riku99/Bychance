@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {TalkRoomListPage} from '../components/pages/TalkRoomList';
+import {TalkRoomListPage} from '../components/screens/TalkRoomList';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 
 export type ChatListStackParamList = {

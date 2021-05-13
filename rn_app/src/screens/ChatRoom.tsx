@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {ChatRoomPage} from '../components/pages/TalkRoom';
+import {ChatRoomPage} from '../components/screens/TalkRoom';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 
 export type TalkRoomStackParamList = {

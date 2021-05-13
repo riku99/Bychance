@@ -6,9 +6,9 @@ import {
   userPageScreensGroup,
   UserPageFrom,
 } from './UserPage';
-import {FlashesPage} from '../components/pages/Flashes';
+import {FlashesPage} from '../components/screens/Flashes';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {FlashesData} from '../components/pages/Flashes/types';
+import {FlashesData} from '../components/screens/Flashes/types';
 
 export type FlashesStackParamList = {
   Flashes:

@@ -31,7 +31,7 @@ export const TalkRoomListPage = () => {
     partnerId: string;
   }) => {
     dispatch(resetRecievedMessage());
-    navigationToChatRoom.push('TalkRoomStack', {
+    navigationToChatRoom.navigate('TalkRoomStack', {
       screen: 'ChatRoom',
       params: {roomId: room.id, partnerId},
     });

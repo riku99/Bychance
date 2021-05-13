@@ -3,7 +3,7 @@ import {Post} from './posts';
 import {TalkRoom} from './talkRooms';
 import {TalkRoomMessage} from './talkRoomMessages';
 import {Flash} from './flashes';
-import {FlashesData} from '../components/pages/Flashes/types';
+import {FlashesData} from '../components/screens/Flashes/types';
 
 export type ClientData = {
   user: User;

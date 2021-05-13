@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Button} from 'react-native-elements';
 
-import {CreatePost} from '../components/pages/CreatePost/Page';
+import {CreatePost} from '../components/screens/CreatePost/Page';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 
 export type CreatePostStackParamList = {

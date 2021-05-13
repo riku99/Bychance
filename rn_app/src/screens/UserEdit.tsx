@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {UserEditPage} from '../components/pages/UserEdit';
-import {EditUserItemPage} from '../components/pages/EditUserItem/Page';
+import {UserEditPage} from '../components/screens/UserEdit';
+import {EditUserItemPage} from '../components/screens/EditUserItem/Page';
 
 export type UserEditStackParamList = {
   UserEdit: undefined;
