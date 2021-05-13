@@ -17,7 +17,6 @@ import {TalkRoomStackParamList, TalkRoomStackScreen} from './ChatRoom';
 import {TakeFlashPage} from '~/components/pages/TakeFlash';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {normalStyles} from '~/constants/styles/normal';
-import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
 
 export type RootStackParamList = {
   Tab: undefined;

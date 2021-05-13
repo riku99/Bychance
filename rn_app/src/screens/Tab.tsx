@@ -10,6 +10,7 @@ import {MyPageStackScreen} from './UserPage';
 import {SearchUsersStackScreen} from './SearchUsers';
 import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles/normal';
+import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
 
 type TabList = {
   Profile: undefined;
@@ -24,6 +25,10 @@ export const Tabs = () => {
   const unreadMessagesNumber = useSelector((state: RootState) => {
     return getAllUnreadMessagesNumber(state);
   });
+
+  // このフックはuseNavigationを使うのでstackに渡されているコンポーネントの中じゃないと使えない
+  // stackの中で最初にレンダリングされるのがこのコンポーネントなのでとりあえずここに置く
+  useTalkRoomMessagesPushNotification();
 
   return (
     <RootTab.Navigator

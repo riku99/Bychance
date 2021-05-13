@@ -13,21 +13,20 @@ type TalkRoomMessagesNotificationData = {
 
 export const useTalkRoomMessagesPushNotification = () => {
   const dispatch = useCustomDispatch();
-  const navigate = useNavigation<
+  const navigation = useNavigation<
     RootNavigationProp<'Flashes' | 'TakeFlash' | 'Tab' | 'UserEditStack'>
   >();
 
   useEffect(() => {
     //backgroundで通知を受け取ってその通知をタップした時の処理;
     messaging().onNotificationOpenedApp(async (remoteMessage) => {
-      console.log('backgroundからアプリを開きました');
-      console.log(remoteMessage);
       const {
         talkRoomId,
         partnerId,
       } = remoteMessage.data as TalkRoomMessagesNotificationData;
 
-      navigate.push('TalkRoomStack', {
+      // .push ではなく .navigate にすることで既にrouteに存在するすスタックを探す。そのため、既にトークルームが開かれている場合2重になることがない。pushだと新しいスタックが追加されるので2重になってしまう
+      navigation.navigate('TalkRoomStack', {
         screen: 'ChatRoom',
         params: {
           roomId: Number(talkRoomId),
@@ -42,5 +41,5 @@ export const useTalkRoomMessagesPushNotification = () => {
       .then(() => {
         console.log('quit状態からアプリが開かれました');
       });
-  }, [dispatch, navigate]);
+  }, [dispatch, navigation]);
 };
