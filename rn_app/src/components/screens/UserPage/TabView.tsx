@@ -24,7 +24,6 @@ import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {normalStyles} from '~/constants/styles/normal';
 import TikTok from '~/assets/tiktok_logo.svg';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 type PostsRouteProps = {
   posts: Post[];

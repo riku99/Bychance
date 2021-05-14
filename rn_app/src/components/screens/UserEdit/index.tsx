@@ -29,6 +29,7 @@ import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {normalStyles} from '~/constants/styles/normal';
 import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';
+import {SnsIconList} from './SnsIconList';
 import {RootNavigationProp} from '~/screens/Root';
 
 const options: ImagePickerOptions = {
@@ -341,6 +342,9 @@ export const UserEditPage = () => {
             <Text style={styles.element}>{message}</Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.snsIconContainer}>
+          <SnsIconList />
+        </View>
       </View>
     </View>
   );
@@ -371,18 +375,18 @@ const styles = StyleSheet.create({
     height: '90%',
     display: 'flex',
     alignItems: 'center',
-    marginTop: '15%',
+    marginTop: '10%',
   },
   profileContainer: {
     width: '100%',
     height: 200,
-    marginTop: 15,
   },
   editElenentContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
+    marginTop: 30,
   },
   elementLabel: {
     fontSize: 16,
@@ -400,5 +404,10 @@ const styles = StyleSheet.create({
   completeButtonTitle: {
     color: normalStyles.blueText,
     fontWeight: 'bold',
+  },
+  snsIconContainer: {
+    marginTop: 40,
+    alignSelf: 'flex-start',
+    width: '75%',
   },
 });
