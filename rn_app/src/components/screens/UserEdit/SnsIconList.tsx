@@ -1,11 +1,15 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {SocialIcon} from 'react-native-elements';
+
 import TikTok from '~/assets/tiktok_logo.svg';
+import {SnsList} from '~/types';
 
-type Props = {};
+type Props = {
+  showSnsModal: (snsType: SnsList) => void;
+};
 
-export const SnsIconList = React.memo(() => {
+export const SnsIconList = React.memo(({showSnsModal}: Props) => {
   return (
     <View style={styles.container}>
       <SocialIcon
@@ -17,10 +21,25 @@ export const SnsIconList = React.memo(() => {
             backgroundColor: 'pink',
           },
         ]}
+        onPress={() => showSnsModal('instagram')}
       />
-      <SocialIcon raised={false} type="twitter" style={styles.icon} />
-      <SocialIcon raised={false} type="youtube" style={styles.icon} />
-      <TikTok width={40} style={{marginLeft: 6}} />
+      <SocialIcon
+        raised={false}
+        type="twitter"
+        style={styles.icon}
+        onPress={() => showSnsModal('twitter')}
+      />
+      <SocialIcon
+        raised={false}
+        type="youtube"
+        style={styles.icon}
+        onPress={() => showSnsModal('youtube')}
+      />
+      <TikTok
+        width={40}
+        style={{marginLeft: 6}}
+        onPress={() => showSnsModal('tiktok')}
+      />
     </View>
   );
 });

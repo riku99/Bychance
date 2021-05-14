@@ -19,6 +19,7 @@ import {Button} from 'react-native-elements';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 
+import {RootNavigationProp} from '~/screens/Root';
 import {RootState} from '../../../stores/index';
 import {editProfileThunk} from '../../../apis/users/editProfile';
 import {resetEditData} from '../../../stores/user';
@@ -27,10 +28,11 @@ import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMe
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {normalStyles} from '~/constants/styles/normal';
+import {SnsList} from '~/types';
 import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIconList} from './SnsIconList';
-import {RootNavigationProp} from '~/screens/Root';
+import {SnsModal} from './SnsModal';
 
 const options: ImagePickerOptions = {
   title: 'プロフィール画像を変更',
@@ -100,10 +102,13 @@ export const UserEditPage = () => {
     user.introduce ? user.introduce : '',
   );
   const [message, setMessage] = useState(user.message ? user.message : '');
+
   const [instagram, setInstagram] = useState<string | null>(user.instagram);
   const [twitter, setTwitter] = useState<string | null>(user.twitter);
   const [tiktok, setTiktok] = useState<string | null>(user.tiktok);
   const [youtube, setYoutube] = useState<string | null>(user.youtube);
+  const [snsModal, setSnsModal] = useState<null | SnsList>(null);
+
   const [loading, setLoding] = useState(false);
 
   const isFocused = useIsFocused();
@@ -288,6 +293,10 @@ export const UserEditPage = () => {
     tiktok,
   ]);
 
+  const showSnsModal = useCallback((snsType: SnsList) => {
+    setSnsModal(snsType);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.backGraondItemContainer}>
@@ -343,9 +352,12 @@ export const UserEditPage = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.snsIconContainer}>
-          <SnsIconList />
+          <SnsIconList showSnsModal={showSnsModal} />
         </View>
       </View>
+      {snsModal && (
+        <SnsModal show={snsModal} onClose={() => setSnsModal(null)} />
+      )}
     </View>
   );
 };
