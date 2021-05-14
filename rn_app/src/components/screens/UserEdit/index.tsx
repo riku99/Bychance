@@ -47,6 +47,7 @@ const options: ImagePickerOptions = {
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {
+    const {instagram, twitter, youtube, tiktok} = state.userReducer.user!;
     return {
       id: state.userReducer.user!.id,
       name: state.userReducer.user!.name,
@@ -55,6 +56,10 @@ export const UserEditPage = () => {
       message: state.userReducer.user!.statusMessage,
       backGroundItem: state.userReducer.user!.backGroundItem,
       backGroundItemType: state.userReducer.user!.backGroundItemType,
+      instagram,
+      twitter,
+      tiktok,
+      youtube,
     };
   }, shallowEqual);
 
@@ -94,6 +99,10 @@ export const UserEditPage = () => {
     user.introduce ? user.introduce : '',
   );
   const [message, setMessage] = useState(user.message ? user.message : '');
+  const [instagram, setInstagram] = useState<string | null>(user.instagram);
+  const [twitter, setTwitter] = useState<string | null>(user.twitter);
+  const [tiktok, setTiktok] = useState<string | null>(user.tiktok);
+  const [youtube, setYoutube] = useState<string | null>(user.youtube);
   const [loading, setLoding] = useState(false);
 
   const isFocused = useIsFocused();
@@ -242,6 +251,10 @@ export const UserEditPage = () => {
                     backGroundItemType: selectedBackGroundItem?.sourceType,
                     deleteBackGroundItem,
                     backGroundItemExt: ext,
+                    instagram,
+                    twitter,
+                    tiktok,
+                    youtube,
                   }),
                 );
 
@@ -268,6 +281,10 @@ export const UserEditPage = () => {
     deleteBackGroundItem,
     selectedBackGroundItem,
     dispatch,
+    instagram,
+    twitter,
+    youtube,
+    tiktok,
   ]);
 
   return (
