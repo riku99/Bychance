@@ -20,6 +20,10 @@ export type EdiProfilePayload = Pick<
   | 'statusMessage'
   | 'backGroundItem'
   | 'backGroundItemType'
+  | 'instagram'
+  | 'twitter'
+  | 'youtube'
+  | 'tiktok'
 >;
 
 export const editProfileThunk = createAsyncThunk<
@@ -34,6 +38,10 @@ export const editProfileThunk = createAsyncThunk<
     backGroundItemType?: 'image' | 'video';
     deleteBackGroundItem: boolean;
     backGroundItemExt?: string;
+    instagram: string | null;
+    twitter: string | null;
+    youtube: string | null;
+    tiktok: string | null;
   },
   {
     rejectValue: rejectPayload;
@@ -51,6 +59,10 @@ export const editProfileThunk = createAsyncThunk<
       backGroundItemType,
       deleteBackGroundItem,
       backGroundItemExt,
+      instagram,
+      tiktok,
+      twitter,
+      youtube,
     },
     {rejectWithValue, dispatch},
   ) => {
@@ -68,6 +80,10 @@ export const editProfileThunk = createAsyncThunk<
             | 'statusMessage'
             | 'backGroundItem'
             | 'backGroundItemType'
+            | 'instagram'
+            | 'twitter'
+            | 'tiktok'
+            | 'youtube'
           >
         >(
           `${origin}/users?id=${keychain.id}`,
@@ -81,6 +97,10 @@ export const editProfileThunk = createAsyncThunk<
             backGroundItemType,
             deleteBackGroundItem,
             backGroundItemExt,
+            instagram,
+            twitter,
+            youtube,
+            tiktok,
           },
           headers(keychain.token),
         );

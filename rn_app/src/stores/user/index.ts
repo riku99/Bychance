@@ -40,6 +40,10 @@ export type UserState = {
     lng: number | null;
     backGroundItem: string | null;
     backGroundItemType: 'image' | 'video' | null;
+    instagram: string | null;
+    twitter: string | null;
+    youtube: string | null;
+    tiktok: string | null;
   };
   temporarilySavedData?: {
     name?: string;
