@@ -24,6 +24,7 @@ import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {normalStyles} from '~/constants/styles/normal';
 import TikTok from '~/assets/tiktok_logo.svg';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 type PostsRouteProps = {
   posts: Post[];
@@ -126,14 +127,35 @@ const UserInformationRoute = React.memo(
           style={{
             minHeight:
               containerHeight - (profileContainerHeight + stickyTabHeight),
-            justifyContent: 'center',
           }}
           onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
-          <View style={{flexDirection: 'row'}}>
-            <SocialIcon type="instagram" onPress={handleUrlPress} />
-            <SocialIcon type="twitter" onPress={() => console.log('ok')} />
-            <SocialIcon type="youtube" onPress={() => console.log('ok')} />
-            <TikTok width={120} height={40} />
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 20,
+              justifyContent: 'space-between',
+              width: '75%',
+              alignSelf: 'center',
+            }}>
+            <SocialIcon
+              raised={false}
+              type="instagram"
+              onPress={handleUrlPress}
+              style={[informationStyles.socialIcom, {backgroundColor: 'pink'}]}
+            />
+            <SocialIcon
+              raised={false}
+              type="twitter"
+              onPress={() => console.log('ok')}
+              style={informationStyles.socialIcom}
+            />
+            <SocialIcon
+              raised={false}
+              type="youtube"
+              onPress={() => console.log('ok')}
+              style={informationStyles.socialIcom}
+            />
+            <TikTok width={52} style={{marginLeft: 6}} />
           </View>
         </View>
         <View style={{height: scrollableHeight}} />
@@ -141,6 +163,13 @@ const UserInformationRoute = React.memo(
     );
   },
 );
+
+const informationStyles = StyleSheet.create({
+  socialIcom: {
+    width: 52,
+    height: 52,
+  },
+});
 
 type TabSceneProps = {
   children: Element;
