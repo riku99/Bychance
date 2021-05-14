@@ -109,6 +109,21 @@ export const UserEditPage = () => {
   const [youtube, setYoutube] = useState<string | null>(user.youtube);
   const [snsModal, setSnsModal] = useState<null | SnsList>(null);
 
+  const snsText = useMemo(() => {
+    switch (snsModal) {
+      case 'instagram':
+        return user.instagram;
+      case 'twitter':
+        return user.twitter;
+      case 'youtube':
+        return user.youtube;
+      case 'tiktok':
+        return user.tiktok;
+      default:
+        return null;
+    }
+  }, [snsModal, user.instagram, user.twitter, user.youtube, user.tiktok]);
+
   const [loading, setLoding] = useState(false);
 
   const isFocused = useIsFocused();
@@ -356,7 +371,11 @@ export const UserEditPage = () => {
         </View>
       </View>
       {snsModal && (
-        <SnsModal show={snsModal} onClose={() => setSnsModal(null)} />
+        <SnsModal
+          show={snsModal}
+          onClose={() => setSnsModal(null)}
+          text={snsText}
+        />
       )}
     </View>
   );
