@@ -268,13 +268,23 @@ export const UserPage = ({route, navigation}: Props) => {
                 </Text>
               </View>
             </View>
-            {/* <View style={{width: '50%'}}>
+          </Animated.View>
+
+          <Animated.View
+            style={[
+              styles.editProfileOrSendMessageButtonContainer,
+              styles.animatedElement,
+              {
+                transform: [{translateY: y}],
+              },
+            ]}>
+            <View style={{width: '50%'}}>
               {isMe ? (
                 <EditButton />
               ) : (
                 <SendMessageButton user={anotherUser!} />
               )}
-            </View> */}
+            </View>
           </Animated.View>
 
           {moreReadButton && (
@@ -316,6 +326,11 @@ const profileContainerHeight = height / 2;
 
 export const oneIntroduceTextLineHeght = 19.7;
 
+const nameContainerHeight = 19.5;
+
+const avatarAndNameContainerHeight =
+  (height > X_HEIGHT ? 119.5 : 113) - nameContainerHeight - 10;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -340,14 +355,18 @@ const styles = StyleSheet.create({
     left: 10,
     flexDirection: 'row',
     alignSelf: 'flex-start',
-    //backgroundColor: 'gray',
   },
   nameContainer: {
     marginTop: height > X_HEIGHT ? 15 : 13,
   },
+  editProfileOrSendMessageButtonContainer: {
+    width: '100%',
+    top: '15%',
+    left: '45%',
+    marginTop: avatarAndNameContainerHeight,
+  },
   animatedElement: {
     position: 'absolute',
-    alignSelf: 'center',
   },
   takeFlashContainer: {
     position: 'absolute',
