@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useMemo, useState} from 'react';
 import {Dimensions, StyleSheet, View, Text, TextInput} from 'react-native';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 import {Button} from 'react-native-elements';
 

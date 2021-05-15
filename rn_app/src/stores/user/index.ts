@@ -174,18 +174,25 @@ const userSlice = createSlice({
     [editProfileThunk.fulfilled.type]: (
       state,
       actions: PayloadAction<EdiProfilePayload>,
-    ) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        name: actions.payload.name,
-        introduce: actions.payload.introduce,
-        avatar: actions.payload.avatar,
-        statusMessage: actions.payload.statusMessage,
-        backGroundItem: actions.payload.backGroundItem,
-        backGroundItemType: actions.payload.backGroundItemType,
-      },
-    }),
+    ) => {
+      const {instagram, twitter, youtube, tiktok} = actions.payload;
+      return {
+        ...state,
+        user: {
+          ...state.user!,
+          name: actions.payload.name,
+          introduce: actions.payload.introduce,
+          avatar: actions.payload.avatar,
+          statusMessage: actions.payload.statusMessage,
+          backGroundItem: actions.payload.backGroundItem,
+          backGroundItemType: actions.payload.backGroundItemType,
+          instagram,
+          twitter,
+          youtube,
+          tiktok,
+        },
+      };
+    },
     [editUserDisplayThunk.fulfilled.type]: (
       state,
       action: PayloadAction<EidtUserDisplayThunk>,

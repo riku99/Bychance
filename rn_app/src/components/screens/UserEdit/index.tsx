@@ -326,11 +326,6 @@ export const UserEditPage = () => {
     setSnsModalType(snsType);
   }, []);
 
-  useEffect(() => {
-    console.log('instagram' + instagram);
-    console.log('twitter' + twitter);
-  }, [instagram, twitter]);
-
   return (
     <View style={styles.container}>
       <View style={styles.backGraondItemContainer}>
