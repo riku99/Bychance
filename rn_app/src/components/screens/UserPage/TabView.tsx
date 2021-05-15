@@ -6,7 +6,6 @@ import {
   Animated,
   ScrollView,
   RefreshControl,
-  Linking,
 } from 'react-native';
 import {
   TabView,
@@ -16,14 +15,13 @@ import {
 } from 'react-native-tab-view';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch} from 'react-redux';
-import {SocialIcon} from 'react-native-elements';
 
 import {AppDispatch} from '../../../stores/index';
 import {Post} from '../../../stores/posts';
 import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {normalStyles} from '~/constants/styles/normal';
-import TikTok from '~/assets/tiktok_logo.svg';
+import {UserInformationRouteInTabView} from './UserInformationInTabView';
 
 type PostsRouteProps = {
   posts: Post[];
@@ -80,96 +78,6 @@ type UserInformationProps = {
   profileContainerHeight: number;
   mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
 };
-
-const UserInformationRoute = React.memo(
-  ({
-    containerHeight,
-    profileContainerHeight,
-    mostRecentlyScrolledView,
-  }: UserInformationProps) => {
-    const [contentsHeight, setContentsHeight] = useState(0);
-
-    const paddingTopHeight = useMemo(
-      () => profileContainerHeight + stickyTabHeight,
-      [profileContainerHeight],
-    );
-
-    const scrollableHeight = useMemo(() => {
-      switch (mostRecentlyScrolledView) {
-        case 'UserInformation':
-          return paddingTopHeight;
-        case 'Posts':
-          return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-      }
-    }, [
-      containerHeight,
-      contentsHeight,
-      mostRecentlyScrolledView,
-      paddingTopHeight,
-      profileContainerHeight,
-    ]);
-
-    const handleUrlPress = useCallback(async () => {
-      const url = 'https://www.tiktok.com/@kageihina';
-      //const url = 'https://twitter.com/';
-      const supported = await Linking.canOpenURL(url);
-
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        console.log('インストールされていません');
-      }
-    }, []);
-
-    return (
-      <>
-        <View
-          style={{
-            minHeight:
-              containerHeight - (profileContainerHeight + stickyTabHeight),
-          }}
-          onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 20,
-              justifyContent: 'space-between',
-              width: '75%',
-              alignSelf: 'center',
-            }}>
-            <SocialIcon
-              raised={false}
-              type="instagram"
-              onPress={handleUrlPress}
-              style={[informationStyles.socialIcom, {backgroundColor: 'pink'}]}
-            />
-            <SocialIcon
-              raised={false}
-              type="twitter"
-              onPress={() => console.log('ok')}
-              style={informationStyles.socialIcom}
-            />
-            <SocialIcon
-              raised={false}
-              type="youtube"
-              onPress={() => console.log('ok')}
-              style={informationStyles.socialIcom}
-            />
-            <TikTok width={52} style={{marginLeft: 6}} />
-          </View>
-        </View>
-        <View style={{height: scrollableHeight}} />
-      </>
-    );
-  },
-);
-
-const informationStyles = StyleSheet.create({
-  socialIcom: {
-    width: 52,
-    height: 52,
-  },
-});
 
 type TabSceneProps = {
   children: Element;
@@ -358,7 +266,7 @@ export const UserTabView = React.memo(
                   setMostRecentlyScrolledView('UserInformation');
                 }
               }}>
-              <UserInformationRoute
+              <UserInformationRouteInTabView
                 containerHeight={containerHeight}
                 profileContainerHeight={profileContainerHeight}
                 mostRecentlyScrolledView={mostRecentlyScrolledView}
@@ -428,7 +336,7 @@ export const UserTabView = React.memo(
 
 const {width} = Dimensions.get('window');
 
-const stickyTabHeight = 40.5;
+export const stickyTabHeight = 40.5;
 
 const styles = StyleSheet.create({
   container: {
