@@ -77,7 +77,13 @@ export const Menu = ({
   }, [isVisble]);
 
   return (
-    <Modalize ref={modalizeRef} modalHeight={height / 2} onClose={displayMenu}>
+    <Modalize
+      ref={modalizeRef}
+      modalHeight={height / 2}
+      onClose={displayMenu}
+      scrollViewProps={{
+        scrollEnabled: false,
+      }}>
       <View style={styles.inModalContainer}>
         {list.map((l, i) => {
           return (

@@ -268,13 +268,13 @@ export const UserPage = ({route, navigation}: Props) => {
                 </Text>
               </View>
             </View>
-            <View style={{width: '50%'}}>
+            {/* <View style={{width: '50%'}}>
               {isMe ? (
                 <EditButton />
               ) : (
                 <SendMessageButton user={anotherUser!} />
               )}
-            </View>
+            </View> */}
           </Animated.View>
 
           {moreReadButton && (
@@ -330,20 +330,20 @@ const styles = StyleSheet.create({
   },
   introduceContainer: {
     position: 'absolute',
-    top: height > X_HEIGHT ? '35%' : '40%',
+    top: height > X_HEIGHT ? '33%' : '38%',
+    paddingHorizontal: 14,
     width: '100%',
-    paddingHorizontal: 25,
     height: '20%',
   },
   avatarAndNameContainer: {
     top: '15%',
+    left: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    width: '95%',
+    alignSelf: 'flex-start',
+    //backgroundColor: 'gray',
   },
   nameContainer: {
-    marginTop: height > X_HEIGHT ? '25%' : '20%',
+    marginTop: height > X_HEIGHT ? 15 : 13,
   },
   animatedElement: {
     position: 'absolute',
