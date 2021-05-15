@@ -110,7 +110,8 @@ const UserInformationRoute = React.memo(
     ]);
 
     const handleUrlPress = useCallback(async () => {
-      const url = 'https://www.instagram.com/';
+      const url = 'https://www.tiktok.com/@kageihina';
+      //const url = 'https://twitter.com/';
       const supported = await Linking.canOpenURL(url);
 
       if (supported) {

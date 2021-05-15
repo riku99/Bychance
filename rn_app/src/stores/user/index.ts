@@ -49,6 +49,10 @@ export type UserState = {
     name?: string;
     introduce?: string;
     statusMessage?: string;
+    instagram?: string | null;
+    twitter?: string | null;
+    youtube?: string | null;
+    tiktok?: string | null;
   };
 };
 
@@ -64,6 +68,7 @@ const userSlice = createSlice({
       state,
       action: PayloadAction<UserState['temporarilySavedData']>,
     ) => {
+      const currentTemporarilySavedData = state.temporarilySavedData;
       if (action.payload?.name) {
         return {
           ...state,
@@ -91,6 +96,46 @@ const userSlice = createSlice({
           temporarilySavedData: {
             ...state.temporarilySavedData,
             statusMessage: action.payload.statusMessage,
+          },
+        };
+      }
+      if (action.payload?.instagram || action.payload?.instagram === '') {
+        const {instagram} = action.payload;
+        return {
+          ...state,
+          temporarilySavedData: {
+            ...currentTemporarilySavedData,
+            instagram,
+          },
+        };
+      }
+      if (action.payload?.twitter || action.payload?.twitter === '') {
+        const {twitter} = action.payload;
+        return {
+          ...state,
+          temporarilySavedData: {
+            ...currentTemporarilySavedData,
+            twitter,
+          },
+        };
+      }
+      if (action.payload?.youtube || action.payload?.youtube === '') {
+        const {youtube} = action.payload;
+        return {
+          ...state,
+          temporarilySavedData: {
+            ...currentTemporarilySavedData,
+            youtube,
+          },
+        };
+      }
+      if (action.payload?.tiktok || action.payload?.tiktok === '') {
+        const {tiktok} = action.payload;
+        return {
+          ...state,
+          temporarilySavedData: {
+            ...currentTemporarilySavedData,
+            tiktok,
           },
         };
       }

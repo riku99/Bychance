@@ -107,22 +107,36 @@ export const UserEditPage = () => {
   const [twitter, setTwitter] = useState<string | null>(user.twitter);
   const [tiktok, setTiktok] = useState<string | null>(user.tiktok);
   const [youtube, setYoutube] = useState<string | null>(user.youtube);
-  const [snsModal, setSnsModal] = useState<null | SnsList>(null);
+  const [snsModalType, setSnsModalType] = useState<null | SnsList>(null);
 
-  const snsText = useMemo(() => {
-    switch (snsModal) {
+  const snsModalProps = useMemo(() => {
+    switch (snsModalType) {
       case 'instagram':
-        return user.instagram;
+        return {
+          text: user.instagram,
+          setContents: setInstagram,
+        };
       case 'twitter':
-        return user.twitter;
+        return {
+          text: user.twitter,
+          setContents: setTwitter,
+        };
       case 'youtube':
-        return user.youtube;
+        return {
+          text: user.youtube,
+          setContents: setYoutube,
+        };
       case 'tiktok':
-        return user.tiktok;
+        return {
+          text: user.tiktok,
+          setContents: setTiktok,
+        };
       default:
-        return null;
+        return {
+          text: null,
+        };
     }
-  }, [snsModal, user.instagram, user.twitter, user.youtube, user.tiktok]);
+  }, [snsModalType, user.instagram, user.twitter, user.youtube, user.tiktok]);
 
   const [loading, setLoding] = useState(false);
 
@@ -309,8 +323,13 @@ export const UserEditPage = () => {
   ]);
 
   const showSnsModal = useCallback((snsType: SnsList) => {
-    setSnsModal(snsType);
+    setSnsModalType(snsType);
   }, []);
+
+  useEffect(() => {
+    console.log('instagram' + instagram);
+    console.log('twitter' + twitter);
+  }, [instagram, twitter]);
 
   return (
     <View style={styles.container}>
@@ -370,11 +389,12 @@ export const UserEditPage = () => {
           <SnsIconList showSnsModal={showSnsModal} />
         </View>
       </View>
-      {snsModal && (
+      {snsModalType && (
         <SnsModal
-          show={snsModal}
-          onClose={() => setSnsModal(null)}
-          text={snsText}
+          show={snsModalType}
+          onClose={() => setSnsModalType(null)}
+          text={snsModalProps.text}
+          setContents={snsModalProps.setContents}
         />
       )}
     </View>
