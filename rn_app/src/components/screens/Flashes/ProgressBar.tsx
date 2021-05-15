@@ -1,7 +1,7 @@
 import React, {useRef, useEffect} from 'react';
 import {View, StyleSheet, Dimensions, Animated} from 'react-native';
 
-import {FlashesData} from '../../../stores/types';
+import {FlashesData} from '~/stores/types';
 
 type Props = {
   flashesData: FlashesData;

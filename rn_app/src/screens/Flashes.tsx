@@ -8,7 +8,7 @@ import {
 } from './UserPage';
 import {FlashesPage} from '../components/screens/Flashes';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {FlashesData} from '../components/screens/Flashes/types';
+import {FlashesData} from '~/stores/types';
 
 export type FlashesStackParamList = {
   Flashes:

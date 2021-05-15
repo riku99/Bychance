@@ -19,7 +19,7 @@ import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
 import {ShowModalButton} from './ShowModalButton';
 import {Modal} from './Modal';
-import {FlashesData} from './types';
+import {FlashesData} from '~/stores/types';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';

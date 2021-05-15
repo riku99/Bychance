@@ -3,7 +3,6 @@ import {Post} from './posts';
 import {TalkRoom} from './talkRooms';
 import {TalkRoomMessage} from './talkRoomMessages';
 import {Flash} from './flashes';
-import {FlashesData} from '../components/screens/Flashes/types';
 
 export type ClientData = {
   user: User;
@@ -12,6 +11,13 @@ export type ClientData = {
   messages: TalkRoomMessage[];
   flashes: Flash[];
   chatPartners: AnotherUser[];
+};
+
+// 自分以外のユーザーが持つデータ。データそのもの(entiites)以外にも閲覧データとか必要なので定義
+export type FlashesData = {
+  entities: Flash[];
+  alreadyViewed: number[];
+  isAllAlreadyViewed?: boolean;
 };
 
 export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {

@@ -21,7 +21,7 @@ import {SearchBar} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 
 import {AnotherUser} from '../../../stores/types';
-import {FlashesData} from '~/components/pages/Flashes/types';
+import {FlashesData} from '~/stores/types';
 import {Avatar} from './Avatar';
 import {RangeSelector} from './RangeSelector';
 import {AppDispatch} from '../../../stores/index';

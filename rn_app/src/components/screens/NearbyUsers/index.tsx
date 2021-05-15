@@ -9,7 +9,7 @@ import {AnotherUser} from '../../../stores/types';
 import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
 import {getNearbyUsersThunk} from '../../../apis/nearbyUsers/getNearbyUsers';
 import {SearchUsersStackNavigationProp} from '../../../screens/types';
-import {FlashesData} from '../Flashes/types';
+import {FlashesData} from '~/stores/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
 import {RootNavigationProp} from '~/screens/Root';
 

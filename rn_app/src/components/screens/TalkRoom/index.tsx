@@ -9,7 +9,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 
-import {ChatRoom} from './ChatRoom';
+import {ChatRoom} from './TaklRoom';
 import {TalkRoomStackNavigationProp} from '../../../screens/types';
 import {AppDispatch, RootState} from '../../../stores/index';
 import {selectMessages} from '../../../stores/talkRoomMessages';

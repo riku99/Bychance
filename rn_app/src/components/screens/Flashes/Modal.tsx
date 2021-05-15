@@ -76,6 +76,7 @@ export const Modal = ({
     <Modalize
       ref={modalizeRef}
       modalHeight={140}
+      scrollViewProps={{scrollEnabled: false}}
       onClosed={() => {
         setIsPaused(false);
         progressAnimation({

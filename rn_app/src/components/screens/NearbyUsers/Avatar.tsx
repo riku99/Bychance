@@ -2,7 +2,7 @@ import React from 'react';
 
 import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
 import {AnotherUser} from '~/stores/types';
-import {FlashesData} from '~/components/screens/Flashes/types';
+import {FlashesData} from '~/stores/types';
 
 type Props = {
   user: AnotherUser;

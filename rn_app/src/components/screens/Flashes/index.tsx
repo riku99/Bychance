@@ -12,7 +12,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
-import {FlashesData} from './types';
+import {FlashesData} from '~/stores/types';
 import {FlashesRouteProp} from '../../../screens/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
 import {RootState} from '../../../stores/index';
