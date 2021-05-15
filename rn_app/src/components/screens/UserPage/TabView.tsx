@@ -21,7 +21,10 @@ import {Post} from '../../../stores/posts';
 import {Posts} from './Posts';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {normalStyles} from '~/constants/styles/normal';
-import {UserInformationRouteInTabView} from './UserInformationInTabView';
+import {
+  UserInformationRouteInTabView,
+  SnsLinkData,
+} from './UserInformationInTabView';
 
 type PostsRouteProps = {
   posts: Post[];
@@ -72,12 +75,6 @@ const PostsRoute = React.memo(
     );
   },
 );
-
-type UserInformationProps = {
-  containerHeight: number;
-  profileContainerHeight: number;
-  mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
-};
 
 type TabSceneProps = {
   children: Element;
@@ -148,6 +145,7 @@ type Props = {
   scrollY: Animated.Value;
   postsTabViewRef: React.RefObject<ScrollView>;
   userInformationTabViewRef: React.RefObject<ScrollView>;
+  snsLinkData: SnsLinkData;
 };
 
 export const UserTabView = React.memo(
@@ -159,6 +157,7 @@ export const UserTabView = React.memo(
     scrollY,
     postsTabViewRef,
     userInformationTabViewRef,
+    snsLinkData,
   }: Props) => {
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
@@ -270,6 +269,7 @@ export const UserTabView = React.memo(
                 containerHeight={containerHeight}
                 profileContainerHeight={profileContainerHeight}
                 mostRecentlyScrolledView={mostRecentlyScrolledView}
+                snsLinkData={snsLinkData}
               />
             </TabScene>
           );

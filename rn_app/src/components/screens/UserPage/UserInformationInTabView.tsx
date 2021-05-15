@@ -1,17 +1,23 @@
 import React, {useState, useMemo, useCallback} from 'react';
 import {StyleSheet, View, Linking} from 'react-native';
-import {shallowEqual, useSelector} from 'react-redux';
 import {SocialIcon} from 'react-native-elements';
 import TikTok from '~/assets/tiktok_logo.svg';
 
 import {stickyTabHeight} from './TabView';
-import {RootState} from '~/stores';
 import {snsBaseUrl} from '~/constants/sns';
+
+export type SnsLinkData = {
+  instagram: string | null;
+  twitter: string | null;
+  youtube: string | null;
+  tiktok: string | null;
+};
 
 type Props = {
   containerHeight: number;
   profileContainerHeight: number;
   mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
+  snsLinkData: SnsLinkData;
 };
 
 export const UserInformationRouteInTabView = React.memo(
@@ -19,6 +25,7 @@ export const UserInformationRouteInTabView = React.memo(
     containerHeight,
     profileContainerHeight,
     mostRecentlyScrolledView,
+    snsLinkData,
   }: Props) => {
     const [contentsHeight, setContentsHeight] = useState(0);
 
@@ -42,10 +49,10 @@ export const UserInformationRouteInTabView = React.memo(
       profileContainerHeight,
     ]);
 
-    const linkData = useSelector((state: RootState) => {
-      const {instagram, twitter, youtube, tiktok} = state.userReducer.user!;
-      return {instagram, twitter, youtube, tiktok};
-    }, shallowEqual);
+    // const snsLinkData = useSelector((state: RootState) => {
+    //   const {instagram, twitter, youtube, tiktok} = state.userReducer.user!;
+    //   return {instagram, twitter, youtube, tiktok};
+    // }, shallowEqual);
 
     const handleSnsIconPress = useCallback(async (link: string) => {
       const supported = await Linking.canOpenURL(link);
@@ -66,45 +73,45 @@ export const UserInformationRouteInTabView = React.memo(
           }}
           onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
           <View style={styles.iconContainer}>
-            {linkData.instagram && (
+            {snsLinkData.instagram && (
               <SocialIcon
                 raised={false}
                 type="instagram"
                 onPress={() =>
                   handleSnsIconPress(
-                    `${snsBaseUrl.instagramBaseUrl}/${linkData.instagram}`,
+                    `${snsBaseUrl.instagramBaseUrl}/${snsLinkData.instagram}`,
                   )
                 }
                 style={[styles.socialIcom, {backgroundColor: 'pink'}]}
               />
             )}
-            {linkData.twitter && (
+            {snsLinkData.twitter && (
               <SocialIcon
                 raised={false}
                 type="twitter"
                 onPress={() =>
                   handleSnsIconPress(
-                    `${snsBaseUrl.twitterBaseUrl}/${linkData.twitter}`,
+                    `${snsBaseUrl.twitterBaseUrl}/${snsLinkData.twitter}`,
                   )
                 }
                 style={styles.socialIcom}
               />
             )}
-            {linkData.youtube && (
+            {snsLinkData.youtube && (
               <SocialIcon
                 raised={false}
                 type="youtube"
-                onPress={() => handleSnsIconPress(linkData.youtube!)}
+                onPress={() => handleSnsIconPress(snsLinkData.youtube!)}
                 style={styles.socialIcom}
               />
             )}
-            {linkData.tiktok && (
+            {snsLinkData.tiktok && (
               <TikTok
                 width={52}
                 style={{marginLeft: 10}}
                 onPress={() =>
                   handleSnsIconPress(
-                    `${snsBaseUrl.tiktokBaseUrl}/@${linkData.tiktok}`,
+                    `${snsBaseUrl.tiktokBaseUrl}/@${snsLinkData.tiktok}`,
                   )
                 }
               />

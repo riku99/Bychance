@@ -95,6 +95,20 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, shallowEqual);
 
+  const snsLinkData = useMemo(() => {
+    if (user) {
+      const {instagram, twitter, youtube, tiktok} = user;
+      return {instagram, twitter, youtube, tiktok};
+    } else {
+      return {
+        instagram: null,
+        twitter: null,
+        youtube: null,
+        tiktok: null,
+      };
+    }
+  }, [user]);
+
   const avatarOuterType: 'gradation' | 'silver' | 'none' = useMemo(() => {
     if (me) {
       if (myFlashes && myFlashes.length) {
@@ -118,7 +132,6 @@ export const UserPage = ({route, navigation}: Props) => {
   const [containerHeight, setContainerHeight] = useState(0);
 
   const scrollY = useRef(new Animated.Value(0)).current;
-
   const y = scrollY.interpolate({
     inputRange: [0, profileContainerHeight],
     outputRange: [0, -profileContainerHeight],
@@ -231,6 +244,7 @@ export const UserPage = ({route, navigation}: Props) => {
             scrollY={scrollY}
             postsTabViewRef={postsTabViewRef}
             userInformationTabViewRef={userInformationTabViewRef}
+            snsLinkData={snsLinkData}
           />
 
           <Animated.View
