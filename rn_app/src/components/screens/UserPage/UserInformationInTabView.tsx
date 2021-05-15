@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useCallback} from 'react';
-import {StyleSheet, View, Linking} from 'react-native';
+import {StyleSheet, View, Linking, Alert} from 'react-native';
 import {SocialIcon} from 'react-native-elements';
 import TikTok from '~/assets/tiktok_logo.svg';
 
@@ -49,18 +49,25 @@ export const UserInformationRouteInTabView = React.memo(
       profileContainerHeight,
     ]);
 
-    // const snsLinkData = useSelector((state: RootState) => {
-    //   const {instagram, twitter, youtube, tiktok} = state.userReducer.user!;
-    //   return {instagram, twitter, youtube, tiktok};
-    // }, shallowEqual);
-
     const handleSnsIconPress = useCallback(async (link: string) => {
-      const supported = await Linking.canOpenURL(link);
+      const notSupportedAlert = () => {
+        Alert.alert('無効なURLです', '', [
+          {
+            text: 'かしこまりまし子',
+          },
+        ]);
+      };
 
-      if (supported) {
-        await Linking.openURL(link);
-      } else {
-        console.log('無効なリンクです');
+      try {
+        const supported = await Linking.canOpenURL(link);
+
+        if (supported) {
+          await Linking.openURL(link);
+        } else {
+          notSupportedAlert();
+        }
+      } catch (e) {
+        notSupportedAlert();
       }
     }, []);
 
