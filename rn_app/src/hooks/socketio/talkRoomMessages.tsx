@@ -49,6 +49,12 @@ export const useTalkRoomMessagesIo = ({id}: {id?: string}) => {
             });
           }
         });
+
+        // https://socket.io/docs/v3/client-socket-instance/
+        // disconnectイベントはサーバーが落ちた時とかに発火される。他にも理由いくつかある。
+        // サーバー側からのsocket.disconnect()が起こった時、そしてクライアント側からsocket.disconnect()が起こった時には再接続は自動で行われない。逆に他の理由では行われる
+        // クライアント側でdisconectした場合は再接続を試みる必要はないし、現在サーバー側でdisconnectしている場面もないので手動で再接続を試みる必要はない。なのでdisconnectイベントのハンドラはいったん必要ない
+        // socket.on('disconnect', (reason) => {});
       } else {
         socket.disconnect();
       }
