@@ -9,6 +9,7 @@ import {normalStyles} from '~/constants/styles/normal';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {saveEditData} from '~/stores/user';
 import {RootState} from '~/stores';
+import {X_HEIGHT} from '~/constants/device';
 
 type Props = {
   show: SnsList;
@@ -101,6 +102,11 @@ export const SnsModal = React.memo(
               titleStyle={styles.endButtonTitle}
             />
           </View>
+          <View style={styles.alertTextContainer}>
+            <Text style={styles.alertText}>
+              大文字小文字、スペースなどに注意して正確に入力してください
+            </Text>
+          </View>
           <View style={styles.inputContainer}>
             <TextInput
               ref={inputRef}
@@ -118,7 +124,7 @@ export const SnsModal = React.memo(
 
 const {height} = Dimensions.get('screen');
 
-const modalHeight = height / 1.5;
+const modalHeight = X_HEIGHT > height ? height / 1.4 : height / 1.5;
 
 const styles = StyleSheet.create({
   container: {
@@ -153,5 +159,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     fontSize: 15,
+  },
+  alertTextContainer: {
+    marginTop: 10,
+  },
+  alertText: {
+    color: 'orange',
+    fontSize: 12,
   },
 });
