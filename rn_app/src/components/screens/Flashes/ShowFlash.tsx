@@ -421,7 +421,6 @@ export const ShowFlash = React.memo(
                         style={styles.source}
                         onLoadStart={onImageLoadStart}
                         onLoad={onImageLoad}
-                        resizeMode="contain"
                       />
                     ) : (
                       <FastImage
@@ -522,7 +521,8 @@ const {height, width} = Dimensions.get('window');
 
 const MAX_PROGRESS_BAR = width - 20;
 
-const sourceHeight = height > X_HEIGHT ? height - 150 : height;
+const partsWidth = width / 9;
+const sourceHeight = partsWidth * 16;
 
 const styles = StyleSheet.create({
   container: {
