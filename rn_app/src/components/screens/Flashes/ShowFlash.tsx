@@ -420,7 +420,7 @@ export const ShowFlash = React.memo(
                         style={{width, height}}
                         onLoadStart={onImageLoadStart}
                         onLoad={onImageLoad}
-                        resizeMode="cover"
+                        //resizeMode="cover"
                       />
                     ) : (
                       <FastImage
@@ -524,6 +524,8 @@ const MAX_PROGRESS_BAR = width - 20;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   info: {
     width: '95%',
@@ -543,7 +545,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   soruceContainer: {
-    //backgroundColor: '#1f1f1f',
     backgroundColor: 'black',
   },
   indicator: {

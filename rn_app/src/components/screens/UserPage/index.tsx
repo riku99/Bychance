@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
   },
   introduceContainer: {
     position: 'absolute',
-    top: height > X_HEIGHT ? '33%' : '38%',
+    top: height > X_HEIGHT ? '34%' : '38%',
     paddingHorizontal: 14,
     width: '100%',
     height: '20%',

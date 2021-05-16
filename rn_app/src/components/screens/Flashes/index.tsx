@@ -69,6 +69,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
       }
     }
   }, [dataArray.length, navigation]);
+
   // statusBarの設定のためにデバイスがX以上であるかどうかを判定
   // 判断方法の正解がわからなかったのでとりあえずデバイスの大きさで判断
   const moreDeviceX = useMoreDeviceX();
