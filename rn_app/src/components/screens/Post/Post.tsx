@@ -7,6 +7,7 @@ import FastImage from 'react-native-fast-image';
 
 import {Post as PostType} from '../../../stores/posts';
 import {normalStyles} from '../../../constants/styles/normal';
+import {ScrollView} from 'react-native-gesture-handler';
 
 type Props = {
   post: PostType;
@@ -18,44 +19,58 @@ export const Post = ({post, user, deletePost}: Props) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <View style={{backgroundColor: normalStyles.imageBackGroundColor}}>
-        <FastImage source={{uri: post.image}} style={styles.image} />
-      </View>
-      <View style={styles.upperBox}>
-        <Text style={styles.date}>{post.date}</Text>
-        {user === post.userId && (
-          <Button
-            icon={<Icon name="delete-outline" color="#999999" />}
-            buttonStyle={{backgroundColor: 'transparent'}}
-            onPress={() => {
-              Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
-                {
-                  text: 'はい',
-                  onPress: () => {
-                    deletePost(post.id);
-                    navigation.goBack();
-                  },
-                },
-                {text: 'いいえ'},
-              ]);
-            }}
+      <ScrollView
+        style={{width}}
+        contentContainerStyle={styles.scrollViewContainer}>
+        <View style={{backgroundColor: normalStyles.imageBackGroundColor}}>
+          <FastImage
+            source={{uri: post.image}}
+            style={styles.image}
+            resizeMode="contain"
           />
-        )}
-      </View>
-      <Text style={styles.text}>{post.text}</Text>
+        </View>
+        <View style={styles.upperBox}>
+          <Text style={styles.date}>{post.date}</Text>
+          {user === post.userId && (
+            <Button
+              icon={<Icon name="delete-outline" color="#999999" />}
+              buttonStyle={{backgroundColor: 'transparent'}}
+              onPress={() => {
+                Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
+                  {
+                    text: 'はい',
+                    onPress: () => {
+                      deletePost(post.id);
+                      navigation.goBack();
+                    },
+                  },
+                  {text: 'いいえ'},
+                ]);
+              }}
+            />
+          )}
+        </View>
+        <Text style={styles.text}>{post.text}</Text>
+      </ScrollView>
     </View>
   );
 };
 
-const {width} = Dimensions.get('window');
+const {width} = Dimensions.get('screen');
+const quarterSize = width / 4;
+const postHeight = quarterSize * 5; // Postはとりあえず 4:5 の比率にするのでheightを計算して取得
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
   },
+  scrollViewContainer: {
+    alignItems: 'center',
+  },
   image: {
     width: width,
-    height: 400,
+    height: postHeight,
   },
   upperBox: {
     flexDirection: 'row',
