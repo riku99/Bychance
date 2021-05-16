@@ -27,6 +27,7 @@ import {createAlreadyViewdFlashThunk} from '../../../apis/flashes/createAlreadyV
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
+import {X_HEIGHT} from '~/constants/device';
 
 type Props = {
   flashesData: FlashesData;
@@ -417,10 +418,10 @@ export const ShowFlash = React.memo(
                         source={{
                           uri: currentFlash.source,
                         }}
-                        style={{width, height}}
+                        style={styles.source}
                         onLoadStart={onImageLoadStart}
                         onLoad={onImageLoad}
-                        //resizeMode="cover"
+                        resizeMode="contain"
                       />
                     ) : (
                       <FastImage
@@ -521,11 +522,11 @@ const {height, width} = Dimensions.get('window');
 
 const MAX_PROGRESS_BAR = width - 20;
 
+const sourceHeight = height > X_HEIGHT ? height - 150 : height;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   info: {
     width: '95%',
@@ -546,6 +547,10 @@ const styles = StyleSheet.create({
   },
   soruceContainer: {
     backgroundColor: 'black',
+  },
+  source: {
+    width,
+    height: sourceHeight,
   },
   indicator: {
     width: 40,
