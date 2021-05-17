@@ -10,9 +10,12 @@ import {
   MyPageNavigationProp,
 } from '../../../screens/types';
 
-type Props = {posts: Post[]};
+type Props = {
+  post: Post;
+  index: number;
+};
 
-export const Posts = React.memo(({posts}: Props) => {
+export const TabViewPost = React.memo(({post, index}: Props) => {
   const checkMiddleItem = (i: number) => {
     return (i + 1) % 3 === 0 ? true : false;
   };
@@ -32,22 +35,18 @@ export const Posts = React.memo(({posts}: Props) => {
 
   return (
     <View style={styles.posts}>
-      {posts.map((p, i) => {
-        return (
-          <TouchableOpacity
-            key={p.id}
-            activeOpacity={1}
-            onPress={() => onPress(p)}>
-            <View
-              style={[
-                styles.postWrapper,
-                {marginHorizontal: checkMiddleItem(i + 1) ? createGap() : 0},
-              ]}>
-              <FastImage source={{uri: p.image}} style={styles.post} />
-            </View>
-          </TouchableOpacity>
-        );
-      })}
+      <TouchableOpacity
+        key={post.id}
+        activeOpacity={1}
+        onPress={() => onPress(post)}>
+        <View
+          style={[
+            styles.postWrapper,
+            {marginHorizontal: checkMiddleItem(index + 1) ? createGap() : 0},
+          ]}>
+          <FastImage source={{uri: post.image}} style={styles.post} />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 });

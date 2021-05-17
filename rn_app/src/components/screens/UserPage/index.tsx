@@ -12,6 +12,7 @@ import {
   ScrollView,
   Text,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
@@ -139,7 +140,7 @@ export const UserPage = ({route, navigation}: Props) => {
   });
 
   // 2つの子コンポーネントで必要なrefなのでこのコンポーネントから渡す
-  const postsTabViewRef = useRef<ScrollView>(null);
+  const postsTabViewRef = useRef<FlatList>(null);
   const userInformationTabViewRef = useRef<ScrollView>(null);
 
   const lineNumber = useMemo(

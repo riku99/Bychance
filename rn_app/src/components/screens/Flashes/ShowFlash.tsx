@@ -27,7 +27,6 @@ import {createAlreadyViewdFlashThunk} from '../../../apis/flashes/createAlreadyV
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
-import {X_HEIGHT} from '~/constants/device';
 
 type Props = {
   flashesData: FlashesData;

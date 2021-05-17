@@ -31,6 +31,7 @@ export const useRegisterDeviceToken = ({login}: {login: boolean}) => {
       const getDeviceToken = async () => {
         const token = await messaging().getToken();
         dispatch(createDeviceToken({token}));
+        console.log(token);
       };
       getDeviceToken();
     }
