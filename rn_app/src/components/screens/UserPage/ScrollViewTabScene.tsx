@@ -1,5 +1,5 @@
-import React, {useCallback, useState} from 'react';
-import {Animated, ScrollView, RefreshControl} from 'react-native';
+import React, {useCallback, useState, useMemo} from 'react';
+import {Animated, ScrollView, RefreshControl, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 
 import {AppDispatch} from '../../../stores/index';
@@ -9,24 +9,24 @@ import {stickyTabHeight} from './TabView';
 type TabSceneProps = {
   children: Element;
   userId: string;
-  contentsPaddingTop: number;
   scrollY: Animated.Value;
   tabViewRef: React.RefObject<ScrollView>;
   onScrollEndDrag: () => void;
   onMomentumScrollEnd: () => void;
   setMostRecentlyScrolledView: () => void;
+  profileContainerHeight: number;
 };
 
 export const ScrollViewTabScene = React.memo(
   ({
     children,
     userId,
-    contentsPaddingTop,
     scrollY,
     tabViewRef,
     onScrollEndDrag,
     onMomentumScrollEnd,
     setMostRecentlyScrolledView,
+    profileContainerHeight,
   }: TabSceneProps) => {
     const dispatch: AppDispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false);
@@ -41,21 +41,26 @@ export const ScrollViewTabScene = React.memo(
       setRefreshing(false);
     }, [dispatch, userId]);
 
+    const paddingTopHeight = useMemo(
+      () => profileContainerHeight + stickyTabHeight,
+      [profileContainerHeight],
+    );
+
     return (
       <Animated.ScrollView
         ref={tabViewRef}
-        scrollEventThrottle={1}
-        style={{paddingTop: contentsPaddingTop + stickyTabHeight}}
+        scrollEventThrottle={16}
+        style={{
+          paddingTop: paddingTopHeight,
+        }}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {
             useNativeDriver: true,
-            listener: () => {
-              setMostRecentlyScrolledView();
-            },
           },
         )}
+        onScrollBeginDrag={setMostRecentlyScrolledView}
         onScrollEndDrag={onScrollEndDrag}
         onMomentumScrollEnd={onMomentumScrollEnd}
         refreshControl={

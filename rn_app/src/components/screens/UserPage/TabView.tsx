@@ -78,33 +78,28 @@ const PostsRoute = React.memo(
 );
 
 type TabSceneProps = {
-  children: Element;
+  renderItem?: ListRenderItem<Post>;
+  renderData?: Post[];
   userId: string;
-  contentsPaddingTop: number;
   scrollY: Animated.Value;
   tabViewRef: React.RefObject<FlatList>;
   onScrollEndDrag: () => void;
   onMomentumScrollEnd: () => void;
   setMostRecentlyScrolledView: () => void;
-  data: Post[];
-  renderItem: ListRenderItem<Post>;
-  containerHeight: number;
   profileContainerHeight: number;
   mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
 };
 
-const TabScene = React.memo(
+const FlatListTabScene = React.memo(
   ({
     userId,
-    //contentsPaddingTop,
     scrollY,
     tabViewRef,
     onScrollEndDrag,
     onMomentumScrollEnd,
     setMostRecentlyScrolledView,
-    data,
+    renderData,
     renderItem,
-    containerHeight,
     profileContainerHeight,
     mostRecentlyScrolledView,
   }: TabSceneProps) => {
@@ -129,24 +124,22 @@ const TabScene = React.memo(
     return (
       <Animated.FlatList
         ref={tabViewRef}
-        data={data}
+        data={renderData}
         keyExtractor={(item) => String(item.id)}
         renderItem={renderItem}
         numColumns={3}
         horizontal={false}
-        scrollEventThrottle={1}
+        scrollEventThrottle={16}
         contentContainerStyle={{paddingTop: paddingTopHeight}}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {
             useNativeDriver: true,
-            listener: () => {
-              setMostRecentlyScrolledView();
-            },
           },
         )}
         onScrollEndDrag={onScrollEndDrag}
+        onScrollBeginDrag={setMostRecentlyScrolledView}
         onMomentumScrollEnd={onMomentumScrollEnd}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -234,18 +227,16 @@ export const UserTabView = React.memo(
       switch (route.key) {
         case 'Posts':
           return (
-            <TabScene
+            <FlatListTabScene
               userId={userId}
-              data={posts}
+              renderData={posts}
               renderItem={({item, index}) => (
                 <TabViewPost post={item} index={index} />
               )}
               tabViewRef={postsTabViewRef}
-              // contentsPaddingTop={profileContainerHeight}
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
-              containerHeight={containerHeight}
               profileContainerHeight={profileContainerHeight}
               mostRecentlyScrolledView={mostRecentlyScrolledView}
               setMostRecentlyScrolledView={() => {
@@ -260,21 +251,14 @@ export const UserTabView = React.memo(
                 ) {
                   setMostRecentlyScrolledView('UserInformation');
                 }
-              }}>
-              {/* <PostsRoute
-                //posts={posts}
-                containerHeight={containerHeight}
-                profileContainerHeight={profileContainerHeight}
-                mostRecentlyScrolledView={mostRecentlyScrolledView}
-              /> */}
-            </TabScene>
+              }}
+            />
           );
         case 'UserInformation':
           return (
             <ScrollViewTabScene
               userId={userId}
               tabViewRef={userInformationTabViewRef}
-              contentsPaddingTop={profileContainerHeight}
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
@@ -290,7 +274,8 @@ export const UserTabView = React.memo(
                 ) {
                   setMostRecentlyScrolledView('UserInformation');
                 }
-              }}>
+              }}
+              profileContainerHeight={profileContainerHeight}>
               <UserInformationRouteInTabView
                 containerHeight={containerHeight}
                 profileContainerHeight={profileContainerHeight}
