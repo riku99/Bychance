@@ -1,9 +1,8 @@
-import React, {useState, useMemo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View, Linking, Alert} from 'react-native';
 import {SocialIcon} from 'react-native-elements';
 import TikTok from '~/assets/tiktok_logo.svg';
 
-import {stickyTabHeight} from './TabView';
 import {snsBaseUrl} from '~/constants/sns';
 
 export type SnsLinkData = {
@@ -14,41 +13,12 @@ export type SnsLinkData = {
 };
 
 type Props = {
-  containerHeight: number;
-  profileContainerHeight: number;
-  mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
   snsLinkData: SnsLinkData;
+  setContentsHeight: (n: number) => void;
 };
 
 export const UserInformationRouteInTabView = React.memo(
-  ({
-    containerHeight,
-    profileContainerHeight,
-    mostRecentlyScrolledView,
-    snsLinkData,
-  }: Props) => {
-    const [contentsHeight, setContentsHeight] = useState(0);
-
-    const paddingTopHeight = useMemo(
-      () => profileContainerHeight + stickyTabHeight,
-      [profileContainerHeight],
-    );
-
-    const scrollableHeight = useMemo(() => {
-      switch (mostRecentlyScrolledView) {
-        case 'UserInformation':
-          return paddingTopHeight;
-        case 'Posts':
-          return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-      }
-    }, [
-      containerHeight,
-      contentsHeight,
-      mostRecentlyScrolledView,
-      paddingTopHeight,
-      profileContainerHeight,
-    ]);
-
+  ({snsLinkData, setContentsHeight}: Props) => {
     const handleSnsIconPress = useCallback(async (link: string) => {
       const notSupportedAlert = () => {
         Alert.alert('無効なURLです', '', [
@@ -73,12 +43,7 @@ export const UserInformationRouteInTabView = React.memo(
 
     return (
       <>
-        <View
-          style={{
-            minHeight:
-              containerHeight - (profileContainerHeight + stickyTabHeight),
-          }}
-          onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
+        <View onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
           <View style={styles.iconContainer}>
             {snsLinkData.instagram && (
               <SocialIcon
@@ -125,7 +90,6 @@ export const UserInformationRouteInTabView = React.memo(
             )}
           </View>
         </View>
-        <View style={{height: scrollableHeight}} />
       </>
     );
   },

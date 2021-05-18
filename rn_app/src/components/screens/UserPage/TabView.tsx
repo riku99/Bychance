@@ -1,13 +1,11 @@
-import React, {useMemo, useState, useRef, useEffect, useCallback} from 'react';
+import React, {useMemo, useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
   Dimensions,
   Animated,
   ScrollView,
-  RefreshControl,
   FlatList,
-  ListRenderItem,
 } from 'react-native';
 import {
   TabView,
@@ -16,138 +14,15 @@ import {
   NavigationState,
 } from 'react-native-tab-view';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../stores/index';
 import {Post} from '../../../stores/posts';
-import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {normalStyles} from '~/constants/styles/normal';
 import {
   UserInformationRouteInTabView,
   SnsLinkData,
 } from './UserInformationInTabView';
 import {TabViewPost} from './Posts';
-import {ScrollViewTabScene} from './ScrollViewTabScene';
-
-type PostsRouteProps = {
-  //posts: Post[];
-  containerHeight: number;
-  profileContainerHeight: number;
-  mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
-};
-
-const PostsRoute = React.memo(
-  ({
-    containerHeight,
-    profileContainerHeight,
-    mostRecentlyScrolledView,
-  }: PostsRouteProps) => {
-    const [contentsHeight, setContentsHeight] = useState(0);
-    const paddingTopHeight = useMemo(
-      () => profileContainerHeight + stickyTabHeight,
-      [profileContainerHeight],
-    );
-
-    const scrollableHeight = useMemo(() => {
-      switch (mostRecentlyScrolledView) {
-        case 'Posts':
-          return paddingTopHeight;
-        case 'UserInformation':
-          return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-      }
-    }, [
-      containerHeight,
-      contentsHeight,
-      mostRecentlyScrolledView,
-      paddingTopHeight,
-      profileContainerHeight,
-    ]);
-
-    return (
-      <>
-        <View
-          onLayout={(e) => {
-            setContentsHeight(e.nativeEvent.layout.height);
-          }}>
-          <View />
-        </View>
-        <View style={{height: scrollableHeight}} />
-      </>
-    );
-  },
-);
-
-type TabSceneProps = {
-  renderItem?: ListRenderItem<Post>;
-  renderData?: Post[];
-  userId: string;
-  scrollY: Animated.Value;
-  tabViewRef: React.RefObject<FlatList>;
-  onScrollEndDrag: () => void;
-  onMomentumScrollEnd: () => void;
-  setMostRecentlyScrolledView: () => void;
-  profileContainerHeight: number;
-  mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
-};
-
-const FlatListTabScene = React.memo(
-  ({
-    userId,
-    scrollY,
-    tabViewRef,
-    onScrollEndDrag,
-    onMomentumScrollEnd,
-    setMostRecentlyScrolledView,
-    renderData,
-    renderItem,
-    profileContainerHeight,
-    mostRecentlyScrolledView,
-  }: TabSceneProps) => {
-    const dispatch: AppDispatch = useDispatch();
-    const [refreshing, setRefreshing] = useState(false);
-
-    const onRefresh = useCallback(async () => {
-      setRefreshing(true);
-      await dispatch(
-        refreshUserThunk({
-          userId,
-        }),
-      );
-      setRefreshing(false);
-    }, [dispatch, userId]);
-
-    const paddingTopHeight = useMemo(
-      () => profileContainerHeight + stickyTabHeight,
-      [profileContainerHeight],
-    );
-
-    return (
-      <Animated.FlatList
-        ref={tabViewRef}
-        data={renderData}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={renderItem}
-        numColumns={3}
-        horizontal={false}
-        scrollEventThrottle={16}
-        contentContainerStyle={{paddingTop: paddingTopHeight}}
-        showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {
-            useNativeDriver: true,
-          },
-        )}
-        onScrollEndDrag={onScrollEndDrag}
-        onScrollBeginDrag={setMostRecentlyScrolledView}
-        onMomentumScrollEnd={onMomentumScrollEnd}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
-    );
-  },
-);
+import {FlatListTabScene, ScrollViewTabScene} from './ScrollViewTabScene';
 
 type Props = {
   userId: string;
@@ -219,6 +94,8 @@ export const UserTabView = React.memo(
       }
     };
 
+    const [contentsHeight, setContentsHeight] = useState(0);
+
     const renderScene = ({
       route,
     }: SceneRendererProps & {
@@ -275,12 +152,13 @@ export const UserTabView = React.memo(
                   setMostRecentlyScrolledView('UserInformation');
                 }
               }}
-              profileContainerHeight={profileContainerHeight}>
+              containerHeight={containerHeight}
+              contentsHeight={contentsHeight}
+              profileContainerHeight={profileContainerHeight}
+              mostRecentlyScrolledView={mostRecentlyScrolledView}>
               <UserInformationRouteInTabView
-                containerHeight={containerHeight}
-                profileContainerHeight={profileContainerHeight}
-                mostRecentlyScrolledView={mostRecentlyScrolledView}
                 snsLinkData={snsLinkData}
+                setContentsHeight={setContentsHeight}
               />
             </ScrollViewTabScene>
           );
