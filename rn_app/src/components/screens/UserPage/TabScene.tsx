@@ -57,6 +57,8 @@ export const FlatListTabScene = React.memo(
         numColumns={3}
         horizontal={false}
         scrollEventThrottle={16}
+        initialNumToRender={4}
+        windowSize={2}
         contentContainerStyle={{
           paddingTop: paddingTopHeight,
           minHeight: tabViewContainerMinHeight,
