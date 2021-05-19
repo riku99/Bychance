@@ -20,7 +20,11 @@ export const IntroduceModal = ({show, introduce, onClose}: Props) => {
   }, [show]);
 
   return (
-    <Modalize ref={modalRef} onClose={onClose} modalHeight={height / 2}>
+    <Modalize
+      ref={modalRef}
+      onClose={onClose}
+      modalHeight={height / 2}
+      scrollViewProps={{scrollEnabled: false}}>
       <View style={styles.textContainer}>
         <Text style={{lineHeight: oneIntroduceTextLineHeght}}>{introduce}</Text>
       </View>
