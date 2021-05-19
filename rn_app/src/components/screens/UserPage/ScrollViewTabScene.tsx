@@ -114,8 +114,8 @@ type ScrollViewTabSceneProps = {
   tabViewRef: React.RefObject<ScrollView>;
   onScrollEndDrag: () => void;
   onMomentumScrollEnd: () => void;
-  profileContainerHeight: number;
-  containerHeight: number;
+  paddingTopHeight: number;
+  tabViewContainerMinHeight: number;
 };
 
 export const ScrollViewTabScene = React.memo(
@@ -126,8 +126,8 @@ export const ScrollViewTabScene = React.memo(
     tabViewRef,
     onScrollEndDrag,
     onMomentumScrollEnd,
-    profileContainerHeight,
-    containerHeight,
+    paddingTopHeight,
+    tabViewContainerMinHeight,
   }: ScrollViewTabSceneProps) => {
     const dispatch: AppDispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false);
@@ -142,25 +142,13 @@ export const ScrollViewTabScene = React.memo(
       setRefreshing(false);
     }, [dispatch, userId]);
 
-    // これFalatList, ScrollViewどちらもで使えるからTabViewからPropsで渡す方がいい
-    const paddingTopHeight = useMemo(
-      () => profileContainerHeight + stickyTabHeight,
-      [profileContainerHeight],
-    );
-
-    // これもFlatListの方でも使うことになるのでTabViewから渡す
-    const containerMinHeight = useMemo(
-      () => containerHeight + paddingTopHeight - stickyTabHeight,
-      [containerHeight, paddingTopHeight],
-    );
-
     return (
       <Animated.ScrollView
         ref={tabViewRef}
         scrollEventThrottle={16}
         contentContainerStyle={{
           paddingTop: paddingTopHeight,
-          minHeight: containerMinHeight,
+          minHeight: tabViewContainerMinHeight,
         }}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
@@ -174,7 +162,7 @@ export const ScrollViewTabScene = React.memo(
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <>{children}</>
+        {children}
       </Animated.ScrollView>
     );
   },

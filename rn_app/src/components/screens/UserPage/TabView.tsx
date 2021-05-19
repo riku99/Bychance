@@ -94,7 +94,15 @@ export const UserTabView = React.memo(
       }
     };
 
-    const [contentsHeight, setContentsHeight] = useState(0);
+    const paddingTopHeight = useMemo(
+      () => profileContainerHeight + stickyTabHeight,
+      [profileContainerHeight],
+    );
+
+    const tabViewContainerMinHeight = useMemo(
+      () => containerHeight + paddingTopHeight - stickyTabHeight,
+      [containerHeight, paddingTopHeight],
+    );
 
     const renderScene = ({
       route,
@@ -140,8 +148,8 @@ export const UserTabView = React.memo(
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
-              containerHeight={containerHeight}
-              profileContainerHeight={profileContainerHeight}>
+              paddingTopHeight={paddingTopHeight}
+              tabViewContainerMinHeight={tabViewContainerMinHeight}>
               <UserInformationRouteInTabView snsLinkData={snsLinkData} />
             </ScrollViewTabScene>
           );
