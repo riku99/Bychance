@@ -22,7 +22,7 @@ import {
   SnsLinkData,
 } from './UserInformationInTabView';
 import {TabViewPost} from './Posts';
-import {FlatListTabScene, ScrollViewTabScene} from './ScrollViewTabScene';
+import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
 
 type Props = {
   userId: string;
@@ -59,10 +59,6 @@ export const UserTabView = React.memo(
     );
 
     const scrollValue = useRef(0);
-
-    const [mostRecentlyScrolledView, setMostRecentlyScrolledView] = useState<
-      'Posts' | 'UserInformation' | null
-    >(null);
 
     // TabViewをどれだけスクロールしたかを記述
     useEffect(() => {
@@ -122,22 +118,8 @@ export const UserTabView = React.memo(
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
-              containerHeight={containerHeight}
-              profileContainerHeight={profileContainerHeight}
-              mostRecentlyScrolledView={mostRecentlyScrolledView}
-              setMostRecentlyScrolledView={() => {
-                if (
-                  tabRoute[tabIndex].key === 'Posts' &&
-                  mostRecentlyScrolledView !== 'Posts'
-                ) {
-                  setMostRecentlyScrolledView('Posts');
-                } else if (
-                  tabRoute[tabIndex].key === 'UserInformation' &&
-                  mostRecentlyScrolledView !== 'UserInformation'
-                ) {
-                  setMostRecentlyScrolledView('UserInformation');
-                }
-              }}
+              paddingTopHeight={paddingTopHeight}
+              tabViewContainerMinHeight={tabViewContainerMinHeight}
             />
           );
         case 'UserInformation':
