@@ -24,6 +24,8 @@ type FlatListTabSceneProps = {
   onMomentumScrollEnd: () => void;
   setMostRecentlyScrolledView: () => void;
   profileContainerHeight: number;
+  containerHeight: number;
+  contentsHeight: number;
   mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
 };
 
@@ -38,10 +40,12 @@ export const FlatListTabScene = React.memo(
     renderData,
     renderItem,
     profileContainerHeight,
+    containerHeight,
     mostRecentlyScrolledView,
   }: FlatListTabSceneProps) => {
     const dispatch: AppDispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false);
+    const [contentsHeight, setContentsHeight] = useState(0);
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
@@ -58,16 +62,35 @@ export const FlatListTabScene = React.memo(
       [profileContainerHeight],
     );
 
+    const scrollableHeight = useMemo(() => {
+      switch (mostRecentlyScrolledView) {
+        case 'UserInformation':
+          return containerHeight + profileContainerHeight - contentsHeight;
+        case 'Posts':
+          return paddingTopHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
+      }
+    }, [
+      containerHeight,
+      mostRecentlyScrolledView,
+      paddingTopHeight,
+      profileContainerHeight,
+      contentsHeight,
+    ]);
+
     return (
       <Animated.FlatList
         ref={tabViewRef}
         data={renderData}
         keyExtractor={(item) => String(item.id)}
         renderItem={renderItem}
+        onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}
         numColumns={3}
         horizontal={false}
         scrollEventThrottle={16}
-        contentContainerStyle={{paddingTop: paddingTopHeight}}
+        contentContainerStyle={{
+          paddingTop: paddingTopHeight,
+          backgroundColor: 'gray',
+        }}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -151,9 +174,12 @@ export const ScrollViewTabScene = React.memo(
       <Animated.ScrollView
         ref={tabViewRef}
         scrollEventThrottle={16}
-        style={{
+        contentContainerStyle={{
           paddingTop: paddingTopHeight,
+          minHeight: containerHeight + paddingTopHeight - stickyTabHeight,
+          backgroundColor: 'orange',
         }}
+        style={{height: paddingTopHeight}}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -169,7 +195,7 @@ export const ScrollViewTabScene = React.memo(
         }>
         <>
           {children}
-          <View style={{height: scrollableHeight}} />
+          {/* <View style={{height: paddingTopHeight}} /> */}
         </>
       </Animated.ScrollView>
     );

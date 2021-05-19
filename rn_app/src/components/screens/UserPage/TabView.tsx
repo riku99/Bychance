@@ -114,6 +114,7 @@ export const UserTabView = React.memo(
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
+              containerHeight={containerHeight}
               profileContainerHeight={profileContainerHeight}
               mostRecentlyScrolledView={mostRecentlyScrolledView}
               setMostRecentlyScrolledView={() => {
