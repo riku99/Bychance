@@ -5,7 +5,6 @@ import {
   RefreshControl,
   ListRenderItem,
   FlatList,
-  View,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 
@@ -89,7 +88,6 @@ export const FlatListTabScene = React.memo(
         scrollEventThrottle={16}
         contentContainerStyle={{
           paddingTop: paddingTopHeight,
-          backgroundColor: 'gray',
         }}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
@@ -116,11 +114,8 @@ type ScrollViewTabSceneProps = {
   tabViewRef: React.RefObject<ScrollView>;
   onScrollEndDrag: () => void;
   onMomentumScrollEnd: () => void;
-  setMostRecentlyScrolledView: () => void;
   profileContainerHeight: number;
   containerHeight: number;
-  contentsHeight: number;
-  mostRecentlyScrolledView: 'Posts' | 'UserInformation' | null;
 };
 
 export const ScrollViewTabScene = React.memo(
@@ -131,11 +126,8 @@ export const ScrollViewTabScene = React.memo(
     tabViewRef,
     onScrollEndDrag,
     onMomentumScrollEnd,
-    setMostRecentlyScrolledView,
     profileContainerHeight,
     containerHeight,
-    mostRecentlyScrolledView,
-    contentsHeight,
   }: ScrollViewTabSceneProps) => {
     const dispatch: AppDispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false);
@@ -150,25 +142,17 @@ export const ScrollViewTabScene = React.memo(
       setRefreshing(false);
     }, [dispatch, userId]);
 
+    // これFalatList, ScrollViewどちらもで使えるからTabViewからPropsで渡す方がいい
     const paddingTopHeight = useMemo(
       () => profileContainerHeight + stickyTabHeight,
       [profileContainerHeight],
     );
 
-    const scrollableHeight = useMemo(() => {
-      switch (mostRecentlyScrolledView) {
-        case 'UserInformation':
-          return paddingTopHeight;
-        case 'Posts':
-          return containerHeight + profileContainerHeight - contentsHeight; // 上部に到達したTabまでスクロールできる高さを持たせる
-      }
-    }, [
-      containerHeight,
-      mostRecentlyScrolledView,
-      paddingTopHeight,
-      profileContainerHeight,
-      contentsHeight,
-    ]);
+    // これもFlatListの方でも使うことになるのでTabViewから渡す
+    const containerMinHeight = useMemo(
+      () => containerHeight + paddingTopHeight - stickyTabHeight,
+      [containerHeight, paddingTopHeight],
+    );
 
     return (
       <Animated.ScrollView
@@ -176,10 +160,8 @@ export const ScrollViewTabScene = React.memo(
         scrollEventThrottle={16}
         contentContainerStyle={{
           paddingTop: paddingTopHeight,
-          minHeight: containerHeight + paddingTopHeight - stickyTabHeight,
-          backgroundColor: 'orange',
+          minHeight: containerMinHeight,
         }}
-        style={{height: paddingTopHeight}}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -187,16 +169,12 @@ export const ScrollViewTabScene = React.memo(
             useNativeDriver: true,
           },
         )}
-        onScrollBeginDrag={setMostRecentlyScrolledView}
         onScrollEndDrag={onScrollEndDrag}
         onMomentumScrollEnd={onMomentumScrollEnd}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <>
-          {children}
-          {/* <View style={{height: paddingTopHeight}} /> */}
-        </>
+        <>{children}</>
       </Animated.ScrollView>
     );
   },

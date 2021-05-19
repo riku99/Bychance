@@ -14,11 +14,10 @@ export type SnsLinkData = {
 
 type Props = {
   snsLinkData: SnsLinkData;
-  setContentsHeight: (n: number) => void;
 };
 
 export const UserInformationRouteInTabView = React.memo(
-  ({snsLinkData, setContentsHeight}: Props) => {
+  ({snsLinkData}: Props) => {
     const handleSnsIconPress = useCallback(async (link: string) => {
       const notSupportedAlert = () => {
         Alert.alert('無効なURLです', '', [
@@ -43,7 +42,7 @@ export const UserInformationRouteInTabView = React.memo(
 
     return (
       <>
-        <View onLayout={(e) => setContentsHeight(e.nativeEvent.layout.height)}>
+        <View>
           <View style={styles.iconContainer}>
             {snsLinkData.instagram && (
               <SocialIcon

@@ -140,27 +140,9 @@ export const UserTabView = React.memo(
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
-              setMostRecentlyScrolledView={() => {
-                if (
-                  tabRoute[tabIndex].key === 'Posts' &&
-                  mostRecentlyScrolledView !== 'Posts'
-                ) {
-                  setMostRecentlyScrolledView('Posts');
-                } else if (
-                  tabRoute[tabIndex].key === 'UserInformation' &&
-                  mostRecentlyScrolledView !== 'UserInformation'
-                ) {
-                  setMostRecentlyScrolledView('UserInformation');
-                }
-              }}
               containerHeight={containerHeight}
-              contentsHeight={contentsHeight}
-              profileContainerHeight={profileContainerHeight}
-              mostRecentlyScrolledView={mostRecentlyScrolledView}>
-              <UserInformationRouteInTabView
-                snsLinkData={snsLinkData}
-                setContentsHeight={setContentsHeight}
-              />
+              profileContainerHeight={profileContainerHeight}>
+              <UserInformationRouteInTabView snsLinkData={snsLinkData} />
             </ScrollViewTabScene>
           );
       }
