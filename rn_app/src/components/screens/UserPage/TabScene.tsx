@@ -6,11 +6,10 @@ import {
   ListRenderItem,
   FlatList,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../stores/index';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {Post} from '~/stores/posts';
+import {useCustomDispatch} from '~/hooks/stores/dispatch';
 
 type FlatListTabSceneProps = {
   renderItem?: ListRenderItem<Post>;
@@ -31,13 +30,12 @@ export const FlatListTabScene = React.memo(
     tabViewRef,
     onScrollEndDrag,
     onMomentumScrollEnd,
-
     renderData,
     renderItem,
     paddingTopHeight,
     tabViewContainerMinHeight,
   }: FlatListTabSceneProps) => {
-    const dispatch: AppDispatch = useDispatch();
+    const dispatch = useCustomDispatch();
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(async () => {
@@ -102,7 +100,7 @@ export const ScrollViewTabScene = React.memo(
     paddingTopHeight,
     tabViewContainerMinHeight,
   }: ScrollViewTabSceneProps) => {
-    const dispatch: AppDispatch = useDispatch();
+    const dispatch = useCustomDispatch();
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(async () => {
