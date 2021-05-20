@@ -178,9 +178,9 @@ export const FlashesPage = ({route, navigation}: Props) => {
         })}
         scrollEnabled={!showModal}
         initialScrollIndex={startingIndex}
-        initialNumToRender={1}
-        maxToRenderPerBatch={1}
-        windowSize={1}
+        initialNumToRender={2}
+        maxToRenderPerBatch={2}
+        windowSize={2}
       />
     </View>
   );

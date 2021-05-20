@@ -117,9 +117,9 @@ export const ShowFlash = React.memo(
 
     const createAlreadyViewdFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
-        await dispatch(
-          createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
-        );
+        // await dispatch(
+        //   createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
+        // );
       },
       [dispatch, userData.userId],
     );
@@ -135,7 +135,7 @@ export const ShowFlash = React.memo(
         duration?: number;
         restart?: boolean;
       }) => {
-        if (progressNumber < entityLength) {
+        if (progressNumber < entityLength && isDisplayed) {
           progressAnim[progressNumber].addListener((e) => {
             progressValue.current = e.value;
           });
@@ -169,6 +169,7 @@ export const ShowFlash = React.memo(
         progressAnim,
         progressBarWidth,
         scrollToNextOrBackScreen,
+        isDisplayed,
       ],
     );
 
@@ -426,7 +427,14 @@ export const ShowFlash = React.memo(
                         onLoad={onImageLoad}
                       />
                     ) : (
-                      <View />
+                      <FastImage
+                        source={{
+                          uri: currentFlash.source,
+                        }}
+                        style={styles.source}
+                        onLoadStart={onImageLoadStart}
+                        onLoad={onImageLoad}
+                      />
                     )}
                   </View>
                 ) : (
