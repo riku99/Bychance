@@ -162,24 +162,22 @@ export const FlashesPage = ({route, navigation}: Props) => {
     <View
       style={[
         styles.container,
-        {paddingTop: moreDeviceX ? top : 0, paddingBottom: bottom},
+        // {paddingTop: moreDeviceX ? top : 0, paddingBottom: bottom},
       ]}>
       <FlatList
         ref={flatListRef}
         data={dataArray}
         keyExtractor={(item) => item.userData.userId}
         renderItem={({item, index}) => (
-          <View style={{height: safeAreaHeight, width}}>
-            <ShowFlash
-              flashesData={getData({item}).flashesData}
-              userData={getData({item}).userData}
-              isDisplayed={displayManagementTable[index]}
-              scrolling={scrolling}
-              showModal={showModal}
-              setShowModal={setShowModal}
-              scrollToNextOrBackScreen={scrollToNextOrBackScreen}
-            />
-          </View>
+          <ShowFlash
+            flashesData={getData({item}).flashesData}
+            userData={getData({item}).userData}
+            isDisplayed={displayManagementTable[index]}
+            scrolling={scrolling}
+            showModal={showModal}
+            setShowModal={setShowModal}
+            scrollToNextOrBackScreen={scrollToNextOrBackScreen}
+          />
         )}
         onScrollEndDrag={() => setScrolling(false)}
         onMomentumScrollEnd={() => setScrolling(false)}

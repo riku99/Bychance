@@ -175,8 +175,8 @@ export const EditImage = React.memo(({source}: Props) => {
 
   return (
     <View style={styles.container}>
-      <ViewShot ref={viewShotRef} options={{quality: 1}}>
-        <FlashContainer>
+      <FlashContainer>
+        <ViewShot ref={viewShotRef} options={{quality: 1}}>
           <LinearGradient
             style={{height: '100%', width: '100%'}}
             colors={[topBackGroundColor, bottomBackGroundColor]}>
@@ -231,8 +231,9 @@ export const EditImage = React.memo(({source}: Props) => {
               </>
             )}
           </LinearGradient>
-        </FlashContainer>
-      </ViewShot>
+        </ViewShot>
+      </FlashContainer>
+
       {dustIndicator && (
         <View style={styles.dustIndicatorContainer}>
           <DustIndicator

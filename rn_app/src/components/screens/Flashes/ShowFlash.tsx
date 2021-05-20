@@ -14,6 +14,7 @@ import Video, {OnLoadData} from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
@@ -27,6 +28,7 @@ import {createAlreadyViewdFlashThunk} from '../../../apis/flashes/createAlreadyV
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
+import {FlashContainer} from '~/components/utils/FlashContainer';
 
 type Props = {
   flashesData: FlashesData;
@@ -398,11 +400,13 @@ export const ShowFlash = React.memo(
       canStartVideo.current = true;
     };
 
+    const {top} = useSafeAreaInsets();
+
     return (
-      <>
-        <View style={styles.container}>
-          {entityLength ? (
-            <>
+      <View style={styles.container}>
+        {entityLength ? (
+          <>
+            <FlashContainer>
               <TouchableOpacity
                 activeOpacity={1}
                 delayLongPress={100}
@@ -411,7 +415,7 @@ export const ShowFlash = React.memo(
                 onLongPress={onScreenLongPress}
                 onPressOut={onScreenPressOut}>
                 {currentFlash.sourceType === 'image' ? (
-                  <View style={styles.soruceContainer}>
+                  <View>
                     {isDisplayed ? (
                       <FastImage
                         source={{
@@ -426,16 +430,16 @@ export const ShowFlash = React.memo(
                         source={{
                           uri: currentFlash.source + '?' + new Date(),
                         }}
-                        style={{width: '100%', height: '100%'}}
+                        style={styles.source}
                       />
                     )}
                   </View>
                 ) : (
-                  <View style={styles.soruceContainer}>
+                  <View>
                     <Video
                       ref={videoRef}
                       source={{uri: currentFlash.source}}
-                      style={{width: '100%', height: '100%'}}
+                      style={styles.source}
                       resizeMode="cover"
                       paused={isPaused}
                       onLoadStart={onVideoLoadStart}
@@ -451,67 +455,66 @@ export const ShowFlash = React.memo(
                   </View>
                 )}
               </TouchableOpacity>
-
-              <View style={styles.info}>
-                <ProgressBar
-                  flashesData={flashesData}
-                  entityLength={entityLength}
-                  alreadyViewedLength={
-                    alreadyViewedLength ? alreadyViewedLength : 0
-                  }
-                  progressAnim={progressAnim}
-                  progressBarWidth={progressBarWidth}
-                  currentProgressBar={currentProgressBar}
-                  firstEntitiesLength={firstEntitiesLength}
-                />
-                <InfoItems
-                  userData={userData}
-                  timestamp={currentFlash.timestamp}
-                  setIsNavigatedToProfile={setIsNavigatedToProfile}
-                />
-                {creatingFlash && referenceId === userData.userId && (
-                  <View style={styles.addMessageContainer}>
-                    <ActivityIndicator color="white" />
-                    <Text style={styles.addMessage}>新しく追加しています</Text>
-                  </View>
-                )}
-              </View>
-              {referenceId === userData.userId && (
-                <View style={styles.showModalButtonContainer}>
-                  <ShowModalButton
-                    modalizeRef={modalizeRef}
-                    setShowModal={setShowModal}
-                    setIsPaused={setIsPaused}
-                    currentProgressBar={currentProgressBar}
-                    progressAnim={progressAnim}
-                  />
-                </View>
-              )}
-              {onLoading && (
-                <ActivityIndicator size="large" style={styles.indicator} />
-              )}
-              <Modal
-                flashId={currentFlash.id}
-                modalizeRef={modalizeRef}
-                setShowModal={setShowModal}
-                setIsPaused={setIsPaused}
+            </FlashContainer>
+            <View style={[styles.info, {top: top + 10}]}>
+              <ProgressBar
+                flashesData={flashesData}
+                entityLength={entityLength}
+                alreadyViewedLength={
+                  alreadyViewedLength ? alreadyViewedLength : 0
+                }
+                progressAnim={progressAnim}
+                progressBarWidth={progressBarWidth}
                 currentProgressBar={currentProgressBar}
-                videoDuration={videoDuration}
-                progressAnimation={progressAnimation}
+                firstEntitiesLength={firstEntitiesLength}
               />
-            </>
-          ) : (
-            creatingFlash && (
-              <View style={styles.creatingFlashContainer}>
-                <View style={styles.creatingFlashMessage}>
+              <InfoItems
+                userData={userData}
+                timestamp={currentFlash.timestamp}
+                setIsNavigatedToProfile={setIsNavigatedToProfile}
+              />
+              {creatingFlash && referenceId === userData.userId && (
+                <View style={styles.addMessageContainer}>
                   <ActivityIndicator color="white" />
-                  <Text style={{color: 'white'}}>追加しています</Text>
+                  <Text style={styles.addMessage}>新しく追加しています</Text>
                 </View>
+              )}
+            </View>
+            {referenceId === userData.userId && (
+              <View style={styles.showModalButtonContainer}>
+                <ShowModalButton
+                  modalizeRef={modalizeRef}
+                  setShowModal={setShowModal}
+                  setIsPaused={setIsPaused}
+                  currentProgressBar={currentProgressBar}
+                  progressAnim={progressAnim}
+                />
               </View>
-            )
-          )}
-        </View>
-      </>
+            )}
+            {onLoading && (
+              <ActivityIndicator size="large" style={styles.indicator} />
+            )}
+            <Modal
+              flashId={currentFlash.id}
+              modalizeRef={modalizeRef}
+              setShowModal={setShowModal}
+              setIsPaused={setIsPaused}
+              currentProgressBar={currentProgressBar}
+              videoDuration={videoDuration}
+              progressAnimation={progressAnimation}
+            />
+          </>
+        ) : (
+          creatingFlash && (
+            <View style={styles.creatingFlashContainer}>
+              <View style={styles.creatingFlashMessage}>
+                <ActivityIndicator color="white" />
+                <Text style={{color: 'white'}}>追加しています</Text>
+              </View>
+            </View>
+          )
+        )}
+      </View>
     );
   },
 );
@@ -519,9 +522,6 @@ export const ShowFlash = React.memo(
 const {height, width} = Dimensions.get('window');
 
 const MAX_PROGRESS_BAR = width - 20;
-
-const partsWidth = width / 9;
-const sourceHeight = partsWidth * 16;
 
 const styles = StyleSheet.create({
   container: {
@@ -531,7 +531,6 @@ const styles = StyleSheet.create({
     width: '95%',
     height: 65,
     position: 'absolute',
-    top: 5,
     alignSelf: 'center',
   },
   addMessageContainer: {
@@ -548,8 +547,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   source: {
-    width,
-    height: sourceHeight,
+    width: '100%',
+    height: '100%',
   },
   indicator: {
     width: 40,
