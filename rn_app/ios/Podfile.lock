@@ -381,6 +381,9 @@ PODS:
     - React
   - RNSVG (12.1.1):
     - React
+  - RNToasty (1.0.2):
+    - React
+    - Toast (~> 4.0.0)
   - RNVectorIcons (7.1.0):
     - React
   - SDWebImage (5.10.4):
@@ -389,6 +392,7 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
+  - Toast (4.0.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -444,6 +448,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - RNToasty (from `../node_modules/react-native-toasty/ios`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -464,6 +469,7 @@ SPEC REPOS:
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
+    - Toast
 
 EXTERNAL SOURCES:
   BVLinearGradient:
@@ -566,6 +572,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  RNToasty:
+    :path: "../node_modules/react-native-toasty/ios"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -635,11 +643,13 @@ SPEC CHECKSUMS:
   RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
   RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
+  RNToasty: 7e83e74086ac39913662ceaba36de22631c8eaa4
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
-PODFILE CHECKSUM: 92cbb303b25b9630f998e8896a06d522470ab54f
+PODFILE CHECKSUM: f0f190b3f93bea89fcb68406f38524e8f9fe1afe
 
 COCOAPODS: 1.10.1

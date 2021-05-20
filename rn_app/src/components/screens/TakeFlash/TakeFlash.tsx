@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  LayoutAnimation,
-  ActivityIndicator,
-} from 'react-native';
+import {View, StyleSheet, Text, LayoutAnimation} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -161,9 +155,9 @@ export const TakeFlash = React.memo(
               buttonStyle={styles.backButton}
               onPress={goBack}
             /> */}
-            {savingData && (
+            {/* {savingData && (
               <ActivityIndicator style={styles.load} color="white" />
-            )}
+            )} */}
           </>
         )}
       </View>

@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Animated} from 'react-native';
+import {StyleSheet, View, Animated, ActivityIndicator} from 'react-native';
 import {PanGestureHandlerGestureEvent} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import ViewShot from 'react-native-view-shot';
+import CameraRoll from '@react-native-community/cameraroll';
+import {RNToasty} from 'react-native-toasty';
 
 import {SketchCanvas} from './SketchCanvas';
 import {TopButtonGroup} from './TopButtonGroup';
@@ -139,11 +141,26 @@ export const EditImage = React.memo(({source}: Props) => {
     [allTextInfo],
   );
 
+  const [savingData, setSavingData] = useState(false);
+
   // viewshot
   const create = useCreateFlash();
   const viewShotRef = useRef<ViewShot>(null);
   const onSaveBottunPress = async () => {
     // デバイスに保存する処理
+    if (viewShotRef.current?.capture) {
+      try {
+        setSavingData(true);
+        const uri = await viewShotRef.current.capture();
+        await CameraRoll.save(uri);
+        setSavingData(false);
+        RNToasty.Show({
+          title: '保存しました🤟',
+          fontFamily: 'Arial',
+          position: 'center',
+        });
+      } catch {}
+    }
   };
   const onCreateBottunPress = useCallback(async () => {
     if (viewShotRef.current && viewShotRef.current.capture) {
@@ -230,6 +247,14 @@ export const EditImage = React.memo(({source}: Props) => {
           </View>
         </>
       )}
+
+      {savingData && (
+        <ActivityIndicator
+          color="white"
+          style={styles.indicator}
+          size="large"
+        />
+      )}
     </View>
   );
 });
@@ -273,5 +298,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     top: 170,
+  },
+  indicator: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
