@@ -117,9 +117,9 @@ export const ShowFlash = React.memo(
 
     const createAlreadyViewdFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
-        // await dispatch(
-        //   createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
-        // );
+        await dispatch(
+          createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
+        );
       },
       [dispatch, userData.userId],
     );
@@ -403,6 +403,14 @@ export const ShowFlash = React.memo(
 
     const {top} = useSafeAreaInsets();
 
+    // スムーズに表示するためpreload
+    useEffect(() => {
+      const preData = flashesData.entities.map((f) => ({
+        uri: f.source,
+      }));
+      FastImage.preload(preData);
+    }, [flashesData.entities]);
+
     return (
       <View style={styles.container}>
         {entityLength ? (
@@ -416,27 +424,14 @@ export const ShowFlash = React.memo(
                 onLongPress={onScreenLongPress}
                 onPressOut={onScreenPressOut}>
                 {currentFlash.sourceType === 'image' ? (
-                  <View>
-                    {isDisplayed ? (
-                      <FastImage
-                        source={{
-                          uri: currentFlash.source,
-                        }}
-                        style={styles.source}
-                        onLoadStart={onImageLoadStart}
-                        onLoad={onImageLoad}
-                      />
-                    ) : (
-                      <FastImage
-                        source={{
-                          uri: currentFlash.source,
-                        }}
-                        style={styles.source}
-                        onLoadStart={onImageLoadStart}
-                        onLoad={onImageLoad}
-                      />
-                    )}
-                  </View>
+                  <FastImage
+                    source={{
+                      uri: currentFlash.source,
+                    }}
+                    style={styles.source}
+                    onLoadStart={onImageLoadStart}
+                    onLoad={onImageLoad}
+                  />
                 ) : (
                   <View>
                     <Video
