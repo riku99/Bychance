@@ -33,6 +33,7 @@ type Props = {
   recordingVideo: boolean;
   setRecordingVideo: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
+  onPictureTaken: () => void;
 };
 
 export const TakeFlash = React.memo(
@@ -47,6 +48,7 @@ export const TakeFlash = React.memo(
     pickImageOrVideo,
     recordingVideo,
     setRecordingVideo,
+    onPictureTaken,
     loading,
   }: Props) => {
     const [backPhotoMode, setBackPhotoMode] = useState(true);
@@ -82,6 +84,7 @@ export const TakeFlash = React.memo(
                   : RNCamera.Constants.Type.front
               }
               keepAudioSession={true}
+              onPictureTaken={onPictureTaken}
             />
             <View style={[styles.topButtonGroupContainer, {top}]}>
               <TakeFlashTopButtonGroup onPartyModePress={onPartyModePress} />
@@ -165,7 +168,7 @@ export const TakeFlash = React.memo(
             /> */}
           </>
         )}
-        {!loading && (
+        {loading && (
           <View style={styles.load}>
             <Text style={styles.loadText}>ロード中です</Text>
             <ActivityIndicator color="white" />

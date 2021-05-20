@@ -21,40 +21,43 @@ export const TakeFlashPage = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const takePhoto = async () => {
+  const takePhoto = useCallback(async () => {
     if (cameraRef.current) {
       const data = await cameraRef.current.takePictureAsync(takePhotoOptions);
       if (data && data.base64) {
         setTargetPhoto({base64: data.base64, uri: data.uri});
       }
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const takeVideo = async () => {
+  const takeVideo = useCallback(async () => {
     if (cameraRef.current) {
       const data = await cameraRef.current.recordAsync(takeVideoOptions);
       setTargetVideo({uri: data.uri});
     }
-  };
+  }, []);
 
-  const stopVideo = () => {
+  const stopVideo = useCallback(() => {
     if (cameraRef.current) {
       cameraRef.current.stopRecording();
     }
-  };
+  }, []);
 
-  const saveDataToCameraRoll = async (uri: string) => {
+  const saveDataToCameraRoll = useCallback(async (uri: string) => {
     try {
       await CameraRoll.save(uri);
       return;
     } catch {}
-  };
+  }, []);
 
   const pickImageOrVideo = useCallback(() => {
+    setLoading(true);
     ImagePicker.launchImageLibrary(
       {mediaType: 'mixed', quality: 0.5}, // 画像選択から表示まで遅いの気になったらquality変える
       (response) => {
         if (response.didCancel) {
+          setLoading(false);
           return;
         }
         if (response.type) {
@@ -62,8 +65,13 @@ export const TakeFlashPage = () => {
         } else {
           setTargetVideo({uri: response.uri});
         }
+        setLoading(false);
       },
     );
+  }, []);
+
+  const setSourceLoading = useCallback(() => {
+    setLoading(true);
   }, []);
 
   if (!targetPhoto && !targetVideo) {
@@ -80,6 +88,7 @@ export const TakeFlashPage = () => {
         recordingVideo={recordingVideo}
         setRecordingVideo={setRecordingVideo}
         loading={loading}
+        onPictureTaken={setSourceLoading}
       />
     );
   } else if (targetPhoto && !targetVideo && !recordingVideo) {
