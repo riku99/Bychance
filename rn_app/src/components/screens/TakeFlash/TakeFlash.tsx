@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, LayoutAnimation} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  LayoutAnimation,
+  ActivityIndicator,
+} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -26,6 +32,7 @@ type Props = {
   pickImageOrVideo: () => void;
   recordingVideo: boolean;
   setRecordingVideo: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
 };
 
 export const TakeFlash = React.memo(
@@ -40,6 +47,7 @@ export const TakeFlash = React.memo(
     pickImageOrVideo,
     recordingVideo,
     setRecordingVideo,
+    loading,
   }: Props) => {
     const [backPhotoMode, setBackPhotoMode] = useState(true);
     const [savingData, setSavingData] = useState(false);
@@ -109,7 +117,7 @@ export const TakeFlash = React.memo(
               //   </>
               // )
             )}
-            <View style={styles.saveDataContainer}>
+            {/* <View style={styles.saveDataContainer}>
               <Button
                 icon={
                   <MIcon name="save-alt" style={{color: 'white'}} size={40} />
@@ -142,7 +150,7 @@ export const TakeFlash = React.memo(
                 buttonStyle={styles.addFlashButton}
               />
               <Text style={styles.addFlashText}>フラッシュに追加</Text>
-            </View>
+            </View> */}
             {/* <Button
               icon={
                 <MIcon
@@ -155,15 +163,20 @@ export const TakeFlash = React.memo(
               buttonStyle={styles.backButton}
               onPress={goBack}
             /> */}
-            {/* {savingData && (
-              <ActivityIndicator style={styles.load} color="white" />
-            )} */}
           </>
+        )}
+        {!loading && (
+          <View style={styles.load}>
+            <Text style={styles.loadText}>ロード中です</Text>
+            <ActivityIndicator color="white" />
+          </View>
         )}
       </View>
     );
   },
 );
+
+const loadToastStyle = {height: 35, width: 135};
 
 const styles = StyleSheet.create({
   container: {
@@ -225,9 +238,23 @@ const styles = StyleSheet.create({
   },
   load: {
     position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    top: '50%',
+    left: '50%',
+    transform: [
+      {translateX: -(loadToastStyle.width / 2)},
+      {translateY: -(loadToastStyle.height / 2)},
+    ],
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: loadToastStyle.width,
+    height: loadToastStyle.height,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 10,
+  },
+  loadText: {
+    color: 'white',
+    marginRight: 4,
+    fontWeight: '500',
   },
 });
