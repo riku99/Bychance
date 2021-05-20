@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,7 +9,6 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {ShowFlash} from './ShowFlash';
 import {FlashesData} from '~/stores/types';
@@ -98,15 +97,6 @@ export const FlashesPage = ({route, navigation}: Props) => {
     return unsubscribe;
   }, [navigation]);
 
-  // そのデバイスのsafeareaのtopとbottomの高さを取得
-  const {top, bottom} = useSafeAreaInsets();
-
-  // 取得したsafeareaのtopとbottomから実際に表示する要素のheightを取得
-  // UI表示までのプロセスの都合上、SafeAreaViewではなくこのようにして計算
-  const safeAreaHeight = useMemo(() => {
-    return moreDeviceX ? height - top - bottom : height;
-  }, [top, bottom, moreDeviceX]);
-
   // FlatListのdataに渡した配列(dataArray)の中のアイテムが{item}に渡される
   // flashesDataが存在しない場合は自分のデータを表示する時なのでセレクタで取得したデータを使いオブジェクトを生成
   // そうでない場合はそのまま返す
@@ -141,9 +131,8 @@ export const FlashesPage = ({route, navigation}: Props) => {
       setScrolling(true);
     }
     // offset.yがheightで割り切れる、つまり画面内の要素が完全に切り替わった時
-    if (e.nativeEvent.contentOffset.y % safeAreaHeight === 0) {
-      const displayedElementIndex =
-        e.nativeEvent.contentOffset.y / safeAreaHeight; // 何番目のアイテムが表示されたかをoffsetから計算し取得
+    if (e.nativeEvent.contentOffset.y % height === 0) {
+      const displayedElementIndex = e.nativeEvent.contentOffset.y / height; // 何番目のアイテムが表示されたかをoffsetから計算し取得
       // 表示状態を切り替える
       setDisplayManagementTable({
         ...displayManagementTable,
@@ -159,34 +148,32 @@ export const FlashesPage = ({route, navigation}: Props) => {
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        // {paddingTop: moreDeviceX ? top : 0, paddingBottom: bottom},
-      ]}>
+    <View style={[styles.container]}>
       <FlatList
         ref={flatListRef}
         data={dataArray}
         keyExtractor={(item) => item.userData.userId}
         renderItem={({item, index}) => (
-          <ShowFlash
-            flashesData={getData({item}).flashesData}
-            userData={getData({item}).userData}
-            isDisplayed={displayManagementTable[index]}
-            scrolling={scrolling}
-            showModal={showModal}
-            setShowModal={setShowModal}
-            scrollToNextOrBackScreen={scrollToNextOrBackScreen}
-          />
+          <View style={{height, width}}>
+            <ShowFlash
+              flashesData={getData({item}).flashesData}
+              userData={getData({item}).userData}
+              isDisplayed={displayManagementTable[index]}
+              scrolling={scrolling}
+              showModal={showModal}
+              setShowModal={setShowModal}
+              scrollToNextOrBackScreen={scrollToNextOrBackScreen}
+            />
+          </View>
         )}
         onScrollEndDrag={() => setScrolling(false)}
         onMomentumScrollEnd={() => setScrolling(false)}
         onScroll={(e) => onScroll(e)}
         decelerationRate="fast"
-        snapToInterval={safeAreaHeight}
+        snapToInterval={height}
         getItemLayout={(data, index) => ({
-          length: safeAreaHeight,
-          offset: safeAreaHeight * index,
+          length: height,
+          offset: height * index,
           index,
         })}
         scrollEnabled={!showModal}

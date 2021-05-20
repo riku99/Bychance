@@ -426,12 +426,7 @@ export const ShowFlash = React.memo(
                         onLoad={onImageLoad}
                       />
                     ) : (
-                      <FastImage
-                        source={{
-                          uri: currentFlash.source + '?' + new Date(),
-                        }}
-                        style={styles.source}
-                      />
+                      <View />
                     )}
                   </View>
                 ) : (
@@ -526,6 +521,7 @@ const MAX_PROGRESS_BAR = width - 20;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black',
   },
   info: {
     width: '95%',
