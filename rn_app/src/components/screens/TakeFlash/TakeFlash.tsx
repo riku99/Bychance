@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo, useLayoutEffect} from 'react';
 import {
   View,
   StyleSheet,
   Text,
   LayoutAnimation,
   ActivityIndicator,
+  Dimensions,
+  StatusBar,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
@@ -15,6 +17,7 @@ import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMe
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 import {TakeFlashTopButtonGroup} from './TakeFlashTopButtonGroup';
 import {ShootButtonGroup} from './ShootButtonGroup';
+import {useMoreDeviceX} from '~/hooks/device/';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -55,6 +58,20 @@ export const TakeFlash = React.memo(
     const [savingData, setSavingData] = useState(false);
 
     const {top, bottom} = useSafeAreaInsets();
+    const moreDeviceX = useMoreDeviceX();
+    const cameraBorderRadius = useMemo(() => (moreDeviceX ? 20 : 0), [
+      moreDeviceX,
+    ]);
+
+    useLayoutEffect(() => {
+      StatusBar.setBarStyle('light-content');
+      StatusBar.setHidden(!moreDeviceX ? true : false);
+
+      return () => {
+        StatusBar.setHidden(false);
+        StatusBar.setBarStyle('default');
+      };
+    }, [moreDeviceX]);
 
     const onPartyModePress = () => {
       backPhotoMode ? setBackPhotoMode(false) : setBackPhotoMode(true);
@@ -71,21 +88,29 @@ export const TakeFlash = React.memo(
       }
     };
 
+    console.log(cameraBorderRadius);
+
     return (
       <View style={styles.container}>
         {!targetPhoto && !targetVideo ? (
           <>
-            <RNCamera
-              ref={cameraRef}
-              style={styles.preview}
-              type={
-                backPhotoMode
-                  ? RNCamera.Constants.Type.back
-                  : RNCamera.Constants.Type.front
-              }
-              keepAudioSession={true}
-              onPictureTaken={onPictureTaken}
-            />
+            <View
+              style={[
+                styles.preview,
+                {marginTop: top, borderRadius: cameraBorderRadius},
+              ]}>
+              <RNCamera
+                ref={cameraRef}
+                style={styles.camera}
+                type={
+                  backPhotoMode
+                    ? RNCamera.Constants.Type.back
+                    : RNCamera.Constants.Type.front
+                }
+                keepAudioSession={true}
+                onPictureTaken={onPictureTaken}
+              />
+            </View>
             <View style={[styles.topButtonGroupContainer, {top}]}>
               <TakeFlashTopButtonGroup onPartyModePress={onPartyModePress} />
             </View>
@@ -179,14 +204,26 @@ export const TakeFlash = React.memo(
   },
 );
 
+const {width} = Dimensions.get('screen');
+
 const loadToastStyle = {height: 35, width: 135};
+
+const partsWidth = width / 9;
+const sourceHeight = partsWidth * 16;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black',
   },
   preview: {
-    flex: 1,
+    width,
+    height: sourceHeight,
+    overflow: 'hidden',
+  },
+  camera: {
+    width,
+    height: sourceHeight,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
