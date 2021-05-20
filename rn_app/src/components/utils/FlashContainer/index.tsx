@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -10,7 +10,12 @@ type Props = {
 
 export const FlashContainer = ({children}: Props) => {
   const {top} = useSafeAreaInsets();
-  return <View style={[styles.container, {marginTop: top}]}>{children}</View>;
+  const cameraContainerTop = useMemo(() => (moreDviceX ? top : 0), [top]);
+  return (
+    <View style={[styles.container, {top: cameraContainerTop}]}>
+      {children}
+    </View>
+  );
 };
 
 const {width} = Dimensions.get('screen');

@@ -20,6 +20,8 @@ import {
   setOffsetAndDiff,
 } from '~/helpers/animation/translate';
 import {useCreateFlash} from '~/hooks/flashes/useCreateFlash';
+import {FlashContainer} from '~/components/utils/FlashContainer';
+import {useFlashStatusBarSetting} from '~/hooks//statusBar';
 
 export type Source = {
   type: 'image' | 'video';
@@ -169,60 +171,67 @@ export const EditImage = React.memo(({source}: Props) => {
     }
   }, [create]);
 
+  useFlashStatusBarSetting();
+
   return (
     <View style={styles.container}>
       <ViewShot ref={viewShotRef} options={{quality: 1}}>
-        <LinearGradient
-          style={{height: '100%', width: '100%'}}
-          colors={[topBackGroundColor, bottomBackGroundColor]}>
-          <AnimatedImage source={source} />
-          <SketchCanvas sketchMode={sketchMode} setScetchMode={setSketchMode} />
-          {!!allTextInfo.length &&
-            allTextInfo.map((data, index) => (
-              <AnimatedText
-                data={data}
-                onPanGestureEvent={(e) => onTextPanGesture(e, data.id)}
-                onPanHandlerStateChange={(e) =>
-                  onTextPanGestureStateChange(e, data.id)
-                }
-                translateX={textTranslate.current[data.id].x}
-                translateY={textTranslate.current[data.id].y}
-                onLongPress={() => setDustIndcator(data.id)}
-                onPressOut={() => {
-                  if (dustIndicator) {
-                    setDustIndcator(undefined);
-                  }
-                }}
-                onPress={() => onTextPress({index, id: data.id})}
-                key={data.id}
-              />
-            ))}
-          {colorPickerMode && (
-            <ColorPicker
-              setTopBackGroundColor={setTopBackGroundColor}
-              setBottomBackGroundColor={setBottomBackGroundColor}
-              setColorPickerMode={setColorPickerMode}
-              topBackGroundColor={topBackGroundColor}
-              bottomBackGroundColor={bottomBackGroundColor}
+        <FlashContainer>
+          <LinearGradient
+            style={{height: '100%', width: '100%'}}
+            colors={[topBackGroundColor, bottomBackGroundColor]}>
+            <AnimatedImage source={source} />
+            <SketchCanvas
+              sketchMode={sketchMode}
+              setScetchMode={setSketchMode}
             />
-          )}
-          {textEditMode && (
-            <>
-              <View
-                style={[styles.textEditContainer, styles.textEditorOverlay]}
-              />
-              <View style={styles.textEditContainer}>
-                <TextEditor
-                  setTextEditMode={setTextEditMode}
-                  setAllTextInfo={setAllTextInfo}
-                  textInfo={selectedText && selectedText}
-                  textTranslate={textTranslate}
-                  textOffset={textOffset}
+            {!!allTextInfo.length &&
+              allTextInfo.map((data, index) => (
+                <AnimatedText
+                  data={data}
+                  onPanGestureEvent={(e) => onTextPanGesture(e, data.id)}
+                  onPanHandlerStateChange={(e) =>
+                    onTextPanGestureStateChange(e, data.id)
+                  }
+                  translateX={textTranslate.current[data.id].x}
+                  translateY={textTranslate.current[data.id].y}
+                  onLongPress={() => setDustIndcator(data.id)}
+                  onPressOut={() => {
+                    if (dustIndicator) {
+                      setDustIndcator(undefined);
+                    }
+                  }}
+                  onPress={() => onTextPress({index, id: data.id})}
+                  key={data.id}
                 />
-              </View>
-            </>
-          )}
-        </LinearGradient>
+              ))}
+            {colorPickerMode && (
+              <ColorPicker
+                setTopBackGroundColor={setTopBackGroundColor}
+                setBottomBackGroundColor={setBottomBackGroundColor}
+                setColorPickerMode={setColorPickerMode}
+                topBackGroundColor={topBackGroundColor}
+                bottomBackGroundColor={bottomBackGroundColor}
+              />
+            )}
+            {textEditMode && (
+              <>
+                <View
+                  style={[styles.textEditContainer, styles.textEditorOverlay]}
+                />
+                <View style={styles.textEditContainer}>
+                  <TextEditor
+                    setTextEditMode={setTextEditMode}
+                    setAllTextInfo={setAllTextInfo}
+                    textInfo={selectedText && selectedText}
+                    textTranslate={textTranslate}
+                    textOffset={textOffset}
+                  />
+                </View>
+              </>
+            )}
+          </LinearGradient>
+        </FlashContainer>
       </ViewShot>
       {dustIndicator && (
         <View style={styles.dustIndicatorContainer}>
@@ -234,7 +243,7 @@ export const EditImage = React.memo(({source}: Props) => {
 
       {!sketchMode && !colorPickerMode && !textEditMode && (
         <>
-          <View style={[styles.buttonItemsContainer, {top}]}>
+          <View style={[styles.buttonItemsContainer, {top: top + 10}]}>
             <TopButtonGroup
               setSketchMode={setSketchMode}
               setColorPickerMode={setColorPickerMode}
@@ -242,7 +251,7 @@ export const EditImage = React.memo(({source}: Props) => {
               onSaveButtonPress={onSaveBottunPress}
             />
           </View>
-          <View style={{position: 'absolute', bottom: '7%', right: 30}}>
+          <View style={styles.buttomButtonContainer}>
             <PostFlashButton onPress={onCreateBottunPress} />
           </View>
         </>
@@ -262,6 +271,7 @@ export const EditImage = React.memo(({source}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black',
   },
   buttonItemsContainer: {
     position: 'absolute',
@@ -305,5 +315,10 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  buttomButtonContainer: {
+    position: 'absolute',
+    right: 30,
+    bottom: '4%',
   },
 });

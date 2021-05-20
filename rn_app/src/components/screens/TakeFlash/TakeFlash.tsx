@@ -1,12 +1,10 @@
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
   Text,
   LayoutAnimation,
   ActivityIndicator,
-  Dimensions,
-  StatusBar,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
@@ -16,8 +14,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 import {ShootButtonGroup} from './ShootButtonGroup';
 import {BackButton} from '~/components/utils/BackButton';
-import {judgeMoreDeviceX} from '~/helpers/device';
 import {FlashContainer} from '~/components/utils/FlashContainer';
+import {useFlashStatusBarSetting} from '~/hooks//statusBar';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -56,15 +54,7 @@ export const TakeFlash = React.memo(
 
     const {top, bottom} = useSafeAreaInsets();
 
-    useLayoutEffect(() => {
-      StatusBar.setBarStyle('light-content');
-      StatusBar.setHidden(!moreDeviceX ? true : false);
-
-      return () => {
-        StatusBar.setHidden(false);
-        StatusBar.setBarStyle('default');
-      };
-    }, []);
+    useFlashStatusBarSetting();
 
     const changePhotoMode = () => {
       backPhotoMode ? setBackPhotoMode(false) : setBackPhotoMode(true);
@@ -209,31 +199,15 @@ export const TakeFlash = React.memo(
   },
 );
 
-const {width} = Dimensions.get('screen');
-
 const loadToastStyle = {height: 35, width: 135};
-
-const partsWidth = width / 9;
-const sourceHeight = partsWidth * 16;
-
-const moreDeviceX = judgeMoreDeviceX();
-const cameraBorderRadius = moreDeviceX ? 20 : 0;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
   },
-  preview: {
-    width,
-    height: sourceHeight,
-    overflow: 'hidden',
-    borderRadius: cameraBorderRadius,
-  },
   camera: {
     flex: 1,
-    // justifyContent: 'flex-end',
-    // alignItems: 'center',
   },
   topButtonGroupContainer: {
     position: 'absolute',
