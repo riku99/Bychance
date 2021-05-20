@@ -1,5 +1,4 @@
 import React, {useState, useRef, useCallback} from 'react';
-import CameraRoll from '@react-native-community/cameraroll';
 import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 
@@ -44,13 +43,6 @@ export const TakeFlashPage = () => {
     }
   }, []);
 
-  const saveDataToCameraRoll = useCallback(async (uri: string) => {
-    try {
-      await CameraRoll.save(uri);
-      return;
-    } catch {}
-  }, []);
-
   const pickImageOrVideo = useCallback(() => {
     setLoading(true);
     ImagePicker.launchImageLibrary(
@@ -83,7 +75,6 @@ export const TakeFlashPage = () => {
         takePhoto={takePhoto}
         takeVideo={takeVideo}
         stopVideo={stopVideo}
-        saveDataToCameraRoll={saveDataToCameraRoll}
         pickImageOrVideo={pickImageOrVideo}
         recordingVideo={recordingVideo}
         setRecordingVideo={setRecordingVideo}

@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -15,8 +15,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 import {ShootButtonGroup} from './ShootButtonGroup';
-import {useMoreDeviceX} from '~/hooks/device/';
 import {BackButton} from '~/components/utils/BackButton';
+import {judgeMoreDeviceX} from '~/helpers/device';
+import {FlashContainer} from '~/components/utils/FlashContainer';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;
@@ -30,7 +31,6 @@ type Props = {
   takePhoto: () => Promise<void>;
   takeVideo: () => Promise<void>;
   stopVideo: () => void;
-  saveDataToCameraRoll: (uri: string) => Promise<void>;
   pickImageOrVideo: () => void;
   recordingVideo: boolean;
   setRecordingVideo: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,7 +46,6 @@ export const TakeFlash = React.memo(
     takePhoto,
     takeVideo,
     stopVideo,
-    saveDataToCameraRoll,
     pickImageOrVideo,
     recordingVideo,
     setRecordingVideo,
@@ -56,10 +55,6 @@ export const TakeFlash = React.memo(
     const [backPhotoMode, setBackPhotoMode] = useState(true);
 
     const {top, bottom} = useSafeAreaInsets();
-    const moreDeviceX = useMoreDeviceX(); // これhooksにしない方が便利
-    const cameraBorderRadius = useMemo(() => (moreDeviceX ? 20 : 0), [
-      moreDeviceX,
-    ]);
 
     useLayoutEffect(() => {
       StatusBar.setBarStyle('light-content');
@@ -69,9 +64,9 @@ export const TakeFlash = React.memo(
         StatusBar.setHidden(false);
         StatusBar.setBarStyle('default');
       };
-    }, [moreDeviceX]);
+    }, []);
 
-    const onPartyModePress = () => {
+    const changePhotoMode = () => {
       backPhotoMode ? setBackPhotoMode(false) : setBackPhotoMode(true);
     };
 
@@ -90,11 +85,7 @@ export const TakeFlash = React.memo(
       <View style={styles.container}>
         {!targetPhoto && !targetVideo ? (
           <>
-            <View
-              style={[
-                styles.preview,
-                {marginTop: top, borderRadius: cameraBorderRadius},
-              ]}>
+            <FlashContainer>
               <RNCamera
                 ref={cameraRef}
                 style={styles.camera}
@@ -106,13 +97,13 @@ export const TakeFlash = React.memo(
                 keepAudioSession={true}
                 onPictureTaken={onPictureTaken}
               />
-            </View>
+            </FlashContainer>
             <View style={[styles.topButtonGroupContainer, {top: top + 15}]}>
               <BackButton
                 icon={{name: 'chevron-right', size: 35, color: 'white'}}
                 buttonStyle={{backgroundColor: 'transoarent'}}
                 containerStyle={{alignSelf: 'flex-end'}}
-                onPress={onPartyModePress}
+                onPress={changePhotoMode}
               />
             </View>
             <View style={styles.shootButtonContainer}>
@@ -225,6 +216,9 @@ const loadToastStyle = {height: 35, width: 135};
 const partsWidth = width / 9;
 const sourceHeight = partsWidth * 16;
 
+const moreDeviceX = judgeMoreDeviceX();
+const cameraBorderRadius = moreDeviceX ? 20 : 0;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -234,12 +228,12 @@ const styles = StyleSheet.create({
     width,
     height: sourceHeight,
     overflow: 'hidden',
+    borderRadius: cameraBorderRadius,
   },
   camera: {
-    width,
-    height: sourceHeight,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flex: 1,
+    // justifyContent: 'flex-end',
+    // alignItems: 'center',
   },
   topButtonGroupContainer: {
     position: 'absolute',
@@ -309,7 +303,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: loadToastStyle.width,
     height: loadToastStyle.height,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // backgroundのみopacityをかけたい場合はrgbaでbackgroundColorを指定する。opacityで指定すると子要素まで透明になる
     borderRadius: 10,
   },
   loadText: {
