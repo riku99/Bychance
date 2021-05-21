@@ -48,7 +48,7 @@ const nearbyUsersSlice = createSlice({
 
 export const nearbyUsersReducer = nearbyUsersSlice.reducer;
 
-const nearbyUsersSelector = nearbyUsersAdapter.getSelectors();
+export const nearbyUsersSelector = nearbyUsersAdapter.getSelectors();
 
 export const selectNearbyUsersArray = (state: RootState) =>
   nearbyUsersSelector.selectAll(state.nearbyUsersReducer);

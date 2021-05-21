@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   StyleSheet,
@@ -402,14 +409,6 @@ export const ShowFlash = React.memo(
     };
 
     const {top} = useSafeAreaInsets();
-
-    // スムーズに表示するためpreload
-    useEffect(() => {
-      const preData = flashesData.entities.map((f) => ({
-        uri: f.source,
-      }));
-      FastImage.preload(preData);
-    }, [flashesData.entities]);
 
     return (
       <View style={styles.container}>

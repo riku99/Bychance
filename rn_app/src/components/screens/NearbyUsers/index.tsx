@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
-import {NearbyUsersList} from './nearbyUsersMain';
+import {NearbyUsersList} from './nearbyUsersList';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {AnotherUser} from '../../../stores/types';
 import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
@@ -13,9 +13,7 @@ import {FlashesData} from '~/stores/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
 import {RootNavigationProp} from '~/screens/Root';
 
-export const SearchUsersPage = () => {
-  const isFocused = useIsFocused();
-
+export const GetNearbyUsers = () => {
   const position = useSelector((state: RootState) => {
     const lat = state.userReducer.user!.lat;
     const lng = state.userReducer.user!.lng;
@@ -28,15 +26,31 @@ export const SearchUsersPage = () => {
     return selectNearbyUsersArray(state);
   }, shallowEqual);
 
+  // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
+  const preloadUriGroup = useMemo(() => {
+    return JSON.stringify(
+      nearbyUsers
+        .filter((user) => user.flashes.entities.length)
+        .map((user) => user.flashes.entities.map((e) => ({uri: e.source}))),
+    );
+  }, [nearbyUsers]);
+
+  // preload用uriの中身が変更した場合はそれをオブジェクトに戻しpreloadを実行。
+  // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
+  useEffect(() => {
+    const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
+    preData.forEach((uri) => {
+      FastImage.preload(uri);
+    });
+  }, [preloadUriGroup]);
+
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    if (isFocused) {
-      dispatch(
-        getNearbyUsersThunk({lat: position.lat, lng: position.lng, range}),
-      );
-    }
-  }, [dispatch, isFocused, position.lat, position.lng, range]);
+    dispatch(
+      getNearbyUsersThunk({lat: position.lat, lng: position.lng, range}),
+    );
+  }, [dispatch, position.lat, position.lng, range]);
 
   const searchStackNavigation = useNavigation<
     SearchUsersStackNavigationProp<'SearchUsers'>

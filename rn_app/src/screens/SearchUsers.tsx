@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {SearchUsersPage} from '../components/screens/NearbyUsers';
+import {GetNearbyUsers} from '../components/screens/NearbyUsers';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 import {normalStyles} from '~/constants/styles/normal';
@@ -24,7 +24,7 @@ export const SearchUsersStackScreen = () => {
       }}>
       <Stack.Screen
         name="SearchUsers"
-        component={SearchUsersPage}
+        component={GetNearbyUsers}
         options={{
           headerTitle: () => (
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
