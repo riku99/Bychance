@@ -3,7 +3,7 @@ import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 
 import {TakeFlash} from './TakeFlash';
-import {EditImage} from './EditImage';
+import {EditSource} from './EditSource';
 
 const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {quality: RNCamera.Constants.VideoQuality['720p']};
@@ -83,9 +83,9 @@ export const TakeFlashPage = () => {
       />
     );
   } else if (targetPhoto && !targetVideo && !recordingVideo) {
-    return <EditImage source={{type: 'image', ...targetPhoto}} />;
+    return <EditSource source={{type: 'image', ...targetPhoto}} />;
   } else if (!targetPhoto && targetVideo && !recordingVideo) {
-    return <EditImage source={{type: 'video', ...targetVideo}} />;
+    return <EditSource source={{type: 'video', ...targetVideo}} />;
   } else {
     return <></>;
   }

@@ -13,7 +13,7 @@ import {ColorPicker} from './ColorPicker';
 import {TextEditor, TextInfo} from './TextEditor';
 import {DustIndicator} from '~/components/utils/DustIndicator';
 import {AnimatedText} from './AnimatedText';
-import {AnimatedImage} from './AnimatedImage';
+import {AnimatedSource} from './AnimatedSource';
 import {PostFlashButton} from './PostButton';
 import {
   setTranslateAndDiff,
@@ -33,7 +33,7 @@ type Props = {
   source: Source;
 };
 
-export const EditImage = React.memo(({source}: Props) => {
+export const EditSource = React.memo(({source}: Props) => {
   const {top} = useSafeAreaInsets();
   const [sketchMode, setSketchMode] = useState(false);
   const [colorPickerMode, setColorPickerMode] = useState(false);
@@ -43,7 +43,7 @@ export const EditImage = React.memo(({source}: Props) => {
   const [bottomBackGroundColor, setBottomBackGroundColor] = useState('black');
 
   // テキスト関連
-  // 画像のアニメーション関連のstateや関数は他のAnimatedImage以外か現時点で使われることがないのでそのコンポーネントにまとめている
+  // 画像のアニメーション関連のstateや関数は他のAnimatedSource以外か現時点で使われることがないのでそのコンポーネントにまとめている
   // テキスト関連のものはAnimatedText以外のコンポーネントやここのEffectでも使う必要があるので呼び出し側となるこちらで定義
   const [allTextInfo, setAllTextInfo] = useState<TextInfo[]>([]);
   const [selectedText, setSelectedText] = useState<TextInfo>();
@@ -180,7 +180,7 @@ export const EditImage = React.memo(({source}: Props) => {
           <LinearGradient
             style={{height: '100%', width: '100%'}}
             colors={[topBackGroundColor, bottomBackGroundColor]}>
-            <AnimatedImage source={source} />
+            <AnimatedSource source={source} />
             <SketchCanvas
               sketchMode={sketchMode}
               setScetchMode={setSketchMode}

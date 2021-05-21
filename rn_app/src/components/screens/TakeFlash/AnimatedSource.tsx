@@ -9,7 +9,7 @@ import {
 } from 'react-native-gesture-handler';
 import Video from 'react-native-video';
 
-import {Source} from './EditImage';
+import {Source} from './EditSource';
 import {
   setTranslateAndDiff,
   setOffsetAndDiff,
@@ -20,7 +20,7 @@ type Props = {
   source: Source;
 };
 
-export const AnimatedImage = React.memo(({source}: Props) => {
+export const AnimatedSource = React.memo(({source}: Props) => {
   const scale = useRef(new Animated.Value(1)).current;
   const totalScale = useRef(1);
   const totalScaleDiff = useRef(0);
@@ -98,7 +98,11 @@ export const AnimatedImage = React.memo(({source}: Props) => {
                   styles.photoStyle,
                   {transform: [{scale}, {translateX}, {translateY}]},
                 ]}>
-                <Video source={{uri: source.uri}} />
+                <Video
+                  source={{uri: source.uri}}
+                  style={{flex: 1}}
+                  repeat={true}
+                />
               </Animated.View>
             )}
           </PanGestureHandler>
