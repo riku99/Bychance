@@ -44,6 +44,7 @@ export type UserState = {
     twitter: string | null;
     youtube: string | null;
     tiktok: string | null;
+    videoEditDescription: boolean;
   };
   temporarilySavedData?: {
     name?: string;
