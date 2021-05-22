@@ -13,7 +13,7 @@ import {useCustomDispatch} from '~/hooks/stores/dispatch';
 const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {
   quality: RNCamera.Constants.VideoQuality['720p'],
-  maxDuration: 3,
+  maxDuration: 15,
 };
 
 const videoEditDescriptionText =
@@ -26,8 +26,6 @@ export const TakeFlashPage = () => {
   } | null>(null);
   const [targetVideo, setTargetVideo] = useState<{uri: string} | null>(null);
   const [recordingVideo, setRecordingVideo] = useState(false);
-
-  console.log(recordingVideo);
 
   const cameraRef = useRef<RNCamera>(null);
 

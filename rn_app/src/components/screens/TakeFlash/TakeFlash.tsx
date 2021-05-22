@@ -5,11 +5,13 @@ import {
   Text,
   LayoutAnimation,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {Button} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 import {ShootButtonGroup} from './ShootButtonGroup';
@@ -190,6 +192,28 @@ export const TakeFlash = React.memo(
             <ActivityIndicator color="white" />
           </View>
         )}
+
+        {recordingVideo && (
+          <View style={styles.timerContainer}>
+            <CountdownCircleTimer
+              isPlaying
+              duration={15}
+              size={70}
+              strokeWidth={6}
+              isLinearGradient
+              colors={[
+                ['#ff9791', 0.5],
+                ['#f7b57c', 0.5],
+              ]}>
+              {({remainingTime, animatedColor}) => (
+                <Animated.Text
+                  style={[styles.timerText, {color: animatedColor}]}>
+                  {remainingTime}
+                </Animated.Text>
+              )}
+            </CountdownCircleTimer>
+          </View>
+        )}
       </View>
     );
   },
@@ -280,5 +304,13 @@ const styles = StyleSheet.create({
     color: 'white',
     marginRight: 4,
     fontWeight: '500',
+  },
+  timerContainer: {
+    position: 'absolute',
+    bottom: '13%',
+    left: '8%',
+  },
+  timerText: {
+    fontSize: 19,
   },
 });
