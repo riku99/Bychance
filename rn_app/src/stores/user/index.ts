@@ -11,7 +11,7 @@ import {
 } from '../../apis/session/sessionLogin';
 import {
   editProfileThunk,
-  EdiProfilePayload,
+  EditProfilePayload,
 } from '../../apis/users/editProfile';
 import {
   refreshUserThunk,
@@ -25,6 +25,10 @@ import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
 } from '../../apis/users/updateLocation';
+import {
+  changeVideoEditDescriptionThunk,
+  ChangeVideoEditDescriptionPayload,
+} from '~/apis/users/changeVideoEditDescription';
 import {sampleLogin} from '../../apis/session/sampleLogin';
 import {logoutAction} from '../../apis/session/logout';
 
@@ -174,7 +178,7 @@ const userSlice = createSlice({
     [logoutAction.type]: () => initialState,
     [editProfileThunk.fulfilled.type]: (
       state,
-      actions: PayloadAction<EdiProfilePayload>,
+      actions: PayloadAction<EditProfilePayload>,
     ) => {
       const {instagram, twitter, youtube, tiktok} = actions.payload;
       return {
@@ -218,6 +222,16 @@ const userSlice = createSlice({
         action,
       }) as UserState;
     },
+    [changeVideoEditDescriptionThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<ChangeVideoEditDescriptionPayload>,
+    ) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        videoEditDescription: action.payload,
+      },
+    }),
   },
 });
 

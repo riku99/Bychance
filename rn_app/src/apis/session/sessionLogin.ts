@@ -22,8 +22,6 @@ export const sessionLoginThunk = createAsyncThunk<
       headers(token),
     );
 
-    console.log(response.data);
-
     return response.data;
   } catch (e) {
     const result = handleBasicError({e, dispatch});

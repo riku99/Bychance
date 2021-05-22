@@ -11,7 +11,7 @@ import {
 } from '../re-modules';
 import {User} from '../../stores/user';
 
-export type EdiProfilePayload = Pick<
+export type EditProfilePayload = Pick<
   User,
   | 'id'
   | 'name'
@@ -27,7 +27,7 @@ export type EdiProfilePayload = Pick<
 >;
 
 export const editProfileThunk = createAsyncThunk<
-  EdiProfilePayload,
+  EditProfilePayload,
   {
     name: string;
     introduce: string;
@@ -66,9 +66,9 @@ export const editProfileThunk = createAsyncThunk<
     },
     {rejectWithValue, dispatch},
   ) => {
-    const keychain = await checkKeychain();
+    const credentials = await checkKeychain();
 
-    if (keychain) {
+    if (credentials) {
       try {
         const response = await axios.patch<
           Pick<
@@ -86,7 +86,7 @@ export const editProfileThunk = createAsyncThunk<
             | 'youtube'
           >
         >(
-          `${origin}/users?id=${keychain.id}`,
+          `${origin}/users?id=${credentials.id}`,
           {
             name,
             introduce,
@@ -102,7 +102,7 @@ export const editProfileThunk = createAsyncThunk<
             youtube,
             tiktok,
           },
-          headers(keychain.token),
+          headers(credentials.token),
         );
 
         return response.data;

@@ -7,6 +7,8 @@ import {useSelector} from 'react-redux';
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
 import {RootState} from '~/stores';
+import {changeVideoEditDescriptionThunk} from '~/apis/users/changeVideoEditDescription';
+import {useCustomDispatch} from '~/hooks/stores/dispatch';
 
 const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {quality: RNCamera.Constants.VideoQuality['720p']};
@@ -76,22 +78,22 @@ export const TakeFlashPage = () => {
     (state: RootState) => state.userReducer.user!.videoEditDescription,
   );
 
+  const dispatch = useCustomDispatch();
+
   useEffect(() => {
     if (!videoEditDesctiption) {
       Alert.alert('動画の編集について', videoEditDescriptionText, [
         {
           text: 'OK👌',
-          onPress: () => {},
+          onPress: () => dispatch(changeVideoEditDescriptionThunk(true)),
         },
         {
           text: 'しゃーなし👼',
-          onPress: () => {},
+          onPress: () => dispatch(changeVideoEditDescriptionThunk(true)),
         },
       ]);
     }
-  }, [videoEditDesctiption]);
-
-  console.log(videoEditDesctiption);
+  }, [videoEditDesctiption, dispatch]);
 
   if (!targetPhoto && !targetVideo) {
     return (
