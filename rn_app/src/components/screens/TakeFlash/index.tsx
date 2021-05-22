@@ -11,7 +11,10 @@ import {changeVideoEditDescriptionThunk} from '~/apis/users/changeVideoEditDescr
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 
 const takePhotoOptions = {quality: 0.5, base64: true};
-const takeVideoOptions = {quality: RNCamera.Constants.VideoQuality['720p']};
+const takeVideoOptions = {
+  quality: RNCamera.Constants.VideoQuality['720p'],
+  maxDuration: 3,
+};
 
 const videoEditDescriptionText =
   '現在動画に関しては撮影したものを保存、投稿はできますが編集、加工ができません。🙇‍♂️🙇‍♀\nなのでインスタとかで加工したものを使ってください!🥺🌞';
@@ -23,6 +26,8 @@ export const TakeFlashPage = () => {
   } | null>(null);
   const [targetVideo, setTargetVideo] = useState<{uri: string} | null>(null);
   const [recordingVideo, setRecordingVideo] = useState(false);
+
+  console.log(recordingVideo);
 
   const cameraRef = useRef<RNCamera>(null);
 
@@ -40,16 +45,18 @@ export const TakeFlashPage = () => {
 
   const takeVideo = useCallback(async () => {
     if (cameraRef.current) {
+      setRecordingVideo(true);
       const data = await cameraRef.current.recordAsync(takeVideoOptions);
+      setRecordingVideo(false);
       setTargetVideo({uri: data.uri});
     }
   }, []);
 
   const stopVideo = useCallback(() => {
-    if (cameraRef.current) {
+    if (cameraRef.current && recordingVideo) {
       cameraRef.current.stopRecording();
     }
-  }, []);
+  }, [recordingVideo]);
 
   const pickImageOrVideo = useCallback(() => {
     setLoading(true);
@@ -106,7 +113,6 @@ export const TakeFlashPage = () => {
         stopVideo={stopVideo}
         pickImageOrVideo={pickImageOrVideo}
         recordingVideo={recordingVideo}
-        setRecordingVideo={setRecordingVideo}
         loading={loading}
         onPictureTaken={setSourceLoading}
       />

@@ -31,7 +31,6 @@ type Props = {
   stopVideo: () => void;
   pickImageOrVideo: () => void;
   recordingVideo: boolean;
-  setRecordingVideo: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
   onPictureTaken: () => void;
 };
@@ -46,7 +45,6 @@ export const TakeFlash = React.memo(
     stopVideo,
     pickImageOrVideo,
     recordingVideo,
-    setRecordingVideo,
     onPictureTaken,
     loading,
   }: Props) => {
@@ -63,11 +61,9 @@ export const TakeFlash = React.memo(
     const onVideoButtonPress = () => {
       if (!recordingVideo) {
         LayoutAnimation.easeInEaseOut();
-        setRecordingVideo(true);
         takeVideo();
       } else {
         stopVideo();
-        setRecordingVideo(false);
       }
     };
 
