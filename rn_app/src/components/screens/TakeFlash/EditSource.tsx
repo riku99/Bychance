@@ -250,6 +250,7 @@ export const EditSource = React.memo(({source}: Props) => {
               setColorPickerMode={setColorPickerMode}
               setTextEditMode={setTextEditMode}
               onSaveButtonPress={onSaveBottunPress}
+              type={source.type}
             />
           </View>
           <View style={styles.buttomButtonContainer}>

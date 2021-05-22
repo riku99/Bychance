@@ -93,17 +93,13 @@ export const AnimatedSource = React.memo(({source}: Props) => {
                 resizeMode="contain"
               />
             ) : (
-              <Animated.View
-                style={[
-                  styles.photoStyle,
-                  {transform: [{scale}, {translateX}, {translateY}]},
-                ]}>
+              <View style={[styles.photoStyle]}>
                 <Video
                   source={{uri: source.uri}}
                   style={{flex: 1}}
                   repeat={true}
                 />
-              </Animated.View>
+              </View>
             )}
           </PanGestureHandler>
         </View>
