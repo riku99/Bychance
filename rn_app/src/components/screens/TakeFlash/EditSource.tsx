@@ -149,7 +149,7 @@ export const EditSource = React.memo(({source}: Props) => {
   const create = useCreateFlash();
   const viewShotRef = useRef<ViewShot>(null);
   const onSaveBottunPress = async () => {
-    // デバイスに保存する処理
+    //デバイスに保存する処理
     if (viewShotRef.current?.capture) {
       try {
         setSavingData(true);
