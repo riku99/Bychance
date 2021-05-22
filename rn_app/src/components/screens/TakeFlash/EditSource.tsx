@@ -25,7 +25,6 @@ import {useFlashStatusBarSetting} from '~/hooks//statusBar';
 
 export type Source = {
   type: 'image' | 'video';
-  base64?: string;
   uri: string;
 };
 

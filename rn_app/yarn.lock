@@ -6903,10 +6903,10 @@ react-native-image-colors@^1.2.5:
   resolved "https://registry.yarnpkg.com/react-native-image-colors/-/react-native-image-colors-1.2.5.tgz#9ef185d0d2157ce0a975c2a17b62b405e647d0f5"
   integrity sha512-fuNLWhKqeXldLuWjKcoSHbR+QIqRs3EcK5mkJVviKNlRKNNZl0GGYZDSFA5KW/xr2LchSS2+jqqsZaO+GeisgQ==
 
-react-native-image-picker@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-2.3.4.tgz#1c31dbe9872ade17e2ed6457b0c669d63c322590"
-  integrity sha512-4UHu+zOyDT570r5mIbjH6h1iMrKIq/qfsKiAVUEZwncVegh0usJiEYNyJw4CEVwNeehmye/ia5sLDsa+kzIE4g==
+react-native-image-picker@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-3.8.0.tgz#d6e9e46c060feae9e248843c0d22fd5f9ed78458"
+  integrity sha512-jlL8YdKBaN8OamKZZYWjjpgUEj4+VvMdnh69euUsUdKBu2iD9HTLQrC9NHVQ78p0fQ2YL3Gf4xNwMTDDFspNpA==
 
 react-native-image-resizer@^1.4.2:
   version "1.4.2"

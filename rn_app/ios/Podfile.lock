@@ -270,8 +270,8 @@ PODS:
     - React
   - react-native-geolocation-service (5.0.0):
     - React
-  - react-native-image-picker (2.3.4):
-    - React-Core
+  - react-native-image-picker (2.4.0):
+    - React
   - react-native-image-resizer (1.4.2):
     - React-Core
   - react-native-safe-area-context (3.1.9):
@@ -612,7 +612,7 @@ SPEC CHECKSUMS:
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
   react-native-cameraroll: 60ba0068826eab1c8d43146191bafd4363ea58a7
   react-native-geolocation-service: 141e33bdb179bcba10b216ee13962611e21f2be4
-  react-native-image-picker: c6d75c4ab2cf46f9289f341242b219cb3c1180d3
+  react-native-image-picker: 4e63090db19a528e36c0cc07d1423c8c0cb4c4ef
   react-native-image-resizer: 4999a7dff8fc7fed5ed7d7c7dbfa5facbd345861
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168

@@ -1,8 +1,9 @@
 import React, {useState, useRef, useCallback, useEffect} from 'react';
 import {Alert} from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 import {useSelector} from 'react-redux';
+import {RNToasty} from 'react-native-toasty';
 
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
@@ -21,7 +22,6 @@ const videoEditDescriptionText =
 
 export const TakeFlashPage = () => {
   const [targetPhoto, setTargetPhoto] = useState<{
-    base64: string;
     uri: string;
   } | null>(null);
   const [targetVideo, setTargetVideo] = useState<{uri: string} | null>(null);
@@ -35,7 +35,7 @@ export const TakeFlashPage = () => {
     if (cameraRef.current) {
       const data = await cameraRef.current.takePictureAsync(takePhotoOptions);
       if (data && data.base64) {
-        setTargetPhoto({base64: data.base64, uri: data.uri});
+        setTargetPhoto({uri: data.uri});
       }
       setLoading(false);
     }
@@ -58,21 +58,28 @@ export const TakeFlashPage = () => {
 
   const pickImageOrVideo = useCallback(() => {
     setLoading(true);
-    ImagePicker.launchImageLibrary(
-      {mediaType: 'mixed', quality: 0.5}, // 画像選択から表示まで遅いの気になったらquality変える
-      (response) => {
-        if (response.didCancel) {
-          setLoading(false);
-          return;
-        }
+    launchImageLibrary({mediaType: 'mixed'}, (response) => {
+      if (response.didCancel) {
+        setLoading(false);
+        return;
+      }
+      if (response.uri) {
         if (response.type) {
-          setTargetPhoto({uri: response.uri, base64: response.data});
+          setTargetPhoto({uri: response.uri});
         } else {
+          if (response.duration && response.duration > 15) {
+            RNToasty.Show({
+              title: '15秒以下の動画にしてください',
+              position: 'center',
+            });
+            setLoading(false);
+            return;
+          }
           setTargetVideo({uri: response.uri});
         }
-        setLoading(false);
-      },
-    );
+      }
+      setLoading(false);
+    });
   }, []);
 
   const setSourceLoading = useCallback(() => {
