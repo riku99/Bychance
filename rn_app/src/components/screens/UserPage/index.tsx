@@ -37,6 +37,7 @@ import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {X_HEIGHT} from '~/constants/device';
 import {RootNavigationProp} from '~/screens/Root';
+import {normalStyles} from '~/constants/styles/normal';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -219,8 +220,8 @@ export const UserPage = ({route, navigation}: Props) => {
               {transform: [{translateY: y}]},
             ]}>
             <BackGroundItem
-              soruce={user.backGroundItem}
-              sorceType={user.backGroundItemType}
+              source={user.backGroundItem}
+              sourceType={user.backGroundItemType}
             />
           </Animated.View>
 
@@ -338,8 +339,7 @@ const styles = StyleSheet.create({
   },
   backGroundImageContainer: {
     position: 'absolute',
-    backgroundColor: 'gray',
-    top: 0,
+    backgroundColor: normalStyles.imageBackGroundColor,
     left: 0,
     width: '100%',
     height: '20%',

@@ -425,6 +425,7 @@ const styles = StyleSheet.create({
   backGraondItemContainer: {
     width: '100%',
     height: '20%',
+    backgroundColor: normalStyles.imageBackGroundColor,
   },
   avatarContainer: {
     width: 80,

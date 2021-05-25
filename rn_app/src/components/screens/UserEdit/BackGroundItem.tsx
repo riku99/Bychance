@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 
@@ -7,12 +7,15 @@ import {User} from '~/stores/user';
 import {normalStyles} from '~/constants/styles/normal';
 
 type Props = {
-  source: string;
+  source: User['backGroundItem'];
   type: User['backGroundItemType'];
 };
 
 export const BackGroundItem = React.memo(({source, type}: Props) => {
-  if (source && type === 'image') {
+  if (!source) {
+    return <View style={styles.noneSoruce} />;
+  }
+  if (type === 'image') {
     return (
       <>
         <FastImage source={{uri: source}} style={styles.source} />
