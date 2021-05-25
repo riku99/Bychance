@@ -174,7 +174,6 @@ export const UserEditPage = () => {
     | {
         sourceType: 'image' | 'video';
         uri: string;
-        base64?: string;
       }
     | undefined
   >();
@@ -199,16 +198,15 @@ export const UserEditPage = () => {
   ]);
 
   const pickBackGraoundItem = useCallback(() => {
-    launchImageLibrary({mediaType: 'mixed', quality: 1}, (response) => {
-      if (response.didCancel) {
+    launchImageLibrary({mediaType: 'mixed', quality: 0.5}, (response) => {
+      if (response.didCancel || !response.uri) {
         return;
       }
 
-      // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。画像の場合は uri.data でbase64のエンコードデータを取れる
+      // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。
       if (response.type) {
         setSelectedBackGroundItem({
           sourceType: 'image',
-          base64: response.data,
           uri: response.uri,
         });
       } else {
@@ -217,23 +215,17 @@ export const UserEditPage = () => {
           uri: response.uri,
         });
       }
-    });
-  }, []);
 
-  const onDeleteBackGroundItem = useCallback(() => {
-    Alert.alert('背景を削除', '削除してよろしいですか?', [
-      {
-        text: 'はい',
-        onPress: () => {
-          setSelectedBackGroundItem(undefined);
-          setDeleteBackGroundItem(true);
-        },
-      },
-      {
-        text: 'いいえ',
-      },
-    ]);
-  }, []);
+      if (deleteBackGroundItem) {
+        setDeleteBackGroundItem(false);
+      }
+    });
+  }, [deleteBackGroundItem]);
+
+  const onDeleteBackGroundItem = () => {
+    setSelectedBackGroundItem(undefined);
+    setDeleteBackGroundItem(true);
+  };
 
   useLayoutEffect(() => {
     if (isFocused) {
@@ -316,14 +308,40 @@ export const UserEditPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.backGraondItemContainer}>
-        <BackGroundItem
-          source={displayedBackGroundItem ? displayedBackGroundItem.uri : null}
-          type={
-            displayedBackGroundItem ? displayedBackGroundItem.sourceType : null
-          }
-          onPress={pickBackGraoundItem}
-          onDeletePress={onDeleteBackGroundItem}
-        />
+        <MenuView
+          title="背景の変更"
+          actions={[
+            {
+              id: 'pick',
+              title: 'ライブラリから選択',
+              image: 'photo',
+            },
+            {
+              id: 'delete',
+              title: '背景を削除',
+              image: 'trash',
+            },
+          ]}
+          onPressAction={(e) => {
+            switch (e.nativeEvent.event) {
+              case 'pick':
+                pickBackGraoundItem();
+                break;
+              case 'delete':
+                onDeleteBackGroundItem();
+            }
+          }}>
+          <BackGroundItem
+            source={
+              displayedBackGroundItem ? displayedBackGroundItem.uri : null
+            }
+            type={
+              displayedBackGroundItem
+                ? displayedBackGroundItem.sourceType
+                : null
+            }
+          />
+        </MenuView>
       </View>
       <View style={styles.avatarContainer}>
         <MenuView
@@ -331,7 +349,7 @@ export const UserEditPage = () => {
           actions={[
             {
               id: 'pick',
-              title: '写真から選択する',
+              title: 'ライブラリから選択',
               image: 'photo',
             },
             {

@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Button, Icon} from 'react-native-elements';
 
 import {User} from '~/stores/user';
 import {normalStyles} from '~/constants/styles/normal';
@@ -9,38 +8,19 @@ import {normalStyles} from '~/constants/styles/normal';
 type Props = {
   source: User['backGroundItem'];
   type: User['backGroundItemType'];
-  onPress: () => void;
-  onDeletePress: () => void;
 };
 
-export const BackGroundItem = React.memo(
-  ({source, type, onPress, onDeletePress}: Props) => {
-    if (source && type === 'image') {
-      return (
-        <>
-          <TouchableOpacity activeOpacity={1} onPress={onPress}>
-            <FastImage source={{uri: source}} style={styles.source} />
-          </TouchableOpacity>
-          <Button
-            activeOpacity={1}
-            onPress={onDeletePress}
-            icon={<Icon name="delete" color="white" size={30} />}
-            buttonStyle={styles.deleteButton}
-            containerStyle={styles.deleteButtonContainer}
-          />
-        </>
-      );
-    } else {
-      return (
-        <TouchableOpacity
-          style={styles.noneSoruce}
-          activeOpacity={1}
-          onPress={onPress}
-        />
-      );
-    }
-  },
-);
+export const BackGroundItem = React.memo(({source, type}: Props) => {
+  if (source && type === 'image') {
+    return (
+      <>
+        <FastImage source={{uri: source}} style={styles.source} />
+      </>
+    );
+  } else {
+    return <TouchableOpacity style={styles.noneSoruce} activeOpacity={1} />;
+  }
+});
 
 const styles = StyleSheet.create({
   source: {
