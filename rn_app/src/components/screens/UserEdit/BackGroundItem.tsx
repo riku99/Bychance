@@ -1,12 +1,13 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Video from 'react-native-video';
 
 import {User} from '~/stores/user';
 import {normalStyles} from '~/constants/styles/normal';
 
 type Props = {
-  source: User['backGroundItem'];
+  source: string;
   type: User['backGroundItemType'];
 };
 
@@ -18,7 +19,14 @@ export const BackGroundItem = React.memo(({source, type}: Props) => {
       </>
     );
   } else {
-    return <TouchableOpacity style={styles.noneSoruce} activeOpacity={1} />;
+    return (
+      <Video
+        source={{uri: source}}
+        style={styles.source}
+        repeat={true}
+        resizeMode="cover"
+      />
+    );
   }
 });
 
