@@ -239,32 +239,22 @@ export const UserEditPage = () => {
               buttonStyle={styles.completeButton}
               onPress={async () => {
                 setLoding(true);
-                const length =
+                const base64 = await Promise.all([
+                  selectedAvatar && fs.readFile(selectedAvatar, 'base64'),
                   selectedBackGroundItem &&
-                  selectedBackGroundItem.uri.lastIndexOf('.');
-                const ext =
-                  length && length !== -1
-                    ? selectedBackGroundItem?.uri.slice(length + 1)
-                    : undefined;
-
-                // 画像の場合はカメラロールから取得した時点でエンコードされたデータを取得できているが、動画の場合はできていないので、uriを元にエンコードデータを作成し、それを送信する
-                const base64 =
-                  selectedBackGroundItem &&
-                  (selectedBackGroundItem.sourceType === 'image'
-                    ? selectedBackGroundItem.base64
-                    : await fs.readFile(selectedBackGroundItem.uri, 'base64'));
+                    fs.readFile(selectedBackGroundItem.uri, 'base64'),
+                ]);
 
                 const result = await dispatch(
                   editProfileThunk({
                     name,
                     introduce,
-                    avatar: selectedAvatar,
+                    avatar: base64[0],
                     message,
                     deleteAvatar,
-                    backGroundItem: base64,
+                    backGroundItem: base64[1],
                     backGroundItemType: selectedBackGroundItem?.sourceType,
                     deleteBackGroundItem,
-                    backGroundItemExt: ext,
                     instagram,
                     twitter,
                     tiktok,
