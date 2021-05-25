@@ -5,7 +5,7 @@ import {UserAvatarWithOuter} from '~/components/utils/Avatar';
 
 type Props = {
   avatar: string | null;
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 export const Avatar = React.memo(({avatar, onPress}: Props) => {

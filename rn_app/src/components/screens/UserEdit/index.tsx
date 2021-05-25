@@ -16,8 +16,9 @@ import {
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
+import {MenuView} from '@react-native-menu/menu';
 
 import {RootNavigationProp} from '~/screens/Root';
 import {RootState} from '../../../stores/index';
@@ -33,20 +34,6 @@ import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIconList} from './SnsIconList';
 import {SnsModal} from './SnsModal';
-
-const options: ImagePickerOptions = {
-  title: 'プロフィール画像を変更',
-  cancelButtonTitle: 'キャンセル',
-  takePhotoButtonTitle: '写真をとる',
-  chooseFromLibraryButtonTitle: 'ライブラリから選択',
-  customButtons: [{title: '現在の写真を削除', name: 'delete'}],
-  quality: 0.3,
-  storageOptions: {
-    skipBackup: true,
-    path: 'images',
-  },
-  allowsEditing: true,
-};
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {
@@ -166,29 +153,22 @@ export const UserEditPage = () => {
 
   const pickAvatarImage = useCallback(() => {
     launchImageLibrary(
-      {mediaType: 'photo', quality: 1, includeBase64: true},
+      {mediaType: 'photo', quality: 0.5, includeBase64: true},
       (response) => {
         if (response.didCancel || !response.uri) {
           return;
         }
-
         setSelectedAvatar(response.uri);
+        if (deleteAvatar) {
+          setDeleteAvatar(false);
+        }
       },
     );
-    // ImagePicker.showImagePicker(options, (response) => {
-    //   if (response.customButton === 'delete') {
-    //     setDeleteAvatar(true);
-    //     return;
-    //   }
-    //   if (response.uri) {
-    //     const source = 'data:image/jpeg;base64,' + response.data;
-    //     setSelectedAvatar(source);
-    //     if (deleteAvatar) {
-    //       setDeleteAvatar(false);
-    //     }
-    //   }
-    // });
-  }, []);
+  }, [deleteAvatar]);
+
+  const deleteAvatrImage = () => {
+    setDeleteAvatar(true);
+  };
 
   const [selectedBackGroundItem, setSelectedBackGroundItem] = useState<
     | {
@@ -219,7 +199,7 @@ export const UserEditPage = () => {
   ]);
 
   const pickBackGraoundItem = useCallback(() => {
-    launchImageLibrary({mediaType: 'mixed', quality: 0.3}, (response) => {
+    launchImageLibrary({mediaType: 'mixed', quality: 1}, (response) => {
       if (response.didCancel) {
         return;
       }
@@ -346,7 +326,32 @@ export const UserEditPage = () => {
         />
       </View>
       <View style={styles.avatarContainer}>
-        <Avatar avatar={displayedAvatar} onPress={pickAvatarImage} />
+        <MenuView
+          title="プロフィール画像の変更"
+          actions={[
+            {
+              id: 'pick',
+              title: '写真から選択する',
+              image: 'photo',
+            },
+            {
+              id: 'delete',
+              title: 'プロフィール画像の削除',
+              image: 'trash',
+            },
+          ]}
+          onPressAction={(action) => {
+            console.log(action.nativeEvent.event);
+            switch (action.nativeEvent.event) {
+              case 'pick':
+                pickAvatarImage();
+                break;
+              case 'delete':
+                deleteAvatrImage();
+            }
+          }}>
+          <Avatar avatar={displayedAvatar} />
+        </MenuView>
       </View>
       <View style={styles.mainEditContainer}>
         <View style={styles.profileContainer}>
