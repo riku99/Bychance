@@ -10,7 +10,7 @@ import {useDispatch} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
-import ImagePicker from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 import {AppDispatch} from '../../../stores';
 import {creatingPost} from '../../../stores/otherSettings';
@@ -60,16 +60,19 @@ export const CreatePost = ({navigation}: Props) => {
 
   useEffect(() => {
     if (isFocused) {
-      ImagePicker.launchImageLibrary({quality: 1}, (response) => {
-        if (response.didCancel) {
-          navigation.goBack();
-        }
-        let img;
-        if ((img = response.data)) {
-          const source = 'data:image/jpeg;base64,' + img;
-          setSelectedImage(source);
-        }
-      });
+      launchImageLibrary(
+        {quality: 1, mediaType: 'photo', includeBase64: true},
+        (response) => {
+          if (response.didCancel || !response.base64) {
+            navigation.goBack();
+          }
+          let img;
+          if ((img = response.base64)) {
+            const source = 'data:image/jpeg;base64,' + img;
+            setSelectedImage(source);
+          }
+        },
+      );
     } else {
       setSelectedImage(undefined);
     }

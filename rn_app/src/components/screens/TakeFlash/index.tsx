@@ -58,7 +58,7 @@ export const TakeFlashPage = () => {
 
   const pickImageOrVideo = useCallback(() => {
     setLoading(true);
-    launchImageLibrary({mediaType: 'mixed'}, (response) => {
+    launchImageLibrary({mediaType: 'mixed', quality: 1}, (response) => {
       if (response.didCancel) {
         setLoading(false);
         return;

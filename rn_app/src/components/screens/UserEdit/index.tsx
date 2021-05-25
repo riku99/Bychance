@@ -16,7 +16,7 @@ import {
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
-import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 
 import {RootNavigationProp} from '~/screens/Root';
@@ -165,20 +165,30 @@ export const UserEditPage = () => {
   );
 
   const pickAvatarImage = useCallback(() => {
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.customButton === 'delete') {
-        setDeleteAvatar(true);
-        return;
-      }
-      if (response.uri) {
-        const source = 'data:image/jpeg;base64,' + response.data;
-        setSelectedAvatar(source);
-        if (deleteAvatar) {
-          setDeleteAvatar(false);
+    launchImageLibrary(
+      {mediaType: 'photo', quality: 1, includeBase64: true},
+      (response) => {
+        if (response.didCancel || !response.uri) {
+          return;
         }
-      }
-    });
-  }, [deleteAvatar]);
+
+        setSelectedAvatar(response.uri);
+      },
+    );
+    // ImagePicker.showImagePicker(options, (response) => {
+    //   if (response.customButton === 'delete') {
+    //     setDeleteAvatar(true);
+    //     return;
+    //   }
+    //   if (response.uri) {
+    //     const source = 'data:image/jpeg;base64,' + response.data;
+    //     setSelectedAvatar(source);
+    //     if (deleteAvatar) {
+    //       setDeleteAvatar(false);
+    //     }
+    //   }
+    // });
+  }, []);
 
   const [selectedBackGroundItem, setSelectedBackGroundItem] = useState<
     | {
@@ -209,28 +219,25 @@ export const UserEditPage = () => {
   ]);
 
   const pickBackGraoundItem = useCallback(() => {
-    ImagePicker.launchImageLibrary(
-      {mediaType: 'mixed', quality: 0.3},
-      (response) => {
-        if (response.didCancel) {
-          return;
-        }
+    launchImageLibrary({mediaType: 'mixed', quality: 0.3}, (response) => {
+      if (response.didCancel) {
+        return;
+      }
 
-        // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。画像の場合は uri.data でbase64のエンコードデータを取れる
-        if (response.type) {
-          setSelectedBackGroundItem({
-            sourceType: 'image',
-            base64: response.data,
-            uri: response.uri,
-          });
-        } else {
-          setSelectedBackGroundItem({
-            sourceType: 'video',
-            uri: response.uri,
-          });
-        }
-      },
-    );
+      // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。画像の場合は uri.data でbase64のエンコードデータを取れる
+      if (response.type) {
+        setSelectedBackGroundItem({
+          sourceType: 'image',
+          base64: response.data,
+          uri: response.uri,
+        });
+      } else {
+        setSelectedBackGroundItem({
+          sourceType: 'video',
+          uri: response.uri,
+        });
+      }
+    });
   }, []);
 
   const onDeleteBackGroundItem = useCallback(() => {

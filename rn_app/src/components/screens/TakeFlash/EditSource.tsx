@@ -164,11 +164,16 @@ export const EditSource = React.memo(({source}: Props) => {
     }
   };
   const onCreateBottunPress = useCallback(async () => {
-    if (viewShotRef.current && viewShotRef.current.capture) {
-      const uri = await viewShotRef.current.capture();
-      create({sourceType: 'image', uri});
+    console.log('ok');
+    if (source.type === 'image') {
+      if (viewShotRef.current && viewShotRef.current.capture) {
+        const uri = await viewShotRef.current.capture();
+        create({sourceType: 'image', uri});
+      }
+    } else {
+      create({sourceType: 'video', uri: source.uri});
     }
-  }, [create]);
+  }, [create, source]);
 
   useFlashStatusBarSetting();
 

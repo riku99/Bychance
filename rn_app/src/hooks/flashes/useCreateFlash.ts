@@ -13,25 +13,14 @@ export const useCreateFlash = () => {
   const dispatch: AppDispatch = useDispatch();
 
   return useCallback(
-    async ({
-      source,
-      sourceType,
-      uri,
-    }: {
-      source?: string;
-      sourceType: 'image' | 'video';
-      uri: string;
-    }) => {
+    async ({sourceType, uri}: {sourceType: 'image' | 'video'; uri: string}) => {
       dispatch(creatingFlash());
       navigation.goBack();
       const length = uri.lastIndexOf('.'); // 拡張子の有無。なければ-1が返される
       const ext = length !== -1 ? uri.slice(length + 1) : null; // あれば拡張子('.'以降)を取得
       const result = await dispatch(
         createFlashThunk({
-          source:
-            sourceType === 'image' && source
-              ? source
-              : await fs.readFile(uri, 'base64'),
+          source: await fs.readFile(uri, 'base64'),
           sourceType,
           ext,
         }),

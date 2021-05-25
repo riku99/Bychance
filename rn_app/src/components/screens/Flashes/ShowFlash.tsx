@@ -435,12 +435,16 @@ export const ShowFlash = React.memo(
                   <View>
                     <Video
                       ref={videoRef}
-                      source={{uri: currentFlash.source}}
+                      source={{
+                        uri:
+                          'https://bc-bucket-dev.s3-ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/flash/acxAiOsipAO2vOi7Vq3EZ95uVkLaWp22nMUafeww7N4%3D.mp4',
+                      }}
+                      //source={require('~/assets/iii.mp4')}
                       style={styles.source}
-                      resizeMode="cover"
                       paused={isPaused}
                       onLoadStart={onVideoLoadStart}
                       onLoad={(e) => {
+                        console.log('ok');
                         onVideoLoad(e);
                       }}
                       onProgress={({currentTime}) => {
@@ -488,9 +492,9 @@ export const ShowFlash = React.memo(
                 />
               </View>
             )}
-            {onLoading && (
+            {/* {onLoading && (
               <ActivityIndicator size="large" style={styles.indicator} />
-            )}
+            )} */}
             <Modal
               flashId={currentFlash.id}
               modalizeRef={modalizeRef}
