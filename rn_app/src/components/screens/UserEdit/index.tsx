@@ -90,6 +90,17 @@ export const UserEditPage = () => {
   const [introduce, setIntroduce] = useState(
     user.introduce ? user.introduce : '',
   );
+  const displayedIntroduce = useMemo(() => {
+    if (introduce.length > 12) {
+      return introduce.substr(0, 11) + ' ...';
+    }
+
+    if (introduce.split('\n')[1]) {
+      return introduce.split('\n')[0] + ' ...';
+    }
+
+    return introduce;
+  }, [introduce]);
   const [message, setMessage] = useState(user.message ? user.message : '');
 
   const [instagram, setInstagram] = useState<string | null>(user.instagram);
@@ -383,13 +394,7 @@ export const UserEditPage = () => {
               });
             }}>
             <Text style={styles.elementLabel}>自己紹介</Text>
-            <Text style={styles.element}>
-              {introduce && introduce !== ''
-                ? introduce.split('\n')[1]
-                  ? introduce.split('\n')[0] + ' ...'
-                  : introduce
-                : ''}
-            </Text>
+            <Text style={styles.element}>{displayedIntroduce}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.editElenentContainer}
