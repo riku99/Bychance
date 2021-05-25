@@ -68,17 +68,20 @@ export const UserEditPage = () => {
   }, [navigation, dispatch]);
 
   const navigateToNameEditPage = ({name}: {name: string}) =>
-    userEditNavigation.push('NameEdit', {type: 'name', name});
+    userEditNavigation.navigate('NameEdit', {type: 'name', name});
 
   const navigateToIntroduceEditPage = ({introduce}: {introduce: string}) =>
-    userEditNavigation.push('IntroduceEdit', {type: 'introduce', introduce});
+    userEditNavigation.navigate('IntroduceEdit', {
+      type: 'introduce',
+      introduce,
+    });
 
   const navigateToStatusMessageEditPage = ({
     statusMessage,
   }: {
     statusMessage: string;
   }) =>
-    userEditNavigation.push('StatusMessageEdit', {
+    userEditNavigation.navigate('StatusMessageEdit', {
       type: 'statusMessage',
       statusMessage,
     });
