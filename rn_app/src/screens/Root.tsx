@@ -75,6 +75,9 @@ export const RootStackScreen = () => {
       <RootStack.Screen
         name="UserBackGroundView"
         component={UserBackGroundView}
+        options={{
+          headerShown: false,
+        }}
       />
       <RootStack.Screen
         name="TalkRoomStack"

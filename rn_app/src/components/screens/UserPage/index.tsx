@@ -319,7 +319,7 @@ export const UserPage = ({route, navigation}: Props) => {
           )}
 
           {isMe && (
-            <View style={styles.takeFlashContainer}>
+            <View style={styles.takeWideRangeSourceContainer}>
               <TakeFlashButton />
             </View>
           )}
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   animatedElement: {
     position: 'absolute',
   },
-  takeFlashContainer: {
+  takeWideRangeSourceContainer: {
     position: 'absolute',
     bottom: '3%',
     right: '7%',

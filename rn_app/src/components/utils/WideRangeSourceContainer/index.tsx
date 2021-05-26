@@ -8,7 +8,8 @@ type Props = {
   children: Element;
 };
 
-export const FlashContainer = ({children}: Props) => {
+// 16:9のソース(画像とか動画)に対応するコンテナ
+export const WideRangeSourceContainer = ({children}: Props) => {
   const {top} = useSafeAreaInsets();
   const cameraContainerTop = useMemo(() => (moreDviceX ? top : 0), [top]);
   return (

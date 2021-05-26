@@ -8,3 +8,7 @@ export const getExtention = (uri?: string) => {
 
   return ext;
 };
+
+export const removeExtention = (str: string) => {
+  return str.replace(/\.[^/.]+$/, '');
+};

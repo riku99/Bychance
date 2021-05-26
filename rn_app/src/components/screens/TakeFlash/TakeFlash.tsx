@@ -16,7 +16,7 @@ import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 import {ShootButtonGroup} from './ShootButtonGroup';
 import {BackButton} from '~/components/utils/BackButton';
-import {FlashContainer} from '~/components/utils/FlashContainer';
+import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {useFlashStatusBarSetting} from '~/hooks//statusBar';
 
 type Props = {
@@ -73,7 +73,7 @@ export const TakeFlash = React.memo(
       <View style={styles.container}>
         {!targetPhoto && !targetVideo ? (
           <>
-            <FlashContainer>
+            <WideRangeSourceContainer>
               <RNCamera
                 ref={cameraRef}
                 style={styles.camera}
@@ -85,7 +85,7 @@ export const TakeFlash = React.memo(
                 keepAudioSession={true}
                 onPictureTaken={onPictureTaken}
               />
-            </FlashContainer>
+            </WideRangeSourceContainer>
             <View style={[styles.topButtonGroupContainer, {top: top + 15}]}>
               <BackButton
                 icon={{name: 'chevron-right', size: 35, color: 'white'}}

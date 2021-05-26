@@ -28,7 +28,7 @@ import {createAlreadyViewdFlashThunk} from '../../../apis/flashes/createAlreadyV
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
-import {FlashContainer} from '~/components/utils/FlashContainer';
+import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 
 type Props = {
   flashesData: FlashesData;
@@ -407,7 +407,7 @@ export const ShowFlash = React.memo(
       <View style={styles.container}>
         {entityLength ? (
           <>
-            <FlashContainer>
+            <WideRangeSourceContainer>
               <TouchableOpacity
                 activeOpacity={1}
                 delayLongPress={100}
@@ -432,7 +432,6 @@ export const ShowFlash = React.memo(
                         uri:
                           'https://bc-bucket-dev.s3-ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/flash/acxAiOsipAO2vOi7Vq3EZ95uVkLaWp22nMUafeww7N4%3D.mp4',
                       }}
-                      //source={require('~/assets/iii.mp4')}
                       style={styles.source}
                       paused={isPaused}
                       onLoadStart={onVideoLoadStart}
@@ -448,7 +447,7 @@ export const ShowFlash = React.memo(
                   </View>
                 )}
               </TouchableOpacity>
-            </FlashContainer>
+            </WideRangeSourceContainer>
             <View style={[styles.info, {top: top + 10}]}>
               <ProgressBar
                 flashesData={flashesData}
@@ -499,7 +498,7 @@ export const ShowFlash = React.memo(
           </>
         ) : (
           creatingFlash && (
-            <View style={styles.creatingFlashContainer}>
+            <View style={styles.creatingWideRangeSourceContainer}>
               <View style={styles.creatingFlashMessage}>
                 <ActivityIndicator color="white" />
                 <Text style={{color: 'white'}}>追加しています</Text>
@@ -569,7 +568,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  creatingFlashContainer: {
+  creatingWideRangeSourceContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

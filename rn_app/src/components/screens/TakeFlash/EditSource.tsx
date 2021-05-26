@@ -20,7 +20,7 @@ import {
   setOffsetAndDiff,
 } from '~/helpers/animation/translate';
 import {useCreateFlash} from '~/hooks/flashes';
-import {FlashContainer} from '~/components/utils/FlashContainer';
+import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {useFlashStatusBarSetting} from '~/hooks//statusBar';
 
 export type Source = {
@@ -178,7 +178,7 @@ export const EditSource = React.memo(({source}: Props) => {
 
   return (
     <View style={styles.container}>
-      <FlashContainer>
+      <WideRangeSourceContainer>
         <ViewShot ref={viewShotRef} options={{quality: 1}}>
           <LinearGradient
             style={{height: '100%', width: '100%'}}
@@ -235,7 +235,7 @@ export const EditSource = React.memo(({source}: Props) => {
             )}
           </LinearGradient>
         </ViewShot>
-      </FlashContainer>
+      </WideRangeSourceContainer>
 
       {dustIndicator && (
         <View style={styles.dustIndicatorContainer}>
