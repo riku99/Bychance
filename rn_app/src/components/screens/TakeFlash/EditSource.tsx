@@ -19,7 +19,7 @@ import {
   setTranslateAndDiff,
   setOffsetAndDiff,
 } from '~/helpers/animation/translate';
-import {useCreateFlash} from '~/hooks/flashes/useCreateFlash';
+import {useCreateFlash} from '~/hooks/flashes';
 import {FlashContainer} from '~/components/utils/FlashContainer';
 import {useFlashStatusBarSetting} from '~/hooks//statusBar';
 
@@ -164,7 +164,6 @@ export const EditSource = React.memo(({source}: Props) => {
     }
   };
   const onCreateBottunPress = useCallback(async () => {
-    console.log('ok');
     if (source.type === 'image') {
       if (viewShotRef.current && viewShotRef.current.capture) {
         const uri = await viewShotRef.current.capture();

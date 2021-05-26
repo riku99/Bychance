@@ -11,12 +11,14 @@ import {useIsFocused} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
+import fs from 'react-native-fs';
 
 import {AppDispatch} from '../../../stores';
 import {creatingPost} from '../../../stores/otherSettings';
 import {createPostThunk} from '../../../apis/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
+import {getExtention} from '~/utils';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -25,56 +27,57 @@ type Props = {
 export const CreatePost = ({navigation}: Props) => {
   const isFocused = useIsFocused();
 
-  const [selectedImage, setSelectedImage] = useState<undefined | string>();
+  const [uri, setUri] = useState<string>();
   const [text, setText] = useState('');
 
   const dispatch: AppDispatch = useDispatch();
 
-  const createPost = useCallback(
-    async (data: {text: string; source: string}) => {
+  const createPost = useCallback(async () => {
+    if (uri) {
       dispatch(creatingPost());
       navigation.goBack();
-      const resullt = await dispatch(createPostThunk(data));
+      const ext = getExtention(uri);
+      if (!ext) {
+        displayShortMessage('無効なデータです', 'warning');
+        dispatch(creatingPost());
+        return;
+      }
+      const source = await fs.readFile(uri, 'base64');
+      const resullt = await dispatch(createPostThunk({text, source, ext}));
       if (createPostThunk.fulfilled.match(resullt)) {
         displayShortMessage('投稿しました', 'success');
       }
       dispatch(creatingPost());
-    },
-    [dispatch, navigation],
-  );
+    }
+  }, [dispatch, navigation, uri, text]);
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: selectedImage
+      headerRight: uri
         ? () => (
             <Button
               title="投稿"
               buttonStyle={{backgroundColor: 'transparent'}}
               titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
-              onPress={() => createPost({text, source: selectedImage})}
+              onPress={createPost}
             />
           )
         : undefined,
     });
-  }, [navigation, selectedImage, text, dispatch, createPost]);
+  }, [navigation, uri, text, dispatch, createPost]);
 
   useEffect(() => {
     if (isFocused) {
-      launchImageLibrary(
-        {quality: 1, mediaType: 'photo', includeBase64: true},
-        (response) => {
-          if (response.didCancel || !response.base64) {
-            navigation.goBack();
-          }
-          let img;
-          if ((img = response.base64)) {
-            const source = 'data:image/jpeg;base64,' + img;
-            setSelectedImage(source);
-          }
-        },
-      );
+      launchImageLibrary({quality: 1, mediaType: 'photo'}, (response) => {
+        if (response.didCancel || !response.uri) {
+          navigation.goBack();
+          return;
+        }
+
+        setUri(response.uri);
+      });
     } else {
-      setSelectedImage(undefined);
+      setUri(undefined);
     }
   }, [isFocused, navigation]);
 
@@ -86,11 +89,11 @@ export const CreatePost = ({navigation}: Props) => {
 
   return (
     <>
-      {selectedImage ? (
+      {uri ? (
         <View style={styles.container}>
           <View style={styles.contents}>
-            {selectedImage ? (
-              <Image source={{uri: selectedImage}} style={styles.image} />
+            {uri ? (
+              <Image source={{uri: uri}} style={styles.image} />
             ) : (
               <View style={{...styles.image, justifyContent: 'center'}}>
                 <ActivityIndicator size="small" />

@@ -40,7 +40,6 @@ export const useTalkRoomMessagesPushNotification = () => {
       .getInitialNotification()
       .then((remoteMessage) => {
         if (remoteMessage) {
-          console.log('quit状態からアプリが開かれました');
           const {
             talkRoomId,
             partnerId,

@@ -444,7 +444,6 @@ export const ShowFlash = React.memo(
                       paused={isPaused}
                       onLoadStart={onVideoLoadStart}
                       onLoad={(e) => {
-                        console.log('ok');
                         onVideoLoad(e);
                       }}
                       onProgress={({currentTime}) => {

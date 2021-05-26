@@ -7,6 +7,7 @@ import {createFlashThunk} from '~/apis/flashes/createFlash';
 import {creatingFlash} from '~/stores/otherSettings';
 import {AppDispatch} from '~/stores/index';
 import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
+import {getExtention} from '~/utils';
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
@@ -16,8 +17,11 @@ export const useCreateFlash = () => {
     async ({sourceType, uri}: {sourceType: 'image' | 'video'; uri: string}) => {
       dispatch(creatingFlash());
       navigation.goBack();
-      const length = uri.lastIndexOf('.'); // 拡張子の有無。なければ-1が返される
-      const ext = length !== -1 ? uri.slice(length + 1) : null; // あれば拡張子('.'以降)を取得
+      const ext = getExtention(uri);
+      if (!ext) {
+        displayShortMessage('無効なデータです', 'warning');
+        return;
+      }
       const result = await dispatch(
         createFlashThunk({
           source: await fs.readFile(uri, 'base64'),

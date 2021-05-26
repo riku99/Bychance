@@ -15,7 +15,7 @@ export type CreateFlashThunkPaylaod = Flash;
 
 export const createFlashThunk = createAsyncThunk<
   CreateFlashThunkPaylaod,
-  {sourceType: 'image' | 'video'; source: string; ext: string | null},
+  {sourceType: 'image' | 'video'; source: string; ext: string},
   {
     rejectValue: rejectPayload;
   }
