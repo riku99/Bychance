@@ -28,7 +28,6 @@ export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
         <Video
           source={{uri: source}}
           style={styles.sourceStyle}
-          repeat={true}
           resizeMode="cover"
         />
       </View>

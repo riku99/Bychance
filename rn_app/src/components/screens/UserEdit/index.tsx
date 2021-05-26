@@ -33,6 +33,7 @@ import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIconList} from './SnsIconList';
 import {SnsModal} from './SnsModal';
+import {getExtention} from '~/utils';
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {
@@ -155,9 +156,7 @@ export const UserEditPage = () => {
     }
   }, [savedEditData]);
 
-  const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>(
-    undefined,
-  );
+  const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>();
   const [deleteAvatar, setDeleteAvatar] = useState(false);
   const displayedAvatar = useMemo(
     () => (deleteAvatar ? null : selectedAvatar ? selectedAvatar : user.avatar),
@@ -240,6 +239,55 @@ export const UserEditPage = () => {
     setDeleteBackGroundItem(true);
   };
 
+  const update = useCallback(async () => {
+    setLoding(true);
+    const avatarExt = getExtention(selectedAvatar);
+    const backGroundItemExt = getExtention(selectedBackGroundItem?.uri);
+    const base64 = await Promise.all([
+      selectedAvatar && fs.readFile(selectedAvatar, 'base64'),
+      selectedBackGroundItem &&
+        fs.readFile(selectedBackGroundItem.uri, 'base64'),
+    ]);
+
+    const result = await dispatch(
+      editProfileThunk({
+        name,
+        introduce,
+        avatar: base64[0],
+        avatarExt,
+        message,
+        deleteAvatar,
+        backGroundItem: base64[1],
+        backGroundItemType: selectedBackGroundItem?.sourceType,
+        backGroundItemExt,
+        deleteBackGroundItem,
+        instagram,
+        twitter,
+        tiktok,
+        youtube,
+      }),
+    );
+
+    if (editProfileThunk.fulfilled.match(result)) {
+      displayShortMessage('更新しました', 'success');
+    }
+    navigation.goBack();
+  }, [
+    navigation,
+    name,
+    introduce,
+    message,
+    selectedAvatar,
+    deleteAvatar,
+    deleteBackGroundItem,
+    selectedBackGroundItem,
+    dispatch,
+    instagram,
+    twitter,
+    youtube,
+    tiktok,
+  ]);
+
   useLayoutEffect(() => {
     if (isFocused) {
       navigation.dangerouslyGetParent()?.setOptions({
@@ -250,59 +298,14 @@ export const UserEditPage = () => {
               title="完了"
               titleStyle={styles.completeButtonTitle}
               buttonStyle={styles.completeButton}
-              onPress={async () => {
-                setLoding(true);
-                const base64 = await Promise.all([
-                  selectedAvatar && fs.readFile(selectedAvatar, 'base64'),
-                  selectedBackGroundItem &&
-                    fs.readFile(selectedBackGroundItem.uri, 'base64'),
-                ]);
-
-                const result = await dispatch(
-                  editProfileThunk({
-                    name,
-                    introduce,
-                    avatar: base64[0],
-                    message,
-                    deleteAvatar,
-                    backGroundItem: base64[1],
-                    backGroundItemType: selectedBackGroundItem?.sourceType,
-                    deleteBackGroundItem,
-                    instagram,
-                    twitter,
-                    tiktok,
-                    youtube,
-                  }),
-                );
-
-                if (editProfileThunk.fulfilled.match(result)) {
-                  displayShortMessage('更新しました', 'success');
-                }
-                navigation.goBack();
-              }}
+              onPress={update}
             />
           ) : (
             <ActivityIndicator />
           ),
       });
     }
-  }, [
-    navigation,
-    name,
-    introduce,
-    message,
-    selectedAvatar,
-    deleteAvatar,
-    isFocused,
-    loading,
-    deleteBackGroundItem,
-    selectedBackGroundItem,
-    dispatch,
-    instagram,
-    twitter,
-    youtube,
-    tiktok,
-  ]);
+  }, [isFocused, loading, update, navigation]);
 
   const showSnsModal = useCallback((snsType: SnsList) => {
     setSnsModalType(snsType);

@@ -31,13 +31,14 @@ export const editProfileThunk = createAsyncThunk<
   {
     name: string;
     introduce: string;
-    avatar: string | undefined;
+    avatar?: string;
+    avatarExt?: string | null;
     deleteAvatar: boolean;
     message: string;
     backGroundItem?: string;
     backGroundItemType?: 'image' | 'video';
     deleteBackGroundItem: boolean;
-    backGroundItemExt?: string;
+    backGroundItemExt?: string | null;
     instagram: string | null;
     twitter: string | null;
     youtube: string | null;
@@ -53,6 +54,7 @@ export const editProfileThunk = createAsyncThunk<
       name,
       introduce,
       avatar,
+      avatarExt,
       message,
       deleteAvatar,
       backGroundItem,
@@ -91,6 +93,7 @@ export const editProfileThunk = createAsyncThunk<
             name,
             introduce,
             avatar,
+            avatarExt,
             deleteAvatar,
             statusMessage: message,
             backGroundItem,
