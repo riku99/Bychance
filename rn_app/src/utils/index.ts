@@ -9,6 +9,7 @@ export const getExtention = (uri?: string) => {
   return ext;
 };
 
+// urlとかの拡張子を除いた部分をとる
 export const removeExtention = (str: string) => {
   return str.replace(/\.[^/.]+$/, '');
 };

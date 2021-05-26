@@ -209,14 +209,29 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, [introduceHeight, lineNumber]);
 
+  const [videoPaused, setVideoPaused] = useState(false);
   const onBackGroundItemPress = useCallback(() => {
     if (user?.backGroundItem && user?.backGroundItemType) {
+      if (user.backGroundItemType === 'video') {
+        setVideoPaused(true);
+      }
       navigation.navigate('UserBackGroundView', {
         source: user.backGroundItem,
         sourceType: user.backGroundItemType,
       });
     }
   }, [navigation, user?.backGroundItem, user?.backGroundItemType]);
+
+  // BackGroundItemViewから戻ってきた時にビデオが停止されていた場合再開させたい
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (videoPaused) {
+        setVideoPaused(false);
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, videoPaused]);
 
   return (
     <>
@@ -257,6 +272,7 @@ export const UserPage = ({route, navigation}: Props) => {
               source={user.backGroundItem}
               sourceType={user.backGroundItemType}
               onPress={onBackGroundItemPress}
+              videoPaused={videoPaused}
             />
           </Animated.View>
 

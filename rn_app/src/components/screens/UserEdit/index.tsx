@@ -373,7 +373,6 @@ export const UserEditPage = () => {
             },
           ]}
           onPressAction={(action) => {
-            console.log(action.nativeEvent.event);
             switch (action.nativeEvent.event) {
               case 'pick':
                 pickAvatarImage();

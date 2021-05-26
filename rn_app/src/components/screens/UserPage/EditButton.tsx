@@ -17,6 +17,7 @@ export const EditButton = React.memo(() => {
       buttonStyle={styles.editButton}
       titleStyle={styles.editButtonTitle}
       onPress={onEditButtonPress}
+      activeOpacity={1}
     />
   );
 });

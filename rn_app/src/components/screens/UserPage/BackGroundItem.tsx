@@ -7,10 +7,11 @@ type Props = {
   source: string | null;
   sourceType: 'image' | 'video' | null;
   onPress: () => void;
+  videoPaused: boolean;
 };
 
 export const BackGroundItem = React.memo(
-  ({source, sourceType, onPress}: Props) => {
+  ({source, sourceType, onPress, videoPaused}: Props) => {
     if (!source) {
       return <View />;
     }
@@ -31,6 +32,8 @@ export const BackGroundItem = React.memo(
             source={{uri: source}}
             style={styles.sourceStyle}
             resizeMode="cover"
+            ignoreSilentSwitch="obey"
+            paused={videoPaused}
           />
         </TouchableOpacity>
       );

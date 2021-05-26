@@ -5,13 +5,15 @@ import Video from 'react-native-video';
 import {RouteProp} from '@react-navigation/native';
 
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
-import {RootStackParamList} from '~/screens/Root';
+import {RootStackParamList, RootNavigationProp} from '~/screens/Root';
 import {removeExtention} from '~/utils';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'UserBackGroundView'>;
+  navigation: RootNavigationProp<'UserBackGroundView'>;
 };
 
+// Videoのサムネイルはposterプロップスでも作れるhが、FastImageでpreloadしたいのでFasImageを使って実現
 export const UserBackGroundView = ({route}: Props) => {
   const {source, sourceType} = useMemo(() => route.params, [route.params]);
 
@@ -32,6 +34,7 @@ export const UserBackGroundView = ({route}: Props) => {
               style={[styles.source, styles.video]}
               repeat={true}
               poster={thumbnailUrl}
+              ignoreSilentSwitch="ignore"
             />
             <FastImage source={{uri: thumbnailUrl}} style={styles.source} />
           </>
