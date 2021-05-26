@@ -18,6 +18,7 @@ import {Button} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 import {MenuView} from '@react-native-menu/menu';
+import {RNToasty} from 'react-native-toasty';
 
 import {RootNavigationProp} from '~/screens/Root';
 import {RootState} from '../../../stores/index';
@@ -222,6 +223,13 @@ export const UserEditPage = () => {
           uri: response.uri,
         });
       } else {
+        if (!response.duration || response.duration > 30) {
+          RNToasty.Show({
+            title: '30秒以下の動画にしてください',
+            position: 'center',
+          });
+          return;
+        }
         setSelectedBackGroundItem({
           sourceType: 'video',
           uri: response.uri,

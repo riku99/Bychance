@@ -59,24 +59,23 @@ export const TakeFlashPage = () => {
   const pickImageOrVideo = useCallback(() => {
     setLoading(true);
     launchImageLibrary({mediaType: 'mixed', quality: 1}, (response) => {
-      if (response.didCancel) {
+      if (response.didCancel || !response.uri) {
         setLoading(false);
         return;
       }
-      if (response.uri) {
-        if (response.type) {
-          setTargetPhoto({uri: response.uri});
-        } else {
-          if (response.duration && response.duration > 15) {
-            RNToasty.Show({
-              title: '15秒以下の動画にしてください',
-              position: 'center',
-            });
-            setLoading(false);
-            return;
-          }
-          setTargetVideo({uri: response.uri});
+
+      if (response.type) {
+        setTargetPhoto({uri: response.uri});
+      } else {
+        if (response.duration && response.duration > 15) {
+          RNToasty.Show({
+            title: '15秒以下の動画にしてください',
+            position: 'center',
+          });
+          setLoading(false);
+          return;
         }
+        setTargetVideo({uri: response.uri});
       }
       setLoading(false);
     });
