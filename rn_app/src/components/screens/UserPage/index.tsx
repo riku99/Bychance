@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useLayoutEffect,
+  useCallback,
 } from 'react';
 import {
   View,
@@ -208,23 +209,21 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, [introduceHeight, lineNumber]);
 
+  const onBackGroundItemPress = useCallback(() => {
+    if (user?.backGroundItem && user?.backGroundItemType) {
+      navigation.navigate('UserBackGroundView', {
+        source: user.backGroundItem,
+        sourceType: user.backGroundItemType,
+      });
+    }
+  }, [navigation, user?.backGroundItem, user?.backGroundItemType]);
+
   return (
     <>
       {user ? (
         <View
           style={styles.container}
           onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}>
-          <Animated.View
-            style={[
-              styles.backGroundImageContainer,
-              {transform: [{translateY: y}]},
-            ]}>
-            <BackGroundItem
-              source={user.backGroundItem}
-              sourceType={user.backGroundItemType}
-            />
-          </Animated.View>
-
           <Animated.View
             onLayout={(e) => setIntroduceHeight(e.nativeEvent.layout.height)}
             style={[
@@ -248,6 +247,18 @@ export const UserPage = ({route, navigation}: Props) => {
             userInformationTabViewRef={userInformationTabViewRef}
             snsLinkData={snsLinkData}
           />
+
+          <Animated.View
+            style={[
+              styles.backGroundImageContainer,
+              {transform: [{translateY: y}]},
+            ]}>
+            <BackGroundItem
+              source={user.backGroundItem}
+              sourceType={user.backGroundItemType}
+              onPress={onBackGroundItemPress}
+            />
+          </Animated.View>
 
           <Animated.View
             style={[

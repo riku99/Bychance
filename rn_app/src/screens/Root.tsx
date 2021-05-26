@@ -17,6 +17,8 @@ import {TalkRoomStackParamList, TalkRoomStackScreen} from './ChatRoom';
 import {TakeFlashPage} from '~/components/screens/TakeFlash';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {normalStyles} from '~/constants/styles/normal';
+import {User} from '~/stores/user';
+import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -24,6 +26,10 @@ export type RootStackParamList = {
   TalkRoomStack: NavigatorScreenParams<TalkRoomStackParamList>;
   TakeFlash: undefined;
   Flashes: NavigatorScreenParams<FlashesStackParamList>;
+  UserBackGroundView: {
+    source: string;
+    sourceType: NonNullable<User['backGroundItemType']>;
+  };
 };
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
@@ -65,6 +71,10 @@ export const RootStackScreen = () => {
                   ),
           };
         }}
+      />
+      <RootStack.Screen
+        name="UserBackGroundView"
+        component={UserBackGroundView}
       />
       <RootStack.Screen
         name="TalkRoomStack"
