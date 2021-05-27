@@ -12,6 +12,7 @@ import {SearchUsersStackNavigationProp} from '../../../screens/types';
 import {FlashesData} from '~/stores/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
 import {RootNavigationProp} from '~/screens/Root';
+import {getThumbnailUrl} from '~/helpers/video';
 
 export const GetNearbyUsers = () => {
   const position = useSelector((state: RootState) => {
@@ -31,7 +32,15 @@ export const GetNearbyUsers = () => {
     return JSON.stringify(
       nearbyUsers
         .filter((user) => user.flashes.entities.length)
-        .map((user) => user.flashes.entities.map((e) => ({uri: e.source}))),
+        .map((user) =>
+          user.flashes.entities.map((e) => {
+            const uri =
+              e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
+            return {
+              uri,
+            };
+          }),
+        ),
     );
   }, [nearbyUsers]);
 
@@ -39,8 +48,9 @@ export const GetNearbyUsers = () => {
   // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
   useEffect(() => {
     const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
-    preData.forEach((uri) => {
-      FastImage.preload(uri);
+    preData.forEach((data) => {
+      console.log(data);
+      FastImage.preload(data);
     });
   }, [preloadUriGroup]);
 

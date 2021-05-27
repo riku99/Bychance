@@ -1,9 +1,7 @@
 import {useMemo} from 'react';
-import {removeExtention} from '~/utils';
+
+import {getThumbnailUrl} from '~/helpers/video';
 
 export const useGetThumbnailUrl = (url: string) => {
-  return useMemo(() => {
-    const urlwithoutExt = removeExtention(url);
-    return `${urlwithoutExt}_thumbnail.webp`;
-  }, [url]);
+  return useMemo(() => getThumbnailUrl(url), [url]);
 };
