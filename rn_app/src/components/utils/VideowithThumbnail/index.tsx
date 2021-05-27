@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {ComponentProps} from 'react';
 import {StyleSheet, View} from 'react-native';
 import FastImage, {FastImageProps} from 'react-native-fast-image';
-import Video, {VideoProperties} from 'react-native-video';
+import Video from 'react-native-video';
 
 import {useGetThumbnailUrl} from '~/hooks/video';
 
 type Props = {
-  video: VideoProperties & {source: {uri: string}};
+  video: ComponentProps<typeof Video> & {
+    source: {uri: string};
+  } & React.ClassAttributes<Video>; // refを渡したい時、ComponentProps<typeof Video>だけだとエラー出るのでrefの型明記
   thumbnail?: Omit<FastImageProps, 'source'>;
 };
 

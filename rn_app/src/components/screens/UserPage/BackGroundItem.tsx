@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Video from 'react-native-video';
 
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 

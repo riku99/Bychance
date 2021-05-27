@@ -29,6 +29,7 @@ import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
+import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 
 type Props = {
   flashesData: FlashesData;
@@ -425,26 +426,23 @@ export const ShowFlash = React.memo(
                     onLoad={onImageLoad}
                   />
                 ) : (
-                  <View>
-                    <Video
-                      ref={videoRef}
-                      source={{
+                  <VideoWithThumbnail
+                    video={{
+                      ref: videoRef,
+                      source: {
                         uri:
                           'https://bc-bucket-dev.s3-ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/backGroundItem/6TUUIJe7DYDpj0rINdpg0Eowv%2B2PFjaNcFFTRA9QWCI%3D.mp4',
-                      }}
-                      style={styles.source}
-                      paused={isPaused}
-                      onLoadStart={onVideoLoadStart}
-                      onLoad={(e) => {
-                        onVideoLoad(e);
-                      }}
-                      onProgress={({currentTime}) => {
+                      },
+                      paused: isPaused,
+                      onLoadStart: onVideoLoadStart,
+                      onLoad: (e) => onVideoLoad(e),
+                      onProgress: ({currentTime}) => {
                         onVideoProgress({currentTime});
-                      }}
-                      onSeek={onVideoSeek}
-                      onEnd={onVideoEnd}
-                    />
-                  </View>
+                      },
+                      onSeek: onVideoSeek,
+                      onEnd: onVideoEnd,
+                    }}
+                  />
                 )}
               </TouchableOpacity>
             </WideRangeSourceContainer>
