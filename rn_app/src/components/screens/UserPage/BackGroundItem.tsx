@@ -3,6 +3,8 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 
+import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
+
 type Props = {
   source: string | null;
   sourceType: 'image' | 'video' | null;
@@ -28,12 +30,13 @@ export const BackGroundItem = React.memo(
     if (sourceType === 'video') {
       return (
         <TouchableOpacity onPress={onPress} activeOpacity={1}>
-          <Video
-            source={{uri: source}}
-            style={styles.sourceStyle}
-            resizeMode="cover"
-            ignoreSilentSwitch="obey"
-            paused={videoPaused}
+          <VideoWithThumbnail
+            video={{
+              source: {uri: source},
+              resizeMode: 'cover',
+              ignoreSilentSwitch: 'obey',
+              paused: videoPaused,
+            }}
           />
         </TouchableOpacity>
       );
