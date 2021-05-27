@@ -30,7 +30,6 @@ export const UserBackGroundView = ({route}: Props) => {
               source={{uri: source}}
               style={[styles.source, styles.video]}
               repeat={true}
-              poster={thumbnailUrl}
               ignoreSilentSwitch="ignore"
             />
             <FastImage source={{uri: thumbnailUrl}} style={styles.source} />
