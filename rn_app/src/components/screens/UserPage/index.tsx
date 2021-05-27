@@ -245,6 +245,16 @@ export const UserPage = ({route, navigation}: Props) => {
     return unsubscribe;
   }, [navigation, videoPaused]);
 
+  const onAvatarPress = useCallback(() => {
+    if (flashesNavigationParam) {
+      setVideoPaused(true);
+      navigation.push('Flashes', {
+        screen: 'Flashes',
+        params: flashesNavigationParam,
+      });
+    }
+  }, [flashesNavigationParam, navigation]);
+
   return (
     <>
       {user ? (
@@ -300,7 +310,7 @@ export const UserPage = ({route, navigation}: Props) => {
               <Avatar
                 source={user.avatar}
                 outerType={avatarOuterType}
-                flashesNavigationParam={flashesNavigationParam}
+                onPress={onAvatarPress}
               />
 
               <View style={styles.nameContainer}>

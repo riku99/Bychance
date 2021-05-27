@@ -12,7 +12,7 @@ type Props = {
   thumbnail?: Omit<FastImageProps, 'source'>;
 };
 
-export const VideoWithThumbnail = ({video, thumbnail}: Props) => {
+export const VideoWithThumbnail = React.memo(({video, thumbnail}: Props) => {
   const thumbnailUrl = useGetThumbnailUrl(video.source.uri);
   return (
     <View>
@@ -24,7 +24,7 @@ export const VideoWithThumbnail = ({video, thumbnail}: Props) => {
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {},

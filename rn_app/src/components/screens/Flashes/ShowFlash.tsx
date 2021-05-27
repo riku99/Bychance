@@ -430,8 +430,7 @@ export const ShowFlash = React.memo(
                     video={{
                       ref: videoRef,
                       source: {
-                        uri:
-                          'https://bc-bucket-dev.s3-ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/backGroundItem/6TUUIJe7DYDpj0rINdpg0Eowv%2B2PFjaNcFFTRA9QWCI%3D.mp4',
+                        uri: currentFlash.source,
                       },
                       paused: isPaused,
                       onLoadStart: onVideoLoadStart,
@@ -441,6 +440,7 @@ export const ShowFlash = React.memo(
                       },
                       onSeek: onVideoSeek,
                       onEnd: onVideoEnd,
+                      ignoreSilentSwitch: 'ignore',
                     }}
                   />
                 )}
