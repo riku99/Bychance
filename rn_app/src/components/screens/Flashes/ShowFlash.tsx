@@ -87,7 +87,11 @@ export const ShowFlash = React.memo(
       }
     });
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // ソースが実際にロード中なのかどうかを表す
+    const [showLoading, setShowLoading] = useState(false); // インディケーターを出すか否かを表す
+    const _loading = useRef(true);
+    const loadingTimeout = useRef<ReturnType<typeof setTimeout>>();
+
     const [isPaused, setIsPaused] = useState(false);
     const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
 
@@ -101,7 +105,6 @@ export const ShowFlash = React.memo(
 
     const longPress = useRef(false);
     const videoDuration = useRef<number | undefined>(undefined);
-    const canStartVideo = useRef(true);
     const videoRef = useRef<Video>(null);
     const firstEntitiesLength = useRef(entityLength);
     const modalizeRef = useRef<Modalize>(null);
@@ -245,7 +248,7 @@ export const ShowFlash = React.memo(
           setIsPaused(true);
         }
         scrollRef.current = true;
-      } else if (scrollRef.current && isDisplayed && !loading) {
+      } else if (scrollRef.current && isDisplayed && !showLoading) {
         progressAnimation({
           progressNumber: currentProgressBar.current,
           duration: videoDuration.current,
@@ -263,7 +266,7 @@ export const ShowFlash = React.memo(
       progressAnimation,
       showModal,
       isDisplayed,
-      loading,
+      showLoading,
     ]);
 
     const onScreenPres = (e: GestureResponderEvent) => {
@@ -305,7 +308,7 @@ export const ShowFlash = React.memo(
           }
           // 現在のプログレスバーのアニメーションが1/7以上の場合。そのプログレスバーのアニメーションを初めから実行させる
         } else {
-          if (!loading) {
+          if (!showLoading) {
             // まずアニメーションの値を初期値に戻す。(プログレスバーが白くなってない状態)
             progressAnim[currentProgressBar.current].setValue(
               -progressBarWidth,
@@ -353,45 +356,63 @@ export const ShowFlash = React.memo(
 
     const onImageLoadStart = () => {
       setLoading(true);
+      setTimeout(() => {
+        if (loading) {
+          setShowLoading(true);
+        }
+      }, 1500);
       videoDuration.current = undefined;
     };
 
     const onImageLoad = () => {
       setLoading(false);
+      if (showLoading) {
+        setShowLoading(false);
+      }
       progressAnimation({
         progressNumber: currentProgressBar.current,
       });
     };
 
+    useEffect(() => {
+      if (loadingTimeout.current) {
+        clearTimeout(loadingTimeout.current);
+      }
+      setLoading(true);
+      _loading.current = true;
+    }, [currentFlash.id]);
+
     const onVideoLoadStart = () => {
-      // ロードを開始してから2秒たってもcanStartVideoがtrue、つまり動画がまだ始まってない場合はloadingをtrueにしてインディケータを出す
-      setTimeout(() => {
-        if (canStartVideo) {
-          setLoading(true);
+      const timer = setTimeout(() => {
+        if (_loading.current) {
+          setShowLoading(true);
         }
-      }, 2000);
-      canStartVideo.current = true;
+        loadingTimeout.current = timer;
+      }, 1500);
     };
 
     const onVideoLoad = (e: OnLoadData) => {
       if (!isDisplayed) {
         setIsPaused(true);
-        setLoading(false);
+        setShowLoading(false);
       }
       videoDuration.current = e.duration * 1000;
     };
 
+    // videoとアニメーションを合わせるためにvideoが始まり次第即座にプログレスバーのアニメーションを開始させている
+    // onProgressはビデオ再生中一定間隔で実行されるので、何度もアニメーションの実行が起こらないようにloadingで制御
+    // onVideoLoadでロード終了のタイミングを取れるが、それが発火してから実際に動画が再生されるまでに乖離があるのでonVideoProgressでとるようにしている
     const onVideoProgress = ({currentTime}: {currentTime: number}) => {
-      setLoading(false);
-      // videoとアニメーションを合わせるためにvideoが始まり次第即座にプログレスバーのアニメーションを開始させている
-      // onProgressはビデオ再生中一定間隔で実行されるので、何度もアニメーションの実行が起こらないようにcanStartVideoで制御
-      if (currentTime > 0.002 && canStartVideo.current) {
+      if (currentTime > 0.002 && loading) {
+        setShowLoading(false);
+        setLoading(false);
+        _loading.current = false;
         progressAnimation({
           progressNumber: currentProgressBar.current,
           duration: videoDuration.current,
         });
-        if (canStartVideo.current) {
-          canStartVideo.current = false;
+        if (loadingTimeout.current) {
+          clearTimeout(loadingTimeout.current);
         }
       }
     };
@@ -402,10 +423,7 @@ export const ShowFlash = React.memo(
       }
     };
 
-    const onVideoEnd = () => {
-      // ビデオの再生が終わったらまたビデオとアニメーションをリンクできるように値を変更
-      canStartVideo.current = true;
-    };
+    const onVideoEnd = () => {};
 
     const {top} = useSafeAreaInsets();
 
@@ -488,7 +506,7 @@ export const ShowFlash = React.memo(
               </View>
             )}
 
-            {loading && (
+            {showLoading && (
               <ActivityIndicator size="large" style={styles.indicator} />
             )}
 
