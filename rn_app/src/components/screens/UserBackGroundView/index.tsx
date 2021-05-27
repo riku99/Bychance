@@ -1,12 +1,11 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Video from 'react-native-video';
 import {RouteProp} from '@react-navigation/native';
 
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {RootStackParamList, RootNavigationProp} from '~/screens/Root';
-import {useGetThumbnailUrl} from '~/hooks/video';
+import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'UserBackGroundView'>;
@@ -17,23 +16,19 @@ type Props = {
 export const UserBackGroundView = ({route}: Props) => {
   const {source, sourceType} = useMemo(() => route.params, [route.params]);
 
-  const thumbnailUrl = useGetThumbnailUrl(source);
-
   return (
     <View>
       <WideRangeSourceContainer>
         {sourceType === 'image' ? (
           <FastImage source={{uri: source}} style={styles.source} />
         ) : (
-          <>
-            <Video
-              source={{uri: source}}
-              style={[styles.source, styles.video]}
-              repeat={true}
-              ignoreSilentSwitch="ignore"
-            />
-            <FastImage source={{uri: thumbnailUrl}} style={styles.source} />
-          </>
+          <VideoWithThumbnail
+            video={{
+              source: {uri: source},
+              repeat: true,
+              ignoreSilentSwitch: 'ignore',
+            }}
+          />
         )}
       </WideRangeSourceContainer>
     </View>
