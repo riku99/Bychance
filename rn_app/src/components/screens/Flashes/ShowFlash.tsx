@@ -87,7 +87,7 @@ export const ShowFlash = React.memo(
       }
     });
 
-    const [onLoading, setOnLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
 
@@ -245,7 +245,7 @@ export const ShowFlash = React.memo(
           setIsPaused(true);
         }
         scrollRef.current = true;
-      } else if (scrollRef.current && isDisplayed && !onLoading) {
+      } else if (scrollRef.current && isDisplayed && !loading) {
         progressAnimation({
           progressNumber: currentProgressBar.current,
           duration: videoDuration.current,
@@ -263,7 +263,7 @@ export const ShowFlash = React.memo(
       progressAnimation,
       showModal,
       isDisplayed,
-      onLoading,
+      loading,
     ]);
 
     const onScreenPres = (e: GestureResponderEvent) => {
@@ -291,7 +291,7 @@ export const ShowFlash = React.memo(
             videoDuration.current = undefined;
             setCurrentFlash(flashesData.entities[currentProgressBar.current]);
           } else {
-            if (!onLoading) {
+            if (!loading) {
               progressAnimation({
                 progressNumber: currentProgressBar.current,
                 duration: videoDuration.current
@@ -305,7 +305,7 @@ export const ShowFlash = React.memo(
           }
           // 現在のプログレスバーのアニメーションが1/7以上の場合。そのプログレスバーのアニメーションを初めから実行させる
         } else {
-          if (!onLoading) {
+          if (!loading) {
             // まずアニメーションの値を初期値に戻す。(プログレスバーが白くなってない状態)
             progressAnim[currentProgressBar.current].setValue(
               -progressBarWidth,
@@ -352,32 +352,37 @@ export const ShowFlash = React.memo(
     };
 
     const onImageLoadStart = () => {
-      setOnLoading(true);
+      setLoading(true);
       videoDuration.current = undefined;
     };
 
     const onImageLoad = () => {
-      setOnLoading(false);
+      setLoading(false);
       progressAnimation({
         progressNumber: currentProgressBar.current,
       });
     };
 
     const onVideoLoadStart = () => {
-      setOnLoading(true);
+      // ロードを開始してから2秒たってもcanStartVideoがtrue、つまり動画がまだ始まってない場合はloadingをtrueにしてインディケータを出す
+      setTimeout(() => {
+        if (canStartVideo) {
+          setLoading(true);
+        }
+      }, 2000);
       canStartVideo.current = true;
     };
 
     const onVideoLoad = (e: OnLoadData) => {
       if (!isDisplayed) {
         setIsPaused(true);
-        setOnLoading(false);
+        setLoading(false);
       }
       videoDuration.current = e.duration * 1000;
     };
 
     const onVideoProgress = ({currentTime}: {currentTime: number}) => {
-      setOnLoading(false);
+      setLoading(false);
       // videoとアニメーションを合わせるためにvideoが始まり次第即座にプログレスバーのアニメーションを開始させている
       // onProgressはビデオ再生中一定間隔で実行されるので、何度もアニメーションの実行が起こらないようにcanStartVideoで制御
       if (currentTime > 0.002 && canStartVideo.current) {
@@ -470,6 +475,7 @@ export const ShowFlash = React.memo(
                 </View>
               )}
             </View>
+
             {referenceId === userData.userId && (
               <View style={styles.showModalButtonContainer}>
                 <ShowModalButton
@@ -481,9 +487,11 @@ export const ShowFlash = React.memo(
                 />
               </View>
             )}
-            {/* {onLoading && (
+
+            {loading && (
               <ActivityIndicator size="large" style={styles.indicator} />
-            )} */}
+            )}
+
             <Modal
               flashId={currentFlash.id}
               modalizeRef={modalizeRef}

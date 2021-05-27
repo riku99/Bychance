@@ -248,7 +248,7 @@ export const UserPage = ({route, navigation}: Props) => {
   const onAvatarPress = useCallback(() => {
     if (flashesNavigationParam) {
       setVideoPaused(true);
-      navigation.push('Flashes', {
+      navigation.navigate('Flashes', {
         screen: 'Flashes',
         params: flashesNavigationParam,
       });
