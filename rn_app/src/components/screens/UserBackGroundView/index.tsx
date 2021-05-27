@@ -6,21 +6,18 @@ import {RouteProp} from '@react-navigation/native';
 
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {RootStackParamList, RootNavigationProp} from '~/screens/Root';
-import {removeExtention} from '~/utils';
+import {useGetThumbnailUrl} from '~/hooks/video';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'UserBackGroundView'>;
   navigation: RootNavigationProp<'UserBackGroundView'>;
 };
 
-// Videoのサムネイルはposterプロップスでも作れるhが、FastImageでpreloadしたいのでFasImageを使って実現
+// Videoのサムネイルはposterプロップスでも作れるが、FastImageでpreloadしたいのでFasImageを使って実現
 export const UserBackGroundView = ({route}: Props) => {
   const {source, sourceType} = useMemo(() => route.params, [route.params]);
 
-  const thumbnailUrl = useMemo(() => {
-    const urlwithoutExt = removeExtention(source);
-    return `${urlwithoutExt}_thumbnail.webp`;
-  }, [source]);
+  const thumbnailUrl = useGetThumbnailUrl(source);
 
   return (
     <View>
