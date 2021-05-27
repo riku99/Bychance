@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
+import FastImage from 'react-native-fast-image';
 
 import {UserTabView} from './TabView';
 import {Avatar} from './Avatar';
@@ -221,6 +222,17 @@ export const UserPage = ({route, navigation}: Props) => {
       });
     }
   }, [navigation, user?.backGroundItem, user?.backGroundItemType]);
+
+  useEffect(() => {
+    // サムネイルのpreload
+    if (user?.backGroundItemType === 'video' && user.backGroundItem) {
+      FastImage.preload([
+        {
+          uri: user.backGroundItem,
+        },
+      ]);
+    }
+  }, [user?.backGroundItem, user?.backGroundItemType]);
 
   // BackGroundItemViewから戻ってきた時にビデオが停止されていた場合再開させたい
   useEffect(() => {
