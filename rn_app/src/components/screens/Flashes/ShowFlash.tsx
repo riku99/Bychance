@@ -89,7 +89,7 @@ export const ShowFlash = React.memo(
 
     const [loading, setLoading] = useState(true); // ソースが実際にロード中なのかどうかを表す
     const [showLoading, setShowLoading] = useState(false); // インディケーターを出すか否かを表す
-    const _loading = useRef(true); // setTimeoutでロードしている場合はshowLoadをtureにする、という処理が存在する。その中でloadingを使い条件分岐を行うとsetLoadingが非同期で値を変えるため期待しない動きになってしまう。同期的に値を変えることを可能にするためにuseRefのデータを定義
+    const _loading = useRef(true); // setTimeout内でロードしている場合はshowLoadをtureにする、という処理が存在する。その中でloadingを使い条件分岐を行うとsetLoadingが非同期で値を変えるため期待しない動きになってしまう。同期的に値を変えることを可能にするためにuseRefのデータを定義
     const loadingTimeout = useRef<ReturnType<typeof setTimeout>>(); // timeoutをクリアするためこいつにいれる
 
     const [isPaused, setIsPaused] = useState(false);
@@ -121,9 +121,9 @@ export const ShowFlash = React.memo(
 
     const createAlreadyViewdFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
-        await dispatch(
-          createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
-        );
+        // await dispatch(
+        //   createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
+        // );
       },
       [dispatch, userData.userId],
     );
@@ -240,7 +240,8 @@ export const ShowFlash = React.memo(
     }, [flashStackNavigation, isNavigatedToPofile, progressAnimation]);
 
     const scrollRef = useRef(false);
-    // スクロールした時の処理
+
+    //スクロールした時の処理;
     useEffect(() => {
       if (scrolling) {
         progressAnim[currentProgressBar.current].stopAnimation();
@@ -248,7 +249,7 @@ export const ShowFlash = React.memo(
           setIsPaused(true);
         }
         scrollRef.current = true;
-      } else if (scrollRef.current && isDisplayed && !showLoading) {
+      } else if (scrollRef.current && isDisplayed) {
         progressAnimation({
           progressNumber: currentProgressBar.current,
           duration: videoDuration.current,
@@ -379,10 +380,10 @@ export const ShowFlash = React.memo(
     };
 
     const onImageLoad = () => {
+      _loading.current = false;
+      setShowLoading(false);
+      setLoading(false);
       if (isDisplayed) {
-        _loading.current = false;
-        setShowLoading(false);
-        setLoading(false);
         progressAnimation({
           progressNumber: currentProgressBar.current,
         });
@@ -390,16 +391,18 @@ export const ShowFlash = React.memo(
     };
 
     const onVideoLoadStart = () => {
-      if (loadingTimeout.current) {
-        clearTimeout(loadingTimeout.current);
-      }
-      const timer = setTimeout(() => {
-        if (_loading.current) {
-          setShowLoading(true);
+      if (isDisplayed) {
+        if (loadingTimeout.current) {
+          clearTimeout(loadingTimeout.current);
         }
-      }, 1500);
+        const timer = setTimeout(() => {
+          if (_loading.current) {
+            setShowLoading(true);
+          }
+        }, 1500);
 
-      loadingTimeout.current = timer;
+        loadingTimeout.current = timer;
+      }
     };
 
     const onVideoLoad = (e: OnLoadData) => {
@@ -430,8 +433,6 @@ export const ShowFlash = React.memo(
         setIsPaused(true);
       }
     };
-
-    const onVideoEnd = () => {};
 
     const {top} = useSafeAreaInsets();
 
@@ -470,7 +471,6 @@ export const ShowFlash = React.memo(
                         onVideoProgress({currentTime});
                       },
                       onSeek: onVideoSeek,
-                      onEnd: onVideoEnd,
                       ignoreSilentSwitch: 'ignore',
                     }}
                   />
