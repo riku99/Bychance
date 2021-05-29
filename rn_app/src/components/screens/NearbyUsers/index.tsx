@@ -49,7 +49,6 @@ export const GetNearbyUsers = () => {
   useEffect(() => {
     const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
     preData.forEach((data) => {
-      console.log(data);
       FastImage.preload(data);
     });
   }, [preloadUriGroup]);

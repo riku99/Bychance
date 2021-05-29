@@ -121,11 +121,14 @@ export const ShowFlash = React.memo(
 
     const createAlreadyViewdFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
-        // await dispatch(
-        //   createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
-        // );
+        const existing = flashesData.alreadyViewed.includes(flashId);
+        if (!existing) {
+          await dispatch(
+            createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
+          );
+        }
       },
-      [dispatch, userData.userId],
+      [dispatch, userData.userId, flashesData],
     );
 
     // プログレスバーのアニメーション
