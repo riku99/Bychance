@@ -28,6 +28,7 @@ export const BackGroundItem = React.memo(({source, type}: Props) => {
         style={styles.source}
         repeat={true}
         resizeMode="cover"
+        ignoreSilentSwitch="obey"
       />
     );
   }
