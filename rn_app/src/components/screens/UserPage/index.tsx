@@ -40,6 +40,7 @@ import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {X_HEIGHT} from '~/constants/device';
 import {RootNavigationProp} from '~/screens/Root';
 import {normalStyles} from '~/constants/styles/normal';
+import {judgeMoreDeviceX} from '~/helpers/device';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -338,7 +339,7 @@ export const UserPage = ({route, navigation}: Props) => {
             </View>
           </Animated.View>
 
-          {moreReadButton && (
+          {/* {moreReadButton && (
             <Animated.View
               style={[
                 styles.moreReadButtonContainer,
@@ -346,7 +347,15 @@ export const UserPage = ({route, navigation}: Props) => {
               ]}>
               <MoreReadBottun onPress={() => setIntroduceModal(true)} />
             </Animated.View>
-          )}
+          )} */}
+
+          <Animated.View
+            style={[
+              styles.moreReadButtonContainer,
+              {transform: [{translateY: y}]},
+            ]}>
+            <MoreReadBottun onPress={() => setIntroduceModal(true)} />
+          </Animated.View>
 
           {introduceModal && (
             <IntroduceModal
@@ -373,14 +382,19 @@ export const UserPage = ({route, navigation}: Props) => {
 
 const {height} = Dimensions.get('screen');
 
-const profileContainerHeight = height / 2;
+const moreXHeight = judgeMoreDeviceX();
+
+const profileContainerHeight = moreXHeight ? height / 1.9 : height / 1.75;
 
 export const oneIntroduceTextLineHeght = 19.7;
 
 const nameContainerHeight = 19.5;
 
 const avatarAndNameContainerHeight =
-  (height > X_HEIGHT ? 119.5 : 113) - nameContainerHeight - 10;
+  (moreXHeight ? 119.5 : 113) - nameContainerHeight - 10;
+
+const introduceContainerTop = moreXHeight ? height * 0.274 : height * 0.31;
+const introduceContainerHeight = height * 0.14;
 
 const styles = StyleSheet.create({
   container: {
@@ -395,23 +409,23 @@ const styles = StyleSheet.create({
   },
   introduceContainer: {
     position: 'absolute',
-    top: height > X_HEIGHT ? '35%' : '38%',
+    top: introduceContainerTop,
     paddingHorizontal: 14,
     width: '100%',
-    height: '20%',
+    height: introduceContainerHeight,
   },
   avatarAndNameContainer: {
-    top: '15%',
+    top: moreXHeight ? '15%' : '13%',
     left: 10,
     flexDirection: 'row',
     alignSelf: 'flex-start',
   },
   nameContainer: {
-    marginTop: height > X_HEIGHT ? 15 : 13,
+    marginTop: moreXHeight ? 15 : 13,
   },
   editProfileOrSendMessageButtonContainer: {
     width: '100%',
-    top: '15%',
+    top: moreXHeight ? '15%' : '13%',
     left: '45%',
     marginTop: avatarAndNameContainerHeight,
   },
@@ -425,7 +439,7 @@ const styles = StyleSheet.create({
   },
   moreReadButtonContainer: {
     position: 'absolute',
-    top: height > X_HEIGHT ? height / 2.3 : height / 2.2,
+    top: introduceContainerTop + introduceContainerHeight,
     right: '2%',
   },
 });
