@@ -19,7 +19,7 @@ import {RouteProp} from '@react-navigation/native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 
-import {UserTabView} from './TabView';
+import {UserTabView, stickyTabHeight} from './TabView';
 import {Avatar} from './Avatar';
 import {EditButton} from './EditButton';
 import {TakeFlashButton} from './TakeFlashButton';
@@ -27,6 +27,7 @@ import {SendMessageButton} from './SendMessageButton';
 import {MoreReadBottun} from './MoreReadButton';
 import {IntroduceModal} from './IntoduceModal';
 import {BackGroundItem} from './BackGroundItem';
+import {SnsIcons} from './SnsIcons';
 import {
   MyPageStackParamList,
   UserPageScreenGroupParamList,
@@ -37,7 +38,6 @@ import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
-import {X_HEIGHT} from '~/constants/device';
 import {RootNavigationProp} from '~/screens/Root';
 import {normalStyles} from '~/constants/styles/normal';
 import {judgeMoreDeviceX} from '~/helpers/device';
@@ -339,7 +339,7 @@ export const UserPage = ({route, navigation}: Props) => {
             </View>
           </Animated.View>
 
-          {/* {moreReadButton && (
+          {moreReadButton && (
             <Animated.View
               style={[
                 styles.moreReadButtonContainer,
@@ -347,15 +347,7 @@ export const UserPage = ({route, navigation}: Props) => {
               ]}>
               <MoreReadBottun onPress={() => setIntroduceModal(true)} />
             </Animated.View>
-          )} */}
-
-          <Animated.View
-            style={[
-              styles.moreReadButtonContainer,
-              {transform: [{translateY: y}]},
-            ]}>
-            <MoreReadBottun onPress={() => setIntroduceModal(true)} />
-          </Animated.View>
+          )}
 
           {introduceModal && (
             <IntroduceModal
@@ -364,6 +356,15 @@ export const UserPage = ({route, navigation}: Props) => {
               onClose={() => setIntroduceModal(false)}
             />
           )}
+
+          <Animated.View
+            style={[
+              styles.animatedElement,
+              styles.snsIconsContainer,
+              {transform: [{translateY: y}]},
+            ]}>
+            <SnsIcons snsLinkData={snsLinkData} />
+          </Animated.View>
 
           {isMe && (
             <View style={styles.takeWideRangeSourceContainer}>
@@ -395,6 +396,8 @@ const avatarAndNameContainerHeight =
 
 const introduceContainerTop = moreXHeight ? height * 0.274 : height * 0.31;
 const introduceContainerHeight = height * 0.14;
+
+const snsIconsContainerTop = profileContainerHeight - stickyTabHeight - 12;
 
 const styles = StyleSheet.create({
   container: {
@@ -441,5 +444,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: introduceContainerTop + introduceContainerHeight,
     right: '2%',
+  },
+  snsIconsContainer: {
+    top: snsIconsContainerTop,
+    alignItems: 'center',
   },
 });
