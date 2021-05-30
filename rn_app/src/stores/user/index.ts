@@ -29,6 +29,10 @@ import {
   changeVideoEditDescriptionThunk,
   ChangeVideoEditDescriptionPayload,
 } from '~/apis/users/changeVideoEditDescription';
+import {
+  changeTalkRoomMessageReceiptThunk,
+  ChangeTalkRoomMessageReceiptPaylpad,
+} from '~/apis/users/changeTalkRoomMessageReceipt';
 import {sampleLogin} from '../../apis/session/sampleLogin';
 import {logoutAction} from '../../apis/session/logout';
 
@@ -49,6 +53,7 @@ export type UserState = {
     youtube: string | null;
     tiktok: string | null;
     videoEditDescription: boolean;
+    talkRoomMessageReceipt: boolean;
   };
   temporarilySavedData?: {
     name?: string;
@@ -230,6 +235,16 @@ const userSlice = createSlice({
       user: {
         ...state.user!,
         videoEditDescription: action.payload,
+      },
+    }),
+    [changeTalkRoomMessageReceiptThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<ChangeTalkRoomMessageReceiptPaylpad>,
+    ) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        talkRoomMessageReceipt: action.payload,
       },
     }),
   },

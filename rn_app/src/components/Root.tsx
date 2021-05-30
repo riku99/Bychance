@@ -6,7 +6,7 @@ import FlashMessage from 'react-native-flash-message';
 import {RootState} from '../stores/index';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
-import {Container as Menu} from './utils/Menu';
+import {Menu} from './utils/Menu';
 import {updateLocationThunk} from '../apis/users/updateLocation';
 import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {useTalkRoomMessagesIo} from '~/hooks/socketio/talkRoomMessages';
