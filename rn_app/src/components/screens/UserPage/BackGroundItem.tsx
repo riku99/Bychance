@@ -37,6 +37,7 @@ export const BackGroundItem = React.memo(
               paused: videoPaused,
             }}
           />
+          <View style={styles.blurStyle} />
         </TouchableOpacity>
       );
     }

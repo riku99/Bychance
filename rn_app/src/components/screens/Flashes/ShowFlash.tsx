@@ -54,6 +54,11 @@ export const ShowFlash = React.memo(
   }: Props) => {
     const referenceId = useMyId();
 
+    const isMyData = useMemo(() => referenceId === userData.userId, [
+      referenceId,
+      userData.userId,
+    ]);
+
     const entityLength = useMemo(() => flashesData.entities.length, [
       flashesData.entities,
     ]);
@@ -123,13 +128,13 @@ export const ShowFlash = React.memo(
     const createAlreadyViewdFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
         const existing = flashesData.alreadyViewed.includes(flashId);
-        if (!existing) {
+        if (!existing && !isMyData) {
           await dispatch(
             createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
           );
         }
       },
-      [dispatch, userData.userId, flashesData],
+      [dispatch, userData.userId, flashesData, isMyData],
     );
 
     // プログレスバーのアニメーション
@@ -440,8 +445,6 @@ export const ShowFlash = React.memo(
 
     const {top} = useSafeAreaInsets();
 
-    console.log(currentFlash);
-
     return (
       <View style={styles.container}>
         {entityLength ? (
@@ -500,7 +503,7 @@ export const ShowFlash = React.memo(
                 timestamp={currentFlash.timestamp}
                 setIsNavigatedToProfile={setIsNavigatedToProfile}
               />
-              {creatingFlash && referenceId === userData.userId && (
+              {creatingFlash && isMyData && (
                 <View style={styles.addMessageContainer}>
                   <ActivityIndicator color="white" />
                   <Text style={styles.addMessage}>新しく追加しています</Text>
@@ -508,7 +511,7 @@ export const ShowFlash = React.memo(
               )}
             </View>
 
-            {referenceId === userData.userId && (
+            {isMyData && (
               <View style={styles.showModalButtonContainer}>
                 <ShowModalButton
                   modalizeRef={modalizeRef}
