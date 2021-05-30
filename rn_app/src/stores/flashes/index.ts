@@ -29,6 +29,7 @@ export type Flash = {
   source: string;
   sourceType: 'image' | 'video';
   timestamp: string;
+  viewsNumber: number;
 };
 
 const flashesAdapter = createEntityAdapter<Flash>({

@@ -283,7 +283,6 @@ export const UserPage = ({route, navigation}: Props) => {
             scrollY={scrollY}
             postsTabViewRef={postsTabViewRef}
             userInformationTabViewRef={userInformationTabViewRef}
-            snsLinkData={snsLinkData}
           />
 
           <Animated.View

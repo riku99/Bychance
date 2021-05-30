@@ -15,6 +15,7 @@ import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
@@ -439,6 +440,8 @@ export const ShowFlash = React.memo(
 
     const {top} = useSafeAreaInsets();
 
+    console.log(currentFlash);
+
     return (
       <View style={styles.container}>
         {entityLength ? (
@@ -517,6 +520,15 @@ export const ShowFlash = React.memo(
               </View>
             )}
 
+            <View style={styles.viewsNumberContainer}>
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <MIcon name="remove-red-eye" color="white" size={30} />
+                <Text style={{color: 'white', fontWeight: '500'}}>
+                  {currentFlash.viewsNumber}
+                </Text>
+              </View>
+            </View>
+
             {showLoading && (
               <ActivityIndicator size="large" style={styles.indicator} />
             )}
@@ -549,6 +561,8 @@ export const ShowFlash = React.memo(
 const {height, width} = Dimensions.get('window');
 
 const MAX_PROGRESS_BAR = width - 20;
+
+const buttonBottom = height * 0.05;
 
 const styles = StyleSheet.create({
   container: {
@@ -588,7 +602,7 @@ const styles = StyleSheet.create({
   },
   showModalButtonContainer: {
     position: 'absolute',
-    bottom: '4%',
+    bottom: buttonBottom,
     right: 30,
   },
   modalListContainer: {
@@ -617,5 +631,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
+  },
+  viewsNumberContainer: {
+    position: 'absolute',
+    left: 30,
+    bottom: buttonBottom,
+    flexDirection: 'row',
   },
 });
