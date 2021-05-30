@@ -17,10 +17,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {Post} from '../../../stores/posts';
 import {normalStyles} from '~/constants/styles/normal';
-import {
-  UserInformationRouteInTabView,
-  SnsLinkData,
-} from './UserInformationInTabView';
+import {UserInformationRouteInTabView} from './UserInformationInTabView';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
 
@@ -32,7 +29,6 @@ type Props = {
   scrollY: Animated.Value;
   postsTabViewRef: React.RefObject<FlatList>;
   userInformationTabViewRef: React.RefObject<ScrollView>;
-  snsLinkData: SnsLinkData;
 };
 
 export const UserTabView = React.memo(
@@ -44,7 +40,6 @@ export const UserTabView = React.memo(
     scrollY,
     postsTabViewRef,
     userInformationTabViewRef,
-    snsLinkData,
   }: Props) => {
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
@@ -132,7 +127,7 @@ export const UserTabView = React.memo(
               onMomentumScrollEnd={syncScrollOffset}
               paddingTopHeight={paddingTopHeight}
               tabViewContainerMinHeight={tabViewContainerMinHeight}>
-              <UserInformationRouteInTabView snsLinkData={snsLinkData} />
+              <UserInformationRouteInTabView />
             </ScrollViewTabScene>
           );
       }
