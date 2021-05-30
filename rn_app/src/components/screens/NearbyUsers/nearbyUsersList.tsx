@@ -82,8 +82,10 @@ export const NearbyUsersList = React.memo(
         const matchedUsers = otherUsers.filter((u) => {
           return (
             u.name.toLowerCase().includes(keyword.toLowerCase()) ||
-            u.introduce.toLowerCase().includes(keyword.toLowerCase()) ||
-            u.statusMessage.toLowerCase().includes(keyword.toLowerCase())
+            (u.introduce &&
+              u.introduce.toLowerCase().includes(keyword.toLowerCase())) ||
+            (u.statusMessage &&
+              u.statusMessage.toLowerCase().includes(keyword.toLowerCase()))
           );
         });
         setFilteredUsers(matchedUsers);
