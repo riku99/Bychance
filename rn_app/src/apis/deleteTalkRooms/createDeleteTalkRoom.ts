@@ -18,30 +18,24 @@ export const createDeleteRoomThunk = createAsyncThunk<
   CreateDeleteRoomThunkPayload,
   {talkRoomId: number},
   {rejectValue: rejectPayload}
->(
-  'deleteTalkRoom/createDeleteRoom',
-  async ({talkRoomId}, {dispatch, rejectWithValue}) => {
-    const credentials = await checkKeychain();
+>('talkRooms/delete', async ({talkRoomId}, {dispatch, rejectWithValue}) => {
+  const credentials = await checkKeychain();
 
-    if (credentials) {
-      try {
-        await axios.post(
-          `${origin}/deleteTalkRooms?id=${credentials.id}`,
-          {
-            talkRoomId,
-          },
-          headers(credentials.token),
-        );
+  if (credentials) {
+    try {
+      await axios.delete(
+        `${origin}/talkRooms/${talkRoomId}?id=${credentials.id}`,
+        headers(credentials.token),
+      );
 
-        return {talkRoomId};
-      } catch (e) {
-        const result = handleBasicError({e, dispatch});
-        return rejectWithValue(result);
-      }
-    } else {
-      // credentials存在しないエラー
-      requestLogin(() => dispatch(logoutAction));
-      return rejectWithValue({errorType: 'loginError'});
+      return {talkRoomId};
+    } catch (e) {
+      const result = handleBasicError({e, dispatch});
+      return rejectWithValue(result);
     }
-  },
-);
+  } else {
+    // credentials存在しないエラー
+    requestLogin(() => dispatch(logoutAction));
+    return rejectWithValue({errorType: 'loginError'});
+  }
+});

@@ -70,7 +70,9 @@ const talkRoomMessagesSlice = createSlice({
       state,
       action: PayloadAction<CreateMessageThunkPayload>,
     ) => {
-      talkRoomMessagesAdapter.addOne(state, action.payload.message);
+      if (action.payload.talkRoomPresence) {
+        talkRoomMessagesAdapter.addOne(state, action.payload.message);
+      }
     },
   },
 });

@@ -11,7 +11,7 @@ import {editUserDisplayThunk} from '../../../apis/users/changeUserDisplay';
 import {logoutAction} from '~/apis/session/logout';
 import {changeTalkRoomMessageReceiptThunk} from '~/apis/users/changeTalkRoomMessageReceipt';
 
-export const Menu = () => {
+export const Menu = React.memo(() => {
   const isVisible = useSelector((state: RootState) => {
     return state.otherSettingsReducer.displayedMenu!;
   });
@@ -39,7 +39,6 @@ export const Menu = () => {
 
   const changeTalkRoomMessageReceipt = useCallback(
     (receipt: boolean) => {
-      console.log('firew');
       dispatch(changeTalkRoomMessageReceiptThunk({receipt}));
     },
     [dispatch],
@@ -156,7 +155,7 @@ export const Menu = () => {
       </View>
     </Modalize>
   );
-};
+});
 
 const {height} = Dimensions.get('window');
 

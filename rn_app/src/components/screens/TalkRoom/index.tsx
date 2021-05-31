@@ -194,19 +194,21 @@ export const TalkRoom = ({route, navigation}: Props) => {
           }),
         );
         if (createMessageThunk.fulfilled.match(result)) {
-          const _message = result.payload.message;
-          // 送信したメッセージを追加
-          setMessages([
-            {
-              _id: _message.id,
-              text: _message.text,
-              createdAt: new Date(_message.timestamp),
-              user: {
-                _id: _message.userId,
+          if (result.payload.talkRoomPresence) {
+            const _message = result.payload.message;
+            // 送信したメッセージを追加
+            setMessages([
+              {
+                _id: _message.id,
+                text: _message.text,
+                createdAt: new Date(_message.timestamp),
+                user: {
+                  _id: _message.userId,
+                },
               },
-            },
-            ...messages,
-          ]);
+              ...messages,
+            ]);
+          }
         }
       }
     },

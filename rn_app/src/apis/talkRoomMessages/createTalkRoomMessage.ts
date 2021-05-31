@@ -11,10 +11,19 @@ import {
 } from '../re-modules';
 import {TalkRoomMessage} from '../../stores/talkRoomMessages';
 
-export type CreateMessageThunkPayload = {
+type talkRoomPresence = {
+  talkRoomPresence: true;
   message: TalkRoomMessage;
-  roomId: number;
+  talkRoomId: number;
 };
+
+type NotTalkRoomPresence = {
+  talkRoomPresence: false;
+  talkRoomId: number;
+};
+
+// トークルームが削除されていて
+export type CreateMessageThunkPayload = talkRoomPresence | NotTalkRoomPresence;
 
 export const createMessageThunk = createAsyncThunk<
   CreateMessageThunkPayload,
@@ -32,7 +41,9 @@ export const createMessageThunk = createAsyncThunk<
 
     if (credentials) {
       try {
-        const response = await axios.post<TalkRoomMessage>(
+        const response = await axios.post<
+          talkRoomPresence | NotTalkRoomPresence
+        >(
           `${origin}/talkRoomMessages?id=${credentials.id}`,
           {
             talkRoomId: roomId,
@@ -43,7 +54,9 @@ export const createMessageThunk = createAsyncThunk<
           headers(credentials.token),
         );
 
-        return {message: response.data, roomId};
+        console.log(response.data);
+
+        return response.data;
       } catch (e) {
         // axioserror
         const result = handleBasicError({e, dispatch});

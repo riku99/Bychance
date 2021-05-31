@@ -19,7 +19,9 @@ export const TalkRoomListItem = React.memo(
       <ListItem key={room.id} onPress={onPress}>
         <UserAvatar image={avatar} size="medium" opacity={1} />
         <ListItem.Content>
-          <ListItem.Title>{name ? name : 'ユーザーがいません'}</ListItem.Title>
+          <ListItem.Title>
+            {name ? name : 'メンバーが存在しません'}
+          </ListItem.Title>
           <ListItem.Subtitle style={styles.subtitle}>
             {room.latestMessage && room.latestMessage}
           </ListItem.Subtitle>

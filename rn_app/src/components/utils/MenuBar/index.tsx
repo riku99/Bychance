@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 import {displayMenu} from '../../../stores/otherSettings';
 import {normalStyles} from '~/constants/styles/normal';
 
-export const MenuBar = () => {
+export const MenuBar = React.memo(() => {
   const dispatch = useDispatch();
   return (
     <Button
@@ -17,7 +17,7 @@ export const MenuBar = () => {
       }}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   button: {

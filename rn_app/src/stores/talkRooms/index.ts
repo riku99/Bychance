@@ -3,6 +3,7 @@ import {
   PayloadAction,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
+import {RNToasty} from 'react-native-toasty';
 
 import {RootState} from '../index';
 import {
@@ -99,14 +100,29 @@ export const RoomsSlice = createSlice({
       state,
       action: PayloadAction<CreateMessageThunkPayload>,
     ) => {
-      const relatedRoom = state.entities[action.payload.roomId];
-      if (relatedRoom) {
+      const {talkRoomId} = action.payload;
+      if (action.payload.talkRoomPresence) {
+        const relatedRoom = state.entities[action.payload.talkRoomId];
+        if (relatedRoom) {
+          talkRoomsAdapter.updateOne(state, {
+            id: talkRoomId,
+            changes: {
+              messages: [action.payload.message.id, ...relatedRoom.messages],
+              timestamp: action.payload.message.timestamp,
+              latestMessage: action.payload.message.text,
+            },
+          });
+        }
+      } else {
+        // talkRoomPresenceがfalse、つまり既にトークルームが相手によって削除されている場合
+        RNToasty.Show({
+          title: 'メンバーが存在しません',
+          position: 'center',
+        });
         talkRoomsAdapter.updateOne(state, {
-          id: action.payload.roomId,
+          id: talkRoomId,
           changes: {
-            messages: [action.payload.message.id, ...relatedRoom.messages],
-            timestamp: action.payload.message.timestamp,
-            latestMessage: action.payload.message.text,
+            partner: undefined,
           },
         });
       }
