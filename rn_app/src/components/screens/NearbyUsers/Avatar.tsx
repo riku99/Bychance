@@ -6,7 +6,7 @@ import {FlashesData} from '~/stores/types';
 
 type Props = {
   user: AnotherUser;
-  onAvatarPress: ({
+  onAvatarPress?: ({
     isAllAlreadyViewed,
     userId,
     flashesData,
@@ -31,11 +31,13 @@ export const Avatar = React.memo(({user, onAvatarPress}: Props) => {
         size="medium"
         outerType="gradation"
         onPress={() => {
-          onAvatarPress({
-            userId: user.id,
-            isAllAlreadyViewed: false,
-            flashesData: undefined,
-          });
+          if (onAvatarPress) {
+            onAvatarPress({
+              userId: user.id,
+              isAllAlreadyViewed: false,
+              flashesData: undefined,
+            });
+          }
         }}
       />
     );
@@ -48,11 +50,13 @@ export const Avatar = React.memo(({user, onAvatarPress}: Props) => {
         size="medium"
         outerType="silver"
         onPress={() => {
-          onAvatarPress({
-            userId: user.id,
-            isAllAlreadyViewed: true,
-            flashesData: user.flashes,
-          });
+          if (onAvatarPress) {
+            onAvatarPress({
+              userId: user.id,
+              isAllAlreadyViewed: true,
+              flashesData: user.flashes,
+            });
+          }
         }}
       />
     );

@@ -1,21 +1,25 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useContext,
+} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
-import {NearbyUsersList} from './nearbyUsersList';
+import {List} from './nearbyUsersList';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {AnotherUser} from '../../../stores/types';
 import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
 import {getNearbyUsersThunk} from '../../../apis/nearbyUsers/getNearbyUsers';
-import {SearchUsersStackNavigationProp} from '../../../screens/types';
+// import {SearchUsersStackNavigationProp} from '../../../screens/types';
 import {FlashesData} from '~/stores/types';
 import {FlashesStackParamList} from '../../../screens/Flashes';
 import {RootNavigationProp} from '~/screens/Root';
 import {getThumbnailUrl} from '~/helpers/video';
-
-// ListView
-// MapView
+import {TabViewContext} from './index';
 
 type Props = {
   view: 'list' | 'map';
@@ -150,22 +154,25 @@ export const TabView = React.memo(({view}: Props) => {
     [rootStackNavigation, sequenceFlashesAndUserData],
   );
 
-  if (view === 'list') {
-    return (
-      <NearbyUsersList
-        otherUsers={nearbyUsers}
-        range={range}
-        setRange={setRange}
-        position={position}
-        onListItemPress={navigateToUserPage}
-        onAvatarPress={onAvatarPress}
-      />
-    );
-  }
+  const keyword = useContext(TabViewContext);
+  useEffect(() => {
+    console.log(keyword);
+  }, [keyword]);
 
-  if (view === 'map') {
-    return <></>;
-  }
-
-  return null;
+  return (
+    <>
+      {view === 'list' ? (
+        <List
+          users={nearbyUsers}
+          range={range}
+          setRange={setRange}
+          position={position}
+          onListItemPress={navigateToUserPage}
+          onAvatarPress={onAvatarPress}
+        />
+      ) : (
+        <></>
+      )}
+    </>
+  );
 });

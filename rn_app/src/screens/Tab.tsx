@@ -7,7 +7,7 @@ import {RootState} from '../stores/index';
 import {getAllUnreadMessagesNumber} from '../stores/talkRooms';
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
-import {SearchUsersStackScreen} from './NearbyUsers';
+import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles/normal';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
@@ -40,7 +40,7 @@ export const Tabs = () => {
       }}>
       <RootTab.Screen
         name="Search"
-        component={SearchUsersStackScreen}
+        component={NearbyUsersStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <MIcon name="search" size={27} color={color} />
