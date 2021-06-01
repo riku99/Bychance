@@ -1,20 +1,49 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
-import {MenuView} from '@react-native-menu/menu';
+import {MenuView, MenuAction} from '@react-native-menu/menu';
 import {Button} from 'react-native-elements';
 
 import {normalStyles} from '~/constants/styles/normal';
 
-type Props = {};
+const menuActions: MenuAction[] = [
+  {
+    id: '0.1',
+    title: 'すぐ近く🕺',
+  },
+  {
+    id: '0.3',
+    title: 'ここら辺🪐',
+  },
+  {
+    id: '1',
+    title: 'ちょい広め💫',
+  },
+];
 
-export const RangeSelectButton = React.memo(() => {
+type Props = {
+  setRange: (n: number) => void;
+};
+
+export const RangeSelectButton = React.memo(({setRange}: Props) => {
+  const onMenuAction = useCallback(
+    (id: string) => {
+      setRange(Number(id));
+    },
+    [setRange],
+  );
+
   return (
-    <Button
+    <MenuView
       title="検索範囲を変更"
-      buttonStyle={styles.buttonContainer}
-      titleStyle={styles.titleStyle}
-      activeOpacity={1}
-    />
+      actions={menuActions}
+      onPressAction={(e) => onMenuAction(e.nativeEvent.event)}>
+      <Button
+        title="検索範囲を変更"
+        buttonStyle={styles.buttonContainer}
+        titleStyle={styles.titleStyle}
+        activeOpacity={1}
+      />
+    </MenuView>
   );
 });
 

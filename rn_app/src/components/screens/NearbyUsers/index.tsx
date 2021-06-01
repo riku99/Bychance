@@ -14,7 +14,7 @@ import {FlashesStackParamList} from '../../../screens/Flashes';
 import {RootNavigationProp} from '~/screens/Root';
 import {getThumbnailUrl} from '~/helpers/video';
 
-export const GetNearbyUsers = () => {
+export const NearbyUsers = () => {
   const position = useSelector((state: RootState) => {
     const lat = state.userReducer.user!.lat;
     const lng = state.userReducer.user!.lng;

@@ -193,7 +193,7 @@ export const NearbyUsersList = React.memo(
 
         <View style={styles.pcikerContainer}>
           {/* <RangeSelector setRange={setRange} /> */}
-          <RangeSelectButton />
+          <RangeSelectButton setRange={setRange} />
         </View>
       </View>
     );
