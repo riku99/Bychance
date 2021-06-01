@@ -24,6 +24,7 @@ import {AnotherUser} from '../../../stores/types';
 import {FlashesData} from '~/stores/types';
 import {Avatar} from './Avatar';
 import {RangeSelector} from './RangeSelector';
+import {RangeSelectButton} from './RangeSelectBottun';
 import {AppDispatch} from '../../../stores/index';
 import {getNearbyUsersThunk} from '../../../apis/nearbyUsers/getNearbyUsers';
 
@@ -191,7 +192,8 @@ export const NearbyUsersList = React.memo(
         )}
 
         <View style={styles.pcikerContainer}>
-          <RangeSelector setRange={setRange} />
+          {/* <RangeSelector setRange={setRange} /> */}
+          <RangeSelectButton />
         </View>
       </View>
     );
