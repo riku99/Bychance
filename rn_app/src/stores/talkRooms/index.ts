@@ -82,10 +82,10 @@ export const RoomsSlice = createSlice({
       state,
       action: PayloadAction<CreateRoomThunkPayload>,
     ) => {
-      // roomが存在する場合は何もしなくていい。upsertOneの必要ない
-      // なかったら新しくaddする。messageとunreadNumberとlatestMessageはなしで。
-      if (!action.payload.presence) {
-        const data = action.payload;
+      const data = action.payload;
+      // トークルームがサーバー側でも存在しなかった場合(それが初めて作成された場合)、サーバー側では存在するがクライアント側には存在しない場合(作成した相手がメッセージを送っていない場合)はaddOneで新しく追加
+      const targetTaklRoom = state.entities[data.roomId];
+      if (!action.payload.presence || !targetTaklRoom) {
         talkRoomsAdapter.addOne(state, {
           id: data.roomId,
           partner: data.partner.id,

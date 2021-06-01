@@ -14,7 +14,7 @@ type Props = {
   onSend: (text: string) => void;
 };
 
-export const ChatRoom = React.memo(({messages, userId, onSend}: Props) => {
+export const TalkRoom = React.memo(({messages, userId, onSend}: Props) => {
   const [text, setText] = useState('');
   return (
     <GiftedChat

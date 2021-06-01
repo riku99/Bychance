@@ -9,7 +9,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 
-import {ChatRoom} from './TaklRoom';
+import {TalkRoom} from './TaklRoom';
 import {TalkRoomStackNavigationProp} from '../../../screens/types';
 import {AppDispatch, RootState} from '../../../stores/index';
 import {selectMessages} from '../../../stores/talkRoomMessages';
@@ -28,7 +28,7 @@ type Props = {
   navigation: TalkRoomStackNavigationProp<'ChatRoom'>;
 };
 
-export const TalkRoom = ({route, navigation}: Props) => {
+export const TalkRoomScreen = ({route, navigation}: Props) => {
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
   const room = useSelector((state: RootState) => {
@@ -91,7 +91,7 @@ export const TalkRoom = ({route, navigation}: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: partner?.name ? partner.name : 'ユーザーが存在しません',
+      headerTitle: partner?.name ? partner.name : 'メンバーが存在しません',
     });
   });
 
@@ -190,7 +190,7 @@ export const TalkRoom = ({route, navigation}: Props) => {
             roomId: room.id,
             partnerId: route.params.partnerId,
             text,
-            isFirstMessage: room.messages.length ? false : true,
+            // isFirstMessage: room.messages.length ? false : true, 初回メッセージかどうかはサーバ側で判断するようにしたのでこのデータは必要ない
           }),
         );
         if (createMessageThunk.fulfilled.match(result)) {
@@ -215,5 +215,5 @@ export const TalkRoom = ({route, navigation}: Props) => {
     [room, dispatch, route.params.partnerId, messages],
   );
 
-  return <ChatRoom messages={messages} userId={myId} onSend={onSend} />;
+  return <TalkRoom messages={messages} userId={myId} onSend={onSend} />;
 };

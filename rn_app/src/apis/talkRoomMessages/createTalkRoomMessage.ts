@@ -27,16 +27,13 @@ export type CreateMessageThunkPayload = talkRoomPresence | NotTalkRoomPresence;
 
 export const createMessageThunk = createAsyncThunk<
   CreateMessageThunkPayload,
-  {roomId: number; partnerId: string; text: string; isFirstMessage: boolean},
+  {roomId: number; partnerId: string; text: string},
   {
     rejectValue: rejectPayload;
   }
 >(
   'messages/createMessage',
-  async (
-    {roomId, partnerId, text, isFirstMessage},
-    {dispatch, rejectWithValue},
-  ) => {
+  async ({roomId, partnerId, text}, {dispatch, rejectWithValue}) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
@@ -49,12 +46,9 @@ export const createMessageThunk = createAsyncThunk<
             talkRoomId: roomId,
             text,
             partnerId,
-            isFirstMessage,
           },
           headers(credentials.token),
         );
-
-        console.log(response.data);
 
         return response.data;
       } catch (e) {
