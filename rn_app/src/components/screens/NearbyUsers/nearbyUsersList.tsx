@@ -23,7 +23,6 @@ import {useDispatch} from 'react-redux';
 import {AnotherUser} from '../../../stores/types';
 import {FlashesData} from '~/stores/types';
 import {Avatar} from './Avatar';
-import {RangeSelector} from './RangeSelector';
 import {RangeSelectButton} from './RangeSelectBottun';
 import {AppDispatch} from '../../../stores/index';
 import {getNearbyUsersThunk} from '../../../apis/nearbyUsers/getNearbyUsers';
@@ -173,7 +172,7 @@ export const NearbyUsersList = React.memo(
                     }}>
                     <Avatar user={u} onAvatarPress={onAvatarPress} />
                     <ListItem.Content>
-                      <ListItem.Title style={{fontWeight: '500'}}>
+                      <ListItem.Title style={{fontWeight: '500', fontSize: 17}}>
                         {u.name}
                       </ListItem.Title>
                       <ListItem.Subtitle style={styles.subtitle}>
@@ -192,7 +191,6 @@ export const NearbyUsersList = React.memo(
         )}
 
         <View style={styles.pcikerContainer}>
-          {/* <RangeSelector setRange={setRange} /> */}
           <RangeSelectButton setRange={setRange} />
         </View>
       </View>

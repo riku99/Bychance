@@ -5,7 +5,7 @@ import {MyPageStackParamList, UserPageScreenGroupParamList} from './UserPage';
 import {TalkRoomStackParamList} from './ChatRoom';
 import {UserEditStackParamList} from './UserEdit';
 import {CreatePostStackParamList} from './CreatePost';
-import {SearchUsersStackParamList} from './SearchUsers';
+import {SearchUsersStackParamList} from './NearbyUsers';
 import {FlashesStackParamList} from './Flashes';
 
 // navigationの型たち 順次修正していく

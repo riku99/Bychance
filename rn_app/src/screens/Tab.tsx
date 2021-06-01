@@ -7,7 +7,7 @@ import {RootState} from '../stores/index';
 import {getAllUnreadMessagesNumber} from '../stores/talkRooms';
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
-import {SearchUsersStackScreen} from './SearchUsers';
+import {SearchUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles/normal';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
