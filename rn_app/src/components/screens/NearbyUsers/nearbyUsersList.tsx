@@ -108,7 +108,7 @@ export const NearbyUsersList = React.memo(
 
     return (
       <View style={styles.container}>
-        <Animated.View
+        {/* <Animated.View
           style={{
             ...styles.displayOptionsContainer,
             transform: [{translateY: transformY}],
@@ -124,12 +124,12 @@ export const NearbyUsersList = React.memo(
               setKeyword(text);
             }}
           />
-        </Animated.View>
+        </Animated.View> */}
         {filteredUsers.length ? (
           <>
             <ScrollView
-              contentInset={{top: SEARCH_TAB_HEIGHT}}
-              contentOffset={{y: -SEARCH_TAB_HEIGHT, x: 0}}
+              // contentInset={{top: SEARCH_TAB_HEIGHT}}
+              // contentOffset={{y: -SEARCH_TAB_HEIGHT, x: 0}}
               scrollEventThrottle={16}
               refreshControl={
                 <RefreshControl
@@ -204,31 +204,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  displayOptionsContainer: {
-    backgroundColor: 'white',
-    height: SEARCH_TAB_HEIGHT,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-  },
-  searchContainer: {
-    backgroundColor: 'white',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-  },
-  searchInputContainer: {
-    width: '90%',
-    height: 30,
-    backgroundColor: '#ebebeb',
-    alignSelf: 'center',
-  },
-  iosPicker: {
-    color: '#2c3e50',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
+  // displayOptionsContainer: {
+  //   backgroundColor: 'white',
+  //   height: SEARCH_TAB_HEIGHT,
+  //   position: 'absolute',
+  //   top: 0,
+  //   left: 0,
+  //   right: 0,
+  //   zIndex: 10,
+  // },
+  // searchContainer: {
+  //   backgroundColor: 'white',
+  //   borderTopColor: 'transparent',
+  //   borderBottomColor: 'transparent',
+  // },
+  // searchInputContainer: {
+  //   width: '90%',
+  //   height: 30,
+  //   backgroundColor: '#ebebeb',
+  //   alignSelf: 'center',
+  // },
+  // iosPicker: {
+  //   color: '#2c3e50',
+  //   fontSize: 15,
+  //   fontWeight: 'bold',
+  // },
   subtitle: {
     fontSize: 14,
     color: '#999999',
