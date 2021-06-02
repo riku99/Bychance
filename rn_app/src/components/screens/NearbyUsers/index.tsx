@@ -69,10 +69,21 @@ export const NearbyUsersScreen = React.memo(() => {
     extrapolate: 'clamp',
   });
 
-  const position = useSelector((state: RootState) => {
-    const lat = state.userReducer.user!.lat;
-    const lng = state.userReducer.user!.lng;
-    return {lat, lng};
+  // shallowEqualつけてもインラインでオブジェクト返すと、キャッシュと異なるデータとして見做され再レンダリング起きる。これに依存している子コンポーネントも再レンダリングされる(React.memoでも)。分割して取得すべし
+  // const position = useSelector((state: RootState) => {
+  //   const lat = state.userReducer.user!.lat;
+  //   const lng = state.userReducer.user!.lng;
+  //   return {lat, lng};
+  // }, shallowEqual);
+
+  const lat = useSelector((state: RootState) => {
+    const _lat = state.userReducer.user!.lat;
+    return _lat;
+  }, shallowEqual);
+
+  const lng = useSelector((state: RootState) => {
+    const _lng = state.userReducer.user!.lng;
+    return _lng;
   }, shallowEqual);
 
   const [range, setRange] = useState(0.1);
@@ -103,10 +114,8 @@ export const NearbyUsersScreen = React.memo(() => {
   const dispatch = useCustomDispatch();
 
   useEffect(() => {
-    dispatch(
-      getNearbyUsersThunk({lat: position.lat, lng: position.lng, range}),
-    );
-  }, [dispatch, position.lat, position.lng, range]);
+    dispatch(getNearbyUsersThunk({lat, lng, range}));
+  }, [dispatch, lat, lng, range]);
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
   const preloadUriGroup = useMemo(() => {
@@ -218,6 +227,18 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const {top} = useSafeAreaInsets();
 
+  const tabViewContextData = useMemo(
+    () => ({
+      users: filteredUsers,
+      keyword,
+      onAvatarPress,
+      navigateToUserPage,
+      lat,
+      lng,
+    }),
+    [filteredUsers, keyword, onAvatarPress, navigateToUserPage, lat, lng],
+  );
+
   return (
     <View style={[styles.container, {paddingTop: top}]}>
       <Animated.View
@@ -237,15 +258,7 @@ export const NearbyUsersScreen = React.memo(() => {
           }}
         />
       </Animated.View>
-      <TabViewContext.Provider
-        value={{
-          users: filteredUsers,
-          keyword,
-          onAvatarPress,
-          navigateToUserPage,
-          lat: position.lat && position.lat,
-          lng: position.lng && position.lng,
-        }}>
+      <TabViewContext.Provider value={tabViewContextData}>
         <Tab.Navigator
           tabBarPosition="top"
           tabBarOptions={{
