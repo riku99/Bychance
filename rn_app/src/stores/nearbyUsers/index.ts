@@ -17,7 +17,10 @@ import {
 } from '../../apis/flashes/createAlreadyViewedFlashes';
 
 // NearbyUserは位置情報により取得したユーザーなので必ずlat, lngが存在する。AnotherUserはトーク相手とかも含まれるので位置情報のデータが必ず含まれるとは限らない
-type NearbyUser = Omit<AnotherUser, 'lat' | 'lng'> & {lat: number; lng: number};
+export type NearbyUser = Omit<AnotherUser, 'lat' | 'lng'> & {
+  lat: number;
+  lng: number;
+};
 export type NearbyUsers = NearbyUser[];
 
 // entityのユニークなプロパテがidの場合は指定する必要ない

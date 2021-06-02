@@ -6,6 +6,7 @@ import {FlashesData} from '~/stores/types';
 
 type Props = {
   user: AnotherUser;
+  size?: number | 'small' | 'medium' | 'large';
   onAvatarPress?: ({
     isAllAlreadyViewed,
     userId,
@@ -23,46 +24,48 @@ type Props = {
       }) => void;
 };
 
-export const Avatar = React.memo(({user, onAvatarPress}: Props) => {
-  if (user.flashes.entities.length && !user.flashes.isAllAlreadyViewed) {
-    return (
-      <UserAvatarWithOuter
-        image={user.avatar}
-        size="medium"
-        outerType="gradation"
-        onPress={() => {
-          if (onAvatarPress) {
-            onAvatarPress({
-              userId: user.id,
-              isAllAlreadyViewed: false,
-              flashesData: undefined,
-            });
-          }
-        }}
-      />
-    );
-  }
+export const Avatar = React.memo(
+  ({user, onAvatarPress, size = 'medium'}: Props) => {
+    if (user.flashes.entities.length && !user.flashes.isAllAlreadyViewed) {
+      return (
+        <UserAvatarWithOuter
+          image={user.avatar}
+          size={size}
+          outerType="gradation"
+          onPress={() => {
+            if (onAvatarPress) {
+              onAvatarPress({
+                userId: user.id,
+                isAllAlreadyViewed: false,
+                flashesData: undefined,
+              });
+            }
+          }}
+        />
+      );
+    }
 
-  if (user.flashes.entities.length && user.flashes.isAllAlreadyViewed) {
-    return (
-      <UserAvatarWithOuter
-        image={user.avatar}
-        size="medium"
-        outerType="silver"
-        onPress={() => {
-          if (onAvatarPress) {
-            onAvatarPress({
-              userId: user.id,
-              isAllAlreadyViewed: true,
-              flashesData: user.flashes,
-            });
-          }
-        }}
-      />
-    );
-  }
+    if (user.flashes.entities.length && user.flashes.isAllAlreadyViewed) {
+      return (
+        <UserAvatarWithOuter
+          image={user.avatar}
+          size={size}
+          outerType="silver"
+          onPress={() => {
+            if (onAvatarPress) {
+              onAvatarPress({
+                userId: user.id,
+                isAllAlreadyViewed: true,
+                flashesData: user.flashes,
+              });
+            }
+          }}
+        />
+      );
+    }
 
-  return (
-    <UserAvatarWithOuter image={user.avatar} size="medium" outerType="none" />
-  );
-});
+    return (
+      <UserAvatarWithOuter image={user.avatar} size={size} outerType="none" />
+    );
+  },
+);

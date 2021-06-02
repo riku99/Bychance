@@ -3,9 +3,11 @@ import {View, StyleSheet} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
 import {TabViewContext} from './index';
+import {Avatar} from './Avatar';
+import {NearbyUser} from '~/stores/nearbyUsers';
 
 export const Map = React.memo(() => {
-  const {lat, lng, users} = useContext(TabViewContext);
+  const {lat, lng, users, onAvatarPress} = useContext(TabViewContext);
 
   const region = useMemo(() => {
     if (lat && lng) {
@@ -18,6 +20,26 @@ export const Map = React.memo(() => {
     }
   }, [lat, lng]);
 
+  const a = (user: NearbyUser) => {
+    if (onAvatarPress) {
+      if (user.flashes.entities.length && !user.flashes.isAllAlreadyViewed) {
+        onAvatarPress({
+          userId: user.id,
+          isAllAlreadyViewed: false,
+          flashesData: undefined,
+        });
+      }
+
+      if (user.flashes.entities.length && user.flashes.isAllAlreadyViewed) {
+        onAvatarPress({
+          userId: user.id,
+          isAllAlreadyViewed: true,
+          flashesData: user.flashes,
+        });
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <MapView style={styles.map} region={region} showsUserLocation={true}>
@@ -25,7 +47,9 @@ export const Map = React.memo(() => {
           <Marker
             key={user.id}
             coordinate={{latitude: user.lat, longitude: user.lng}}
-          />
+            onPress={() => a(user)}>
+            <Avatar user={user} size={35} />
+          </Marker>
         ))}
       </MapView>
     </View>
