@@ -39,7 +39,7 @@ import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {RootNavigationProp} from '~/screens/Root';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 import {judgeMoreDeviceX} from '~/helpers/device';
 
 // BottomTabに渡される時のプロップス

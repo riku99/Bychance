@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
 import {Post as PostType} from '../../../stores/posts';
-import {normalStyles} from '../../../constants/styles/normal';
+import {normalStyles} from '../../../constants/styles';
 import {ScrollView} from 'react-native-gesture-handler';
 
 type Props = {

@@ -9,7 +9,7 @@ import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
 
 type TabList = {

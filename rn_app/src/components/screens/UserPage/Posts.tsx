@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
 import {Post} from '../../../stores/posts';
-import {normalStyles} from '../../../constants/styles/normal';
+import {normalStyles} from '../../../constants/styles';
 import {
   UserPageNavigationProp,
   MyPageNavigationProp,

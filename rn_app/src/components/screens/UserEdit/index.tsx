@@ -28,7 +28,7 @@ import {UserEditNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 import {SnsList} from '~/types';
 import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';

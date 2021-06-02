@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 import {RootNavigationProp} from '~/screens/Root';
 
 export const EditButton = React.memo(() => {

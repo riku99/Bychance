@@ -8,7 +8,7 @@ import {Post as PostType} from '../stores/posts';
 import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPage} from '../components/screens/UserPage';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 export type MyPageStackParamList = {
   MyPage: undefined;

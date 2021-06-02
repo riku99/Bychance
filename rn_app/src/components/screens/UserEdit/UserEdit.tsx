@@ -11,7 +11,7 @@ import {Button} from 'react-native-elements';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 
 import {UserAvatar} from '../../utils/Avatar';
-import {normalStyles} from '../../../constants/styles/normal';
+import {normalStyles} from '../../../constants/styles';
 import {UserEditNavigationProp} from '../../../screens/types';
 
 type Props = {

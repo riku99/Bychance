@@ -27,7 +27,7 @@ import {RootNavigationProp} from '~/screens/Root';
 import {FlashesData} from '~/stores/types';
 import {NearbyUsersStackNavigationProp} from '~/screens/NearbyUsers';
 import {FlashesStackParamList} from '~/screens/Flashes';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 const Tab = createMaterialTopTabNavigator();
 

@@ -5,7 +5,7 @@ import {store} from './stores/index';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 
 import Root from './components/Root';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 const App: () => React.ReactNode = () => {
   return (

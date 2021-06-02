@@ -4,7 +4,7 @@ import {Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 
 import {displayMenu} from '../../../stores/otherSettings';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 export const MenuBar = React.memo(() => {
   const dispatch = useDispatch();

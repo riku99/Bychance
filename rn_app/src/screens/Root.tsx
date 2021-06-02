@@ -16,7 +16,7 @@ import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
 import {TalkRoomStackParamList, TalkRoomStackScreen} from './ChatRoom';
 import {TakeFlashPage} from '~/components/screens/TakeFlash';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 import {User} from '~/stores/user';
 import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 

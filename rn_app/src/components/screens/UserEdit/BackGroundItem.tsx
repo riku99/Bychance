@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 
 import {User} from '~/stores/user';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 type Props = {
   source: User['backGroundItem'];

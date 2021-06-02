@@ -16,7 +16,7 @@ import {
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {Post} from '../../../stores/posts';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 import {UserInformationRouteInTabView} from './UserInformationInTabView';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene, ScrollViewTabScene} from './TabScene';

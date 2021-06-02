@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {StyleSheet, View, Animated} from 'react-native';
 import Emoji from 'react-native-emoji';
 
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 type Props = {
   onAnimationEnd?: () => void;

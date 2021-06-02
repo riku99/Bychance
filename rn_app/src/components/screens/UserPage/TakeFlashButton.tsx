@@ -5,7 +5,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 
 import {RootNavigationProp} from '~/screens/Root';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 export const TakeFlashButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();

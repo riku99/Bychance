@@ -4,7 +4,7 @@ import {ListItem, Badge} from 'react-native-elements';
 
 import {TalkRoom} from '~/stores/talkRooms/';
 import {UserAvatar} from '../../utils/Avatar';
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 type Props = {
   room: TalkRoom;

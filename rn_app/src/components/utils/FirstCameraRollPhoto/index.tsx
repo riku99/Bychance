@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, ImageBackground} from 'react-native';
 import CameraRoll from '@react-native-community/cameraroll';
 
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 type Props = {
   onPress: () => void;

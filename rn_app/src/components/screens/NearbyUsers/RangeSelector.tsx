@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
-import {normalStyles} from '~/constants/styles/normal';
+import {normalStyles} from '~/constants/styles';
 
 type Props = {
   setRange: (n: number) => void;

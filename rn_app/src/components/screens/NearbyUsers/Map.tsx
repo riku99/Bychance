@@ -7,19 +7,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {TabViewContext} from './index';
 import {Avatar} from './Avatar';
 import {NearbyUser} from '~/stores/nearbyUsers';
-import {normalStyles} from '~/constants/styles/normal';
-
-const gradientConfig: {
-  colors: string[];
-  start: {x: number; y: number};
-  end: {x: number; y: number};
-  baseStyle: ViewStyle;
-} = {
-  colors: [normalStyles.mainColor, '#ffc4c4'],
-  start: {x: 0.0, y: 1.0},
-  end: {x: 1.0, y: 1.0},
-  baseStyle: {alignItems: 'center', justifyContent: 'center'},
-};
+import {mainButtonGradientConfig} from '~/constants/styles';
 
 export const Map = React.memo(() => {
   const {
@@ -90,9 +78,9 @@ export const Map = React.memo(() => {
         activeOpacity={1}
         onPress={onRefreshButtonPress}>
         <LinearGradient
-          colors={gradientConfig.colors}
-          start={gradientConfig.start}
-          end={gradientConfig.end}
+          colors={mainButtonGradientConfig.colors}
+          start={mainButtonGradientConfig.start}
+          end={mainButtonGradientConfig.end}
           style={styles.refreshButtonContainer}>
           <MIcon name="refresh" size={30} color="white" />
         </LinearGradient>

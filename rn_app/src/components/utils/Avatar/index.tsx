@@ -1,7 +1,7 @@
 import React from 'react';
 import {Avatar} from 'react-native-elements';
 
-import {normalStyles} from '../../../constants/styles/normal';
+import {normalStyles} from '../../../constants/styles';
 import {UserProfileOuter} from '../AvatarOuter';
 
 type Props = {
