@@ -1,11 +1,11 @@
 import React, {useContext, useMemo} from 'react';
 import {View, StyleSheet} from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 
 import {TabViewContext} from './index';
 
 export const Map = React.memo(() => {
-  const {lat, lng} = useContext(TabViewContext);
+  const {lat, lng, users} = useContext(TabViewContext);
 
   const region = useMemo(() => {
     if (lat && lng) {
@@ -20,7 +20,14 @@ export const Map = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={region} showsUserLocation={true} />
+      <MapView style={styles.map} region={region} showsUserLocation={true}>
+        {users.map((user) => (
+          <Marker
+            key={user.id}
+            coordinate={{latitude: user.lat, longitude: user.lng}}
+          />
+        ))}
+      </MapView>
     </View>
   );
 });
