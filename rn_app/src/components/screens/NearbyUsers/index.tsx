@@ -52,6 +52,7 @@ type TabViewContextType = {
         userId: string;
         flashesData: undefined;
       }) => void;
+  refreshUsers?: () => Promise<void>;
 };
 
 export const TabViewContext = createContext<TabViewContextType>({
@@ -225,6 +226,10 @@ export const NearbyUsersScreen = React.memo(() => {
     [rootStackNavigation, sequenceFlashesAndUserData],
   );
 
+  const refreshUsers = useCallback(async () => {
+    await dispatch(getNearbyUsersThunk({lat, lng, range}));
+  }, [dispatch, lat, lng, range]);
+
   const {top} = useSafeAreaInsets();
 
   const tabViewContextData = useMemo(
@@ -235,8 +240,17 @@ export const NearbyUsersScreen = React.memo(() => {
       navigateToUserPage,
       lat,
       lng,
+      refreshUsers,
     }),
-    [filteredUsers, keyword, onAvatarPress, navigateToUserPage, lat, lng],
+    [
+      filteredUsers,
+      keyword,
+      onAvatarPress,
+      navigateToUserPage,
+      lat,
+      lng,
+      refreshUsers,
+    ],
   );
 
   return (

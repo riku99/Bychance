@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {StyleSheet, View, Text, RefreshControl} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
@@ -8,7 +8,19 @@ import {TabViewContext} from './index';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
-  const {users, onAvatarPress, navigateToUserPage} = useContext(TabViewContext);
+  const {users, onAvatarPress, navigateToUserPage, refreshUsers} = useContext(
+    TabViewContext,
+  );
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    if (refreshUsers) {
+      await refreshUsers();
+    }
+    setRefreshing(false);
+  }, [refreshUsers]);
 
   // const caluculateDuration = useCallback((n: number) => {
   //   return n * 5;
@@ -22,12 +34,12 @@ export const List = React.memo(() => {
             scrollEventThrottle={16}
             // contentInset={{top: SEARCH_TAB_HEIGHT}}
             // contentOffset={{y: -SEARCH_TAB_HEIGHT, x: 0}}
-            // refreshControl={
-            //   <RefreshControl
-            //     refreshing={refreshing}
-            //     onRefresh={() => onRefresh(range)}
-            //   />
-            // }
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => onRefresh()}
+              />
+            }
             // onScroll={Animated.event(
             //   [{nativeEvent: {contentOffset: {y: scrollY}}}],
             //   {
