@@ -20,7 +20,7 @@ export type FlashesData = {
   isAllAlreadyViewed?: boolean;
 };
 
-export type AnotherUser = Omit<User, 'display' | 'lat' | 'lng'> & {
+export type AnotherUser = Omit<User, 'display'> & {
   posts: Post[];
   flashes: FlashesData;
 };

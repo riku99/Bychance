@@ -20,7 +20,7 @@ export const Map = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={region} />
+      <MapView style={styles.map} region={region} showsUserLocation={true} />
     </View>
   );
 });
