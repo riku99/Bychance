@@ -1,15 +1,35 @@
-import React, {useContext, useMemo} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useCallback, useContext, useMemo} from 'react';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
+import LinearGradient from 'react-native-linear-gradient';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {TabViewContext} from './index';
 import {Avatar} from './Avatar';
 import {NearbyUser} from '~/stores/nearbyUsers';
+import {normalStyles} from '~/constants/styles/normal';
+
+const gradientConfig: {
+  colors: string[];
+  start: {x: number; y: number};
+  end: {x: number; y: number};
+  baseStyle: ViewStyle;
+} = {
+  colors: [normalStyles.mainColor, '#ffc4c4'],
+  start: {x: 0.0, y: 1.0},
+  end: {x: 1.0, y: 1.0},
+  baseStyle: {alignItems: 'center', justifyContent: 'center'},
+};
 
 export const Map = React.memo(() => {
-  const {lat, lng, users, onAvatarPress, navigateToUserPage} = useContext(
-    TabViewContext,
-  );
+  const {
+    lat,
+    lng,
+    users,
+    onAvatarPress,
+    navigateToUserPage,
+    refreshUsers,
+  } = useContext(TabViewContext);
 
   const region = useMemo(() => {
     if (lat && lng) {
@@ -47,6 +67,12 @@ export const Map = React.memo(() => {
     }
   };
 
+  const onRefreshButtonPress = useCallback(() => {
+    if (refreshUsers) {
+      refreshUsers();
+    }
+  }, [refreshUsers]);
+
   return (
     <View style={styles.container}>
       <MapView style={styles.map} region={region} showsUserLocation={true}>
@@ -59,6 +85,18 @@ export const Map = React.memo(() => {
           </Marker>
         ))}
       </MapView>
+      <TouchableOpacity
+        style={styles.refreshButtonContainer}
+        activeOpacity={1}
+        onPress={onRefreshButtonPress}>
+        <LinearGradient
+          colors={gradientConfig.colors}
+          start={gradientConfig.start}
+          end={gradientConfig.end}
+          style={styles.refreshButtonContainer}>
+          <MIcon name="refresh" size={30} color="white" />
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   );
 });
@@ -70,5 +108,20 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+  },
+  refreshButtonContainer: {
+    position: 'absolute',
+    bottom: '3%',
+    left: '7%',
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  refreshButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
   },
 });

@@ -288,7 +288,6 @@ export const NearbyUsersScreen = React.memo(() => {
               height: 45,
               alignItems: 'center',
             },
-            style: {},
           }}>
           <Tab.Screen name="リスト" component={List} />
           <Tab.Screen name="マップ" component={Map} />
