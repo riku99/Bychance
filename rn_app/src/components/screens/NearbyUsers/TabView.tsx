@@ -9,7 +9,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
-import {List} from './nearbyUsersList';
+import {List} from './List';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {AnotherUser} from '../../../stores/types';
 import {selectNearbyUsersArray} from '../../../stores/nearbyUsers';
@@ -25,6 +25,7 @@ type Props = {
   view: 'list' | 'map';
 };
 
+// 使ってないけど参考したりしているため残している
 export const TabView = React.memo(({view}: Props) => {
   const position = useSelector((state: RootState) => {
     const lat = state.userReducer.user!.lat;

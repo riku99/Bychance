@@ -61,7 +61,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Program requires GPS to track cars and job orders</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Program requires GPS to track cars and job orders</string>
+	<string>地図上への表示のため位置情報を取得します</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Your message to user when the microphone is accessed for the first time</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

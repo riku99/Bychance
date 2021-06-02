@@ -274,6 +274,8 @@ PODS:
     - React-Core
   - react-native-image-resizer (1.4.2):
     - React-Core
+  - react-native-maps (0.28.0):
+    - React-Core
   - react-native-menu (0.4.1):
     - React
   - react-native-safe-area-context (3.1.9):
@@ -421,6 +423,7 @@ DEPENDENCIES:
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
+  - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
@@ -517,6 +520,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-image-resizer:
     :path: "../node_modules/react-native-image-resizer"
+  react-native-maps:
+    :path: "../node_modules/react-native-maps"
   react-native-menu:
     :path: "../node_modules/@react-native-menu/menu"
   react-native-safe-area-context:
@@ -619,6 +624,7 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: 141e33bdb179bcba10b216ee13962611e21f2be4
   react-native-image-picker: ec63410edbcacc543acd77dcccfc056da39320ab
   react-native-image-resizer: 4999a7dff8fc7fed5ed7d7c7dbfa5facbd345861
+  react-native-maps: 2d405b4e8cee0282e4c02bac434d81450dfea877
   react-native-menu: e2d39080467a852466613b8cd123c7f54869b23c
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168

@@ -5,7 +5,7 @@ import {MyPageStackParamList, UserPageScreenGroupParamList} from './UserPage';
 import {TalkRoomStackParamList} from './ChatRoom';
 import {UserEditStackParamList} from './UserEdit';
 import {CreatePostStackParamList} from './CreatePost';
-import {SearchUsersStackParamList} from './NearbyUsers';
+// import {SearchUsersStackParamList} from './NearbyUsers';
 import {FlashesStackParamList} from './Flashes';
 
 // navigationの型たち 順次修正していく
@@ -29,9 +29,9 @@ export type CreatePostStackNavigationProp<
   T extends keyof CreatePostStackParamList
 > = StackNavigationProp<CreatePostStackParamList, T>;
 
-export type SearchUsersStackNavigationProp<
-  T extends keyof SearchUsersStackParamList
-> = StackNavigationProp<SearchUsersStackParamList, T>;
+// export type SearchUsersStackNavigationProp<
+//   T extends keyof SearchUsersStackParamList
+// > = StackNavigationProp<SearchUsersStackParamList, T>;
 
 export type FlashStackNavigationProp<
   T extends keyof FlashesStackParamList

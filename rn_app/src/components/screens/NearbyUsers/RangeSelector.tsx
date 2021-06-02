@@ -17,6 +17,7 @@ const selectItems = [
   {label: '1km', value: 1},
 ];
 
+// 現在使ってないけど一応残す
 export const RangeSelector = React.memo(({setRange}: Props) => {
   return (
     <RNPickerSelect

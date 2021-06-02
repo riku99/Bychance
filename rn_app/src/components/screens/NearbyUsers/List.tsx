@@ -6,6 +6,7 @@ import {ListItem} from 'react-native-elements';
 import {Avatar} from './Avatar';
 import {TabViewContext} from './index';
 
+// アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
   const {users, onAvatarPress, onListItemPress} = useContext(TabViewContext);
 
@@ -108,15 +109,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#999999',
   },
-  pcikerContainer: {
-    position: 'absolute',
-    bottom: '3%',
-    right: '7%',
-    width: 130,
-    height: 40,
-  },
+  // pcikerContainer: {
+  //   position: 'absolute',
+  //   bottom: '3%',
+  //   right: '7%',
+  //   width: 130,
+  //   height: 40,
+  // },
 });
 
+// いったんこのコンポーネントは屍になるが後々アニメーションとか再実装する時に参考になりそうなのでいったんコメントアウトで残す
 // type Props = {
 //   users: AnotherUser[];
 //   range: number;
@@ -280,9 +282,9 @@ const styles = StyleSheet.create({
 //           </View>
 //         )}
 
-//         <View style={styles.pcikerContainer}>
-//           <RangeSelectButton setRange={setRange} />
-//         </View>
+// <View style={styles.pcikerContainer}>
+//   <RangeSelectButton setRange={setRange} />
+// </View>
 //       </View>
 //     );
 //   },

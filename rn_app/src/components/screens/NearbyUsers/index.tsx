@@ -6,15 +6,17 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {StyleSheet, Animated, SafeAreaView, View} from 'react-native';
+import {StyleSheet, Animated, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SearchBar} from 'react-native-elements';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {MapView} from './MapView';
-import {List} from './nearbyUsersList';
+import {List} from './List';
+import {Map} from './Map';
+import {RangeSelectButton} from './RangeSelectBottun';
 import {RootState} from '~/stores';
 import {selectNearbyUsersArray} from '~/stores/nearbyUsers';
 import {getNearbyUsersThunk} from '~/apis/nearbyUsers/getNearbyUsers';
@@ -32,6 +34,8 @@ const Tab = createMaterialTopTabNavigator();
 type TabViewContextType = {
   keyword: string;
   users: NearbyUsers;
+  lng?: number | null;
+  lat?: number | null;
   onListItemPress?: (user: AnotherUser) => void;
   onAvatarPress?: ({
     isAllAlreadyViewed,
@@ -55,6 +59,8 @@ export const TabViewContext = createContext<TabViewContextType>({
   keyword: '',
 });
 
+// createMaterialTopTabNavigatorでスクリーンを作る際に、componentにインラインで記述するとパフォーマンスの問題があるのでインラインの記述はしたくない
+// そうするとpropsを渡すのが難しくなる。それぞれのスクリーンが独立していたら問題ないが、今回は同じデータを参照したい。これは本来親コンポーネントからpropsで渡していたが、今回それができないのでContextで対応する
 export const NearbyUsersScreen = React.memo(() => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const transformY = scrollY.interpolate({
@@ -210,9 +216,10 @@ export const NearbyUsersScreen = React.memo(() => {
     [rootStackNavigation, sequenceFlashesAndUserData],
   );
 
+  const {top} = useSafeAreaInsets();
+
   return (
-    <View style={{flex: 1}}>
-      <SafeAreaView />
+    <View style={[styles.container, {paddingTop: top}]}>
       <Animated.View
         style={{
           ...styles.displayOptionsContainer,
@@ -236,6 +243,8 @@ export const NearbyUsersScreen = React.memo(() => {
           keyword,
           onAvatarPress,
           onListItemPress,
+          lat: position.lat && position.lat,
+          lng: position.lng && position.lng,
         }}>
         <Tab.Navigator
           tabBarPosition="top"
@@ -255,9 +264,12 @@ export const NearbyUsersScreen = React.memo(() => {
             style: {},
           }}>
           <Tab.Screen name="リスト" component={List} />
-          <Tab.Screen name="マップ" component={MapView} />
+          <Tab.Screen name="マップ" component={Map} />
         </Tab.Navigator>
       </TabViewContext.Provider>
+      <View style={styles.pickButtonContainer}>
+        <RangeSelectButton setRange={setRange} />
+      </View>
     </View>
   );
 });
@@ -265,6 +277,9 @@ export const NearbyUsersScreen = React.memo(() => {
 const SEARCH_TAB_HEIGHT = 45;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   displayOptionsContainer: {
     //backgroundColor: 'white',
     //height: SEARCH_TAB_HEIGHT,
@@ -285,5 +300,12 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: '#f2f2f2',
     alignSelf: 'center',
+  },
+  pickButtonContainer: {
+    position: 'absolute',
+    bottom: '3%',
+    right: '7%',
+    width: 130,
+    height: 40,
   },
 });
