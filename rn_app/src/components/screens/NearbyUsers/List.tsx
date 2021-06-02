@@ -8,7 +8,7 @@ import {TabViewContext} from './index';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
-  const {users, onAvatarPress, onListItemPress} = useContext(TabViewContext);
+  const {users, onAvatarPress, navigateToUserPage} = useContext(TabViewContext);
 
   // const caluculateDuration = useCallback((n: number) => {
   //   return n * 5;
@@ -60,8 +60,8 @@ export const List = React.memo(() => {
                   containerStyle={{height: 72}}
                   key={u.id}
                   onPress={() => {
-                    if (onListItemPress) {
-                      onListItemPress(u);
+                    if (navigateToUserPage) {
+                      navigateToUserPage(u);
                     }
                   }}>
                   <Avatar user={u} onAvatarPress={onAvatarPress} />

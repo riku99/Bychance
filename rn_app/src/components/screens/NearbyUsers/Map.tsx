@@ -7,7 +7,9 @@ import {Avatar} from './Avatar';
 import {NearbyUser} from '~/stores/nearbyUsers';
 
 export const Map = React.memo(() => {
-  const {lat, lng, users, onAvatarPress} = useContext(TabViewContext);
+  const {lat, lng, users, onAvatarPress, navigateToUserPage} = useContext(
+    TabViewContext,
+  );
 
   const region = useMemo(() => {
     if (lat && lng) {
@@ -20,22 +22,27 @@ export const Map = React.memo(() => {
     }
   }, [lat, lng]);
 
-  const a = (user: NearbyUser) => {
-    if (onAvatarPress) {
+  const onMarkerPress = (user: NearbyUser) => {
+    if (onAvatarPress && navigateToUserPage) {
       if (user.flashes.entities.length && !user.flashes.isAllAlreadyViewed) {
         onAvatarPress({
           userId: user.id,
           isAllAlreadyViewed: false,
           flashesData: undefined,
         });
-      }
-
-      if (user.flashes.entities.length && user.flashes.isAllAlreadyViewed) {
+        return;
+      } else if (
+        user.flashes.entities.length &&
+        user.flashes.isAllAlreadyViewed
+      ) {
         onAvatarPress({
           userId: user.id,
           isAllAlreadyViewed: true,
           flashesData: user.flashes,
         });
+        return;
+      } else {
+        navigateToUserPage(user);
       }
     }
   };
@@ -47,7 +54,7 @@ export const Map = React.memo(() => {
           <Marker
             key={user.id}
             coordinate={{latitude: user.lat, longitude: user.lng}}
-            onPress={() => a(user)}>
+            onPress={() => onMarkerPress(user)}>
             <Avatar user={user} size={35} />
           </Marker>
         ))}

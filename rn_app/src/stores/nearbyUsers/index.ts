@@ -25,7 +25,7 @@ export type NearbyUsers = NearbyUser[];
 
 // entityのユニークなプロパテがidの場合は指定する必要ない
 // ソート方法もAPIから送られてきた通りなので指定しない
-export const nearbyUsersAdapter = createEntityAdapter<AnotherUser>();
+export const nearbyUsersAdapter = createEntityAdapter<NearbyUser>();
 
 export type NearbyUsersState = ReturnType<
   typeof nearbyUsersAdapter.getInitialState

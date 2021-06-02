@@ -18,13 +18,13 @@ import {List} from './List';
 import {Map} from './Map';
 import {RangeSelectButton} from './RangeSelectBottun';
 import {RootState} from '~/stores';
-import {selectNearbyUsersArray} from '~/stores/nearbyUsers';
+import {NearbyUser, selectNearbyUsersArray} from '~/stores/nearbyUsers';
 import {getNearbyUsersThunk} from '~/apis/nearbyUsers/getNearbyUsers';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {NearbyUsers} from '~/stores/nearbyUsers';
 import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/screens/Root';
-import {AnotherUser, FlashesData} from '~/stores/types';
+import {FlashesData} from '~/stores/types';
 import {NearbyUsersStackNavigationProp} from '~/screens/NearbyUsers';
 import {FlashesStackParamList} from '~/screens/Flashes';
 import {normalStyles} from '~/constants/styles/normal';
@@ -36,7 +36,7 @@ type TabViewContextType = {
   users: NearbyUsers;
   lng?: number | null;
   lat?: number | null;
-  onListItemPress?: (user: AnotherUser) => void;
+  navigateToUserPage?: (user: NearbyUser) => void;
   onAvatarPress?: ({
     isAllAlreadyViewed,
     userId,
@@ -140,8 +140,8 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const rootStackNavigation = useNavigation<RootNavigationProp<'Tab'>>();
 
-  const onListItemPress = useCallback(
-    (user: AnotherUser) => {
+  const navigateToUserPage = useCallback(
+    (user: NearbyUser) => {
       searchStackNavigation.navigate('UserPage', {
         userId: user.id,
         from: 'nearbyUsers',
@@ -242,7 +242,7 @@ export const NearbyUsersScreen = React.memo(() => {
           users: filteredUsers,
           keyword,
           onAvatarPress,
-          onListItemPress,
+          navigateToUserPage,
           lat: position.lat && position.lat,
           lng: position.lng && position.lng,
         }}>
