@@ -261,6 +261,10 @@ export const UserPage = ({route, navigation}: Props) => {
     (state: RootState) => state.otherSettingsReducer.creatingPost,
   );
 
+  const creatingFlash = useSelector(
+    (state: RootState) => state.otherSettingsReducer.creatingFlash,
+  );
+
   return (
     <>
       {user ? (
@@ -284,6 +288,19 @@ export const UserPage = ({route, navigation}: Props) => {
             <Animated.View
               style={[
                 styles.creatingPostContaienr,
+                {transform: [{translateY: y}]},
+              ]}>
+              <Text style={styles.creatingPostText}>作成中です</Text>
+              <View style={{width: 17}}>
+                <UIActivityIndicator size={14} color="gray" />
+              </View>
+            </Animated.View>
+          )}
+
+          {creatingFlash && (
+            <Animated.View
+              style={[
+                styles.creatingFlashContaienr,
                 {transform: [{translateY: y}]},
               ]}>
               <Text style={styles.creatingPostText}>作成中です</Text>
@@ -411,6 +428,8 @@ const nameContainerHeight = 19.5;
 const avatarAndNameContainerHeight =
   (moreXHeight ? 119.5 : 113) - nameContainerHeight - 10;
 
+const avatarAndNameContainerTop = moreXHeight ? '15%' : '13%';
+
 const introduceContainerTop = moreXHeight ? height * 0.274 : height * 0.31;
 const introduceContainerHeight = height * 0.14;
 
@@ -435,7 +454,7 @@ const styles = StyleSheet.create({
     height: introduceContainerHeight,
   },
   avatarAndNameContainer: {
-    top: moreXHeight ? '15%' : '13%',
+    top: avatarAndNameContainerTop,
     left: 10,
     flexDirection: 'row',
     alignSelf: 'flex-start',
@@ -473,10 +492,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red',
   },
   creatingPostText: {
     fontSize: 14,
     color: 'gray',
+  },
+  creatingFlashContaienr: {
+    position: 'absolute',
+    top: '22%',
+    left: 100,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

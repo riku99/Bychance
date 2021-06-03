@@ -43,8 +43,8 @@ export const CreatePost = ({navigation}: Props) => {
         return;
       }
       const source = await fs.readFile(uri, 'base64');
-      const resullt = await dispatch(createPostThunk({text, source, ext}));
-      if (createPostThunk.fulfilled.match(resullt)) {
+      const result = await dispatch(createPostThunk({text, source, ext}));
+      if (createPostThunk.fulfilled.match(result)) {
         displayShortMessage('投稿しました', 'success');
       }
       dispatch(creatingPost());

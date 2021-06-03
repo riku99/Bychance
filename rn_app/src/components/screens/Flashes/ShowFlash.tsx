@@ -115,9 +115,9 @@ export const ShowFlash = React.memo(
     const firstEntitiesLength = useRef(entityLength);
     const modalizeRef = useRef<Modalize>(null);
 
-    const creatingFlash = useSelector((state: RootState) => {
-      return state.otherSettingsReducer.creatingFlash;
-    });
+    // const creatingFlash = useSelector((state: RootState) => {
+    //   return state.otherSettingsReducer.creatingFlash;
+    // });
 
     const flashStackNavigation = useNavigation<
       FlashStackNavigationProp<'Flashes'>
@@ -447,7 +447,7 @@ export const ShowFlash = React.memo(
 
     return (
       <View style={styles.container}>
-        {entityLength ? (
+        {entityLength && (
           <>
             <WideRangeSourceContainer>
               <TouchableOpacity
@@ -503,12 +503,12 @@ export const ShowFlash = React.memo(
                 timestamp={currentFlash.timestamp}
                 setIsNavigatedToProfile={setIsNavigatedToProfile}
               />
-              {creatingFlash && isMyData && (
+              {/* {creatingFlash && isMyData && (
                 <View style={styles.addMessageContainer}>
                   <ActivityIndicator color="white" />
                   <Text style={styles.addMessage}>新しく追加しています</Text>
                 </View>
-              )}
+              )} */}
             </View>
 
             {isMyData && (
@@ -546,15 +546,6 @@ export const ShowFlash = React.memo(
               progressAnimation={progressAnimation}
             />
           </>
-        ) : (
-          creatingFlash && (
-            <View style={styles.creatingWideRangeSourceContainer}>
-              <View style={styles.creatingFlashMessage}>
-                <ActivityIndicator color="white" />
-                <Text style={{color: 'white'}}>追加しています</Text>
-              </View>
-            </View>
-          )
         )}
       </View>
     );

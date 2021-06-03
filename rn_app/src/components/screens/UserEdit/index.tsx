@@ -309,7 +309,7 @@ export const UserEditPage = () => {
               onPress={update}
             />
           ) : (
-            <ActivityIndicator />
+            <ActivityIndicator style={{paddingRight: 10}} />
           ),
       });
     }
