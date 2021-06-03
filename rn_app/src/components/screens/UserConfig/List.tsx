@@ -5,6 +5,7 @@ import {ListItem} from 'react-native-elements';
 type List = {
   title: string;
   switch?: JSX.Element;
+  onItemPress?: () => void;
 }[];
 
 type Props = {
@@ -19,7 +20,12 @@ export const ConfigList = React.memo(({list}: Props) => {
           key={i}
           bottomDivider
           topDivider={i === 0 ? true : false}
-          containerStyle={styles.listContainer}>
+          containerStyle={styles.listContainer}
+          onPress={() => {
+            if (l.onItemPress) {
+              l.onItemPress();
+            }
+          }}>
           <ListItem.Content>
             <ListItem.Title>{l.title}</ListItem.Title>
           </ListItem.Content>

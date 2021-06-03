@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {StyleSheet, View, Switch} from 'react-native';
+import {View, Switch} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
@@ -43,20 +43,10 @@ export const DisplayConfig = React.memo(() => {
   }, [switchForDisplay, onUserDisplaySwitchValueChange]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.sectionContainer}>
+    <View style={commonStyles.container}>
+      <View style={commonStyles.sectionContainer}>
         <ConfigList list={list} />
       </View>
     </View>
   );
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f7f7f7',
-  },
-  sectionContainer: {
-    marginTop: 30,
-  },
 });
