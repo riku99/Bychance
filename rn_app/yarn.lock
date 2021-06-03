@@ -1752,7 +1752,7 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native-vector-icons@^6.4.5":
+"@types/react-native-vector-icons@^6.4.6":
   version "6.4.6"
   resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.6.tgz#848e3b14572def56212cafbf5cb1254b445bfb41"
   integrity sha512-lAyxNfMd5L1xZvXWsGcJmNegDf61TAp40uL6ashNNWj9W3IrDJO59L9+9inh0Y2MsEZpLTdxzVU8Unb4/0FQng==
@@ -1769,9 +1769,9 @@
     "@types/react-native" "*"
 
 "@types/react-native@*":
-  version "0.64.5"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.64.5.tgz#219738b52b2e372ec057d3c8f20fbd6c37b245cd"
-  integrity sha512-k0r8MnQX7UFboZDvMKLov26gFLXKrNgLhCfSVhjaZ6wMUofKijxvee7/wgfAqtT2zS5FR4an4+qn0r72SCbw3g==
+  version "0.64.10"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.64.10.tgz#5eb6a72c77ce0f7e6e14b19c61a6bc585975eef5"
+  integrity sha512-3Kb9QM5/WZ6p58yZ7VPbvjvi6Wc/ZkESgJhKso1gKkNuHBe/4WL6586R2JRDiz9Tsxal9lMnbj3fligBVGl8PA==
   dependencies:
     "@types/react" "*"
 
@@ -1800,9 +1800,9 @@
     "@types/react" "*"
 
 "@types/react@*":
-  version "17.0.6"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.6.tgz#0ec564566302c562bf497d73219797a5e0297013"
-  integrity sha512-u/TtPoF/hrvb63LdukET6ncaplYsvCvmkceasx8oG84/ZCsoLxz9Z/raPBP4lTAiWW1Jb889Y9svHmv8R26dWw==
+  version "17.0.9"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.9.tgz#1147fb520024a62c9b3841f5cb4db89b73ddb87f"
+  integrity sha512-2Cw7FvevpJxQrCb+k5t6GH1KIvmadj5uBbjPaLlJB/nZWUj56e1ZqcD6zsoMFB47MsJUTFl9RJ132A7hb3QFJA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -2764,9 +2764,9 @@ color-name@^1.0.0, color-name@~1.1.4:
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
 color-string@^1.5.2:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.3.tgz#c9bbc5f01b58b5492f3d6857459cb6590ce204cc"
-  integrity sha512-dC2C5qeWoYkxki5UAXapdjqO672AM4vZuPGRQfO8b5HKuKGBbKWpITyDYN7TOFKvRW7kOgAn3746clDBMDJyQw==
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.5.tgz#65474a8f0e7439625f3d27a6a19d89fc45223014"
+  integrity sha512-jgIoum0OfQfq9Whcfc2z/VhCNcmQjWbey6qBX0vqt7YICflUmBCh9E9CiQD5GSJ+Uehixm3NUwHVhqUAWRivZg==
   dependencies:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
@@ -2784,7 +2784,7 @@ color-support@^1.1.3:
   resolved "https://registry.yarnpkg.com/color-support/-/color-support-1.1.3.tgz#93834379a1cc9a0c61f82f52f0d04322251bd5a2"
   integrity sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==
 
-color@^3.1.0, color@^3.1.2:
+color@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/color/-/color-3.1.2.tgz#68148e7f85d41ad7649c5fa8c8106f098d229e10"
   integrity sha512-vXTJhHebByxZn3lDvDJYw4lR5+uB3vuoHsuYA5AKuxRVn5wzzIfQKGLBmgdVRHKTJYeK5rvJcHnrd0Li49CFpg==
@@ -4230,7 +4230,7 @@ hermes-profile-transformer@^0.0.6:
   dependencies:
     source-map "^0.7.3"
 
-hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.0:
+hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
@@ -5514,12 +5514,12 @@ lodash.toarray@^4.4.0:
   resolved "https://registry.yarnpkg.com/lodash.toarray/-/lodash.toarray-4.4.0.tgz#24c4bfcd6b2fba38bfd0594db1179d8e9b656561"
   integrity sha1-JMS/zWsvuji/0FlNsRedjptlZWE=
 
-lodash@^4.0.0:
+lodash@^4.0.0, lodash@^4.17.15:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.3.0, lodash@^4.5.0:
+lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.19, lodash@^4.3.0, lodash@^4.5.0:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
@@ -6438,7 +6438,7 @@ open@^6.2.0:
   dependencies:
     is-wsl "^1.1.0"
 
-opencollective-postinstall@^2.0.0, opencollective-postinstall@^2.0.1:
+opencollective-postinstall@^2.0.1, opencollective-postinstall@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
   integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
@@ -6864,20 +6864,19 @@ react-native-countdown-circle-timer@^2.5.3:
   resolved "https://registry.yarnpkg.com/react-native-countdown-circle-timer/-/react-native-countdown-circle-timer-2.5.3.tgz#f4200dbd0b6747551cdb9f071d128602de656932"
   integrity sha512-+L3PVJ+aPpL6FOOGELoG6LofQ5JsRmPfDOwxMi6S/SqEF9ZybjhwvR6Vv/FdQXtNpvBt7Yvw6KSFxLLbQmgQRA==
 
-react-native-elements@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-2.3.2.tgz#f6b974127a3484bb46ebd98fbc012fb2208decd7"
-  integrity sha512-HygYYmq8JYjk/YYiUwr/64qT64H2xlPBz0JnkGTQwvnnyXZrfkHFopw8rLWCupv3iLLPDzVohvPs0Z5HLdonSQ==
+react-native-elements@3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-3.4.1.tgz#74ea15a9369b05abf4f7421f0ce236ca01fedfe1"
+  integrity sha512-SPotW75psW1qyZgtiWuiKSTASdd4yNYvf6/vgO6nyl2kEgZG5nP5wtFxL/GsUVxwHh7yc8xnJ3J9pkApa7p9lQ==
   dependencies:
-    "@types/react-native-vector-icons" "^6.4.5"
-    color "^3.1.0"
+    "@types/react-native-vector-icons" "^6.4.6"
+    color "^3.1.2"
     deepmerge "^4.2.2"
-    hoist-non-react-statics "^3.1.0"
+    hoist-non-react-statics "^3.3.2"
     lodash.isequal "^4.5.0"
-    opencollective-postinstall "^2.0.0"
-    prop-types "^15.7.2"
-    react-native-ratings "^7.2.0"
-    react-native-status-bar-height "^2.5.0"
+    opencollective-postinstall "^2.0.3"
+    react-native-ratings "^7.3.0"
+    react-native-size-matters "^0.3.1"
 
 react-native-emoji@^1.8.0:
   version "1.8.0"
@@ -7012,10 +7011,10 @@ react-native-parsed-text@0.0.22:
     "@react-native-picker/picker" "^1.8.3"
     lodash.isequal "^4.5.0"
 
-react-native-ratings@^7.2.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-7.3.0.tgz#32e11e4ed944ba8adbbc995d601df3f131619b6f"
-  integrity sha512-NCDIkmrVPnxPzP9zKdlcNpa2rPs3Hiv2qXsojUr3FpwbANWfgYE+jjGSSCBcS3vpXndTjhoaTGFDnybnUSFPFA==
+react-native-ratings@^7.3.0:
+  version "7.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-7.6.1.tgz#b3d8a99a0c12fd6874f7e3c0e492089543d837c8"
+  integrity sha512-V3y19iIifwemMr87KfovFIIzy/Rotqcds9k+ECaayQvrlucm/mXFC69R8xl/NivEdnxX7K87iurigByhpE37EQ==
   dependencies:
     lodash "^4.17.15"
     prop-types "^15.7.2"
@@ -7037,10 +7036,10 @@ react-native-screens@^2.11.0:
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.11.0.tgz#34b30b07c2d04aa100cba984b944b303bfa43ea6"
   integrity sha512-vJzJE3zI1XUtqthrX3Dh2TBQWB+xFyaGhF52KBq9FjJUN5ws4xpLZJxBWa1KbGV3DilmcSZ4jmZR5LGordwE7w==
 
-react-native-status-bar-height@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz#bc0fb85230603850aab9667ee8111a62954de90c"
-  integrity sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA==
+react-native-size-matters@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz#24d0cfc335a2c730f6d58bd7b43ea5a41be4b49f"
+  integrity sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw==
 
 react-native-svg-transformer@^0.14.3:
   version "0.14.3"

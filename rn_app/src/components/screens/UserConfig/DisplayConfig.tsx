@@ -29,8 +29,8 @@ export const DisplayConfig = React.memo(() => {
   const list = useMemo(() => {
     return [
       {
-        title: '他のユーザーに自分を表示する',
-        addComponent: (
+        title: '他のユーザーに自分を表示',
+        switch: (
           <Switch
             value={switchForDisplay}
             style={styles.switch}
@@ -53,7 +53,7 @@ export const DisplayConfig = React.memo(() => {
             <ListItem.Content>
               <ListItem.Title>{l.title}</ListItem.Title>
             </ListItem.Content>
-            {l.addComponent && l.addComponent}
+            {l.switch && l.switch}
           </ListItem>
         ))}
       </View>

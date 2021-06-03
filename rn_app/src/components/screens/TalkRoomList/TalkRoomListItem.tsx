@@ -29,7 +29,12 @@ export const TalkRoomListItem = React.memo(
         {room.unreadNumber !== 0 && (
           <Badge
             value={room.unreadNumber}
-            textStyle={{fontSize: 15}}
+            textProps={{
+              style: {
+                fontSize: 15,
+                color: 'white',
+              },
+            }}
             badgeStyle={styles.badgeStyle}
           />
         )}
@@ -49,5 +54,6 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 25 / 2,
     backgroundColor: normalStyles.mainColor,
+    fontSize: 15,
   },
 });
