@@ -42,6 +42,7 @@ import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {RootNavigationProp} from '~/screens/Root';
 import {normalStyles} from '~/constants/styles';
 import {judgeMoreDeviceX} from '~/helpers/device';
+import {Menu} from '~/components/utils/Menu';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -265,6 +266,10 @@ export const UserPage = ({route, navigation}: Props) => {
     (state: RootState) => state.otherSettingsReducer.creatingFlash,
   );
 
+  const displayedMenu = useSelector((state: RootState) => {
+    return state.otherSettingsReducer.displayedMenu;
+  });
+
   return (
     <>
       {user ? (
@@ -405,6 +410,8 @@ export const UserPage = ({route, navigation}: Props) => {
               <TakeFlashButton />
             </View>
           )}
+
+          {displayedMenu && isMe && <Menu />}
         </View>
       ) : (
         <View>

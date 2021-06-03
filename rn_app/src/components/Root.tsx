@@ -6,7 +6,6 @@ import FlashMessage from 'react-native-flash-message';
 import {RootState} from '../stores/index';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
-import {Menu} from './utils/Menu';
 import {updateLocationThunk} from '../apis/users/updateLocation';
 import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {useTalkRoomMessagesIo} from '~/hooks/socketio/talkRoomMessages';
@@ -25,9 +24,6 @@ const Root = () => {
   const dispatch = useCustomDispatch();
   const login = useLoginSelect();
   const id = useUserSelect()?.id;
-  const displayedMenu = useSelector((state: RootState) => {
-    return state.otherSettingsReducer.displayedMenu;
-  });
 
   const onEndSessionLogin = useCallback(() => setLoad(false), []);
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
@@ -72,7 +68,6 @@ const Root = () => {
     return (
       <View style={styles.container}>
         <RootStackScreen />
-        {displayedMenu && <Menu />}
         <FlashMessage position="top" />
       </View>
     );
