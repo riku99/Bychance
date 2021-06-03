@@ -4,6 +4,7 @@ import {RouteProp, NavigationProp} from '@react-navigation/native';
 
 import {RootStackParamList} from '~/screens/Root';
 import {DisplayConfig} from './DisplayConfig';
+import {MessageConfig} from './MessageConfig';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'UserConfing'>;
@@ -35,11 +36,7 @@ export const UserConfig = ({route, navigation}: Props) => {
   }
 
   if (goTo === 'message') {
-    return (
-      <View>
-        <Text>{goTo}</Text>
-      </View>
-    );
+    return <MessageConfig />;
   }
 
   if (goTo === 'account') {

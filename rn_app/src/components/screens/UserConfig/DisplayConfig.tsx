@@ -1,11 +1,12 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View, Switch} from 'react-native';
-import {ListItem} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
 import {changeUserDisplayThunk} from '~/apis/users/changeUserDisplay';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {ConfigList} from './List';
+import {commonStyles} from './constants';
 
 export const DisplayConfig = React.memo(() => {
   const userDisplay = useSelector((state: RootState) => {
@@ -33,7 +34,7 @@ export const DisplayConfig = React.memo(() => {
         switch: (
           <Switch
             value={switchForDisplay}
-            style={styles.switch}
+            style={commonStyles.switch}
             onValueChange={onUserDisplaySwitchValueChange}
           />
         ),
@@ -44,18 +45,7 @@ export const DisplayConfig = React.memo(() => {
   return (
     <View style={styles.container}>
       <View style={styles.sectionContainer}>
-        {list.map((l, i) => (
-          <ListItem
-            key={i}
-            bottomDivider
-            topDivider={i === 0 ? true : false}
-            containerStyle={styles.listContainer}>
-            <ListItem.Content>
-              <ListItem.Title>{l.title}</ListItem.Title>
-            </ListItem.Content>
-            {l.switch && l.switch}
-          </ListItem>
-        ))}
+        <ConfigList list={list} />
       </View>
     </View>
   );
@@ -68,11 +58,5 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     marginTop: 30,
-  },
-  listContainer: {
-    height: 45,
-  },
-  switch: {
-    transform: [{scaleX: 0.8}, {scaleY: 0.8}],
   },
 });
