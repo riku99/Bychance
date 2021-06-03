@@ -8,9 +8,10 @@ import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '../../../stores/index';
 import {displayMenu} from '../../../stores/otherSettings';
-import {editUserDisplayThunk} from '../../../apis/users/changeUserDisplay';
+import {changeUserDisplayThunk} from '../../../apis/users/changeUserDisplay';
 import {logoutAction} from '~/apis/session/logout';
 import {changeTalkRoomMessageReceiptThunk} from '~/apis/users/changeTalkRoomMessageReceipt';
+import {RootStackParamList} from '~/screens/Root';
 
 export const Menu = React.memo(() => {
   const isVisible = useSelector((state: RootState) => {
@@ -40,7 +41,7 @@ export const Menu = React.memo(() => {
 
   const changeUserDisplay = useCallback(
     (display: boolean) => {
-      dispatch(editUserDisplayThunk(display));
+      dispatch(changeUserDisplayThunk(display));
     },
     [dispatch],
   );
@@ -65,6 +66,13 @@ export const Menu = React.memo(() => {
       modalizeRef.current.close();
     }
   }, []);
+
+  const navigateToConfig = useCallback(
+    (goTo: RootStackParamList['UserConfing']['goTo']) => {
+      navigation.navigate('UserConfing', {goTo});
+    },
+    [navigation],
+  );
 
   const list = useMemo(() => {
     return [
@@ -95,6 +103,7 @@ export const Menu = React.memo(() => {
         titleStyle: styles.listTitleStyle,
         onPress: () => {
           modalClose();
+          navigateToConfig('display');
         },
       },
       // {
@@ -123,6 +132,7 @@ export const Menu = React.memo(() => {
         titleStyle: styles.listTitleStyle,
         onPress: () => {
           modalClose();
+          navigateToConfig('message');
         },
       },
       // {
@@ -154,10 +164,11 @@ export const Menu = React.memo(() => {
         titleStyle: styles.listTitleStyle,
         onPress: () => {
           modalClose();
+          navigateToConfig('account');
         },
       },
     ];
-  }, [modalClose]);
+  }, [modalClose, navigateToConfig]);
 
   return (
     <Modalize
@@ -189,11 +200,11 @@ const styles = StyleSheet.create({
   inModalContainer: {
     width: '97%',
     alignSelf: 'center',
-    marginTop: 10,
+    marginTop: 9,
     backgroundColor: 'gray',
   },
   listTitleStyle: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#575757',
   },
 });

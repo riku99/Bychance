@@ -18,7 +18,7 @@ import {
   RefreshUserThunkPaylaod,
 } from '../../apis/users/refreshUser';
 import {
-  editUserDisplayThunk,
+  changeUserDisplayThunk,
   EidtUserDisplayThunk,
 } from '../../apis/users/changeUserDisplay';
 import {
@@ -203,7 +203,7 @@ const userSlice = createSlice({
         },
       };
     },
-    [editUserDisplayThunk.fulfilled.type]: (
+    [changeUserDisplayThunk.fulfilled.type]: (
       state,
       action: PayloadAction<EidtUserDisplayThunk>,
     ) => ({

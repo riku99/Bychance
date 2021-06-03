@@ -12,7 +12,7 @@ import {
 
 export type EidtUserDisplayThunk = boolean;
 
-export const editUserDisplayThunk = createAsyncThunk<
+export const changeUserDisplayThunk = createAsyncThunk<
   EidtUserDisplayThunk,
   boolean,
   {rejectValue: rejectPayload}

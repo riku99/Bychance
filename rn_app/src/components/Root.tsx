@@ -1,9 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, AppState, AppStateStatus} from 'react-native';
-import {useSelector} from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
 
-import {RootState} from '../stores/index';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
 import {updateLocationThunk} from '../apis/users/updateLocation';

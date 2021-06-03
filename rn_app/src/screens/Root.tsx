@@ -19,6 +19,7 @@ import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {normalStyles} from '~/constants/styles';
 import {User} from '~/stores/user';
 import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
+import {UserConfig} from '~/components/screens/UserConfig';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -29,6 +30,9 @@ export type RootStackParamList = {
   UserBackGroundView: {
     source: string;
     sourceType: NonNullable<User['backGroundItemType']>;
+  };
+  UserConfing: {
+    goTo: 'display' | 'message' | 'account';
   };
 };
 
@@ -121,6 +125,14 @@ export const RootStackScreen = () => {
               };
             },
           };
+        }}
+      />
+      <RootStack.Screen
+        name="UserConfing"
+        component={UserConfig}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
         }}
       />
     </RootStack.Navigator>
