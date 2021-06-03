@@ -118,14 +118,18 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const [firstLoading, setFirstLoading] = useState(true);
 
+  const getUsers = useCallback(async () => {
+    await dispatch(getNearbyUsersThunk({lat, lng, range}));
+  }, [dispatch, lat, lng, range]);
+
   useEffect(() => {
-    const get = async () => {
+    const _get = async () => {
       setFirstLoading(true);
-      await dispatch(getNearbyUsersThunk({lat, lng, range})); // この部分refreshの処理と共通化できそう
+      await getUsers();
       setFirstLoading(false);
     };
-    get();
-  }, [dispatch, lat, lng, range]);
+    _get();
+  }, [getUsers]);
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
   const preloadUriGroup = useMemo(() => {
@@ -236,8 +240,8 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   const refreshUsers = useCallback(async () => {
-    await dispatch(getNearbyUsersThunk({lat, lng, range}));
-  }, [dispatch, lat, lng, range]);
+    await getUsers();
+  }, [getUsers]);
 
   const {top} = useSafeAreaInsets();
 
