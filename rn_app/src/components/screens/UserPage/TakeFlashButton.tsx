@@ -1,11 +1,11 @@
 import React from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {Button} from 'react-native-elements';
+import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {RootNavigationProp} from '~/screens/Root';
-import {normalStyles} from '~/constants/styles';
+import {mainButtonGradientConfig} from '~/constants/styles';
 
 export const TakeFlashButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
@@ -14,13 +14,15 @@ export const TakeFlashButton = React.memo(() => {
     navigation.push('TakeFlash');
   };
   return (
-    <Button
-      activeOpacity={1}
-      icon={<MIcon name="flash-on" size={27} style={styles.buttonIcon} />}
-      buttonStyle={styles.button}
-      onPress={onPress}
-      raised
-    />
+    <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={1}>
+      <LinearGradient
+        colors={mainButtonGradientConfig.colors}
+        start={mainButtonGradientConfig.start}
+        end={mainButtonGradientConfig.end}
+        style={styles.button}>
+        <MIcon name="flash-on" size={27} style={styles.buttonIcon} />
+      </LinearGradient>
+    </TouchableOpacity>
   );
 });
 
@@ -31,7 +33,8 @@ const styles = StyleSheet.create({
     width: width / 7,
     height: width / 7,
     borderRadius: width / 7,
-    backgroundColor: normalStyles.mainColor,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonIcon: {color: 'white'},
 });
