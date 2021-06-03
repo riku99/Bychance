@@ -1736,6 +1736,14 @@
   resolved "https://registry.yarnpkg.com/@types/rails-actioncable/-/rails-actioncable-0.0.21.tgz#36b2b9ccae318fc11baa02b58e753eefdd370d5d"
   integrity sha1-NrK5zK4xj8EbqgK1jnU+7903DV0=
 
+"@types/react-native-indicators@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-indicators/-/react-native-indicators-0.16.0.tgz#2b06042fa82e6afb195b0425bbc65bd7aed820a3"
+  integrity sha512-YfrRxz+fk5CMwpKCF+m7Y4I681tWSf2tzMj7UBk8WvtsksudsoQvnnIgHcg+fot0Dxig61VpSsqRR+rnRUKNZA==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-native-photo-view@^1.5.3":
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/@types/react-native-photo-view/-/react-native-photo-view-1.5.3.tgz#ada480d353c4653b242ed38a00285e9deceb428e"
@@ -6943,6 +6951,13 @@ react-native-image-resizer@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/react-native-image-resizer/-/react-native-image-resizer-1.4.2.tgz#8573c0f956eb8a62824999b9dbcec4ebeefb9a75"
   integrity sha512-owYyKdNnbxtBtNoMjodpUvrSQJ6HM+K/cHTeCyu1GpQwSk5MzGIwOt6Ng84cYLkodKEvLrLknnewTx/pCj4Eeg==
+
+react-native-indicators@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/react-native-indicators/-/react-native-indicators-0.17.0.tgz#92f95efaf5fb53be576dfe4e1980a25655a93f55"
+  integrity sha512-s23em477GHGxWeGczWrixScAZD6tQU4mx1fttlrwhEGKOxhBgp55Kh3RoD9Wj4yna4e5W35xQNoPqoJAT6QW5A==
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"

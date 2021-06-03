@@ -13,6 +13,7 @@ export const TakeFlashButton = React.memo(() => {
   const onPress = () => {
     navigation.push('TakeFlash');
   };
+
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={1}>
       <LinearGradient

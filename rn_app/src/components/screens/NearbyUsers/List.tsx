@@ -1,5 +1,11 @@
 import React, {useCallback, useContext, useState} from 'react';
-import {StyleSheet, View, Text, RefreshControl} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  RefreshControl,
+  ActivityIndicator,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
 
@@ -8,9 +14,13 @@ import {TabViewContext} from './index';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
-  const {users, onAvatarPress, navigateToUserPage, refreshUsers} = useContext(
-    TabViewContext,
-  );
+  const {
+    users,
+    onAvatarPress,
+    navigateToUserPage,
+    refreshUsers,
+    firstLoading,
+  } = useContext(TabViewContext);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -25,6 +35,14 @@ export const List = React.memo(() => {
   // const caluculateDuration = useCallback((n: number) => {
   //   return n * 5;
   // }, []);
+
+  if (firstLoading) {
+    return (
+      <View style={{marginTop: 10}}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -95,10 +113,6 @@ export const List = React.memo(() => {
           <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
         </View>
       )}
-
-      {/* <View style={styles.pcikerContainer}>
-        <RangeSelectButton setRange={setRange} />
-      </View> */}
     </View>
   );
 });

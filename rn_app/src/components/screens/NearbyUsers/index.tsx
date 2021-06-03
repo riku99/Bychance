@@ -53,11 +53,13 @@ type TabViewContextType = {
         flashesData: undefined;
       }) => void;
   refreshUsers?: () => Promise<void>;
+  firstLoading: boolean;
 };
 
 export const TabViewContext = createContext<TabViewContextType>({
   users: [],
   keyword: '',
+  firstLoading: false,
 });
 
 // createMaterialTopTabNavigatorでスクリーンを作る際に、componentにインラインで記述するとパフォーマンスの問題があるのでインラインの記述はしたくない
@@ -114,8 +116,15 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const dispatch = useCustomDispatch();
 
+  const [firstLoading, setFirstLoading] = useState(true);
+
   useEffect(() => {
-    dispatch(getNearbyUsersThunk({lat, lng, range}));
+    const get = async () => {
+      setFirstLoading(true);
+      await dispatch(getNearbyUsersThunk({lat, lng, range})); // この部分refreshの処理と共通化できそう
+      setFirstLoading(false);
+    };
+    get();
   }, [dispatch, lat, lng, range]);
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
@@ -241,6 +250,7 @@ export const NearbyUsersScreen = React.memo(() => {
       lat,
       lng,
       refreshUsers,
+      firstLoading,
     }),
     [
       filteredUsers,
@@ -250,6 +260,7 @@ export const NearbyUsersScreen = React.memo(() => {
       lat,
       lng,
       refreshUsers,
+      firstLoading,
     ],
   );
 

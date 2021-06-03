@@ -1,8 +1,9 @@
-import React, {useCallback, useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import {UIActivityIndicator} from 'react-native-indicators';
 
 import {TabViewContext} from './index';
 import {Avatar} from './Avatar';
@@ -18,6 +19,8 @@ export const Map = React.memo(() => {
     navigateToUserPage,
     refreshUsers,
   } = useContext(TabViewContext);
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const region = useMemo(() => {
     if (lat && lng) {
@@ -55,9 +58,11 @@ export const Map = React.memo(() => {
     }
   };
 
-  const onRefreshButtonPress = useCallback(() => {
+  const onRefreshButtonPress = useCallback(async () => {
     if (refreshUsers) {
-      refreshUsers();
+      setRefreshing(true);
+      await refreshUsers();
+      setRefreshing(false);
     }
   }, [refreshUsers]);
 
@@ -82,7 +87,11 @@ export const Map = React.memo(() => {
           start={mainButtonGradientConfig.start}
           end={mainButtonGradientConfig.end}
           style={styles.refreshButtonContainer}>
-          <MIcon name="refresh" size={30} color="white" />
+          {!refreshing ? (
+            <MIcon name="refresh" size={30} color="white" />
+          ) : (
+            <UIActivityIndicator color="white" size={20} />
+          )}
         </LinearGradient>
       </TouchableOpacity>
     </View>
