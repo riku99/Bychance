@@ -68,7 +68,10 @@ export const Map = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={region} showsUserLocation={true}>
+      <MapView
+        style={styles.map}
+        initialRegion={region}
+        showsUserLocation={true}>
         {users.map((user) => (
           <Marker
             key={user.id}
