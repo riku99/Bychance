@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as Keychain from 'react-native-keychain';
 import {ListItem, Icon} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
+import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '../../../stores/index';
 import {displayMenu} from '../../../stores/otherSettings';
@@ -15,6 +16,13 @@ export const Menu = React.memo(() => {
   const isVisible = useSelector((state: RootState) => {
     return state.otherSettingsReducer.displayedMenu!;
   });
+
+  const modalizeRef = useRef<Modalize>(null);
+  useEffect(() => {
+    if (isVisible) {
+      modalizeRef.current?.open();
+    }
+  }, [isVisible]);
 
   const userDisplay = useSelector((state: RootState) => {
     return state.userReducer.user!.display;
@@ -50,87 +58,106 @@ export const Menu = React.memo(() => {
     setTalkRoomMessageReceiptSwitch,
   ] = useState(talkRoomMessageReceipt);
 
+  const navigation = useNavigation();
+
+  const modalClose = useCallback(() => {
+    if (modalizeRef.current) {
+      modalizeRef.current.close();
+    }
+  }, []);
+
   const list = useMemo(() => {
     return [
+      // {
+      //   title: '他のユーザーに自分を表示',
+      //   icon: 'emoji-people',
+      //   titleStyle: styles.listTitleStyle,
+      //   onPress: () => {},
+      //   addComponent: (
+      //     <Switch
+      //       value={displaySwitch}
+      //       style={{transform: [{scaleX: 0.8}, {scaleY: 0.8}]}}
+      //       onValueChange={() => {
+      //         if (displaySwitch) {
+      //           setDisplaySwitch(false);
+      //           changeUserDisplay(false);
+      //         } else {
+      //           setDisplaySwitch(true);
+      //           changeUserDisplay(true);
+      //         }
+      //       }}
+      //     />
+      //   ),
+      // },
       {
-        title: '他のユーザーに自分を表示',
+        title: '自分の表示',
         icon: 'emoji-people',
-        titleStyle: {fontSize: 15, color: '#575757'},
-        onPress: () => {},
-        addComponent: (
-          <Switch
-            value={displaySwitch}
-            style={{transform: [{scaleX: 0.8}, {scaleY: 0.8}]}}
-            onValueChange={() => {
-              if (displaySwitch) {
-                setDisplaySwitch(false);
-                changeUserDisplay(false);
-              } else {
-                setDisplaySwitch(true);
-                changeUserDisplay(true);
-              }
-            }}
-          />
-        ),
-      },
-      {
-        title: '他のユーザーからメッセージを受け取る',
-        icon: 'mail-outline',
-        titleStyle: {fontSize: 15, color: '#575757'},
-        addComponent: (
-          <Switch
-            value={talkRoomMessageReceiptSwitch}
-            style={{transform: [{scaleX: 0.8}, {scaleY: 0.8}]}}
-            onValueChange={() => {
-              if (talkRoomMessageReceiptSwitch) {
-                setTalkRoomMessageReceiptSwitch(false);
-                changeTalkRoomMessageReceipt(false);
-              } else {
-                setTalkRoomMessageReceiptSwitch(true);
-                changeTalkRoomMessageReceipt(true);
-              }
-            }}
-          />
-        ),
-      },
-      {
-        title: 'ログアウト',
-        icon: 'logout',
-        titleStyle: {fontSize: 15, color: '#575757'},
+        titleStyle: styles.listTitleStyle,
         onPress: () => {
-          Alert.alert('ログアウトしますか?', '', [
-            {
-              text: 'はい',
-              onPress: async () => {
-                await Keychain.resetGenericPassword();
-                dispatch(logoutAction);
-                return;
-              },
-            },
-            {
-              text: 'いいえ',
-              onPress: () => {
-                return;
-              },
-            },
-          ]);
+          modalClose();
+        },
+      },
+      // {
+      //   title: '他のユーザーからメッセージを受け取る',
+      //   icon: 'mail-outline',
+      //   titleStyle: styles.listTitleStyle,
+      //   addComponent: (
+      //     <Switch
+      //       value={talkRoomMessageReceiptSwitch}
+      //       style={{transform: [{scaleX: 0.8}, {scaleY: 0.8}]}}
+      //       onValueChange={() => {
+      //         if (talkRoomMessageReceiptSwitch) {
+      //           setTalkRoomMessageReceiptSwitch(false);
+      //           changeTalkRoomMessageReceipt(false);
+      //         } else {
+      //           setTalkRoomMessageReceiptSwitch(true);
+      //           changeTalkRoomMessageReceipt(true);
+      //         }
+      //       }}
+      //     />
+      //   ),
+      // },
+      {
+        title: 'メッセージ',
+        icon: 'mail-outline',
+        titleStyle: styles.listTitleStyle,
+        onPress: () => {
+          modalClose();
+        },
+      },
+      // {
+      //   title: 'ログアウト',
+      //   icon: 'logout',
+      //   titleStyle: styles.listTitleStyle,
+      //   onPress: () => {
+      //     Alert.alert('ログアウトしますか?', '', [
+      //       {
+      //         text: 'はい',
+      //         onPress: async () => {
+      //           await Keychain.resetGenericPassword();
+      //           dispatch(logoutAction);
+      //           return;
+      //         },
+      //       },
+      //       {
+      //         text: 'いいえ',
+      //         onPress: () => {
+      //           return;
+      //         },
+      //       },
+      //     ]);
+      //   },
+      // },
+      {
+        title: 'アカウント',
+        icon: 'account-circle',
+        titleStyle: styles.listTitleStyle,
+        onPress: () => {
+          modalClose();
         },
       },
     ];
-  }, [
-    changeUserDisplay,
-    dispatch,
-    displaySwitch,
-    talkRoomMessageReceiptSwitch,
-    changeTalkRoomMessageReceipt,
-  ]);
-
-  const modalizeRef = useRef<Modalize>(null);
-  useEffect(() => {
-    if (isVisible) {
-      modalizeRef.current?.open();
-    }
-  }, [isVisible]);
+  }, [modalClose]);
 
   return (
     <Modalize
@@ -148,7 +175,6 @@ export const Menu = React.memo(() => {
               <ListItem.Content>
                 <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
               </ListItem.Content>
-              {l.addComponent}
             </ListItem>
           );
         })}
@@ -164,5 +190,10 @@ const styles = StyleSheet.create({
     width: '97%',
     alignSelf: 'center',
     marginTop: 10,
+    backgroundColor: 'gray',
+  },
+  listTitleStyle: {
+    fontSize: 15,
+    color: '#575757',
   },
 });
