@@ -18,6 +18,7 @@ import {
 import {RouteProp} from '@react-navigation/native';
 import {shallowEqual, useSelector, useDispatch} from 'react-redux';
 import FastImage from 'react-native-fast-image';
+import {UIActivityIndicator} from 'react-native-indicators';
 
 import {UserTabView, stickyTabHeight} from './TabView';
 import {Avatar} from './Avatar';
@@ -256,6 +257,10 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, [flashesNavigationParam, navigation]);
 
+  const creatingPost = useSelector(
+    (state: RootState) => state.otherSettingsReducer.creatingPost,
+  );
+
   return (
     <>
       {user ? (
@@ -274,6 +279,19 @@ export const UserPage = ({route, navigation}: Props) => {
               {user.introduce}
             </Text>
           </Animated.View>
+
+          {creatingPost && (
+            <Animated.View
+              style={[
+                styles.creatingPostContaienr,
+                {transform: [{translateY: y}]},
+              ]}>
+              <Text style={styles.creatingPostText}>作成中です</Text>
+              <View style={{width: 17}}>
+                <UIActivityIndicator size={14} color="gray" />
+              </View>
+            </Animated.View>
+          )}
 
           <UserTabView
             userId={user.id}
@@ -447,5 +465,18 @@ const styles = StyleSheet.create({
   snsIconsContainer: {
     top: snsIconsContainerTop,
     alignItems: 'center',
+  },
+  creatingPostContaienr: {
+    position: 'absolute',
+    top: snsIconsContainerTop + 21,
+    right: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'red',
+  },
+  creatingPostText: {
+    fontSize: 14,
+    color: 'gray',
   },
 });
