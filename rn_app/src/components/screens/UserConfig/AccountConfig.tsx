@@ -4,7 +4,7 @@ import {View, Alert} from 'react-native';
 import {commonStyles} from './constants';
 import {ConfigList} from './List';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
-import {logutThunk} from '~/apis/session/logout';
+import {logoutThunk} from '~/apis/session/logout';
 
 export const AccountConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
@@ -18,7 +18,7 @@ export const AccountConfig = React.memo(() => {
             {
               text: 'はい',
               onPress: async () => {
-                await dispatch(logutThunk());
+                await dispatch(logoutThunk());
                 return;
               },
             },

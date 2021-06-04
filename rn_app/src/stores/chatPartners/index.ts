@@ -27,7 +27,7 @@ import {
   GetNearbyUsersPayload,
 } from '../../apis/nearbyUsers/getNearbyUsers';
 import {refreshUserThunk} from '../../apis/users/refreshUser';
-import {logoutAction} from '../../apis/session/logout';
+import {logoutThunk} from '~/apis/session/logout';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
@@ -52,7 +52,7 @@ export const chatPartnersSlice = createSlice({
       state,
       action: PayloadAction<SampleLoginThunkPayload>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
-    [logoutAction.type]: () => {
+    [logoutThunk.fulfilled.type]: () => {
       return chatPartnersAdapter.getInitialState();
     },
     [lineLoginThunk.fulfilled.type]: (

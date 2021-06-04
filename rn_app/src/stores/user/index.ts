@@ -33,8 +33,8 @@ import {
   changeTalkRoomMessageReceiptThunk,
   ChangeTalkRoomMessageReceiptPaylpad,
 } from '~/apis/users/changeTalkRoomMessageReceipt';
+import {logoutThunk} from '~/apis/session/logout';
 import {sampleLogin} from '../../apis/session/sampleLogin';
-import {logoutAction} from '../../apis/session/logout';
 
 export type UserState = {
   user?: {
@@ -180,7 +180,7 @@ const userSlice = createSlice({
         user: action.payload.user,
       };
     },
-    [logoutAction.type]: () => initialState,
+    [logoutThunk.fulfilled.type]: () => initialState,
     [editProfileThunk.fulfilled.type]: (
       state,
       actions: PayloadAction<EditProfilePayload>,

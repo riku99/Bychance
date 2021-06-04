@@ -10,15 +10,11 @@ import {
 } from '../re-modules';
 import * as Keychain from 'react-native-keychain';
 
-export const logoutAction = {
-  type: 'session/logout',
-};
-
-export const logutThunk = createAsyncThunk<
+export const logoutThunk = createAsyncThunk<
   undefined,
   undefined,
   {rejectValue: RejectPayload}
->('sessions/logou', async (_, {dispatch, rejectWithValue}) => {
+>('sessions/logout', async (_, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
   if (credentials) {
     try {

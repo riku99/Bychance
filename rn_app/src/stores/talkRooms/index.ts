@@ -27,7 +27,7 @@ import {
   createDeleteRoomThunk,
   CreateDeleteRoomThunkPayload,
 } from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
-import {logoutAction} from '../../apis/session/logout';
+import {logoutThunk} from '~/apis/session/logout';
 import {receiveTalkRoomMessage} from '../talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
 
@@ -63,7 +63,7 @@ export const RoomsSlice = createSlice({
     [sampleLogin.fulfilled.type]: (state, action) => {
       talkRoomsAdapter.addMany(state, action.payload.rooms);
     },
-    [logoutAction.type]: () => {
+    [logoutThunk.fulfilled.type]: () => {
       return talkRoomsAdapter.getInitialState();
     },
     [lineLoginThunk.fulfilled.type]: (

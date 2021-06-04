@@ -22,7 +22,7 @@ import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
 } from '../../apis/session/sessionLogin';
-import {logoutAction} from '../../apis/session/logout';
+import {logoutThunk} from '~/apis/session/logout';
 
 export type Flash = {
   id: number;
@@ -43,7 +43,7 @@ const flashesSlice = createSlice({
   initialState: flashesAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
-    [logoutAction.type]: () => flashesAdapter.getInitialState(),
+    [logoutThunk.fulfilled.type]: () => flashesAdapter.getInitialState(),
     [sessionLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SessionLoginThunkPayload>,

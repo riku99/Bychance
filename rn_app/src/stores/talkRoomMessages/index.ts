@@ -17,7 +17,7 @@ import {
   SessionLoginThunkPayload,
 } from '../../apis/session/sessionLogin';
 import {sampleLogin} from '../../apis/session/sampleLogin';
-import {logoutAction} from '../../apis/session/logout';
+import {logoutThunk} from '~/apis/session/logout';
 import {RootState} from '../index';
 import {ReceivedMessageData} from '../types';
 
@@ -48,7 +48,7 @@ const talkRoomMessagesSlice = createSlice({
     },
   },
   extraReducers: {
-    [logoutAction.type]: () => {
+    [logoutThunk.fulfilled.type]: () => {
       return talkRoomMessagesAdapter.getInitialState();
     },
     [sampleLogin.fulfilled.type]: (state, action) => {

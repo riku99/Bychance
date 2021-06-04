@@ -15,7 +15,7 @@ import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
 } from '../../apis/flashes/createAlreadyViewedFlashes';
-import {logoutAction} from '../../apis/session/logout';
+import {logoutThunk} from '~/apis/session/logout';
 
 // NearbyUserは位置情報により取得したユーザーなので必ずlat, lngが存在する。AnotherUserはトーク相手とかも含まれるので位置情報のデータが必ず含まれるとは限らない
 export type NearbyUser = Omit<AnotherUser, 'lat' | 'lng'> & {
@@ -37,7 +37,7 @@ const nearbyUsersSlice = createSlice({
   initialState: nearbyUsersAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
-    [logoutAction.type]: () => {
+    [logoutThunk.fulfilled.type]: () => {
       return nearbyUsersAdapter.getInitialState();
     },
     [getNearbyUsersThunk.fulfilled.type]: (
