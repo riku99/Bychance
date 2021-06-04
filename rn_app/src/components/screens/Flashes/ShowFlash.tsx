@@ -115,10 +115,6 @@ export const ShowFlash = React.memo(
     const firstEntitiesLength = useRef(entityLength);
     const modalizeRef = useRef<Modalize>(null);
 
-    // const creatingFlash = useSelector((state: RootState) => {
-    //   return state.otherSettingsReducer.creatingFlash;
-    // });
-
     const flashStackNavigation = useNavigation<
       FlashStackNavigationProp<'Flashes'>
     >();
@@ -351,7 +347,7 @@ export const ShowFlash = React.memo(
     };
 
     const onScreenPressOut = () => {
-      if (longPress.current) {
+      if (longPress.current && !loading) {
         progressAnimation({
           progressNumber: currentProgressBar.current,
           duration: videoDuration.current,
@@ -503,12 +499,6 @@ export const ShowFlash = React.memo(
                 timestamp={currentFlash.timestamp}
                 setIsNavigatedToProfile={setIsNavigatedToProfile}
               />
-              {/* {creatingFlash && isMyData && (
-                <View style={styles.addMessageContainer}>
-                  <ActivityIndicator color="white" />
-                  <Text style={styles.addMessage}>新しく追加しています</Text>
-                </View>
-              )} */}
             </View>
 
             {isMyData && (

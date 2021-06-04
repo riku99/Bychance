@@ -42,4 +42,6 @@ export const UserConfig = ({route, navigation}: Props) => {
   if (goTo === 'account') {
     return <AccountConfig />;
   }
+
+  return null;
 };

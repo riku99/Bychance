@@ -34,7 +34,7 @@ export const AccountConfig = React.memo(() => {
         },
       },
     ];
-  }, []);
+  }, [dispatch]);
 
   return (
     <View style={commonStyles.container}>

@@ -53,7 +53,7 @@ export const chatPartnersSlice = createSlice({
       action: PayloadAction<SampleLoginThunkPayload>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [logoutAction.type]: () => {
-      chatPartnersAdapter.getInitialState();
+      return chatPartnersAdapter.getInitialState();
     },
     [lineLoginThunk.fulfilled.type]: (
       state,
