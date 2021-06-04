@@ -339,11 +339,13 @@ export const ShowFlash = React.memo(
     };
 
     const onScreenLongPress = () => {
-      progressAnim[currentProgressBar.current].stopAnimation();
-      if (currentFlash.sourceType === 'video') {
-        setIsPaused(true);
+      if (!loading) {
+        progressAnim[currentProgressBar.current].stopAnimation();
+        if (currentFlash.sourceType === 'video') {
+          setIsPaused(true);
+        }
+        longPress.current = true;
       }
-      longPress.current = true;
     };
 
     const onScreenPressOut = () => {
