@@ -1,5 +1,4 @@
 import React, {useLayoutEffect, useMemo} from 'react';
-import {View, Text} from 'react-native';
 import {RouteProp, NavigationProp} from '@react-navigation/native';
 
 import {RootStackParamList} from '~/screens/Root';

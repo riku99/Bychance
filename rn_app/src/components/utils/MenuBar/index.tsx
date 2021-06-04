@@ -15,6 +15,7 @@ export const MenuBar = React.memo(() => {
       onPress={() => {
         dispatch(displayMenu());
       }}
+      activeOpacity={1}
     />
   );
 });
