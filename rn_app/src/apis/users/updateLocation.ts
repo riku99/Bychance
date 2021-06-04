@@ -6,8 +6,8 @@ import {
   headers,
   checkKeychain,
   requestLogin,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
 } from '../re-modules';
 
 export type UpdateLocationThunkPaylaod = {
@@ -23,7 +23,7 @@ export type UpdateLocationThunkArg = {
 export const updateLocationThunk = createAsyncThunk<
   UpdateLocationThunkPaylaod,
   UpdateLocationThunkArg,
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('users/location', async ({lat, lng}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
 
@@ -36,7 +36,7 @@ export const updateLocationThunk = createAsyncThunk<
       );
       return {lat, lng};
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

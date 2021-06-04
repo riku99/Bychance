@@ -1,21 +1,20 @@
 import {
   axios,
   createAsyncThunk,
-  logoutAction,
   origin,
   headers,
   checkKeychain,
-  requestLogin,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  handleCredentialsError,
+  RejectPayload,
 } from '../re-modules';
 
-export type EidtUserDisplayThunk = boolean;
+export type EidtUserDisplayThunkPayload = boolean;
 
 export const changeUserDisplayThunk = createAsyncThunk<
-  EidtUserDisplayThunk,
+  EidtUserDisplayThunkPayload,
   boolean,
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('users/editUserDisplay', async (display, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
   if (credentials) {
@@ -28,11 +27,11 @@ export const changeUserDisplayThunk = createAsyncThunk<
 
       return display;
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {
-    requestLogin(() => dispatch(logoutAction));
+    handleCredentialsError(dispatch);
     return rejectWithValue({errorType: 'loginError'});
   }
 });

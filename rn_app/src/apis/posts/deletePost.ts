@@ -3,8 +3,8 @@ import {
   createAsyncThunk,
   origin,
   headers,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
   checkKeychain,
   requestLogin,
   logoutAction,
@@ -15,7 +15,7 @@ export type DeletePostThunkPaylaod = number;
 export const deletePostThunk = createAsyncThunk<
   DeletePostThunkPaylaod,
   {postId: number},
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('post/deletePost', async ({postId}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
   if (credentials) {
@@ -29,7 +29,7 @@ export const deletePostThunk = createAsyncThunk<
 
       return postId;
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

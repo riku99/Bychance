@@ -19,7 +19,7 @@ import {
 } from '../../apis/users/refreshUser';
 import {
   changeUserDisplayThunk,
-  EidtUserDisplayThunk,
+  EidtUserDisplayThunkPayload,
 } from '../../apis/users/changeUserDisplay';
 import {
   updateLocationThunk,
@@ -205,7 +205,7 @@ const userSlice = createSlice({
     },
     [changeUserDisplayThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<EidtUserDisplayThunk>,
+      action: PayloadAction<EidtUserDisplayThunkPayload>,
     ) => ({
       ...state,
       user: {...state.user!, display: action.payload},

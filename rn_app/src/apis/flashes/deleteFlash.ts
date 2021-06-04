@@ -1,11 +1,11 @@
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -16,7 +16,7 @@ export const deleteFlashThunk = createAsyncThunk<
   DeleteFlashThunkPayload,
   {flashId: number},
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >('flashes/delete', async ({flashId}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
@@ -30,7 +30,7 @@ export const deleteFlashThunk = createAsyncThunk<
 
       return flashId;
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

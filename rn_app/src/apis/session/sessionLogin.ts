@@ -3,8 +3,8 @@ import {
   createAsyncThunk,
   origin,
   headers,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
   SuccessfullLoginData,
   Credentials,
 } from '../re-modules';
@@ -14,17 +14,17 @@ export type SessionLoginThunkPayload = SuccessfullLoginData;
 export const sessionLoginThunk = createAsyncThunk<
   SessionLoginThunkPayload,
   Credentials,
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('users/sessionLogin', async ({id, token}, {dispatch, rejectWithValue}) => {
   try {
     const response = await axios.get<SuccessfullLoginData>(
-      `${origin}/sessions?id=${id}`,
+      `${origin}/sessions/sessionlogin?id=${id}`,
       headers(token),
     );
 
     return response.data;
   } catch (e) {
-    const result = handleBasicError({e, dispatch});
+    const result = handleBasicApiError({e, dispatch});
     return rejectWithValue(result);
   }
 });

@@ -1,11 +1,11 @@
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -19,7 +19,7 @@ export const createAlreadyViewdFlashThunk = createAsyncThunk<
   CreateAlreadyViewdFlashThunkPayload,
   {flashId: number; userId: string},
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >(
   'flashes/createAlreadyViewdFlash',
@@ -36,7 +36,7 @@ export const createAlreadyViewdFlashThunk = createAsyncThunk<
 
         return {userId, flashId};
       } catch (e) {
-        const result = handleBasicError({e, dispatch});
+        const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

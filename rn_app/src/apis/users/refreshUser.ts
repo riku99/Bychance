@@ -6,8 +6,8 @@ import {
   headers,
   checkKeychain,
   requestLogin,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
 } from '../re-modules';
 import {User} from '../../stores/user';
 import {AnotherUser} from '../../stores/types';
@@ -19,7 +19,7 @@ export type RefreshUserThunkPaylaod =
 export const refreshUserThunk = createAsyncThunk<
   RefreshUserThunkPaylaod,
   {userId: string},
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('users/refreshUser', async ({userId}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
 
@@ -35,7 +35,7 @@ export const refreshUserThunk = createAsyncThunk<
 
       return response.data;
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

@@ -3,8 +3,8 @@ import {
   createAsyncThunk,
   origin,
   headers,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
   SuccessfullLoginData,
 } from '../re-modules';
 import LineLogin from '@xmartlabs/react-native-line';
@@ -15,7 +15,7 @@ export type LineLoginThunkPayload = SuccessfullLoginData;
 export const lineLoginThunk = createAsyncThunk<
   LineLoginThunkPayload | void,
   undefined,
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('users/lineLogin', async (dummy, {dispatch, rejectWithValue}) => {
   try {
     const loginResult = await LineLogin.login({
@@ -52,7 +52,7 @@ export const lineLoginThunk = createAsyncThunk<
     if (e.message === 'User cancelled or interrupted the login process.') {
       console.log('cancelled');
     } else {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   }

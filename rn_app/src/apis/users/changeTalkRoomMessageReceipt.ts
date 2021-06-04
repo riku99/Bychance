@@ -6,8 +6,8 @@ import {
   headers,
   checkKeychain,
   requestLogin,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
 } from '../re-modules';
 
 export type ChangeTalkRoomMessageReceiptPaylpad = boolean;
@@ -16,7 +16,7 @@ export const changeTalkRoomMessageReceiptThunk = createAsyncThunk<
   ChangeTalkRoomMessageReceiptPaylpad,
   {receipt: boolean},
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >(
   'users/changeTalkRoomMessageReceipt',
@@ -33,7 +33,7 @@ export const changeTalkRoomMessageReceiptThunk = createAsyncThunk<
 
         return receipt;
       } catch (e) {
-        const result = handleBasicError({e, dispatch});
+        const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

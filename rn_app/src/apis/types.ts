@@ -1,7 +1,7 @@
 import {AxiosError} from 'axios';
 import {ClientData} from '~/stores/types';
 
-export type rejectPayload =
+export type RejectPayload =
   | {errorType: 'loginError'}
   | {errorType: 'invalidError'; message: string}
   | {errorType: 'someError'};

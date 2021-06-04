@@ -1,11 +1,11 @@
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -17,7 +17,7 @@ export const createFlashThunk = createAsyncThunk<
   CreateFlashThunkPaylaod,
   {sourceType: 'image' | 'video'; source: string; ext: string},
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >(
   'flashes/createFlash',
@@ -34,7 +34,7 @@ export const createFlashThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicError({e, dispatch});
+        const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

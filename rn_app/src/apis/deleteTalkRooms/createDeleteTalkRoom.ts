@@ -1,11 +1,11 @@
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -17,7 +17,7 @@ export type CreateDeleteRoomThunkPayload = {
 export const createDeleteRoomThunk = createAsyncThunk<
   CreateDeleteRoomThunkPayload,
   {talkRoomId: number},
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('talkRooms/delete', async ({talkRoomId}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
 
@@ -30,7 +30,7 @@ export const createDeleteRoomThunk = createAsyncThunk<
 
       return {talkRoomId};
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

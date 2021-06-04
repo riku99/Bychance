@@ -1,11 +1,11 @@
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -21,7 +21,7 @@ export type CreateRoomThunkPayload = {
 export const createRoomThunk = createAsyncThunk<
   CreateRoomThunkPayload,
   {partner: AnotherUser},
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >('chats/createRoom', async ({partner}, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
 
@@ -39,7 +39,7 @@ export const createRoomThunk = createAsyncThunk<
 
       return {...response.data, partner};
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

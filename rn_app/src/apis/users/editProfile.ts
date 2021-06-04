@@ -6,8 +6,8 @@ import {
   headers,
   checkKeychain,
   requestLogin,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
 } from '../re-modules';
 import {User} from '../../stores/user';
 
@@ -45,7 +45,7 @@ export const editProfileThunk = createAsyncThunk<
     tiktok: string | null;
   },
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >(
   'users/editProfile',
@@ -110,7 +110,7 @@ export const editProfileThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicError({e, dispatch});
+        const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

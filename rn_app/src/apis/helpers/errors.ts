@@ -1,18 +1,36 @@
 import {ThunkDispatch} from '@reduxjs/toolkit';
+import {Alert} from 'react-native';
+import * as Keychain from 'react-native-keychain';
 
-import {rejectPayload, basicAxiosError} from '~/apis/types';
-import {requestLogin} from '~/apis/helpers/errors/requestLogin';
+import {RejectPayload, basicAxiosError} from '~/apis/types';
 import {alertSomeError} from '~/helpers/errors';
 import {logoutAction} from '~/apis/session/logout';
 import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
 
-export const handleBasicError = ({
+export const requestLogin = (callback: () => void) => {
+  Alert.alert(
+    'ログインが無効です',
+    'ログインできません。ログインしなおしてください',
+    [
+      {
+        text: 'OK',
+        onPress: async () => {
+          await Keychain.resetGenericPassword();
+          callback();
+          return;
+        },
+      },
+    ],
+  );
+};
+
+export const handleBasicApiError = ({
   e,
   dispatch,
 }: {
   e: any;
   dispatch: ThunkDispatch<unknown, unknown, any>;
-}): rejectPayload => {
+}): RejectPayload => {
   if (e && e.response) {
     const axiosError = e as basicAxiosError;
     switch (axiosError.response?.data.errorType) {
@@ -39,4 +57,10 @@ export const handleBasicError = ({
       errorType: 'someError',
     };
   }
+};
+
+export const handleCredentialsError = (
+  dispatch: ThunkDispatch<unknown, unknown, any>,
+) => {
+  requestLogin(() => dispatch(logoutAction));
 };

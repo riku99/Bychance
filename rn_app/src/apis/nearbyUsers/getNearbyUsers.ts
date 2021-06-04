@@ -2,11 +2,11 @@ import {NearbyUsers} from '../../stores/nearbyUsers';
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -17,7 +17,7 @@ export const getNearbyUsersThunk = createAsyncThunk<
   GetNearbyUsersPayload,
   {lat: number | null; lng: number | null; range: number},
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >(
   'others/getNearbyUsersThunk',
@@ -32,7 +32,7 @@ export const getNearbyUsersThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicError({dispatch, e});
+        const result = handleBasicApiError({dispatch, e});
         return rejectWithValue(result);
       }
     } else {

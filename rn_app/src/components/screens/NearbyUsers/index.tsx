@@ -279,8 +279,9 @@ export const NearbyUsersScreen = React.memo(() => {
           placeholder="キーワードを検索"
           inputContainerStyle={styles.searchInputContainer}
           containerStyle={styles.searchContainer}
-          lightTheme={true}
-          round={true}
+          // lightTheme=""
+          platform="default"
+          // round={true}
           value={keyword}
           onChangeText={(text) => {
             setKeyword(text);

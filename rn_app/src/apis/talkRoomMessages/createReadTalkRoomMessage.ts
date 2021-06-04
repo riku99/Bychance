@@ -1,11 +1,11 @@
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -14,7 +14,7 @@ export const createReadMessagesThunk = createAsyncThunk<
   void,
   {roomId: number; unreadNumber: number; partnerId: string},
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >(
   'messages/createReadMessages',
@@ -34,7 +34,7 @@ export const createReadMessagesThunk = createAsyncThunk<
         );
       } catch (e) {
         // axioserror
-        const result = handleBasicError({e, dispatch});
+        const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

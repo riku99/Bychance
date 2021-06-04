@@ -1,11 +1,11 @@
 import {
   axios,
   createAsyncThunk,
-  rejectPayload,
+  RejectPayload,
   logoutAction,
   checkKeychain,
   requestLogin,
-  handleBasicError,
+  handleBasicApiError,
   headers,
   origin,
 } from '../re-modules';
@@ -13,7 +13,7 @@ import {
 export const createDeviceToken = createAsyncThunk<
   undefined,
   {token: string},
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >(
   'deviceToken/createDeviceToken',
   async ({token}, {dispatch, rejectWithValue}) => {
@@ -30,7 +30,7 @@ export const createDeviceToken = createAsyncThunk<
         return;
       } catch (e) {
         // axiosエラー
-        const result = handleBasicError({e, dispatch});
+        const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

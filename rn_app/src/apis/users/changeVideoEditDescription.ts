@@ -6,8 +6,8 @@ import {
   headers,
   checkKeychain,
   requestLogin,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
 } from '../re-modules';
 
 export type ChangeVideoEditDescriptionPayload = boolean;
@@ -16,7 +16,7 @@ export const changeVideoEditDescriptionThunk = createAsyncThunk<
   ChangeVideoEditDescriptionPayload,
   boolean,
   {
-    rejectValue: rejectPayload;
+    rejectValue: RejectPayload;
   }
 >('users/changeEditDescription', async (bool, {rejectWithValue, dispatch}) => {
   const credentials = await checkKeychain();
@@ -31,7 +31,7 @@ export const changeVideoEditDescriptionThunk = createAsyncThunk<
 
       return bool;
     } catch (e) {
-      const result = handleBasicError({e, dispatch});
+      const result = handleBasicApiError({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

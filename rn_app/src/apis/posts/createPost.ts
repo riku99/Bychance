@@ -3,8 +3,8 @@ import {
   createAsyncThunk,
   origin,
   headers,
-  handleBasicError,
-  rejectPayload,
+  handleBasicApiError,
+  RejectPayload,
   checkKeychain,
   requestLogin,
   logoutAction,
@@ -16,7 +16,7 @@ export type CreatePostThunkPayload = Post;
 export const createPostThunk = createAsyncThunk<
   Post,
   {text: string; source: string; ext: string},
-  {rejectValue: rejectPayload}
+  {rejectValue: RejectPayload}
 >(
   'posts/createPost',
   async ({text, source, ext}, {rejectWithValue, dispatch}) => {
@@ -31,7 +31,7 @@ export const createPostThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicError({e, dispatch});
+        const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {
