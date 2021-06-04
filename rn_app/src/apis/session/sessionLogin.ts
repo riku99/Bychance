@@ -15,7 +15,7 @@ export const sessionLoginThunk = createAsyncThunk<
   SessionLoginThunkPayload,
   Credentials,
   {rejectValue: RejectPayload}
->('users/sessionLogin', async ({id, token}, {dispatch, rejectWithValue}) => {
+>('sessions/sessionLogin', async ({id, token}, {dispatch, rejectWithValue}) => {
   try {
     const response = await axios.get<SuccessfullLoginData>(
       `${origin}/sessions/sessionlogin?id=${id}`,

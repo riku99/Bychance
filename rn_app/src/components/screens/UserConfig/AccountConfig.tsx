@@ -1,11 +1,10 @@
 import React, {useMemo} from 'react';
 import {View, Alert} from 'react-native';
-import * as Keychain from 'react-native-keychain';
 
 import {commonStyles} from './constants';
 import {ConfigList} from './List';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
-import {logoutAction} from '~/apis/session/logout';
+import {logutThunk} from '~/apis/session/logout';
 
 export const AccountConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
@@ -19,8 +18,7 @@ export const AccountConfig = React.memo(() => {
             {
               text: 'はい',
               onPress: async () => {
-                await Keychain.resetGenericPassword();
-                dispatch(logoutAction);
+                await dispatch(logutThunk());
                 return;
               },
             },
