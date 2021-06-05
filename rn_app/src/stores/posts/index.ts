@@ -46,6 +46,7 @@ const postSlice = createSlice({
       postsAdaper.addMany(state, action.payload.posts);
     },
     [logoutThunk.fulfilled.type]: () => {
+      console.log(logoutThunk.fulfilled(undefined, '', undefined));
       return postsAdaper.getInitialState();
     },
     [lineLoginThunk.fulfilled.type]: (
