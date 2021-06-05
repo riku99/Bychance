@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
   post: {
     width: width / 3.02,
     height: width / 3.02,
-    borderRadius: 10,
   },
   postWrapper: {
     backgroundColor: normalStyles.imageBackGroundColor,
