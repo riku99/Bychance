@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 import {View, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 import {commonStyles} from './constants';
 import {ConfigList} from './List';
@@ -8,6 +9,7 @@ import {logoutThunk} from '~/apis/session/logout';
 
 export const AccountConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
+  const navigation = useNavigation();
 
   const list = useMemo(() => {
     return [
@@ -19,6 +21,7 @@ export const AccountConfig = React.memo(() => {
               text: 'はい',
               onPress: async () => {
                 await dispatch(logoutThunk());
+                navigation.goBack();
                 return;
               },
             },
@@ -32,7 +35,7 @@ export const AccountConfig = React.memo(() => {
         },
       },
     ];
-  }, [dispatch]);
+  }, [dispatch, navigation]);
 
   return (
     <View style={commonStyles.container}>
