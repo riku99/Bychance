@@ -32,7 +32,7 @@ export const CreatePost = ({navigation}: Props) => {
   const [data, setData] = useState<{
     uri: string;
     sourceType: Post['sourceType'];
-  }>();
+  } | null>();
   const [text, setText] = useState('');
 
   const dispatch: AppDispatch = useDispatch();
@@ -76,19 +76,27 @@ export const CreatePost = ({navigation}: Props) => {
   useEffect(() => {
     if (isFocused) {
       launchImageLibrary({quality: 1, mediaType: 'mixed'}, (response) => {
-        if (response.didCancel || !response.uri) {
+        if (response.didCancel) {
           navigation.goBack();
           return;
         }
 
-        if (response.type) {
+        const uri = response.assets[0].uri;
+        const _type = response.assets[0].type;
+
+        if (!uri) {
+          navigation.goBack();
+          return;
+        }
+
+        if (_type) {
           setData({
-            uri: response.uri,
+            uri,
             sourceType: 'image',
           });
         } else {
           setData({
-            uri: response.uri,
+            uri,
             sourceType: 'video',
           });
         }
@@ -99,6 +107,7 @@ export const CreatePost = ({navigation}: Props) => {
   useEffect(() => {
     if (!isFocused) {
       setText('');
+      setData(null);
     }
   }, [isFocused]);
 

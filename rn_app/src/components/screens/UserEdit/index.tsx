@@ -165,18 +165,18 @@ export const UserEditPage = () => {
   );
 
   const pickAvatarImage = useCallback(() => {
-    launchImageLibrary(
-      {mediaType: 'photo', quality: 0.5, includeBase64: true},
-      (response) => {
-        if (response.didCancel || !response.uri) {
-          return;
-        }
-        setSelectedAvatar(response.uri);
-        if (deleteAvatar) {
-          setDeleteAvatar(false);
-        }
-      },
-    );
+    launchImageLibrary({mediaType: 'photo', quality: 0.8}, (response) => {
+      if (response.didCancel) {
+        return;
+      }
+      const asset = response.assets[0];
+      const uri = asset.uri;
+
+      setSelectedAvatar(uri);
+      if (deleteAvatar) {
+        setDeleteAvatar(false);
+      }
+    });
   }, [deleteAvatar]);
 
   const deleteAvatrImage = () => {
@@ -212,18 +212,27 @@ export const UserEditPage = () => {
 
   const pickBackGraoundItem = useCallback(() => {
     launchImageLibrary({mediaType: 'mixed', quality: 0.5}, (response) => {
-      if (response.didCancel || !response.uri) {
+      if (response.didCancel) {
+        return;
+      }
+
+      const asset = response.assets[0];
+      const uri = asset.uri;
+      const _type = asset.type;
+      const duration = asset.duration;
+
+      if (!uri) {
         return;
       }
 
       // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。
-      if (response.type) {
+      if (_type) {
         setSelectedBackGroundItem({
           sourceType: 'image',
-          uri: response.uri,
+          uri,
         });
       } else {
-        if (!response.duration || response.duration > 30) {
+        if (!duration || duration > 30) {
           RNToasty.Show({
             title: '30秒以下の動画にしてください',
             position: 'center',
@@ -232,7 +241,7 @@ export const UserEditPage = () => {
         }
         setSelectedBackGroundItem({
           sourceType: 'video',
-          uri: response.uri,
+          uri,
         });
       }
 
