@@ -13,6 +13,7 @@ import {Button} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 import Video from 'react-native-video';
+import {RNToasty} from 'react-native-toasty';
 
 import {AppDispatch} from '../../../stores';
 import {creatingPost} from '../../../stores/otherSettings';
@@ -81,8 +82,9 @@ export const CreatePost = ({navigation}: Props) => {
           return;
         }
 
-        const uri = response.assets[0].uri;
-        const _type = response.assets[0].type;
+        const asset = response.assets[0];
+        const uri = asset.uri;
+        const _type = asset.type;
 
         if (!uri) {
           navigation.goBack();
@@ -90,11 +92,28 @@ export const CreatePost = ({navigation}: Props) => {
         }
 
         if (_type) {
+          if (!asset.fileSize || asset.fileSize > 4000000) {
+            RNToasty.Show({
+              title: '4MB以下の画像にしてください',
+              position: 'center',
+            });
+            navigation.goBack();
+            return;
+          }
           setData({
             uri,
             sourceType: 'image',
           });
         } else {
+          const duration = asset.duration;
+          if (!duration || duration > 30) {
+            RNToasty.Show({
+              title: '30秒以下の動画にしてください',
+              position: 'center',
+            });
+            navigation.goBack();
+            return;
+          }
           setData({
             uri,
             sourceType: 'video',

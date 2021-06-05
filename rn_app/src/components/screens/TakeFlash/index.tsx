@@ -67,7 +67,6 @@ export const TakeFlashPage = () => {
       const asset = response.assets[0];
       const uri = asset.uri;
       const _type = asset.type;
-      const duration = asset.duration;
 
       if (!uri) {
         setLoading(false);
@@ -75,8 +74,18 @@ export const TakeFlashPage = () => {
       }
 
       if (_type) {
+        const size = asset.fileSize;
+        if (!size || size > 4000000) {
+          RNToasty.Show({
+            title: '4MB以下の画像にしてください',
+            position: 'center',
+          });
+          setLoading(false);
+          return;
+        }
         setTargetPhoto({uri});
       } else {
+        const duration = asset.duration;
         if (duration && duration > 15) {
           RNToasty.Show({
             title: '15秒以下の動画にしてください',

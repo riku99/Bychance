@@ -170,8 +170,17 @@ export const UserEditPage = () => {
         return;
       }
       const asset = response.assets[0];
-      const uri = asset.uri;
+      const size = asset.fileSize;
 
+      if (!size || size > 4000000) {
+        RNToasty.Show({
+          title: '4MB以下の画像にしてください',
+          position: 'center',
+        });
+        return;
+      }
+
+      const uri = asset.uri;
       setSelectedAvatar(uri);
       if (deleteAvatar) {
         setDeleteAvatar(false);
@@ -211,7 +220,7 @@ export const UserEditPage = () => {
   ]);
 
   const pickBackGraoundItem = useCallback(() => {
-    launchImageLibrary({mediaType: 'mixed', quality: 0.5}, (response) => {
+    launchImageLibrary({mediaType: 'mixed', quality: 0.8}, (response) => {
       if (response.didCancel) {
         return;
       }
@@ -227,6 +236,14 @@ export const UserEditPage = () => {
 
       // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。
       if (_type) {
+        const size = asset.fileSize;
+        if (!size || size > 4000000) {
+          RNToasty.Show({
+            title: '4MB以下の画像にしてください',
+            position: 'center',
+          });
+          return;
+        }
         setSelectedBackGroundItem({
           sourceType: 'image',
           uri,
