@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -9,6 +9,7 @@ import {
   UserPageNavigationProp,
   MyPageNavigationProp,
 } from '../../../screens/types';
+import {getThumbnailUrl} from '~/helpers/video';
 
 type Props = {
   post: Post;
@@ -33,6 +34,8 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
     navigation.push('Post', post);
   };
 
+  const sourceType = useMemo(() => post.sourceType, [post.sourceType]);
+
   return (
     <View style={styles.posts}>
       <TouchableOpacity
@@ -44,7 +47,13 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
             styles.postWrapper,
             {marginHorizontal: checkMiddleItem(index + 1) ? createGap() : 0},
           ]}>
-          <FastImage source={{uri: post.url}} style={styles.post} />
+          <FastImage
+            source={{
+              uri:
+                sourceType === 'image' ? post.url : getThumbnailUrl(post.url),
+            }}
+            style={styles.post}
+          />
         </View>
       </TouchableOpacity>
     </View>

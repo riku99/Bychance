@@ -20,10 +20,8 @@ export const Post = ({post, user, deletePost}: Props) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={{width}}
-        contentContainerStyle={styles.scrollViewContainer}>
-        <View>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <View style={styles.sourceContainer}>
           {post.sourceType === 'image' ? (
             <FastImage
               source={{uri: post.url}}
@@ -37,6 +35,7 @@ export const Post = ({post, user, deletePost}: Props) => {
                   uri: post.url,
                 },
                 resizeMode: 'cover',
+                repeat: true,
               }}
             />
           )}
@@ -80,12 +79,15 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     alignItems: 'center',
     width: width,
-    // height: postHeight,
   },
-  image: {
+  sourceContainer: {
     width: width,
     height: postHeight,
-    // backgroundColor: 'gray',
+    backgroundColor: normalStyles.imageBackGroundColor,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
   upperBox: {
     flexDirection: 'row',
