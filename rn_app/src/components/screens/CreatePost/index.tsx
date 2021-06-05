@@ -12,6 +12,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
+import Video from 'react-native-video';
 
 import {AppDispatch} from '../../../stores';
 import {creatingPost} from '../../../stores/otherSettings';
@@ -112,7 +113,11 @@ export const CreatePost = ({navigation}: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
-        <Image source={{uri: data.uri}} style={styles.image} />
+        {data.sourceType === 'image' ? (
+          <Image source={{uri: data.uri}} style={styles.source} />
+        ) : (
+          <Video source={{uri: data.uri}} style={styles.source} repeat={true} />
+        )}
         <TextInput
           style={styles.textInputArea}
           multiline={true}
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  image: {
+  source: {
     width: height / 9,
     height: height / 9,
     marginLeft: 15,
