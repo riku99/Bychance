@@ -40,6 +40,13 @@ export const CreatePost = ({navigation}: Props) => {
 
   const createPost = useCallback(async () => {
     if (data?.uri) {
+      if (text.length > 150) {
+        RNToasty.Show({
+          title: 'テキストは150文字以下にしてください',
+          position: 'center',
+        });
+        return;
+      }
       dispatch(creatingPost());
       navigation.goBack();
       const ext = getExtention(data.uri);
@@ -92,7 +99,7 @@ export const CreatePost = ({navigation}: Props) => {
         }
 
         if (_type) {
-          if (!asset.fileSize || asset.fileSize > 4000000) {
+          if (!asset.fileSize || asset.fileSize > 5000000) {
             RNToasty.Show({
               title: '4MB以下の画像にしてください',
               position: 'center',
@@ -149,7 +156,7 @@ export const CreatePost = ({navigation}: Props) => {
         <TextInput
           style={styles.textInputArea}
           multiline={true}
-          placeholder="テキストの入力"
+          placeholder="テキストを150文字以内で入力"
           onChangeText={(t) => {
             setText(t);
           }}>
