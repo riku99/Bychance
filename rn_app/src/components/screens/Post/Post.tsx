@@ -16,8 +16,6 @@ type Props = {
   deletePost: (id: number) => void;
 };
 
-// "https://bc-bucket-dev.s3.ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/backGroundItem/oHdGcs4WkAjYKzbGubMwYQwAyGYxqlfaN8FTQ6mr55w%3D.mp4"
-
 export const Post = ({post, user, deletePost}: Props) => {
   const navigation = useNavigation();
   return (
@@ -26,20 +24,22 @@ export const Post = ({post, user, deletePost}: Props) => {
         style={{width}}
         contentContainerStyle={styles.scrollViewContainer}>
         <View>
-          <FastImage
-            source={{uri: post.image}}
-            style={styles.image}
-            resizeMode="contain"
-          />
-          {/* <VideoWithThumbnail
-            video={{
-              source: {
-                uri:
-                  'https://bc-bucket-dev.s3.ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/flash/v7DT2kFETT2UV8GCu4Vra2c06eaK2NB01LmiRs5XX3Q%3D.mp4',
-              },
-              resizeMode: 'cover',
-            }}
-          /> */}
+          {post.sourceType === 'image' ? (
+            <FastImage
+              source={{uri: post.url}}
+              style={styles.image}
+              resizeMode="contain"
+            />
+          ) : (
+            <VideoWithThumbnail
+              video={{
+                source: {
+                  uri: post.url,
+                },
+                resizeMode: 'cover',
+              }}
+            />
+          )}
         </View>
         <View style={styles.upperBox}>
           <Text style={styles.date}>{post.date}</Text>

@@ -44,7 +44,7 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
             styles.postWrapper,
             {marginHorizontal: checkMiddleItem(index + 1) ? createGap() : 0},
           ]}>
-          <FastImage source={{uri: post.image}} style={styles.post} />
+          <FastImage source={{uri: post.url}} style={styles.post} />
         </View>
       </TouchableOpacity>
     </View>
