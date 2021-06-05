@@ -15,17 +15,17 @@ export type CreatePostThunkPayload = Post;
 
 export const createPostThunk = createAsyncThunk<
   Post,
-  {text: string; source: string; ext: string},
+  {text: string; source: string; ext: string; sourceType: 'image' | 'video'},
   {rejectValue: RejectPayload}
 >(
   'posts/createPost',
-  async ({text, source, ext}, {rejectWithValue, dispatch}) => {
+  async ({text, source, ext, sourceType}, {rejectWithValue, dispatch}) => {
     const credentials = await checkKeychain();
     if (credentials) {
       try {
         const response = await axios.post<Post>(
           `${origin}/posts?id=${credentials.id}`,
-          {text, source, ext},
+          {text, source, ext, sourceType},
           headers(credentials.token),
         );
 

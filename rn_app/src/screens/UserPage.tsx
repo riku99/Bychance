@@ -3,7 +3,7 @@ import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Emoji from 'react-native-emoji';
 
-import {Container as Post} from '../components/screens/Post/Page';
+import {Container as Post} from '../components/screens/Post';
 import {Post as PostType} from '../stores/posts';
 import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';

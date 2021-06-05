@@ -8,12 +8,15 @@ import FastImage from 'react-native-fast-image';
 import {Post as PostType} from '../../../stores/posts';
 import {normalStyles} from '../../../constants/styles';
 import {ScrollView} from 'react-native-gesture-handler';
+import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 
 type Props = {
   post: PostType;
   user: string;
   deletePost: (id: number) => void;
 };
+
+// "https://bc-bucket-dev.s3.ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/backGroundItem/oHdGcs4WkAjYKzbGubMwYQwAyGYxqlfaN8FTQ6mr55w%3D.mp4"
 
 export const Post = ({post, user, deletePost}: Props) => {
   const navigation = useNavigation();
@@ -22,12 +25,21 @@ export const Post = ({post, user, deletePost}: Props) => {
       <ScrollView
         style={{width}}
         contentContainerStyle={styles.scrollViewContainer}>
-        <View style={{backgroundColor: normalStyles.imageBackGroundColor}}>
+        <View>
           <FastImage
             source={{uri: post.image}}
             style={styles.image}
             resizeMode="contain"
           />
+          {/* <VideoWithThumbnail
+            video={{
+              source: {
+                uri:
+                  'https://bc-bucket-dev.s3.ap-northeast-1.amazonaws.com/5b9a9b57-d497-4dd5-b257-cd5d10c2ea40/flash/v7DT2kFETT2UV8GCu4Vra2c06eaK2NB01LmiRs5XX3Q%3D.mp4',
+              },
+              resizeMode: 'cover',
+            }}
+          /> */}
         </View>
         <View style={styles.upperBox}>
           <Text style={styles.date}>{post.date}</Text>
@@ -67,10 +79,13 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     alignItems: 'center',
+    width: width,
+    // height: postHeight,
   },
   image: {
     width: width,
     height: postHeight,
+    // backgroundColor: 'gray',
   },
   upperBox: {
     flexDirection: 'row',

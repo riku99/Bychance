@@ -27,7 +27,6 @@ export const VideoWithThumbnail = React.memo(({video, thumbnail}: Props) => {
 });
 
 const styles = StyleSheet.create({
-  container: {},
   source: {
     width: '100%',
     height: '100%',

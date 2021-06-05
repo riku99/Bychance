@@ -27,7 +27,8 @@ import {RootState} from '..';
 export type Post = {
   id: number;
   text: string;
-  image: string;
+  url: string;
+  sourceType: 'image' | 'video';
   date: string;
   userId: string;
 };

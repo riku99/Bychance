@@ -19,6 +19,7 @@ import {createPostThunk} from '../../../apis/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 import {getExtention} from '~/utils';
+import {Post} from '~/stores/posts';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -27,33 +28,38 @@ type Props = {
 export const CreatePost = ({navigation}: Props) => {
   const isFocused = useIsFocused();
 
-  const [uri, setUri] = useState<string>();
+  const [data, setData] = useState<{
+    uri: string;
+    sourceType: Post['sourceType'];
+  }>();
   const [text, setText] = useState('');
 
   const dispatch: AppDispatch = useDispatch();
 
   const createPost = useCallback(async () => {
-    if (uri) {
+    if (data?.uri) {
       dispatch(creatingPost());
       navigation.goBack();
-      const ext = getExtention(uri);
+      const ext = getExtention(data.uri);
       if (!ext) {
         displayShortMessage('無効なデータです', 'warning');
         dispatch(creatingPost());
         return;
       }
-      const source = await fs.readFile(uri, 'base64');
-      const result = await dispatch(createPostThunk({text, source, ext}));
+      const source = await fs.readFile(data.uri, 'base64');
+      const result = await dispatch(
+        createPostThunk({text, source, ext, sourceType: data.sourceType}),
+      );
       if (createPostThunk.fulfilled.match(result)) {
         displayShortMessage('投稿しました', 'success');
       }
       dispatch(creatingPost());
     }
-  }, [dispatch, navigation, uri, text]);
+  }, [dispatch, navigation, data, text]);
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: uri
+      headerRight: data?.uri
         ? () => (
             <Button
               title="投稿"
@@ -64,20 +70,28 @@ export const CreatePost = ({navigation}: Props) => {
           )
         : undefined,
     });
-  }, [navigation, uri, text, dispatch, createPost]);
+  }, [navigation, data, text, dispatch, createPost]);
 
   useEffect(() => {
     if (isFocused) {
-      launchImageLibrary({quality: 1, mediaType: 'photo'}, (response) => {
+      launchImageLibrary({quality: 1, mediaType: 'mixed'}, (response) => {
         if (response.didCancel || !response.uri) {
           navigation.goBack();
           return;
         }
 
-        setUri(response.uri);
+        if (response.type) {
+          setData({
+            uri: response.uri,
+            sourceType: 'image',
+          });
+        } else {
+          setData({
+            uri: response.uri,
+            sourceType: 'video',
+          });
+        }
       });
-    } else {
-      setUri(undefined);
     }
   }, [isFocused, navigation]);
 
@@ -87,35 +101,29 @@ export const CreatePost = ({navigation}: Props) => {
     }
   }, [isFocused]);
 
+  if (!data?.uri) {
+    return (
+      <View style={{...styles.container, justifyContent: 'center'}}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
-    <>
-      {uri ? (
-        <View style={styles.container}>
-          <View style={styles.contents}>
-            {uri ? (
-              <Image source={{uri: uri}} style={styles.image} />
-            ) : (
-              <View style={{...styles.image, justifyContent: 'center'}}>
-                <ActivityIndicator size="small" />
-              </View>
-            )}
-            <TextInput
-              style={styles.textInputArea}
-              multiline={true}
-              placeholder="テキストの入力"
-              onChangeText={(t) => {
-                setText(t);
-              }}>
-              {text}
-            </TextInput>
-          </View>
-        </View>
-      ) : (
-        <View style={{...styles.container, justifyContent: 'center'}}>
-          <ActivityIndicator />
-        </View>
-      )}
-    </>
+    <View style={styles.container}>
+      <View style={styles.contents}>
+        <Image source={{uri: data.uri}} style={styles.image} />
+        <TextInput
+          style={styles.textInputArea}
+          multiline={true}
+          placeholder="テキストの入力"
+          onChangeText={(t) => {
+            setText(t);
+          }}>
+          {text}
+        </TextInput>
+      </View>
+    </View>
   );
 };
 
