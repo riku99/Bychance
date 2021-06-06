@@ -2,12 +2,11 @@ import {
   axios,
   createAsyncThunk,
   RejectPayload,
-  logoutAction,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   headers,
   origin,
+  handleCredentialsError,
 } from '../re-modules';
 
 export const createDeviceToken = createAsyncThunk<
@@ -35,7 +34,7 @@ export const createDeviceToken = createAsyncThunk<
       }
     } else {
       // credentialsなしエラー
-      requestLogin(() => dispatch(logoutAction));
+      handleCredentialsError(dispatch);
       return rejectWithValue({errorType: 'loginError'});
     }
   },

@@ -1,13 +1,12 @@
 import {
   axios,
   createAsyncThunk,
-  logoutAction,
   origin,
   headers,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   RejectPayload,
+  handleCredentialsError,
 } from '../re-modules';
 
 export type ChangeTalkRoomMessageReceiptPaylpad = boolean;
@@ -37,7 +36,7 @@ export const changeTalkRoomMessageReceiptThunk = createAsyncThunk<
         return rejectWithValue(result);
       }
     } else {
-      requestLogin(() => dispatch(logoutAction));
+      handleCredentialsError(dispatch);
       return rejectWithValue({errorType: 'loginError'});
     }
   },

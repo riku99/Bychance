@@ -6,8 +6,7 @@ import {
   handleBasicApiError,
   RejectPayload,
   checkKeychain,
-  requestLogin,
-  logoutAction,
+  handleCredentialsError,
 } from '../re-modules';
 import {Post} from '../../stores/posts';
 
@@ -35,7 +34,7 @@ export const createPostThunk = createAsyncThunk<
         return rejectWithValue(result);
       }
     } else {
-      requestLogin(() => dispatch(logoutAction));
+      handleCredentialsError(dispatch);
       return rejectWithValue({errorType: 'loginError'});
     }
   },

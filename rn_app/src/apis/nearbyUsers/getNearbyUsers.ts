@@ -3,12 +3,11 @@ import {
   axios,
   createAsyncThunk,
   RejectPayload,
-  logoutAction,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   headers,
   origin,
+  handleCredentialsError,
 } from '../re-modules';
 
 export type GetNearbyUsersPayload = NearbyUsers;
@@ -36,7 +35,7 @@ export const getNearbyUsersThunk = createAsyncThunk<
         return rejectWithValue(result);
       }
     } else {
-      requestLogin(() => dispatch(logoutAction));
+      handleCredentialsError(dispatch);
       return rejectWithValue({errorType: 'loginError'});
     }
   },

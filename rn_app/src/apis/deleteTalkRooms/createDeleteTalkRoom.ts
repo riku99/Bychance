@@ -2,12 +2,11 @@ import {
   axios,
   createAsyncThunk,
   RejectPayload,
-  logoutAction,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   headers,
   origin,
+  handleCredentialsError,
 } from '../re-modules';
 
 export type CreateDeleteRoomThunkPayload = {
@@ -35,7 +34,7 @@ export const createDeleteRoomThunk = createAsyncThunk<
     }
   } else {
     // credentials存在しないエラー
-    requestLogin(() => dispatch(logoutAction));
+    handleCredentialsError(dispatch);
     return rejectWithValue({errorType: 'loginError'});
   }
 });

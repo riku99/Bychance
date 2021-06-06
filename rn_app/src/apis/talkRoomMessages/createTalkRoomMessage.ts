@@ -2,12 +2,11 @@ import {
   axios,
   createAsyncThunk,
   RejectPayload,
-  logoutAction,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   headers,
   origin,
+  handleCredentialsError,
 } from '../re-modules';
 import {TalkRoomMessage} from '../../stores/talkRoomMessages';
 
@@ -58,7 +57,7 @@ export const createMessageThunk = createAsyncThunk<
       }
     } else {
       // loginerror
-      requestLogin(() => dispatch(logoutAction));
+      handleCredentialsError(dispatch);
       return rejectWithValue({errorType: 'loginError'});
     }
   },

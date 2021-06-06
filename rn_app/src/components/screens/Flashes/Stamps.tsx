@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -8,6 +8,9 @@ import {
   TextStyle,
 } from 'react-native';
 
+import {createFlashStampThunk} from '~/apis/flashStamps/createFlashStamp';
+import {useCustomDispatch} from '~/hooks/stores/dispatch';
+
 type StampData = {
   type: 'emoji' | 'image';
   label: string;
@@ -16,15 +19,17 @@ type StampData = {
   style?: TextStyle;
 };
 
-type Props = {};
+type Props = {
+  flashId: number;
+};
 
-export const Stamps = React.memo(() => {
+export const Stamps = React.memo(({flashId}: Props) => {
   const stampData: StampData[] = useMemo(() => {
     return [
       {
         type: 'emoji',
         label: '👍',
-        value: 'thumbUp',
+        value: 'thumbsUp',
         number: 4,
       },
       {
@@ -51,7 +56,7 @@ export const Stamps = React.memo(() => {
       },
       {
         type: 'emoji',
-        label: 'お前が1番',
+        label: 'お前が\n1番',
         value: 'itibann',
         number: 168,
         style: {
@@ -74,6 +79,12 @@ export const Stamps = React.memo(() => {
     ];
   }, []);
 
+  const dispatch = useCustomDispatch();
+
+  const createStamp = useCallback(async ({value}: {value: string}) => {
+    await dispatch(createFlashStampThunk({flashId, value}));
+  }, []);
+
   return (
     <View style={styles.container}>
       {stampData.map((data) => {
@@ -81,7 +92,8 @@ export const Stamps = React.memo(() => {
           <TouchableOpacity
             style={styles.stamp}
             key={data.label}
-            activeOpacity={0.7}>
+            activeOpacity={0.7}
+            onPress={() => createStamp({value: data.value})}>
             {data.type === 'emoji' ? (
               <Text style={[styles.stampText, {...data.style}]}>
                 {data.label}
@@ -121,5 +133,6 @@ const styles = StyleSheet.create({
   stampNumber: {
     fontSize: 12,
     color: 'white',
+    fontWeight: 'bold',
   },
 });

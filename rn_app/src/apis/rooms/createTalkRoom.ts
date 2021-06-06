@@ -2,12 +2,11 @@ import {
   axios,
   createAsyncThunk,
   RejectPayload,
-  logoutAction,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   headers,
   origin,
+  handleCredentialsError,
 } from '../re-modules';
 import {AnotherUser} from '../../stores/types';
 
@@ -44,7 +43,7 @@ export const createRoomThunk = createAsyncThunk<
     }
   } else {
     // loginerror
-    requestLogin(() => dispatch(logoutAction));
+    handleCredentialsError(dispatch);
     return rejectWithValue({errorType: 'loginError'});
   }
 });

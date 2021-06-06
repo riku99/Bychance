@@ -9,35 +9,34 @@ import {
   handleCredentialsError,
 } from '../re-modules';
 
-export const createReadMessagesThunk = createAsyncThunk<
-  void,
-  {roomId: number; unreadNumber: number; partnerId: string},
+export type CreateFlashStamp = null;
+
+export const createFlashStampThunk = createAsyncThunk<
+  undefined,
+  {flashId: number; value: string},
   {
     rejectValue: RejectPayload;
   }
 >(
-  'messages/createReadMessages',
-  async ({roomId, unreadNumber, partnerId}, {dispatch, rejectWithValue}) => {
+  'flashStamps/createFlashStamp',
+  async ({flashId, value}, {dispatch, rejectWithValue}) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
       try {
-        axios.post(
-          `${origin}/readTalkRoomMessages?id=${credentials.id}`,
+        await axios.post(
+          `${origin}/flashStamps?id=${credentials.id}`,
           {
-            talkRoomId: roomId,
-            partnerId,
-            unreadNumber,
+            flashId,
+            value,
           },
           headers(credentials.token),
         );
       } catch (e) {
-        // axioserror
         const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);
       }
     } else {
-      // loginerror
       handleCredentialsError(dispatch);
       return rejectWithValue({errorType: 'loginError'});
     }

@@ -2,12 +2,11 @@ import {
   axios,
   createAsyncThunk,
   RejectPayload,
-  logoutAction,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   headers,
   origin,
+  handleCredentialsError,
 } from '../re-modules';
 import {Flash} from '../../stores/flashes';
 
@@ -38,7 +37,7 @@ export const createFlashThunk = createAsyncThunk<
         return rejectWithValue(result);
       }
     } else {
-      requestLogin(() => dispatch(logoutAction));
+      handleCredentialsError(dispatch);
     }
     return rejectWithValue({errorType: 'loginError'});
   },

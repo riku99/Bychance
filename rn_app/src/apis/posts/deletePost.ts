@@ -33,7 +33,7 @@ export const deletePostThunk = createAsyncThunk<
       return rejectWithValue(result);
     }
   } else {
-    requestLogin(() => dispatch(logoutAction));
+    handleCredentialsError(dispatch);
     return rejectWithValue({errorType: 'loginError'});
   }
 });

@@ -2,12 +2,11 @@ import {
   axios,
   createAsyncThunk,
   RejectPayload,
-  logoutAction,
   checkKeychain,
-  requestLogin,
   handleBasicApiError,
   headers,
   origin,
+  handleCredentialsError,
 } from '../re-modules';
 
 export type DeleteFlashThunkPayload = number;
@@ -34,7 +33,7 @@ export const deleteFlashThunk = createAsyncThunk<
       return rejectWithValue(result);
     }
   } else {
-    requestLogin(() => dispatch(logoutAction));
+    handleCredentialsError(dispatch);
     return rejectWithValue({errorType: 'loginError'});
   }
 });
