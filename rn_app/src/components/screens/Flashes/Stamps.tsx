@@ -10,9 +10,9 @@ import {
 
 import {createFlashStampThunk} from '~/apis/flashStamps/createFlashStamp';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {Flash} from '~/stores/flashes';
 
 type StampData = {
-  type: 'emoji' | 'image';
   label: string;
   value: string;
   number: number;
@@ -20,33 +20,33 @@ type StampData = {
 };
 
 type Props = {
-  flashId: number;
+  flash: Flash;
 };
 
-export const Stamps = React.memo(({flashId}: Props) => {
+export const Stamps = React.memo(({flash}: Props) => {
+  const {thumbsUp, yusyo, yoi, itibann, seikai} = useMemo(() => flash.stamps, [
+    flash.stamps,
+  ]);
   const stampData: StampData[] = useMemo(() => {
     return [
       {
-        type: 'emoji',
         label: '👍',
         value: 'thumbsUp',
-        number: 4,
+        number: thumbsUp.number,
       },
       {
-        type: 'emoji',
         label: '優勝',
         value: 'yusyo',
-        number: 10,
+        number: yusyo.number,
         style: {
           fontFamily: 'Hiragino Sans',
           fontWeight: '700',
         },
       },
       {
-        type: 'emoji',
         label: 'シンプルに\n良い',
         value: 'yoi',
-        number: 2,
+        number: yoi.number,
         style: {
           fontSize: 9.5,
           fontFamily: 'Hiragino Sans',
@@ -55,10 +55,9 @@ export const Stamps = React.memo(({flashId}: Props) => {
         },
       },
       {
-        type: 'emoji',
         label: 'お前が\n1番',
         value: 'itibann',
-        number: 168,
+        number: itibann.number,
         style: {
           fontSize: 11,
           fontWeight: '700',
@@ -66,10 +65,9 @@ export const Stamps = React.memo(({flashId}: Props) => {
         },
       },
       {
-        type: 'emoji',
         label: '見て正解',
         value: 'seikai',
-        number: 1,
+        number: seikai.number,
         style: {
           fontSize: 11,
           fontWeight: '700',
@@ -77,15 +75,15 @@ export const Stamps = React.memo(({flashId}: Props) => {
         },
       },
     ];
-  }, []);
+  }, [thumbsUp, yusyo, yoi, itibann, seikai]);
 
   const dispatch = useCustomDispatch();
 
   const createStamp = useCallback(
     async ({value}: {value: string}) => {
-      await dispatch(createFlashStampThunk({flashId, value}));
+      await dispatch(createFlashStampThunk({flashId: flash.id, value}));
     },
-    [dispatch, flashId],
+    [dispatch, flash.id],
   );
 
   return (
@@ -97,13 +95,9 @@ export const Stamps = React.memo(({flashId}: Props) => {
             key={data.label}
             activeOpacity={0.7}
             onPress={() => createStamp({value: data.value})}>
-            {data.type === 'emoji' ? (
-              <Text style={[styles.stampText, {...data.style}]}>
-                {data.label}
-              </Text>
-            ) : (
-              <></>
-            )}
+            <Text style={[styles.stampText, {...data.style}]}>
+              {data.label}
+            </Text>
             <Text style={styles.stampNumber}>{data.number}</Text>
           </TouchableOpacity>
         );

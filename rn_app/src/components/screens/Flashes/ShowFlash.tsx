@@ -505,7 +505,7 @@ export const ShowFlash = React.memo(
             </View>
 
             <View style={styles.stampsContainer}>
-              <Stamps flashId={currentFlash.id} />
+              <Stamps flash={currentFlash} />
             </View>
 
             {isMyData && (
