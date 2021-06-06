@@ -10,7 +10,8 @@ import {
 
 type StampData = {
   type: 'emoji' | 'image';
-  content: string;
+  label: string;
+  value: string;
   number: number;
   style?: TextStyle;
 };
@@ -22,12 +23,14 @@ export const Stamps = React.memo(() => {
     return [
       {
         type: 'emoji',
-        content: '👍',
+        label: '👍',
+        value: 'thumbUp',
         number: 4,
       },
       {
         type: 'emoji',
-        content: '優勝',
+        label: '優勝',
+        value: 'yusyo',
         number: 10,
         style: {
           fontFamily: 'Hiragino Sans',
@@ -36,7 +39,8 @@ export const Stamps = React.memo(() => {
       },
       {
         type: 'emoji',
-        content: 'シンプルに\n良い',
+        label: 'シンプルに\n良い',
+        value: 'yoi',
         number: 2,
         style: {
           fontSize: 9.5,
@@ -47,7 +51,8 @@ export const Stamps = React.memo(() => {
       },
       {
         type: 'emoji',
-        content: 'お前が1番',
+        label: 'お前が1番',
+        value: 'itibann',
         number: 168,
         style: {
           fontSize: 11,
@@ -57,7 +62,8 @@ export const Stamps = React.memo(() => {
       },
       {
         type: 'emoji',
-        content: '見て正解',
+        label: '見て正解',
+        value: 'seikai',
         number: 1,
         style: {
           fontSize: 11,
@@ -74,11 +80,11 @@ export const Stamps = React.memo(() => {
         return (
           <TouchableOpacity
             style={styles.stamp}
-            key={data.content}
+            key={data.label}
             activeOpacity={0.7}>
             {data.type === 'emoji' ? (
               <Text style={[styles.stampText, {...data.style}]}>
-                {data.content}
+                {data.label}
               </Text>
             ) : (
               <></>
@@ -113,8 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   stampNumber: {
-    fontSize: 13,
+    fontSize: 12,
     color: 'white',
-    fontWeight: 'bold',
   },
 });
