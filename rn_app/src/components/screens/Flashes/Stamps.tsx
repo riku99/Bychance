@@ -1,5 +1,11 @@
 import React, {useMemo} from 'react';
-import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Dimensions,
+} from 'react-native';
 
 type StampData = {
   type: 'emoji' | 'image';
@@ -17,12 +23,32 @@ export const Stamps = React.memo(() => {
         content: '👍',
         number: 4,
       },
+      {
+        type: 'emoji',
+        content: '❤️',
+        number: 4,
+      },
+      {
+        type: 'emoji',
+        content: '🥺',
+        number: 4,
+      },
+      {
+        type: 'emoji',
+        content: '👼',
+        number: 4,
+      },
+      {
+        type: 'emoji',
+        content: '🎉',
+        number: 4,
+      },
     ];
   }, []);
 
   return (
     <View style={styles.container}>
-      {stampData.map((data, i) => {
+      {stampData.map((data) => {
         return (
           <TouchableOpacity
             style={styles.stamp}
@@ -41,15 +67,18 @@ export const Stamps = React.memo(() => {
   );
 });
 
+const {width} = Dimensions.get('screen');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   stamp: {
     backgroundColor: "backgroundColor: 'rgba(133,133,133,0.85)",
-    width: 64,
+    width: width / 5 - 5,
     height: 35,
     borderRadius: 20,
     flexDirection: 'row',
