@@ -81,9 +81,12 @@ export const Stamps = React.memo(({flashId}: Props) => {
 
   const dispatch = useCustomDispatch();
 
-  const createStamp = useCallback(async ({value}: {value: string}) => {
-    await dispatch(createFlashStampThunk({flashId, value}));
-  }, []);
+  const createStamp = useCallback(
+    async ({value}: {value: string}) => {
+      await dispatch(createFlashStampThunk({flashId, value}));
+    },
+    [dispatch, flashId],
+  );
 
   return (
     <View style={styles.container}>
