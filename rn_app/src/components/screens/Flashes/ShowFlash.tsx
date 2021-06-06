@@ -31,6 +31,7 @@ import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
+import {Stamps} from './Stamps';
 
 type Props = {
   flashesData: FlashesData;
@@ -391,9 +392,9 @@ export const ShowFlash = React.memo(
       setShowLoading(false);
       setLoading(false);
       if (isDisplayed) {
-        progressAnimation({
-          progressNumber: currentProgressBar.current,
-        });
+        // progressAnimation({
+        //   progressNumber: currentProgressBar.current,
+        // });
       }
     };
 
@@ -428,10 +429,10 @@ export const ShowFlash = React.memo(
         _loading.current = false;
         setShowLoading(false);
         setLoading(false);
-        progressAnimation({
-          progressNumber: currentProgressBar.current,
-          duration: videoDuration.current,
-        });
+        // progressAnimation({
+        //   progressNumber: currentProgressBar.current,
+        //   duration: videoDuration.current,
+        // });
       }
     };
 
@@ -501,6 +502,10 @@ export const ShowFlash = React.memo(
                 timestamp={currentFlash.timestamp}
                 setIsNavigatedToProfile={setIsNavigatedToProfile}
               />
+            </View>
+
+            <View style={styles.stampsContainer}>
+              <Stamps />
             </View>
 
             {isMyData && (
@@ -623,5 +628,14 @@ const styles = StyleSheet.create({
     left: 30,
     bottom: buttonBottom,
     flexDirection: 'row',
+  },
+  stampsContainer: {
+    width: '100%',
+    height: 40,
+    position: 'absolute',
+    bottom: height * 0.13,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
