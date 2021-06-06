@@ -392,9 +392,9 @@ export const ShowFlash = React.memo(
       setShowLoading(false);
       setLoading(false);
       if (isDisplayed) {
-        // progressAnimation({
-        //   progressNumber: currentProgressBar.current,
-        // });
+        progressAnimation({
+          progressNumber: currentProgressBar.current,
+        });
       }
     };
 
@@ -429,10 +429,10 @@ export const ShowFlash = React.memo(
         _loading.current = false;
         setShowLoading(false);
         setLoading(false);
-        // progressAnimation({
-        //   progressNumber: currentProgressBar.current,
-        //   duration: videoDuration.current,
-        // });
+        progressAnimation({
+          progressNumber: currentProgressBar.current,
+          duration: videoDuration.current,
+        });
       }
     };
 

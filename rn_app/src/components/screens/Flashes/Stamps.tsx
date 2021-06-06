@@ -5,12 +5,14 @@ import {
   View,
   Text,
   Dimensions,
+  TextStyle,
 } from 'react-native';
 
 type StampData = {
   type: 'emoji' | 'image';
   content: string;
   number: number;
+  style?: TextStyle;
 };
 
 type Props = {};
@@ -25,23 +27,43 @@ export const Stamps = React.memo(() => {
       },
       {
         type: 'emoji',
-        content: '❤️',
-        number: 4,
+        content: '優勝',
+        number: 10,
+        style: {
+          fontFamily: 'Hiragino Sans',
+          fontWeight: '700',
+        },
       },
       {
         type: 'emoji',
-        content: '🥺',
-        number: 4,
+        content: 'シンプルに\n良い',
+        number: 2,
+        style: {
+          fontSize: 9.5,
+          fontFamily: 'Hiragino Sans',
+          fontWeight: '700',
+          color: 'pink',
+        },
       },
       {
         type: 'emoji',
-        content: '👼',
-        number: 4,
+        content: 'お前が1番',
+        number: 168,
+        style: {
+          fontSize: 11,
+          fontWeight: '700',
+          color: '#ffae00',
+        },
       },
       {
         type: 'emoji',
-        content: '🎉',
-        number: 4,
+        content: '見て正解',
+        number: 1,
+        style: {
+          fontSize: 11,
+          fontWeight: '700',
+          color: '#004cff',
+        },
       },
     ];
   }, []);
@@ -55,7 +77,9 @@ export const Stamps = React.memo(() => {
             key={data.content}
             activeOpacity={0.7}>
             {data.type === 'emoji' ? (
-              <Text style={styles.stampText}>{data.content}</Text>
+              <Text style={[styles.stampText, {...data.style}]}>
+                {data.content}
+              </Text>
             ) : (
               <></>
             )}
@@ -78,7 +102,7 @@ const styles = StyleSheet.create({
   },
   stamp: {
     backgroundColor: "backgroundColor: 'rgba(133,133,133,0.85)",
-    width: width / 5 - 5,
+    width: width / 5 - 2.5,
     height: 35,
     borderRadius: 20,
     flexDirection: 'row',
@@ -89,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   stampNumber: {
-    fontSize: 15,
+    fontSize: 13,
     color: 'white',
     fontWeight: 'bold',
   },
