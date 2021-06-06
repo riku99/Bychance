@@ -24,12 +24,18 @@ import {
 } from '../../apis/session/sessionLogin';
 import {logoutThunk} from '~/apis/session/logout';
 
+export type FlashStamps = Record<
+  'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai',
+  number
+>;
+
 export type Flash = {
   id: number;
   source: string;
   sourceType: 'image' | 'video';
   timestamp: string;
   viewsNumber: number;
+  stamps: FlashStamps;
 };
 
 const flashesAdapter = createEntityAdapter<Flash>({
