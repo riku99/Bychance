@@ -11,7 +11,7 @@ export const TakeFlashButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   const onPress = () => {
-    navigation.push('TakeFlash');
+    navigation.navigate('TakeFlash');
   };
 
   return (

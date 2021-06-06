@@ -35,7 +35,10 @@ export const InfoItems = ({
 
   const onUserPress = () => {
     setIsNavigatedToProfile(true);
-    navigation.push('UserPage', {userId: userData.userId, from: userData.from});
+    navigation.navigate('UserPage', {
+      userId: userData.userId,
+      from: userData.from,
+    });
   };
 
   return (

@@ -31,8 +31,8 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
     UserPageNavigationProp<'UserPage'> & MyPageNavigationProp<'MyPage'>
   >();
 
-  const onPress = (post: Post) => {
-    navigation.push('Post', post);
+  const onPress = (_post: Post) => {
+    navigation.navigate('Post', _post);
   };
 
   const sourceType = useMemo(() => post.sourceType, [post.sourceType]);

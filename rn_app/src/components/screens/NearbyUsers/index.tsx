@@ -230,7 +230,7 @@ export const NearbyUsersScreen = React.memo(() => {
         };
       }
       if (navigationParams!) {
-        rootStackNavigation.push('Flashes', {
+        rootStackNavigation.navigate('Flashes', {
           screen: 'Flashes',
           params: navigationParams!,
         });

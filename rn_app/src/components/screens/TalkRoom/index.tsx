@@ -55,7 +55,7 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
 
   const onAvatarPress = useCallback(() => {
     if (partner) {
-      navigation.push('UserPage', {
+      navigation.navigate('UserPage', {
         userId: partner.id,
         from: 'chatRoom',
       });
