@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -34,72 +34,142 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
 
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
-  const stampData: StampData[] = useMemo(() => {
-    return [
-      {
-        label: '👍',
-        value: 'thumbsUp',
-        number: thumbsUp.number,
-        disabled: thumbsUp.userIds.includes(myId),
+  // const stampData: StampData[] = useMemo(() => {
+  //   return [
+  //     {
+  //       label: '👍',
+  //       value: 'thumbsUp',
+  //       number: thumbsUp.number,
+  //       disabled: thumbsUp.userIds.includes(myId),
+  //     },
+  //     {
+  //       label: '優勝',
+  //       value: 'yusyo',
+  //       number: yusyo.number,
+  //       disabled: yusyo.userIds.includes(myId),
+  //       style: {
+  //         fontFamily: 'Hiragino Sans',
+  //         fontWeight: '700',
+  //       },
+  //     },
+  //     {
+  //       label: 'シンプルに\n良い',
+  //       value: 'yoi',
+  //       number: yoi.number,
+  //       disabled: yoi.userIds.includes(myId),
+  //       style: {
+  //         fontSize: 9.5,
+  //         fontFamily: 'Hiragino Sans',
+  //         fontWeight: '700',
+  //         color: 'pink',
+  //       },
+  //     },
+  //     {
+  //       label: 'お前が\n1番',
+  //       value: 'itibann',
+  //       number: itibann.number,
+  //       disabled: itibann.userIds.includes(myId),
+  //       style: {
+  //         fontSize: 11,
+  //         fontWeight: '700',
+  //         color: '#ffae00',
+  //       },
+  //     },
+  //     {
+  //       label: '見て正解',
+  //       value: 'seikai',
+  //       number: seikai.number,
+  //       disabled: seikai.userIds.includes(myId),
+  //       style: {
+  //         fontSize: 11,
+  //         fontWeight: '700',
+  //         color: '#004cff',
+  //       },
+  //     },
+  //   ];
+  // }, [thumbsUp, yusyo, yoi, itibann, seikai, myId]);
+
+  const [stampData, setStampData] = useState<StampData[]>([
+    {
+      label: '👍',
+      value: 'thumbsUp',
+      number: thumbsUp.number,
+      disabled: thumbsUp.userIds.includes(myId),
+    },
+    {
+      label: '優勝',
+      value: 'yusyo',
+      number: yusyo.number,
+      disabled: yusyo.userIds.includes(myId),
+      style: {
+        fontFamily: 'Hiragino Sans',
+        fontWeight: '700',
       },
-      {
-        label: '優勝',
-        value: 'yusyo',
-        number: yusyo.number,
-        disabled: yusyo.userIds.includes(myId),
-        style: {
-          fontFamily: 'Hiragino Sans',
-          fontWeight: '700',
-        },
+    },
+    {
+      label: 'シンプルに\n良い',
+      value: 'yoi',
+      number: yoi.number,
+      disabled: yoi.userIds.includes(myId),
+      style: {
+        fontSize: 9.5,
+        fontFamily: 'Hiragino Sans',
+        fontWeight: '700',
+        color: 'pink',
       },
-      {
-        label: 'シンプルに\n良い',
-        value: 'yoi',
-        number: yoi.number,
-        disabled: yoi.userIds.includes(myId),
-        style: {
-          fontSize: 9.5,
-          fontFamily: 'Hiragino Sans',
-          fontWeight: '700',
-          color: 'pink',
-        },
+    },
+    {
+      label: 'お前が\n1番',
+      value: 'itibann',
+      number: itibann.number,
+      disabled: itibann.userIds.includes(myId),
+      style: {
+        fontSize: 11,
+        fontWeight: '700',
+        color: '#ffae00',
       },
-      {
-        label: 'お前が\n1番',
-        value: 'itibann',
-        number: itibann.number,
-        disabled: itibann.userIds.includes(myId),
-        style: {
-          fontSize: 11,
-          fontWeight: '700',
-          color: '#ffae00',
-        },
+    },
+    {
+      label: '見て正解',
+      value: 'seikai',
+      number: seikai.number,
+      disabled: seikai.userIds.includes(myId),
+      style: {
+        fontSize: 11,
+        fontWeight: '700',
+        color: '#004cff',
       },
-      {
-        label: '見て正解',
-        value: 'seikai',
-        number: seikai.number,
-        disabled: seikai.userIds.includes(myId),
-        style: {
-          fontSize: 11,
-          fontWeight: '700',
-          color: '#004cff',
-        },
-      },
-    ];
-  }, [thumbsUp, yusyo, yoi, itibann, seikai, myId]);
+    },
+  ]);
 
   const dispatch = useCustomDispatch();
 
   const createStamp = useCallback(
     async ({value}: {value: string}) => {
-      await dispatch(
+      setStampData((current) => {
+        return current.map((st) => {
+          if (st.value === value) {
+            const newData = {
+              ...st,
+              number: st.number += 1,
+              disabled: true,
+            };
+            return newData;
+          }
+
+          return st;
+        });
+      });
+      const result = await dispatch(
         createFlashStampThunk({
           flashId: flash.id,
           value,
           anotherUserId: userId,
         }),
       );
+
+      if (createFlashStampThunk.fulfilled.match(result)) {
+      }
     },
     [dispatch, flash.id, userId],
   );
