@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -7,12 +7,13 @@ import {
   Dimensions,
   TextStyle,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 
 import {createFlashStampThunk} from '~/apis/flashStamps/createFlashStamp';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {Flash} from '~/stores/flashes';
 import {RootState} from '~/stores';
+import {selectNearbyUser} from '~/stores/nearbyUsers';
 
 type StampData = {
   label: string;
@@ -28,64 +29,88 @@ type Props = {
 };
 
 export const Stamps = React.memo(({flash, userId}: Props) => {
-  const {thumbsUp, yusyo, yoi, itibann, seikai} = useMemo(() => flash.stamps, [
-    flash.stamps,
-  ]);
-
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
-  const [stampData, setStampData] = useState<StampData[]>([
-    {
-      label: '👍',
-      value: 'thumbsUp',
-      number: thumbsUp.number,
-      disabled: thumbsUp.userIds.includes(myId),
-    },
-    {
-      label: '優勝',
-      value: 'yusyo',
-      number: yusyo.number,
-      disabled: yusyo.userIds.includes(myId),
-      style: {
-        fontFamily: 'Hiragino Sans',
-        fontWeight: '700',
-      },
-    },
-    {
-      label: 'シンプルに\n良い',
-      value: 'yoi',
-      number: yoi.number,
-      disabled: yoi.userIds.includes(myId),
-      style: {
-        fontSize: 9.5,
-        fontFamily: 'Hiragino Sans',
-        fontWeight: '700',
-        color: 'pink',
-      },
-    },
-    {
-      label: 'お前が\n1番',
-      value: 'itibann',
-      number: itibann.number,
-      disabled: itibann.userIds.includes(myId),
-      style: {
-        fontSize: 11,
-        fontWeight: '700',
-        color: '#ffae00',
-      },
-    },
-    {
-      label: '見て正解',
-      value: 'seikai',
-      number: seikai.number,
-      disabled: seikai.userIds.includes(myId),
-      style: {
-        fontSize: 11,
-        fontWeight: '700',
-        color: '#004cff',
-      },
-    },
-  ]);
+  const user = useSelector(
+    (state: RootState) => selectNearbyUser(state, userId),
+    shallowEqual,
+  );
+
+  const reducerStampData = useMemo(() => {
+    if (user) {
+      const f = user.flashes.entities.find((e) => e.id === flash.id);
+      if (f) {
+        return f.stamps;
+      }
+    }
+  }, [user, flash.id]);
+
+  const stampValues = useMemo(() => reducerStampData, [reducerStampData]);
+
+  const _stampData: StampData[] = useMemo(() => {
+    if (stampValues) {
+      return [
+        {
+          label: '👍',
+          value: 'thumbsUp',
+          number: stampValues.thumbsUp.number,
+          disabled: stampValues.thumbsUp.userIds.includes(myId),
+        },
+        {
+          label: '優勝',
+          value: 'yusyo',
+          number: stampValues.yusyo.number,
+          disabled: stampValues.yusyo.userIds.includes(myId),
+          style: {
+            fontFamily: 'Hiragino Sans',
+            fontWeight: '700',
+          },
+        },
+        {
+          label: 'シンプルに\n良い',
+          value: 'yoi',
+          number: stampValues.yoi.number,
+          disabled: stampValues.yoi.userIds.includes(myId),
+          style: {
+            fontSize: 9.5,
+            fontFamily: 'Hiragino Sans',
+            fontWeight: '700',
+            color: 'pink',
+          },
+        },
+        {
+          label: 'お前が\n1番',
+          value: 'itibann',
+          number: stampValues.itibann.number,
+          disabled: stampValues.itibann.userIds.includes(myId),
+          style: {
+            fontSize: 11,
+            fontWeight: '700',
+            color: '#ffae00',
+          },
+        },
+        {
+          label: '見て正解',
+          value: 'seikai',
+          number: stampValues.seikai.number,
+          disabled: stampValues.seikai.userIds.includes(myId),
+          style: {
+            fontSize: 11,
+            fontWeight: '700',
+            color: '#004cff',
+          },
+        },
+      ];
+    } else {
+      return [];
+    }
+  }, [stampValues, myId]);
+
+  const [stampData, setStampData] = useState<StampData[]>(_stampData);
+
+  useEffect(() => {
+    setStampData(_stampData);
+  }, [_stampData]);
 
   const dispatch = useCustomDispatch();
 
@@ -96,7 +121,7 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
           if (st.value === value) {
             const newData = {
               ...st,
-              number: st.number += 1,
+              number: st.number,
               disabled: true,
             };
             return newData;
@@ -105,16 +130,13 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
           return st;
         });
       });
-      const result = await dispatch(
+      await dispatch(
         createFlashStampThunk({
           flashId: flash.id,
           value,
           anotherUserId: userId,
         }),
       );
-
-      if (createFlashStampThunk.fulfilled.match(result)) {
-      }
     },
     [dispatch, flash.id, userId],
   );
@@ -133,9 +155,12 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
               },
             ]}
             key={data.label}
-            activeOpacity={0.7}
+            activeOpacity={1}
             disabled={data.disabled}
-            onPress={() => createStamp({value: data.value})}>
+            onPress={() => {
+              data.number += 1;
+              createStamp({value: data.value});
+            }}>
             <Text style={[styles.stampText, {...data.style}]}>
               {data.label}
             </Text>
