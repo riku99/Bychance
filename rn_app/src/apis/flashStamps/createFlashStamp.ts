@@ -9,22 +9,31 @@ import {
   handleCredentialsError,
 } from '../re-modules';
 
-export type CreateFlashStamp = null;
+import {StampValues} from '~/stores/flashes';
+
+export type CreateFlashStampPayload = {
+  anotherUserId: string;
+  flashId: number;
+  value: StampValues;
+  userId: string;
+};
 
 export const createFlashStampThunk = createAsyncThunk<
-  undefined,
-  {flashId: number; value: string},
+  CreateFlashStampPayload,
+  {flashId: number; value: string; anotherUserId: string},
   {
     rejectValue: RejectPayload;
   }
 >(
   'flashStamps/createFlashStamp',
-  async ({flashId, value}, {dispatch, rejectWithValue}) => {
+  async ({flashId, value, anotherUserId}, {dispatch, rejectWithValue}) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
       try {
-        await axios.post(
+        const response = await axios.post<
+          Omit<CreateFlashStampPayload, 'anotherUserId'>
+        >(
           `${origin}/flashStamps?id=${credentials.id}`,
           {
             flashId,
@@ -32,6 +41,11 @@ export const createFlashStampThunk = createAsyncThunk<
           },
           headers(credentials.token),
         );
+
+        return {
+          ...response.data,
+          anotherUserId,
+        };
       } catch (e) {
         const result = handleBasicApiError({e, dispatch});
         return rejectWithValue(result);

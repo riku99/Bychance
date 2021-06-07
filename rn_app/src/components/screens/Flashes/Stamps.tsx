@@ -24,9 +24,10 @@ type StampData = {
 
 type Props = {
   flash: Flash;
+  userId: string;
 };
 
-export const Stamps = React.memo(({flash}: Props) => {
+export const Stamps = React.memo(({flash, userId}: Props) => {
   const {thumbsUp, yusyo, yoi, itibann, seikai} = useMemo(() => flash.stamps, [
     flash.stamps,
   ]);
@@ -92,9 +93,15 @@ export const Stamps = React.memo(({flash}: Props) => {
 
   const createStamp = useCallback(
     async ({value}: {value: string}) => {
-      await dispatch(createFlashStampThunk({flashId: flash.id, value}));
+      await dispatch(
+        createFlashStampThunk({
+          flashId: flash.id,
+          value,
+          anotherUserId: userId,
+        }),
+      );
     },
-    [dispatch, flash.id],
+    [dispatch, flash.id, userId],
   );
 
   return (

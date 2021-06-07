@@ -24,7 +24,7 @@ import {
 } from '../../apis/session/sessionLogin';
 import {logoutThunk} from '~/apis/session/logout';
 
-type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
+export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
 
 type FlashStampData = Record<
   StampValues,
