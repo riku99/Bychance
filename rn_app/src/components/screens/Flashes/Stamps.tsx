@@ -34,61 +34,6 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
 
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
-  // const stampData: StampData[] = useMemo(() => {
-  //   return [
-  //     {
-  //       label: '👍',
-  //       value: 'thumbsUp',
-  //       number: thumbsUp.number,
-  //       disabled: thumbsUp.userIds.includes(myId),
-  //     },
-  //     {
-  //       label: '優勝',
-  //       value: 'yusyo',
-  //       number: yusyo.number,
-  //       disabled: yusyo.userIds.includes(myId),
-  //       style: {
-  //         fontFamily: 'Hiragino Sans',
-  //         fontWeight: '700',
-  //       },
-  //     },
-  //     {
-  //       label: 'シンプルに\n良い',
-  //       value: 'yoi',
-  //       number: yoi.number,
-  //       disabled: yoi.userIds.includes(myId),
-  //       style: {
-  //         fontSize: 9.5,
-  //         fontFamily: 'Hiragino Sans',
-  //         fontWeight: '700',
-  //         color: 'pink',
-  //       },
-  //     },
-  //     {
-  //       label: 'お前が\n1番',
-  //       value: 'itibann',
-  //       number: itibann.number,
-  //       disabled: itibann.userIds.includes(myId),
-  //       style: {
-  //         fontSize: 11,
-  //         fontWeight: '700',
-  //         color: '#ffae00',
-  //       },
-  //     },
-  //     {
-  //       label: '見て正解',
-  //       value: 'seikai',
-  //       number: seikai.number,
-  //       disabled: seikai.userIds.includes(myId),
-  //       style: {
-  //         fontSize: 11,
-  //         fontWeight: '700',
-  //         color: '#004cff',
-  //       },
-  //     },
-  //   ];
-  // }, [thumbsUp, yusyo, yoi, itibann, seikai, myId]);
-
   const [stampData, setStampData] = useState<StampData[]>([
     {
       label: '👍',
