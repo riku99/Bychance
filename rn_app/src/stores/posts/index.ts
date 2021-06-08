@@ -23,6 +23,11 @@ import {
 } from '../../apis/session/sessionLogin';
 import {sampleLogin} from '../../apis/session/sampleLogin';
 import {RootState} from '..';
+import {refreshUser} from '~/stores/helpers/refreshUser';
+import {
+  refreshUserThunk,
+  RefreshUserThunkPaylaod,
+} from '~/apis/users/refreshUser';
 
 export type Post = {
   id: number;
@@ -37,6 +42,10 @@ const postsAdaper = createEntityAdapter<Post>({
   selectId: (post) => post.id,
   sortComparer: (a, b) => b.id - a.id,
 });
+
+export type PostsAdapter = typeof postsAdaper;
+
+export type PostsState = ReturnType<typeof postsAdaper.getInitialState>;
 
 const postSlice = createSlice({
   name: 'post',
@@ -73,6 +82,17 @@ const postSlice = createSlice({
       action: PayloadAction<DeletePostThunkPaylaod>,
     ) => {
       postsAdaper.removeOne(state, action.payload);
+    },
+    [refreshUserThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<RefreshUserThunkPaylaod>,
+    ) => {
+      refreshUser({
+        slice: 'post',
+        state,
+        adaper: postsAdaper,
+        action: action,
+      });
     },
   },
 });
