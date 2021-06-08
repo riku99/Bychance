@@ -16,6 +16,7 @@ import {RootState} from '~/stores';
 import {selectNearbyUser} from '~/stores/nearbyUsers';
 import {selectAllFlashes} from '~/stores/flashes';
 import {selectChatPartner} from '~/stores/chatPartners';
+import {selectFlashStampEntites} from '~/stores/flashStamps';
 
 type StampData = {
   label: string;
@@ -37,44 +38,49 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
   // なので、chatPartnersからFlashの画面を開いてももしnearbyUsersに同じユーザーがいる場合はそちらのデータが優先して取られる
   // これは基本的にchatPartnersとnearbyUsersでは後者の方が更新される頻度が高いので今のところ基本的に問題ない
   // ただ、今後厳密にユーザーを取得したくなったら、調整する必要が出てくる
-  const stampValues = useSelector((state: RootState) => {
-    if (userId === myId) {
-      return selectAllFlashes(state).find((f) => f.id === flash.id)?.stamps;
-    }
+  // const stampValuesData = useSelector((state: RootState) => {
+  //   if (userId === myId) {
+  //     return selectAllFlashes(state).find((f) => f.id === flash.id)?.stamps;
+  //   }
 
-    const fromNearbyUsersStampsData = selectNearbyUser(
-      state,
-      userId,
-    )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
+  //   const fromNearbyUsersStampsData = selectNearbyUser(
+  //     state,
+  //     userId,
+  //   )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
 
-    if (fromNearbyUsersStampsData) {
-      return fromNearbyUsersStampsData;
-    }
+  //   if (fromNearbyUsersStampsData) {
+  //     return fromNearbyUsersStampsData;
+  //   }
 
-    const fromChatPartnersStampsData = selectChatPartner(
-      state,
-      userId,
-    )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
+  //   const fromChatPartnersStampsData = selectChatPartner(
+  //     state,
+  //     userId,
+  //   )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
 
-    return fromChatPartnersStampsData;
-  }, shallowEqual);
+  //   return fromChatPartnersStampsData;
+  // }, shallowEqual);
+
+  const stampValuesData = useSelector(
+    (state: RootState) => selectFlashStampEntites(state)[flash.id],
+    shallowEqual,
+  );
 
   const _stampData: StampData[] = useMemo(() => {
     return [
       {
         label: '👍',
         value: 'thumbsUp',
-        number: stampValues ? stampValues.thumbsUp.number : 0,
-        disabled: stampValues
-          ? stampValues.thumbsUp.userIds.includes(myId)
+        number: stampValuesData ? stampValuesData.data.thumbsUp.number : 0,
+        disabled: stampValuesData
+          ? stampValuesData.data.thumbsUp.userIds.includes(myId)
           : false,
       },
       {
         label: '優勝',
         value: 'yusyo',
-        number: stampValues ? stampValues.yusyo.number : 0,
-        disabled: stampValues
-          ? stampValues.yusyo.userIds.includes(myId)
+        number: stampValuesData ? stampValuesData.data.yusyo.number : 0,
+        disabled: stampValuesData
+          ? stampValuesData.data.yusyo.userIds.includes(myId)
           : false,
         style: {
           fontFamily: 'Hiragino Sans',
@@ -84,8 +90,10 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
       {
         label: 'シンプルに\n良い',
         value: 'yoi',
-        number: stampValues ? stampValues.yoi.number : 0,
-        disabled: stampValues ? stampValues.yoi.userIds.includes(myId) : false,
+        number: stampValuesData ? stampValuesData.data.yoi.number : 0,
+        disabled: stampValuesData
+          ? stampValuesData.data.yoi.userIds.includes(myId)
+          : false,
         style: {
           fontSize: 9.5,
           fontFamily: 'Hiragino Sans',
@@ -96,9 +104,9 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
       {
         label: 'お前が\n1番',
         value: 'itibann',
-        number: stampValues ? stampValues.itibann.number : 0,
-        disabled: stampValues
-          ? stampValues.itibann.userIds.includes(myId)
+        number: stampValuesData ? stampValuesData.data.itibann.number : 0,
+        disabled: stampValuesData
+          ? stampValuesData.data.itibann.userIds.includes(myId)
           : false,
         style: {
           fontSize: 11,
@@ -109,9 +117,9 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
       {
         label: '見て正解',
         value: 'seikai',
-        number: stampValues ? stampValues.seikai.number : 0,
-        disabled: stampValues
-          ? stampValues.seikai.userIds.includes(myId)
+        number: stampValuesData ? stampValuesData.data.seikai.number : 0,
+        disabled: stampValuesData
+          ? stampValuesData.data.seikai.userIds.includes(myId)
           : false,
         style: {
           fontSize: 11,
@@ -120,7 +128,7 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
         },
       },
     ];
-  }, [stampValues, myId]);
+  }, [stampValuesData, myId]);
 
   const [stampData, setStampData] = useState<StampData[]>(_stampData);
 

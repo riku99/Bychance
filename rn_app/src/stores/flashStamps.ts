@@ -1,4 +1,4 @@
-import {createSlice, createEntityAdapter, Dictionary} from '@reduxjs/toolkit';
+import {createSlice, createEntityAdapter} from '@reduxjs/toolkit';
 
 import {RootState} from './index';
 
