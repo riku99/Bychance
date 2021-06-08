@@ -1,8 +1,16 @@
-import {createSlice, createEntityAdapter} from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  PayloadAction,
+} from '@reduxjs/toolkit';
 
 import {RootState} from './index';
+import {
+  CreateFlashStampPayload,
+  createFlashStampThunk,
+} from '~/apis/flashStamps/createFlashStamp';
 
-type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
+export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 
 type FlashStampData = Record<
   StampValues,
@@ -25,7 +33,33 @@ const flashStampsSlice = createSlice({
   name: 'flashStamps',
   initialState: flashStampsAdapter.getInitialState(),
   reducers: {},
-  extraReducers: {},
+  extraReducers: {
+    [createFlashStampThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<CreateFlashStampPayload>,
+    ) => {
+      const {flashId, value, userId} = action.payload;
+      const targetData = state.entities[flashId];
+      if (targetData) {
+        const targetValue = targetData.data[value];
+        if (targetValue) {
+          flashStampsAdapter.updateOne(state, {
+            id: flashId,
+            changes: {
+              flashId: targetData.flashId,
+              data: {
+                ...targetData.data,
+                [value]: {
+                  number: targetValue.number += 1,
+                  userIds: [...targetValue.userIds, userId],
+                },
+              },
+            },
+          });
+        }
+      }
+    },
+  },
 });
 
 const flashStampsSelector = flashStampsAdapter.getSelectors();

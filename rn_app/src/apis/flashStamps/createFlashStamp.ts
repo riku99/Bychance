@@ -9,7 +9,7 @@ import {
   handleCredentialsError,
 } from '../re-modules';
 
-import {StampValues} from '~/stores/flashes';
+import {StampValues} from '~/stores/flashStamps';
 
 export type CreateFlashStampPayload = {
   ownerId: string;
