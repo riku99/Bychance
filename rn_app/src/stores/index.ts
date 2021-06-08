@@ -8,6 +8,7 @@ import {talkRoomMessageReducer} from './talkRoomMessages';
 import {flashesReducer} from './flashes';
 import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';
+import {flashStampsReducer} from './flashStamps';
 
 const rootReducer = combineReducers({
   sessionReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   flashesReducer,
   nearbyUsersReducer,
   otherSettingsReducer,
+  flashStampsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

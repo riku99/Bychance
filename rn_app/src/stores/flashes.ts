@@ -4,24 +4,24 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {RootState} from '../index';
+import {RootState} from './index';
 import {
   deleteFlashThunk,
   DeleteFlashThunkPayload,
-} from '../../apis/flashes/deleteFlash';
+} from '../apis/flashes/deleteFlash';
 import {
   createFlashThunk,
   CreateFlashThunkPaylaod,
-} from '../../apis/flashes/createFlash';
+} from '../apis/flashes/createFlash';
 import {
   lineLoginThunk,
   LineLoginThunkPayload,
   //sampleLogin,
-} from '../../apis/session/lineLogin';
+} from '../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../apis/session/sessionLogin';
+} from '../apis/session/sessionLogin';
 import {logoutThunk} from '~/apis/session/logout';
 import {
   refreshUserThunk,
@@ -33,15 +33,15 @@ import {
   CreateFlashStampPayload,
 } from '~/apis/flashStamps/createFlashStamp';
 
-export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
+// export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
 
-type FlashStampData = Record<
-  StampValues,
-  {
-    number: number;
-    userIds: string[];
-  }
->;
+// type FlashStampData = Record<
+//   StampValues,
+//   {
+//     number: number;
+//     userIds: string[];
+//   }
+// >;
 
 export type Flash = {
   id: number;
@@ -49,7 +49,7 @@ export type Flash = {
   sourceType: 'image' | 'video';
   timestamp: string;
   viewsNumber: number;
-  stamps: FlashStampData;
+  // stamps: FlashStampData;
 };
 
 export const flashesAdapter = createEntityAdapter<Flash>({
@@ -90,34 +90,34 @@ const flashesSlice = createSlice({
     ) => {
       refreshUser({slice: 'flash', state, action, adapter: flashesAdapter});
     },
-    [createFlashStampThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateFlashStampPayload>,
-    ) => {
-      const {userId, ownerId, flashId, value} = action.payload;
-      if (userId === ownerId) {
-        const targetFlash = state.entities[flashId];
-        if (targetFlash) {
-          const targetStamp = targetFlash.stamps[value];
-          const newStampData = {
-            ...targetStamp,
-            number: targetStamp.number += 1,
-            userIds: [...targetStamp.userIds, userId],
-          };
+    // [createFlashStampThunk.fulfilled.type]: (
+    //   state,
+    //   action: PayloadAction<CreateFlashStampPayload>,
+    // ) => {
+    //   // const {userId, ownerId, flashId, value} = action.payload;
+    //   // if (userId === ownerId) {
+    //   //   const targetFlash = state.entities[flashId];
+    //   //   if (targetFlash) {
+    //   //     const targetStamp = targetFlash.stamps[value];
+    //   //     const newStampData = {
+    //   //       ...targetStamp,
+    //   //       number: targetStamp.number += 1,
+    //   //       userIds: [...targetStamp.userIds, userId],
+    //   //     };
 
-          flashesAdapter.updateOne(state, {
-            id: targetFlash.id,
-            changes: {
-              ...targetFlash,
-              stamps: {
-                ...targetFlash.stamps,
-                ...newStampData,
-              },
-            },
-          });
-        }
-      }
-    },
+    //   //     flashesAdapter.updateOne(state, {
+    //   //       id: targetFlash.id,
+    //   //       changes: {
+    //   //         ...targetFlash,
+    //   //         stamps: {
+    //   //           ...targetFlash.stamps,
+    //   //           ...newStampData,
+    //   //         },
+    //   //       },
+    //   //     });
+    //   //   }
+    //   // }
+    // },
   },
 });
 
