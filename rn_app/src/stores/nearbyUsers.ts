@@ -4,17 +4,17 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {RootState} from '../index';
-import {AnotherUser} from '../types';
-import {updateAlreadyViewed} from '../helpers/createViewedFlashes';
+import {RootState} from './index';
+import {AnotherUser} from './types';
+import {updateAlreadyViewed} from './helpers/createViewedFlashes';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
-} from '../../apis/nearbyUsers/getNearbyUsers';
+} from '../apis/nearbyUsers/getNearbyUsers';
 import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
-} from '../../apis/flashes/createAlreadyViewedFlashes';
+} from '../apis/flashes/createAlreadyViewedFlashes';
 import {logoutThunk} from '~/apis/session/logout';
 
 // NearbyUserは位置情報により取得したユーザーなので必ずlat, lngが存在する。AnotherUserはトーク相手とかも含まれるので位置情報のデータが必ず含まれるとは限らない
@@ -44,7 +44,7 @@ const nearbyUsersSlice = createSlice({
       state,
       action: PayloadAction<GetNearbyUsersPayload>,
     ) => {
-      nearbyUsersAdapter.setAll(state, action.payload);
+      nearbyUsersAdapter.setAll(state, action.payload.usersData);
     },
     [createAlreadyViewdFlashThunk.fulfilled.type]: (
       state,

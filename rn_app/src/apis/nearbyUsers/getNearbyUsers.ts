@@ -10,7 +10,12 @@ import {
   handleCredentialsError,
 } from '../re-modules';
 
-export type GetNearbyUsersPayload = NearbyUsers;
+import {FlashStamp} from '~/stores/flashStamps';
+
+export type GetNearbyUsersPayload = {
+  usersData: NearbyUsers;
+  flashStampsData: FlashStamp[];
+};
 
 export const getNearbyUsersThunk = createAsyncThunk<
   GetNearbyUsersPayload,

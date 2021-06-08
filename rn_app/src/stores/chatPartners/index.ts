@@ -105,7 +105,7 @@ export const chatPartnersSlice = createSlice({
       const forUpdateArray: {id: string; changes: AnotherUser}[] = [];
       const ids = selectIds(state);
       ids.forEach((n) => {
-        const target = result.find((data) => data.id === n);
+        const target = result.usersData.find((data) => data.id === n);
         if (target) {
           const updateObj = {id: target.id, changes: target};
           forUpdateArray.push(updateObj);

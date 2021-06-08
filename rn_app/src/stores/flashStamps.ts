@@ -13,6 +13,10 @@ import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
 } from '~/apis/session/sessionLogin';
+import {
+  getNearbyUsersThunk,
+  GetNearbyUsersPayload,
+} from '~/apis/nearbyUsers/getNearbyUsers';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 
@@ -68,6 +72,12 @@ const flashStampsSlice = createSlice({
           });
         }
       }
+    },
+    [getNearbyUsersThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<GetNearbyUsersPayload>,
+    ) => {
+      flashStampsAdapter.upsertMany(state, action.payload.flashStampsData);
     },
   },
 });
