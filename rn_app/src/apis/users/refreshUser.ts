@@ -10,9 +10,11 @@ import {
 } from '../re-modules';
 import {User} from '../../stores/user';
 import {AnotherUser} from '../../stores/types';
+import {Post} from '~/stores/posts';
+import {Flash} from '~/stores/flashes';
 
 export type RefreshUserThunkPaylaod =
-  | {isMyData: true; data: User}
+  | {isMyData: true; user: User; posts: Post[]; flashes: Flash[]}
   | {isMyData: false; data: AnotherUser};
 
 export const refreshUserThunk = createAsyncThunk<
@@ -24,9 +26,7 @@ export const refreshUserThunk = createAsyncThunk<
 
   if (credentials) {
     try {
-      const response = await axios.patch<
-        {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
-      >(
+      const response = await axios.patch<RefreshUserThunkPaylaod>(
         `${origin}/users/refresh?id=${credentials.id}`,
         {userId},
         headers(credentials.token),

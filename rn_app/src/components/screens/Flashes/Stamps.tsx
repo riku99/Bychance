@@ -14,6 +14,8 @@ import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {Flash} from '~/stores/flashes';
 import {RootState} from '~/stores';
 import {selectNearbyUser} from '~/stores/nearbyUsers';
+import {selectAllFlashes} from '~/stores/flashes';
+import {selectChatPartner} from '~/stores/chatPartners';
 
 type StampData = {
   label: string;
@@ -31,79 +33,89 @@ type Props = {
 export const Stamps = React.memo(({flash, userId}: Props) => {
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
-  const user = useSelector(
-    (state: RootState) => selectNearbyUser(state, userId),
-    shallowEqual,
-  );
-
-  const reducerStampData = useMemo(() => {
-    if (user) {
-      const f = user.flashes.entities.find((e) => e.id === flash.id);
-      if (f) {
-        return f.stamps;
-      }
+  const stampValues = useSelector((state: RootState) => {
+    if (userId === myId) {
+      return selectAllFlashes(state).find((f) => f.id === flash.id)?.stamps;
     }
-  }, [user, flash.id]);
 
-  const stampValues = useMemo(() => reducerStampData, [reducerStampData]);
+    const fromNearbyUsersStampsData = selectNearbyUser(
+      state,
+      userId,
+    )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
+
+    if (fromNearbyUsersStampsData) {
+      return fromNearbyUsersStampsData;
+    }
+
+    const fromChatPartnersStampsData = selectChatPartner(
+      state,
+      userId,
+    )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
+
+    return fromChatPartnersStampsData;
+  }, shallowEqual);
 
   const _stampData: StampData[] = useMemo(() => {
-    if (stampValues) {
-      return [
-        {
-          label: '👍',
-          value: 'thumbsUp',
-          number: stampValues.thumbsUp.number,
-          disabled: stampValues.thumbsUp.userIds.includes(myId),
+    return [
+      {
+        label: '👍',
+        value: 'thumbsUp',
+        number: stampValues ? stampValues.thumbsUp.number : 0,
+        disabled: stampValues
+          ? stampValues.thumbsUp.userIds.includes(myId)
+          : false,
+      },
+      {
+        label: '優勝',
+        value: 'yusyo',
+        number: stampValues ? stampValues.yusyo.number : 0,
+        disabled: stampValues
+          ? stampValues.yusyo.userIds.includes(myId)
+          : false,
+        style: {
+          fontFamily: 'Hiragino Sans',
+          fontWeight: '700',
         },
-        {
-          label: '優勝',
-          value: 'yusyo',
-          number: stampValues.yusyo.number,
-          disabled: stampValues.yusyo.userIds.includes(myId),
-          style: {
-            fontFamily: 'Hiragino Sans',
-            fontWeight: '700',
-          },
+      },
+      {
+        label: 'シンプルに\n良い',
+        value: 'yoi',
+        number: stampValues ? stampValues.yoi.number : 0,
+        disabled: stampValues ? stampValues.yoi.userIds.includes(myId) : false,
+        style: {
+          fontSize: 9.5,
+          fontFamily: 'Hiragino Sans',
+          fontWeight: '700',
+          color: 'pink',
         },
-        {
-          label: 'シンプルに\n良い',
-          value: 'yoi',
-          number: stampValues.yoi.number,
-          disabled: stampValues.yoi.userIds.includes(myId),
-          style: {
-            fontSize: 9.5,
-            fontFamily: 'Hiragino Sans',
-            fontWeight: '700',
-            color: 'pink',
-          },
+      },
+      {
+        label: 'お前が\n1番',
+        value: 'itibann',
+        number: stampValues ? stampValues.itibann.number : 0,
+        disabled: stampValues
+          ? stampValues.itibann.userIds.includes(myId)
+          : false,
+        style: {
+          fontSize: 11,
+          fontWeight: '700',
+          color: '#ffae00',
         },
-        {
-          label: 'お前が\n1番',
-          value: 'itibann',
-          number: stampValues.itibann.number,
-          disabled: stampValues.itibann.userIds.includes(myId),
-          style: {
-            fontSize: 11,
-            fontWeight: '700',
-            color: '#ffae00',
-          },
+      },
+      {
+        label: '見て正解',
+        value: 'seikai',
+        number: stampValues ? stampValues.seikai.number : 0,
+        disabled: stampValues
+          ? stampValues.seikai.userIds.includes(myId)
+          : false,
+        style: {
+          fontSize: 11,
+          fontWeight: '700',
+          color: '#004cff',
         },
-        {
-          label: '見て正解',
-          value: 'seikai',
-          number: stampValues.seikai.number,
-          disabled: stampValues.seikai.userIds.includes(myId),
-          style: {
-            fontSize: 11,
-            fontWeight: '700',
-            color: '#004cff',
-          },
-        },
-      ];
-    } else {
-      return [];
-    }
+      },
+    ];
   }, [stampValues, myId]);
 
   const [stampData, setStampData] = useState<StampData[]>(_stampData);

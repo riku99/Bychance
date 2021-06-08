@@ -23,6 +23,11 @@ import {
   SessionLoginThunkPayload,
 } from '../../apis/session/sessionLogin';
 import {logoutThunk} from '~/apis/session/logout';
+import {
+  refreshUserThunk,
+  RefreshUserThunkPaylaod,
+} from '~/apis/users/refreshUser';
+import {refreshUser} from '~/stores/helpers/refreshUser';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
 
@@ -43,11 +48,15 @@ export type Flash = {
   stamps: FlashStampData;
 };
 
-const flashesAdapter = createEntityAdapter<Flash>({
+export const flashesAdapter = createEntityAdapter<Flash>({
   selectId: (flash) => flash.id,
   sortComparer: (a, b) =>
     new Date(b.timestamp) < new Date(a.timestamp) ? 1 : -1,
 });
+
+export type FlashesAdapter = typeof flashesAdapter;
+
+export type FlashesState = ReturnType<typeof flashesAdapter.getInitialState>;
 
 const flashesSlice = createSlice({
   name: 'flashes',
@@ -71,6 +80,12 @@ const flashesSlice = createSlice({
       state,
       action: PayloadAction<DeleteFlashThunkPayload>,
     ) => flashesAdapter.removeOne(state, action.payload),
+    [refreshUserThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<RefreshUserThunkPaylaod>,
+    ) => {
+      refreshUser({slice: 'flash', state, action, adapter: flashesAdapter});
+    },
   },
 });
 
