@@ -17,6 +17,10 @@ import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
 } from '~/apis/nearbyUsers/getNearbyUsers';
+import {
+  refreshUserThunk,
+  RefreshUserThunkPaylaod,
+} from '~/apis/users/refreshUser';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 
@@ -46,7 +50,7 @@ const flashStampsSlice = createSlice({
       state,
       action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
-      flashStampsAdapter.addMany(state, action.payload.flasStamps);
+      flashStampsAdapter.addMany(state, action.payload.flashStamps);
     },
     [createFlashStampThunk.fulfilled.type]: (
       state,
@@ -78,6 +82,16 @@ const flashStampsSlice = createSlice({
       action: PayloadAction<GetNearbyUsersPayload>,
     ) => {
       flashStampsAdapter.upsertMany(state, action.payload.flashStampsData);
+    },
+    [refreshUserThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<RefreshUserThunkPaylaod>,
+    ) => {
+      if (action.payload.isMyData) {
+        flashStampsAdapter.upsertMany(state, action.payload.flashStamps);
+      } else {
+        flashStampsAdapter.upsertMany(state, action.payload.data.flashStamps);
+      }
     },
   },
 });

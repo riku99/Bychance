@@ -36,8 +36,6 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
     shallowEqual,
   );
 
-  console.log(stampValuesData);
-
   const _stampData: StampData[] = useMemo(() => {
     return [
       {

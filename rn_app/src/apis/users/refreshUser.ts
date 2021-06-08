@@ -12,10 +12,17 @@ import {User} from '../../stores/user';
 import {AnotherUser} from '../../stores/types';
 import {Post} from '~/stores/posts';
 import {Flash} from '~/stores/flashes';
+import {FlashStamp} from '~/stores/flashStamps';
 
 export type RefreshUserThunkPaylaod =
-  | {isMyData: true; user: User; posts: Post[]; flashes: Flash[]}
-  | {isMyData: false; data: AnotherUser};
+  | {
+      isMyData: true;
+      user: User;
+      posts: Post[];
+      flashes: Flash[];
+      flashStamps: FlashStamp[];
+    }
+  | {isMyData: false; data: {user: AnotherUser; flashStamps: FlashStamp[]}};
 
 export const refreshUserThunk = createAsyncThunk<
   RefreshUserThunkPaylaod,

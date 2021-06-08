@@ -49,8 +49,8 @@ export const refreshUser = (arg: State & Action) => {
     }
   } else {
     const updatedObj = {
-      id: arg.action.payload.data.id,
-      changes: arg.action.payload.data,
+      id: arg.action.payload.data.user.id,
+      changes: arg.action.payload.data.user,
     };
     switch (arg.slice) {
       case 'chatPartners':

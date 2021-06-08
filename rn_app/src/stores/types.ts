@@ -12,7 +12,7 @@ export type ClientData = {
   messages: TalkRoomMessage[];
   flashes: Flash[];
   chatPartners: AnotherUser[];
-  flasStamps: FlashStamp[];
+  flashStamps: FlashStamp[];
 };
 
 // 自分以外のユーザーが持つデータ。データそのもの(entiites)以外にも閲覧データとか必要なので定義
