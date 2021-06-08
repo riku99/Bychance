@@ -12,7 +12,7 @@ import {
 import {StampValues} from '~/stores/flashes';
 
 export type CreateFlashStampPayload = {
-  anotherUserId: string;
+  ownerId: string;
   flashId: number;
   value: StampValues;
   userId: string;
@@ -20,13 +20,13 @@ export type CreateFlashStampPayload = {
 
 export const createFlashStampThunk = createAsyncThunk<
   CreateFlashStampPayload,
-  {flashId: number; value: string; anotherUserId: string},
+  {flashId: number; value: string; ownerId: string},
   {
     rejectValue: RejectPayload;
   }
 >(
   'flashStamps/createFlashStamp',
-  async ({flashId, value, anotherUserId}, {dispatch, rejectWithValue}) => {
+  async ({flashId, value, ownerId}, {dispatch, rejectWithValue}) => {
     const credentials = await checkKeychain();
 
     if (credentials) {
@@ -44,7 +44,7 @@ export const createFlashStampThunk = createAsyncThunk<
 
         return {
           ...response.data,
-          anotherUserId,
+          ownerId,
         };
       } catch (e) {
         const result = handleBasicApiError({e, dispatch});

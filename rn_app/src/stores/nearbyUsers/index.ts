@@ -60,7 +60,7 @@ const nearbyUsersSlice = createSlice({
       state,
       action: PayloadAction<CreateFlashStampPayload>,
     ) => {
-      const targetUser = state.entities[action.payload.anotherUserId];
+      const targetUser = state.entities[action.payload.ownerId];
       if (targetUser) {
         const targetEntites = targetUser.flashes.entities;
         const targetFlash = targetEntites.find(

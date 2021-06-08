@@ -33,6 +33,10 @@ type Props = {
 export const Stamps = React.memo(({flash, userId}: Props) => {
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
+  // 現在、対象ユーザーが自分以外のユーザーだった場合、まずnearbyUsersからそのユーザーを探し、見つからなかったらchatPartnersから探すようにしている。
+  // なので、chatPartnersからFlashの画面を開いてももしnearbyUsersに同じユーザーがいる場合はそちらのデータが優先して取られる
+  // これは基本的にchatPartnersとnearbyUsersでは後者の方が更新される頻度が高いので今のところ基本的に問題ない
+  // ただ、今後厳密にユーザーを取得したくなったら、調整する必要が出てくる
   const stampValues = useSelector((state: RootState) => {
     if (userId === myId) {
       return selectAllFlashes(state).find((f) => f.id === flash.id)?.stamps;
@@ -146,7 +150,7 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
         createFlashStampThunk({
           flashId: flash.id,
           value,
-          anotherUserId: userId,
+          ownerId: userId,
         }),
       );
     },

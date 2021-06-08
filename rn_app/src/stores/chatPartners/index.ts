@@ -7,7 +7,6 @@ import {
 import {AnotherUser, ReceivedMessageData} from '../types';
 import {RootState} from '../index';
 import {receiveTalkRoomMessage} from '../talkRoomMessages';
-import {User} from '../user';
 import {updateAlreadyViewed} from '../helpers/createViewedFlashes';
 import {refreshUser} from '../helpers/refreshUser';
 import {
@@ -26,7 +25,10 @@ import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
 } from '../../apis/nearbyUsers/getNearbyUsers';
-import {refreshUserThunk} from '../../apis/users/refreshUser';
+import {
+  refreshUserThunk,
+  RefreshUserThunkPaylaod,
+} from '../../apis/users/refreshUser';
 import {logoutThunk} from '~/apis/session/logout';
 import {
   createRoomThunk,
@@ -81,9 +83,7 @@ export const chatPartnersSlice = createSlice({
     },
     [refreshUserThunk.fulfilled.type]: (
       state,
-      action: PayloadAction<
-        {isMyData: true; data: User} | {isMyData: false; data: AnotherUser}
-      >,
+      action: PayloadAction<RefreshUserThunkPaylaod>,
     ) => {
       refreshUser({
         slice: chatPartnersSlice.name,

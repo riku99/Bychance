@@ -28,6 +28,10 @@ import {
   RefreshUserThunkPaylaod,
 } from '~/apis/users/refreshUser';
 import {refreshUser} from '~/stores/helpers/refreshUser';
+import {
+  createFlashStampThunk,
+  CreateFlashStampPayload,
+} from '~/apis/flashStamps/createFlashStamp';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
 
@@ -85,6 +89,34 @@ const flashesSlice = createSlice({
       action: PayloadAction<RefreshUserThunkPaylaod>,
     ) => {
       refreshUser({slice: 'flash', state, action, adapter: flashesAdapter});
+    },
+    [createFlashStampThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<CreateFlashStampPayload>,
+    ) => {
+      const {userId, ownerId, flashId, value} = action.payload;
+      if (userId === ownerId) {
+        const targetFlash = state.entities[flashId];
+        if (targetFlash) {
+          const targetStamp = targetFlash.stamps[value];
+          const newStampData = {
+            ...targetStamp,
+            number: targetStamp.number += 1,
+            userIds: [...targetStamp.userIds, userId],
+          };
+
+          flashesAdapter.updateOne(state, {
+            id: targetFlash.id,
+            changes: {
+              ...targetFlash,
+              stamps: {
+                ...targetFlash.stamps,
+                ...newStampData,
+              },
+            },
+          });
+        }
+      }
     },
   },
 });
