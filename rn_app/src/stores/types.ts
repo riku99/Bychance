@@ -3,6 +3,7 @@ import {Post} from './posts';
 import {TalkRoom} from './talkRooms';
 import {TalkRoomMessage} from './talkRoomMessages';
 import {Flash} from './flashes';
+import {FlashStamp} from './flashStamps';
 
 export type ClientData = {
   user: User;
@@ -11,6 +12,7 @@ export type ClientData = {
   messages: TalkRoomMessage[];
   flashes: Flash[];
   chatPartners: AnotherUser[];
+  flasStamps: FlashStamp[];
 };
 
 // 自分以外のユーザーが持つデータ。データそのもの(entiites)以外にも閲覧データとか必要なので定義

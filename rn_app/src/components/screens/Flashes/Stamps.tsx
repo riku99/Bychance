@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -13,9 +13,6 @@ import {createFlashStampThunk} from '~/apis/flashStamps/createFlashStamp';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
 import {Flash} from '~/stores/flashes';
 import {RootState} from '~/stores';
-import {selectNearbyUser} from '~/stores/nearbyUsers';
-import {selectAllFlashes} from '~/stores/flashes';
-import {selectChatPartner} from '~/stores/chatPartners';
 import {selectFlashStampEntites} from '~/stores/flashStamps';
 
 type StampData = {
@@ -34,36 +31,12 @@ type Props = {
 export const Stamps = React.memo(({flash, userId}: Props) => {
   const myId = useSelector((state: RootState) => state.userReducer.user!.id);
 
-  // 現在、対象ユーザーが自分以外のユーザーだった場合、まずnearbyUsersからそのユーザーを探し、見つからなかったらchatPartnersから探すようにしている。
-  // なので、chatPartnersからFlashの画面を開いてももしnearbyUsersに同じユーザーがいる場合はそちらのデータが優先して取られる
-  // これは基本的にchatPartnersとnearbyUsersでは後者の方が更新される頻度が高いので今のところ基本的に問題ない
-  // ただ、今後厳密にユーザーを取得したくなったら、調整する必要が出てくる
-  // const stampValuesData = useSelector((state: RootState) => {
-  //   if (userId === myId) {
-  //     return selectAllFlashes(state).find((f) => f.id === flash.id)?.stamps;
-  //   }
-
-  //   const fromNearbyUsersStampsData = selectNearbyUser(
-  //     state,
-  //     userId,
-  //   )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
-
-  //   if (fromNearbyUsersStampsData) {
-  //     return fromNearbyUsersStampsData;
-  //   }
-
-  //   const fromChatPartnersStampsData = selectChatPartner(
-  //     state,
-  //     userId,
-  //   )?.flashes.entities.find((e) => e.id === flash.id)?.stamps;
-
-  //   return fromChatPartnersStampsData;
-  // }, shallowEqual);
-
   const stampValuesData = useSelector(
     (state: RootState) => selectFlashStampEntites(state)[flash.id],
     shallowEqual,
   );
+
+  console.log(stampValuesData);
 
   const _stampData: StampData[] = useMemo(() => {
     return [
@@ -132,7 +105,7 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
 
   const [stampData, setStampData] = useState<StampData[]>(_stampData);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setStampData(_stampData);
   }, [_stampData]);
 

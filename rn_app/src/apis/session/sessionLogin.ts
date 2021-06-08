@@ -22,6 +22,7 @@ export const sessionLoginThunk = createAsyncThunk<
       headers(token),
     );
 
+    console.log(response.data); // 消す
     return response.data;
   } catch (e) {
     const result = handleBasicApiError({e, dispatch});

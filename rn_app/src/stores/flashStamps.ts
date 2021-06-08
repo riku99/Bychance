@@ -9,6 +9,10 @@ import {
   CreateFlashStampPayload,
   createFlashStampThunk,
 } from '~/apis/flashStamps/createFlashStamp';
+import {
+  sessionLoginThunk,
+  SessionLoginThunkPayload,
+} from '~/apis/session/sessionLogin';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 
@@ -20,7 +24,7 @@ type FlashStampData = Record<
   }
 >;
 
-type FlashStamp = {
+export type FlashStamp = {
   flashId: number;
   data: FlashStampData;
 };
@@ -34,6 +38,12 @@ const flashStampsSlice = createSlice({
   initialState: flashStampsAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
+    [sessionLoginThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<SessionLoginThunkPayload>,
+    ) => {
+      flashStampsAdapter.addMany(state, action.payload.flasStamps);
+    },
     [createFlashStampThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateFlashStampPayload>,
