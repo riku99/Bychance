@@ -2,6 +2,7 @@ import React, {ComponentProps} from 'react';
 import {StyleSheet, View} from 'react-native';
 import FastImage, {FastImageProps} from 'react-native-fast-image';
 import Video from 'react-native-video';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import {useGetThumbnailUrl} from '~/hooks/video';
 

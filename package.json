@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@react-native-masked-view/masked-view": "^0.2.4",
+    "react-native-skeleton-placeholder": "^4.0.0"
+  }
+}

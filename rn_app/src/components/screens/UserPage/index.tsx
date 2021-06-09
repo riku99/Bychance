@@ -40,7 +40,6 @@ import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {RootNavigationProp} from '~/screens/Root';
-import {normalStyles} from '~/constants/styles';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 
@@ -442,16 +441,18 @@ const introduceContainerHeight = height * 0.14;
 
 const snsIconsContainerTop = profileContainerHeight - stickyTabHeight - 12;
 
+const backgroundItemHeight = height * 0.17;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   backGroundImageContainer: {
     position: 'absolute',
-    backgroundColor: normalStyles.imageBackGroundColor,
+    // backgroundColor: normalStyles.imageBackGroundColor,
     left: 0,
     width: '100%',
-    height: '20%',
+    height: backgroundItemHeight,
   },
   introduceContainer: {
     position: 'absolute',
@@ -511,5 +512,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  blurStyle: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'black',
+    opacity: 0.25,
   },
 });

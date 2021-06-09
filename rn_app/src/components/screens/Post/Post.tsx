@@ -68,8 +68,8 @@ export const Post = ({post, user, deletePost}: Props) => {
 };
 
 const {width} = Dimensions.get('screen');
-const quarterSize = width / 4;
-const postHeight = quarterSize * 5; // Postはとりあえず 4:5 の比率にするのでheightを計算して取得
+const quarterSize = width / 3;
+const postHeight = quarterSize * 4; // Postはとりあえず 3:4 の比率にするのでheightを計算して取得
 
 const styles = StyleSheet.create({
   container: {
