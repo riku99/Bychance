@@ -47,6 +47,7 @@ export const SnsIcons = React.memo(({snsLinkData}: Props) => {
             <SocialIcon
               raised={false}
               type="instagram"
+              underlayColor="pink"
               onPress={() =>
                 handleSnsIconPress(
                   `${snsBaseUrl.instagramBaseUrl}/${snsLinkData.instagram}`,
