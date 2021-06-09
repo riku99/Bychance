@@ -37,6 +37,7 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
 
   const sourceType = useMemo(() => post.sourceType, [post.sourceType]);
 
+  // SkeltonLoaingコンポーネント作ったけど結構重くなってしまうのでいったん使わない
   return (
     <View style={styles.posts}>
       <TouchableOpacity
