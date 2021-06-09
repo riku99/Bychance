@@ -42,6 +42,7 @@ import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {RootNavigationProp} from '~/screens/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
+import {normalStyles} from '~/constants/styles';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -449,10 +450,10 @@ const styles = StyleSheet.create({
   },
   backGroundImageContainer: {
     position: 'absolute',
-    // backgroundColor: normalStyles.imageBackGroundColor,
     left: 0,
     width: '100%',
     height: backgroundItemHeight,
+    backgroundColor: normalStyles.imageBackGroundColor,
   },
   introduceContainer: {
     position: 'absolute',
