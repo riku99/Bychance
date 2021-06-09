@@ -11,4 +11,11 @@ export const commonStyles = StyleSheet.create({
   switch: {
     transform: [{scaleX: 0.8}, {scaleY: 0.8}],
   },
+  descriptionModal: {
+    width: '85%',
+    height: 200,
+    backgroundColor: 'white',
+    alignSelf: 'center',
+    borderRadius: 10,
+  },
 });
