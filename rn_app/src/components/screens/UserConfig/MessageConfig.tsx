@@ -96,6 +96,7 @@ export const MessageConfig = React.memo(() => {
           <Text
             style={{fontSize: 18, marginHorizontal: 10, marginVertical: 10}}>
             ONの場合、アプリ起動中（バックグラウンドは除く）にメッセージが他のユーザーから送られた場合に画面上部に表示されます。
+            {'\n'}※ プッシュ通知とは別のものです
           </Text>
         </View>
       </CustomPopupModal>
