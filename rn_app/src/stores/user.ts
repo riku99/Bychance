@@ -1,30 +1,24 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {refreshUser} from '../helpers/refreshUser';
-import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../../apis/session/lineLogin';
+import {refreshUser} from './helpers/refreshUser';
+import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../apis/session/sessionLogin';
-import {
-  editProfileThunk,
-  EditProfilePayload,
-} from '../../apis/users/editProfile';
+} from '../apis/session/sessionLogin';
+import {editProfileThunk, EditProfilePayload} from '../apis/users/editProfile';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '../../apis/users/refreshUser';
+} from '../apis/users/refreshUser';
 import {
   changeUserDisplayThunk,
   EidtUserDisplayThunkPayload,
-} from '../../apis/users/changeUserDisplay';
+} from '../apis/users/changeUserDisplay';
 import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
-} from '../../apis/users/updateLocation';
+} from '../apis/users/updateLocation';
 import {
   changeVideoEditDescriptionThunk,
   ChangeVideoEditDescriptionPayload,
@@ -33,8 +27,12 @@ import {
   changeTalkRoomMessageReceiptThunk,
   ChangeTalkRoomMessageReceiptPaylpad,
 } from '~/apis/users/changeTalkRoomMessageReceipt';
+import {
+  ChangeShowReceiveMessagePayload,
+  changeShowReceiveMessageThunk,
+} from '~/apis/users/changeShowReceiveMessage';
 import {logoutThunk} from '~/apis/session/logout';
-import {sampleLogin} from '../../apis/session/sampleLogin';
+import {sampleLogin} from '../apis/session/sampleLogin';
 
 export type UserState = {
   user?: {
@@ -54,6 +52,7 @@ export type UserState = {
     tiktok: string | null;
     videoEditDescription: boolean;
     talkRoomMessageReceipt: boolean;
+    showReceiveMessage: boolean;
   };
   temporarilySavedData?: {
     name?: string;
@@ -245,6 +244,16 @@ const userSlice = createSlice({
       user: {
         ...state.user!,
         talkRoomMessageReceipt: action.payload,
+      },
+    }),
+    [changeShowReceiveMessageThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<ChangeShowReceiveMessagePayload>,
+    ) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        showReceiveMessage: action.payload,
       },
     }),
   },

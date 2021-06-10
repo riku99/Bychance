@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {View, Switch, Text} from 'react-native';
 import {useSelector} from 'react-redux';
-import Modal from 'react-native-modal';
 
 import {RootState} from '~/stores';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
@@ -9,10 +8,15 @@ import {changeTalkRoomMessageReceiptThunk} from '~/apis/users/changeTalkRoomMess
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
+import {changeShowReceiveMessageThunk} from '~/apis/users/changeShowReceiveMessage';
 
 export const MessageConfig = React.memo(() => {
   const talkRoomMessageReceipt = useSelector(
     (state: RootState) => state.userReducer.user!.talkRoomMessageReceipt,
+  );
+
+  const currentShowReceiveMessage = useSelector(
+    (state: RootState) => state.userReducer!.user?.showReceiveMessage,
   );
 
   const [
@@ -23,7 +27,7 @@ export const MessageConfig = React.memo(() => {
   const [
     switchValueForShowRecieveMessage,
     setSwitchValueForShowRecieveMessage,
-  ] = useState(true);
+  ] = useState(currentShowReceiveMessage);
   const [
     showReceiveMessageDescription,
     setShowReceiveMessageDescription,
@@ -40,6 +44,14 @@ export const MessageConfig = React.memo(() => {
       dispatch(changeTalkRoomMessageReceiptThunk({receipt: true}));
     }
   }, [dispatch, switchValueForMessageReceipt]);
+
+  const onShowReceiveMessageSwitchValueChange = useCallback(
+    (v: boolean) => {
+      setSwitchValueForShowRecieveMessage(v);
+      dispatch(changeShowReceiveMessageThunk({showReceiveMessage: v}));
+    },
+    [dispatch],
+  );
 
   const list = useMemo(() => {
     return [
@@ -59,6 +71,7 @@ export const MessageConfig = React.memo(() => {
           <Switch
             style={commonStyles.switch}
             value={switchValueForShowRecieveMessage}
+            onValueChange={(e) => onShowReceiveMessageSwitchValueChange(e)}
           />
         ),
         description: true,
@@ -69,6 +82,7 @@ export const MessageConfig = React.memo(() => {
     switchValueForMessageReceipt,
     onMessageReceiptSwitchValueChange,
     switchValueForShowRecieveMessage,
+    onShowReceiveMessageSwitchValueChange,
   ]);
   return (
     <View style={commonStyles.container}>
