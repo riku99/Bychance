@@ -33,10 +33,12 @@ export type ReceivedMessageData =
       room: TalkRoom;
       sender: AnotherUser;
       message: TalkRoomMessage;
+      show: boolean;
     }
   | {
       isFirstMessage: false;
       roomId: number;
       sender: {id: string; name: string; avatar: string | null};
       message: TalkRoomMessage;
+      show: boolean;
     };

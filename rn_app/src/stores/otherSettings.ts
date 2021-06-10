@@ -1,8 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {logoutThunk} from '~/apis/session/logout';
-import {TalkRoomMessage, receiveTalkRoomMessage} from '../talkRoomMessages';
-import {ReceivedMessageData} from '../types';
+import {TalkRoomMessage, receiveTalkRoomMessage} from './talkRoomMessages';
+import {ReceivedMessageData} from './types';
 
 type InitialState = {
   displayedMenu?: boolean;

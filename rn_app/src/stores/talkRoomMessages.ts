@@ -7,19 +7,16 @@ import {
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../../apis/talkRoomMessages/createTalkRoomMessage';
-import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../../apis/session/lineLogin';
+} from '../apis/talkRoomMessages/createTalkRoomMessage';
+import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../apis/session/sessionLogin';
-import {sampleLogin} from '../../apis/session/sampleLogin';
+} from '../apis/session/sessionLogin';
+import {sampleLogin} from '../apis/session/sampleLogin';
 import {logoutThunk} from '~/apis/session/logout';
-import {RootState} from '../index';
-import {ReceivedMessageData} from '../types';
+import {RootState} from './index';
+import {ReceivedMessageData} from './types';
 
 export type TalkRoomMessage = {
   id: number;

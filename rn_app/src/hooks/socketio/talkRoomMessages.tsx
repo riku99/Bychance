@@ -30,7 +30,7 @@ export const useTalkRoomMessagesIo = ({id}: {id?: string}) => {
       if (id) {
         socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
           dispatch(receiveTalkRoomMessage(data));
-          if (AppState.currentState === 'active') {
+          if (AppState.currentState === 'active' && data.show) {
             showMessage({
               message: data.sender.name,
               description: data.message.text,
