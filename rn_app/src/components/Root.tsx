@@ -5,7 +5,7 @@ import FlashMessage from 'react-native-flash-message';
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
 import {updateLocationThunk} from '../apis/users/updateLocation';
-import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
+// import {getCurrentPosition} from '../helpers/geolocation/getCurrentPosition';
 import {useTalkRoomMessagesIo} from '~/hooks/socketio/talkRoomMessages';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
@@ -42,29 +42,29 @@ const Root = () => {
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
 
   // 位置情報取得のためのeffect。あとでカスタムフックにまとめる
-  useEffect(() => {
-    if (login) {
-      const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
-        if (nextAppState === 'active') {
-          if (id) {
-            dispatch(refreshUserThunk({userId: id}));
-          }
-          const position = await getCurrentPosition();
-          dispatch(
-            updateLocationThunk({
-              lat: position ? position.coords.latitude : null,
-              lng: position ? position.coords.longitude : null,
-            }),
-          );
-        }
-      };
+  // useEffect(() => {
+  //   if (login) {
+  //     const _handleAppStateChange = async (nextAppState: AppStateStatus) => {
+  //       if (nextAppState === 'active') {
+  //         if (id) {
+  //           dispatch(refreshUserThunk({userId: id}));
+  //         }
+  //         const position = await getCurrentPosition();
+  //         dispatch(
+  //           updateLocationThunk({
+  //             lat: position ? position.coords.latitude : null,
+  //             lng: position ? position.coords.longitude : null,
+  //           }),
+  //         );
+  //       }
+  //     };
 
-      AppState.addEventListener('change', _handleAppStateChange);
-      return () => {
-        AppState.removeEventListener('change', _handleAppStateChange);
-      };
-    }
-  }, [dispatch, login, id]);
+  //     AppState.addEventListener('change', _handleAppStateChange);
+  //     return () => {
+  //       AppState.removeEventListener('change', _handleAppStateChange);
+  //     };
+  //   }
+  // }, [dispatch, login, id]);
 
   // socket周り
   useTalkRoomMessagesIo({id});
@@ -74,11 +74,36 @@ const Root = () => {
   useRegisterDeviceToken({login});
 
   const onLocation = (location: Location) => {
+    console.log('hey');
     console.log(location);
   };
 
   useEffect(() => {
     BackgroundGeolocation.onLocation(onLocation);
+
+    BackgroundGeolocation.ready(
+      {
+        desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 10,
+        stopTimeout: 1,
+        debug: true,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        // url: これで位置更新のたびにサーバーにアクセスできそう
+        // headers: これでヘッダーつけれそう
+        // params: 必要ならこれでpramsつけれそう
+      },
+      (state) => {
+        console.log('設定、準備完了?: ' + state.enabled);
+
+        if (!state.enabled) {
+          console.log('トラッキングスタート');
+          BackgroundGeolocation.start(() => {
+            console.log('スタートしました');
+          });
+        }
+      },
+    );
 
     const cleanup = () => {
       BackgroundGeolocation.removeListeners();
