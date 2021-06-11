@@ -5,6 +5,7 @@ import {RootStackParamList} from '~/screens/Root';
 import {DisplayConfig} from './DisplayConfig';
 import {MessageConfig} from './MessageConfig';
 import {AccountConfig} from './AccountConfig';
+import {Others} from './Others';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'UserConfing'>;
@@ -22,6 +23,8 @@ export const UserConfig = ({route, navigation}: Props) => {
         return 'メッセージに関する設定';
       case 'account':
         return 'アカウントに関する設定';
+      case 'others':
+        return 'その他';
     }
   }, [goTo]);
 
@@ -41,6 +44,10 @@ export const UserConfig = ({route, navigation}: Props) => {
 
   if (goTo === 'account') {
     return <AccountConfig />;
+  }
+
+  if (goTo === 'others') {
+    return <Others />;
   }
 
   return null;

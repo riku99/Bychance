@@ -8,6 +8,7 @@ import {
   TextStyle,
 } from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import {createFlashStampThunk} from '~/apis/flashStamps/createFlashStamp';
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
@@ -153,6 +154,9 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
             activeOpacity={1}
             disabled={data.disabled}
             onPress={() => {
+              ReactNativeHapticFeedback.trigger('impactMedium', {
+                enableVibrateFallback: true,
+              });
               data.number += 1;
               createStamp({value: data.value});
             }}>

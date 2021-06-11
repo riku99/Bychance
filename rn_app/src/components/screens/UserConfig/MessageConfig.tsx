@@ -35,15 +35,13 @@ export const MessageConfig = React.memo(() => {
 
   const dispatch = useCustomDispatch();
 
-  const onMessageReceiptSwitchValueChange = useCallback(() => {
-    if (switchValueForMessageReceipt) {
-      setSwitchValueForMessageReceipt(false);
-      dispatch(changeTalkRoomMessageReceiptThunk({receipt: false}));
-    } else {
-      setSwitchValueForMessageReceipt(true);
-      dispatch(changeTalkRoomMessageReceiptThunk({receipt: true}));
-    }
-  }, [dispatch, switchValueForMessageReceipt]);
+  const onMessageReceiptSwitchValueChange = useCallback(
+    (v: boolean) => {
+      setSwitchValueForMessageReceipt(v);
+      dispatch(changeTalkRoomMessageReceiptThunk({receipt: v}));
+    },
+    [dispatch],
+  );
 
   const onShowReceiveMessageSwitchValueChange = useCallback(
     (v: boolean) => {
@@ -61,7 +59,7 @@ export const MessageConfig = React.memo(() => {
           <Switch
             style={commonStyles.switch}
             value={switchValueForMessageReceipt}
-            onValueChange={onMessageReceiptSwitchValueChange}
+            onValueChange={(e) => onMessageReceiptSwitchValueChange(e)}
           />
         ),
       },

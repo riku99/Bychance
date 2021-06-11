@@ -71,6 +71,15 @@ export const Menu = React.memo(() => {
           navigateToConfig('account');
         },
       },
+      {
+        title: 'その他',
+        icon: 'subject',
+        titleStyle: styles.listTitleStyle,
+        onPress: () => {
+          modalClose();
+          navigateToConfig('others');
+        },
+      },
     ];
   }, [modalClose, navigateToConfig]);
 

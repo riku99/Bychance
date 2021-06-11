@@ -278,7 +278,7 @@ PODS:
     - React-Core
   - react-native-menu (0.4.1):
     - React
-  - react-native-safe-area-context (3.1.9):
+  - react-native-safe-area-context (3.2.0):
     - React-Core
   - react-native-slider (3.0.3):
     - React
@@ -349,7 +349,7 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
-  - RNCMaskedView (0.1.10):
+  - RNCMaskedView (0.1.11):
     - React
   - RNCPicker (1.8.1):
     - React-Core
@@ -368,8 +368,8 @@ PODS:
     - RNFBApp
   - RNFS (2.16.6):
     - React
-  - RNGestureHandler (1.8.0):
-    - React
+  - RNGestureHandler (1.10.3):
+    - React-Core
   - RNImageColors (1.2.5):
     - React
   - RNImageEditor (0.8.3):
@@ -379,10 +379,40 @@ PODS:
   - RNLine (2.1.0):
     - LineSDKSwift (~> 5.0)
     - React
-  - RNReanimated (1.13.1):
+  - RNReactNativeHapticFeedback (1.11.0):
+    - React-Core
+  - RNReanimated (2.2.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - Folly
+    - glog
+    - RCTRequired
+    - RCTTypeSafety
     - React
-  - RNScreens (2.11.0):
-    - React
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNScreens (3.3.0):
+    - React-Core
+    - React-RCTImage
   - RNSVG (12.1.1):
     - React
   - RNToasty (1.0.2):
@@ -451,6 +481,7 @@ DEPENDENCIES:
   - "RNImageEditor (from `../node_modules/@wwimmo/react-native-sketch-canvas`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - "RNLine (from `../node_modules/@xmartlabs/react-native-line`)"
+  - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -576,6 +607,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keychain"
   RNLine:
     :path: "../node_modules/@xmartlabs/react-native-line"
+  RNReactNativeHapticFeedback:
+    :path: "../node_modules/react-native-haptic-feedback"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -626,7 +659,7 @@ SPEC CHECKSUMS:
   react-native-image-resizer: 4999a7dff8fc7fed5ed7d7c7dbfa5facbd345861
   react-native-maps: 2d405b4e8cee0282e4c02bac434d81450dfea877
   react-native-menu: e2d39080467a852466613b8cd123c7f54869b23c
-  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
+  react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
   react-native-video: 0bb76b6d6b77da3009611586c7dbf817b947f30e
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
@@ -640,20 +673,21 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
-  RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
+  RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 914b557e20b3b8317b084aca9ff4b4edb95f61e4
   RNCPushNotificationIOS: 61a7c72bd1ebad3568025957d001e0f0e7b32191
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNFBApp: 996860ad6832996faba79ef3f6ec2d3ea5870dd9
   RNFBMessaging: 8d84ceadc705ca6b6047c37376d2e2aaabcb8e3d
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
-  RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
+  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageColors: f55f90cc27ef799c80e6b9a5798c9405919d328e
   RNImageEditor: 43f5f80bbfcb66dd9fff2399a22f3500514617e2
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
   RNLine: b9b67a03a9228832b3ba6c40f5015169fdb264a5
-  RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
-  RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
+  RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
+  RNReanimated: d9da990fc90123f4ffbfdda93d00fc15174863a8
+  RNScreens: bf59f17fbf001f1025243eeed5f19419d3c11ef2
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNToasty: 7e83e74086ac39913662ceaba36de22631c8eaa4
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
