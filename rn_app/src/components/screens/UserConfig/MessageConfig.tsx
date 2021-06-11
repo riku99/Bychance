@@ -36,17 +36,28 @@ export const MessageConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
 
   const onMessageReceiptSwitchValueChange = useCallback(
-    (v: boolean) => {
+    async (v: boolean) => {
       setSwitchValueForMessageReceipt(v);
-      dispatch(changeTalkRoomMessageReceiptThunk({receipt: v}));
+      const result = await dispatch(
+        changeTalkRoomMessageReceiptThunk({receipt: v}),
+      );
+      // 設定の変更がうまく行かなかった場合はスイッチのvalueも戻す
+      if (!changeTalkRoomMessageReceiptThunk.fulfilled.match(result)) {
+        setSwitchValueForMessageReceipt(!v);
+      }
     },
     [dispatch],
   );
 
   const onShowReceiveMessageSwitchValueChange = useCallback(
-    (v: boolean) => {
+    async (v: boolean) => {
       setSwitchValueForShowRecieveMessage(v);
-      dispatch(changeShowReceiveMessageThunk({showReceiveMessage: v}));
+      const result = await dispatch(
+        changeShowReceiveMessageThunk({showReceiveMessage: v}),
+      );
+      if (!changeShowReceiveMessageThunk.fulfilled.match(result)) {
+        setSwitchValueForShowRecieveMessage(!v);
+      }
     },
     [dispatch],
   );

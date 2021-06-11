@@ -17,15 +17,16 @@ export const DisplayConfig = React.memo(() => {
 
   const [switchForDisplay, setSwitchForDisplay] = useState(userDisplay);
 
-  const onUserDisplaySwitchValueChange = useCallback(async () => {
-    if (switchForDisplay) {
-      setSwitchForDisplay(false);
-      await dispatch(changeUserDisplayThunk(false));
-    } else {
-      setSwitchForDisplay(true);
-      await dispatch(changeUserDisplayThunk(true));
-    }
-  }, [setSwitchForDisplay, switchForDisplay, dispatch]);
+  const onUserDisplaySwitchValueChange = useCallback(
+    async (v: boolean) => {
+      setSwitchForDisplay(v);
+      const result = await dispatch(changeUserDisplayThunk(v));
+      if (!changeUserDisplayThunk.fulfilled.match(result)) {
+        setSwitchForDisplay(!v);
+      }
+    },
+    [setSwitchForDisplay, dispatch],
+  );
 
   const list = useMemo(() => {
     return [
