@@ -5,6 +5,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
 #import <Firebase.h>
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
@@ -57,6 +58,9 @@ static void InitializeFlipper(UIApplication *application) {
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
+
+  // [REQUIRED] Register BackgroundFetch
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   return YES;
 }

@@ -36,6 +36,8 @@
     "axios": "^0.20.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-background-fetch": "^4.0.2",
+    "react-native-background-geolocation": "^4.1.0",
     "react-native-camera": "^3.40.0",
     "react-native-color-picker": "^0.6.0",
     "react-native-countdown-circle-timer": "^2.5.3",

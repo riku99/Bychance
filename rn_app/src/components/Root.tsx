@@ -16,6 +16,21 @@ import {
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification/setup';
 import {refreshUserThunk} from '~/apis/users/refreshUser';
+import BackgroundGeolocation, {
+  State,
+  Config,
+  Location,
+  LocationError,
+  Geofence,
+  GeofenceEvent,
+  GeofencesChangeEvent,
+  HeartbeatEvent,
+  HttpEvent,
+  MotionActivityEvent,
+  MotionChangeEvent,
+  ProviderChangeEvent,
+  ConnectivityChangeEvent,
+} from 'react-native-background-geolocation';
 
 const Root = () => {
   const [load, setLoad] = useState(true);
@@ -57,6 +72,19 @@ const Root = () => {
   // push通知周り
   usePushNotificationReqest({login});
   useRegisterDeviceToken({login});
+
+  const onLocation = (location: Location) => {
+    console.log(location);
+  };
+
+  useEffect(() => {
+    BackgroundGeolocation.onLocation(onLocation);
+
+    const cleanup = () => {
+      BackgroundGeolocation.removeListeners();
+    };
+    return cleanup;
+  }, []);
 
   if (load) {
     return null;

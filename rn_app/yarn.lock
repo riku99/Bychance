@@ -6889,6 +6889,18 @@ react-native-animatable@1.3.3:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-background-fetch@^4.0.2, react-native-background-fetch@~4.0.1:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-4.0.2.tgz#97842722b67c584fd860f30eb1fc70e481b207c0"
+  integrity sha512-R5T4fxz3k7Lldv3urUDuhOVwueMNCGQ03pCu44oe/zcOmKX3iGzvwup9W2J2C763MKnuSztF0Y2F4fMYPIR0fw==
+
+react-native-background-geolocation@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-background-geolocation/-/react-native-background-geolocation-4.1.0.tgz#2dc301ede674f5caa3ce506b33528aebf439551d"
+  integrity sha512-Q6A+zj/CiV8cHO035OjlNUXx/PUjBUMKj6RG5OWSoGUKHgRh+3bcnGALh+mHo/udWHv/ggRQYye/mYXjkAblUw==
+  dependencies:
+    react-native-background-fetch "~4.0.1"
+
 react-native-camera@^3.40.0:
   version "3.40.0"
   resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-3.40.0.tgz#69845991e46b0892cc2b50322d49b18f292c3202"

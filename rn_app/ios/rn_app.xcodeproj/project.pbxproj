@@ -35,6 +35,7 @@
 		326D308E252C66AE00568272 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 326D307E252C66AE00568272 /* AntDesign.ttf */; };
 		326D308F252C66AE00568272 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 326D307F252C66AE00568272 /* MaterialCommunityIcons.ttf */; };
 		327CB4592647900B00243C36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 327CB4582647900B00243C36 /* GoogleService-Info.plist */; };
+		3292716E267320030095D05D /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3292716D267320030095D05D /* RNBackgroundFetch+AppDelegate.m */; };
 		359DB361112958556D916AFB /* Pods_rn_app_rn_appTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E463DE8EB868A9BD25C4C4 /* Pods_rn_app_rn_appTests.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		BA3F0697B0BAB6C478BE4229 /* Pods_rn_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B32107C9D2C16C0497F2C80 /* Pods_rn_app.framework */; };
@@ -92,6 +93,7 @@
 		326D307E252C66AE00568272 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		326D307F252C66AE00568272 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		327CB4582647900B00243C36 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3292716D267320030095D05D /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		3408D641D64A829EC459908D /* Pods-rn_app-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn_app-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-rn_app-tvOSTests/Pods-rn_app-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3AA87A6ACDEDF305B7C7BF7D /* Pods-rn_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rn_app.release.xcconfig"; path = "Target Support Files/Pods-rn_app/Pods-rn_app.release.xcconfig"; sourceTree = "<group>"; };
 		630A86BB784767DBC993ABF2 /* Pods_rn_app_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_rn_app_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,6 +165,7 @@
 		13B07FAE1A68108700A75B9A /* rn_app */ = {
 			isa = PBXGroup;
 			children = (
+				3292716D267320030095D05D /* RNBackgroundFetch+AppDelegate.m */,
 				322196DE2568FC4F0074FF43 /* rn_app.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -485,6 +488,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-rn_app-rn_appTests/Pods-rn_app-rn_appTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BVLinearGradient/BVLinearGradient.framework",
+				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
 				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
 				"${BUILT_PRODUCTS_DIR}/FBReactNativeSpec/FBReactNativeSpec.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
@@ -498,6 +502,7 @@
 				"${BUILT_PRODUCTS_DIR}/LineSDKSwift/LineSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework",
+				"${BUILT_PRODUCTS_DIR}/RNBackgroundFetch/RNBackgroundFetch.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCMaskedView/RNCMaskedView.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCPicker/RNCPicker.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCPushNotificationIOS/RNCPushNotificationIOS.framework",
@@ -552,6 +557,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BVLinearGradient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaLumberjack.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBReactNativeSpec.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
@@ -565,6 +571,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LineSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTTypeSafety.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNBackgroundFetch.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCMaskedView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCPicker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCPushNotificationIOS.framework",
@@ -731,6 +738,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-rn_app/Pods-rn_app-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BVLinearGradient/BVLinearGradient.framework",
+				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
 				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
 				"${BUILT_PRODUCTS_DIR}/FBReactNativeSpec/FBReactNativeSpec.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
@@ -744,6 +752,7 @@
 				"${BUILT_PRODUCTS_DIR}/LineSDKSwift/LineSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework",
+				"${BUILT_PRODUCTS_DIR}/RNBackgroundFetch/RNBackgroundFetch.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCMaskedView/RNCMaskedView.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCPicker/RNCPicker.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCPushNotificationIOS/RNCPushNotificationIOS.framework",
@@ -798,6 +807,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BVLinearGradient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaLumberjack.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBReactNativeSpec.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
@@ -811,6 +821,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LineSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTTypeSafety.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNBackgroundFetch.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCMaskedView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCPicker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCPushNotificationIOS.framework",
@@ -936,6 +947,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				3227EB3F2541660A005BDB59 /* gelocation-service.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				3292716E267320030095D05D /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
