@@ -75,7 +75,7 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
               <UserAvatar
                 image={partner?.avatar}
                 size={'small'}
-                opacity={0}
+                opacity={1}
                 onPress={onAvatarPress}
               />
             ),
