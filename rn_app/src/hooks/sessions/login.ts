@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 
 import {useCustomDispatch} from '~/hooks/stores/dispatch';
-import {checkKeychain} from '~/helpers/credentials/checkKeychain';
+import {checkKeychain} from '~/helpers/credentials';
 import {sessionLoginThunk} from '~/apis/session/sessionLogin';
 
 type Arg = {
