@@ -6,7 +6,7 @@ import fs from 'react-native-fs';
 import {createFlashThunk} from '~/apis/flashes/createFlash';
 import {creatingFlash} from '~/stores/otherSettings';
 import {AppDispatch} from '~/stores/index';
-import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
+import {displayShortMessage} from '~/helpers/topShortMessage';
 import {getExtention} from '~/utils';
 
 export const useCreateFlash = () => {

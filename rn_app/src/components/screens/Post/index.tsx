@@ -8,7 +8,7 @@ import {
   MyPageStackRouteProp,
   UserPageStackRouteProp,
 } from '../../../screens/types';
-import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
+import {displayShortMessage} from '../../../helpers/topShortMessage';
 
 type Props = {
   route: MyPageStackRouteProp<'Post'> | UserPageStackRouteProp<'Post'>;

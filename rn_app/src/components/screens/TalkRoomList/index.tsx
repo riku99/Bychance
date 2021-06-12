@@ -12,7 +12,7 @@ import {useCustomDispatch} from '~/hooks/stores';
 import {useSelectAllRooms} from '~/hooks/talkRooms/selector';
 import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
 import {createDeleteRoomThunk} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
-import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
+import {displayShortMessage} from '~/helpers/topShortMessage';
 
 export const TalkRoomListPage = () => {
   const dispatch = useCustomDispatch();

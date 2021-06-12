@@ -19,7 +19,7 @@ import {AppDispatch} from '../../../stores';
 import {creatingPost} from '../../../stores/otherSettings';
 import {createPostThunk} from '../../../apis/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../screens/types';
-import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
+import {displayShortMessage} from '../../../helpers/topShortMessage';
 import {getExtention} from '~/utils';
 import {Post} from '~/stores/posts';
 

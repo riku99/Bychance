@@ -4,7 +4,7 @@ import {Alert} from 'react-native';
 import {RejectPayload, basicAxiosError} from '~/apis/types';
 import {alertSomeError} from '~/helpers/errors';
 import {logoutThunk} from '~/apis/session/logout';
-import {displayShortMessage} from '~/helpers/shortMessages/displayShortMessage';
+import {displayShortMessage} from '~/helpers/topShortMessage';
 
 export const requestLogin = (callback: () => void) => {
   Alert.alert(

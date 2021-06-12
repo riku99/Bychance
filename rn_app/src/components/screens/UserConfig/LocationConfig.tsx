@@ -1,11 +1,15 @@
 import React, {useMemo, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Alert} from 'react-native';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
+import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
+import {useCustomDispatch} from '~/hooks/stores';
+import {displayShortMessage} from '~/helpers/topShortMessage';
 
 export const LocationConfig = React.memo(() => {
+  const dispatch = useCustomDispatch();
   const [showAboutLocationInfoModal, setShowAboutLocationInfoModal] = useState(
     false,
   );
@@ -13,6 +17,24 @@ export const LocationConfig = React.memo(() => {
     return [
       {
         title: '位置情報を削除',
+        onItemPress: () => {
+          Alert.alert('位置情報を削除', '位置情報を削除しますか?', [
+            {
+              text: 'はい',
+              onPress: async () => {
+                const result = await dispatch(deleteLocationInfoThunk());
+                if (deleteLocationInfoThunk.fulfilled.match(result)) {
+                  displayShortMessage('削除しました', 'success');
+                }
+              },
+            },
+            {
+              text: 'いいえ',
+              style: 'destructive',
+              onPress: () => {},
+            },
+          ]);
+        },
       },
       {
         title: '位置情報を更新',
@@ -34,7 +56,11 @@ export const LocationConfig = React.memo(() => {
         closeModal={() => setShowAboutLocationInfoModal(false)}>
         <View style={styles.aboutLocationInfoModal}>
           <Text style={styles.aboutLocationInfoText}>
-            位置情報は暗号化されて保存されます。
+            位置情報を削除した場合、このアプリ内の位置情報に関するサービスは利用できなくなります。
+            また、位置情報が自動で更新されることもなくなります。
+            {'\n'}
+            再度取得、更新をしたい場合は「位置情報を更新」を行ってください。
+            {'\n'}なお、位置情報は常に暗号化されて保存されます。
           </Text>
         </View>
       </CustomPopupModal>
@@ -45,10 +71,13 @@ export const LocationConfig = React.memo(() => {
 const styles = StyleSheet.create({
   aboutLocationInfoModal: {
     ...commonStyles.descriptionModal,
+    width: '90%',
+    height: 250,
   },
   aboutLocationInfoText: {
     fontSize: 16,
     marginHorizontal: 10,
     marginVertical: 10,
+    lineHeight: 18,
   },
 });
