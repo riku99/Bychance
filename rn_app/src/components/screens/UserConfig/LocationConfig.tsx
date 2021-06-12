@@ -1,6 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {View, StyleSheet, Text, Alert, Switch} from 'react-native';
-import BackgroundGeolocation from 'react-native-background-geolocation';
+import {View, StyleSheet, Text, Alert} from 'react-native';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
@@ -26,10 +25,6 @@ export const LocationConfig = React.memo(() => {
                 const result = await dispatch(deleteLocationInfoThunk());
                 if (deleteLocationInfoThunk.fulfilled.match(result)) {
                   displayShortMessage('削除しました', 'success');
-                  const state = await BackgroundGeolocation.getState();
-                  if (state.enabled) {
-                    BackgroundGeolocation.stop(); // 位置情報の取得を停止
-                  }
                 }
               },
               style: 'destructive',
@@ -60,9 +55,8 @@ export const LocationConfig = React.memo(() => {
         <View style={styles.aboutLocationInfoModal}>
           <Text style={styles.aboutLocationInfoText}>
             位置情報を削除した場合、このアプリ内の位置情報に関するサービスは利用できなくなります。
-            また、位置情報が自動で取得、更新されることもなくなります。
             {'\n'}
-            再度取得、更新をしたい場合は「位置情報を更新」を行ってください。
+            一度削除してもお使いの端末により位置情報の変更が検知された場合は再度更新、保存されます。これを無効にするにはお使いの端末の設定から位置情報を無効にしてください。
             {'\n'}なお、位置情報は常に暗号化されて保存されます。
           </Text>
         </View>

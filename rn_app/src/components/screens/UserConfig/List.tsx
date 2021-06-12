@@ -1,7 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 export type List = {
   title: string;
@@ -17,10 +16,10 @@ type Props = {
 export const ConfigList = React.memo(({list}: Props) => {
   return (
     <>
-      <Text style={{marginBottom: 15}}>
+      {/* <Text style={{marginBottom: 15}}>
         <MIcon name="info" size={14} style={{marginLeft: 5}} />
         マークがあるリストをタップすると説明が表示されます
-      </Text>
+      </Text> */}
       {list.map((l, i) => (
         <ListItem
           key={i}
@@ -35,9 +34,14 @@ export const ConfigList = React.memo(({list}: Props) => {
           <ListItem.Content>
             <View style={{flexDirection: 'row'}}>
               <ListItem.Title>{l.title}</ListItem.Title>
-              {l.description && (
-                <MIcon name="info" size={17} style={{marginLeft: 5}} />
-              )}
+              {/* {l.description && (
+                <MIcon
+                  name="info"
+                  size={17}
+                  color="blue"
+                  style={{marginLeft: 5}}
+                />
+              )} */}
             </View>
           </ListItem.Content>
           {l.switch && l.switch}
