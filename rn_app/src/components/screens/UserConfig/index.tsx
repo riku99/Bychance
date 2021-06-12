@@ -6,6 +6,7 @@ import {DisplayConfig} from './DisplayConfig';
 import {MessageConfig} from './MessageConfig';
 import {AccountConfig} from './AccountConfig';
 import {Others} from './Others';
+import {LocationConfig} from './LocationConfig';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'UserConfing'>;
@@ -21,6 +22,8 @@ export const UserConfig = ({route, navigation}: Props) => {
         return '表示に関する設定';
       case 'message':
         return 'メッセージに関する設定';
+      case 'location':
+        return '位置情報に関する設定';
       case 'account':
         return 'アカウントに関する設定';
       case 'others':
@@ -40,6 +43,10 @@ export const UserConfig = ({route, navigation}: Props) => {
 
   if (goTo === 'message') {
     return <MessageConfig />;
+  }
+
+  if (goTo === 'location') {
+    return <LocationConfig />;
   }
 
   if (goTo === 'account') {

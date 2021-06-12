@@ -32,7 +32,7 @@ export type RootStackParamList = {
     sourceType: NonNullable<User['backGroundItemType']>;
   };
   UserConfing: {
-    goTo: 'display' | 'message' | 'account' | 'others';
+    goTo: 'display' | 'message' | 'location' | 'account' | 'others';
   };
 };
 

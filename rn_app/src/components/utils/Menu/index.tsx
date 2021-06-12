@@ -66,6 +66,10 @@ export const Menu = React.memo(() => {
         title: '位置情報',
         icon: 'location-pin',
         titleStyle: styles.listTitleStyle,
+        onPress: () => {
+          modalClose();
+          navigateToConfig('location');
+        },
       },
       {
         title: 'アカウント',
