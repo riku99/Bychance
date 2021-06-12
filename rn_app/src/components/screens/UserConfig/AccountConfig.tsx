@@ -19,6 +19,7 @@ export const AccountConfig = React.memo(() => {
           Alert.alert('ログアウトしますか?', '', [
             {
               text: 'はい',
+              style: 'destructive',
               onPress: async () => {
                 await dispatch(logoutThunk());
                 navigation.goBack();

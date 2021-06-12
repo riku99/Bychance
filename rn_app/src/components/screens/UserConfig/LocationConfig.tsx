@@ -20,17 +20,18 @@ export const LocationConfig = React.memo(() => {
         onItemPress: () => {
           Alert.alert('位置情報を削除', '位置情報を削除しますか?', [
             {
-              text: 'はい',
+              text: '削除',
               onPress: async () => {
                 const result = await dispatch(deleteLocationInfoThunk());
                 if (deleteLocationInfoThunk.fulfilled.match(result)) {
                   displayShortMessage('削除しました', 'success');
+                  // backgroundGeolocationの停止
                 }
               },
+              style: 'destructive',
             },
             {
               text: 'いいえ',
-              style: 'destructive',
               onPress: () => {},
             },
           ]);
@@ -38,6 +39,23 @@ export const LocationConfig = React.memo(() => {
       },
       {
         title: '位置情報を更新',
+        onItemPress: () => {
+          Alert.alert(
+            '位置情報を更新',
+            '現在の位置情報が取得、保存されます。\n 更新しますか?',
+            [
+              {
+                text: '更新',
+                style: 'destructive',
+                onPress: () => {},
+              },
+              {
+                text: 'いいえ',
+                onPress: () => {},
+              },
+            ],
+          );
+        },
       },
       {
         title: '位置情報について',
@@ -45,7 +63,8 @@ export const LocationConfig = React.memo(() => {
         onItemPress: () => setShowAboutLocationInfoModal(true),
       },
     ];
-  }, []);
+  }, [dispatch]);
+
   return (
     <View style={commonStyles.container}>
       <View style={commonStyles.sectionContainer}>
