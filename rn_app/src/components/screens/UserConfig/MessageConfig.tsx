@@ -3,7 +3,7 @@ import {View, Switch, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {changeTalkRoomMessageReceiptThunk} from '~/apis/users/changeTalkRoomMessageReceipt';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';

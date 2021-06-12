@@ -6,10 +6,10 @@ import io, {Socket} from 'socket.io-client';
 import {ReceivedMessageData} from '~/stores/types';
 import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {UserAvatar} from '~/components/utils/Avatar';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 
-const _origin = 'http://192.168.128.159:4001';
-//const _origin = 'http://localhost:4001';
+//const _origin = 'http://192.168.128.159:4001';
+const _origin = 'http://localhost:4001';
 //const _origin = 'http://192.168.3.6:4001';
 
 // メッセージの反映にはとりあえずpush通知ではなくてsocketで行う(push通知自体はある)
@@ -29,6 +29,7 @@ export const useTalkRoomMessagesIo = ({id}: {id?: string}) => {
     if (socket) {
       if (id) {
         socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
+          // console.log('recieve'); backgroundでも実行される
           dispatch(receiveTalkRoomMessage(data));
           if (AppState.currentState === 'active' && data.show) {
             showMessage({

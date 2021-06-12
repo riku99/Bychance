@@ -8,7 +8,7 @@ import {SwipeHiddenItems, hiddenRowItemWidth} from './SwipeHiddenItems';
 import {TalkRoom} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {RootNavigationProp} from '../../../screens/Root';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {useSelectAllRooms} from '~/hooks/talkRooms/selector';
 import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
 import {createDeleteRoomThunk} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';

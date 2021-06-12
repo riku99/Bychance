@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
 
 import {createDeviceToken} from '~/apis/deviceToken/createDeviceToken';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 
 // push通知の許可リクエスト
 export const usePushNotificationReqest = ({login}: {login: boolean}) => {

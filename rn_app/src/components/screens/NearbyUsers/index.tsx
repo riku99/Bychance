@@ -20,7 +20,7 @@ import {RangeSelectButton} from './RangeSelectBottun';
 import {RootState} from '~/stores';
 import {NearbyUser, selectNearbyUsersArray} from '~/stores/nearbyUsers';
 import {getNearbyUsersThunk} from '~/apis/nearbyUsers/getNearbyUsers';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {NearbyUsers} from '~/stores/nearbyUsers';
 import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/screens/Root';

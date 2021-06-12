@@ -9,7 +9,7 @@ import {
 
 import {refreshUserThunk} from '../../../apis/users/refreshUser';
 import {Post} from '~/stores/posts';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 
 type FlatListTabSceneProps = {
   renderItem?: ListRenderItem<Post>;

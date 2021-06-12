@@ -27,7 +27,7 @@ import {resetEditData} from '../../../stores/user';
 import {UserEditNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/shortMessages/displayShortMessage';
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {normalStyles} from '~/constants/styles';
 import {SnsList} from '~/types';
 import {Avatar} from './Avatar';

@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
 import {changeUserDisplayThunk} from '~/apis/users/changeUserDisplay';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 

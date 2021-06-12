@@ -11,7 +11,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import {createFlashStampThunk} from '~/apis/flashStamps/createFlashStamp';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {Flash} from '~/stores/flashes';
 import {RootState} from '~/stores';
 import {selectFlashStampEntites} from '~/stores/flashStamps';

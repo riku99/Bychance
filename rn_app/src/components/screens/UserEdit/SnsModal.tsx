@@ -6,7 +6,7 @@ import {Button} from 'react-native-elements';
 
 import {SnsList} from '~/types';
 import {normalStyles} from '~/constants/styles';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {saveEditData} from '~/stores/user';
 import {RootState} from '~/stores';
 import {X_HEIGHT} from '~/constants/device';

@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
 import {useNavigation} from '@react-navigation/native';
 
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 import {RootNavigationProp} from '~/screens/Root';
 
 type TalkRoomMessagesNotificationData = {

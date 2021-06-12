@@ -9,7 +9,7 @@ import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
 import {RootState} from '~/stores';
 import {changeVideoEditDescriptionThunk} from '~/apis/users/changeVideoEditDescription';
-import {useCustomDispatch} from '~/hooks/stores/dispatch';
+import {useCustomDispatch} from '~/hooks/stores';
 
 const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {
