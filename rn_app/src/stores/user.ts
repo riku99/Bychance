@@ -31,6 +31,7 @@ import {
   ChangeShowReceiveMessagePayload,
   changeShowReceiveMessageThunk,
 } from '~/apis/users/changeShowReceiveMessage';
+import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
 import {logoutThunk} from '~/apis/session/logout';
 import {sampleLogin} from '../apis/session/sampleLogin';
 
@@ -254,6 +255,14 @@ const userSlice = createSlice({
       user: {
         ...state.user!,
         showReceiveMessage: action.payload,
+      },
+    }),
+    [deleteLocationInfoThunk.fulfilled.type]: (state) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        lat: null,
+        lng: null,
       },
     }),
   },

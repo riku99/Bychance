@@ -1,15 +1,13 @@
 import React, {useMemo, useState} from 'react';
-import {View, StyleSheet, Text, Alert} from 'react-native';
+import {View, StyleSheet, Text, Alert, Switch} from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
 import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
-import {updateLocationThunk} from '~/apis/users/updateLocation';
 import {useCustomDispatch} from '~/hooks/stores';
 import {displayShortMessage} from '~/helpers/topShortMessage';
-import {getCurrentPosition} from '~/helpers/geolocation';
 
 export const LocationConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
@@ -44,44 +42,6 @@ export const LocationConfig = React.memo(() => {
         },
       },
       {
-        title: '位置情報を更新',
-        onItemPress: () => {
-          Alert.alert(
-            '位置情報を更新',
-            '現在の位置情報が取得、保存されます。\n 更新しますか?',
-            [
-              {
-                text: '更新',
-                style: 'destructive',
-                onPress: async () => {
-                  const currentPosition = await getCurrentPosition();
-                  if (!currentPosition) {
-                    return;
-                  }
-                  const result = await dispatch(
-                    updateLocationThunk({
-                      lat: currentPosition.coords.latitude,
-                      lng: currentPosition.coords.longitude,
-                    }),
-                  );
-                  if (updateLocationThunk.fulfilled.match(result)) {
-                    displayShortMessage('更新しました', 'success');
-                    const state = await BackgroundGeolocation.getState();
-                    if (!state.enabled) {
-                      BackgroundGeolocation.start();
-                    }
-                  }
-                },
-              },
-              {
-                text: 'いいえ',
-                onPress: () => {},
-              },
-            ],
-          );
-        },
-      },
-      {
         title: '位置情報について',
         description: true,
         onItemPress: () => setShowAboutLocationInfoModal(true),
@@ -100,7 +60,7 @@ export const LocationConfig = React.memo(() => {
         <View style={styles.aboutLocationInfoModal}>
           <Text style={styles.aboutLocationInfoText}>
             位置情報を削除した場合、このアプリ内の位置情報に関するサービスは利用できなくなります。
-            また、位置情報が自動で更新されることもなくなります。
+            また、位置情報が自動で取得、更新されることもなくなります。
             {'\n'}
             再度取得、更新をしたい場合は「位置情報を更新」を行ってください。
             {'\n'}なお、位置情報は常に暗号化されて保存されます。
