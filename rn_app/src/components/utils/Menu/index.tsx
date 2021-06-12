@@ -63,6 +63,11 @@ export const Menu = React.memo(() => {
         },
       },
       {
+        title: '位置情報',
+        icon: 'location-pin',
+        titleStyle: styles.listTitleStyle,
+      },
+      {
         title: 'アカウント',
         icon: 'account-circle',
         titleStyle: styles.listTitleStyle,
