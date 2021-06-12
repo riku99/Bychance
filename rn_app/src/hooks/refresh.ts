@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import {AppState} from 'react-native';
+import {AppState, AppStateStatus} from 'react-native';
 
 import {useCustomDispatch} from './stores';
 import {refreshUserThunk} from '~/apis/users/refreshUser';
@@ -15,8 +15,8 @@ export const useActiveRefresh = ({
 
   useEffect(() => {
     if (login && id) {
-      const _refresh = () => {
-        if (AppState.currentState === 'active') {
+      const _refresh = (nextAppState: AppStateStatus) => {
+        if (nextAppState === 'active') {
           dispatch(refreshUserThunk({userId: id}));
         }
       };

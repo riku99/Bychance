@@ -1,12 +1,15 @@
 import React, {useMemo, useState} from 'react';
 import {View, StyleSheet, Text, Alert} from 'react-native';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
 import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
+import {updateLocationThunk} from '~/apis/users/updateLocation';
 import {useCustomDispatch} from '~/hooks/stores';
 import {displayShortMessage} from '~/helpers/topShortMessage';
+import {getCurrentPosition} from '~/helpers/geolocation';
 
 export const LocationConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
@@ -25,7 +28,10 @@ export const LocationConfig = React.memo(() => {
                 const result = await dispatch(deleteLocationInfoThunk());
                 if (deleteLocationInfoThunk.fulfilled.match(result)) {
                   displayShortMessage('削除しました', 'success');
-                  // backgroundGeolocationの停止
+                  const state = await BackgroundGeolocation.getState();
+                  if (state.enabled) {
+                    BackgroundGeolocation.stop(); // 位置情報の取得を停止
+                  }
                 }
               },
               style: 'destructive',
@@ -47,7 +53,25 @@ export const LocationConfig = React.memo(() => {
               {
                 text: '更新',
                 style: 'destructive',
-                onPress: () => {},
+                onPress: async () => {
+                  const currentPosition = await getCurrentPosition();
+                  if (!currentPosition) {
+                    return;
+                  }
+                  const result = await dispatch(
+                    updateLocationThunk({
+                      lat: currentPosition.coords.latitude,
+                      lng: currentPosition.coords.longitude,
+                    }),
+                  );
+                  if (updateLocationThunk.fulfilled.match(result)) {
+                    displayShortMessage('更新しました', 'success');
+                    const state = await BackgroundGeolocation.getState();
+                    if (!state.enabled) {
+                      BackgroundGeolocation.start();
+                    }
+                  }
+                },
               },
               {
                 text: 'いいえ',
