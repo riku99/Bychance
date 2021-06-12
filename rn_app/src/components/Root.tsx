@@ -1,24 +1,22 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, AppState} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View, StyleSheet} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
 import {useTalkRoomMessagesIo} from '~/hooks/socketio/talkRoomMessages';
 import {useUserSelect} from '~/hooks/users/selector';
-import {useCustomDispatch} from '~/hooks/stores';
 import {useLoginSelect} from '~/hooks/sessions/selector';
 import {useSessionLoginProcess} from '~/hooks/sessions/login';
 import {
   usePushNotificationReqest,
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification/setup';
-import {refreshUserThunk} from '~/apis/users/refreshUser';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
+import {useActiveRefresh} from '~/hooks/refresh';
 
 const Root = () => {
   const [load, setLoad] = useState(true);
-  const dispatch = useCustomDispatch();
   const login = useLoginSelect();
   const id = useUserSelect()?.id;
 
@@ -35,20 +33,8 @@ const Root = () => {
   // 位置情報周り
   useBackgroundGeolocation({login});
 
-  useEffect(() => {
-    if (login && id) {
-      const _refresh = () => {
-        if (AppState.currentState === 'active') {
-          dispatch(refreshUserThunk({userId: id}));
-        }
-      };
-      AppState.addEventListener('change', _refresh); // background -> activeになったら更新処理。backgroundの場合位置情報はサーバに保存されるだけでクライアント側の状態は変化させないのでこれにより更新する
-
-      return () => {
-        AppState.removeEventListener('change', _refresh);
-      };
-    }
-  }, [login, id, dispatch]);
+  // active時の更新処理
+  useActiveRefresh({login, id});
 
   if (load) {
     return null;
