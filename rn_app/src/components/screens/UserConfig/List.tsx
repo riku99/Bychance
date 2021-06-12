@@ -3,7 +3,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-type List = {
+export type List = {
   title: string;
   switch?: JSX.Element;
   description?: boolean;
