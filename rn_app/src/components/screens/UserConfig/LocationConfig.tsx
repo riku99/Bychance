@@ -7,6 +7,8 @@ import {CustomPopupModal} from '~/components/utils/PopupModal';
 import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
 import {useCustomDispatch} from '~/hooks/stores';
 import {displayShortMessage} from '~/helpers/topShortMessage';
+import BackgroundGeolocation from 'react-native-background-geolocation';
+import {notAuthLocationProviderAlert} from '~/helpers/alert';
 
 export const LocationConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
@@ -34,6 +36,38 @@ export const LocationConfig = React.memo(() => {
               onPress: () => {},
             },
           ]);
+        },
+      },
+      {
+        title: '位置情報を更新',
+        onItemPress: () => {
+          Alert.alert(
+            '位置情報を更新',
+            '現在の位置情報に更新されます。更新しますか?',
+            [
+              {
+                text: '更新',
+                style: 'destructive',
+                onPress: async () => {
+                  const authState = await BackgroundGeolocation.getProviderState();
+                  if (!authState.enabled) {
+                    notAuthLocationProviderAlert();
+                    return;
+                  }
+                  try {
+                    await BackgroundGeolocation.getCurrentPosition({});
+                    displayShortMessage('更新しました', 'success');
+                  } catch {
+                    displayShortMessage('更新に失敗しました', 'danger');
+                    return;
+                  }
+                },
+              },
+              {
+                text: 'いいえ',
+              },
+            ],
+          );
         },
       },
       {

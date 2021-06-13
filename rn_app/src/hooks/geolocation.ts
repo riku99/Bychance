@@ -44,7 +44,7 @@ export const useBackgroundGeolocation = ({login}: {login: boolean}) => {
       BackgroundGeolocation.ready(
         {
           desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-          distanceFilter: 10, // イベントが発生するのに必要な最低距離
+          distanceFilter: 10, // イベントが発生するのに必要な最低距離 本番でもっと距離大きくする
           stopTimeout: 1, // デバイスの動きが実際に止まってから Stationary になるまでの分数。この分数より前にデバイスの動きが検知されたら Moving のまま。
           debug: false,
           stopOnTerminate: false,

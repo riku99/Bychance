@@ -6,8 +6,8 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {StyleSheet, Animated, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {StyleSheet, Animated, View, Alert} from 'react-native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SearchBar} from 'react-native-elements';
 import {shallowEqual, useSelector} from 'react-redux';
@@ -56,14 +56,14 @@ type TabViewContextType = {
   firstLoading: boolean;
 };
 
+// createMaterialTopTabNavigatorでスクリーンを作る際に、componentにインラインで記述するとパフォーマンスの問題があるのでインラインの記述はしたくない
+// そうするとpropsを渡すのが難しくなる。それぞれのスクリーンが独立していたら問題ないが、今回は同じデータを参照したい。これは本来親コンポーネントからpropsで渡していたが、今回それができないのでContextで対応する
 export const TabViewContext = createContext<TabViewContextType>({
   users: [],
   keyword: '',
   firstLoading: false,
 });
 
-// createMaterialTopTabNavigatorでスクリーンを作る際に、componentにインラインで記述するとパフォーマンスの問題があるのでインラインの記述はしたくない
-// そうするとpropsを渡すのが難しくなる。それぞれのスクリーンが独立していたら問題ないが、今回は同じデータを参照したい。これは本来親コンポーネントからpropsで渡していたが、今回それができないのでContextで対応する
 export const NearbyUsersScreen = React.memo(() => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const transformY = scrollY.interpolate({
@@ -71,13 +71,6 @@ export const NearbyUsersScreen = React.memo(() => {
     outputRange: [0, -SEARCH_TAB_HEIGHT],
     extrapolate: 'clamp',
   });
-
-  // shallowEqualつけてもインラインでオブジェクト返すと、キャッシュと異なるデータとして見做され再レンダリング起きる。これに依存している子コンポーネントも再レンダリングされる(React.memoでも)。分割して取得すべし
-  // const position = useSelector((state: RootState) => {
-  //   const lat = state.userReducer.user!.lat;
-  //   const lng = state.userReducer.user!.lng;
-  //   return {lat, lng};
-  // }, shallowEqual);
 
   const lat = useSelector((state: RootState) => {
     const _lat = state.userReducer.user!.lat;
@@ -119,7 +112,9 @@ export const NearbyUsersScreen = React.memo(() => {
   const [firstLoading, setFirstLoading] = useState(true);
 
   const getUsers = useCallback(async () => {
-    await dispatch(getNearbyUsersThunk({lat, lng, range}));
+    if (lat && lng) {
+      await dispatch(getNearbyUsersThunk({lat, lng, range}));
+    }
   }, [dispatch, lat, lng, range]);
 
   useEffect(() => {
@@ -130,6 +125,15 @@ export const NearbyUsersScreen = React.memo(() => {
     };
     _get();
   }, [getUsers]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!lat || !lng) {
+        Alert.alert('位置情報がありません', '位置情報を更新してください');
+        return;
+      }
+    }, [lat, lng]),
+  );
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
   const preloadUriGroup = useMemo(() => {
@@ -279,9 +283,7 @@ export const NearbyUsersScreen = React.memo(() => {
           placeholder="キーワードを検索"
           inputContainerStyle={styles.searchInputContainer}
           containerStyle={styles.searchContainer}
-          // lightTheme=""
           platform="default"
-          // round={true}
           value={keyword}
           onChangeText={(text) => {
             setKeyword(text);
