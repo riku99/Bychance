@@ -53,7 +53,7 @@ export const useBackgroundGeolocation = ({login}: {login: boolean}) => {
             titleWhenOff: '位置情報がオフになっています',
             titleWhenNotEnabled: '位置情報が利用できません',
             instructions:
-              'バックグラウンドで位置情報に関連したサービスを利用するには「常に」を設定してください',
+              'バックグラウンドで位置情報に関連したサービスを利用するには端末の設定から「常に」を設定してください',
             cancelButton: 'キャンセル',
             settingsButton: '設定',
           },
