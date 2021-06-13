@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {View, Switch, Text} from 'react-native';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '~/stores';
 import {changeUserDisplayThunk} from '~/apis/users/changeUserDisplay';
@@ -33,6 +34,8 @@ export const DisplayConfig = React.memo(() => {
     [setSwitchForDisplay, dispatch],
   );
 
+  const navigation = useNavigation();
+
   const list = useMemo(() => {
     return [
       {
@@ -47,8 +50,20 @@ export const DisplayConfig = React.memo(() => {
         description: true,
         onItemPress: () => setShowDisplayDescriptionModal(true),
       },
+      {
+        title: 'プライベートゾーンの設定',
+        onItemPress: () => {
+          navigation.navigate('PrivateConfig', {goTo: 'location'});
+        },
+      },
+      {
+        title: 'プライベートタイムの設定',
+        onItemPress: () => {
+          navigation.navigate('PrivateConfig', {goTo: 'time'});
+        },
+      },
     ];
-  }, [switchForDisplay, onUserDisplaySwitchValueChange]);
+  }, [switchForDisplay, onUserDisplaySwitchValueChange, navigation]);
 
   return (
     <View style={commonStyles.container}>

@@ -20,6 +20,7 @@ import {normalStyles} from '~/constants/styles';
 import {User} from '~/stores/user';
 import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 import {UserConfig} from '~/components/screens/UserConfig';
+import {PrivateConfig} from '~/components/screens/PrivateConfig';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -33,6 +34,9 @@ export type RootStackParamList = {
   };
   UserConfing: {
     goTo: 'display' | 'message' | 'location' | 'account' | 'others';
+  };
+  PrivateConfig: {
+    goTo: 'location' | 'time';
   };
 };
 
@@ -130,6 +134,14 @@ export const RootStackScreen = () => {
       <RootStack.Screen
         name="UserConfing"
         component={UserConfig}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
+      <RootStack.Screen
+        name="PrivateConfig"
+        component={PrivateConfig}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal',
