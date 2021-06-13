@@ -13,6 +13,7 @@ import {SearchBar} from 'react-native-elements';
 import {shallowEqual, useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import {List} from './List';
 import {Map} from './Map';
@@ -28,6 +29,10 @@ import {FlashesData} from '~/stores/types';
 import {NearbyUsersStackNavigationProp} from '~/screens/NearbyUsers';
 import {FlashesStackParamList} from '~/screens/Flashes';
 import {normalStyles} from '~/constants/styles';
+import {
+  notAuthLocationProviderAlert,
+  notLocationInfoAlert,
+} from '~/helpers/alert';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -128,10 +133,24 @@ export const NearbyUsersScreen = React.memo(() => {
 
   useFocusEffect(
     useCallback(() => {
-      if (!lat || !lng) {
-        Alert.alert('位置情報がありません', '位置情報を更新してください');
-        return;
-      }
+      const checkLocation = async () => {
+        const authState = await BackgroundGeolocation.getProviderState();
+        if (lat && lng) {
+          if (authState.enabled) {
+            return;
+          } else {
+            notAuthLocationProviderAlert();
+            return;
+          }
+        } else {
+          if (authState.enabled) {
+            notLocationInfoAlert();
+          } else {
+            notAuthLocationProviderAlert();
+          }
+        }
+      };
+      checkLocation();
     }, [lat, lng]),
   );
 
