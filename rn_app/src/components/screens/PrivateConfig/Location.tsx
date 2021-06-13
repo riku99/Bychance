@@ -1,9 +1,26 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import MapView from 'react-native-maps';
+import {useSelector} from 'react-redux';
+
+import {RootState} from '~/stores';
 
 export const Location = React.memo(() => {
+  const lat = useSelector((state: RootState) => state.userReducer.user!.lat);
+  const lng = useSelector((state: RootState) => state.userReducer.user!.lng);
+
+  const region = useMemo(() => {
+    if (lat && lng) {
+      return {
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.008,
+        longitudeDelta: 0.008,
+      };
+    }
+  }, [lat, lng]);
+
   return (
     <View style={styles.container}>
       <Button
@@ -12,7 +29,12 @@ export const Location = React.memo(() => {
         buttonStyle={styles.descriptionButton}
         activeOpacity={1}
       />
-      <MapView style={styles.map} />
+      <MapView
+        style={styles.map}
+        region={region}
+        showsUserLocation={true}
+        onPress={(e) => console.log(e.nativeEvent)}
+      />
     </View>
   );
 });
