@@ -110,7 +110,20 @@ export const List = React.memo(() => {
         </>
       ) : (
         <View style={styles.noUser}>
-          <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => onRefresh()}
+              />
+            }
+            contentContainerStyle={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+            }}>
+            <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
+          </ScrollView>
         </View>
       )}
     </View>
@@ -128,8 +141,6 @@ const styles = StyleSheet.create({
   },
   noUser: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   noUserText: {
     fontSize: 18,

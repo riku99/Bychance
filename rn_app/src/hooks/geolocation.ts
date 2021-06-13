@@ -49,13 +49,14 @@ export const useBackgroundGeolocation = ({login}: {login: boolean}) => {
           debug: false,
           stopOnTerminate: false,
           startOnBoot: true,
+          disableLocationAuthorizationAlert: true,
           locationAuthorizationAlert: {
             titleWhenOff: '位置情報がオフになっています',
-            titleWhenNotEnabled: '位置情報が利用できません',
+            titleWhenNotEnabled: 'バックグラウンドで位置情報が利用できません',
             instructions:
               'バックグラウンドで位置情報に関連したサービスを利用するには端末の設定から「常に」を設定してください',
             cancelButton: 'キャンセル',
-            settingsButton: '設定',
+            settingsButton: '設定画面へ',
           },
           // logLevel: BackgroundGeolocation.LOG_LEVEL_OFF, 本番ではコメントはずす
         },
