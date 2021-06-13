@@ -70,10 +70,10 @@ export const useBackgroundGeolocation = ({login}: {login: boolean}) => {
         },
       );
 
-      // const cleanup = () => {
-      //   BackgroundGeolocation.removeListeners();
-      // };
-      // return cleanup;
+      const cleanup = () => {
+        BackgroundGeolocation.removeListeners();
+      };
+      return cleanup;
     }
   }, [login, dispatch]);
 };

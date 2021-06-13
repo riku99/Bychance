@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {StyleSheet, Animated, View, Alert} from 'react-native';
+import {StyleSheet, Animated, View} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SearchBar} from 'react-native-elements';
