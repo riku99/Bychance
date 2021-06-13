@@ -2,6 +2,7 @@ import React, {useLayoutEffect, useMemo} from 'react';
 import {RouteProp, NavigationProp} from '@react-navigation/native';
 
 import {RootStackParamList} from '~/screens/Root';
+import {Location} from './Location';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'PrivateConfig'>;
@@ -26,5 +27,11 @@ export const PrivateConfig = React.memo(({route, navigation}: Props) => {
     });
   }, [headerTitle, navigation]);
 
-  return null;
+  if (goTo === 'location') {
+    return <Location />;
+  }
+
+  if (goTo === 'time') {
+    return null;
+  }
 });
