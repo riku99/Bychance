@@ -10,6 +10,9 @@ export const Others = React.memo(() => {
       title: '利用規約',
       onItemPress: () => {},
     },
+    {
+      title: 'プライバシーポリシー',
+    },
   ];
 
   return (

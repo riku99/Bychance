@@ -23,6 +23,7 @@ export const MessageConfig = React.memo(() => {
     switchValueForMessageReceipt,
     setSwitchValueForMessageReceipt,
   ] = useState(talkRoomMessageReceipt);
+  const [showMessageReceiptModal, setShowMessageReceiptModal] = useState(false);
 
   const [
     switchValueForShowRecieveMessage,
@@ -73,6 +74,7 @@ export const MessageConfig = React.memo(() => {
             onValueChange={(e) => onMessageReceiptSwitchValueChange(e)}
           />
         ),
+        onItemPress: () => setShowMessageReceiptModal(true),
       },
       {
         title: 'メッセージの受け取りを知らせる',
@@ -99,11 +101,22 @@ export const MessageConfig = React.memo(() => {
         <ConfigList list={list} />
       </View>
       <CustomPopupModal
+        isVisible={showMessageReceiptModal}
+        closeModal={() => setShowMessageReceiptModal(false)}>
+        <View style={commonStyles.descriptionModal}>
+          <Text style={commonStyles.descriptionText}>
+            ONの場合、他のユーザーからメッセージを受け取ります。
+            {'\n'}OFFの場合、他のユーザーからメッセージを受け取りません。
+            {'\n'}
+            なお、他のユーザーが「あなたがメッセージを受け取るかどうか」を知ることはありません。
+          </Text>
+        </View>
+      </CustomPopupModal>
+      <CustomPopupModal
         isVisible={showReceiveMessageDescription}
         closeModal={() => setShowReceiveMessageDescription(false)}>
         <View style={commonStyles.descriptionModal}>
-          <Text
-            style={{fontSize: 18, marginHorizontal: 10, marginVertical: 10}}>
+          <Text style={commonStyles.descriptionText}>
             ONの場合、アプリ起動中（バックグラウンドは除く）にメッセージが他のユーザーから送られた場合に画面上部に表示されます。
             {'\n'}※ プッシュ通知とは別のものです
           </Text>

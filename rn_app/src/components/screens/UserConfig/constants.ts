@@ -18,4 +18,10 @@ export const commonStyles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
   },
+  descriptionText: {
+    fontSize: 16,
+    marginHorizontal: 10,
+    marginVertical: 10,
+    lineHeight: 18,
+  },
 });
