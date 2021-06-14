@@ -13,3 +13,10 @@ export const getExtention = (uri?: string) => {
 export const removeExtention = (str: string) => {
   return str.replace(/\.[^/.]+$/, '');
 };
+
+export const formatAddress = (addr: string) => {
+  return addr
+    .replace(/^日本、/, '')
+    .replace(/〒\d+-\d+/, '')
+    .trim();
+};

@@ -8,8 +8,9 @@ import Geocoder from 'react-native-geocoding';
 import {RootState} from '~/stores';
 import {credentials} from '~/credentials';
 import {normalStyles} from '~/constants/styles';
+import {formatAddress} from '~/utils';
 
-// Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
+Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
 export const Location = React.memo(() => {
   const lat = useSelector((state: RootState) => state.userReducer.user!.lat);
@@ -26,16 +27,20 @@ export const Location = React.memo(() => {
     }
   }, [lat, lng]);
 
-  const [selectedAddress, setSelectedAdress] = useState('千葉県千葉市幕張1-1');
+  const [selectedAddress, setSelectedAddress] = useState('');
   const [selectedCoordinate, setSelectedCoordinate] = useState<{
     lat: number;
     lng: number;
   }>();
 
-  const onSelectMap = useCallback((e: MapEvent) => {
+  const onSelectMap = useCallback(async (e: MapEvent) => {
     const {coordinate} = e.nativeEvent;
-    console.log(coordinate);
-    // アドレスの変換
+    const addressData = await Geocoder.from(
+      coordinate.latitude,
+      coordinate.longitude,
+    );
+    const _address = formatAddress(addressData.results[0].formatted_address);
+    setSelectedAddress(_address);
   }, []);
 
   return (
@@ -48,14 +53,14 @@ export const Location = React.memo(() => {
       />
       <MapView
         style={styles.map}
-        region={region}
+        initialRegion={region}
         showsUserLocation={true}
         onPress={onSelectMap}
       />
       <View style={styles.selectedAddressContainer}>
         <View style={{maxWidth: '65%'}}>
-          <Text style={styles.selectedAdressTitle}>選択された住所</Text>
-          <Text style={styles.selectedAdress}>{selectedAddress}</Text>
+          <Text style={styles.selectedAddressTitle}>選択された住所</Text>
+          <Text style={styles.selectedAddress}>{selectedAddress}</Text>
         </View>
         <Button
           title="追加"
@@ -64,7 +69,7 @@ export const Location = React.memo(() => {
         />
       </View>
       <View style={styles.currentAdrressContainer}>
-        <Text style={styles.selectedAdressTitle}>
+        <Text style={styles.selectedAddressTitle}>
           現在設定されているプライベートゾーン
         </Text>
       </View>
@@ -101,11 +106,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  selectedAdressTitle: {
+  selectedAddressTitle: {
     color: fontColor,
     fontWeight: '500',
   },
-  selectedAdress: {
+  selectedAddress: {
     fontSize: 15,
     marginTop: 10,
     // backgroundColor: 'red',
