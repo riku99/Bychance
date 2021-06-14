@@ -1,18 +1,28 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-elements';
 import MapView, {MapEvent, Marker} from 'react-native-maps';
 import {useSelector} from 'react-redux';
 import Geocoder from 'react-native-geocoding';
+import {Modalize} from 'react-native-modalize';
 
 import {RootState} from '~/stores';
 import {credentials} from '~/credentials';
 import {normalStyles} from '~/constants/styles';
 import {formatAddress} from '~/utils';
+import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
 export const Location = React.memo(() => {
+  const aboutPrivateZoneModalRef = useRef<Modalize>(null);
+
+  const onAboutPrivateZoneButton = useCallback(() => {
+    if (aboutPrivateZoneModalRef.current) {
+      aboutPrivateZoneModalRef.current.open();
+    }
+  }, []);
+
   const lat = useSelector((state: RootState) => state.userReducer.user!.lat);
   const lng = useSelector((state: RootState) => state.userReducer.user!.lng);
 
@@ -54,6 +64,7 @@ export const Location = React.memo(() => {
         titleStyle={styles.descriptionButtonTitle}
         buttonStyle={styles.descriptionButton}
         activeOpacity={1}
+        onPress={onAboutPrivateZoneButton}
       />
       <MapView
         style={styles.map}
@@ -86,6 +97,7 @@ export const Location = React.memo(() => {
           現在設定されているプライベートゾーン
         </Text>
       </View>
+      <AboutPrivateZoneModal modalRef={aboutPrivateZoneModalRef} />
     </View>
   );
 });
