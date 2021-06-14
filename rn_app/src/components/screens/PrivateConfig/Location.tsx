@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-elements';
-import MapView, {MapEvent} from 'react-native-maps';
+import MapView, {MapEvent, Marker} from 'react-native-maps';
 import {useSelector} from 'react-redux';
 import Geocoder from 'react-native-geocoding';
 
@@ -35,6 +35,10 @@ export const Location = React.memo(() => {
 
   const onSelectMap = useCallback(async (e: MapEvent) => {
     const {coordinate} = e.nativeEvent;
+    setSelectedCoordinate({
+      lat: coordinate.latitude,
+      lng: coordinate.longitude,
+    });
     const addressData = await Geocoder.from(
       coordinate.latitude,
       coordinate.longitude,
@@ -55,8 +59,16 @@ export const Location = React.memo(() => {
         style={styles.map}
         initialRegion={region}
         showsUserLocation={true}
-        onPress={onSelectMap}
-      />
+        onPress={onSelectMap}>
+        {selectedCoordinate && (
+          <Marker
+            coordinate={{
+              latitude: selectedCoordinate.lat,
+              longitude: selectedCoordinate.lng,
+            }}
+          />
+        )}
+      </MapView>
       <View style={styles.selectedAddressContainer}>
         <View style={{maxWidth: '65%'}}>
           <Text style={styles.selectedAddressTitle}>選択された住所</Text>
@@ -66,6 +78,7 @@ export const Location = React.memo(() => {
           title="追加"
           buttonStyle={styles.addButton}
           titleStyle={styles.addButtonTitle}
+          disabled={!selectedCoordinate && !selectedAddress}
         />
       </View>
       <View style={styles.currentAdrressContainer}>
