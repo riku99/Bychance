@@ -10,6 +10,7 @@ import {
 } from '~/apis/session/sessionLogin';
 import {LineLoginThunkPayload, lineLoginThunk} from '~/apis/session/lineLogin';
 import {SampleLoginThunkPayload, sampleLogin} from '~/apis/session/sampleLogin';
+import {RootState} from './index';
 
 export type PrivateZone = {
   id: number;
@@ -47,3 +48,8 @@ const privateZoneSlice = createSlice({
 });
 
 export const privateZoneReducer = privateZoneSlice.reducer;
+
+const privateZoneSelector = privateZoneAdapter.getSelectors();
+
+export const selectPrivateZoneArray = (state: RootState) =>
+  privateZoneSelector.selectAll(state.privateZoneReducer);
