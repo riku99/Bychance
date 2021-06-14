@@ -27,10 +27,6 @@ export const lineLoginThunk = createAsyncThunk<
 
     await axios.post(`${origin}/nonce`, {nonce});
 
-    // firstログインで位置情報とる必要ある?
-    // コンポーネントがマウントされたらで良くない?
-    //const position = await getCurrentPosition();
-
     const response = await axios.post<
       SuccessfullLoginData & {accessToken: string}
     >(
