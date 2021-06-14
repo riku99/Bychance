@@ -63,6 +63,11 @@ export const Location = React.memo(() => {
           titleStyle={styles.addButtonTitle}
         />
       </View>
+      <View style={styles.currentAdrressContainer}>
+        <Text style={styles.selectedAdressTitle}>
+          現在設定されているプライベートゾーン
+        </Text>
+      </View>
     </View>
   );
 });
@@ -91,7 +96,6 @@ const styles = StyleSheet.create({
   selectedAddressContainer: {
     marginTop: 15,
     width: '96%',
-    // backgroundColor: 'gray',
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -115,5 +119,11 @@ const styles = StyleSheet.create({
   addButtonTitle: {
     fontSize: 15,
     fontWeight: '500',
+  },
+  currentAdrressContainer: {
+    marginTop: 30,
+    width: '96%',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
   },
 });
