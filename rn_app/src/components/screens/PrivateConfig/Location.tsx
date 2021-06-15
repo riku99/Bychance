@@ -48,11 +48,11 @@ export const Location = React.memo(() => {
     }
   }, [_privateZone]);
 
-  useEffect(() => {
-    if (err && err.message) {
-      bottomToast?.show(err.message, {type: err.toastType});
-    }
-  }, [err, bottomToast]);
+  // useEffect(() => {
+  //   if (err && err.message) {
+  //     bottomToast?.show(err.message, {type: err.toastType});
+  //   }
+  // }, [err, bottomToast]);
 
   const onAboutPrivateZoneButton = useCallback(() => {
     if (aboutPrivateZoneModalRef.current) {
@@ -103,7 +103,7 @@ export const Location = React.memo(() => {
       });
 
       if (postResult) {
-        bottomToast?.show('作成しました', {type: 'success'});
+        // bottomToast?.show('作成しました', {type: 'success'});
         setCurrentPrivateZone((c) => [postResult, ...c]);
       }
     }
@@ -112,7 +112,6 @@ export const Location = React.memo(() => {
     selectedCoordinate,
     selectedAddress,
     setCurrentPrivateZone,
-    bottomToast,
   ]);
 
   return (

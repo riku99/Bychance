@@ -11,6 +11,7 @@ import {
   handleCredentialsError,
   handleBasicApiErrorWithDispatch,
 } from '~/helpers/errors';
+import {showBottomToast} from '~/stores/bottomToast';
 
 export const usePrivateZone = () => {
   const bottomToast = useToast();
@@ -70,6 +71,15 @@ export const usePrivateZone = () => {
           );
 
           setPostLoading(false);
+          dispatch(
+            showBottomToast({
+              data: {
+                message: '作成しました',
+                timestamp: new Date().toString(),
+                type: 'success',
+              },
+            }),
+          );
           return _result.data;
         } catch (e) {
           const _err = handleBasicApiErrorWithDispatch({e, dispatch});

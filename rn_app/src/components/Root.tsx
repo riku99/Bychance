@@ -1,6 +1,8 @@
-import React, {useCallback, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
+import {useSelector} from 'react-redux';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
@@ -14,6 +16,8 @@ import {
 } from '~/hooks/pushNotification/setup';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';
+import {useToast} from 'react-native-fast-toast';
+import {RootState} from '~/stores';
 
 const Root = () => {
   const [load, setLoad] = useState(true);
@@ -36,6 +40,26 @@ const Root = () => {
   // active時の更新処理
   useActiveRefresh({login, id});
 
+  const bottomToastData = useSelector(
+    (state: RootState) => state.bottomToastReducer.data,
+  );
+
+  const bottomToast = useToast();
+
+  useEffect(() => {
+    if (bottomToastData) {
+      bottomToast?.show(bottomToastData.message, {
+        type: bottomToastData.type,
+        successIcon: <MIcon name="done" color="white" size={17} />,
+        dangerIcon: <MIcon name="clear" color="white" size={17} />,
+        icon: <MIcon name="priority-high" color="white" size={17} />,
+        style: {
+          width: bottomToastWidth,
+        },
+      });
+    }
+  }, [bottomToastData, bottomToast]);
+
   if (load) {
     return null;
   }
@@ -51,6 +75,10 @@ const Root = () => {
     return <Auth />;
   }
 };
+
+const {width} = Dimensions.get('screen');
+
+const bottomToastWidth = width * 0.9;
 
 const styles = StyleSheet.create({
   container: {

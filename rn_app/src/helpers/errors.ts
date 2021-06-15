@@ -5,6 +5,7 @@ import {RejectPayload} from '~/apis/types';
 import {logoutThunk} from '~/apis/session/logout';
 // import {displayShortMessage} from '~/helpers/topShortMessage';
 import {BasicAxiosError} from '~/types';
+import {showBottomToast} from '~/stores/bottomToast';
 
 export const alertSomeError = () => {
   Alert.alert(
@@ -57,6 +58,15 @@ export const handleBasicApiErrorWithDispatch = ({
           toastType: 'danger',
         };
       default:
+        dispatch(
+          showBottomToast({
+            data: {
+              message: '何らかのエラーが発生しました',
+              timestamp: new Date().toString(),
+              type: 'danger',
+            },
+          }),
+        );
         return {
           errorType: 'someError',
           toastType: 'normal',
