@@ -5,7 +5,7 @@ import {
   headers,
   checkKeychain,
   handleCredentialsError,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   RejectPayload,
 } from '../re-modules';
 
@@ -27,7 +27,7 @@ export const deleteLocationInfoThunk = createAsyncThunk<
 
       return;
     } catch (e) {
-      const result = handleBasicApiError({e, dispatch});
+      const result = handleBasicApiErrorWithDispatch({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

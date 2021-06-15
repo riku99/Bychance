@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   RejectPayload,
   checkKeychain,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   headers,
   origin,
   handleCredentialsError,
@@ -33,7 +33,7 @@ export const createFlashThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicApiError({e, dispatch});
+        const result = handleBasicApiErrorWithDispatch({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

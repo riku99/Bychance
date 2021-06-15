@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   origin,
   headers,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   RejectPayload,
   SuccessfullLoginData,
   Credentials,
@@ -24,7 +24,7 @@ export const sessionLoginThunk = createAsyncThunk<
 
     return response.data;
   } catch (e) {
-    const result = handleBasicApiError({e, dispatch});
+    const result = handleBasicApiErrorWithDispatch({e, dispatch});
     return rejectWithValue(result);
   }
 });

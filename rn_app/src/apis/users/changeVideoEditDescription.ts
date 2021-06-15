@@ -6,7 +6,7 @@ import {
   headers,
   checkKeychain,
   requestLogin,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   RejectPayload,
 } from '../re-modules';
 
@@ -31,7 +31,7 @@ export const changeVideoEditDescriptionThunk = createAsyncThunk<
 
       return bool;
     } catch (e) {
-      const result = handleBasicApiError({e, dispatch});
+      const result = handleBasicApiErrorWithDispatch({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

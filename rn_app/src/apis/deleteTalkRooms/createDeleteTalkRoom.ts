@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   RejectPayload,
   checkKeychain,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   headers,
   origin,
   handleCredentialsError,
@@ -29,7 +29,7 @@ export const createDeleteRoomThunk = createAsyncThunk<
 
       return {talkRoomId};
     } catch (e) {
-      const result = handleBasicApiError({e, dispatch});
+      const result = handleBasicApiErrorWithDispatch({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

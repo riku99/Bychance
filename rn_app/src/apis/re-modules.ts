@@ -3,12 +3,12 @@ export {createAsyncThunk} from '@reduxjs/toolkit';
 
 export {logoutThunk} from './session/logout';
 export {origin} from '../constants/origin';
-export {headers} from '~/apis/helpers/headers';
+export {headers} from '~/helpers/requestHeaders';
 export {checkKeychain, Credentials} from '../helpers/credentials';
 export {
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   requestLogin,
   handleCredentialsError,
-} from '~/apis/helpers/errors';
+} from '~/helpers/errors';
 export {RejectPayload} from './types';
 export {SuccessfullLoginData} from './types';

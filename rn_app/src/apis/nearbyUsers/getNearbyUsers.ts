@@ -4,7 +4,7 @@ import {
   createAsyncThunk,
   RejectPayload,
   checkKeychain,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   headers,
   origin,
   handleCredentialsError,
@@ -36,7 +36,7 @@ export const getNearbyUsersThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicApiError({dispatch, e});
+        const result = handleBasicApiErrorWithDispatch({dispatch, e});
         return rejectWithValue(result);
       }
     } else {

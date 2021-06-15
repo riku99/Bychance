@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   RejectPayload,
   checkKeychain,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   headers,
   origin,
   handleCredentialsError,
@@ -35,7 +35,7 @@ export const createAlreadyViewdFlashThunk = createAsyncThunk<
 
         return {userId, flashId};
       } catch (e) {
-        const result = handleBasicApiError({e, dispatch});
+        const result = handleBasicApiErrorWithDispatch({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

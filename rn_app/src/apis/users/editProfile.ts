@@ -6,7 +6,7 @@ import {
   headers,
   checkKeychain,
   requestLogin,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   RejectPayload,
 } from '../re-modules';
 import {User} from '../../stores/user';
@@ -110,7 +110,7 @@ export const editProfileThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        const result = handleBasicApiError({e, dispatch});
+        const result = handleBasicApiErrorWithDispatch({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

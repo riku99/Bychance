@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   origin,
   headers,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   RejectPayload,
   SuccessfullLoginData,
 } from '../re-modules';
@@ -48,7 +48,7 @@ export const lineLoginThunk = createAsyncThunk<
     if (e.message === 'User cancelled or interrupted the login process.') {
       console.log('cancelled');
     } else {
-      const result = handleBasicApiError({e, dispatch});
+      const result = handleBasicApiErrorWithDispatch({e, dispatch});
       return rejectWithValue(result);
     }
   }

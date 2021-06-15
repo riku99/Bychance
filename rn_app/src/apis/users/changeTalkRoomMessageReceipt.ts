@@ -4,7 +4,7 @@ import {
   origin,
   headers,
   checkKeychain,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   RejectPayload,
   handleCredentialsError,
 } from '../re-modules';
@@ -32,7 +32,7 @@ export const changeTalkRoomMessageReceiptThunk = createAsyncThunk<
 
         return receipt;
       } catch (e) {
-        const result = handleBasicApiError({e, dispatch});
+        const result = handleBasicApiErrorWithDispatch({e, dispatch});
         return rejectWithValue(result);
       }
     } else {

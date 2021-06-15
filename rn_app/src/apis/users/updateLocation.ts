@@ -5,7 +5,7 @@ import {
   headers,
   checkKeychain,
   handleCredentialsError,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   RejectPayload,
 } from '../re-modules';
 
@@ -56,7 +56,7 @@ export const updateLocationThunk = createAsyncThunk<
       );
       return {lat, lng};
     } catch (e) {
-      const result = handleBasicApiError({e, dispatch});
+      const result = handleBasicApiErrorWithDispatch({e, dispatch});
       return rejectWithValue(result);
     }
   } else {

@@ -4,7 +4,7 @@ import {
   origin,
   headers,
   checkKeychain,
-  handleBasicApiError,
+  handleBasicApiErrorWithDispatch,
   handleCredentialsError,
   RejectPayload,
 } from '../re-modules';
@@ -26,7 +26,7 @@ export const logoutThunk = createAsyncThunk<
       await Keychain.resetGenericPassword(); // ログアウトするからキーチェーンの中身リセット
       return;
     } catch (e) {
-      const result = handleBasicApiError({e, dispatch});
+      const result = handleBasicApiErrorWithDispatch({e, dispatch});
       return rejectWithValue(result);
     }
   } else {
