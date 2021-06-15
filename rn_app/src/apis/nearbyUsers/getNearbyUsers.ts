@@ -9,7 +9,6 @@ import {
   origin,
   handleCredentialsError,
 } from '../re-modules';
-import {useToast} from 'react-native-fast-toast';
 
 import {FlashStamp} from '~/stores/flashStamps';
 
@@ -37,7 +36,9 @@ export const getNearbyUsersThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
+        console.log(e);
         const result = handleBasicApiErrorWithDispatch({dispatch, e});
+        console.log(result);
         return rejectWithValue(result);
       }
     } else {

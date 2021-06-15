@@ -14,6 +14,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+import {unwrapResult} from '@reduxjs/toolkit';
 
 import {List} from './List';
 import {Map} from './Map';
@@ -118,7 +119,15 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const getUsers = useCallback(async () => {
     if (lat && lng) {
-      await dispatch(getNearbyUsersThunk({lat, lng, range}));
+      try {
+        const resultAction = await dispatch(
+          getNearbyUsersThunk({lat, lng, range}),
+        );
+        const r = unwrapResult(resultAction);
+        console.log(r);
+      } catch (err) {
+        console.log(err);
+      }
     }
   }, [dispatch, lat, lng, range]);
 

@@ -3,7 +3,7 @@ import {Alert} from 'react-native';
 
 import {RejectPayload} from '~/apis/types';
 import {logoutThunk} from '~/apis/session/logout';
-import {displayShortMessage} from '~/helpers/topShortMessage';
+// import {displayShortMessage} from '~/helpers/topShortMessage';
 import {BasicAxiosError} from '~/types';
 
 export const alertSomeError = () => {
@@ -52,7 +52,7 @@ export const handleBasicApiErrorWithDispatch = ({
         requestLogin(() => dispatch(logoutThunk()));
         return {errorType: 'loginError'};
       case 'invalidError':
-        displayShortMessage(axiosError.response.data.message, 'danger');
+        // displayShortMessage(axiosError.response.data.message, 'danger');
         return {
           errorType: 'invalidError',
           message: axiosError.response.data.message,
