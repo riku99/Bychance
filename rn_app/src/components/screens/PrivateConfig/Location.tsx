@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import MapView, {MapEvent, Marker} from 'react-native-maps';
-import {useSelector, shallowEqual} from 'react-redux';
+import {useSelector} from 'react-redux';
 import Geocoder from 'react-native-geocoding';
 import {Modalize} from 'react-native-modalize';
 
@@ -11,7 +11,6 @@ import {credentials} from '~/credentials';
 import {normalStyles} from '~/constants/styles';
 import {formatAddress} from '~/utils';
 import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
-import {selectPrivateZoneArray} from '~/stores/privateZone';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
@@ -27,10 +26,6 @@ export const Location = React.memo(() => {
 
   const lat = useSelector((state: RootState) => state.userReducer.user!.lat);
   const lng = useSelector((state: RootState) => state.userReducer.user!.lng);
-  const currnetPrivateZone = useSelector(
-    (state: RootState) => selectPrivateZoneArray(state),
-    shallowEqual,
-  );
 
   const region = useMemo(() => {
     if (lat && lng) {
@@ -103,7 +98,7 @@ export const Location = React.memo(() => {
         <Text style={styles.currentAddressTitle}>
           現在設定されているプライベートゾーン
         </Text>
-        {currnetPrivateZone.map((p) => (
+        {/* {currnetPrivateZone.map((p) => (
           <View key={p.id} style={styles.currentAddressSet}>
             <Text style={styles.currentAddress}>{p.address}</Text>
             <Button
@@ -112,7 +107,7 @@ export const Location = React.memo(() => {
               titleStyle={styles.addressButtonTitle}
             />
           </View>
-        ))}
+        ))} */}
       </View>
       <AboutPrivateZoneModal modalRef={aboutPrivateZoneModalRef} />
       <ToastLoading />

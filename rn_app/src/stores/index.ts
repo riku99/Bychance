@@ -9,7 +9,6 @@ import {flashesReducer} from './flashes';
 import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';
 import {flashStampsReducer} from './flashStamps';
-import {privateZoneReducer} from './privateZone';
 
 const rootReducer = combineReducers({
   sessionReducer,
@@ -22,7 +21,6 @@ const rootReducer = combineReducers({
   nearbyUsersReducer,
   otherSettingsReducer,
   flashStampsReducer,
-  privateZoneReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
