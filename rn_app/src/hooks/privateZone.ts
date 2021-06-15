@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import {useToast} from 'react-native-fast-toast';
 
@@ -12,12 +12,13 @@ import {
   handleBasicApiErrorWithDispatch,
 } from '~/helpers/errors';
 
-export const useFetchPrivateZone = () => {
+export const usePrivateZone = () => {
   const bottomToast = useToast();
   const dispatch = useCustomDispatch();
 
   const [result, setResult] = useState<PrivateZone[]>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fetchLoading, setfetchLoading] = useState<boolean>(true);
+  const [postLoading, setPostLoading] = useState<boolean>(false);
   const [err, setErr] = useState<any>();
 
   useEffect(() => {
@@ -37,15 +38,56 @@ export const useFetchPrivateZone = () => {
       } else {
         handleCredentialsError(dispatch);
       }
-      setIsLoading(false);
+      setfetchLoading(false);
     };
 
     _fetch();
   }, [dispatch, bottomToast]);
 
+  const createPrivateZone = useCallback(
+    async ({
+      address,
+      lat,
+      lng,
+    }: {
+      address: string;
+      lat: number;
+      lng: number;
+    }) => {
+      setPostLoading(true);
+      const credentials = await checkKeychain();
+
+      if (credentials) {
+        try {
+          const _result = await axios.post<PrivateZone>(
+            `${origin}/privateZone?id=${credentials.id}`,
+            {
+              address,
+              lat,
+              lng,
+            },
+            headers(credentials.token),
+          );
+
+          setPostLoading(false);
+          return _result.data;
+        } catch (e) {
+          const _err = handleBasicApiErrorWithDispatch({e, dispatch});
+          setErr(_err);
+        }
+      } else {
+        handleCredentialsError(dispatch);
+      }
+      setPostLoading(false);
+    },
+    [dispatch],
+  );
+
   return {
     result,
-    isLoading,
+    fetchLoading,
+    postLoading,
     err,
+    createPrivateZone,
   };
 };

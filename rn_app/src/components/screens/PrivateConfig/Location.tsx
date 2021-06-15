@@ -1,5 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  ScrollView,
+  SafeAreaView,
+  Dimensions,
+} from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import MapView, {MapEvent, Marker} from 'react-native-maps';
 import {useSelector} from 'react-redux';
@@ -12,24 +20,27 @@ import {normalStyles} from '~/constants/styles';
 import {formatAddress} from '~/utils';
 import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {ToastLoading} from '~/components/utils/ToastLoading';
-import {useFetchPrivateZone} from '~/hooks/privateZone';
+import {usePrivateZone} from '~/hooks/privateZone';
 import {useToast} from 'react-native-fast-toast';
 import {PrivateZone} from '~/types';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
 export const Location = React.memo(() => {
+  const bottomToast = useToast();
+
+  const {
+    result: _privateZone,
+    err,
+    fetchLoading,
+    postLoading,
+    createPrivateZone,
+  } = usePrivateZone();
+
   const aboutPrivateZoneModalRef = useRef<Modalize>(null);
   const [currentPrivateZone, setCurrentPrivateZone] = useState<PrivateZone[]>(
     [],
   );
-
-  const bottomToast = useToast();
-  const {
-    result: _privateZone,
-    err,
-    isLoading: fetchLoaidng,
-  } = useFetchPrivateZone();
 
   useEffect(() => {
     if (_privateZone) {
@@ -83,63 +94,93 @@ export const Location = React.memo(() => {
     setSelectedAddress(_address);
   }, []);
 
+  const onAddButtonPress = useCallback(async () => {
+    if (selectedCoordinate && selectedAddress) {
+      const postResult = await createPrivateZone({
+        address: selectedAddress,
+        lat: selectedCoordinate.lat,
+        lng: selectedCoordinate.lng,
+      });
+
+      if (postResult) {
+        bottomToast?.show('作成しました', {type: 'success'});
+        setCurrentPrivateZone((c) => [postResult, ...c]);
+      }
+    }
+  }, [
+    createPrivateZone,
+    selectedCoordinate,
+    selectedAddress,
+    setCurrentPrivateZone,
+    bottomToast,
+  ]);
+
   return (
     <View style={styles.container}>
-      <Button
-        title="プライベートゾーンとは?"
-        titleStyle={styles.descriptionButtonTitle}
-        buttonStyle={styles.descriptionButton}
-        activeOpacity={1}
-        onPress={onAboutPrivateZoneButton}
-      />
-      <MapView
-        style={styles.map}
-        initialRegion={region}
-        showsUserLocation={true}
-        onPress={onSelectMap}>
-        {selectedCoordinate && (
-          <Marker
-            coordinate={{
-              latitude: selectedCoordinate.lat,
-              longitude: selectedCoordinate.lng,
-            }}
-          />
-        )}
-      </MapView>
-      <View style={styles.selectedAddressContainer}>
-        <View style={{maxWidth: '65%'}}>
-          <Text style={styles.selectedAddressTitle}>選択された住所</Text>
-          <Text style={styles.selectedAddress}>{selectedAddress}</Text>
-        </View>
+      <View>
         <Button
-          title="追加"
-          buttonStyle={styles.addressButton}
-          titleStyle={styles.addressButtonTitle}
-          disabled={!selectedCoordinate && !selectedAddress}
+          title="プライベートゾーンとは?"
+          titleStyle={styles.descriptionButtonTitle}
+          buttonStyle={styles.descriptionButton}
+          activeOpacity={1}
+          onPress={onAboutPrivateZoneButton}
         />
-      </View>
-      <Divider style={styles.diver} />
-      <View style={styles.currentAdrressContainer}>
-        <Text style={styles.currentAddressTitle}>
-          現在設定されているプライベートゾーン
-        </Text>
-        {currentPrivateZone.map((p) => (
-          <View key={p.id} style={styles.currentAddressSet}>
-            <Text style={styles.currentAddress}>{p.address}</Text>
-            <Button
-              buttonStyle={styles.addressButton}
-              title="削除"
-              titleStyle={styles.addressButtonTitle}
+        <MapView
+          style={styles.map}
+          initialRegion={region}
+          showsUserLocation={true}
+          onPress={onSelectMap}>
+          {selectedCoordinate && (
+            <Marker
+              coordinate={{
+                latitude: selectedCoordinate.lat,
+                longitude: selectedCoordinate.lng,
+              }}
             />
+          )}
+        </MapView>
+        <View style={styles.selectedAddressContainer}>
+          <View style={{maxWidth: '65%'}}>
+            <Text style={styles.selectedAddressTitle}>選択された住所</Text>
+            <Text style={styles.selectedAddress}>{selectedAddress}</Text>
           </View>
-        ))}
-        {fetchLoaidng && <ActivityIndicator style={{marginTop: 15}} />}
+          <Button
+            title="追加"
+            buttonStyle={styles.addressButton}
+            titleStyle={styles.addressButtonTitle}
+            disabled={!selectedCoordinate && !selectedAddress}
+            onPress={onAddButtonPress}
+          />
+        </View>
+        <Divider style={styles.diver} />
       </View>
+      <View style={styles.currentAdrressContainer}>
+        <ScrollView>
+          <Text style={styles.currentAddressTitle}>
+            現在設定されているプライベートゾーン
+          </Text>
+          {currentPrivateZone.map((p) => (
+            <View key={p.id} style={styles.currentAddressSet}>
+              <Text style={styles.currentAddress}>{p.address}</Text>
+              <Button
+                buttonStyle={styles.addressButton}
+                title="削除"
+                titleStyle={styles.addressButtonTitle}
+              />
+            </View>
+          ))}
+          {fetchLoading && <ActivityIndicator style={{marginTop: 15}} />}
+        </ScrollView>
+      </View>
+
       <AboutPrivateZoneModal modalRef={aboutPrivateZoneModalRef} />
-      {/* <ToastLoading /> */}
+      {postLoading && <ToastLoading />}
+      <SafeAreaView />
     </View>
   );
 });
+
+const {height} = Dimensions.get('screen');
 
 const fontColor = '#4d4d4d';
 const styles = StyleSheet.create({
@@ -158,7 +199,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   map: {
-    height: '35%',
+    height: height * 0.25,
     width: '100%',
     marginTop: 10,
   },
@@ -192,6 +233,7 @@ const styles = StyleSheet.create({
     width: '96%',
     alignSelf: 'center',
     justifyContent: 'space-between',
+    height: height * 0.38,
   },
   currentAddressTitle: {
     color: fontColor,
@@ -199,13 +241,13 @@ const styles = StyleSheet.create({
   },
   currentAddressSet: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 30,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   currentAddress: {
     fontSize: 15,
-    maxWidth: '96%',
+    maxWidth: '65%',
   },
   diver: {
     width: '90%',
