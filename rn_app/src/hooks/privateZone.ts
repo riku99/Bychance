@@ -5,9 +5,12 @@ import {useToast} from 'react-native-fast-toast';
 import {checkKeychain} from '~/helpers/credentials';
 import {origin} from '~/constants/origin';
 import {headers} from '~/helpers/requestHeaders';
-import {BasicAxiosError, PrivateZone} from '~/types';
+import {PrivateZone} from '~/types';
 import {useCustomDispatch} from './stores';
-import {handleCredentialsError} from '~/helpers/errors';
+import {
+  handleCredentialsError,
+  handleBasicApiErrorWithDispatch,
+} from '~/helpers/errors';
 
 export const useFetchPrivateZone = () => {
   const bottomToast = useToast();
@@ -15,10 +18,10 @@ export const useFetchPrivateZone = () => {
 
   const [result, setResult] = useState<PrivateZone[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [err, setErr] = useState<any>();
 
   useEffect(() => {
     const _fetch = async () => {
-      console.log('fetchしました');
       const credentials = await checkKeychain();
       if (credentials) {
         try {
@@ -27,29 +30,22 @@ export const useFetchPrivateZone = () => {
             headers(credentials.token),
           );
           setResult(_result.data);
-          setIsLoading(false);
         } catch (e) {
-          setIsLoading(false);
-          const err = e as BasicAxiosError;
-          switch (err.response?.data.errorType) {
-            case 'invalidError':
-              bottomToast?.show(err.response.data.message, {type: 'danger'});
-              return;
-            case 'loginError':
-              handleCredentialsError(dispatch);
-              return;
-          }
+          const _err = handleBasicApiErrorWithDispatch({e, dispatch});
+          setErr(_err);
         }
       } else {
-        setIsLoading(false);
         handleCredentialsError(dispatch);
       }
+      setIsLoading(false);
     };
+
     _fetch();
   }, [dispatch, bottomToast]);
 
   return {
     result,
     isLoading,
+    err,
   };
 };

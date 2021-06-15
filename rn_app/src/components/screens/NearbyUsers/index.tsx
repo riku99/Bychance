@@ -129,7 +129,7 @@ export const NearbyUsersScreen = React.memo(() => {
         unwrapResult(resultAction);
       } catch (err) {
         if (err.message) {
-          bottomToast?.show(err.message, {type: 'danger'});
+          bottomToast?.show(err.message, {type: err.toastType});
         }
       }
     }

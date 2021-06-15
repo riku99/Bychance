@@ -43,7 +43,6 @@ export const handleBasicApiErrorWithDispatch = ({
 }: {
   e: any;
   dispatch: ThunkDispatch<unknown, unknown, any>;
-  showToast?: () => void;
 }): RejectPayload => {
   if (e && e.response) {
     const axiosError = e as BasicAxiosError;
@@ -52,23 +51,23 @@ export const handleBasicApiErrorWithDispatch = ({
         requestLogin(() => dispatch(logoutThunk()));
         return {errorType: 'loginError'};
       case 'invalidError':
-        // displayShortMessage(axiosError.response.data.message, 'danger');
         return {
           errorType: 'invalidError',
           message: axiosError.response.data.message,
+          toastType: 'danger',
         };
       default:
-        console.log(e.response);
-        alertSomeError();
         return {
           errorType: 'someError',
+          toastType: 'normal',
+          message: '何らかのエラーが発生しました',
         };
     }
   } else {
-    console.log(e.response);
-    alertSomeError();
     return {
       errorType: 'someError',
+      toastType: 'normal',
+      message: '何らかのエラーが発生しました',
     };
   }
 };

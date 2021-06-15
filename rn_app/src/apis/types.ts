@@ -1,8 +1,5 @@
 import {ClientData} from '~/stores/types';
+import {ReturnApiError} from '~/types';
 
-export type RejectPayload =
-  | {errorType: 'loginError'}
-  | {errorType: 'invalidError'; message: string}
-  | {errorType: 'someError'};
-
+export type RejectPayload = ReturnApiError;
 export type SuccessfullLoginData = ClientData;

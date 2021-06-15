@@ -36,9 +36,7 @@ export const getNearbyUsersThunk = createAsyncThunk<
 
         return response.data;
       } catch (e) {
-        console.log(e);
         const result = handleBasicApiErrorWithDispatch({dispatch, e});
-        console.log(result);
         return rejectWithValue(result);
       }
     } else {

@@ -1,5 +1,5 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import MapView, {MapEvent, Marker} from 'react-native-maps';
 import {useSelector} from 'react-redux';
@@ -13,14 +13,35 @@ import {formatAddress} from '~/utils';
 import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 import {useFetchPrivateZone} from '~/hooks/privateZone';
+import {useToast} from 'react-native-fast-toast';
+import {PrivateZone} from '~/types';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
 export const Location = React.memo(() => {
   const aboutPrivateZoneModalRef = useRef<Modalize>(null);
+  const [currentPrivateZone, setCurrentPrivateZone] = useState<PrivateZone[]>(
+    [],
+  );
 
-  const {result} = useFetchPrivateZone();
-  console.log(result);
+  const bottomToast = useToast();
+  const {
+    result: _privateZone,
+    err,
+    isLoading: fetchLoaidng,
+  } = useFetchPrivateZone();
+
+  useEffect(() => {
+    if (_privateZone) {
+      setCurrentPrivateZone(_privateZone);
+    }
+  }, [_privateZone]);
+
+  useEffect(() => {
+    if (err && err.message) {
+      bottomToast?.show(err.message, {type: err.toastType});
+    }
+  }, [err, bottomToast]);
 
   const onAboutPrivateZoneButton = useCallback(() => {
     if (aboutPrivateZoneModalRef.current) {
@@ -102,7 +123,7 @@ export const Location = React.memo(() => {
         <Text style={styles.currentAddressTitle}>
           現在設定されているプライベートゾーン
         </Text>
-        {/* {currnetPrivateZone.map((p) => (
+        {currentPrivateZone.map((p) => (
           <View key={p.id} style={styles.currentAddressSet}>
             <Text style={styles.currentAddress}>{p.address}</Text>
             <Button
@@ -111,7 +132,8 @@ export const Location = React.memo(() => {
               titleStyle={styles.addressButtonTitle}
             />
           </View>
-        ))} */}
+        ))}
+        {fetchLoaidng && <ActivityIndicator style={{marginTop: 15}} />}
       </View>
       <AboutPrivateZoneModal modalRef={aboutPrivateZoneModalRef} />
       {/* <ToastLoading /> */}
