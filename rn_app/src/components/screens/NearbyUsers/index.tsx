@@ -34,6 +34,7 @@ import {
   notAuthLocationProviderAlert,
   notLocationInfoAlert,
 } from '~/helpers/alert';
+import {useToast} from 'react-native-fast-toast';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -117,28 +118,31 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const [firstLoading, setFirstLoading] = useState(true);
 
-  const getUsers = useCallback(async () => {
+  const bottomToast = useToast();
+
+  const fetchUsers = useCallback(async () => {
     if (lat && lng) {
       try {
         const resultAction = await dispatch(
           getNearbyUsersThunk({lat, lng, range}),
         );
-        const r = unwrapResult(resultAction);
-        console.log(r);
+        unwrapResult(resultAction);
       } catch (err) {
-        console.log(err);
+        if (err.message) {
+          bottomToast?.show(err.message, {type: 'danger'});
+        }
       }
     }
-  }, [dispatch, lat, lng, range]);
+  }, [dispatch, lat, lng, range, bottomToast]);
 
   useEffect(() => {
     const _get = async () => {
       setFirstLoading(true);
-      await getUsers();
+      await fetchUsers();
       setFirstLoading(false);
     };
     _get();
-  }, [getUsers]);
+  }, [fetchUsers]);
 
   useFocusEffect(
     useCallback(() => {
@@ -272,8 +276,8 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   const refreshUsers = useCallback(async () => {
-    await getUsers();
-  }, [getUsers]);
+    await fetchUsers();
+  }, [fetchUsers]);
 
   const {top} = useSafeAreaInsets();
 

@@ -12,7 +12,7 @@ const App: () => React.ReactNode = () => {
   return (
     <NavigationContainer theme={MyTheme}>
       <Provider store={store}>
-        <ToastProvider placement="bottom" offset={100}>
+        <ToastProvider placement="bottom" offset={140}>
           <Root />
         </ToastProvider>
       </Provider>
