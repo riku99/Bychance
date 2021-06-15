@@ -1,9 +1,10 @@
 import {ThunkDispatch} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
 
-import {RejectPayload, basicAxiosError} from '~/apis/types';
+import {RejectPayload} from '~/apis/types';
 import {logoutThunk} from '~/apis/session/logout';
 import {displayShortMessage} from '~/helpers/topShortMessage';
+import {BasicAxiosError} from '~/types';
 
 export const alertSomeError = () => {
   Alert.alert(
@@ -42,9 +43,10 @@ export const handleBasicApiErrorWithDispatch = ({
 }: {
   e: any;
   dispatch: ThunkDispatch<unknown, unknown, any>;
+  showToast?: () => void;
 }): RejectPayload => {
   if (e && e.response) {
-    const axiosError = e as basicAxiosError;
+    const axiosError = e as BasicAxiosError;
     switch (axiosError.response?.data.errorType) {
       case 'loginError':
         requestLogin(() => dispatch(logoutThunk()));

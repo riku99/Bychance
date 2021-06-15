@@ -12,11 +12,15 @@ import {normalStyles} from '~/constants/styles';
 import {formatAddress} from '~/utils';
 import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {ToastLoading} from '~/components/utils/ToastLoading';
+import {useFetchPrivateZone} from '~/hooks/privateZone';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
 export const Location = React.memo(() => {
   const aboutPrivateZoneModalRef = useRef<Modalize>(null);
+
+  const {result} = useFetchPrivateZone();
+  console.log(result);
 
   const onAboutPrivateZoneButton = useCallback(() => {
     if (aboutPrivateZoneModalRef.current) {
@@ -110,7 +114,7 @@ export const Location = React.memo(() => {
         ))} */}
       </View>
       <AboutPrivateZoneModal modalRef={aboutPrivateZoneModalRef} />
-      <ToastLoading />
+      {/* <ToastLoading /> */}
     </View>
   );
 });
