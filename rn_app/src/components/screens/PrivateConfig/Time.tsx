@@ -1,20 +1,57 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {StyleSheet, View, Text, SafeAreaView, Dimensions} from 'react-native';
 import {Button, Divider} from 'react-native-elements';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import {commonStyles} from './common';
 import {AboutPrivateTimeModal} from './AboutPrivateTimeModal';
 import {Modalize} from 'react-native-modalize';
 import {normalStyles} from '~/constants/styles';
 
+type PrivateTime = {
+  startHours: number;
+  startMinutes: number;
+  endHours: number;
+  endMinutes: number;
+};
+
 export const Time = React.memo(() => {
   const aboutPrivateTimeModalRef = useRef<Modalize>(null);
+
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [startTime, setStartTime] = useState<{
+    startHours: number;
+    startMinutes: number;
+  }>();
+  const [endTime, setEndTime] = useState<{
+    endHours: number;
+    endMinutes: number;
+  }>();
 
   const onAboutPrivateTimeButtonPress = useCallback(() => {
     if (aboutPrivateTimeModalRef.current) {
       aboutPrivateTimeModalRef.current.open();
     }
   }, []);
+
+  const onSelectTimeButtonPress = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const handleDateConfirm = (d: Date) => {
+    const h = d.getHours();
+    const m = d.getMinutes();
+
+    setStartTime({
+      startHours: h,
+      startMinutes: m,
+    });
+
+    setDatePickerVisibility(false);
+  };
+
+  console.log(startTime);
+
   return (
     <View style={styles.container}>
       <Button
@@ -32,6 +69,7 @@ export const Time = React.memo(() => {
             buttonStyle={styles.selectButton}
             titleStyle={styles.selectButotnTitle}
             activeOpacity={1}
+            onPress={onSelectTimeButtonPress}
           />
         </View>
         <Divider style={styles.divider} />
@@ -54,6 +92,15 @@ export const Time = React.memo(() => {
       </View>
       <SafeAreaView />
       <AboutPrivateTimeModal modalRef={aboutPrivateTimeModalRef} />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="time"
+        onConfirm={handleDateConfirm}
+        onCancel={() => setDatePickerVisibility(false)}
+        locale="en_GB"
+        confirmTextIOS="OK"
+        cancelTextIOS="キャンセル"
+      />
     </View>
   );
 });
