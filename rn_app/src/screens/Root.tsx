@@ -36,7 +36,7 @@ export type RootStackParamList = {
     goTo: 'display' | 'message' | 'location' | 'account' | 'others';
   };
   PrivateConfig: {
-    goTo: 'location' | 'time';
+    goTo: 'zone' | 'time';
   };
 };
 

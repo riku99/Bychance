@@ -2,7 +2,7 @@ import React, {useLayoutEffect, useMemo} from 'react';
 import {RouteProp, NavigationProp} from '@react-navigation/native';
 
 import {RootStackParamList} from '~/screens/Root';
-import {Location} from './Location';
+import {Zone} from './Zone';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'PrivateConfig'>;
@@ -14,7 +14,7 @@ export const PrivateConfig = React.memo(({route, navigation}: Props) => {
 
   const headerTitle = useMemo(() => {
     switch (goTo) {
-      case 'location':
+      case 'zone':
         return 'プライベートゾーンの設定';
       case 'time':
         return 'プライベートタイムの設定';
@@ -27,11 +27,13 @@ export const PrivateConfig = React.memo(({route, navigation}: Props) => {
     });
   }, [headerTitle, navigation]);
 
-  if (goTo === 'location') {
-    return <Location />;
+  if (goTo === 'zone') {
+    return <Zone />;
   }
 
   if (goTo === 'time') {
     return null;
   }
+
+  return null;
 });

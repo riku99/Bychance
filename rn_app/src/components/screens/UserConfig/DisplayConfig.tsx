@@ -53,7 +53,7 @@ export const DisplayConfig = React.memo(() => {
       {
         title: 'プライベートゾーンの設定',
         onItemPress: () => {
-          navigation.navigate('PrivateConfig', {goTo: 'location'});
+          navigation.navigate('PrivateConfig', {goTo: 'zone'});
         },
       },
       {

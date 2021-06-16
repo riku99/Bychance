@@ -26,7 +26,7 @@ import {PrivateZone} from '~/types';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
-export const Location = React.memo(() => {
+export const Zone = React.memo(() => {
   const {
     result: _privateZone,
     fetchLoading,
