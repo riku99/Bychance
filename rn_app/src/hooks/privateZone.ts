@@ -20,7 +20,7 @@ export const usePrivateZone = () => {
   const [result, setResult] = useState<PrivateZone[]>();
   const [fetchLoading, setfetchLoading] = useState<boolean>(true);
   const [postLoading, setPostLoading] = useState<boolean>(false);
-  const [err, setErr] = useState<any>();
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const _fetch = async () => {
@@ -33,8 +33,7 @@ export const usePrivateZone = () => {
           );
           setResult(_result.data);
         } catch (e) {
-          const _err = handleBasicApiErrorWithDispatch({e, dispatch});
-          setErr(_err);
+          handleBasicApiErrorWithDispatch({e, dispatch});
         }
       } else {
         handleCredentialsError(dispatch);
@@ -82,8 +81,7 @@ export const usePrivateZone = () => {
           );
           return _result.data;
         } catch (e) {
-          const _err = handleBasicApiErrorWithDispatch({e, dispatch});
-          setErr(_err);
+          handleBasicApiErrorWithDispatch({e, dispatch});
         }
       } else {
         handleCredentialsError(dispatch);
@@ -93,11 +91,49 @@ export const usePrivateZone = () => {
     [dispatch],
   );
 
+  const deletePrivateZone = useCallback(
+    async (id: number): Promise<boolean | void> => {
+      setDeleteLoading(true);
+
+      const credentials = await checkKeychain();
+
+      if (credentials) {
+        try {
+          console.log('2');
+          await axios.delete(
+            `${origin}/privateZone/${id}?id=${credentials.id}`,
+            headers(credentials.token),
+          );
+
+          dispatch(
+            showBottomToast({
+              data: {
+                message: '削除しました',
+                timestamp: new Date().toString(),
+                type: 'success',
+              },
+            }),
+          );
+          setDeleteLoading(false);
+          return true;
+        } catch (e) {
+          handleBasicApiErrorWithDispatch({e, dispatch});
+        }
+      } else {
+        console.log('1');
+        handleCredentialsError(dispatch);
+      }
+      setDeleteLoading(false);
+    },
+    [dispatch],
+  );
+
   return {
     result,
     fetchLoading,
     postLoading,
-    err,
     createPrivateZone,
+    deleteLoading,
+    deletePrivateZone,
   };
 };

@@ -52,6 +52,15 @@ export const handleBasicApiErrorWithDispatch = ({
         requestLogin(() => dispatch(logoutThunk()));
         return {errorType: 'loginError'};
       case 'invalidError':
+        dispatch(
+          showBottomToast({
+            data: {
+              message: axiosError.response.data.message,
+              timestamp: new Date().toString(),
+              type: 'danger',
+            },
+          }),
+        );
         return {
           errorType: 'invalidError',
           message: axiosError.response.data.message,

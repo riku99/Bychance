@@ -7,6 +7,7 @@ import {
   ScrollView,
   SafeAreaView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import MapView, {MapEvent, Marker} from 'react-native-maps';
@@ -21,20 +22,18 @@ import {formatAddress} from '~/utils';
 import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 import {usePrivateZone} from '~/hooks/privateZone';
-import {useToast} from 'react-native-fast-toast';
 import {PrivateZone} from '~/types';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
 export const Location = React.memo(() => {
-  const bottomToast = useToast();
-
   const {
     result: _privateZone,
-    err,
     fetchLoading,
     postLoading,
     createPrivateZone,
+    deleteLoading,
+    deletePrivateZone,
   } = usePrivateZone();
 
   const aboutPrivateZoneModalRef = useRef<Modalize>(null);
@@ -47,12 +46,6 @@ export const Location = React.memo(() => {
       setCurrentPrivateZone(_privateZone);
     }
   }, [_privateZone]);
-
-  // useEffect(() => {
-  //   if (err && err.message) {
-  //     bottomToast?.show(err.message, {type: err.toastType});
-  //   }
-  // }, [err, bottomToast]);
 
   const onAboutPrivateZoneButton = useCallback(() => {
     if (aboutPrivateZoneModalRef.current) {
@@ -103,7 +96,6 @@ export const Location = React.memo(() => {
       });
 
       if (postResult) {
-        // bottomToast?.show('作成しました', {type: 'success'});
         setCurrentPrivateZone((c) => [postResult, ...c]);
       }
     }
@@ -113,6 +105,27 @@ export const Location = React.memo(() => {
     selectedAddress,
     setCurrentPrivateZone,
   ]);
+
+  const onDeleteButtonPress = useCallback(
+    (id: number) => {
+      Alert.alert('プライベートゾーンを削除', '削除してよろしいですか?', [
+        {
+          text: '削除',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await deletePrivateZone(id);
+            if (result) {
+              setCurrentPrivateZone((c) => c.filter((z) => z.id !== id));
+            }
+          },
+        },
+        {
+          text: 'キャンセル',
+        },
+      ]);
+    },
+    [deletePrivateZone],
+  );
 
   return (
     <View style={styles.container}>
@@ -165,6 +178,7 @@ export const Location = React.memo(() => {
                 buttonStyle={styles.addressButton}
                 title="削除"
                 titleStyle={styles.addressButtonTitle}
+                onPress={() => onDeleteButtonPress(p.id)}
               />
             </View>
           ))}
@@ -173,7 +187,7 @@ export const Location = React.memo(() => {
       </View>
 
       <AboutPrivateZoneModal modalRef={aboutPrivateZoneModalRef} />
-      {postLoading && <ToastLoading />}
+      {(postLoading || deleteLoading) && <ToastLoading />}
       <SafeAreaView />
     </View>
   );
