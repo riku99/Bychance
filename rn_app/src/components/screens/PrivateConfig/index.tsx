@@ -3,6 +3,7 @@ import {RouteProp, NavigationProp} from '@react-navigation/native';
 
 import {RootStackParamList} from '~/screens/Root';
 import {Zone} from './Zone';
+import {Time} from './Time';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'PrivateConfig'>;
@@ -32,7 +33,7 @@ export const PrivateConfig = React.memo(({route, navigation}: Props) => {
   }
 
   if (goTo === 'time') {
-    return null;
+    return <Time />;
   }
 
   return null;

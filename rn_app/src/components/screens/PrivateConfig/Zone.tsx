@@ -23,6 +23,7 @@ import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 import {usePrivateZone} from '~/hooks/privateZone';
 import {PrivateZone} from '~/types';
+import {commonStyles} from './common';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
@@ -132,8 +133,8 @@ export const Zone = React.memo(() => {
       <View>
         <Button
           title="プライベートゾーンとは?"
-          titleStyle={styles.descriptionButtonTitle}
-          buttonStyle={styles.descriptionButton}
+          titleStyle={commonStyles.descriptionButtonTitle}
+          buttonStyle={commonStyles.descriptionButton}
           activeOpacity={1}
           onPress={onAboutPrivateZoneButton}
         />
@@ -199,17 +200,6 @@ const fontColor = '#4d4d4d';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  descriptionButton: {
-    backgroundColor: 'transparent',
-    width: 180,
-    marginTop: 10,
-  },
-  descriptionButtonTitle: {
-    color: fontColor,
-    fontSize: 15,
-    fontWeight: '500',
-    textDecorationLine: 'underline',
   },
   map: {
     height: height * 0.25,

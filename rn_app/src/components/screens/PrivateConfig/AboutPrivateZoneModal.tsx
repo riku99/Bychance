@@ -1,6 +1,8 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Text, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
+
+import {commonModalStyles} from './common';
 
 type Props = {
   modalRef: React.MutableRefObject<Modalize | null>;
@@ -9,9 +11,9 @@ type Props = {
 export const AboutPrivateZoneModal = React.memo(({modalRef}: Props) => {
   return (
     <Modalize ref={modalRef} modalHeight={height * 0.8}>
-      <View style={styles.modalContainer}>
-        <Text style={styles.title}>プライベートゾーンとは</Text>
-        <Text style={styles.explanation}>
+      <View style={commonModalStyles.modalContainer}>
+        <Text style={commonModalStyles.title}>プライベートゾーンとは</Text>
+        <Text style={commonModalStyles.explanation}>
           他のユーザーに対して自動で自分を表示させなくする場所のことです。
           {'\n'}
           {'\n'}
@@ -36,20 +38,3 @@ export const AboutPrivateZoneModal = React.memo(({modalRef}: Props) => {
 });
 
 const {height} = Dimensions.get('screen');
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    marginHorizontal: 10,
-    marginTop: 15,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  explanation: {
-    marginTop: 15,
-    lineHeight: 17,
-    fontSize: 16,
-    color: '#4d4d4d',
-  },
-});
