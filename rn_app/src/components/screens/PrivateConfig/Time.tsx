@@ -76,7 +76,7 @@ export const Time = React.memo(() => {
         activeOpacity={1}
         onPress={onAboutPrivateTimeButtonPress}
       />
-      <View style={styles.selectTimeContainer}>
+      <View style={styles.mainContents}>
         <View style={styles.timeSection}>
           <Text style={styles.sectionTitle}>開始</Text>
           {startTime ? (
@@ -127,6 +127,17 @@ export const Time = React.memo(() => {
           activeOpacity={1}
           disabled={!startTime || !endTime}
         />
+        <Text style={styles.currentPrivateTimeTitle}>
+          現在設定されているプライベートタイム
+        </Text>
+        <View style={styles.currentPrivateZoneSet}>
+          <Text style={styles.currentPrivateTime}>23:00 ~ 3:00</Text>
+          <Button
+            title="削除"
+            buttonStyle={styles.deleteButton}
+            titleStyle={styles.deleteButtonTitle}
+          />
+        </View>
       </View>
       <SafeAreaView />
       <AboutPrivateTimeModal modalRef={aboutPrivateTimeModalRef} />
@@ -143,11 +154,12 @@ export const Time = React.memo(() => {
   );
 });
 
+const fontColor = '#4d4d4d';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  selectTimeContainer: {
+  mainContents: {
     width: '100%',
     marginTop: 30,
     paddingHorizontal: 20,
@@ -184,6 +196,30 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   selectedTime: {
+    fontSize: 16,
+  },
+  currentPrivateTimeTitle: {
+    color: fontColor,
+    fontWeight: '500',
+    marginTop: 60,
+    marginBottom: 20,
+  },
+  currentPrivateZoneSet: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  deleteButton: {
+    backgroundColor: 'gray',
+    width: 55,
+    height: 30,
+  },
+  deleteButtonTitle: {
+    fontWeight: '500',
+    fontSize: 15,
+  },
+  currentPrivateTime: {
     fontSize: 16,
   },
 });
