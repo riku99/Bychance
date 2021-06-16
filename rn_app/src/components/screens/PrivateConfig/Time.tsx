@@ -1,5 +1,11 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {StyleSheet, View, Text, SafeAreaView, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
@@ -17,15 +23,16 @@ type PrivateTime = {
 
 export const Time = React.memo(() => {
   const aboutPrivateTimeModalRef = useRef<Modalize>(null);
+  const selectStartOrEnd = useRef<'start' | 'end'>();
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [startTime, setStartTime] = useState<{
-    startHours: number;
-    startMinutes: number;
+    hours: number;
+    minutes: number;
   }>();
   const [endTime, setEndTime] = useState<{
-    endHours: number;
-    endMinutes: number;
+    hours: number;
+    minutes: number;
   }>();
 
   const onAboutPrivateTimeButtonPress = useCallback(() => {
@@ -34,23 +41,31 @@ export const Time = React.memo(() => {
     }
   }, []);
 
-  const onSelectTimeButtonPress = () => {
+  const onSelectTimeButtonPress = (type: 'start' | 'end') => {
+    selectStartOrEnd.current = type;
     setDatePickerVisibility(true);
   };
 
   const handleDateConfirm = (d: Date) => {
-    const h = d.getHours();
-    const m = d.getMinutes();
+    const hours = d.getHours();
+    const minutes = d.getMinutes();
 
-    setStartTime({
-      startHours: h,
-      startMinutes: m,
-    });
+    if (selectStartOrEnd.current === 'start') {
+      setStartTime({
+        hours,
+        minutes,
+      });
+    }
+
+    if (selectStartOrEnd.current === 'end') {
+      setEndTime({
+        hours,
+        minutes,
+      });
+    }
 
     setDatePickerVisibility(false);
   };
-
-  console.log(startTime);
 
   return (
     <View style={styles.container}>
@@ -64,30 +79,53 @@ export const Time = React.memo(() => {
       <View style={styles.selectTimeContainer}>
         <View style={styles.timeSection}>
           <Text style={styles.sectionTitle}>開始</Text>
-          <Button
-            title="選択する"
-            buttonStyle={styles.selectButton}
-            titleStyle={styles.selectButotnTitle}
-            activeOpacity={1}
-            onPress={onSelectTimeButtonPress}
-          />
+          {startTime ? (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => onSelectTimeButtonPress('start')}>
+              <Text style={styles.selectedTime}>
+                {startTime.hours}:{startTime.minutes}
+                {startTime.minutes === 0 && 0}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <Button
+              title="選択する"
+              buttonStyle={styles.selectButton}
+              titleStyle={styles.selectButotnTitle}
+              activeOpacity={1}
+              onPress={() => onSelectTimeButtonPress('start')}
+            />
+          )}
         </View>
         <Divider style={styles.divider} />
         <View style={styles.timeSection}>
           <Text style={styles.sectionTitle}>終了</Text>
-          <Button
-            title="選択する"
-            buttonStyle={styles.selectButton}
-            titleStyle={styles.selectButotnTitle}
-            activeOpacity={1}
-          />
+          {endTime ? (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => onSelectTimeButtonPress('end')}>
+              <Text style={styles.selectedTime}>
+                {endTime.hours}:{endTime.minutes}
+                {endTime.minutes === 0 && 0}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <Button
+              title="選択する"
+              buttonStyle={styles.selectButton}
+              titleStyle={styles.selectButotnTitle}
+              activeOpacity={1}
+              onPress={() => onSelectTimeButtonPress('end')}
+            />
+          )}
         </View>
         <Button
           buttonStyle={styles.addButton}
           title="追加"
           titleStyle={styles.addButotnTitleStyle}
           activeOpacity={1}
-          disabled={true}
+          disabled={!startTime || !endTime}
         />
       </View>
       <SafeAreaView />
@@ -104,8 +142,6 @@ export const Time = React.memo(() => {
     </View>
   );
 });
-
-const {height} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {
@@ -146,5 +182,8 @@ const styles = StyleSheet.create({
   addButotnTitleStyle: {
     fontSize: 14,
     fontWeight: '500',
+  },
+  selectedTime: {
+    fontSize: 16,
   },
 });
