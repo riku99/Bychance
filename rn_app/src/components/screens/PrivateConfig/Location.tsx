@@ -158,7 +158,7 @@ export const Location = React.memo(() => {
           </View>
           <Button
             title="追加"
-            buttonStyle={styles.addressButton}
+            buttonStyle={styles.addAddressButton}
             titleStyle={styles.addressButtonTitle}
             disabled={!selectedCoordinate && !selectedAddress}
             onPress={onAddButtonPress}
@@ -175,7 +175,7 @@ export const Location = React.memo(() => {
             <View key={p.id} style={styles.currentAddressSet}>
               <Text style={styles.currentAddress}>{p.address}</Text>
               <Button
-                buttonStyle={styles.addressButton}
+                buttonStyle={styles.deleteAddressButton}
                 title="削除"
                 titleStyle={styles.addressButtonTitle}
                 onPress={() => onDeleteButtonPress(p.id)}
@@ -233,10 +233,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     maxWidth: '100%',
   },
-  addressButton: {
+  addAddressButton: {
     width: 55,
     height: 30,
     backgroundColor: normalStyles.mainColor,
+  },
+  deleteAddressButton: {
+    width: 55,
+    height: 30,
+    backgroundColor: 'gray',
   },
   addressButtonTitle: {
     fontSize: 15,
