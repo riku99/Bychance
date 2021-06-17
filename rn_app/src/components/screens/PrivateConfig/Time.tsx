@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -24,6 +24,12 @@ export const Time = React.memo(() => {
     fetchLoading,
     fetchResult,
   } = usePrivateTime();
+
+  const [currentPrivateTime, setCurrentPrivateTime] = useState(fetchResult);
+
+  useEffect(() => {
+    setCurrentPrivateTime(fetchResult);
+  }, [fetchResult]);
 
   const aboutPrivateTimeModalRef = useRef<Modalize>(null);
   const selectStartOrEnd = useRef<'start' | 'end'>();
@@ -78,7 +84,16 @@ export const Time = React.memo(() => {
         endHours: endTime.hours,
         endMinutes: endTime.minutes,
       });
-      console.log(_result);
+
+      if (_result) {
+        setCurrentPrivateTime((c) => {
+          if (c) {
+            return [_result, ...c];
+          } else {
+            return [_result];
+          }
+        });
+      }
     }
   };
 
@@ -150,7 +165,7 @@ export const Time = React.memo(() => {
           <ActivityIndicator />
         ) : (
           <>
-            {fetchResult?.map((p) => (
+            {currentPrivateTime?.map((p) => (
               <View style={styles.currentPrivateZoneSet} key={p.id}>
                 <Text style={styles.currentPrivateTime}>
                   {p.startHours}:{p.startMinutes}
