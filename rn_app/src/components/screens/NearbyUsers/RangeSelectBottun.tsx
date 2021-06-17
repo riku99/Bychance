@@ -11,7 +11,7 @@ const menuActions: MenuAction[] = [
     title: 'すぐ近く🕺',
   },
   {
-    id: '1',
+    id: '1.5',
     title: 'ここら辺🪐',
   },
   {
