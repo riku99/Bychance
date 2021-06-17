@@ -20,3 +20,16 @@ export const formatAddress = (addr: string) => {
     .replace(/〒\d+-\d+/, '')
     .trim();
 };
+
+export const formatMinutes = (n: number) => {
+  const len = n.toString().length;
+  if (len === 1) {
+    if (n === 0) {
+      return '00';
+    } else {
+      return `0${n}`;
+    }
+  } else {
+    return n;
+  }
+};

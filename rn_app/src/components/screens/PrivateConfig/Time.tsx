@@ -17,6 +17,7 @@ import {Modalize} from 'react-native-modalize';
 import {normalStyles} from '~/constants/styles';
 import {usePrivateTime} from '~/hooks/privateTime';
 import {ToastLoading} from '~/components/utils/ToastLoading';
+import {formatMinutes} from '~/utils';
 
 export const Time = React.memo(() => {
   const {
@@ -135,8 +136,7 @@ export const Time = React.memo(() => {
               activeOpacity={1}
               onPress={() => onSelectTimeButtonPress('start')}>
               <Text style={styles.selectedTime}>
-                {startTime.hours}:{startTime.minutes}
-                {startTime.minutes === 0 && 0}
+                {startTime.hours}:{formatMinutes(startTime.minutes)}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -157,8 +157,7 @@ export const Time = React.memo(() => {
               activeOpacity={1}
               onPress={() => onSelectTimeButtonPress('end')}>
               <Text style={styles.selectedTime}>
-                {endTime.hours}:{endTime.minutes}
-                {endTime.minutes === 0 && 0}
+                {endTime.hours}:{formatMinutes(endTime.minutes)}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -189,9 +188,8 @@ export const Time = React.memo(() => {
             {currentPrivateTime?.map((p) => (
               <View style={styles.currentPrivateZoneSet} key={p.id}>
                 <Text style={styles.currentPrivateTime}>
-                  {p.startHours}:{p.startMinutes}
-                  {p.startMinutes === 0 && 0} ~ {p.endHours}:{p.endMinutes}
-                  {p.endMinutes === 0 && 0}
+                  {p.startHours}:{formatMinutes(p.startMinutes)} ~ {p.endHours}:
+                  {formatMinutes(p.endMinutes)}
                 </Text>
                 <Button
                   title="削除"
