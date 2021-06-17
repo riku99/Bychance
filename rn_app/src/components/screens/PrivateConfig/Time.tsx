@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -184,22 +186,25 @@ export const Time = React.memo(() => {
         {fetchLoading ? (
           <ActivityIndicator />
         ) : (
-          <>
-            {currentPrivateTime?.map((p) => (
-              <View style={styles.currentPrivateZoneSet} key={p.id}>
-                <Text style={styles.currentPrivateTime}>
-                  {p.startHours}:{formatMinutes(p.startMinutes)} ~ {p.endHours}:
-                  {formatMinutes(p.endMinutes)}
-                </Text>
-                <Button
-                  title="削除"
-                  buttonStyle={styles.deleteButton}
-                  titleStyle={styles.deleteButtonTitle}
-                  onPress={() => onDeleteButtonPress(p.id)}
-                />
-              </View>
-            ))}
-          </>
+          <View style={{height: height * 0.4}}>
+            <ScrollView>
+              {currentPrivateTime?.map((p) => (
+                <View style={styles.currentPrivateZoneSet} key={p.id}>
+                  <Text style={styles.currentPrivateTime}>
+                    {p.startHours}:{formatMinutes(p.startMinutes)} ~{' '}
+                    {p.endHours}:{formatMinutes(p.endMinutes)}
+                  </Text>
+                  <Button
+                    title="削除"
+                    buttonStyle={styles.deleteButton}
+                    titleStyle={styles.deleteButtonTitle}
+                    onPress={() => onDeleteButtonPress(p.id)}
+                    activeOpacity={1}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          </View>
         )}
       </View>
       <SafeAreaView />
@@ -217,6 +222,8 @@ export const Time = React.memo(() => {
     </View>
   );
 });
+
+const {height} = Dimensions.get('screen');
 
 const fontColor = '#4d4d4d';
 const styles = StyleSheet.create({
@@ -266,7 +273,7 @@ const styles = StyleSheet.create({
     color: fontColor,
     fontWeight: '500',
     marginTop: 60,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   currentPrivateZoneSet: {
     flexDirection: 'row',
