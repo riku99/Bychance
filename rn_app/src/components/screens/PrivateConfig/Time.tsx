@@ -82,8 +82,6 @@ export const Time = React.memo(() => {
     }
   };
 
-  console.log(fetchResult);
-
   return (
     <View style={styles.container}>
       <Button
@@ -151,14 +149,22 @@ export const Time = React.memo(() => {
         {fetchLoading ? (
           <ActivityIndicator />
         ) : (
-          <View style={styles.currentPrivateZoneSet}>
-            <Text style={styles.currentPrivateTime}>23:00 ~ 3:00</Text>
-            <Button
-              title="削除"
-              buttonStyle={styles.deleteButton}
-              titleStyle={styles.deleteButtonTitle}
-            />
-          </View>
+          <>
+            {fetchResult?.map((p) => (
+              <View style={styles.currentPrivateZoneSet} key={p.id}>
+                <Text style={styles.currentPrivateTime}>
+                  {p.startHours}:{p.startMinutes}
+                  {p.startMinutes === 0 && 0} ~ {p.endHours}:{p.endMinutes}
+                  {p.endMinutes === 0 && 0}
+                </Text>
+                <Button
+                  title="削除"
+                  buttonStyle={styles.deleteButton}
+                  titleStyle={styles.deleteButtonTitle}
+                />
+              </View>
+            ))}
+          </>
         )}
       </View>
       <SafeAreaView />
