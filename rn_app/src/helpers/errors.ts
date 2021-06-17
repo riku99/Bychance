@@ -3,7 +3,6 @@ import {Alert} from 'react-native';
 
 import {RejectPayload} from '~/apis/types';
 import {logoutThunk} from '~/apis/session/logout';
-// import {displayShortMessage} from '~/helpers/topShortMessage';
 import {BasicAxiosError} from '~/types';
 import {showBottomToast} from '~/stores/bottomToast';
 

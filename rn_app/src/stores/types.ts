@@ -4,7 +4,6 @@ import {TalkRoom} from './talkRooms';
 import {TalkRoomMessage} from './talkRoomMessages';
 import {Flash} from './flashes';
 import {FlashStamp} from './flashStamps';
-import {PrivateZone} from './privateZone';
 
 export type ClientData = {
   user: User;
@@ -14,7 +13,6 @@ export type ClientData = {
   flashes: Flash[];
   chatPartners: AnotherUser[];
   flashStamps: FlashStamp[];
-  privateZone: PrivateZone[];
 };
 
 // 自分以外のユーザーが持つデータ。データそのもの(entiites)以外にも閲覧データとか必要なので定義

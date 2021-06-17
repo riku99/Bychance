@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
-import {useToast} from 'react-native-fast-toast';
 
 import {checkKeychain} from '~/helpers/credentials';
 import {origin} from '~/constants/origin';
@@ -14,7 +13,6 @@ import {
 import {showBottomToast} from '~/stores/bottomToast';
 
 export const usePrivateZone = () => {
-  const bottomToast = useToast();
   const dispatch = useCustomDispatch();
 
   const [result, setResult] = useState<PrivateZone[]>();
@@ -42,7 +40,7 @@ export const usePrivateZone = () => {
     };
 
     _fetch();
-  }, [dispatch, bottomToast]);
+  }, [dispatch]);
 
   const createPrivateZone = useCallback(
     async ({
@@ -99,7 +97,6 @@ export const usePrivateZone = () => {
 
       if (credentials) {
         try {
-          console.log('2');
           await axios.delete(
             `${origin}/privateZone/${id}?id=${credentials.id}`,
             headers(credentials.token),
@@ -120,7 +117,6 @@ export const usePrivateZone = () => {
           handleBasicApiErrorWithDispatch({e, dispatch});
         }
       } else {
-        console.log('1');
         handleCredentialsError(dispatch);
       }
       setDeleteLoading(false);

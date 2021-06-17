@@ -13,15 +13,12 @@ import {commonStyles} from './common';
 import {AboutPrivateTimeModal} from './AboutPrivateTimeModal';
 import {Modalize} from 'react-native-modalize';
 import {normalStyles} from '~/constants/styles';
-
-type PrivateTime = {
-  startHours: number;
-  startMinutes: number;
-  endHours: number;
-  endMinutes: number;
-};
+import {usePrivateTime} from '~/hooks/privateTime';
+import {ToastLoading} from '~/components/utils/ToastLoading';
 
 export const Time = React.memo(() => {
+  const {postLoading, createPrivateTime} = usePrivateTime();
+
   const aboutPrivateTimeModalRef = useRef<Modalize>(null);
   const selectStartOrEnd = useRef<'start' | 'end'>();
 
@@ -65,6 +62,18 @@ export const Time = React.memo(() => {
     }
 
     setDatePickerVisibility(false);
+  };
+
+  const onAddButtonPress = async () => {
+    if (startTime && endTime) {
+      const _result = await createPrivateTime({
+        startHours: startTime.hours,
+        startMinutes: startTime.minutes,
+        endHours: endTime.hours,
+        endMinutes: endTime.minutes,
+      });
+      console.log(_result);
+    }
   };
 
   return (
@@ -126,6 +135,7 @@ export const Time = React.memo(() => {
           titleStyle={styles.addButotnTitleStyle}
           activeOpacity={1}
           disabled={!startTime || !endTime}
+          onPress={onAddButtonPress}
         />
         <Text style={styles.currentPrivateTimeTitle}>
           現在設定されているプライベートタイム
@@ -150,6 +160,7 @@ export const Time = React.memo(() => {
         confirmTextIOS="OK"
         cancelTextIOS="キャンセル"
       />
+      {postLoading && <ToastLoading />}
     </View>
   );
 });

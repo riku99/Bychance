@@ -17,3 +17,11 @@ export type PrivateZone = {
   id: number;
   address: string;
 };
+
+export type PrivateTime = {
+  id: number;
+  startHours: number;
+  startMinutes: number;
+  endHours: number;
+  endMinutes: number;
+};
