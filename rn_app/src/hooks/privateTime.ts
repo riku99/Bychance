@@ -14,8 +14,33 @@ import {useCustomDispatch} from './stores';
 
 export const usePrivateTime = () => {
   const dispatch = useCustomDispatch();
-
   const [postLoading, setPostLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [fetchResult, setFetchResult] = useState<PrivateTime[]>();
+
+  useEffect(() => {
+    const _fetch = async () => {
+      const credentials = await checkKeychain();
+
+      if (credentials) {
+        try {
+          const _result = await axios.get<PrivateTime[]>(
+            `${origin}/privateTime?id=${credentials.id}`,
+            headers(credentials.token),
+          );
+
+          setFetchLoading(false);
+          setFetchResult(_result.data);
+        } catch (e) {
+          handleBasicApiErrorWithDispatch({e, dispatch});
+        }
+      } else {
+        handleCredentialsError(dispatch);
+      }
+      setFetchLoading(false);
+    };
+    _fetch();
+  }, [dispatch]);
 
   const createPrivateTime = useCallback(
     async ({
@@ -64,5 +89,7 @@ export const usePrivateTime = () => {
   return {
     postLoading,
     createPrivateTime,
+    fetchLoading,
+    fetchResult,
   };
 };

@@ -5,6 +5,7 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -17,7 +18,12 @@ import {usePrivateTime} from '~/hooks/privateTime';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 
 export const Time = React.memo(() => {
-  const {postLoading, createPrivateTime} = usePrivateTime();
+  const {
+    postLoading,
+    createPrivateTime,
+    fetchLoading,
+    fetchResult,
+  } = usePrivateTime();
 
   const aboutPrivateTimeModalRef = useRef<Modalize>(null);
   const selectStartOrEnd = useRef<'start' | 'end'>();
@@ -75,6 +81,8 @@ export const Time = React.memo(() => {
       console.log(_result);
     }
   };
+
+  console.log(fetchResult);
 
   return (
     <View style={styles.container}>
@@ -140,14 +148,18 @@ export const Time = React.memo(() => {
         <Text style={styles.currentPrivateTimeTitle}>
           現在設定されているプライベートタイム
         </Text>
-        <View style={styles.currentPrivateZoneSet}>
-          <Text style={styles.currentPrivateTime}>23:00 ~ 3:00</Text>
-          <Button
-            title="削除"
-            buttonStyle={styles.deleteButton}
-            titleStyle={styles.deleteButtonTitle}
-          />
-        </View>
+        {fetchLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <View style={styles.currentPrivateZoneSet}>
+            <Text style={styles.currentPrivateTime}>23:00 ~ 3:00</Text>
+            <Button
+              title="削除"
+              buttonStyle={styles.deleteButton}
+              titleStyle={styles.deleteButtonTitle}
+            />
+          </View>
+        )}
       </View>
       <SafeAreaView />
       <AboutPrivateTimeModal modalRef={aboutPrivateTimeModalRef} />
