@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -23,6 +24,8 @@ export const Time = React.memo(() => {
     createPrivateTime,
     fetchLoading,
     fetchResult,
+    deleteLoading,
+    deletePrivateTime,
   } = usePrivateTime();
 
   const [currentPrivateTime, setCurrentPrivateTime] = useState(fetchResult);
@@ -95,6 +98,24 @@ export const Time = React.memo(() => {
         });
       }
     }
+  };
+
+  const onDeleteButtonPress = (id: number) => {
+    Alert.alert('プライベートタイムを削除', '削除してよろしいですか?', [
+      {
+        text: '削除',
+        style: 'destructive',
+        onPress: async () => {
+          const _result = await deletePrivateTime(id);
+          if (_result) {
+            setCurrentPrivateTime((c) => c?.filter((p) => p.id !== id));
+          }
+        },
+      },
+      {
+        text: 'キャンセル',
+      },
+    ]);
   };
 
   return (
@@ -176,6 +197,7 @@ export const Time = React.memo(() => {
                   title="削除"
                   buttonStyle={styles.deleteButton}
                   titleStyle={styles.deleteButtonTitle}
+                  onPress={() => onDeleteButtonPress(p.id)}
                 />
               </View>
             ))}
@@ -193,7 +215,7 @@ export const Time = React.memo(() => {
         confirmTextIOS="OK"
         cancelTextIOS="キャンセル"
       />
-      {postLoading && <ToastLoading />}
+      {(postLoading || deleteLoading) && <ToastLoading />}
     </View>
   );
 });

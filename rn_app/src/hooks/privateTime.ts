@@ -17,6 +17,7 @@ export const usePrivateTime = () => {
   const [postLoading, setPostLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [fetchResult, setFetchResult] = useState<PrivateTime[]>();
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     const _fetch = async () => {
@@ -86,10 +87,48 @@ export const usePrivateTime = () => {
     [dispatch],
   );
 
+  const deletePrivateTime = useCallback(
+    async (id: number) => {
+      setDeleteLoading(true);
+
+      const credentials = await checkKeychain();
+
+      if (credentials) {
+        try {
+          await axios.delete(
+            `${origin}/privateTime/${id}?id=${credentials.id}`,
+            headers(credentials.token),
+          );
+
+          setDeleteLoading(false);
+          dispatch(
+            showBottomToast({
+              data: {
+                message: '削除しました',
+                type: 'success',
+                timestamp: new Date().toString(),
+              },
+            }),
+          );
+          return true;
+        } catch (e) {
+          handleBasicApiErrorWithDispatch({e, dispatch});
+        }
+      } else {
+        handleCredentialsError(dispatch);
+      }
+
+      setDeleteLoading(false);
+    },
+    [dispatch],
+  );
+
   return {
     postLoading,
     createPrivateTime,
     fetchLoading,
     fetchResult,
+    deletePrivateTime,
+    deleteLoading,
   };
 };
