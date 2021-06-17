@@ -7,15 +7,15 @@ import {mainButtonGradientConfig} from '~/constants/styles';
 
 const menuActions: MenuAction[] = [
   {
-    id: '0.1',
+    id: '0.3',
     title: 'すぐ近く🕺',
   },
   {
-    id: '0.3',
+    id: '1',
     title: 'ここら辺🪐',
   },
   {
-    id: '1',
+    id: '3.5',
     title: 'ちょい広め💫',
   },
 ];

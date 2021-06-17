@@ -80,6 +80,7 @@ export const Zone = React.memo(() => {
       lat: coordinate.latitude,
       lng: coordinate.longitude,
     });
+
     const addressData = await Geocoder.from(
       coordinate.latitude,
       coordinate.longitude,
