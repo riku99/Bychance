@@ -181,6 +181,7 @@ export const Zone = React.memo(() => {
                 title="削除"
                 titleStyle={styles.addressButtonTitle}
                 onPress={() => onDeleteButtonPress(p.id)}
+                activeOpacity={1}
               />
             </View>
           ))}

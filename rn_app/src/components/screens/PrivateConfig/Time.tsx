@@ -191,8 +191,8 @@ export const Time = React.memo(() => {
               {currentPrivateTime?.map((p) => (
                 <View style={styles.currentPrivateZoneSet} key={p.id}>
                   <Text style={styles.currentPrivateTime}>
-                    {p.startHours}:{formatMinutes(p.startMinutes)} ~{p.endHours}
-                    :{formatMinutes(p.endMinutes)}
+                    {p.startHours}:{formatMinutes(p.startMinutes)} ~{' '}
+                    {p.endHours}:{formatMinutes(p.endMinutes)}
                   </Text>
                   <Button
                     title="削除"
