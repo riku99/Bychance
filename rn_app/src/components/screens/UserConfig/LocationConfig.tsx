@@ -1,5 +1,6 @@
-import React, {useMemo, useState} from 'react';
-import {View, StyleSheet, Text, Alert} from 'react-native';
+import React, {useMemo, useRef, useState} from 'react';
+import {View, StyleSheet, Text, Alert, Dimensions} from 'react-native';
+import {Modalize} from 'react-native-modalize';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
@@ -15,6 +16,7 @@ export const LocationConfig = React.memo(() => {
   const [showAboutLocationInfoModal, setShowAboutLocationInfoModal] = useState(
     false,
   );
+  const aboutLocationInfoModalRef = useRef<Modalize | null>(null);
   const list: List = useMemo(() => {
     return [
       {
@@ -73,7 +75,11 @@ export const LocationConfig = React.memo(() => {
       {
         title: '位置情報について',
         description: true,
-        onItemPress: () => setShowAboutLocationInfoModal(true),
+        onItemPress: () => {
+          if (aboutLocationInfoModalRef) {
+            aboutLocationInfoModalRef.current?.open();
+          }
+        },
       },
     ];
   }, [dispatch]);
@@ -83,32 +89,46 @@ export const LocationConfig = React.memo(() => {
       <View style={commonStyles.sectionContainer}>
         <ConfigList list={list} />
       </View>
-      <CustomPopupModal
-        isVisible={showAboutLocationInfoModal}
-        closeModal={() => setShowAboutLocationInfoModal(false)}>
-        <View style={styles.aboutLocationInfoModal}>
-          <Text style={styles.aboutLocationInfoText}>
+      <Modalize modalHeight={height * 0.8} ref={aboutLocationInfoModalRef}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.title}>位置情報について</Text>
+          <Text style={styles.explanation}>
+            端末の設定で許可されている限り、位置情報は自動で更新されます。
+            {'\n'}
+            {'\n'}
             位置情報を削除した場合、このアプリ内の位置情報に関するサービスは利用できなくなります。
             {'\n'}
+            {'\n'}
             一度削除してもお使いの端末により位置情報の変更が検知された場合は再度更新、保存されます。これを無効にするにはお使いの端末の設定から位置情報を無効にしてください。
-            {'\n'}なお、位置情報は常に暗号化されて保存されます。
+            {'\n'}
+            {'\n'}
+            「位置情報を更新」を押すと現在の位置情報に更新されます。 {'\n'}
+            前述の通り許可されている限り位置情報は自動で更新することができますが、何らかの理由で自動更新がされていない場合などに使ってみてください。
+            {'\n'}
+            {'\n'}
+            なお、位置情報は常に暗号化されて保存されます。
           </Text>
         </View>
-      </CustomPopupModal>
+      </Modalize>
     </View>
   );
 });
 
+const {height} = Dimensions.get('screen');
+
 const styles = StyleSheet.create({
-  aboutLocationInfoModal: {
-    ...commonStyles.descriptionModal,
-    width: '90%',
-    height: 250,
-  },
-  aboutLocationInfoText: {
-    fontSize: 16,
+  modalContainer: {
     marginHorizontal: 10,
-    marginVertical: 10,
-    lineHeight: 18,
+    marginTop: 15,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  explanation: {
+    marginTop: 15,
+    lineHeight: 17,
+    fontSize: 16,
+    color: '#4d4d4d',
   },
 });
