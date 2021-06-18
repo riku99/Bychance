@@ -9,6 +9,7 @@ export const MoreReadBottun = ({onPress}: Props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
+        activeOpacity={1}
         onPress={() => {
           if (onPress) {
             onPress();

@@ -270,6 +270,8 @@ export const UserPage = ({route, navigation}: Props) => {
     return state.otherSettingsReducer.displayedMenu;
   });
 
+  console.log(avatarAndNameContainerTop);
+
   return (
     <>
       {user ? (
@@ -435,14 +437,14 @@ const nameContainerHeight = 19.5;
 const avatarAndNameContainerHeight =
   (moreXHeight ? 119.5 : 113) - nameContainerHeight - 10;
 
-const avatarAndNameContainerTop = moreXHeight ? '15%' : '13%';
+const avatarAndNameContainerTop = moreXHeight ? height * 0.115 : height * 0.1;
 
-const introduceContainerTop = moreXHeight ? height * 0.274 : height * 0.31;
+const introduceContainerTop = moreXHeight ? height * 0.273 : height * 0.29;
 const introduceContainerHeight = height * 0.14;
 
 const snsIconsContainerTop = profileContainerHeight - stickyTabHeight - 12;
 
-const backgroundItemHeight = height * 0.17;
+const backgroundItemHeight = height * 0.16;
 
 const styles = StyleSheet.create({
   container: {
@@ -473,7 +475,7 @@ const styles = StyleSheet.create({
   },
   editProfileOrSendMessageButtonContainer: {
     width: '100%',
-    top: moreXHeight ? '15%' : '13%',
+    top: moreXHeight ? height * 0.1 : height * 0.09,
     left: '45%',
     marginTop: avatarAndNameContainerHeight,
   },
