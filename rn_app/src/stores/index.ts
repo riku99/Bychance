@@ -1,5 +1,5 @@
 import {configureStore, combineReducers} from '@reduxjs/toolkit';
-import {sessionReducer} from './session';
+import {sessionReducer} from './sessions';
 import {userReducer} from './user';
 import {postsReducer} from './posts';
 import {talkRoomsReducer} from './talkRooms';

@@ -7,22 +7,19 @@ import {
 import {
   createPostThunk,
   CreatePostThunkPayload,
-} from '../../apis/posts/createPost';
+} from '../apis/posts/createPost';
 import {
   deletePostThunk,
   DeletePostThunkPaylaod,
-} from '../../apis/posts/deletePost';
+} from '../apis/posts/deletePost';
 import {logoutThunk} from '~/apis/session/logout';
-import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../../apis/session/lineLogin';
+import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../apis/session/sessionLogin';
-import {sampleLogin} from '../../apis/session/sampleLogin';
-import {RootState} from '..';
+} from '../apis/session/sessionLogin';
+import {sampleLogin} from '../apis/session/sampleLogin';
+import {RootState} from '.';
 import {refreshUser} from '~/stores/helpers/refreshUser';
 import {
   refreshUserThunk,

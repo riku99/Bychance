@@ -13,6 +13,7 @@ import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
 } from '~/apis/session/sessionLogin';
+import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
@@ -49,6 +50,12 @@ const flashStampsSlice = createSlice({
     [sessionLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<SessionLoginThunkPayload>,
+    ) => {
+      flashStampsAdapter.addMany(state, action.payload.flashStamps);
+    },
+    [lineLoginThunk.fulfilled.type]: (
+      state,
+      action: PayloadAction<LineLoginThunkPayload>,
     ) => {
       flashStampsAdapter.addMany(state, action.payload.flashStamps);
     },

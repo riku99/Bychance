@@ -5,30 +5,27 @@ import {
 } from '@reduxjs/toolkit';
 import {RNToasty} from 'react-native-toasty';
 
-import {RootState} from '../index';
-import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../../apis/session/lineLogin';
+import {RootState} from './index';
+import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../apis/session/sessionLogin';
-import {sampleLogin} from '../../apis/session/sampleLogin';
+} from '../apis/session/sessionLogin';
+import {sampleLogin} from '../apis/session/sampleLogin';
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../../apis/talkRoomMessages/createTalkRoomMessage';
+} from '../apis/talkRoomMessages/createTalkRoomMessage';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
-} from '../../apis/rooms/createTalkRoom';
+} from '../apis/rooms/createTalkRoom';
 import {
   createDeleteRoomThunk,
   CreateDeleteRoomThunkPayload,
 } from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
 import {logoutThunk} from '~/apis/session/logout';
-import {receiveTalkRoomMessage} from '../talkRoomMessages';
+import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
 
 export type TalkRoom = {

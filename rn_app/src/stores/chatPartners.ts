@@ -4,40 +4,37 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {AnotherUser, ReceivedMessageData} from '../types';
-import {RootState} from '../index';
-import {receiveTalkRoomMessage} from '../talkRoomMessages';
-import {updateAlreadyViewed} from '../helpers/createViewedFlashes';
-import {refreshUser} from '../helpers/refreshUser';
+import {AnotherUser, ReceivedMessageData} from './types';
+import {RootState} from './index';
+import {receiveTalkRoomMessage} from './talkRoomMessages';
+import {updateAlreadyViewed} from './helpers/createViewedFlashes';
+import {refreshUser} from './helpers/refreshUser';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../../apis/session/sessionLogin';
-import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../../apis/session/lineLogin';
+} from '../apis/session/sessionLogin';
+import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
 import {
   sampleLogin,
   SampleLoginThunkPayload,
-} from '../../apis/session/sampleLogin';
+} from '../apis/session/sampleLogin';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
-} from '../../apis/nearbyUsers/getNearbyUsers';
+} from '../apis/nearbyUsers/getNearbyUsers';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '../../apis/users/refreshUser';
+} from '../apis/users/refreshUser';
 import {logoutThunk} from '~/apis/session/logout';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
-} from '../../apis/rooms/createTalkRoom';
+} from '../apis/rooms/createTalkRoom';
 import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
-} from '../../apis/flashes/createAlreadyViewedFlashes';
+} from '../apis/flashes/createAlreadyViewedFlashes';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 

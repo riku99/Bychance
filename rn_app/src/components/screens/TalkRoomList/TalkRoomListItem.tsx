@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {ListItem, Badge} from 'react-native-elements';
 
-import {TalkRoom} from '~/stores/talkRooms/';
+import {TalkRoom} from '~/stores/talkRooms';
 import {UserAvatar} from '../../utils/Avatar';
 import {normalStyles} from '~/constants/styles';
 
