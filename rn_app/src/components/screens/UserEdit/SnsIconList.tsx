@@ -15,6 +15,8 @@ export const SnsIconList = React.memo(({showSnsModal}: Props) => {
       <SocialIcon
         raised={false}
         type="instagram"
+        iconType="font-awesome"
+        underlayColor="pink"
         style={[
           styles.icon,
           {
