@@ -1,10 +1,9 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useMemo, useRef} from 'react';
 import {View, StyleSheet, Text, Alert, Dimensions} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
-import {CustomPopupModal} from '~/components/utils/PopupModal';
 import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
 import {useCustomDispatch} from '~/hooks/stores';
 import {displayShortMessage} from '~/helpers/topShortMessage';
@@ -13,9 +12,7 @@ import {notAuthLocationProviderAlert} from '~/helpers/alert';
 
 export const LocationConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
-  const [showAboutLocationInfoModal, setShowAboutLocationInfoModal] = useState(
-    false,
-  );
+
   const aboutLocationInfoModalRef = useRef<Modalize | null>(null);
   const list: List = useMemo(() => {
     return [
