@@ -437,7 +437,7 @@ const avatarAndNameContainerHeight =
 
 const avatarAndNameContainerTop = moreXHeight ? height * 0.115 : height * 0.1;
 
-const introduceContainerTop = moreXHeight ? height * 0.273 : height * 0.2;
+const introduceContainerTop = moreXHeight ? height * 0.273 : height * 0.284;
 const introduceContainerHeight = height * 0.14;
 
 const snsIconsContainerTop = profileContainerHeight - stickyTabHeight - 12;
