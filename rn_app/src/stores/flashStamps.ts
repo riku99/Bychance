@@ -22,6 +22,7 @@ import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
 } from '~/apis/users/refreshUser';
+import {logoutThunk} from '~/apis/session/logout';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 
@@ -100,6 +101,7 @@ const flashStampsSlice = createSlice({
         flashStampsAdapter.upsertMany(state, action.payload.data.flashStamps);
       }
     },
+    [logoutThunk.fulfilled.type]: () => flashStampsAdapter.getInitialState(),
   },
 });
 

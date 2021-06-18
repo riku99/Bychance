@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+import {logoutThunk} from '~/apis/session/logout';
+
 type BottomToast = {
   data?: {
     message: string;
@@ -16,6 +18,9 @@ const bottomToastSlice = createSlice({
   reducers: {
     showBottomToast: (state, action: PayloadAction<BottomToast>) =>
       action.payload,
+  },
+  extraReducers: {
+    [logoutThunk.fulfilled.type]: () => initialState,
   },
 });
 
