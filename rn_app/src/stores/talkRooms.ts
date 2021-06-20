@@ -6,25 +6,28 @@ import {
 import {RNToasty} from 'react-native-toasty';
 
 import {RootState} from './index';
-import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
+import {
+  lineLoginThunk,
+  LineLoginThunkPayload,
+} from '../thunks/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../apis/session/sessionLogin';
-import {sampleLogin} from '../apis/session/sampleLogin';
+} from '../thunks/session/sessionLogin';
+import {sampleLogin} from '../thunks/session/sampleLogin';
 import {
   createMessageThunk,
   CreateMessageThunkPayload,
-} from '../apis/talkRoomMessages/createTalkRoomMessage';
+} from '../thunks/talkRoomMessages/createTalkRoomMessage';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
-} from '../apis/rooms/createTalkRoom';
+} from '../thunks/rooms/createTalkRoom';
 import {
   createDeleteRoomThunk,
   CreateDeleteRoomThunkPayload,
-} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
-import {logoutThunk} from '~/apis/session/logout';
+} from '~/thunks/deleteTalkRooms/createDeleteTalkRoom';
+import {logoutThunk} from '~/thunks/session/logout';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
 

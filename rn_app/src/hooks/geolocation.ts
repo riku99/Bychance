@@ -5,7 +5,10 @@ import BackgroundGeolocation, {
 } from 'react-native-background-geolocation';
 import {useCustomDispatch} from './stores';
 
-import {updateLocationThunk, patchLocation} from '~/apis/users/updateLocation';
+import {
+  updateLocationThunk,
+  patchLocation,
+} from '~/thunks/users/updateLocation';
 import {checkKeychain} from '~/helpers/credentials';
 
 export const useBackgroundGeolocation = ({login}: {login: boolean}) => {

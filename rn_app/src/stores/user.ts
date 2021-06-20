@@ -1,39 +1,45 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {refreshUser} from './helpers/refreshUser';
-import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
+import {
+  lineLoginThunk,
+  LineLoginThunkPayload,
+} from '../thunks/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../apis/session/sessionLogin';
-import {editProfileThunk, EditProfilePayload} from '../apis/users/editProfile';
+} from '../thunks/session/sessionLogin';
+import {
+  editProfileThunk,
+  EditProfilePayload,
+} from '../thunks/users/editProfile';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '../apis/users/refreshUser';
+} from '../thunks/users/refreshUser';
 import {
   changeUserDisplayThunk,
   EidtUserDisplayThunkPayload,
-} from '../apis/users/changeUserDisplay';
+} from '../thunks/users/changeUserDisplay';
 import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
-} from '../apis/users/updateLocation';
+} from '../thunks/users/updateLocation';
 import {
   changeVideoEditDescriptionThunk,
   ChangeVideoEditDescriptionPayload,
-} from '~/apis/users/changeVideoEditDescription';
+} from '~/thunks/users/changeVideoEditDescription';
 import {
   changeTalkRoomMessageReceiptThunk,
   ChangeTalkRoomMessageReceiptPaylpad,
-} from '~/apis/users/changeTalkRoomMessageReceipt';
+} from '~/thunks/users/changeTalkRoomMessageReceipt';
 import {
   ChangeShowReceiveMessagePayload,
   changeShowReceiveMessageThunk,
-} from '~/apis/users/changeShowReceiveMessage';
-import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
-import {logoutThunk} from '~/apis/session/logout';
-import {sampleLogin} from '../apis/session/sampleLogin';
+} from '~/thunks/users/changeShowReceiveMessage';
+import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
+import {logoutThunk} from '~/thunks/session/logout';
+import {sampleLogin} from '../thunks/session/sampleLogin';
 
 export type UserState = {
   user?: {

@@ -8,7 +8,7 @@ import Emoji from 'react-native-emoji';
 import {AppDispatch} from '../../../stores/index';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {AnotherUser} from '../../../stores/types';
-import {createRoomThunk} from '../../../apis/rooms/createTalkRoom';
+import {createRoomThunk} from '../../../thunks/rooms/createTalkRoom';
 import {RootNavigationProp} from '~/screens/Root';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 

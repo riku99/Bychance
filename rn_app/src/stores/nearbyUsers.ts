@@ -10,12 +10,12 @@ import {updateAlreadyViewed} from './helpers/createViewedFlashes';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
-} from '../apis/nearbyUsers/getNearbyUsers';
+} from '../thunks/nearbyUsers/getNearbyUsers';
 import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
-} from '../apis/flashes/createAlreadyViewedFlashes';
-import {logoutThunk} from '~/apis/session/logout';
+} from '../thunks/flashes/createAlreadyViewedFlashes';
+import {logoutThunk} from '~/thunks/session/logout';
 
 // NearbyUserは位置情報により取得したユーザーなので必ずlat, lngが存在する。AnotherUserはトーク相手とかも含まれるので位置情報のデータが必ず含まれるとは限らない
 export type NearbyUser = Omit<AnotherUser, 'lat' | 'lng'> & {

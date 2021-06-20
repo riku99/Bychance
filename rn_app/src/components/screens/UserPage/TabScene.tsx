@@ -7,7 +7,7 @@ import {
   FlatList,
 } from 'react-native';
 
-import {refreshUserThunk} from '../../../apis/users/refreshUser';
+import {refreshUserThunk} from '../../../thunks/users/refreshUser';
 import {Post} from '~/stores/posts';
 import {useCustomDispatch} from '~/hooks/stores';
 

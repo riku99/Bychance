@@ -8,21 +8,24 @@ import {RootState} from './index';
 import {
   CreateFlashStampPayload,
   createFlashStampThunk,
-} from '~/apis/flashStamps/createFlashStamp';
+} from '~/thunks/flashStamps/createFlashStamp';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '~/apis/session/sessionLogin';
-import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
+} from '~/thunks/session/sessionLogin';
+import {
+  lineLoginThunk,
+  LineLoginThunkPayload,
+} from '../thunks/session/lineLogin';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
-} from '~/apis/nearbyUsers/getNearbyUsers';
+} from '~/thunks/nearbyUsers/getNearbyUsers';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '~/apis/users/refreshUser';
-import {logoutThunk} from '~/apis/session/logout';
+} from '~/thunks/users/refreshUser';
+import {logoutThunk} from '~/thunks/session/logout';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 

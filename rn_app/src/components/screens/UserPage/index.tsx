@@ -38,7 +38,7 @@ import {RootState} from '../../../stores/index';
 import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
-import {refreshUserThunk} from '../../../apis/users/refreshUser';
+import {refreshUserThunk} from '../../../thunks/users/refreshUser';
 import {RootNavigationProp} from '~/screens/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';

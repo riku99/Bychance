@@ -1,8 +1,8 @@
 import {ThunkDispatch} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
 
-import {RejectPayload} from '~/apis/types';
-import {logoutThunk} from '~/apis/session/logout';
+import {RejectPayload} from '~/thunks/types';
+import {logoutThunk} from '~/thunks/session/logout';
 import {BasicAxiosError} from '~/types';
 import {showBottomToast} from '~/stores/bottomToast';
 

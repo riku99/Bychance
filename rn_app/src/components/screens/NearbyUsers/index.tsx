@@ -21,7 +21,7 @@ import {Map} from './Map';
 import {RangeSelectButton} from './RangeSelectBottun';
 import {RootState} from '~/stores';
 import {NearbyUser, selectNearbyUsersArray} from '~/stores/nearbyUsers';
-import {getNearbyUsersThunk} from '~/apis/nearbyUsers/getNearbyUsers';
+import {getNearbyUsersThunk} from '~/thunks/nearbyUsers/getNearbyUsers';
 import {useCustomDispatch} from '~/hooks/stores';
 import {NearbyUsers} from '~/stores/nearbyUsers';
 import {getThumbnailUrl} from '~/helpers/video';

@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {logoutThunk} from '~/apis/session/logout';
+import {logoutThunk} from '~/thunks/session/logout';
 import {TalkRoomMessage, receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from './types';
 

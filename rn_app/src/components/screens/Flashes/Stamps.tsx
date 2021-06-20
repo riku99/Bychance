@@ -10,7 +10,7 @@ import {
 import {shallowEqual, useSelector} from 'react-redux';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
-import {createFlashStampThunk} from '~/apis/flashStamps/createFlashStamp';
+import {createFlashStampThunk} from '~/thunks/flashStamps/createFlashStamp';
 import {useCustomDispatch} from '~/hooks/stores';
 import {Flash} from '~/stores/flashes';
 import {RootState} from '~/stores';

@@ -11,7 +11,7 @@ import {RootNavigationProp} from '../../../screens/Root';
 import {useCustomDispatch} from '~/hooks/stores';
 import {useSelectAllRooms} from '~/hooks/talkRooms/selector';
 import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
-import {createDeleteRoomThunk} from '~/apis/deleteTalkRooms/createDeleteTalkRoom';
+import {createDeleteRoomThunk} from '~/thunks/deleteTalkRooms/createDeleteTalkRoom';
 import {displayShortMessage} from '~/helpers/topShortMessage';
 
 export const TalkRoomListPage = () => {

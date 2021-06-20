@@ -4,11 +4,11 @@ import {useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
 import {useCustomDispatch} from '~/hooks/stores';
-import {changeTalkRoomMessageReceiptThunk} from '~/apis/users/changeTalkRoomMessageReceipt';
+import {changeTalkRoomMessageReceiptThunk} from '~/thunks/users/changeTalkRoomMessageReceipt';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
-import {changeShowReceiveMessageThunk} from '~/apis/users/changeShowReceiveMessage';
+import {changeShowReceiveMessageThunk} from '~/thunks/users/changeShowReceiveMessage';
 
 export const MessageConfig = React.memo(() => {
   const talkRoomMessageReceipt = useSelector(

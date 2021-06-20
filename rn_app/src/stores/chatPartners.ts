@@ -12,29 +12,32 @@ import {refreshUser} from './helpers/refreshUser';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../apis/session/sessionLogin';
-import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
+} from '../thunks/session/sessionLogin';
+import {
+  lineLoginThunk,
+  LineLoginThunkPayload,
+} from '../thunks/session/lineLogin';
 import {
   sampleLogin,
   SampleLoginThunkPayload,
-} from '../apis/session/sampleLogin';
+} from '../thunks/session/sampleLogin';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
-} from '../apis/nearbyUsers/getNearbyUsers';
+} from '../thunks/nearbyUsers/getNearbyUsers';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '../apis/users/refreshUser';
-import {logoutThunk} from '~/apis/session/logout';
+} from '../thunks/users/refreshUser';
+import {logoutThunk} from '~/thunks/session/logout';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
-} from '../apis/rooms/createTalkRoom';
+} from '../thunks/rooms/createTalkRoom';
 import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
-} from '../apis/flashes/createAlreadyViewedFlashes';
+} from '../thunks/flashes/createAlreadyViewedFlashes';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 

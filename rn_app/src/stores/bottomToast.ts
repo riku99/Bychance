@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {logoutThunk} from '~/apis/session/logout';
+import {logoutThunk} from '~/thunks/session/logout';
 
 type BottomToast = {
   data?: {

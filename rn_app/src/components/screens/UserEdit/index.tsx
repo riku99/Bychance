@@ -22,7 +22,7 @@ import {RNToasty} from 'react-native-toasty';
 
 import {RootNavigationProp} from '~/screens/Root';
 import {RootState} from '../../../stores/index';
-import {editProfileThunk} from '../../../apis/users/editProfile';
+import {editProfileThunk} from '../../../thunks/users/editProfile';
 import {resetEditData} from '../../../stores/user';
 import {UserEditNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/topShortMessage';

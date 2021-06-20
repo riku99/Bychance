@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 
 import {useCustomDispatch} from './stores';
-import {refreshUserThunk} from '~/apis/users/refreshUser';
+import {refreshUserThunk} from '~/thunks/users/refreshUser';
 
 export const useActiveRefresh = ({
   login,

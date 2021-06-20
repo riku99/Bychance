@@ -7,24 +7,27 @@ import {
 import {
   createPostThunk,
   CreatePostThunkPayload,
-} from '../apis/posts/createPost';
+} from '../thunks/posts/createPost';
 import {
   deletePostThunk,
   DeletePostThunkPaylaod,
-} from '../apis/posts/deletePost';
-import {logoutThunk} from '~/apis/session/logout';
-import {lineLoginThunk, LineLoginThunkPayload} from '../apis/session/lineLogin';
+} from '../thunks/posts/deletePost';
+import {logoutThunk} from '~/thunks/session/logout';
+import {
+  lineLoginThunk,
+  LineLoginThunkPayload,
+} from '../thunks/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../apis/session/sessionLogin';
-import {sampleLogin} from '../apis/session/sampleLogin';
+} from '../thunks/session/sessionLogin';
+import {sampleLogin} from '../thunks/session/sampleLogin';
 import {RootState} from '.';
 import {refreshUser} from '~/stores/helpers/refreshUser';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '~/apis/users/refreshUser';
+} from '~/thunks/users/refreshUser';
 
 export type Post = {
   id: number;

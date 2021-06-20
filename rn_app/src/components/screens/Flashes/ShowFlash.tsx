@@ -25,7 +25,7 @@ import {FlashesData} from '~/stores/types';
 import {RootState, AppDispatch} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
-import {createAlreadyViewdFlashThunk} from '../../../apis/flashes/createAlreadyViewedFlashes';
+import {createAlreadyViewdFlashThunk} from '../../../thunks/flashes/createAlreadyViewedFlashes';
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '../../../hooks/selector/user';

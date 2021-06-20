@@ -4,7 +4,7 @@ import {Modalize} from 'react-native-modalize';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
-import {deleteLocationInfoThunk} from '~/apis/users/deleteLocation';
+import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {useCustomDispatch} from '~/hooks/stores';
 import {displayShortMessage} from '~/helpers/topShortMessage';
 import BackgroundGeolocation from 'react-native-background-geolocation';

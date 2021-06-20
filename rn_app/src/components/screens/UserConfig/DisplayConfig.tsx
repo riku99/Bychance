@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '~/stores';
-import {changeUserDisplayThunk} from '~/apis/users/changeUserDisplay';
+import {changeUserDisplayThunk} from '~/thunks/users/changeUserDisplay';
 import {useCustomDispatch} from '~/hooks/stores';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';

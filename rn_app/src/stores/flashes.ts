@@ -8,25 +8,25 @@ import {RootState} from './index';
 import {
   deleteFlashThunk,
   DeleteFlashThunkPayload,
-} from '../apis/flashes/deleteFlash';
+} from '../thunks/flashes/deleteFlash';
 import {
   createFlashThunk,
   CreateFlashThunkPaylaod,
-} from '../apis/flashes/createFlash';
+} from '../thunks/flashes/createFlash';
 import {
   lineLoginThunk,
   LineLoginThunkPayload,
   //sampleLogin,
-} from '../apis/session/lineLogin';
+} from '../thunks/session/lineLogin';
 import {
   sessionLoginThunk,
   SessionLoginThunkPayload,
-} from '../apis/session/sessionLogin';
-import {logoutThunk} from '~/apis/session/logout';
+} from '../thunks/session/sessionLogin';
+import {logoutThunk} from '~/thunks/session/logout';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
-} from '~/apis/users/refreshUser';
+} from '~/thunks/users/refreshUser';
 import {refreshUser} from '~/stores/helpers/refreshUser';
 
 export type Flash = {

@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
 
-import {createDeviceToken} from '~/apis/deviceToken/createDeviceToken';
+import {createDeviceToken} from '~/thunks/deviceToken/createDeviceToken';
 import {useCustomDispatch} from '~/hooks/stores';
 
 // push通知の許可リクエスト
