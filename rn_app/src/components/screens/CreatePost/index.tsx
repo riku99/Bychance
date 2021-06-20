@@ -5,23 +5,22 @@ import {
   Image,
   ActivityIndicator,
   Dimensions,
+  TextInput,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
-import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 import Video from 'react-native-video';
 import {RNToasty} from 'react-native-toasty';
 
-import {AppDispatch} from '../../../stores';
 import {creatingPost} from '../../../stores/otherSettings';
 import {createPostThunk} from '../../../thunks/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../screens/types';
 import {displayShortMessage} from '../../../helpers/topShortMessage';
 import {getExtention} from '~/utils';
 import {Post} from '~/stores/posts';
+import {useCustomDispatch} from '~/hooks/stores';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -36,7 +35,7 @@ export const CreatePost = ({navigation}: Props) => {
   } | null>();
   const [text, setText] = useState('');
 
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useCustomDispatch();
 
   const createPost = useCallback(async () => {
     if (data?.uri) {
