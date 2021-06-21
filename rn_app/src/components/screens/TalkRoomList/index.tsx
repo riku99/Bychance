@@ -41,12 +41,10 @@ export const TalkRoomListPage = () => {
     ({talkRoomId}: {talkRoomId: number}) => {
       Alert.alert('トークルームを削除', '本当に削除してもよろしいですか?', [
         {
-          text: 'はい',
+          text: '削除',
+          style: 'destructive',
           onPress: async () => {
-            const result = await dispatch(createDeleteRoomThunk({talkRoomId}));
-            if (createDeleteRoomThunk.fulfilled.match(result)) {
-              displayShortMessage('削除しました', 'success');
-            }
+            await dispatch(createDeleteRoomThunk({talkRoomId}));
           },
         },
         {

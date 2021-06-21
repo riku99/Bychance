@@ -5,13 +5,13 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 
 import {TalkRoom} from './TaklRoom';
 import {TalkRoomStackNavigationProp} from '../../../screens/types';
-import {AppDispatch, RootState} from '../../../stores/index';
+import {RootState} from '../../../stores/index';
 import {selectMessages} from '../../../stores/talkRoomMessages';
 import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
 import {selectChatPartner} from '../../../stores/chatPartners';
@@ -20,6 +20,7 @@ import {createMessageThunk} from '../../../thunks/talkRoomMessages/createTalkRoo
 import {createReadMessagesThunk} from '../../../thunks/talkRoomMessages/createReadTalkRoomMessage';
 import {TalkRoomStackParamList} from '../../../screens/TalkRoom';
 import {UserAvatar} from '../../utils/Avatar';
+import {useCustomDispatch} from '~/hooks/stores';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'ChatRoom'>;
 
@@ -95,7 +96,7 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
     });
   });
 
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useCustomDispatch();
 
   // チャットルームを開いている時にメッセージを受け取った時のためのセレクタ
   const receivedMessage = useSelector((state: RootState) => {

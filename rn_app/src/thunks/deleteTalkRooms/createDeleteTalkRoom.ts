@@ -7,6 +7,7 @@ import {
   headers,
   origin,
   handleCredentialsError,
+  showBottomToast,
 } from '../re-modules';
 
 export type CreateDeleteRoomThunkPayload = {
@@ -27,13 +28,21 @@ export const createDeleteRoomThunk = createAsyncThunk<
         headers(credentials.token),
       );
 
+      dispatch(
+        showBottomToast({
+          data: {
+            type: 'success',
+            message: '削除しました',
+          },
+        }),
+      );
+
       return {talkRoomId};
     } catch (e) {
       const result = handleBasicApiErrorWithDispatch({e, dispatch});
       return rejectWithValue(result);
     }
   } else {
-    // credentials存在しないエラー
     handleCredentialsError(dispatch);
     return rejectWithValue({errorType: 'loginError'});
   }

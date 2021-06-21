@@ -12,3 +12,4 @@ export {
 } from '~/helpers/errors';
 export {RejectPayload} from './types';
 export {SuccessfullLoginData} from './types';
+export {showBottomToast} from '~/stores/bottomToast';
