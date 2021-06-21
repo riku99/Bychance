@@ -21,7 +21,7 @@ type TabList = {
 
 const RootTab = createBottomTabNavigator<TabList>();
 
-export const Tabs = () => {
+export const Tabs = React.memo(() => {
   const unreadMessagesNumber = useSelector((state: RootState) => {
     return getAllUnreadMessagesNumber(state);
   });
@@ -78,4 +78,4 @@ export const Tabs = () => {
       />
     </RootTab.Navigator>
   );
-};
+});

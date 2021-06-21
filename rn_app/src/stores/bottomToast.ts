@@ -5,7 +5,7 @@ import {logoutThunk} from '~/thunks/session/logout';
 type BottomToast = {
   data?: {
     message: string;
-    timestamp: string;
+    timestamp?: string;
     type: 'success' | 'normal' | 'danger';
   };
 };

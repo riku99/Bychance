@@ -9,6 +9,7 @@ import {
   handleCredentialsError,
 } from '../re-modules';
 import {Post} from '../../stores/posts';
+import {showBottomToast} from '~/stores/bottomToast';
 
 export type CreatePostThunkPayload = Post;
 
@@ -26,6 +27,15 @@ export const createPostThunk = createAsyncThunk<
           `${origin}/posts?id=${credentials.id}`,
           {text, source, ext, sourceType},
           headers(credentials.token),
+        );
+
+        dispatch(
+          showBottomToast({
+            data: {
+              type: 'success',
+              message: '投稿しました',
+            },
+          }),
         );
 
         return response.data;

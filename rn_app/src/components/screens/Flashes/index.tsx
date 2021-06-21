@@ -147,6 +147,19 @@ export const FlashesPage = ({route, navigation}: Props) => {
     }
   };
 
+  // アイテムが1つの場合、それを削除するとデータはなくなる。その場合はバックさせたい
+  useEffect(() => {
+    if (!myFlashes?.length && !dataArray[0].flashesData) {
+      navigation.goBack();
+    }
+  }, [myFlashes, dataArray, navigation]);
+
+  if (!myFlashes?.length && !dataArray[0].flashesData) {
+    return (
+      <View style={{backgroundColor: 'black', width: '100%', height: '100%'}} />
+    );
+  }
+
   return (
     <View style={[styles.container]}>
       <FlatList

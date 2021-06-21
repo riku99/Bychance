@@ -13,7 +13,7 @@ export type UserEditStackParamList = {
 
 const UserEditStack = createStackNavigator<UserEditStackParamList>();
 
-export const UserEditStackScreen = () => {
+export const UserEditStackScreen = React.memo(() => {
   return (
     <UserEditStack.Navigator>
       <UserEditStack.Screen name="UserEdit" component={UserEditPage} />
@@ -25,4 +25,4 @@ export const UserEditStackScreen = () => {
       />
     </UserEditStack.Navigator>
   );
-};
+});

@@ -1,12 +1,11 @@
 import React, {useMemo, useCallback} from 'react';
 import {TouchableOpacity, StyleSheet, Text, Alert} from 'react-native';
-import {useDispatch} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 
 import {deleteFlashThunk} from '../../../thunks/flashes/deleteFlash';
-import {AppDispatch} from '../../../stores/index';
-import {displayShortMessage} from '../../../helpers/topShortMessage';
+import {useCustomDispatch} from '~/hooks/stores';
 
 type Props = {
   flashId: number;
@@ -35,18 +34,18 @@ export const Modal = ({
   videoDuration,
   progressAnimation,
 }: Props) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useCustomDispatch();
+
+  const navigation = useNavigation();
 
   const deleteFlash = useCallback(async () => {
     Alert.alert('本当に削除してもよろしいですか?', '', [
       {
-        text: 'はい',
+        text: '削除',
+        style: 'destructive',
         onPress: async () => {
-          const result = await dispatch(deleteFlashThunk({flashId}));
-          if (deleteFlashThunk.fulfilled.match(result)) {
-            displayShortMessage('削除しました', 'success');
-            modalizeRef.current?.close();
-          }
+          await dispatch(deleteFlashThunk({flashId}));
+          modalizeRef.current?.close();
         },
       },
       {
@@ -77,15 +76,16 @@ export const Modal = ({
       ref={modalizeRef}
       modalHeight={140}
       scrollViewProps={{scrollEnabled: false}}
-      onClosed={() => {
-        setIsPaused(false);
-        progressAnimation({
-          progressNumber: currentProgressBar.current,
-          duration: videoDuration ? videoDuration.current : undefined,
-          restart: true,
-        });
-        setShowModal(false);
-      }}>
+      // onClosed={() => {
+      //   setIsPaused(false);
+      //   progressAnimation({
+      //     progressNumber: currentProgressBar.current,
+      //     duration: videoDuration ? videoDuration.current : undefined,
+      //     restart: true,
+      //   });
+      //   setShowModal(false);
+      // }}
+    >
       {modalList.map((item, i) => (
         <ListItem
           key={i}

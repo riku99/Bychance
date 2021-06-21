@@ -13,8 +13,8 @@ import {Button} from 'react-native-elements';
 import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
-import {TalkRoomStackParamList, TalkRoomStackScreen} from './ChatRoom';
-import {TakeFlashPage} from '~/components/screens/TakeFlash';
+import {TalkRoomStackParamList, TalkRoomStackScreen} from './TalkRoom';
+import {TakeFlashScreen} from '~/components/screens/TakeFlash';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {normalStyles} from '~/constants/styles';
 import {User} from '~/stores/user';
@@ -46,7 +46,7 @@ export type RootNavigationProp<
 > = StackNavigationProp<RootStackParamList, T>;
 const RootStack = createStackNavigator<RootStackParamList>();
 
-export const RootStackScreen = () => {
+export const RootStackScreen = React.memo(() => {
   return (
     <RootStack.Navigator
       mode="modal"
@@ -100,7 +100,7 @@ export const RootStackScreen = () => {
       />
       <RootStack.Screen
         name="TakeFlash"
-        component={TakeFlashPage}
+        component={TakeFlashScreen}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -149,4 +149,4 @@ export const RootStackScreen = () => {
       />
     </RootStack.Navigator>
   );
-};
+});

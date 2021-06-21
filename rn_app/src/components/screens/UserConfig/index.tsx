@@ -13,7 +13,7 @@ type Props = {
   navigation: NavigationProp<RootStackParamList, 'UserConfing'>;
 };
 
-export const UserConfig = ({route, navigation}: Props) => {
+export const UserConfig = React.memo(({route, navigation}: Props) => {
   const {goTo} = route.params;
 
   const headerTitle = useMemo(() => {
@@ -58,4 +58,4 @@ export const UserConfig = ({route, navigation}: Props) => {
   }
 
   return null;
-};
+});

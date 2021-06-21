@@ -55,12 +55,9 @@ export const CreatePost = ({navigation}: Props) => {
         return;
       }
       const source = await fs.readFile(data.uri, 'base64');
-      const result = await dispatch(
+      await dispatch(
         createPostThunk({text, source, ext, sourceType: data.sourceType}),
       );
-      if (createPostThunk.fulfilled.match(result)) {
-        displayShortMessage('投稿しました', 'success');
-      }
       dispatch(creatingPost());
     }
   }, [dispatch, navigation, data, text]);

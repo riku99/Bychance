@@ -2,7 +2,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 
 import {MyPageStackParamList, UserPageScreenGroupParamList} from './UserPage';
-import {TalkRoomStackParamList} from './ChatRoom';
+import {TalkRoomStackParamList} from './TalkRoom';
 import {UserEditStackParamList} from './UserEdit';
 import {CreatePostStackParamList} from './CreatePost';
 // import {SearchUsersStackParamList} from './NearbyUsers';

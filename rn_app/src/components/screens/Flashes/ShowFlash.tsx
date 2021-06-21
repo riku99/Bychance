@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   GestureResponderEvent,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import Video, {OnLoadData} from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
@@ -22,7 +22,7 @@ import {InfoItems} from './InfoItems';
 import {ShowModalButton} from './ShowModalButton';
 import {Modal} from './Modal';
 import {FlashesData} from '~/stores/types';
-import {RootState, AppDispatch} from '../../../stores/index';
+import {RootState} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../screens/types';
 import {FlashUserData} from '../../../screens/Flashes';
 import {createAlreadyViewdFlashThunk} from '../../../thunks/flashes/createAlreadyViewedFlashes';
@@ -32,6 +32,7 @@ import {useMyId} from '../../../hooks/selector/user';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {Stamps} from './Stamps';
+import {useCustomDispatch} from '~/hooks/stores';
 
 type Props = {
   flashesData: FlashesData;
@@ -120,7 +121,7 @@ export const ShowFlash = React.memo(
       FlashStackNavigationProp<'Flashes'>
     >();
 
-    const dispatch: AppDispatch = useDispatch();
+    const dispatch = useCustomDispatch();
 
     const createAlreadyViewdFlash = useCallback(
       async ({flashId}: {flashId: number}) => {
@@ -446,7 +447,7 @@ export const ShowFlash = React.memo(
 
     return (
       <View style={styles.container}>
-        {entityLength && (
+        {!!entityLength && (
           <>
             <WideRangeSourceContainer>
               <TouchableOpacity

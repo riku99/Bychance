@@ -8,6 +8,7 @@ import {
   origin,
   handleCredentialsError,
 } from '../re-modules';
+import {showBottomToast} from '~/stores/bottomToast';
 
 export type DeleteFlashThunkPayload = number;
 
@@ -25,6 +26,15 @@ export const deleteFlashThunk = createAsyncThunk<
       await axios.delete(
         `${origin}/flashes/${flashId}?id=${credentials.id}`,
         headers(credentials.token),
+      );
+
+      dispatch(
+        showBottomToast({
+          data: {
+            type: 'success',
+            message: '削除しました',
+          },
+        }),
       );
 
       return flashId;

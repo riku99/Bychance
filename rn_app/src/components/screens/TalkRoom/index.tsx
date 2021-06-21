@@ -18,7 +18,7 @@ import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {createMessageThunk} from '../../../thunks/talkRoomMessages/createTalkRoomMessage';
 import {createReadMessagesThunk} from '../../../thunks/talkRoomMessages/createReadTalkRoomMessage';
-import {TalkRoomStackParamList} from '../../../screens/ChatRoom';
+import {TalkRoomStackParamList} from '../../../screens/TalkRoom';
 import {UserAvatar} from '../../utils/Avatar';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'ChatRoom'>;

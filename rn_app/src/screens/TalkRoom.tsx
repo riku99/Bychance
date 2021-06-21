@@ -10,7 +10,7 @@ export type TalkRoomStackParamList = {
 
 const Stack = createStackNavigator<TalkRoomStackParamList>();
 
-export const TalkRoomStackScreen = () => {
+export const TalkRoomStackScreen = React.memo(() => {
   return (
     <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
       <Stack.Screen name="ChatRoom" component={TalkRoomScreen} />
@@ -27,4 +27,4 @@ export const TalkRoomStackScreen = () => {
       ))}
     </Stack.Navigator>
   );
-};
+});

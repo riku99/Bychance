@@ -20,7 +20,7 @@ const takeVideoOptions = {
 const videoEditDescriptionText =
   '現在動画に関しては撮影したものを保存、投稿はできますが編集、加工ができません。🙇‍♂️🙇‍♀\nなのでインスタとかで加工したものを使ってください!🥺🌞';
 
-export const TakeFlashPage = () => {
+export const TakeFlashScreen = React.memo(() => {
   const [targetPhoto, setTargetPhoto] = useState<{
     uri: string;
   } | null>(null);
@@ -147,4 +147,4 @@ export const TakeFlashPage = () => {
   } else {
     return <></>;
   }
-};
+});

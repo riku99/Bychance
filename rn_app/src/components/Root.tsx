@@ -16,7 +16,7 @@ import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';
 import {useSetupBottomToast} from '~/hooks/bottomToast';
 
-const Root = () => {
+const Root = React.memo(() => {
   const [load, setLoad] = useState(true);
   const login = useLoginSelect();
   const id = useUserSelect()?.id;
@@ -54,7 +54,7 @@ const Root = () => {
   } else {
     return <Auth />;
   }
-};
+});
 
 const styles = StyleSheet.create({
   container: {

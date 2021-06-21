@@ -34,7 +34,7 @@ export type FlashUserData = FlashesStackParamList['Flashes']['dataArray'][number
 
 const Stack = createStackNavigator<FlashesStackParamList>();
 
-export const FlashesStackScreen = () => {
+export const FlashesStackScreen = React.memo(() => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -61,4 +61,4 @@ export const FlashesStackScreen = () => {
       ))}
     </Stack.Navigator>
   );
-};
+});
