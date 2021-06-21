@@ -9,8 +9,9 @@ import {
   handleCredentialsError,
 } from '../re-modules';
 import {Flash} from '../../stores/flashes';
+import {FlashStamp} from '~/stores/flashStamps';
 
-export type CreateFlashThunkPaylaod = Flash;
+export type CreateFlashThunkPaylaod = {flash: Flash; stamps: FlashStamp};
 
 export const createFlashThunk = createAsyncThunk<
   CreateFlashThunkPaylaod,
@@ -25,7 +26,7 @@ export const createFlashThunk = createAsyncThunk<
 
     if (credentials) {
       try {
-        const response = await axios.post<Flash>(
+        const response = await axios.post<{flash: Flash; stamps: FlashStamp}>(
           `${origin}/flashes?id=${credentials.id}`,
           {source, sourceType, ext},
           headers(credentials.token),

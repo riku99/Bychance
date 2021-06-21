@@ -64,7 +64,7 @@ const flashesSlice = createSlice({
     [createFlashThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateFlashThunkPaylaod>,
-    ) => flashesAdapter.addOne(state, action.payload),
+    ) => flashesAdapter.addOne(state, action.payload.flash),
     [deleteFlashThunk.fulfilled.type]: (
       state,
       action: PayloadAction<DeleteFlashThunkPayload>,
