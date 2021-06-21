@@ -1,14 +1,15 @@
 import React, {useMemo, useRef} from 'react';
 import {View, StyleSheet, Text, Alert, Dimensions} from 'react-native';
 import {Modalize} from 'react-native-modalize';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
 import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {useCustomDispatch} from '~/hooks/stores';
-import {displayShortMessage} from '~/helpers/topShortMessage';
-import BackgroundGeolocation from 'react-native-background-geolocation';
 import {notAuthLocationProviderAlert} from '~/helpers/alert';
+import {showBottomToast} from '~/thunks/re-modules';
+import {manualLocationUpdate} from '~/stores/otherSettings';
 
 export const LocationConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
@@ -51,10 +52,18 @@ export const LocationConfig = React.memo(() => {
                     return;
                   }
                   try {
-                    await BackgroundGeolocation.getCurrentPosition({});
-                    displayShortMessage('更新しました', 'success');
+                    dispatch(manualLocationUpdate(true));
+                    await BackgroundGeolocation.getCurrentPosition({}); // 成功したらBackgroundGeolocation.onLocationが実行される
                   } catch {
-                    displayShortMessage('更新に失敗しました', 'danger');
+                    dispatch(manualLocationUpdate(false)); // 「getCurrentPosition」が失敗した場合はこっちでfalseにする。API通信でのエラーとは別
+                    dispatch(
+                      showBottomToast({
+                        data: {
+                          type: 'danger',
+                          message: '更新に失敗しました',
+                        },
+                      }),
+                    );
                     return;
                   }
                 },
