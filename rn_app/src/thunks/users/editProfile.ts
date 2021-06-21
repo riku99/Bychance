@@ -1,13 +1,13 @@
 import {
   axios,
   createAsyncThunk,
-  logoutAction,
   origin,
   headers,
   checkKeychain,
-  requestLogin,
   handleBasicApiErrorWithDispatch,
   RejectPayload,
+  handleCredentialsError,
+  showBottomToast,
 } from '../re-modules';
 import {User} from '../../stores/user';
 
@@ -106,6 +106,15 @@ export const editProfileThunk = createAsyncThunk<
             tiktok,
           },
           headers(credentials.token),
+        );
+
+        dispatch(
+          showBottomToast({
+            data: {
+              type: 'success',
+              message: '更新しました',
+            },
+          }),
         );
 
         return response.data;

@@ -283,7 +283,7 @@ export const UserEditPage = () => {
         fs.readFile(selectedBackGroundItem.uri, 'base64'),
     ]);
 
-    const result = await dispatch(
+    await dispatch(
       editProfileThunk({
         name,
         introduce,
@@ -302,9 +302,6 @@ export const UserEditPage = () => {
       }),
     );
 
-    if (editProfileThunk.fulfilled.match(result)) {
-      displayShortMessage('更新しました', 'success');
-    }
     navigation.goBack();
   }, [
     navigation,

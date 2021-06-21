@@ -1,16 +1,20 @@
 import React from 'react';
-import {StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Emoji from 'react-native-emoji';
 
-import {AppDispatch} from '../../../stores/index';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {AnotherUser} from '../../../stores/types';
 import {createRoomThunk} from '../../../thunks/rooms/createTalkRoom';
 import {RootNavigationProp} from '~/screens/Root';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useCustomDispatch} from '~/hooks/stores';
 
 const gradientConfig: {
   colors: string[];
@@ -29,7 +33,7 @@ type Props = {
 };
 
 export const SendMessageButton = React.memo(({user}: Props) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useCustomDispatch();
 
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 

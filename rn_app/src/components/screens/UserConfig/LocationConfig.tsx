@@ -23,10 +23,7 @@ export const LocationConfig = React.memo(() => {
             {
               text: '削除',
               onPress: async () => {
-                const result = await dispatch(deleteLocationInfoThunk());
-                if (deleteLocationInfoThunk.fulfilled.match(result)) {
-                  displayShortMessage('削除しました', 'success');
-                }
+                await dispatch(deleteLocationInfoThunk());
               },
               style: 'destructive',
             },

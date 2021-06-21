@@ -7,6 +7,7 @@ import {
   handleCredentialsError,
   handleBasicApiErrorWithDispatch,
   RejectPayload,
+  showBottomToast,
 } from '../re-modules';
 
 export type DeleteLocationThunkPayload = undefined;
@@ -23,6 +24,15 @@ export const deleteLocationInfoThunk = createAsyncThunk<
       await axios.delete(
         `${origin}/users/location?id=${credentials.id}`,
         headers(credentials.token),
+      );
+
+      dispatch(
+        showBottomToast({
+          data: {
+            type: 'success',
+            message: '削除しました',
+          },
+        }),
       );
 
       return;

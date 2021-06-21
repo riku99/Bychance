@@ -7,6 +7,7 @@ import {
   headers,
   origin,
   handleCredentialsError,
+  showBottomToast,
 } from '../re-modules';
 import {Flash} from '../../stores/flashes';
 import {FlashStamp} from '~/stores/flashStamps';
@@ -32,6 +33,15 @@ export const createFlashThunk = createAsyncThunk<
           headers(credentials.token),
         );
 
+        dispatch(
+          showBottomToast({
+            data: {
+              type: 'success',
+              message: '追加しました',
+            },
+          }),
+        );
+
         return response.data;
       } catch (e) {
         const result = handleBasicApiErrorWithDispatch({e, dispatch});
@@ -39,7 +49,7 @@ export const createFlashThunk = createAsyncThunk<
       }
     } else {
       handleCredentialsError(dispatch);
+      return rejectWithValue({errorType: 'loginError'});
     }
-    return rejectWithValue({errorType: 'loginError'});
   },
 );
