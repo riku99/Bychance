@@ -1,29 +1,27 @@
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {Post} from './Post';
-import {RootState, AppDispatch} from '../../../stores/index';
+import {RootState} from '../../../stores/index';
 import {deletePostThunk} from '../../../thunks/posts/deletePost';
 import {
   MyPageStackRouteProp,
   UserPageStackRouteProp,
 } from '../../../screens/types';
-import {displayShortMessage} from '../../../helpers/topShortMessage';
+import {useCustomDispatch} from '~/hooks/stores';
 
 type Props = {
   route: MyPageStackRouteProp<'Post'> | UserPageStackRouteProp<'Post'>;
 };
 
-export const Container = ({route}: Props) => {
+export const Container = React.memo(({route}: Props) => {
   const user = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useCustomDispatch();
+
   const deletePost = async (postId: number) => {
-    const result = await dispatch(deletePostThunk({postId}));
-    if (deletePostThunk.fulfilled.match(result)) {
-      displayShortMessage('削除しました', 'success');
-    }
+    await dispatch(deletePostThunk({postId}));
   };
   return <Post post={route.params} user={user} deletePost={deletePost} />;
-};
+});

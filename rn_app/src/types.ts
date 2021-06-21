@@ -10,8 +10,8 @@ export type BasicAxiosError = AxiosError<
 // API通信でエラー返ってきた際にエラーハンドリングして最終的にそのAPI用関数がリターンするデータ
 export type ReturnApiError =
   | {errorType: 'loginError'}
-  | {errorType: 'invalidError'; message: string; toastType: 'danger' | 'normal'}
-  | {errorType: 'someError'; message: string; toastType: 'danger' | 'normal'};
+  | {errorType: 'invalidError'}
+  | {errorType: 'someError'};
 
 export type PrivateZone = {
   id: number;

@@ -6,9 +6,10 @@ import {
   handleBasicApiErrorWithDispatch,
   RejectPayload,
   checkKeychain,
-  requestLogin,
-  logoutAction,
+  handleCredentialsError,
 } from '../re-modules';
+
+import {showBottomToast} from '~/stores/bottomToast';
 
 export type DeletePostThunkPaylaod = number;
 
@@ -26,6 +27,15 @@ export const deletePostThunk = createAsyncThunk<
         data: {postId},
         ...headers(credentials.token),
       });
+
+      dispatch(
+        showBottomToast({
+          data: {
+            type: 'success',
+            message: '削除しました',
+          },
+        }),
+      );
 
       return postId;
     } catch (e) {

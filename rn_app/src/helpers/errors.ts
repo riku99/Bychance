@@ -62,8 +62,6 @@ export const handleBasicApiErrorWithDispatch = ({
         );
         return {
           errorType: 'invalidError',
-          message: axiosError.response.data.message,
-          toastType: 'danger',
         };
       default:
         dispatch(
@@ -77,15 +75,11 @@ export const handleBasicApiErrorWithDispatch = ({
         );
         return {
           errorType: 'someError',
-          toastType: 'normal',
-          message: '何らかのエラーが発生しました',
         };
     }
   } else {
     return {
       errorType: 'someError',
-      toastType: 'normal',
-      message: '何らかのエラーが発生しました',
     };
   }
 };
