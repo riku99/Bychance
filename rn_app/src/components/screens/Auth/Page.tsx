@@ -1,13 +1,12 @@
 import React from 'react';
-import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../stores/index';
 import {lineLoginThunk} from '../../../thunks/session/lineLogin';
 import {Auth} from './Auth';
 import {sampleLogin} from '../../../thunks/session/sampleLogin';
+import {useCustomDispatch} from '~/hooks/stores';
 
 export const Container = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useCustomDispatch();
 
   const login = (): void => {
     dispatch(lineLoginThunk());
