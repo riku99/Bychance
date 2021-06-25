@@ -3,19 +3,18 @@ import {
   createAsyncThunk,
   origin,
   headers,
-  handleBasicApiErrorWithDispatch,
-  RejectPayload,
   SuccessfullLoginData,
   Credentials,
 } from '../re-modules';
+import {requestLogin} from '~/helpers/errors';
 
 export type SessionLoginThunkPayload = SuccessfullLoginData;
 
 export const sessionLoginThunk = createAsyncThunk<
   SessionLoginThunkPayload,
   Credentials,
-  {rejectValue: RejectPayload}
->('sessions/sessionLogin', async ({id, token}, {dispatch, rejectWithValue}) => {
+  {rejectValue: any}
+>('sessions/sessionLogin', async ({id, token}, {rejectWithValue}) => {
   try {
     const response = await axios.get<SuccessfullLoginData>(
       `${origin}/sessions/sessionlogin?id=${id}`,
@@ -24,7 +23,7 @@ export const sessionLoginThunk = createAsyncThunk<
 
     return response.data;
   } catch (e) {
-    const result = handleBasicApiErrorWithDispatch({e, dispatch});
-    return rejectWithValue(result);
+    requestLogin();
+    return rejectWithValue(null);
   }
 });

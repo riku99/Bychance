@@ -21,7 +21,7 @@ export const alertSomeError = () => {
   );
 };
 
-export const requestLogin = (callback: () => void) => {
+export const requestLogin = (callback?: () => void) => {
   Alert.alert(
     'ログインが無効です',
     'ログインできません。ログインしなおしてください',
@@ -29,7 +29,9 @@ export const requestLogin = (callback: () => void) => {
       {
         text: 'OK',
         onPress: async () => {
-          callback();
+          if (callback) {
+            callback();
+          }
           return;
         },
       },
