@@ -17,6 +17,7 @@ export const useTalkRoomMessagesPushNotification = () => {
     RootNavigationProp<'Flashes' | 'TakeFlash' | 'Tab' | 'UserEditStack'>
   >();
 
+  // FIX: ログアウト時にはクリーンアップする
   useEffect(() => {
     //backgroundで通知を受け取ってその通知をタップした時の処理;
     messaging().onNotificationOpenedApp(async (remoteMessage) => {

@@ -13,7 +13,7 @@ import * as Keychain from 'react-native-keychain';
 export const logoutThunk = createAsyncThunk<
   undefined,
   undefined,
-  {rejectValue: any}
+  {rejectValue: RejectPayload}
 >('sessions/logout', async (_, {dispatch, rejectWithValue}) => {
   const credentials = await checkKeychain();
   if (credentials) {
@@ -34,3 +34,7 @@ export const logoutThunk = createAsyncThunk<
     return rejectWithValue({errorType: 'loginError'});
   }
 });
+
+export const loguotAction = {
+  type: logoutThunk.fulfilled.type,
+};

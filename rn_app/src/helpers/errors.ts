@@ -1,10 +1,12 @@
 import {ThunkDispatch} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
+import * as Keychain from 'react-native-keychain';
 
 import {RejectPayload} from '~/thunks/types';
 import {logoutThunk} from '~/thunks/session/logout';
 import {BasicAxiosError} from '~/types';
 import {showBottomToast} from '~/stores/bottomToast';
+import {loguotAction} from '~/thunks/session/logout';
 
 export const alertSomeError = () => {
   Alert.alert(
@@ -50,7 +52,8 @@ export const handleBasicApiErrorWithDispatch = ({
     const axiosError = e as BasicAxiosError;
     switch (axiosError.response?.data.errorType) {
       case 'loginError':
-        requestLogin(() => dispatch(logoutThunk()));
+        Keychain.resetGenericPassword();
+        requestLogin(() => dispatch(loguotAction));
         return {errorType: 'loginError'};
       case 'invalidError':
         dispatch(
@@ -89,5 +92,5 @@ export const handleBasicApiErrorWithDispatch = ({
 export const handleCredentialsError = (
   dispatch: ThunkDispatch<unknown, unknown, any>,
 ) => {
-  requestLogin(() => dispatch(logoutThunk()));
+  requestLogin(() => dispatch(logoutThunk.fulfilled.type));
 };
