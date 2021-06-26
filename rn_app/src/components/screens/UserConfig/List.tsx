@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 export type List = {
   title: string;
@@ -34,14 +35,14 @@ export const ConfigList = React.memo(({list}: Props) => {
           <ListItem.Content>
             <View style={{flexDirection: 'row'}}>
               <ListItem.Title>{l.title}</ListItem.Title>
-              {/* {l.description && (
+              {l.description && (
                 <MIcon
                   name="info"
                   size={17}
-                  color="blue"
+                  color="#000445"
                   style={{marginLeft: 5}}
                 />
-              )} */}
+              )}
             </View>
           </ListItem.Content>
           {l.switch && l.switch}

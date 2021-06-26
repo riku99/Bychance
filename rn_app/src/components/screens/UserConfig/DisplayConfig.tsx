@@ -75,11 +75,9 @@ export const DisplayConfig = React.memo(() => {
         closeModal={() => setShowDisplayDescriptionModal(false)}>
         <View style={commonStyles.descriptionModal}>
           <Text
-            style={{fontSize: 15, marginHorizontal: 10, marginVertical: 10}}>
+            style={{fontSize: 17, marginHorizontal: 10, marginVertical: 10}}>
             ONの場合、一定の範囲内にいる他のユーザーに対して自分が表示されます。
             {'\n'}OFFの場合は他のユーザーに表示されることはありません。
-            {'\n'}※
-            位置情報が削除される訳ではありません。削除したい場合はメニューの「位置情報」から行ってください。
           </Text>
         </View>
       </CustomPopupModal>

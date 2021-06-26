@@ -75,6 +75,7 @@ export const MessageConfig = React.memo(() => {
           />
         ),
         onItemPress: () => setShowMessageReceiptModal(true),
+        description: true,
       },
       {
         title: 'メッセージの受け取りを知らせる',

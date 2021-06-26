@@ -77,7 +77,6 @@ export const LocationConfig = React.memo(() => {
       },
       {
         title: '位置情報について',
-        description: true,
         onItemPress: () => {
           if (aboutLocationInfoModalRef) {
             aboutLocationInfoModalRef.current?.open();
