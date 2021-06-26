@@ -11,7 +11,8 @@ import {useSessionLoginProcess} from '~/hooks/sessions/login';
 import {
   usePushNotificationReqest,
   useRegisterDeviceToken,
-} from '~/hooks/pushNotification/setup';
+  useTalkRoomMessagesPushNotification,
+} from '~/hooks/pushNotification';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';
 import {useSetupBottomToast} from '~/hooks/bottomToast';

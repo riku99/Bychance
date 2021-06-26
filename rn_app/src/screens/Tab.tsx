@@ -10,7 +10,7 @@ import {MyPageStackScreen} from './UserPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles';
-import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification/talkRoomMessages';
+import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
 
 type TabList = {
   Profile: undefined;

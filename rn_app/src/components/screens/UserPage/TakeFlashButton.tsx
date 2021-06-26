@@ -21,7 +21,7 @@ export const TakeFlashButton = React.memo(() => {
         start={mainButtonGradientConfig.start}
         end={mainButtonGradientConfig.end}
         style={styles.button}>
-        <MIcon name="flash-on" size={27} style={styles.buttonIcon} />
+        <MIcon name="flare" size={27} style={styles.buttonIcon} />
       </LinearGradient>
     </TouchableOpacity>
   );
