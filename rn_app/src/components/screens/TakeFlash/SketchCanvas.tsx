@@ -3,8 +3,6 @@ import {View, StyleSheet, Dimensions} from 'react-native';
 import {Button} from 'react-native-elements';
 import RNImageEditor from '@wwimmo/react-native-sketch-canvas';
 import Slider from '@react-native-community/slider';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {} from 'react-native-view-shot';
 
 type Props = {
   sketchMode: boolean;
@@ -13,12 +11,9 @@ type Props = {
 
 export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
   const canvasRef = useRef<RNImageEditor>(null);
-  const {top} = useSafeAreaInsets();
 
   return (
-    <View
-      style={styles.container}
-      pointerEvents={!sketchMode ? 'none' : undefined}>
+    <View style={styles.container}>
       <RNImageEditor
         ref={canvasRef}
         touchEnabled={sketchMode}
@@ -60,9 +55,10 @@ export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
       />
       {sketchMode && (
         <>
-          <View style={[styles.topButtonContainer, {top}]}>
+          <View style={[styles.topButtonContainer]}>
             <Button
               title="1つ戻す"
+              activeOpacity={1}
               buttonStyle={styles.topButton}
               titleStyle={{fontSize: 20, fontWeight: 'bold'}}
               onPress={() => {
@@ -73,6 +69,7 @@ export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
             />
             <Button
               title="完了"
+              activeOpacity={1}
               buttonStyle={styles.topButton}
               titleStyle={{fontSize: 20, fontWeight: 'bold'}}
               onPress={() => setScetchMode(false)}
@@ -164,6 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '95%',
     justifyContent: 'space-between',
+    top: 0,
   },
   topButton: {backgroundColor: 'transparent'},
 });
