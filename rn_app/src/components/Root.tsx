@@ -4,14 +4,13 @@ import FlashMessage from 'react-native-flash-message';
 
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
-import {useTalkRoomMessagesIo} from '~/hooks/socketio/talkRoomMessages';
+import {useTalkRoomMessagesIo} from '~/hooks/socketio';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useLoginSelect} from '~/hooks/sessions/selector';
 import {useSessionLoginProcess} from '~/hooks/sessions/login';
 import {
   usePushNotificationReqest,
   useRegisterDeviceToken,
-  useTalkRoomMessagesPushNotification,
 } from '~/hooks/pushNotification';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';

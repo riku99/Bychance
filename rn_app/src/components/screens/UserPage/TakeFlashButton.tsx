@@ -20,7 +20,7 @@ export const TakeFlashButton = React.memo(() => {
         colors={mainButtonGradientConfig.colors}
         start={mainButtonGradientConfig.start}
         end={mainButtonGradientConfig.end}
-        style={styles.button}>
+        style={styles._button}>
         <MIcon name="flare" size={27} style={styles.buttonIcon} />
       </LinearGradient>
     </TouchableOpacity>
@@ -31,6 +31,21 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   button: {
+    width: width / 7,
+    height: width / 7,
+    borderRadius: width / 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1.8,
+      height: 3,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 0,
+  },
+  _button: {
     width: width / 7,
     height: width / 7,
     borderRadius: width / 7,

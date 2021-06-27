@@ -8,9 +8,10 @@ import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useCustomDispatch} from '~/hooks/stores';
 
-const _origin = 'http://192.168.128.159:4001';
-//const _origin = 'http://localhost:4001';
+//const _origin = 'http://192.168.128.159:4001';
+const _origin = 'http://localhost:4001';
 //const _origin = 'http://192.168.3.6:4001';
+//const _origin = 'https://bychance-stg.herokuapp.com';
 
 // メッセージの反映にはとりあえずpush通知ではなくてsocketで行う(push通知自体はある)
 // なぜなら、setBackgroundMessageHandlerの処理が通知がきてからラグがあるのとこのメソッドがかなり不安定なのとpush通知OFFの時の処理がめんどいから
@@ -29,7 +30,7 @@ export const useTalkRoomMessagesIo = ({id}: {id?: string}) => {
     if (socket) {
       if (id) {
         socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
-          // console.log('recieve'); backgroundでも実行される
+          //console.log('recieve'); //backgroundでも実行される
           dispatch(receiveTalkRoomMessage(data));
           if (AppState.currentState === 'active' && data.show) {
             showMessage({
