@@ -178,6 +178,39 @@ export const EditSource = React.memo(({source}: Props) => {
 
   useFlashStatusBarSetting();
 
+  // ソースのアニメーション関連
+  const translateX = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  const sourceOffsetX = useRef(0);
+  const sourceOffsetY = useRef(0);
+
+  const sourcePanGestureDiffX = useRef(0);
+  const sourcepanGestureDiffY = useRef(0);
+
+  const onPanGesture = (e: PanGestureHandlerGestureEvent) => {
+    setTranslateAndDiff({
+      e,
+      translateX,
+      translateY,
+      offsetX: sourceOffsetX.current,
+      offsetY: sourceOffsetY.current,
+      diffX: sourcePanGestureDiffX,
+      diffY: sourcepanGestureDiffY,
+    });
+  };
+
+  const onPanGestureStateChange = (e: PanGestureHandlerGestureEvent) => {
+    setOffsetAndDiff({
+      e,
+      offsetX: sourceOffsetX,
+      offsetY: sourceOffsetY,
+      diffX: sourcePanGestureDiffX,
+      diffY: sourcepanGestureDiffY,
+    });
+  };
+
+  // svg関連
   const [drawPaths, setDrawPaths] = useState<PathType[]>([]);
 
   return (
@@ -187,11 +220,19 @@ export const EditSource = React.memo(({source}: Props) => {
           <LinearGradient
             style={{height: '100%', width: '100%'}}
             colors={[topBackGroundColor, bottomBackGroundColor]}>
-            <AnimatedSource source={source} />
-            <View
-              style={{position: 'absolute', flex: 1}}
-              pointerEvents="box-none">
-              <SVGRenderer paths={drawPaths} />
+            <AnimatedSource
+              source={source}
+              translateX={translateX}
+              translateY={translateY}
+              onPanGesture={onPanGesture}
+              onPanGestureStateChange={onPanGestureStateChange}
+            />
+            <View style={{position: 'absolute'}} pointerEvents="box-none">
+              <SVGRenderer
+                paths={drawPaths}
+                onPanGesture={onPanGesture}
+                onPanGestureStateChange={onPanGestureStateChange}
+              />
             </View>
             {sketchMode && (
               <SketchCanvas

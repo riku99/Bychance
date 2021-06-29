@@ -8,7 +8,7 @@ import {PathType} from '@benjeau/react-native-draw/src/types';
 type Props = {
   sketchMode: boolean;
   setScetchMode: (s: boolean) => void;
-  setDrawPaths: (p: PathType[]) => void;
+  setDrawPaths: React.Dispatch<React.SetStateAction<PathType[]>>;
 };
 
 export const SketchCanvas = React.memo(
@@ -17,8 +17,8 @@ export const SketchCanvas = React.memo(
 
     const onCompletePress = () => {
       if (drawRef.current) {
-        const paths = drawRef.current.getPaths;
-        setDrawPaths(paths);
+        const paths = drawRef.current.getPaths();
+        setDrawPaths((c) => [...c, ...paths]);
       }
       setScetchMode(false);
     };
@@ -175,10 +175,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    // top: 0,
-    // bottom: 0,
-    // left: 0,
-    // right: 0,
   },
   canvasContainer: {
     backgroundColor: 'transparent',
