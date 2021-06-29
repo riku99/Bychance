@@ -30,6 +30,7 @@ import {
 import {useCreateFlash} from '~/hooks/flashes';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {useFlashStatusBarSetting} from '~/hooks//statusBar';
+import {judgeMoreDeviceX} from '~/helpers/device';
 
 export type Source = {
   type: 'image' | 'video';
@@ -225,7 +226,7 @@ export const EditSource = React.memo(({source}: Props) => {
       <WideRangeSourceContainer>
         <ViewShot ref={viewShotRef} options={{quality: 1}}>
           <LinearGradient
-            style={{height: '100%', width: '100%', borderRadius: 15}}
+            style={styles.gradientContainer}
             colors={[topBackGroundColor, bottomBackGroundColor]}>
             <AnimatedSource
               source={source}
@@ -337,6 +338,8 @@ export const EditSource = React.memo(({source}: Props) => {
   );
 });
 
+const moreXHeight = judgeMoreDeviceX();
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -389,5 +392,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 30,
     bottom: '4%',
+  },
+  gradientContainer: {
+    height: '100%',
+    width: '100%',
+    borderRadius: moreXHeight ? 15 : 0,
   },
 });
