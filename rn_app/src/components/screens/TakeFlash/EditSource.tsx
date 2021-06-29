@@ -6,7 +6,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import ViewShot from 'react-native-view-shot';
 import CameraRoll from '@react-native-community/cameraroll';
 import {RNToasty} from 'react-native-toasty';
-import {SVGRenderer, DrawPath} from '~/components/utils/SVGRenderer';
+import {SVGRenderer} from '~/components/utils/SVGRenderer';
+import {PathType} from '@benjeau/react-native-draw/src/types';
 
 import {SketchCanvas} from './SketchCanvas';
 import {TopButtonGroup} from './TopButtonGroup';
@@ -177,7 +178,7 @@ export const EditSource = React.memo(({source}: Props) => {
 
   useFlashStatusBarSetting();
 
-  const [drawPaths, setDrawPaths] = useState<DrawPath[]>([]);
+  const [drawPaths, setDrawPaths] = useState<PathType[]>([]);
 
   return (
     <View style={styles.container}>
@@ -196,6 +197,7 @@ export const EditSource = React.memo(({source}: Props) => {
               <SketchCanvas
                 sketchMode={sketchMode}
                 setScetchMode={setSketchMode}
+                setDrawPaths={setDrawPaths}
               />
             )}
             {!!allTextInfo.length &&

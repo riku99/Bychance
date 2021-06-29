@@ -1,37 +1,47 @@
 import React, {useRef} from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import {Button} from 'react-native-elements';
-import RNImageEditor from '@wwimmo/react-native-sketch-canvas';
 import Slider from '@react-native-community/slider';
 import {Draw, DrawRef} from '@benjeau/react-native-draw';
+import {PathType} from '@benjeau/react-native-draw/src/types';
 
 type Props = {
   sketchMode: boolean;
   setScetchMode: (s: boolean) => void;
+  setDrawPaths: (p: PathType[]) => void;
 };
 
-export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
-  const drawRef = useRef<DrawRef>(null);
+export const SketchCanvas = React.memo(
+  ({sketchMode, setScetchMode, setDrawPaths}: Props) => {
+    const drawRef = useRef<DrawRef>(null);
 
-  return (
-    <View style={styles.container}>
-      <Draw
-        height={height}
-        width={width}
-        ref={drawRef}
-        simplifyOptions={{
-          simplifyPaths: false,
-        }}
-        initialValues={{
-          color: '#B644D0',
-          thickness: 3,
-          opacity: 0.5,
-          paths: [],
-        }}
-        hideButton={true}
-        canvasStyle={{elevation: 0, backgroundColor: 'transparent'}}
-      />
-      {/* <RNImageEditor
+    const onCompletePress = () => {
+      if (drawRef.current) {
+        const paths = drawRef.current.getPaths;
+        setDrawPaths(paths);
+      }
+      setScetchMode(false);
+    };
+
+    return (
+      <View style={styles.container}>
+        <Draw
+          height={height}
+          width={width}
+          ref={drawRef}
+          simplifyOptions={{
+            simplifyPaths: false,
+          }}
+          initialValues={{
+            color: '#B644D0',
+            thickness: 3,
+            opacity: 0.5,
+            paths: [],
+          }}
+          hideButton={true}
+          canvasStyle={{elevation: 0, backgroundColor: 'transparent'}}
+        />
+        {/* <RNImageEditor
         ref={canvasRef}
         touchEnabled={sketchMode}
         containerStyle={styles.canvasContainer}
@@ -111,33 +121,30 @@ export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
           </View>
         </>
       )} */}
-      {sketchMode && (
-        <>
-          <View style={[styles.topButtonContainer]}>
-            <Button
-              title="1つ戻す"
-              activeOpacity={1}
-              buttonStyle={styles.topButton}
-              titleStyle={{fontSize: 20, fontWeight: 'bold'}}
-              onPress={() => {
-                if (drawRef.current) {
-                  drawRef.current.undo();
-                }
-              }}
-            />
-            <Button
-              title="完了"
-              activeOpacity={1}
-              buttonStyle={styles.topButton}
-              titleStyle={{fontSize: 20, fontWeight: 'bold'}}
-              // onPress={() => setScetchMode(false)}
-              onPress={() => {
-                console.log(drawRef.current.getPaths());
-              }}
-            />
-          </View>
-          <View style={styles.sliderContainer}>
-            {/* <Slider
+        {sketchMode && (
+          <>
+            <View style={[styles.topButtonContainer]}>
+              <Button
+                title="1つ戻す"
+                activeOpacity={1}
+                buttonStyle={styles.topButton}
+                titleStyle={{fontSize: 20, fontWeight: 'bold'}}
+                onPress={() => {
+                  if (drawRef.current) {
+                    drawRef.current.undo();
+                  }
+                }}
+              />
+              <Button
+                title="完了"
+                activeOpacity={1}
+                buttonStyle={styles.topButton}
+                titleStyle={{fontSize: 20, fontWeight: 'bold'}}
+                onPress={onCompletePress}
+              />
+            </View>
+            <View style={styles.sliderContainer}>
+              {/* <Slider
               style={{width: 200, height: 20}}
               value={5}
               minimumValue={1}
@@ -152,12 +159,13 @@ export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
                 }
               }}
             /> */}
-          </View>
-        </>
-      )}
-    </View>
-  );
-});
+            </View>
+          </>
+        )}
+      </View>
+    );
+  },
+);
 
 const {width, height} = Dimensions.get('window');
 

@@ -6,7 +6,7 @@ import {PathType} from '@benjeau/react-native-draw/src/types';
 export type DrawPath = Omit<PathType, 'data'>[];
 
 type Props = {
-  paths: DrawPath[];
+  paths: PathType[];
 };
 
 export const SVGRenderer = React.memo(({paths}: Props) => {
