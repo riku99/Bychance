@@ -1,5 +1,11 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Animated, ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Animated,
+  ActivityIndicator,
+  SafeAreaView,
+} from 'react-native';
 import {PanGestureHandlerGestureEvent} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -215,10 +221,11 @@ export const EditSource = React.memo(({source}: Props) => {
 
   return (
     <View style={styles.container}>
+      <SafeAreaView />
       <WideRangeSourceContainer>
         <ViewShot ref={viewShotRef} options={{quality: 1}}>
           <LinearGradient
-            style={{height: '100%', width: '100%'}}
+            style={{height: '100%', width: '100%', borderRadius: 15}}
             colors={[topBackGroundColor, bottomBackGroundColor]}>
             <AnimatedSource
               source={source}
@@ -234,13 +241,7 @@ export const EditSource = React.memo(({source}: Props) => {
                 onPanGestureStateChange={onPanGestureStateChange}
               />
             </View>
-            {sketchMode && (
-              <SketchCanvas
-                sketchMode={sketchMode}
-                setScetchMode={setSketchMode}
-                setDrawPaths={setDrawPaths}
-              />
-            )}
+
             {!!allTextInfo.length &&
               allTextInfo.map((data, index) => (
                 <AnimatedText
@@ -289,6 +290,16 @@ export const EditSource = React.memo(({source}: Props) => {
           </LinearGradient>
         </ViewShot>
       </WideRangeSourceContainer>
+
+      {sketchMode && (
+        <View style={{position: 'absolute'}}>
+          <SketchCanvas
+            sketchMode={sketchMode}
+            setScetchMode={setSketchMode}
+            setDrawPaths={setDrawPaths}
+          />
+        </View>
+      )}
 
       {dustIndicator && (
         <View style={styles.dustIndicatorContainer}>

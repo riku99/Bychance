@@ -1,6 +1,5 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {judgeMoreDeviceX} from '~/helpers/device';
 
@@ -10,13 +9,7 @@ type Props = {
 
 // 16:9のソース(画像とか動画)に対応するコンテナ
 export const WideRangeSourceContainer = ({children}: Props) => {
-  const {top} = useSafeAreaInsets();
-  const cameraContainerTop = useMemo(() => (moreDviceX ? top : 0), [top]);
-  return (
-    <View style={[styles.container, {top: cameraContainerTop}]}>
-      {children}
-    </View>
-  );
+  return <View style={[styles.container]}>{children}</View>;
 };
 
 const {width} = Dimensions.get('screen');
@@ -31,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height: sourceHeight,
-    overflow: 'hidden',
     borderRadius: childrenRedius,
+    overflow: 'hidden',
   },
 });

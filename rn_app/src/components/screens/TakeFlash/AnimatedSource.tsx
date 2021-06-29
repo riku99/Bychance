@@ -20,6 +20,8 @@ type Props = {
   onPanGestureStateChange: (e: PanGestureHandlerGestureEvent) => void;
 };
 
+// 現在、移動に関するデータはPropsとして受け取りスケールに関するデータはこのコンポーネントで保持している
+// これは元々全てこのコンポーネント内で定義していたが、移動に関するデータはsvgの方でも必要になったので親コンポーネントで定義して渡すようにしている
 export const AnimatedSource = React.memo(
   ({
     source,
