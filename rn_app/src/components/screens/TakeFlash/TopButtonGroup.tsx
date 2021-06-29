@@ -35,11 +35,13 @@ export const TopButtonGroup = React.memo(
         />
         <View style={{flexDirection: 'row'}}>
           <Button
+            activeOpacity={1}
             icon={{name: 'save-alt', color: 'white', size: 30}}
             buttonStyle={styles.buttonStyle}
             onPress={onSaveButtonPress}
           />
           <Button
+            activeOpacity={1}
             icon={{name: 'color-lens', color: 'white', size: 30}}
             buttonStyle={styles.buttonStyle}
             onPress={() => setColorPickerMode(true)}
@@ -47,6 +49,7 @@ export const TopButtonGroup = React.memo(
             disabledStyle={styles.buttonStyle}
           />
           <Button
+            activeOpacity={1}
             icon={{name: 'create', color: 'white', size: 30}}
             buttonStyle={styles.buttonStyle}
             onPress={() => setSketchMode(true)}
@@ -55,6 +58,7 @@ export const TopButtonGroup = React.memo(
             disabledStyle={styles.buttonStyle}
           />
           <Button
+            activeOpacity={1}
             icon={{name: 'text-fields', color: 'white', size: 30}}
             buttonStyle={styles.buttonStyle}
             onPress={() => setTextEditMode(true)}

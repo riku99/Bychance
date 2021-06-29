@@ -927,10 +927,9 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@benjeau/react-native-draw@^0.3.3":
+"@benjeau/react-native-draw@git+https://github.com/riku99/react-native-draw.git":
   version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@benjeau/react-native-draw/-/react-native-draw-0.3.3.tgz#395abc1d26858917e1f76054ff251e9c0c55cad9"
-  integrity sha512-TYNKxFZVprnlJew/gJ3qOHIPLjUCGEf7Egf20tV7YZaF2x+40z78yTev/4nfEsIkq4XhWmgoTCN6KNtLVxK09Q==
+  resolved "git+https://github.com/riku99/react-native-draw.git#be8930b0e88de09c5f502bdd52483fd4b5b3e8a5"
   dependencies:
     "@luncheon/simplify-svg-path" "^0.1.3"
 

@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@benjeau/react-native-draw": "^0.3.3",
+    "@benjeau/react-native-draw": "git+https://github.com/riku99/react-native-draw.git",
     "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/datetimepicker": "^3.5.2",
     "@react-native-community/masked-view": "^0.1.11",

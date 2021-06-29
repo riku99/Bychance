@@ -10,14 +10,15 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 
 type Props = {
-  sketchMode: boolean;
   setScetchMode: (s: boolean) => void;
   setDrawPaths: React.Dispatch<React.SetStateAction<PathType[]>>;
 };
 
 export const SketchCanvas = React.memo(
-  ({sketchMode, setScetchMode, setDrawPaths}: Props) => {
+  ({setScetchMode, setDrawPaths}: Props) => {
     const drawRef = useRef<DrawRef>(null);
+
+    const {top, bottom} = useSafeAreaInsets();
 
     const onCompletePress = () => {
       if (drawRef.current) {
@@ -27,7 +28,17 @@ export const SketchCanvas = React.memo(
       setScetchMode(false);
     };
 
-    const {top, bottom} = useSafeAreaInsets();
+    const onSelectColor = (c: string) => {
+      if (drawRef.current) {
+        drawRef.current.setColor(c);
+      }
+    };
+
+    const onChangeThinkness = (n: number) => {
+      if (drawRef.current) {
+        drawRef.current.setThickness(n);
+      }
+    };
 
     return (
       <View style={styles.container}>
@@ -39,12 +50,12 @@ export const SketchCanvas = React.memo(
                 simplifyPaths: false,
               }}
               initialValues={{
-                color: '#B644D0',
-                thickness: 3,
-                opacity: 0.5,
+                color: 'white',
+                thickness: initialThickness,
+                opacity: 1,
                 paths: [],
               }}
-              hideButton={true}
+              hideBottom={true}
               canvasStyle={styles.canvas}
             />
           </WideRangeSourceContainer>
@@ -74,18 +85,17 @@ export const SketchCanvas = React.memo(
         <View style={styles.sliderContainer}>
           <Slider
             style={{width: 200, height: 20}}
-            value={5}
+            value={initialThickness}
             minimumValue={1}
             maximumValue={20}
             step={0.3}
-            minimumTrackTintColor="#FFFFFF"
-            maximumTrackTintColor="#000000"
-            onValueChange={(v) => {}}
+            maximumTrackTintColor="white"
+            onValueChange={onChangeThinkness}
           />
         </View>
 
         <View style={[styles.paletteContainer, {bottom: bottom + 5}]}>
-          <HorizontalColorPalette />
+          <HorizontalColorPalette onSelect={(color) => onSelectColor(color)} />
         </View>
       </View>
     );
@@ -93,6 +103,8 @@ export const SketchCanvas = React.memo(
 );
 
 const {width, height} = Dimensions.get('window');
+
+const initialThickness = 5;
 
 const styles = StyleSheet.create({
   container: {

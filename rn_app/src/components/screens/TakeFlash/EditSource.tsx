@@ -295,7 +295,6 @@ export const EditSource = React.memo(({source}: Props) => {
       {sketchMode && (
         <View style={{position: 'absolute'}}>
           <SketchCanvas
-            sketchMode={sketchMode}
             setScetchMode={setSketchMode}
             setDrawPaths={setDrawPaths}
           />
