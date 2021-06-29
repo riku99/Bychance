@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
+import {useSelector} from 'react-redux';
 
 import {RootStackScreen} from '../screens/Root';
 import {Container as Auth} from './screens/Auth/Page';
@@ -15,6 +16,7 @@ import {
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';
 import {useSetupBottomToast} from '~/hooks/bottomToast';
+import {RootState} from '~/stores';
 
 const Root = React.memo(() => {
   const [load, setLoad] = useState(true);
@@ -39,6 +41,14 @@ const Root = React.memo(() => {
 
   // 下から出てくるトーストのセットアップ
   useSetupBottomToast(login);
+
+  const canvasOpen = useSelector(
+    (state: RootState) => state.otherSettingsReducer.canvas.open,
+  );
+
+  const canvasEnabled = useSelector(
+    (state: RootState) => state.otherSettingsReducer.canvas.enabled,
+  );
 
   if (load) {
     return null;

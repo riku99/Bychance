@@ -3,6 +3,7 @@ import {View, StyleSheet, Dimensions} from 'react-native';
 import {Button} from 'react-native-elements';
 import RNImageEditor from '@wwimmo/react-native-sketch-canvas';
 import Slider from '@react-native-community/slider';
+import {Draw, DrawRef} from '@benjeau/react-native-draw';
 
 type Props = {
   sketchMode: boolean;
@@ -10,11 +11,27 @@ type Props = {
 };
 
 export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
-  const canvasRef = useRef<RNImageEditor>(null);
+  const drawRef = useRef<DrawRef>(null);
 
   return (
     <View style={styles.container}>
-      <RNImageEditor
+      <Draw
+        height={height}
+        width={width}
+        ref={drawRef}
+        simplifyOptions={{
+          simplifyPaths: false,
+        }}
+        initialValues={{
+          color: '#B644D0',
+          thickness: 3,
+          opacity: 0.5,
+          paths: [],
+        }}
+        hideButton={true}
+        canvasStyle={{elevation: 0, backgroundColor: 'transparent'}}
+      />
+      {/* <RNImageEditor
         ref={canvasRef}
         touchEnabled={sketchMode}
         containerStyle={styles.canvasContainer}
@@ -93,12 +110,56 @@ export const SketchCanvas = React.memo(({sketchMode, setScetchMode}: Props) => {
             />
           </View>
         </>
+      )} */}
+      {sketchMode && (
+        <>
+          <View style={[styles.topButtonContainer]}>
+            <Button
+              title="1つ戻す"
+              activeOpacity={1}
+              buttonStyle={styles.topButton}
+              titleStyle={{fontSize: 20, fontWeight: 'bold'}}
+              onPress={() => {
+                if (drawRef.current) {
+                  drawRef.current.undo();
+                }
+              }}
+            />
+            <Button
+              title="完了"
+              activeOpacity={1}
+              buttonStyle={styles.topButton}
+              titleStyle={{fontSize: 20, fontWeight: 'bold'}}
+              // onPress={() => setScetchMode(false)}
+              onPress={() => {
+                console.log(drawRef.current.getPaths());
+              }}
+            />
+          </View>
+          <View style={styles.sliderContainer}>
+            {/* <Slider
+              style={{width: 200, height: 20}}
+              value={5}
+              minimumValue={1}
+              maximumValue={20}
+              step={0.3}
+              minimumTrackTintColor="#FFFFFF"
+              maximumTrackTintColor="#000000"
+              onValueChange={(v) => {
+                if (canvasRef.current) {
+                  // @ts-ignore ._nextStrokeWidthはライブラリforkして作成したオリジナル(?)メソッド
+                  canvasRef.current._nextStrokeWidth(v);
+                }
+              }}
+            /> */}
+          </View>
+        </>
       )}
     </View>
   );
 });
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -106,10 +167,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    // top: 0,
+    // bottom: 0,
+    // left: 0,
+    // right: 0,
   },
   canvasContainer: {
     backgroundColor: 'transparent',

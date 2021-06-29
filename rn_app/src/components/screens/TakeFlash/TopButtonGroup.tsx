@@ -4,6 +4,8 @@ import {Button} from 'react-native-elements';
 
 import {BackButton} from '~/components/utils/BackButton';
 import {Source} from './EditSource';
+import {useCustomDispatch} from '~/hooks/stores';
+import {setCanvasMode} from '~/stores/otherSettings';
 
 type Props = {
   setSketchMode: (v: boolean) => void;
@@ -22,6 +24,8 @@ export const TopButtonGroup = React.memo(
     type,
   }: Props) => {
     const disabled = useMemo(() => type === 'video', [type]);
+
+    const dispatch = useCustomDispatch();
 
     return (
       <View style={styles.container}>
@@ -46,6 +50,7 @@ export const TopButtonGroup = React.memo(
             icon={{name: 'create', color: 'white', size: 30}}
             buttonStyle={styles.buttonStyle}
             onPress={() => setSketchMode(true)}
+            // onPress={() => dispatch(setCanvasMode({open: true, enabled: true}))}
             disabled={disabled}
             disabledStyle={styles.buttonStyle}
           />
