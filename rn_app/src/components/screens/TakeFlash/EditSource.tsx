@@ -12,7 +12,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import ViewShot from 'react-native-view-shot';
 import CameraRoll from '@react-native-community/cameraroll';
 import {RNToasty} from 'react-native-toasty';
-import {SVGRenderer} from '~/components/utils/SVGRenderer';
 import {PathType} from '@benjeau/react-native-draw/src/types';
 
 import {SketchCanvas} from './SketchCanvas';
@@ -31,6 +30,7 @@ import {useCreateFlash} from '~/hooks/flashes';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {useFlashStatusBarSetting} from '~/hooks//statusBar';
 import {judgeMoreDeviceX} from '~/helpers/device';
+import {SVGRenderer} from '~/components/utils/SVGRenderer';
 
 export type Source = {
   type: 'image' | 'video';

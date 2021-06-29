@@ -40,6 +40,23 @@ export const SketchCanvas = React.memo(
       }
     };
 
+    const onBackButtonPress = () => {
+      if (drawRef.current) {
+        const paths = drawRef.current.getPaths();
+        if (paths.length) {
+          drawRef.current.undo();
+        } else {
+          setDrawPaths((c) => {
+            if (c.length) {
+              return c.filter((p, i) => i !== c.length - 1);
+            } else {
+              return c;
+            }
+          });
+        }
+      }
+    };
+
     return (
       <View style={styles.container}>
         <View style={{top}}>
@@ -67,11 +84,7 @@ export const SketchCanvas = React.memo(
             activeOpacity={1}
             buttonStyle={styles.topButton}
             titleStyle={{fontSize: 20, fontWeight: 'bold'}}
-            onPress={() => {
-              if (drawRef.current) {
-                drawRef.current.undo();
-              }
-            }}
+            onPress={onBackButtonPress}
           />
           <Button
             title="完了"
@@ -94,7 +107,7 @@ export const SketchCanvas = React.memo(
           />
         </View>
 
-        <View style={[styles.paletteContainer, {bottom: bottom + 5}]}>
+        <View style={[styles.paletteContainer, {bottom: bottom + 15}]}>
           <HorizontalColorPalette onSelect={(color) => onSelectColor(color)} />
         </View>
       </View>

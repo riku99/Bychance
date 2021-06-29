@@ -929,7 +929,7 @@
 
 "@benjeau/react-native-draw@git+https://github.com/riku99/react-native-draw.git":
   version "0.3.3"
-  resolved "git+https://github.com/riku99/react-native-draw.git#be8930b0e88de09c5f502bdd52483fd4b5b3e8a5"
+  resolved "git+https://github.com/riku99/react-native-draw.git#b72b5b48de079549641c45ef57d76138d7c9516d"
   dependencies:
     "@luncheon/simplify-svg-path" "^0.1.3"
 
