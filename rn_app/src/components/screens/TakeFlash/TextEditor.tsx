@@ -280,7 +280,6 @@ export const TextEditor = React.memo(
           style={[
             styles.topButtonContainer,
             {
-              top,
               height: completeButtonHeight,
             },
           ]}>

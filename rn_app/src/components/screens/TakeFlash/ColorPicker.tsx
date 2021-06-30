@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import {TriangleColorPicker} from 'react-native-color-picker';
 import {Button} from 'react-native-elements';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {hsv2rgb} from '~/helpers/colors';
 
@@ -42,8 +41,6 @@ export const ColorPicker = React.memo(
       }
     };
 
-    const {top} = useSafeAreaInsets();
-
     return (
       <View style={styles.container}>
         <TriangleColorPicker
@@ -58,13 +55,14 @@ export const ColorPicker = React.memo(
             onPickerColorChange({color, which: 'bottom'})
           }
         />
-        <View style={[styles.topButtonContaienr, {top}]}>
+        <View style={[styles.topButtonContaienr, {top: 0}]}>
           <Button
             title="完了"
-            titleStyle={{fontSize: 25}}
+            titleStyle={{fontSize: 25, fontWeight: 'bold'}}
             buttonStyle={{backgroundColor: 'transparent'}}
             style={{alignSelf: 'flex-end'}}
             onPress={() => setColorPickerMode(false)}
+            activeOpacity={1}
           />
         </View>
       </View>

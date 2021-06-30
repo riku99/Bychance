@@ -449,43 +449,46 @@ export const ShowFlash = React.memo(
       <View style={styles.container}>
         {!!entityLength && (
           <>
-            <WideRangeSourceContainer>
-              <TouchableOpacity
-                activeOpacity={1}
-                delayLongPress={100}
-                disabled={showModal}
-                onPress={(e) => onScreenPres(e)}
-                onLongPress={onScreenLongPress}
-                onPressOut={onScreenPressOut}>
-                {currentFlash.sourceType === 'image' ? (
-                  <FastImage
-                    source={{
-                      uri: currentFlash.source,
-                    }}
-                    style={styles.source}
-                    onLoadStart={onImageLoadStart}
-                    onLoad={onImageLoad}
-                  />
-                ) : (
-                  <VideoWithThumbnail
-                    video={{
-                      ref: videoRef,
-                      source: {
+            <View style={{top}}>
+              <WideRangeSourceContainer>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  delayLongPress={100}
+                  disabled={showModal}
+                  onPress={(e) => onScreenPres(e)}
+                  onLongPress={onScreenLongPress}
+                  onPressOut={onScreenPressOut}>
+                  {currentFlash.sourceType === 'image' ? (
+                    <FastImage
+                      source={{
                         uri: currentFlash.source,
-                      },
-                      paused: isPaused,
-                      onLoadStart: onVideoLoadStart,
-                      onLoad: (e) => onVideoLoad(e),
-                      onProgress: ({currentTime}) => {
-                        onVideoProgress({currentTime});
-                      },
-                      onSeek: onVideoSeek,
-                      ignoreSilentSwitch: 'ignore',
-                    }}
-                  />
-                )}
-              </TouchableOpacity>
-            </WideRangeSourceContainer>
+                      }}
+                      style={styles.source}
+                      onLoadStart={onImageLoadStart}
+                      onLoad={onImageLoad}
+                    />
+                  ) : (
+                    <VideoWithThumbnail
+                      video={{
+                        ref: videoRef,
+                        source: {
+                          uri: currentFlash.source,
+                        },
+                        paused: isPaused,
+                        onLoadStart: onVideoLoadStart,
+                        onLoad: (e) => onVideoLoad(e),
+                        onProgress: ({currentTime}) => {
+                          onVideoProgress({currentTime});
+                        },
+                        onSeek: onVideoSeek,
+                        ignoreSilentSwitch: 'ignore',
+                      }}
+                    />
+                  )}
+                </TouchableOpacity>
+              </WideRangeSourceContainer>
+            </View>
+
             <View style={[styles.info, {top: top + 10}]}>
               <ProgressBar
                 flashesData={flashesData}

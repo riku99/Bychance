@@ -10,10 +10,6 @@ type InitialState = {
   creatingFlash?: boolean;
   receivedMessage?: TalkRoomMessage;
   manualLocationUpdate?: boolean;
-  canvas: {
-    open: boolean;
-    enabled: boolean;
-  };
 };
 
 const initialState: InitialState = {
@@ -22,10 +18,6 @@ const initialState: InitialState = {
   creatingFlash: false,
   receivedMessage: undefined,
   manualLocationUpdate: false,
-  canvas: {
-    open: false,
-    enabled: false,
-  },
 };
 
 const otherSettingsSlice = createSlice({
@@ -65,16 +57,6 @@ const otherSettingsSlice = createSlice({
       ...state,
       manualLocationUpdate: aciton.payload,
     }),
-    setCanvasMode: (
-      state,
-      action: PayloadAction<{
-        open: boolean;
-        enabled: boolean;
-      }>,
-    ) => ({
-      ...state,
-      canvas: action.payload,
-    }),
   },
   extraReducers: {
     [logoutThunk.fulfilled.type]: () => initialState,
@@ -101,7 +83,6 @@ export const {
   creatingPost,
   resetRecievedMessage,
   manualLocationUpdate,
-  setCanvasMode,
 } = otherSettingsSlice.actions;
 
 export const otherSettingsReducer = otherSettingsSlice.reducer;
