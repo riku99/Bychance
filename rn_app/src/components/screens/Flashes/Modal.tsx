@@ -2,7 +2,6 @@ import React, {useMemo, useCallback} from 'react';
 import {TouchableOpacity, StyleSheet, Text, Alert} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
 
 import {deleteFlashThunk} from '../../../thunks/flashes/deleteFlash';
 import {useCustomDispatch} from '~/hooks/stores';
@@ -35,8 +34,6 @@ export const Modal = ({
   progressAnimation,
 }: Props) => {
   const dispatch = useCustomDispatch();
-
-  const navigation = useNavigation();
 
   const deleteFlash = useCallback(async () => {
     Alert.alert('本当に削除してもよろしいですか?', '', [
@@ -76,16 +73,15 @@ export const Modal = ({
       ref={modalizeRef}
       modalHeight={140}
       scrollViewProps={{scrollEnabled: false}}
-      // onClosed={() => {
-      //   setIsPaused(false);
-      //   progressAnimation({
-      //     progressNumber: currentProgressBar.current,
-      //     duration: videoDuration ? videoDuration.current : undefined,
-      //     restart: true,
-      //   });
-      //   setShowModal(false);
-      // }}
-    >
+      onClosed={() => {
+        setIsPaused(false);
+        progressAnimation({
+          progressNumber: currentProgressBar.current,
+          duration: videoDuration ? videoDuration.current : undefined,
+          restart: true,
+        });
+        setShowModal(false);
+      }}>
       {modalList.map((item, i) => (
         <ListItem
           key={i}
