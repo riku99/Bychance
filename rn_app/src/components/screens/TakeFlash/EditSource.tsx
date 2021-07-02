@@ -29,7 +29,6 @@ import {
 import {useCreateFlash} from '~/hooks/flashes';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {useFlashStatusBarSetting} from '~/hooks//statusBar';
-import {judgeMoreDeviceX} from '~/helpers/device';
 import {SVGRenderer} from '~/components/utils/SVGRenderer';
 
 export type Source = {
@@ -337,8 +336,6 @@ export const EditSource = React.memo(({source}: Props) => {
   );
 });
 
-const moreXHeight = judgeMoreDeviceX();
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -395,6 +392,5 @@ const styles = StyleSheet.create({
   gradientContainer: {
     height: '100%',
     width: '100%',
-    borderRadius: moreXHeight ? 15 : 0,
   },
 });
