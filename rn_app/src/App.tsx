@@ -7,12 +7,13 @@ import {ToastProvider} from 'react-native-fast-toast';
 
 import Root from './components/Root';
 import {normalStyles} from '~/constants/styles';
+import {Dimensions} from 'react-native';
 
 const App: () => React.ReactNode = () => {
   return (
     <NavigationContainer theme={MyTheme}>
       <Provider store={store}>
-        <ToastProvider placement="bottom" offset={110}>
+        <ToastProvider placement="bottom" offset={toastOffset}>
           <Root />
         </ToastProvider>
       </Provider>
@@ -29,5 +30,9 @@ export const MyTheme = {
     background: 'white',
   },
 };
+
+const {height} = Dimensions.get('screen');
+
+const toastOffset = height * 0.1;
 
 export default App;
