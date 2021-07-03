@@ -15,7 +15,7 @@ export const useApis = () => {
   const handleApi = useCallback(
     async <T>(
       request: (credentials: Credentials) => Promise<T>,
-    ): Promise<T | ReturnApiError | void> => {
+    ): Promise<T | ReturnApiError> => {
       const credentials = await checkKeychain();
       if (credentials) {
         try {
@@ -27,6 +27,7 @@ export const useApis = () => {
         }
       } else {
         handleCredentialsError(dispatch);
+        return {errorType: 'loginError'};
       }
     },
     [dispatch],

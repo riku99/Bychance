@@ -11,7 +11,7 @@ export const useHandleDeviceToken = () => {
 
   const postDeviceToken = useCallback(
     async (deviceToken: string) => {
-      handleApi(async (credentials) => {
+      await handleApi(async (credentials) => {
         await axios.post(
           `${origin}/deviceToken?id=${credentials.id}`,
           {token: deviceToken},
