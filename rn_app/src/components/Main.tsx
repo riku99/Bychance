@@ -9,6 +9,7 @@ import {
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification';
 import {useActive} from '~/hooks/active';
+import {useBackgroundGeolocation} from '~/hooks/geolocation';
 
 export const Main = React.memo(() => {
   // socket周り
@@ -20,6 +21,9 @@ export const Main = React.memo(() => {
 
   // アクティブになった時の処理
   useActive();
+
+  // 位置情報周り
+  useBackgroundGeolocation();
 
   return (
     <View style={styles.container}>
