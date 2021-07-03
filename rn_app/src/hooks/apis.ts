@@ -16,9 +16,12 @@ export const useApis = () => {
       const credentials = await checkKeychain();
       if (credentials) {
         try {
-          const result = request(credentials);
+          console.log(request);
+          const result = await request(credentials);
+          console.log(result);
           return result;
         } catch (e) {
+          console.log(e);
           handleBasicApiErrorWithDispatch({e, dispatch});
         }
       } else {

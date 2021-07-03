@@ -8,6 +8,7 @@ import {
   usePushNotificationReqest,
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification';
+import {useActive} from '~/hooks/active';
 
 export const Main = React.memo(() => {
   // socket周り
@@ -16,6 +17,9 @@ export const Main = React.memo(() => {
   // push通知周り
   usePushNotificationReqest();
   useRegisterDeviceToken();
+
+  // アクティブになった時の処理
+  useActive();
 
   return (
     <View style={styles.container}>

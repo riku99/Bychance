@@ -26,7 +26,7 @@ export const usePushNotificationReqest = () => {
 export const useRegisterDeviceToken = () => {
   const {postDeviceToken} = useHandleDeviceToken();
   useEffect(() => {
-    // onTokenRefreshはactiveの時にしか呼ばれない。
+    // onTokenRefreshはactiveの時にしか呼ばれない。なのでactive時の処理の部分でもトークン更新を行っている
     const undebscribe = messaging().onTokenRefresh((token) => {
       postDeviceToken(token);
     });
