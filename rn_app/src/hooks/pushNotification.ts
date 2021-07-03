@@ -7,21 +7,19 @@ import {useCustomDispatch} from '~/hooks/stores';
 import {RootNavigationProp} from '~/navigations/Root';
 
 // push通知の許可リクエスト
-export const usePushNotificationReqest = ({login}: {login: boolean}) => {
+export const usePushNotificationReqest = () => {
   useEffect(() => {
-    if (login) {
-      async function requestUserPermission() {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-        if (enabled) {
-        }
+    async function requestUserPermission() {
+      const authStatus = await messaging().hasPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      if (!enabled) {
+        await messaging().requestPermission();
       }
-      requestUserPermission();
     }
-  }, [login]);
+    requestUserPermission();
+  }, []);
 };
 
 // push通知のためのデバイストークンをサーバーに登録する処理

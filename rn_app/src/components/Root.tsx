@@ -21,8 +21,6 @@ const Root = React.memo(() => {
   const onEndSessionLogin = useCallback(() => setLoad(false), []);
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
 
-  // push通知周り
-  usePushNotificationReqest({login});
   useRegisterDeviceToken({login});
 
   // 位置情報周り
