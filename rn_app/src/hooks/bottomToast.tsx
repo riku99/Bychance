@@ -6,7 +6,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {RootState} from '~/stores';
 
-export const useSetupBottomToast = (login: boolean) => {
+export const useSetupBottomToast = () => {
   const toast = useToast();
 
   const bottomToastData = useSelector(
@@ -14,7 +14,7 @@ export const useSetupBottomToast = (login: boolean) => {
   );
 
   useEffect(() => {
-    if (login && bottomToastData) {
+    if (bottomToastData) {
       toast?.show(bottomToastData.message, {
         type: bottomToastData.type,
         // icon: <MIcon name="priority-high" color="white" size={17} />,
@@ -25,7 +25,7 @@ export const useSetupBottomToast = (login: boolean) => {
         },
       });
     }
-  }, [bottomToastData, toast, login]);
+  }, [bottomToastData, toast]);
 };
 
 const {width} = Dimensions.get('screen');

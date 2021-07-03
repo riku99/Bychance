@@ -10,6 +10,7 @@ import {
 } from '~/hooks/pushNotification';
 import {useActive} from '~/hooks/active';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
+import {useSetupBottomToast} from '~/hooks/bottomToast';
 
 export const Main = React.memo(() => {
   // socket周り
@@ -24,6 +25,9 @@ export const Main = React.memo(() => {
 
   // 位置情報周り
   useBackgroundGeolocation();
+
+  // 下から出てくるトーストのセットアップ
+  useSetupBottomToast();
 
   return (
     <View style={styles.container}>
