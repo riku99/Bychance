@@ -71,7 +71,9 @@ export const Auth = () => {
             <Text style={styles.termsUserLink}>利用規約</Text>
           </TouchableOpacity>
           と
-          <TouchableOpacity activeOpacity={1}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate('PrivacyPolicy')}>
             <Text style={styles.termsUserLink}>プライバシーポリシー</Text>
           </TouchableOpacity>
           に同意したものとみなされます。

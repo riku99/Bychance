@@ -6,6 +6,7 @@ import {
 
 import {Auth} from '~/components/screens/Auth';
 import {TermsOfUse} from '~/components/utils/TermsOfUse';
+import {PrivacyPolicy} from '~/components/utils/PrivacyPolicy';
 
 export type AuthStackParamList = {
   Auth: undefined;
@@ -21,7 +22,11 @@ const AuthStack = createStackNavigator<AuthStackParamList>();
 
 export const AuthStackScreen = React.memo(() => {
   return (
-    <AuthStack.Navigator>
+    <AuthStack.Navigator
+      mode="modal"
+      screenOptions={{
+        headerBackTitleVisible: false,
+      }}>
       <AuthStack.Screen
         name="Auth"
         component={Auth}
@@ -30,7 +35,16 @@ export const AuthStackScreen = React.memo(() => {
       <AuthStack.Screen
         name="TermsOfUse"
         component={TermsOfUse}
-        options={{headerTitle: '利用規約'}}
+        options={{
+          headerTitle: '利用規約',
+        }}
+      />
+      <AuthStack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicy}
+        options={{
+          headerTitle: 'プライバシーポリシー',
+        }}
       />
     </AuthStack.Navigator>
   );
