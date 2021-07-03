@@ -7,22 +7,23 @@ import {
   handleBasicApiErrorWithDispatch,
   handleCredentialsError,
 } from '~/helpers/errors';
+import {ReturnApiError} from '~/types';
 
 export const useApis = () => {
   const dispatch = useCustomDispatch();
 
   const handleApi = useCallback(
-    async (request: (credentials: Credentials) => any) => {
+    async <T>(
+      request: (credentials: Credentials) => Promise<T>,
+    ): Promise<T | ReturnApiError | void> => {
       const credentials = await checkKeychain();
       if (credentials) {
         try {
-          console.log(request);
           const result = await request(credentials);
-          console.log(result);
           return result;
         } catch (e) {
-          console.log(e);
-          handleBasicApiErrorWithDispatch({e, dispatch});
+          const result = handleBasicApiErrorWithDispatch({e, dispatch});
+          return result;
         }
       } else {
         handleCredentialsError(dispatch);
