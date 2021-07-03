@@ -4,7 +4,10 @@ import FlashMessage from 'react-native-flash-message';
 
 import {RootStackScreen} from '~/navigations/Root';
 import {useTalkRoomMessagesIo} from '~/hooks/socketio';
-import {usePushNotificationReqest} from '~/hooks/pushNotification';
+import {
+  usePushNotificationReqest,
+  useRegisterDeviceToken,
+} from '~/hooks/pushNotification';
 
 export const Main = React.memo(() => {
   // socket周り
@@ -12,6 +15,7 @@ export const Main = React.memo(() => {
 
   // push通知周り
   usePushNotificationReqest();
+  useRegisterDeviceToken();
 
   return (
     <View style={styles.container}>

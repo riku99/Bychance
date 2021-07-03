@@ -2,9 +2,9 @@ import {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
 import {useNavigation} from '@react-navigation/native';
 
-import {createDeviceToken} from '~/thunks/deviceToken/createDeviceToken';
 import {useCustomDispatch} from '~/hooks/stores';
 import {RootNavigationProp} from '~/navigations/Root';
+import {useHandleDeviceToken} from './deviceToken';
 
 // push通知の許可リクエスト
 export const usePushNotificationReqest = () => {
@@ -23,21 +23,16 @@ export const usePushNotificationReqest = () => {
 };
 
 // push通知のためのデバイストークンをサーバーに登録する処理
-export const useRegisterDeviceToken = ({login}: {login: boolean}) => {
-  const dispatch = useCustomDispatch();
+export const useRegisterDeviceToken = () => {
+  const {postDeviceToken} = useHandleDeviceToken();
   useEffect(() => {
-    if (login) {
-      const getDeviceToken = async () => {
-        const token = await messaging().getToken();
-        dispatch(createDeviceToken({token}));
-      };
-      getDeviceToken();
+    // onTokenRefreshはactiveの時にしか呼ばれない。
+    const undebscribe = messaging().onTokenRefresh((token) => {
+      postDeviceToken(token);
+    });
 
-      messaging().onTokenRefresh((token) =>
-        dispatch(createDeviceToken({token})),
-      );
-    }
-  }, [login, dispatch]);
+    return undebscribe;
+  }, [postDeviceToken]);
 };
 
 type TalkRoomMessagesNotificationData = {

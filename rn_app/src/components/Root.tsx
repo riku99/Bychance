@@ -4,10 +4,6 @@ import {Main} from '~/components/Main';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useLoginSelect} from '~/hooks/sessions/selector';
 import {useSessionLoginProcess} from '~/hooks/sessions/login';
-import {
-  usePushNotificationReqest,
-  useRegisterDeviceToken,
-} from '~/hooks/pushNotification';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';
 import {useSetupBottomToast} from '~/hooks/bottomToast';
@@ -20,8 +16,6 @@ const Root = React.memo(() => {
 
   const onEndSessionLogin = useCallback(() => setLoad(false), []);
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
-
-  useRegisterDeviceToken({login});
 
   // 位置情報周り
   useBackgroundGeolocation({login});
