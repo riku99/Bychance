@@ -44,6 +44,7 @@ export type RootStackParamList = {
 export type RootNavigationProp<
   T extends keyof RootStackParamList
 > = StackNavigationProp<RootStackParamList, T>;
+
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = React.memo(() => {

@@ -3,7 +3,6 @@ import {View, StyleSheet} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 
 import {RootStackScreen} from '../screens/Root';
-import {Auth} from './screens/Auth';
 import {useTalkRoomMessagesIo} from '~/hooks/socketio';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useLoginSelect} from '~/hooks/sessions/selector';
@@ -15,6 +14,7 @@ import {
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';
 import {useSetupBottomToast} from '~/hooks/bottomToast';
+import {AuthStackScreen} from '~/screens/Auth';
 
 const Root = React.memo(() => {
   const [load, setLoad] = useState(true);
@@ -52,7 +52,7 @@ const Root = React.memo(() => {
       </View>
     );
   } else {
-    return <Auth />;
+    return <AuthStackScreen />;
   }
 });
 
