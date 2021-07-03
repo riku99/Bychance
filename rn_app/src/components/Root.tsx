@@ -3,7 +3,7 @@ import {View, StyleSheet} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 
 import {RootStackScreen} from '../screens/Root';
-import {Container as Auth} from './screens/Auth/Page';
+import {Auth} from './screens/Auth';
 import {useTalkRoomMessagesIo} from '~/hooks/socketio';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useLoginSelect} from '~/hooks/sessions/selector';

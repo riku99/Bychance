@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
 import {Image, View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Button} from 'react-native-elements';
+
 import Logo from '~/assets/logo.svg';
+import {useCustomDispatch} from '~/hooks/stores';
+import {lineLoginThunk} from '~/thunks/session/lineLogin';
+import {sampleLogin} from '~/thunks/session/sampleLogin';
 
 const lineBase = require('../../../assets/btn_base.png');
 const linePress = require('../../../assets/btn_press.png');
 
-type Props = {
-  login: () => void;
-  sampleLogin: () => void;
-};
-
-export const Auth = ({login, sampleLogin}: Props) => {
+export const Auth = () => {
   const [pressLoginButton, setPressLoginButton] = useState(false);
+
+  const dispatch = useCustomDispatch();
 
   const onLoginPressIn = () => {
     setPressLoginButton(true);
@@ -23,7 +24,11 @@ export const Auth = ({login, sampleLogin}: Props) => {
   };
 
   const onLoginPress = () => {
-    login();
+    dispatch(lineLoginThunk());
+  };
+
+  const onSampleLoginPress = () => {
+    dispatch(sampleLogin());
   };
 
   return (
@@ -83,13 +88,14 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     marginTop: '35%',
+    width: '95%',
   },
   logoContainer: {
     marginTop: '45%',
     alignSelf: 'center',
   },
   loginButtonContainer: {
-    width: '85%',
+    width: '100%',
     height: 45,
     flexDirection: 'row',
     alignItems: 'center',
