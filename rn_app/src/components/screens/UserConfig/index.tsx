@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useMemo} from 'react';
 import {RouteProp, NavigationProp} from '@react-navigation/native';
 
-import {RootStackParamList} from '~/screens/Root';
+import {RootStackParamList} from '~/navigations/Root';
 import {DisplayConfig} from './DisplayConfig';
 import {MessageConfig} from './MessageConfig';
 import {AccountConfig} from './AccountConfig';

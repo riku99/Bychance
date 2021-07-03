@@ -2,11 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {View, AppState} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import io, {Socket} from 'socket.io-client';
+import {useSelector} from 'react-redux';
 
 import {ReceivedMessageData} from '~/stores/types';
 import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useCustomDispatch} from '~/hooks/stores';
+import {RootState} from '~/stores';
 
 //const _origin = 'http://192.168.128.159:4001';
 const _origin = 'http://localhost:4001';
@@ -15,16 +17,25 @@ const _origin = 'http://localhost:4001';
 
 // メッセージの反映にはとりあえずpush通知ではなくてsocketで行う(push通知自体はある)
 // なぜなら、setBackgroundMessageHandlerの処理が通知がきてからラグがあるのとこのメソッドがかなり不安定なのとpush通知OFFの時の処理がめんどいから
-export const useTalkRoomMessagesIo = ({id}: {id?: string}) => {
+export const useTalkRoomMessagesIo = () => {
   const dispatch = useCustomDispatch();
 
   const [socket, setSocket] = useState<Socket>();
 
+  const id = useSelector((state: RootState) => state.userReducer.user?.id);
+
   useEffect(() => {
     if (id) {
       setSocket(io(`${_origin}/talkRoomMessages`, {query: {id}}));
+    } else {
+      // idがなくなる時はログアウト時なので基本的にクリーンアップだけでokだが一応
+      setSocket(undefined);
     }
-  }, [dispatch, id]);
+
+    return () => {
+      setSocket(undefined);
+    };
+  }, [id]);
 
   useEffect(() => {
     if (socket) {
@@ -61,5 +72,9 @@ export const useTalkRoomMessagesIo = ({id}: {id?: string}) => {
         socket.disconnect();
       }
     }
+
+    return () => {
+      socket?.disconnect();
+    };
   }, [socket, id, dispatch]);
 };

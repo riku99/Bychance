@@ -6,7 +6,7 @@ import {EditPage} from './EditPage';
 import {
   UserEditNavigationProp,
   UserEditRouteProp,
-} from '../../../screens/types';
+} from '../../../navigations/types';
 import {saveEditData} from '../../../stores/user';
 
 type Props = {

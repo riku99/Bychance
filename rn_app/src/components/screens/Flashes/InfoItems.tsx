@@ -3,8 +3,8 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import {UserAvatar} from '../../utils/Avatar';
-import {FlashStackNavigationProp} from '../../../screens/types';
-import {FlashUserData} from '../../../screens/Flashes';
+import {FlashStackNavigationProp} from '../../../navigations/types';
+import {FlashUserData} from '../../../navigations/Flashes';
 import {useTimeDiff} from '../../../hooks/time';
 import {useAnotherUser, useUser} from '../../../hooks/selector/user';
 import {BackButton} from '~/components/utils/BackButton';

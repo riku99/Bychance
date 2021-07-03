@@ -9,7 +9,7 @@ import {normalStyles} from '../../../constants/styles';
 import {
   UserPageNavigationProp,
   MyPageNavigationProp,
-} from '../../../screens/types';
+} from '../../../navigations/types';
 import {getThumbnailUrl} from '~/helpers/video';
 
 type Props = {

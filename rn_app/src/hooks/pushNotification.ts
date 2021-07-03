@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {createDeviceToken} from '~/thunks/deviceToken/createDeviceToken';
 import {useCustomDispatch} from '~/hooks/stores';
-import {RootNavigationProp} from '~/screens/Root';
+import {RootNavigationProp} from '~/navigations/Root';
 
 // push通知の許可リクエスト
 export const usePushNotificationReqest = ({login}: {login: boolean}) => {

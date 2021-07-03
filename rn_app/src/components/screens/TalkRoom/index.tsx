@@ -10,7 +10,7 @@ import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 
 import {TalkRoom} from './TaklRoom';
-import {TalkRoomStackNavigationProp} from '../../../screens/types';
+import {TalkRoomStackNavigationProp} from '../../../navigations/types';
 import {RootState} from '../../../stores/index';
 import {selectMessages} from '../../../stores/talkRoomMessages';
 import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
@@ -18,7 +18,7 @@ import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {createMessageThunk} from '../../../thunks/talkRoomMessages/createTalkRoomMessage';
 import {createReadMessagesThunk} from '../../../thunks/talkRoomMessages/createReadTalkRoomMessage';
-import {TalkRoomStackParamList} from '../../../screens/TalkRoom';
+import {TalkRoomStackParamList} from '../../../navigations/TalkRoom';
 import {UserAvatar} from '../../utils/Avatar';
 import {useCustomDispatch} from '~/hooks/stores';
 

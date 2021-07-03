@@ -25,10 +25,10 @@ import {getNearbyUsersThunk} from '~/thunks/nearbyUsers/getNearbyUsers';
 import {useCustomDispatch} from '~/hooks/stores';
 import {NearbyUsers} from '~/stores/nearbyUsers';
 import {getThumbnailUrl} from '~/helpers/video';
-import {RootNavigationProp} from '~/screens/Root';
+import {RootNavigationProp} from '~/navigations/Root';
 import {FlashesData} from '~/stores/types';
-import {NearbyUsersStackNavigationProp} from '~/screens/NearbyUsers';
-import {FlashesStackParamList} from '~/screens/Flashes';
+import {NearbyUsersStackNavigationProp} from '~/navigations/NearbyUsers';
+import {FlashesStackParamList} from '~/navigations/Flashes';
 import {normalStyles} from '~/constants/styles';
 import {
   notAuthLocationProviderAlert,

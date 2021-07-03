@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useMemo} from 'react';
 import {RouteProp, NavigationProp} from '@react-navigation/native';
 
-import {RootStackParamList} from '~/screens/Root';
+import {RootStackParamList} from '~/navigations/Root';
 import {Zone} from './Zone';
 import {Time} from './Time';
 

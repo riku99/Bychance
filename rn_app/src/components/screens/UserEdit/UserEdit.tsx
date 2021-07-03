@@ -12,7 +12,7 @@ import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 
 import {UserAvatar} from '../../utils/Avatar';
 import {normalStyles} from '../../../constants/styles';
-import {UserEditNavigationProp} from '../../../screens/types';
+import {UserEditNavigationProp} from '../../../navigations/types';
 
 type Props = {
   user: {

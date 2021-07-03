@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '../../../stores/index';
 import {displayMenu} from '../../../stores/otherSettings';
-import {RootStackParamList} from '~/screens/Root';
+import {RootStackParamList} from '~/navigations/Root';
 
 export const Menu = React.memo(() => {
   const isVisible = useSelector((state: RootState) => {

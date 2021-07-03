@@ -7,7 +7,7 @@ import {deletePostThunk} from '../../../thunks/posts/deletePost';
 import {
   MyPageStackRouteProp,
   UserPageStackRouteProp,
-} from '../../../screens/types';
+} from '../../../navigations/types';
 import {useCustomDispatch} from '~/hooks/stores';
 
 type Props = {

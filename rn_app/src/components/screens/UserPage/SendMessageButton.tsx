@@ -13,7 +13,7 @@ import Emoji from 'react-native-emoji';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {AnotherUser} from '../../../stores/types';
 import {createRoomThunk} from '../../../thunks/rooms/createTalkRoom';
-import {RootNavigationProp} from '~/screens/Root';
+import {RootNavigationProp} from '~/navigations/Root';
 import {useCustomDispatch} from '~/hooks/stores';
 
 const gradientConfig: {

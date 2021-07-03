@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
 import {normalStyles} from '~/constants/styles';
-import {RootNavigationProp} from '~/screens/Root';
+import {RootNavigationProp} from '~/navigations/Root';
 
 export const EditButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();

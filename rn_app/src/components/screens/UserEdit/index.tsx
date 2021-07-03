@@ -20,11 +20,11 @@ import fs from 'react-native-fs';
 import {MenuView} from '@react-native-menu/menu';
 import {RNToasty} from 'react-native-toasty';
 
-import {RootNavigationProp} from '~/screens/Root';
+import {RootNavigationProp} from '~/navigations/Root';
 import {RootState} from '../../../stores/index';
 import {editProfileThunk} from '../../../thunks/users/editProfile';
 import {resetEditData} from '../../../stores/user';
-import {UserEditNavigationProp} from '../../../screens/types';
+import {UserEditNavigationProp} from '../../../navigations/types';
 import {displayShortMessage} from '../../../helpers/topShortMessage';
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
 import {useCustomDispatch} from '~/hooks/stores';

@@ -80,11 +80,11 @@ export const Auth = () => {
         </Text>
       </View>
 
-      {/* <Button
+      <Button
         title="Sample Login"
         containerStyle={styles.sampleLoginButton}
-        onPress={sampleLogin}
-      /> */}
+        onPress={onSampleLoginPress}
+      />
     </View>
   );
 };

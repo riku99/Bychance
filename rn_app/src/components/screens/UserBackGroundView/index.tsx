@@ -3,7 +3,7 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {RouteProp} from '@react-navigation/native';
 
-import {RootStackParamList, RootNavigationProp} from '~/screens/Root';
+import {RootStackParamList, RootNavigationProp} from '~/navigations/Root';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 
 type Props = {

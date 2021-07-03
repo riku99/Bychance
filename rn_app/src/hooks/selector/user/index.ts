@@ -3,7 +3,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {RootState} from '../../../stores/index';
 import {selectNearbyUser} from '../../../stores/nearbyUsers';
 import {selectChatPartner} from '../../../stores/chatPartners';
-import {UserPageFrom} from '../../../screens/UserPage';
+import {UserPageFrom} from '../../../navigations/UserPage';
 
 export const useMyId = () =>
   useSelector((state: RootState) => state.userReducer.user!.id);

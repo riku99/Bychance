@@ -12,12 +12,12 @@ import {shallowEqual, useSelector} from 'react-redux';
 
 import {ShowFlash} from './ShowFlash';
 import {FlashesData} from '~/stores/types';
-import {FlashesRouteProp} from '../../../screens/types';
-import {FlashesStackParamList} from '../../../screens/Flashes';
+import {FlashesRouteProp} from '../../../navigations/types';
+import {FlashesStackParamList} from '../../../navigations/Flashes';
 import {RootState} from '../../../stores/index';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {useMoreDeviceX} from '../../../hooks/device/index';
-import {RootNavigationProp} from '~/screens/Root';
+import {RootNavigationProp} from '~/navigations/Root';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;

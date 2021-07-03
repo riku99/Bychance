@@ -3,7 +3,7 @@ import {View, StyleSheet, Text} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
 
-import {UserEditNavigationProp} from '../../../screens/types';
+import {UserEditNavigationProp} from '../../../navigations/types';
 
 type Props = {
   name?: string;

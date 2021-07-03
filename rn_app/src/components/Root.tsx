@@ -1,9 +1,6 @@
 import React, {useCallback, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-import FlashMessage from 'react-native-flash-message';
 
-import {RootStackScreen} from '../screens/Root';
-import {useTalkRoomMessagesIo} from '~/hooks/socketio';
+import {Main} from '~/components/Main';
 import {useUserSelect} from '~/hooks/users/selector';
 import {useLoginSelect} from '~/hooks/sessions/selector';
 import {useSessionLoginProcess} from '~/hooks/sessions/login';
@@ -14,7 +11,7 @@ import {
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useActiveRefresh} from '~/hooks/refresh';
 import {useSetupBottomToast} from '~/hooks/bottomToast';
-import {AuthStackScreen} from '~/screens/Auth';
+import {AuthStackScreen} from '~/navigations/Auth';
 
 const Root = React.memo(() => {
   const [load, setLoad] = useState(true);
@@ -23,9 +20,6 @@ const Root = React.memo(() => {
 
   const onEndSessionLogin = useCallback(() => setLoad(false), []);
   useSessionLoginProcess({endSessionLogin: onEndSessionLogin});
-
-  // socket周り
-  useTalkRoomMessagesIo({id});
 
   // push通知周り
   usePushNotificationReqest({login});
@@ -45,47 +39,10 @@ const Root = React.memo(() => {
   }
 
   if (login) {
-    return (
-      <View style={styles.container}>
-        <RootStackScreen />
-        <FlashMessage position="top" />
-      </View>
-    );
+    return <Main />;
   } else {
     return <AuthStackScreen />;
   }
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  info: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '50%',
-    height: 30,
-    borderRadius: 30,
-    backgroundColor: '#2089dc',
-    position: 'absolute',
-    bottom: 80,
-    alignSelf: 'center',
-  },
-  infoText: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  invalid: {
-    position: 'absolute',
-    top: 80,
-    zIndex: 10,
-    alignSelf: 'center',
-  },
-  invalidText: {
-    color: 'red',
-  },
 });
 
 export default Root;
