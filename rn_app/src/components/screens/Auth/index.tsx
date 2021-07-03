@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {Image, View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Button} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 
 import Logo from '~/assets/logo.svg';
 import {useCustomDispatch} from '~/hooks/stores';
 import {lineLoginThunk} from '~/thunks/session/lineLogin';
 import {sampleLogin} from '~/thunks/session/sampleLogin';
+import {AuthNavigationProp} from '~/screens/Auth';
 
 const lineBase = require('../../../assets/btn_base.png');
 const linePress = require('../../../assets/btn_press.png');
@@ -30,6 +32,8 @@ export const Auth = () => {
   const onSampleLoginPress = () => {
     dispatch(sampleLogin());
   };
+
+  const navigation = useNavigation<AuthNavigationProp<'Auth'>>();
 
   return (
     <View style={styles.container}>
@@ -61,7 +65,9 @@ export const Auth = () => {
         </TouchableOpacity>
         <Text style={styles.termsUseDescription}>
           ログインすることで、
-          <TouchableOpacity activeOpacity={1}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate('TermsOfUse')}>
             <Text style={styles.termsUserLink}>利用規約</Text>
           </TouchableOpacity>
           と
