@@ -1,12 +1,10 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
 
 import {UserAvatar} from '../../utils/Avatar';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {FlashUserData} from '../../../navigations/Flashes';
-import {useAnotherUser} from '../../../hooks/selector/user';
 import {BackButton} from '~/components/utils/BackButton';
 import {getTimeDiff} from '~/utils';
 import {useUser} from '~/hooks/users';
@@ -22,16 +20,7 @@ export const InfoItems = ({
   timestamp,
   setIsNavigatedToProfile,
 }: Props) => {
-  // const me = useUser({from: userData.from});
-
-  const {user, isMe} = useUser({from: userData.from, userId: userData.userId});
-
-  // const anotherUser = useAnotherUser({
-  //   from: userData.from,
-  //   userId: userData.userId,
-  // });
-
-  // const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
+  const {user} = useUser({from: userData.from, userId: userData.userId});
 
   const navigation = useNavigation<FlashStackNavigationProp<'Flashes'>>();
 
