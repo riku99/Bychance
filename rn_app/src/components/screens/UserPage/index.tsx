@@ -37,13 +37,12 @@ import {UserPageNavigationProp} from '../../../navigations/types';
 import {RootState} from '../../../stores/index';
 import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
-import {useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../thunks/users/refreshUser';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
-import {useMyId} from '~/hooks/users';
+import {useUser} from '~/hooks/users';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -62,29 +61,10 @@ export const UserPage = ({route, navigation}: Props) => {
   // TabではなくてStackから呼び出される場合は値が存在する
   const routeParams = useMemo(() => route && route.params, [route]);
 
-  const referenceId = useMyId();
-
-  // route.paramsが存在しない(Tabから呼び出された)またはuserIdがリファレンスIdと同じ(stackから自分のデータを渡して呼び出した)場合はtrue
-  const isMe = useMemo(
-    () => !routeParams || routeParams.userId === referenceId,
-    [routeParams, referenceId],
-  );
-
-  // const me = useUser({from: routeParams?.from});
-  const me = useSelector((state: RootState) => {
-    if (isMe) {
-      return state.userReducer.user!;
-    }
-  });
-
-  const anotherUser = useAnotherUser({
+  const {isMe, user, anotherUser, me} = useUser({
     from: routeParams?.from,
     userId: routeParams?.userId,
   });
-
-  // meとanotherUserで共通して使えるものについてはわざわざmeであるかanotherUserであるか検証したくないのでuserとしてまとめる
-  // 別々のものとして使いたい時はme, anotherUserのどちらかを使う
-  const user = useMemo(() => (me ? me : anotherUser), [me, anotherUser]);
 
   const myPosts = useSelector((state: RootState) => {
     if (isMe) {

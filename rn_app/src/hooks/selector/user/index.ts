@@ -5,9 +5,6 @@ import {selectNearbyUser} from '../../../stores/nearbyUsers';
 import {selectChatPartner} from '../../../stores/chatPartners';
 import {UserPageFrom} from '../../../navigations/UserPage';
 
-export const useMyId = () =>
-  useSelector((state: RootState) => state.userReducer.user!.id);
-
 type AnotherUserProps = {
   from?: UserPageFrom;
   userId?: string;
@@ -24,14 +21,3 @@ export const useAnotherUser = ({from, userId}: AnotherUserProps) =>
       }
     }
   }, shallowEqual);
-
-type UserProps = {
-  from?: UserPageFrom;
-};
-
-// export const useUser = ({from}: UserProps) =>
-//   useSelector((state: RootState) => {
-//     if (!from) {
-//       return state.userReducer.user!;
-//     }
-//   }, shallowEqual);

@@ -15,6 +15,7 @@ export const useSelectTamporarilySavedUserEditData = () => {
 export const useMyId = () =>
   useSelector((state: RootState) => state.userReducer.user!.id);
 
+// ユーザーページのように自分のデータか他のユーザーのデータが必要となる時に使う
 export const useUser = ({
   from,
   userId,
@@ -23,24 +24,39 @@ export const useUser = ({
   userId?: string;
 }) => {
   const myId = useMyId();
+  // userIdが存在しない(Tabから呼び出された)またはuserIdがmyIdと同じ(stackから自分のデータを渡して呼び出した)場合はtrue
+  const isMe = !userId || myId === userId;
 
-  const user = useSelector((state: RootState) => {
-    if (from && userId) {
+  const me = useSelector((state: RootState) => {
+    if (isMe) {
+      return state.userReducer.user!;
+    }
+  }, shallowEqual);
+
+  const anotherUser = useSelector((state: RootState) => {
+    if (from && userId && !isMe) {
       switch (from) {
         case 'nearbyUsers':
           return selectNearbyUser(state, userId);
         case 'chatRoom':
           return selectChatPartner(state, userId);
       }
-    } else {
-      return state.userReducer.user!;
     }
   }, shallowEqual);
 
-  const isMe = myId === userId;
-
-  return {
-    user,
-    isMe,
-  };
+  // meとanotherUserで共通して使えるものについてはわざわざmeであるかanotherUserであるか検証したくないのでuserとしてまとめる
+  // 別々のものとして使いたい時はme, anotherUserのどちらかを使う
+  if (isMe) {
+    return {
+      user: me,
+      me,
+      isMe,
+    };
+  } else {
+    return {
+      user: anotherUser,
+      anotherUser,
+      isMe,
+    };
+  }
 };

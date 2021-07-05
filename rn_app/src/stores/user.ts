@@ -41,26 +41,28 @@ import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {logoutThunk} from '~/thunks/session/logout';
 import {sampleLogin} from '../thunks/session/sampleLogin';
 
+export type User = {
+  id: string;
+  name: string;
+  avatar: string | null;
+  introduce: string;
+  statusMessage: string;
+  display: boolean;
+  lat: number | null;
+  lng: number | null;
+  backGroundItem: string | null;
+  backGroundItemType: 'image' | 'video' | null;
+  instagram: string | null;
+  twitter: string | null;
+  youtube: string | null;
+  tiktok: string | null;
+  videoEditDescription: boolean;
+  talkRoomMessageReceipt: boolean;
+  showReceiveMessage: boolean;
+};
+
 export type UserState = {
-  user?: {
-    id: string;
-    name: string;
-    avatar: string | null;
-    introduce: string;
-    statusMessage: string;
-    display: boolean;
-    lat: number | null;
-    lng: number | null;
-    backGroundItem: string | null;
-    backGroundItemType: 'image' | 'video' | null;
-    instagram: string | null;
-    twitter: string | null;
-    youtube: string | null;
-    tiktok: string | null;
-    videoEditDescription: boolean;
-    talkRoomMessageReceipt: boolean;
-    showReceiveMessage: boolean;
-  };
+  user?: User;
   temporarilySavedData?: {
     name?: string;
     introduce?: string;
@@ -72,7 +74,7 @@ export type UserState = {
   };
 };
 
-export type User = NonNullable<UserState['user']>;
+// export type User = NonNullable<UserState['user']>;
 
 const initialState: UserState = {};
 
