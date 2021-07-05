@@ -1,10 +1,9 @@
-import React, {ComponentProps} from 'react';
+import React, {ComponentProps, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import FastImage, {FastImageProps} from 'react-native-fast-image';
 import Video from 'react-native-video';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-import {useGetThumbnailUrl} from '~/hooks/video';
+import {getThumbnailUrl} from '~/helpers/video';
 
 type Props = {
   video: ComponentProps<typeof Video> & {
@@ -14,7 +13,9 @@ type Props = {
 };
 
 export const VideoWithThumbnail = React.memo(({video, thumbnail}: Props) => {
-  const thumbnailUrl = useGetThumbnailUrl(video.source.uri);
+  const thumbnailUrl = useMemo(() => getThumbnailUrl(video.source.uri), [
+    video.source.uri,
+  ]);
   return (
     <View>
       <Video style={[styles.source, styles.video]} {...video} />

@@ -33,3 +33,10 @@ export const formatMinutes = (n: number) => {
     return n;
   }
 };
+
+export const getTimeDiff = (timestamp: string) => {
+  const now = new Date();
+  const createdAt = new Date(timestamp);
+  const diff = now.getTime() - createdAt.getTime();
+  return Math.floor(diff / (1000 * 60 * 60));
+};

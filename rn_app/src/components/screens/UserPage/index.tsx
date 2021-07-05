@@ -37,12 +37,13 @@ import {UserPageNavigationProp} from '../../../navigations/types';
 import {RootState} from '../../../stores/index';
 import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
-import {useMyId, useUser, useAnotherUser} from '../../../hooks/selector/user';
+import {useAnotherUser} from '../../../hooks/selector/user';
 import {refreshUserThunk} from '../../../thunks/users/refreshUser';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
+import {useMyId} from '~/hooks/users';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -69,7 +70,12 @@ export const UserPage = ({route, navigation}: Props) => {
     [routeParams, referenceId],
   );
 
-  const me = useUser({from: routeParams?.from});
+  // const me = useUser({from: routeParams?.from});
+  const me = useSelector((state: RootState) => {
+    if (isMe) {
+      return state.userReducer.user!;
+    }
+  });
 
   const anotherUser = useAnotherUser({
     from: routeParams?.from,

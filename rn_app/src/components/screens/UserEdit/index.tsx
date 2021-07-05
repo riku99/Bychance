@@ -26,7 +26,7 @@ import {editProfileThunk} from '../../../thunks/users/editProfile';
 import {resetEditData} from '../../../stores/user';
 import {UserEditNavigationProp} from '../../../navigations/types';
 import {displayShortMessage} from '../../../helpers/topShortMessage';
-import {useSelectTamporarilySavedUserEditData} from '~/hooks/users/selector';
+import {useSelectTamporarilySavedUserEditData} from '~/hooks/users';
 import {useCustomDispatch} from '~/hooks/stores';
 import {normalStyles} from '~/constants/styles';
 import {SnsList} from '~/types';

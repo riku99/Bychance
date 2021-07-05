@@ -16,5 +16,5 @@
     }
   },
   "exclude": ["node_modules", "babel.config.js"],
-  "include": ["src"]
+  "include": ["src", "src/hooks/sessions/.ts"]
 }

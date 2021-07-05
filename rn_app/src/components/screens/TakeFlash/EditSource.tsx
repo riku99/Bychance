@@ -28,7 +28,7 @@ import {
 } from '~/helpers/animation/translate';
 import {useCreateFlash} from '~/hooks/flashes';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
-import {useFlashStatusBarSetting} from '~/hooks//statusBar';
+import {useFlashStatusBarSetting} from '~/hooks/statusBar';
 import {SVGRenderer} from '~/components/utils/SVGRenderer';
 
 export type Source = {

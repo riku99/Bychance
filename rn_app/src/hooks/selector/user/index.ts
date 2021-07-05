@@ -29,9 +29,9 @@ type UserProps = {
   from?: UserPageFrom;
 };
 
-export const useUser = ({from}: UserProps) =>
-  useSelector((state: RootState) => {
-    if (!from) {
-      return state.userReducer.user!;
-    }
-  }, shallowEqual);
+// export const useUser = ({from}: UserProps) =>
+//   useSelector((state: RootState) => {
+//     if (!from) {
+//       return state.userReducer.user!;
+//     }
+//   }, shallowEqual);

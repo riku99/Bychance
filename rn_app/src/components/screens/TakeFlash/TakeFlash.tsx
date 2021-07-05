@@ -17,7 +17,7 @@ import {FirstCameraRollPhoto} from '~/components/utils/FirstCameraRollPhoto';
 import {ShootButtonGroup} from './ShootButtonGroup';
 import {BackButton} from '~/components/utils/BackButton';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
-import {useFlashStatusBarSetting} from '~/hooks//statusBar';
+import {useFlashStatusBarSetting} from '~/hooks/statusBar';
 
 type Props = {
   cameraRef: React.RefObject<RNCamera>;

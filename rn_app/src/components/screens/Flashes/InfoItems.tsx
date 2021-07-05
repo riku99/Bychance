@@ -1,13 +1,15 @@
 import React, {useMemo} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 import {UserAvatar} from '../../utils/Avatar';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {FlashUserData} from '../../../navigations/Flashes';
-import {useTimeDiff} from '../../../hooks/time';
-import {useAnotherUser, useUser} from '../../../hooks/selector/user';
+import {useAnotherUser} from '../../../hooks/selector/user';
 import {BackButton} from '~/components/utils/BackButton';
+import {getTimeDiff} from '~/utils';
+import {useUser} from '~/hooks/users';
 
 type Props = {
   userData: FlashUserData;
@@ -20,18 +22,20 @@ export const InfoItems = ({
   timestamp,
   setIsNavigatedToProfile,
 }: Props) => {
-  const me = useUser({from: userData.from});
+  // const me = useUser({from: userData.from});
 
-  const anotherUser = useAnotherUser({
-    from: userData.from,
-    userId: userData.userId,
-  });
+  const {user, isMe} = useUser({from: userData.from, userId: userData.userId});
 
-  const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
+  // const anotherUser = useAnotherUser({
+  //   from: userData.from,
+  //   userId: userData.userId,
+  // });
+
+  // const user = useMemo(() => (me ? me : anotherUser!), [me, anotherUser]);
 
   const navigation = useNavigation<FlashStackNavigationProp<'Flashes'>>();
 
-  const timeDiff = useTimeDiff({timestamp});
+  const timeDiff = getTimeDiff(timestamp);
 
   const onUserPress = () => {
     setIsNavigatedToProfile(true);
@@ -43,7 +47,10 @@ export const InfoItems = ({
 
   return (
     <View style={styles.infoItems}>
-      <TouchableOpacity style={styles.userInfo} onPress={onUserPress}>
+      <TouchableOpacity
+        style={styles.userInfo}
+        onPress={onUserPress}
+        activeOpacity={1}>
         <UserAvatar image={user?.avatar} size="small" opacity={1} />
         <Text style={styles.userName}>
           {user ? user.name : 'ユーザーが存在しません'}
