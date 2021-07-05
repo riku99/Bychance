@@ -28,7 +28,7 @@ import {FlashUserData} from '../../../navigations/Flashes';
 import {createAlreadyViewdFlashThunk} from '../../../thunks/flashes/createAlreadyViewedFlashes';
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
-import {useMyId} from '../../../hooks/selector/user';
+import {useMyId} from '~/hooks/users';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {Stamps} from './Stamps';

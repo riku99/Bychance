@@ -7,7 +7,7 @@ import Logo from '~/assets/logo.svg';
 import {useCustomDispatch} from '~/hooks/stores';
 import {lineLoginThunk} from '~/thunks/session/lineLogin';
 import {sampleLogin} from '~/thunks/session/sampleLogin';
-import {AuthNavigationProp} from '~/screens/Auth';
+import {AuthNavigationProp} from '~/navigations/Auth';
 
 const lineBase = require('../../../assets/btn_base.png');
 const linePress = require('../../../assets/btn_press.png');
