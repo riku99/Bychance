@@ -10,7 +10,7 @@ import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {RootNavigationProp} from '../../../navigations/Root';
 import {useCustomDispatch} from '~/hooks/stores';
 import {useSelectAllRooms} from '~/hooks/talkRooms';
-import {useSelectChatPartnerEntities} from '~/hooks/chatPartners/selector';
+import {useSelectChatPartnerEntities} from '~/hooks/chatPartners';
 import {createDeleteRoomThunk} from '~/thunks/deleteTalkRooms/createDeleteTalkRoom';
 import {displayShortMessage} from '~/helpers/topShortMessage';
 

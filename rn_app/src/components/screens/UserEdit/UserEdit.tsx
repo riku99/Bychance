@@ -107,6 +107,7 @@ export const UserEdit = ({
           !loading ? (
             <Button
               title="完了"
+              activeOpacity={1}
               titleStyle={styles.completeButtonTitle}
               buttonStyle={styles.completeButton}
               onPress={() => {

@@ -16,8 +16,8 @@ import {FlashesRouteProp} from '../../../navigations/types';
 import {FlashesStackParamList} from '../../../navigations/Flashes';
 import {RootState} from '../../../stores/index';
 import {selectAllFlashes} from '../../../stores/flashes';
-import {useMoreDeviceX} from '../../../hooks/device/index';
 import {RootNavigationProp} from '~/navigations/Root';
+import {judgeMoreDeviceX} from '~/helpers/device';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;
@@ -69,10 +69,6 @@ export const FlashesPage = ({route, navigation}: Props) => {
     }
   }, [dataArray.length, navigation]);
 
-  // statusBarの設定のためにデバイスがX以上であるかどうかを判定
-  // 判断方法の正解がわからなかったのでとりあえずデバイスの大きさで判断
-  const moreDeviceX = useMoreDeviceX();
-
   const [scrolling, setScrolling] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
@@ -85,7 +81,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
     });
 
     return unsubscribe;
-  }, [navigation, moreDeviceX]);
+  }, [navigation]);
 
   // このページではstatusBarの設定を環境によって変えるので、このページからブラーする時はその設定を元に戻す
   useEffect(() => {
@@ -200,6 +196,8 @@ export const FlashesPage = ({route, navigation}: Props) => {
 };
 
 const {width, height} = Dimensions.get('window');
+
+const moreDeviceX = judgeMoreDeviceX();
 
 const styles = StyleSheet.create({
   container: {

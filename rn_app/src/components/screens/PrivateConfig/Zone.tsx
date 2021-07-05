@@ -164,6 +164,7 @@ export const Zone = React.memo(() => {
             titleStyle={styles.addressButtonTitle}
             disabled={!selectedCoordinate && !selectedAddress}
             onPress={onAddButtonPress}
+            activeOpacity={1}
           />
         </View>
         <Divider style={styles.diver} />

@@ -100,6 +100,7 @@ export const SnsModal = React.memo(
               onPress={onEndButtonPress}
               buttonStyle={styles.endButton}
               titleStyle={styles.endButtonTitle}
+              activeOpacity={1}
             />
           </View>
           <View style={styles.alertTextContainer}>

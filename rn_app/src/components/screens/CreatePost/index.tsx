@@ -71,6 +71,7 @@ export const CreatePost = ({navigation}: Props) => {
               buttonStyle={{backgroundColor: 'transparent'}}
               titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
               onPress={createPost}
+              activeOpacity={1}
             />
           )
         : undefined,

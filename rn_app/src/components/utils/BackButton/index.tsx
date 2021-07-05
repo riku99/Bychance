@@ -9,5 +9,5 @@ export const BackButton = (props: Props) => {
 
   const onPress = () => navigation.goBack();
 
-  return <Button {...props} onPress={onPress} />;
+  return <Button {...props} onPress={onPress} activeOpacity={1} />;
 };

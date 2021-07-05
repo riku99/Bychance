@@ -101,6 +101,7 @@ export const EditPage = ({
       </TextInput>
       <Button
         title="保存"
+        activeOpacity={1}
         containerStyle={{marginTop: 40, width: '90%'}}
         titleStyle={{fontWeight: 'bold', fontSize: 16}}
         disabled={!!alert}

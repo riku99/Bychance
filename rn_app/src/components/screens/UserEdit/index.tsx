@@ -330,6 +330,7 @@ export const UserEditPage = () => {
               titleStyle={styles.completeButtonTitle}
               buttonStyle={styles.completeButton}
               onPress={update}
+              activeOpacity={1}
             />
           ) : (
             <ActivityIndicator style={{paddingRight: 10}} />

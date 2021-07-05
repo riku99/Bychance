@@ -337,6 +337,7 @@ export const TextEditor = React.memo(
             titleStyle={{fontSize: 22, fontWeight: '500'}}
             buttonStyle={{backgroundColor: 'transparent'}}
             onPress={onCompleteButtonPress}
+            activeOpacity={1}
           />
         </View>
       </View>
