@@ -2,7 +2,7 @@ import {useCallback} from 'react';
 import {default as axios} from 'axios';
 
 import {headers} from '~/helpers/requestHeaders';
-import {origin} from '~/constants/origin';
+import {origin} from '~/constants/url';
 
 import {useApis} from './apis';
 

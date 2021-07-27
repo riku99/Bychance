@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 
 import {checkKeychain} from '~/helpers/credentials';
-import {origin} from '~/constants/origin';
+import {origin} from '~/constants/url';
 import {headers} from '~/helpers/requestHeaders';
 import {PrivateTime} from '~/types';
 import {

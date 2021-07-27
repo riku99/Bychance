@@ -15,7 +15,9 @@ export const useSessionloginProccess = () => {
     const loginProccess = async () => {
       const credentials = await checkKeychain();
       if (credentials) {
-        await dispatch(sessionLoginThunk(credentials));
+        // await dispatch(sessionLoginThunk(credentials));
+        try {
+        } catch (e) {}
       }
       setIsLoading(false);
     };

@@ -2,7 +2,7 @@ export {default as axios} from 'axios';
 export {createAsyncThunk} from '@reduxjs/toolkit';
 
 export {logoutThunk} from './session/logout';
-export {origin} from '../constants/origin';
+export {origin} from '../constants/url';
 export {headers} from '~/helpers/requestHeaders';
 export {checkKeychain, Credentials} from '../helpers/credentials';
 export {
