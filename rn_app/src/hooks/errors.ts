@@ -1,17 +1,15 @@
-import {useEffect, useCallback} from 'react';
+import {useEffect} from 'react';
 import {Alert} from 'react-native';
-import {useToast} from 'react-native-fast-toast';
 import {useSelector} from 'react-redux';
 import * as Keychain from 'react-native-keychain';
 
 import {RootState} from '~/stores';
-import {useCustomDispatch} from './stores';
 import {logout} from '~/stores/sessions';
 import {resetError} from '~/stores/errors';
+import {useApikit} from './apikit';
 
 export const useHandleErrors = () => {
-  const toast = useToast();
-  const dispatch = useCustomDispatch();
+  const {toast, dispatch} = useApikit();
   const error = useSelector((state: RootState) => state.errorsReducer.apiError);
 
   useEffect(() => {

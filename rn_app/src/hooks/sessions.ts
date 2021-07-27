@@ -6,20 +6,20 @@ import {checkKeychain} from '~/helpers/credentials';
 import {sessionLoginThunk} from '~/thunks/session/sessionLogin';
 import {RootState} from '~/stores/index';
 
-export const useSessionLoginProcess = () => {
+export const useSessionloginProccess = () => {
   const dispatch = useCustomDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loginProcess = async () => {
+    const loginProccess = async () => {
       const credentials = await checkKeychain();
       if (credentials) {
         await dispatch(sessionLoginThunk(credentials));
       }
       setIsLoading(false);
     };
-    loginProcess();
+    loginProccess();
   }, [dispatch]);
 
   return {
