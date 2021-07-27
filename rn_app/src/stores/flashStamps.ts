@@ -53,7 +53,11 @@ const flashStampsAdapter = createEntityAdapter<FlashStamp>({
 const flashStampsSlice = createSlice({
   name: 'flashStamps',
   initialState: flashStampsAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    setFlashStamps: (state, action: PayloadAction<FlashStamp[]>) => {
+      flashStampsAdapter.addMany(state, action.payload);
+    },
+  },
   extraReducers: {
     [sessionLoginThunk.fulfilled.type]: (
       state,
@@ -124,3 +128,5 @@ export const selectFlashStampEntites = (state: RootState) =>
   flashStampsSelector.selectEntities(state.flashStampsReducer);
 
 export const flashStampsReducer = flashStampsSlice.reducer;
+
+export const {setFlashStamps} = flashStampsSlice.actions;

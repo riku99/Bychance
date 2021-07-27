@@ -40,6 +40,9 @@ const talkRoomMessagesSlice = createSlice({
   name: 'messages',
   initialState: talkRoomMessagesAdapter.getInitialState(),
   reducers: {
+    setTalkRoomMessages: (state, action: PayloadAction<TalkRoomMessage[]>) => {
+      talkRoomMessagesAdapter.addMany(state, action.payload);
+    },
     receiveTalkRoomMessage: (
       state,
       action: PayloadAction<ReceivedMessageData>,
@@ -91,6 +94,9 @@ export const selectMessages = (state: RootState, messageIds: number[]) => {
   return _ms;
 };
 
-export const {receiveTalkRoomMessage} = talkRoomMessagesSlice.actions;
+export const {
+  receiveTalkRoomMessage,
+  setTalkRoomMessages,
+} = talkRoomMessagesSlice.actions;
 
 export const talkRoomMessageReducer = talkRoomMessagesSlice.reducer;

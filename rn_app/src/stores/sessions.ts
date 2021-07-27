@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {lineLoginThunk} from '../thunks/session/lineLogin';
 import {sessionLoginThunk} from '../thunks/session/sessionLogin';
@@ -13,6 +13,15 @@ const sessionSlice = createSlice({
   name: 'session',
   initialState: initialState,
   reducers: {
+    setLogin: (state, action: PayloadAction<boolean>) => {
+      if (action.payload) {
+        return {
+          login: true,
+        };
+      } else {
+        return initialState;
+      }
+    },
     logout: () => initialState,
   },
   extraReducers: {
@@ -25,4 +34,4 @@ const sessionSlice = createSlice({
 
 export const sessionReducer = sessionSlice.reducer;
 
-export const {logout} = sessionSlice.actions;
+export const {logout, setLogin} = sessionSlice.actions;

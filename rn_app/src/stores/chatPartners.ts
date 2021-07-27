@@ -10,10 +10,6 @@ import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {updateAlreadyViewed} from './helpers/createViewedFlashes';
 import {refreshUser} from './helpers/refreshUser';
 import {
-  sessionLoginThunk,
-  SessionLoginThunkPayload,
-} from '../thunks/session/sessionLogin';
-import {
   lineLoginThunk,
   LineLoginThunkPayload,
 } from '../thunks/session/lineLogin';
@@ -48,7 +44,11 @@ export type ChatPartnersState = ReturnType<
 export const chatPartnersSlice = createSlice({
   name: 'chatPartners',
   initialState: chatPartnersAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    setChatPartners: (state, action: PayloadAction<AnotherUser[]>) => {
+      chatPartnersAdapter.addMany(state, action.payload);
+    },
+  },
   extraReducers: {
     [sampleLogin.fulfilled.type]: (
       state,
@@ -150,3 +150,5 @@ const selectIds = (state: RootState['chatPartnersReducer']) =>
   chatPartnersSelector.selectIds(state);
 
 export const chatPartnersReducer = chatPartnersSlice.reducer;
+
+export const {setChatPartners} = chatPartnersSlice.actions;

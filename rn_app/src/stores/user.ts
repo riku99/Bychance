@@ -82,6 +82,10 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
+    setUser: (state, action: PayloadAction<User>) => ({
+      ...state,
+      user: action.payload,
+    }),
     saveEditData: (
       state,
       action: PayloadAction<UserState['temporarilySavedData']>,
@@ -276,6 +280,6 @@ const userSlice = createSlice({
   },
 });
 
-export const {saveEditData, resetEditData} = userSlice.actions;
+export const {saveEditData, resetEditData, setUser} = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

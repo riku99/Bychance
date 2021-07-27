@@ -50,7 +50,11 @@ export type PostsState = ReturnType<typeof postsAdaper.getInitialState>;
 const postSlice = createSlice({
   name: 'post',
   initialState: postsAdaper.getInitialState(),
-  reducers: {},
+  reducers: {
+    setPosts: (state, action: PayloadAction<Post[]>) => {
+      postsAdaper.addMany(state, action.payload);
+    },
+  },
   extraReducers: {
     [sampleLogin.fulfilled.type]: (state, action) => {
       postsAdaper.addMany(state, action.payload.posts);
@@ -104,3 +108,5 @@ export const selectAllPosts = (state: RootState) => {
 };
 
 export const postsReducer = postSlice.reducer;
+
+export const {setPosts} = postSlice.actions;

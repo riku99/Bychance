@@ -50,7 +50,11 @@ export type FlashesState = ReturnType<typeof flashesAdapter.getInitialState>;
 const flashesSlice = createSlice({
   name: 'flashes',
   initialState: flashesAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    setFlashes: (state, action: PayloadAction<Flash[]>) => {
+      flashesAdapter.addMany(state, action.payload);
+    },
+  },
   extraReducers: {
     [logoutThunk.fulfilled.type]: () => flashesAdapter.getInitialState(),
     [sessionLoginThunk.fulfilled.type]: (
@@ -85,3 +89,5 @@ export const selectAllFlashes = (state: RootState) => {
 };
 
 export const flashesReducer = flashesSlice.reducer;
+
+export const {setFlashes} = flashesSlice.actions;

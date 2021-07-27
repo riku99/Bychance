@@ -50,6 +50,9 @@ export const RoomsSlice = createSlice({
   name: 'rooms',
   initialState: talkRoomsAdapter.getInitialState(),
   reducers: {
+    setTalkRooms: (state, action: PayloadAction<TalkRoom[]>) => {
+      talkRoomsAdapter.addMany(state, action.payload);
+    },
     resetUnreadNumber: (state, actions: PayloadAction<{roomId: number}>) => {
       talkRoomsAdapter.updateOne(state, {
         id: actions.payload.roomId,
@@ -164,7 +167,7 @@ export const RoomsSlice = createSlice({
   },
 });
 
-export const {resetUnreadNumber} = RoomsSlice.actions;
+export const {resetUnreadNumber, setTalkRooms} = RoomsSlice.actions;
 
 export const talkRoomSelectors = talkRoomsAdapter.getSelectors();
 
