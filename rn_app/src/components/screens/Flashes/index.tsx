@@ -189,7 +189,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
         initialScrollIndex={startingIndex}
         initialNumToRender={2}
         maxToRenderPerBatch={2}
-        windowSize={2}
+        windowSize={10}
       />
     </View>
   );

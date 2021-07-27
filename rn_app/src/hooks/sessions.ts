@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import {useCustomDispatch} from '~/hooks/stores';
@@ -6,25 +6,25 @@ import {checkKeychain} from '~/helpers/credentials';
 import {sessionLoginThunk} from '~/thunks/session/sessionLogin';
 import {RootState} from '~/stores/index';
 
-type Arg = {
-  endSessionLogin: () => void;
-};
-
-export const useSessionLoginProcess = ({endSessionLogin}: Arg) => {
+export const useSessionLoginProcess = () => {
   const dispatch = useCustomDispatch();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loginProcess = async () => {
       const credentials = await checkKeychain();
       if (credentials) {
         await dispatch(sessionLoginThunk(credentials));
-        endSessionLogin();
-      } else {
-        endSessionLogin();
       }
+      setIsLoading(false);
     };
     loginProcess();
-  }, [dispatch, endSessionLogin]);
+  }, [dispatch]);
+
+  return {
+    isLoading,
+  };
 };
 
 export const useLoginSelect = () => {
