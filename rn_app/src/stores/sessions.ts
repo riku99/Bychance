@@ -12,7 +12,9 @@ const initialState: initialState = {login: false};
 const sessionSlice = createSlice({
   name: 'session',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    logout: () => initialState,
+  },
   extraReducers: {
     [sampleLogin.fulfilled.type]: () => ({login: true}),
     [lineLoginThunk.fulfilled.type]: () => ({login: true}),
@@ -22,3 +24,5 @@ const sessionSlice = createSlice({
 });
 
 export const sessionReducer = sessionSlice.reducer;
+
+export const {logout} = sessionSlice.actions;

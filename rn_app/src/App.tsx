@@ -13,7 +13,10 @@ const App: () => React.ReactNode = () => {
   return (
     <NavigationContainer theme={MyTheme}>
       <Provider store={store}>
-        <ToastProvider placement="bottom" offset={toastOffset}>
+        <ToastProvider
+          placement="bottom"
+          offset={toastOffset}
+          style={{width: bottomToastWidth}}>
           <Root />
         </ToastProvider>
       </Provider>
@@ -31,8 +34,9 @@ export const MyTheme = {
   },
 };
 
-const {height} = Dimensions.get('screen');
+const {height, width} = Dimensions.get('screen');
 
 const toastOffset = height * 0.1;
+const bottomToastWidth = width * 0.9;
 
 export default App;
