@@ -6,10 +6,6 @@ import {
   LineLoginThunkPayload,
 } from '../thunks/session/lineLogin';
 import {
-  editProfileThunk,
-  // EditProfilePayload,
-} from '../thunks/users/editProfile';
-import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
 } from '../thunks/users/refreshUser';
@@ -212,28 +208,6 @@ const userSlice = createSlice({
       };
     },
     [logoutThunk.fulfilled.type]: () => initialState,
-    [editProfileThunk.fulfilled.type]: (
-      state,
-      actions: PayloadAction<EditProfilePayload>,
-    ) => {
-      const {instagram, twitter, youtube, tiktok} = actions.payload;
-      return {
-        ...state,
-        user: {
-          ...state.user!,
-          name: actions.payload.name,
-          introduce: actions.payload.introduce,
-          avatar: actions.payload.avatar,
-          statusMessage: actions.payload.statusMessage,
-          backGroundItem: actions.payload.backGroundItem,
-          backGroundItemType: actions.payload.backGroundItemType,
-          instagram,
-          twitter,
-          youtube,
-          tiktok,
-        },
-      };
-    },
     [changeUserDisplayThunk.fulfilled.type]: (
       state,
       action: PayloadAction<EidtUserDisplayThunkPayload>,

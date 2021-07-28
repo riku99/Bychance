@@ -1,6 +1,8 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {default as axios} from 'axios';
+import LineLogin from '@xmartlabs/react-native-line';
+import * as Keychain from 'react-native-keychain';
 
 import {RootState} from '~/stores/index';
 import {baseUrl} from '~/constants/url';
@@ -14,9 +16,42 @@ import {setTalkRoomMessages} from '~/stores/talkRoomMessages';
 import {setFlashes} from '~/stores/flashes';
 import {setChatPartners} from '~/stores/chatPartners';
 import {setFlashStamps} from '~/stores/flashStamps';
+import {useCustomDispatch} from './stores';
+
+const useSuccessfullLoginDispatch = () => {
+  const dispatch = useCustomDispatch();
+
+  const loginDispatch = useCallback(
+    ({
+      user,
+      posts,
+      rooms,
+      messages,
+      flashes,
+      chatPartners,
+      flashStamps,
+    }: SuccessfullLoginData) => {
+      dispatch(setUser(user));
+      dispatch(setPosts(posts));
+      dispatch(setTalkRooms(rooms));
+      dispatch(setTalkRoomMessages(messages));
+      dispatch(setFlashes(flashes));
+      dispatch(setChatPartners(chatPartners));
+      dispatch(setFlashStamps(flashStamps));
+      dispatch(setLogin(true));
+    },
+    [dispatch],
+  );
+
+  return {
+    loginDispatch,
+  };
+};
 
 export const useSessionloginProccess = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
+
+  const {loginDispatch} = useSuccessfullLoginDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,23 +65,8 @@ export const useSessionloginProccess = () => {
             `${baseUrl}/sessions/sessionLogin?id=${id}`,
             addBearer(token),
           );
-          const {
-            user,
-            posts,
-            rooms,
-            messages,
-            flashes,
-            chatPartners,
-            flashStamps,
-          } = response.data;
-          dispatch(setLogin(true));
-          dispatch(setUser(user));
-          dispatch(setPosts(posts));
-          dispatch(setTalkRooms(rooms));
-          dispatch(setTalkRoomMessages(messages));
-          dispatch(setFlashes(flashes));
-          dispatch(setChatPartners(chatPartners));
-          dispatch(setFlashStamps(flashStamps));
+
+          loginDispatch(response.data);
         } catch (e) {
           handleApiError(e);
         }
@@ -54,10 +74,50 @@ export const useSessionloginProccess = () => {
       setIsLoading(false);
     };
     loginProccess();
-  }, [dispatch, checkKeychain, addBearer, handleApiError]);
+  }, [dispatch, checkKeychain, addBearer, handleApiError, loginDispatch]);
 
   return {
     isLoading,
+  };
+};
+
+export const useLineLogin = () => {
+  const {addBearer} = useApikit();
+
+  const {loginDispatch} = useSuccessfullLoginDispatch();
+
+  const lineLogin = useCallback(async () => {
+    try {
+      const loginResult = await LineLogin.login({
+        // @ts-ignore
+        scopes: ['openid', 'profile'],
+      });
+      const idToken = loginResult.accessToken.id_token;
+      const nonce = loginResult.IDTokenNonce;
+
+      await axios.post(`${baseUrl}/nonce`, {nonce});
+
+      const response = await axios.post<
+        SuccessfullLoginData & {accessToken: string}
+      >(`${baseUrl}/sessions/lineLogin`, {}, addBearer(idToken as string));
+
+      // 成功したらキーチェーンにcredentialsを保存
+      await Keychain.resetGenericPassword();
+      await Keychain.setGenericPassword(
+        String(response.data.user.id),
+        response.data.accessToken,
+      );
+
+      const {accessToken, ...restData} = response.data; // eslint-disable-line
+
+      loginDispatch(restData);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [addBearer, loginDispatch]);
+
+  return {
+    lineLogin,
   };
 };
 

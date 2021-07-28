@@ -8,6 +8,7 @@ import {useCustomDispatch} from '~/hooks/stores';
 import {lineLoginThunk} from '~/thunks/session/lineLogin';
 import {sampleLogin} from '~/thunks/session/sampleLogin';
 import {AuthNavigationProp} from '~/navigations/Auth';
+import {useLineLogin} from '~/hooks/sessions';
 
 const lineBase = require('../../../assets/btn_base.png');
 const linePress = require('../../../assets/btn_press.png');
@@ -25,8 +26,10 @@ export const Auth = () => {
     setPressLoginButton(false);
   };
 
+  const {lineLogin} = useLineLogin();
+
   const onLoginPress = () => {
-    dispatch(lineLoginThunk());
+    lineLogin();
   };
 
   const onSampleLoginPress = () => {
