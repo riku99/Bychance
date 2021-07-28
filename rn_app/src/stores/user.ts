@@ -7,7 +7,7 @@ import {
 } from '../thunks/session/lineLogin';
 import {
   editProfileThunk,
-  EditProfilePayload,
+  // EditProfilePayload,
 } from '../thunks/users/editProfile';
 import {
   refreshUserThunk,
@@ -36,6 +36,7 @@ import {
 import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {logoutThunk} from '~/thunks/session/logout';
 import {sampleLogin} from '../thunks/session/sampleLogin';
+import {EditProfilePayload} from '~/hooks/users';
 
 export type User = {
   id: string;
@@ -82,6 +83,37 @@ const userSlice = createSlice({
       ...state,
       user: action.payload,
     }),
+    updateProfile: (state, action: PayloadAction<EditProfilePayload>) => {
+      const {
+        name,
+        introduce,
+        avatar,
+        statusMessage,
+        backGroundItem,
+        backGroundItemType,
+        instagram,
+        twitter,
+        youtube,
+        tiktok,
+      } = action.payload;
+
+      return {
+        ...state,
+        user: {
+          ...state.user!,
+          name,
+          introduce,
+          avatar,
+          statusMessage,
+          backGroundItemType,
+          backGroundItem,
+          instagram,
+          twitter,
+          youtube,
+          tiktok,
+        },
+      };
+    },
     saveEditData: (
       state,
       action: PayloadAction<UserState['temporarilySavedData']>,
@@ -267,6 +299,11 @@ const userSlice = createSlice({
   },
 });
 
-export const {saveEditData, resetEditData, setUser} = userSlice.actions;
+export const {
+  saveEditData,
+  resetEditData,
+  setUser,
+  updateProfile,
+} = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

@@ -22,10 +22,8 @@ import {RNToasty} from 'react-native-toasty';
 
 import {RootNavigationProp} from '~/navigations/Root';
 import {RootState} from '../../../stores/index';
-import {editProfileThunk} from '../../../thunks/users/editProfile';
 import {resetEditData} from '../../../stores/user';
 import {UserEditNavigationProp} from '../../../navigations/types';
-import {displayShortMessage} from '../../../helpers/topShortMessage';
 import {useSelectTamporarilySavedUserEditData} from '~/hooks/users';
 import {useCustomDispatch} from '~/hooks/stores';
 import {normalStyles} from '~/constants/styles';
@@ -35,6 +33,7 @@ import {BackGroundItem} from './BackGroundItem';
 import {SnsIconList} from './SnsIconList';
 import {SnsModal} from './SnsModal';
 import {getExtention} from '~/utils';
+import {useEditProfile} from '~/hooks/users';
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {
@@ -139,8 +138,6 @@ export const UserEditPage = () => {
         };
     }
   }, [snsModalType, user.instagram, user.twitter, user.youtube, user.tiktok]);
-
-  const [loading, setLoding] = useState(false);
 
   const isFocused = useIsFocused();
 
@@ -273,8 +270,9 @@ export const UserEditPage = () => {
     setDeleteBackGroundItem(true);
   };
 
+  const {editUser, isLoading} = useEditProfile();
+
   const update = useCallback(async () => {
-    setLoding(true);
     const avatarExt = getExtention(selectedAvatar);
     const backGroundItemExt = getExtention(selectedBackGroundItem?.uri);
     const base64 = await Promise.all([
@@ -283,27 +281,26 @@ export const UserEditPage = () => {
         fs.readFile(selectedBackGroundItem.uri, 'base64'),
     ]);
 
-    await dispatch(
-      editProfileThunk({
-        name,
-        introduce,
-        avatar: base64[0],
-        avatarExt,
-        message,
-        deleteAvatar,
-        backGroundItem: base64[1],
-        backGroundItemType: selectedBackGroundItem?.sourceType,
-        backGroundItemExt,
-        deleteBackGroundItem,
-        instagram,
-        twitter,
-        tiktok,
-        youtube,
-      }),
-    );
+    await editUser({
+      name,
+      introduce,
+      avatar: base64[0],
+      avatarExt,
+      message,
+      deleteAvatar,
+      backGroundItem: base64[1],
+      backGroundItemType: selectedBackGroundItem?.sourceType,
+      backGroundItemExt,
+      deleteBackGroundItem,
+      instagram,
+      twitter,
+      tiktok,
+      youtube,
+    });
 
     navigation.goBack();
   }, [
+    editUser,
     navigation,
     name,
     introduce,
@@ -312,7 +309,6 @@ export const UserEditPage = () => {
     deleteAvatar,
     deleteBackGroundItem,
     selectedBackGroundItem,
-    dispatch,
     instagram,
     twitter,
     youtube,
@@ -324,7 +320,7 @@ export const UserEditPage = () => {
       navigation.dangerouslyGetParent()?.setOptions({
         title: 'プロフィールを編集',
         headerRight: () =>
-          !loading ? (
+          !isLoading ? (
             <Button
               title="完了"
               titleStyle={styles.completeButtonTitle}
@@ -337,7 +333,7 @@ export const UserEditPage = () => {
           ),
       });
     }
-  }, [isFocused, loading, update, navigation]);
+  }, [isFocused, isLoading, update, navigation]);
 
   const showSnsModal = useCallback((snsType: SnsList) => {
     setSnsModalType(snsType);

@@ -1,9 +1,15 @@
+import {useCallback, useState} from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
+import {default as axios} from 'axios';
 
 import {RootState} from '~/stores/index';
 import {UserPageFrom} from '~/navigations/UserPage';
 import {selectChatPartner} from '~/stores/chatPartners';
 import {selectNearbyUser} from '~/stores/nearbyUsers';
+import {useApikit} from './apikit';
+import {User} from '~/types/users';
+import {baseUrl} from '~/constants/url';
+import {updateProfile} from '~/stores/user';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -68,4 +74,107 @@ export const useUser = ({
       isMe,
     };
   }
+};
+
+type EditArg = {
+  name: string;
+  introduce: string;
+  avatar?: string;
+  avatarExt?: string | null;
+  deleteAvatar: boolean;
+  message: string;
+  backGroundItem?: string;
+  backGroundItemType?: 'image' | 'video';
+  deleteBackGroundItem: boolean;
+  backGroundItemExt?: string | null;
+  instagram: string | null;
+  twitter: string | null;
+  youtube: string | null;
+  tiktok: string | null;
+};
+
+export type EditProfilePayload = Pick<
+  User,
+  | 'id'
+  | 'name'
+  | 'introduce'
+  | 'avatar'
+  | 'statusMessage'
+  | 'backGroundItem'
+  | 'backGroundItemType'
+  | 'instagram'
+  | 'twitter'
+  | 'youtube'
+  | 'tiktok'
+>;
+
+export const useEditProfile = () => {
+  const {
+    dispatch,
+    checkKeychain,
+    addBearer,
+    handleApiError,
+    toast,
+  } = useApikit();
+
+  const [isLoading, setIsLoaidng] = useState(false);
+
+  const editUser = useCallback(
+    async ({
+      name,
+      introduce,
+      avatar,
+      avatarExt,
+      deleteAvatar,
+      message,
+      backGroundItem,
+      backGroundItemType,
+      deleteBackGroundItem,
+      backGroundItemExt,
+      instagram,
+      twitter,
+      youtube,
+      tiktok,
+    }: EditArg) => {
+      setIsLoaidng(true);
+
+      const credentials = await checkKeychain();
+
+      try {
+        const response = await axios.patch<EditProfilePayload>(
+          `${baseUrl}/users?id=${credentials?.id}`,
+          {
+            name,
+            introduce,
+            avatar,
+            avatarExt,
+            deleteAvatar,
+            statusMessage: message,
+            backGroundItem,
+            backGroundItemType,
+            deleteBackGroundItem,
+            backGroundItemExt,
+            instagram,
+            twitter,
+            youtube,
+            tiktok,
+          },
+          addBearer(credentials?.token),
+        );
+        dispatch(updateProfile(response.data));
+        toast?.show('更新しました', {type: 'success'});
+      } catch (e) {
+        setIsLoaidng(false);
+        handleApiError(e);
+      } finally {
+        setIsLoaidng(false);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, dispatch, toast],
+  );
+
+  return {
+    editUser,
+    isLoading,
+  };
 };

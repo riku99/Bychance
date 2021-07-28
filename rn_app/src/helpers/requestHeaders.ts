@@ -5,7 +5,7 @@ export const headers = (token: string) => ({
 });
 
 // headersの名前違う版
-export const addBearer = (token: string) => ({
+export const addBearer = (token?: string) => ({
   headers: {
     Authorization: 'Bearer ' + token,
   },

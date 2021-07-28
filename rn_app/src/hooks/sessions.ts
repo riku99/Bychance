@@ -16,7 +16,7 @@ import {setChatPartners} from '~/stores/chatPartners';
 import {setFlashStamps} from '~/stores/flashStamps';
 
 export const useSessionloginProccess = () => {
-  const {dispatch, checkKeychain, addBearer, handleError} = useApikit();
+  const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,7 +25,6 @@ export const useSessionloginProccess = () => {
       const credentials = await checkKeychain();
       if (credentials) {
         const {id, token} = credentials;
-        // await dispatch(sessionLoginThunk(credentials));
         try {
           const response = await axios.get<SuccessfullLoginData>(
             `${baseUrl}/sessions/sessionLogin?id=${id}`,
@@ -49,13 +48,13 @@ export const useSessionloginProccess = () => {
           dispatch(setChatPartners(chatPartners));
           dispatch(setFlashStamps(flashStamps));
         } catch (e) {
-          handleError(e);
+          handleApiError(e);
         }
       }
       setIsLoading(false);
     };
     loginProccess();
-  }, [dispatch, checkKeychain, addBearer, handleError]);
+  }, [dispatch, checkKeychain, addBearer, handleApiError]);
 
   return {
     isLoading,

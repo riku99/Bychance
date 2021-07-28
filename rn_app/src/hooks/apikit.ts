@@ -8,13 +8,13 @@ import {useHandleApiErrors} from './errors';
 export const useApikit = () => {
   const toast = useToast();
   const dispatch = useCustomDispatch();
-  const {handleError} = useHandleApiErrors();
+  const {handleApiError} = useHandleApiErrors();
 
   return {
     toast,
     dispatch,
     checkKeychain,
     addBearer,
-    handleError,
+    handleApiError,
   };
 };

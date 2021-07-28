@@ -5,7 +5,7 @@ import * as Keychain from 'react-native-keychain';
 import {AxiosError} from 'axios';
 
 import {RootState} from '~/stores';
-import {logout, setLogin} from '~/stores/sessions';
+import {setLogin} from '~/stores/sessions';
 import {resetError, setError} from '~/stores/errors';
 import {useApikit} from './apikit';
 import {ApiError} from '~/types/errors';
@@ -47,7 +47,7 @@ export const useHandleErrors = () => {
 export const useHandleApiErrors = () => {
   const dispatch = useCustomDispatch();
 
-  const handleError = useCallback(
+  const handleApiError = useCallback(
     (e: any) => {
       if (e && e.response) {
         const axiosError = e as AxiosError<ApiError>;
@@ -62,6 +62,6 @@ export const useHandleApiErrors = () => {
   );
 
   return {
-    handleError,
+    handleApiError,
   };
 };
