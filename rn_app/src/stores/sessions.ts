@@ -1,8 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {lineLoginThunk} from '../thunks/session/lineLogin';
 import {logoutThunk} from '~/thunks/session/logout';
-import {sampleLogin} from '../thunks/session/sampleLogin';
 
 type initialState = {login: boolean};
 
@@ -23,8 +21,6 @@ const sessionSlice = createSlice({
     },
   },
   extraReducers: {
-    [sampleLogin.fulfilled.type]: () => ({login: true}),
-    [lineLoginThunk.fulfilled.type]: () => ({login: true}),
     [logoutThunk.fulfilled.type]: () => initialState,
   },
 });

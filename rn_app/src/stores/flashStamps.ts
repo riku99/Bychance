@@ -10,10 +10,6 @@ import {
   createFlashStampThunk,
 } from '~/thunks/flashStamps/createFlashStamp';
 import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../thunks/session/lineLogin';
-import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
 } from '~/thunks/nearbyUsers/getNearbyUsers';
@@ -55,12 +51,6 @@ const flashStampsSlice = createSlice({
     },
   },
   extraReducers: {
-    [lineLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<LineLoginThunkPayload>,
-    ) => {
-      flashStampsAdapter.addMany(state, action.payload.flashStamps);
-    },
     [createFlashStampThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateFlashStampPayload>,

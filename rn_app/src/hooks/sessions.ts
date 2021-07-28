@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
+import {Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 import LineLogin from '@xmartlabs/react-native-line';
@@ -97,27 +98,58 @@ export const useLineLogin = () => {
 
       await axios.post(`${baseUrl}/nonce`, {nonce});
 
-      const response = await axios.post<
-        SuccessfullLoginData & {accessToken: string}
-      >(`${baseUrl}/sessions/lineLogin`, {}, addBearer(idToken as string));
+      try {
+        const response = await axios.post<
+          SuccessfullLoginData & {accessToken: string}
+        >(`${baseUrl}/sessions/lineLogin`, {}, addBearer(idToken as string));
 
-      // 成功したらキーチェーンにcredentialsを保存
-      await Keychain.resetGenericPassword();
-      await Keychain.setGenericPassword(
-        String(response.data.user.id),
-        response.data.accessToken,
-      );
+        // 成功したらキーチェーンにcredentialsを保存
+        await Keychain.resetGenericPassword();
+        await Keychain.setGenericPassword(
+          String(response.data.user.id),
+          response.data.accessToken,
+        );
 
-      const {accessToken, ...restData} = response.data; // eslint-disable-line
+        const {accessToken, ...restData} = response.data; // eslint-disable-line
 
-      loginDispatch(restData);
+        loginDispatch(restData);
+      } catch (e) {
+        Alert.alert(
+          'エラーが発生しました。',
+          '申し訳ありませんがやり直してください',
+        );
+      }
     } catch (e) {
-      console.log(e);
+      console.log('lineError');
+      // if (e.message === 'User cancelled or interrupted the login process.') {
+      // }
     }
   }, [addBearer, loginDispatch]);
 
   return {
     lineLogin,
+  };
+};
+
+export const useSampleLogin = () => {
+  const {loginDispatch} = useSuccessfullLoginDispatch();
+
+  const sampleLogin = useCallback(async () => {
+    const response = await axios.get<
+      SuccessfullLoginData & {accessToken: string}
+    >(`${baseUrl}/sampleLogin`);
+    await Keychain.resetGenericPassword();
+    await Keychain.setGenericPassword(
+      response.data.user.id,
+      response.data.accessToken,
+    );
+
+    const {accessToken, ...data} = response.data; // eslint-disable-line
+    loginDispatch(data);
+  }, [loginDispatch]);
+
+  return {
+    sampleLogin,
   };
 };
 

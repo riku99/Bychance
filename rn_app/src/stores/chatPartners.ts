@@ -10,14 +10,6 @@ import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {updateAlreadyViewed} from './helpers/createViewedFlashes';
 import {refreshUser} from './helpers/refreshUser';
 import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../thunks/session/lineLogin';
-import {
-  sampleLogin,
-  SampleLoginThunkPayload,
-} from '../thunks/session/sampleLogin';
-import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
 } from '../thunks/nearbyUsers/getNearbyUsers';
@@ -50,17 +42,9 @@ export const chatPartnersSlice = createSlice({
     },
   },
   extraReducers: {
-    [sampleLogin.fulfilled.type]: (
-      state,
-      action: PayloadAction<SampleLoginThunkPayload>,
-    ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [logoutThunk.fulfilled.type]: () => {
       return chatPartnersAdapter.getInitialState();
     },
-    [lineLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<LineLoginThunkPayload>,
-    ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [createRoomThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateRoomThunkPayload>,

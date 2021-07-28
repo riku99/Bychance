@@ -7,11 +7,6 @@ import {RNToasty} from 'react-native-toasty';
 
 import {RootState} from './index';
 import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../thunks/session/lineLogin';
-import {sampleLogin} from '../thunks/session/sampleLogin';
-import {
   createMessageThunk,
   CreateMessageThunkPayload,
 } from '../thunks/talkRoomMessages/createTalkRoomMessage';
@@ -59,17 +54,8 @@ export const RoomsSlice = createSlice({
     },
   },
   extraReducers: {
-    [sampleLogin.fulfilled.type]: (state, action) => {
-      talkRoomsAdapter.addMany(state, action.payload.rooms);
-    },
     [logoutThunk.fulfilled.type]: () => {
       return talkRoomsAdapter.getInitialState();
-    },
-    [lineLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<LineLoginThunkPayload>,
-    ) => {
-      talkRoomsAdapter.addMany(state, action.payload.rooms);
     },
     [createRoomThunk.fulfilled.type]: (
       state,

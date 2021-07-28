@@ -2,10 +2,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {refreshUser} from './helpers/refreshUser';
 import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../thunks/session/lineLogin';
-import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
 } from '../thunks/users/refreshUser';
@@ -31,7 +27,6 @@ import {
 } from '~/thunks/users/changeShowReceiveMessage';
 import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {logoutThunk} from '~/thunks/session/logout';
-import {sampleLogin} from '../thunks/session/sampleLogin';
 import {EditProfilePayload} from '~/hooks/users';
 
 export type User = {
@@ -192,21 +187,6 @@ const userSlice = createSlice({
     }),
   },
   extraReducers: {
-    [sampleLogin.fulfilled.type]: (state, action) => {
-      return {
-        ...state,
-        user: action.payload.user,
-      };
-    },
-    [lineLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<LineLoginThunkPayload>,
-    ) => {
-      return {
-        ...state,
-        user: action.payload.user,
-      };
-    },
     [logoutThunk.fulfilled.type]: () => initialState,
     [changeUserDisplayThunk.fulfilled.type]: (
       state,

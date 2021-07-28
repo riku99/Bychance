@@ -13,11 +13,6 @@ import {
   DeletePostThunkPaylaod,
 } from '../thunks/posts/deletePost';
 import {logoutThunk} from '~/thunks/session/logout';
-import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-} from '../thunks/session/lineLogin';
-import {sampleLogin} from '../thunks/session/sampleLogin';
 import {RootState} from '.';
 import {refreshUser} from '~/stores/helpers/refreshUser';
 import {
@@ -52,17 +47,8 @@ const postSlice = createSlice({
     },
   },
   extraReducers: {
-    [sampleLogin.fulfilled.type]: (state, action) => {
-      postsAdaper.addMany(state, action.payload.posts);
-    },
     [logoutThunk.fulfilled.type]: () => {
       return postsAdaper.getInitialState();
-    },
-    [lineLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<LineLoginThunkPayload>,
-    ) => {
-      postsAdaper.addMany(state, action.payload.posts);
     },
     [createPostThunk.fulfilled.type]: (
       state,

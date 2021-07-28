@@ -4,19 +4,14 @@ import {Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 
 import Logo from '~/assets/logo.svg';
-import {useCustomDispatch} from '~/hooks/stores';
-import {lineLoginThunk} from '~/thunks/session/lineLogin';
-import {sampleLogin} from '~/thunks/session/sampleLogin';
 import {AuthNavigationProp} from '~/navigations/Auth';
-import {useLineLogin} from '~/hooks/sessions';
+import {useLineLogin, useSampleLogin} from '~/hooks/sessions';
 
 const lineBase = require('../../../assets/btn_base.png');
 const linePress = require('../../../assets/btn_press.png');
 
 export const Auth = () => {
   const [pressLoginButton, setPressLoginButton] = useState(false);
-
-  const dispatch = useCustomDispatch();
 
   const onLoginPressIn = () => {
     setPressLoginButton(true);
@@ -27,13 +22,14 @@ export const Auth = () => {
   };
 
   const {lineLogin} = useLineLogin();
+  const {sampleLogin} = useSampleLogin();
 
   const onLoginPress = () => {
     lineLogin();
   };
 
   const onSampleLoginPress = () => {
-    dispatch(sampleLogin());
+    sampleLogin();
   };
 
   const navigation = useNavigation<AuthNavigationProp<'Auth'>>();
@@ -83,11 +79,7 @@ export const Auth = () => {
         </Text>
       </View>
 
-      <Button
-        title="Sample Login"
-        containerStyle={styles.sampleLoginButton}
-        onPress={onSampleLoginPress}
-      />
+      <Button title="Sample Login" onPress={onSampleLoginPress} />
     </View>
   );
 };

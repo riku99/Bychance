@@ -13,11 +13,6 @@ import {
   createFlashThunk,
   CreateFlashThunkPaylaod,
 } from '../thunks/flashes/createFlash';
-import {
-  lineLoginThunk,
-  LineLoginThunkPayload,
-  //sampleLogin,
-} from '../thunks/session/lineLogin';
 import {logoutThunk} from '~/thunks/session/logout';
 import {
   refreshUserThunk,
@@ -53,10 +48,6 @@ const flashesSlice = createSlice({
   },
   extraReducers: {
     [logoutThunk.fulfilled.type]: () => flashesAdapter.getInitialState(),
-    [lineLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<LineLoginThunkPayload>,
-    ) => flashesAdapter.addMany(state, action.payload.flashes),
     [createFlashThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateFlashThunkPaylaod>,

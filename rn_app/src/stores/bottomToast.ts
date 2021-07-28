@@ -20,7 +20,7 @@ const bottomToastSlice = createSlice({
       action.payload,
   },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => initialState,
+    // [logoutThunk.fulfilled.type]: () => initialState,
   },
 });
 
