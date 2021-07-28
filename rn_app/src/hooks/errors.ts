@@ -1,12 +1,15 @@
-import {useEffect} from 'react';
+import {useEffect, useCallback} from 'react';
 import {Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import * as Keychain from 'react-native-keychain';
+import {AxiosError} from 'axios';
 
 import {RootState} from '~/stores';
-import {logout} from '~/stores/sessions';
-import {resetError} from '~/stores/errors';
+import {logout, setLogin} from '~/stores/sessions';
+import {resetError, setError} from '~/stores/errors';
 import {useApikit} from './apikit';
+import {ApiError} from '~/types/errors';
+import {useCustomDispatch} from './stores';
 
 export const useHandleErrors = () => {
   const {toast, dispatch} = useApikit();
@@ -26,7 +29,7 @@ export const useHandleErrors = () => {
             {
               text: 'OK',
               onPress: () => {
-                dispatch(logout());
+                dispatch(setLogin(false));
               },
             },
           ]);
@@ -39,4 +42,26 @@ export const useHandleErrors = () => {
       dispatch(resetError());
     }
   }, [error, toast, dispatch]);
+};
+
+export const useHandleApiErrors = () => {
+  const dispatch = useCustomDispatch();
+
+  const handleError = useCallback(
+    (e: any) => {
+      if (e && e.response) {
+        const axiosError = e as AxiosError<ApiError>;
+        if (axiosError.response?.data) {
+          dispatch(setError(axiosError.response.data));
+        } else {
+          dispatch(setError({errorType: 'someError'}));
+        }
+      }
+    },
+    [dispatch],
+  );
+
+  return {
+    handleError,
+  };
 };

@@ -17,10 +17,6 @@ import {
   lineLoginThunk,
   LineLoginThunkPayload,
 } from '../thunks/session/lineLogin';
-import {
-  sessionLoginThunk,
-  SessionLoginThunkPayload,
-} from '../thunks/session/sessionLogin';
 import {sampleLogin} from '../thunks/session/sampleLogin';
 import {RootState} from '.';
 import {refreshUser} from '~/stores/helpers/refreshUser';
@@ -65,13 +61,6 @@ const postSlice = createSlice({
     [lineLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<LineLoginThunkPayload>,
-    ) => {
-      postsAdaper.addMany(state, action.payload.posts);
-    },
-    // ExceptionsManager.js:179 Invariant Violation: Module AppRegistry is not a registered callable moduleが解決できないので文字列で直接指定
-    [sessionLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
       postsAdaper.addMany(state, action.payload.posts);
     },

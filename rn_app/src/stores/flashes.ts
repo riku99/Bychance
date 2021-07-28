@@ -18,10 +18,6 @@ import {
   LineLoginThunkPayload,
   //sampleLogin,
 } from '../thunks/session/lineLogin';
-import {
-  sessionLoginThunk,
-  SessionLoginThunkPayload,
-} from '../thunks/session/sessionLogin';
 import {logoutThunk} from '~/thunks/session/logout';
 import {
   refreshUserThunk,
@@ -57,10 +53,6 @@ const flashesSlice = createSlice({
   },
   extraReducers: {
     [logoutThunk.fulfilled.type]: () => flashesAdapter.getInitialState(),
-    [sessionLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<SessionLoginThunkPayload>,
-    ) => flashesAdapter.addMany(state, action.payload.flashes),
     [lineLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<LineLoginThunkPayload>,

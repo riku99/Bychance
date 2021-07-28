@@ -10,10 +10,6 @@ import {
   lineLoginThunk,
   LineLoginThunkPayload,
 } from '../thunks/session/lineLogin';
-import {
-  sessionLoginThunk,
-  SessionLoginThunkPayload,
-} from '../thunks/session/sessionLogin';
 import {sampleLogin} from '../thunks/session/sampleLogin';
 import {
   createMessageThunk,
@@ -72,12 +68,6 @@ export const RoomsSlice = createSlice({
     [lineLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<LineLoginThunkPayload>,
-    ) => {
-      talkRoomsAdapter.addMany(state, action.payload.rooms);
-    },
-    [sessionLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
       talkRoomsAdapter.addMany(state, action.payload.rooms);
     },

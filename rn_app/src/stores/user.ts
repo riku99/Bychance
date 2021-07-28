@@ -6,10 +6,6 @@ import {
   LineLoginThunkPayload,
 } from '../thunks/session/lineLogin';
 import {
-  sessionLoginThunk,
-  SessionLoginThunkPayload,
-} from '../thunks/session/sessionLogin';
-import {
   editProfileThunk,
   EditProfilePayload,
 } from '../thunks/users/editProfile';
@@ -177,15 +173,6 @@ const userSlice = createSlice({
     [lineLoginThunk.fulfilled.type]: (
       state,
       action: PayloadAction<LineLoginThunkPayload>,
-    ) => {
-      return {
-        ...state,
-        user: action.payload.user,
-      };
-    },
-    [sessionLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<SessionLoginThunkPayload>,
     ) => {
       return {
         ...state,

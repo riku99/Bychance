@@ -61,10 +61,6 @@ export const chatPartnersSlice = createSlice({
       state,
       action: PayloadAction<LineLoginThunkPayload>,
     ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
-    [sessionLoginThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<SessionLoginThunkPayload>,
-    ) => chatPartnersAdapter.setAll(state, action.payload.chatPartners),
     [createRoomThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateRoomThunkPayload>,

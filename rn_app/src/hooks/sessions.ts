@@ -16,7 +16,7 @@ import {setChatPartners} from '~/stores/chatPartners';
 import {setFlashStamps} from '~/stores/flashStamps';
 
 export const useSessionloginProccess = () => {
-  const {dispatch, checkKeychain, addBearer} = useApikit();
+  const {dispatch, checkKeychain, addBearer, handleError} = useApikit();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,12 +48,14 @@ export const useSessionloginProccess = () => {
           dispatch(setFlashes(flashes));
           dispatch(setChatPartners(chatPartners));
           dispatch(setFlashStamps(flashStamps));
-        } catch (e) {}
+        } catch (e) {
+          handleError(e);
+        }
       }
       setIsLoading(false);
     };
     loginProccess();
-  }, [dispatch, checkKeychain, addBearer]);
+  }, [dispatch, checkKeychain, addBearer, handleError]);
 
   return {
     isLoading,
