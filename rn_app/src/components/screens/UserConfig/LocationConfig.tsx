@@ -8,7 +8,6 @@ import {ConfigList, List} from './List';
 import {useCustomDispatch} from '~/hooks/stores';
 import {notAuthLocationProviderAlert} from '~/helpers/alert';
 import {showBottomToast} from '~/thunks/re-modules';
-import {manualLocationUpdate} from '~/stores/otherSettings';
 import {useDeleteLocation} from '~/hooks/users';
 
 export const LocationConfig = React.memo(() => {
@@ -54,10 +53,10 @@ export const LocationConfig = React.memo(() => {
                     return;
                   }
                   try {
-                    dispatch(manualLocationUpdate(true));
-                    await BackgroundGeolocation.getCurrentPosition({}); // 成功したらBackgroundGeolocation.onLocationが実行される
+                    await BackgroundGeolocation.getCurrentPosition({
+                      extras: {manual: true},
+                    }); // 成功したらBackgroundGeolocation.onLocationが実行される
                   } catch {
-                    dispatch(manualLocationUpdate(false)); // 「getCurrentPosition」が失敗した場合はこっちでfalseにする。API通信でのエラーとは別
                     dispatch(
                       showBottomToast({
                         data: {

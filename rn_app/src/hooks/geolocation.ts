@@ -2,14 +2,13 @@ import {useEffect} from 'react';
 import BackgroundGeolocation, {
   Location,
 } from 'react-native-background-geolocation';
-import {useCustomDispatch} from './stores';
+import {useToast} from 'react-native-fast-toast';
 
 import {useUpdateLocation} from '~/hooks/users';
 
 export const useBackgroundGeolocation = () => {
-  const dispatch = useCustomDispatch();
-
   const {updateLocation} = useUpdateLocation();
+  const toast = useToast();
 
   useEffect(() => {
     BackgroundGeolocation.onLocation(
@@ -20,6 +19,9 @@ export const useBackgroundGeolocation = () => {
           console.log('位置情報が更新されました');
           const {latitude, longitude} = location.coords;
           await updateLocation({lat: latitude, lng: longitude});
+          if (location.extras?.manual) {
+            toast?.show('更新しました', {type: 'success'});
+          }
         }
       },
       (_error) => {
@@ -60,5 +62,5 @@ export const useBackgroundGeolocation = () => {
       BackgroundGeolocation.removeListeners();
     };
     return cleanup;
-  }, [dispatch, updateLocation]);
+  }, [updateLocation, toast]);
 };

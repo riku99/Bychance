@@ -8,7 +8,6 @@ type InitialState = {
   creatingPost?: boolean;
   creatingFlash?: boolean;
   receivedMessage?: TalkRoomMessage;
-  manualLocationUpdate?: boolean;
 };
 
 const initialState: InitialState = {
@@ -16,7 +15,6 @@ const initialState: InitialState = {
   creatingPost: false,
   creatingFlash: false,
   receivedMessage: undefined,
-  manualLocationUpdate: false,
 };
 
 const otherSettingsSlice = createSlice({
@@ -52,10 +50,6 @@ const otherSettingsSlice = createSlice({
       ...state,
       receivedMessage: undefined,
     }),
-    manualLocationUpdate: (state, aciton: PayloadAction<boolean>) => ({
-      ...state,
-      manualLocationUpdate: aciton.payload,
-    }),
     resetSettings: () => initialState,
   },
   extraReducers: {
@@ -81,7 +75,6 @@ export const {
   creatingFlash,
   creatingPost,
   resetRecievedMessage,
-  manualLocationUpdate,
   resetSettings,
 } = otherSettingsSlice.actions;
 
