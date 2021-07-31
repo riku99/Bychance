@@ -153,6 +153,31 @@ export const useSampleLogin = () => {
   };
 };
 
+export const useLogout = () => {
+  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+
+  const logout = useCallback(async () => {
+    const credentials = await checkKeychain();
+
+    try {
+      await axios.get(
+        `${baseUrl}/sessions/logout?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+
+      await Keychain.resetGenericPassword(); // ログアウトするからキーチェーンの中身リセット
+      dispatch(setLogin(false));
+      dispatch(setUser());
+    } catch (e) {
+      handleApiError(e);
+    }
+  }, [checkKeychain, handleApiError, addBearer, dispatch]);
+
+  return {
+    logout,
+  };
+};
+
 export const useLoginSelect = () => {
   const login = useSelector((state: RootState) => {
     return state.sessionReducer.login;

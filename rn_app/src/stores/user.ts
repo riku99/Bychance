@@ -70,10 +70,16 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => ({
-      ...state,
-      user: action.payload,
-    }),
+    setUser: (state, action: PayloadAction<User | undefined>) => {
+      if (!action.payload) {
+        return initialState;
+      }
+
+      return {
+        ...state,
+        user: action.payload,
+      };
+    },
     updateProfile: (state, action: PayloadAction<EditProfilePayload>) => {
       const {
         name,
