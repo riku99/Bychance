@@ -7,9 +7,8 @@ import {
   FlatList,
 } from 'react-native';
 
-import {refreshUserThunk} from '../../../thunks/users/refreshUser';
 import {Post} from '~/stores/posts';
-import {useCustomDispatch} from '~/hooks/stores';
+import {useRefreshUser} from '~/hooks/users';
 
 type FlatListTabSceneProps = {
   renderItem?: ListRenderItem<Post>;
@@ -35,18 +34,15 @@ export const FlatListTabScene = React.memo(
     paddingTopHeight,
     tabViewContainerMinHeight,
   }: FlatListTabSceneProps) => {
-    const dispatch = useCustomDispatch();
     const [refreshing, setRefreshing] = useState(false);
+
+    const {refreshUser} = useRefreshUser();
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
-      await dispatch(
-        refreshUserThunk({
-          userId,
-        }),
-      );
+      await refreshUser({userId});
       setRefreshing(false);
-    }, [dispatch, userId]);
+    }, [refreshUser, userId]);
 
     return (
       <Animated.FlatList
@@ -102,18 +98,15 @@ export const ScrollViewTabScene = React.memo(
     paddingTopHeight,
     tabViewContainerMinHeight,
   }: ScrollViewTabSceneProps) => {
-    const dispatch = useCustomDispatch();
     const [refreshing, setRefreshing] = useState(false);
+
+    const {refreshUser} = useRefreshUser();
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
-      await dispatch(
-        refreshUserThunk({
-          userId,
-        }),
-      );
+      await refreshUser({userId});
       setRefreshing(false);
-    }, [dispatch, userId]);
+    }, [refreshUser, userId]);
 
     return (
       <Animated.ScrollView

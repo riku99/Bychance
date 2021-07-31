@@ -8,15 +8,10 @@ import {AnotherUser, ReceivedMessageData} from './types';
 import {RootState} from './index';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {updateAlreadyViewed} from './helpers/createViewedFlashes';
-import {refreshUser} from './helpers/refreshUser';
 import {
   getNearbyUsersThunk,
   GetNearbyUsersPayload,
 } from '../thunks/nearbyUsers/getNearbyUsers';
-import {
-  refreshUserThunk,
-  RefreshUserThunkPaylaod,
-} from '../thunks/users/refreshUser';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
@@ -39,6 +34,12 @@ export const chatPartnersSlice = createSlice({
     setChatPartners: (state, action: PayloadAction<AnotherUser[]>) => {
       chatPartnersAdapter.upsertMany(state, action.payload);
     },
+    setChatPartner: (state, action: PayloadAction<AnotherUser>) => {
+      chatPartnersAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: action.payload,
+      });
+    },
     resetChatPartners: () => chatPartnersAdapter.getInitialState(),
   },
   extraReducers: {
@@ -57,16 +58,6 @@ export const chatPartnersSlice = createSlice({
       if (action.payload.isFirstMessage) {
         chatPartnersAdapter.upsertOne(state, action.payload.sender);
       }
-    },
-    [refreshUserThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<RefreshUserThunkPaylaod>,
-    ) => {
-      refreshUser({
-        slice: chatPartnersSlice.name,
-        state,
-        action,
-      });
     },
     [createAlreadyViewdFlashThunk.fulfilled.type]: (
       state,
@@ -128,4 +119,8 @@ const selectIds = (state: RootState['chatPartnersReducer']) =>
 
 export const chatPartnersReducer = chatPartnersSlice.reducer;
 
-export const {setChatPartners, resetChatPartners} = chatPartnersSlice.actions;
+export const {
+  setChatPartners,
+  setChatPartner,
+  resetChatPartners,
+} = chatPartnersSlice.actions;

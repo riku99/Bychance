@@ -16,7 +16,7 @@ import {
   FlatList,
 } from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {shallowEqual, useSelector, useDispatch} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import {UIActivityIndicator} from 'react-native-indicators';
 
@@ -37,12 +37,11 @@ import {UserPageNavigationProp} from '../../../navigations/types';
 import {RootState} from '../../../stores/index';
 import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
-import {refreshUserThunk} from '../../../thunks/users/refreshUser';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
-import {useUser} from '~/hooks/users';
+import {useUser, useRefreshUser} from '~/hooks/users';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -178,13 +177,13 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, [anotherUser, isMe, me, myFlashes, routeParams]);
 
-  const dispatch = useDispatch();
+  const {refreshUser} = useRefreshUser();
 
   useEffect(() => {
     if (!isMe && anotherUser?.id) {
-      dispatch(refreshUserThunk({userId: anotherUser.id}));
+      refreshUser({userId: anotherUser.id});
     }
-  }, [anotherUser?.id, dispatch, isMe]);
+  }, [anotherUser?.id, isMe, refreshUser]);
 
   const [introduceHeight, setIntroduceHeight] = useState(0);
   const [introduceModal, setIntroduceModal] = useState(false);

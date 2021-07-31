@@ -14,10 +14,6 @@ import {
   GetNearbyUsersPayload,
 } from '~/thunks/nearbyUsers/getNearbyUsers';
 import {
-  refreshUserThunk,
-  RefreshUserThunkPaylaod,
-} from '~/thunks/users/refreshUser';
-import {
   CreateFlashThunkPaylaod,
   createFlashThunk,
 } from '~/thunks/flashes/createFlash';
@@ -81,16 +77,6 @@ const flashStampsSlice = createSlice({
       action: PayloadAction<GetNearbyUsersPayload>,
     ) => {
       flashStampsAdapter.upsertMany(state, action.payload.flashStampsData);
-    },
-    [refreshUserThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<RefreshUserThunkPaylaod>,
-    ) => {
-      if (action.payload.isMyData) {
-        flashStampsAdapter.upsertMany(state, action.payload.flashStamps);
-      } else {
-        flashStampsAdapter.upsertMany(state, action.payload.data.flashStamps);
-      }
     },
     [createFlashThunk.fulfilled.type]: (
       state,

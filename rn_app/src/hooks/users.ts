@@ -24,6 +24,7 @@ import {FlashStamp} from '~/types/flashStamps';
 import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
 import {setFlashStamps} from '~/stores/flashStamps';
+import {setChatPartner} from '~/stores/chatPartners';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -156,7 +157,7 @@ export const useEditProfile = () => {
 
       try {
         const response = await axios.patch<EditProfilePayload>(
-          `${baseUrl}/users?id=${232}`,
+          `${baseUrl}/users?id=${credentials?.id}`,
           {
             name,
             introduce,
@@ -371,12 +372,18 @@ export const useRefreshUser = () => {
 
           dispatch(setUser(user));
           dispatch(setPosts(posts));
+          dispatch(setFlashes(flashes));
+          dispatch(setFlashStamps(flashStamps));
+        } else {
+          const {data} = response.data;
+          dispatch(setFlashStamps(data.flashStamps));
+          dispatch(setChatPartner(data.user));
         }
       } catch (e) {
         handleApiError(e);
       }
     },
-    [addBearer, handleApiError, checkKeychain],
+    [addBearer, handleApiError, checkKeychain, dispatch],
   );
 
   return {

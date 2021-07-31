@@ -13,11 +13,6 @@ import {
   DeletePostThunkPaylaod,
 } from '../thunks/posts/deletePost';
 import {RootState} from '.';
-import {refreshUser} from '~/stores/helpers/refreshUser';
-import {
-  refreshUserThunk,
-  RefreshUserThunkPaylaod,
-} from '~/thunks/users/refreshUser';
 
 export type Post = {
   id: number;
@@ -60,17 +55,6 @@ const postSlice = createSlice({
       action: PayloadAction<DeletePostThunkPaylaod>,
     ) => {
       postsAdaper.removeOne(state, action.payload);
-    },
-    [refreshUserThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<RefreshUserThunkPaylaod>,
-    ) => {
-      refreshUser({
-        slice: 'post',
-        state,
-        adaper: postsAdaper,
-        action: action,
-      });
     },
   },
 });

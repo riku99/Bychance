@@ -4,22 +4,22 @@ import messaging from '@react-native-firebase/messaging';
 import {useSelector} from 'react-redux';
 
 import {useCustomDispatch} from './stores';
-import {refreshUserThunk} from '~/thunks/users/refreshUser';
 import {useHandleDeviceToken} from './deviceToken';
 import {RootState} from '~/stores';
+import {useRefreshUser} from '~/hooks/users';
 
 export const useActive = () => {
   const id = useSelector((state: RootState) => state.userReducer.user?.id);
 
-  const dispatch = useCustomDispatch();
-
   const {postDeviceToken} = useHandleDeviceToken();
+
+  const {refreshUser} = useRefreshUser();
 
   useEffect(() => {
     if (id) {
       const onActive = async (nextAppState: AppStateStatus) => {
         if (nextAppState === 'active') {
-          dispatch(refreshUserThunk({userId: id}));
+          refreshUser({userId: id});
 
           const deviceToken = await messaging().getToken();
           postDeviceToken(deviceToken);
@@ -31,5 +31,5 @@ export const useActive = () => {
         AppState.removeEventListener('change', onActive);
       };
     }
-  }, [id, dispatch, postDeviceToken]);
+  }, [id, refreshUser, postDeviceToken]);
 };

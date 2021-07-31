@@ -1,10 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {refreshUser} from './helpers/refreshUser';
-import {
-  refreshUserThunk,
-  RefreshUserThunkPaylaod,
-} from '../thunks/users/refreshUser';
 import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
@@ -230,16 +225,6 @@ const userSlice = createSlice({
       ...state,
       user: {...state.user!, lat: action.payload.lat, lng: action.payload.lng},
     }),
-    [refreshUserThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<RefreshUserThunkPaylaod>,
-    ): UserState => {
-      return refreshUser({
-        slice: userSlice.name,
-        state,
-        action,
-      }) as UserState;
-    },
   },
 });
 

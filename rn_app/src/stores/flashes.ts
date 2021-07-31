@@ -13,11 +13,6 @@ import {
   createFlashThunk,
   CreateFlashThunkPaylaod,
 } from '../thunks/flashes/createFlash';
-import {
-  refreshUserThunk,
-  RefreshUserThunkPaylaod,
-} from '~/thunks/users/refreshUser';
-import {refreshUser} from '~/stores/helpers/refreshUser';
 
 export type Flash = {
   id: number;
@@ -55,12 +50,6 @@ const flashesSlice = createSlice({
       state,
       action: PayloadAction<DeleteFlashThunkPayload>,
     ) => flashesAdapter.removeOne(state, action.payload),
-    [refreshUserThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<RefreshUserThunkPaylaod>,
-    ) => {
-      refreshUser({slice: 'flash', state, action, adapter: flashesAdapter});
-    },
   },
 });
 
