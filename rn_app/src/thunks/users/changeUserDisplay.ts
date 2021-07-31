@@ -1,37 +1,37 @@
-import {
-  axios,
-  createAsyncThunk,
-  origin,
-  headers,
-  checkKeychain,
-  handleBasicApiErrorWithDispatch,
-  handleCredentialsError,
-  RejectPayload,
-} from '../re-modules';
+// import {
+//   axios,
+//   createAsyncThunk,
+//   origin,
+//   headers,
+//   checkKeychain,
+//   handleBasicApiErrorWithDispatch,
+//   handleCredentialsError,
+//   RejectPayload,
+// } from '../re-modules';
 
-export type EidtUserDisplayThunkPayload = boolean;
+// export type EidtUserDisplayThunkPayload = boolean;
 
-export const changeUserDisplayThunk = createAsyncThunk<
-  EidtUserDisplayThunkPayload,
-  boolean,
-  {rejectValue: RejectPayload}
->('users/editUserDisplay', async (display, {dispatch, rejectWithValue}) => {
-  const credentials = await checkKeychain();
-  if (credentials) {
-    try {
-      await axios.patch(
-        `${origin}/users/display?id=${credentials.id}`,
-        {display},
-        headers(credentials.token),
-      );
+// export const changeUserDisplayThunk = createAsyncThunk<
+//   EidtUserDisplayThunkPayload,
+//   boolean,
+//   {rejectValue: RejectPayload}
+// >('users/editUserDisplay', async (display, {dispatch, rejectWithValue}) => {
+//   const credentials = await checkKeychain();
+//   if (credentials) {
+//     try {
+//       await axios.patch(
+//         `${origin}/users/display?id=${credentials.id}`,
+//         {display},
+//         headers(credentials.token),
+//       );
 
-      return display;
-    } catch (e) {
-      const result = handleBasicApiErrorWithDispatch({e, dispatch});
-      return rejectWithValue(result);
-    }
-  } else {
-    handleCredentialsError(dispatch);
-    return rejectWithValue({errorType: 'loginError'});
-  }
-});
+//       return display;
+//     } catch (e) {
+//       const result = handleBasicApiErrorWithDispatch({e, dispatch});
+//       return rejectWithValue(result);
+//     }
+//   } else {
+//     handleCredentialsError(dispatch);
+//     return rejectWithValue({errorType: 'loginError'});
+//   }
+// });

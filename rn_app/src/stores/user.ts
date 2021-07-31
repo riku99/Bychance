@@ -6,10 +6,6 @@ import {
   RefreshUserThunkPaylaod,
 } from '../thunks/users/refreshUser';
 import {
-  changeUserDisplayThunk,
-  EidtUserDisplayThunkPayload,
-} from '../thunks/users/changeUserDisplay';
-import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
 } from '../thunks/users/updateLocation';
@@ -210,13 +206,6 @@ const userSlice = createSlice({
     }),
   },
   extraReducers: {
-    [changeUserDisplayThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<EidtUserDisplayThunkPayload>,
-    ) => ({
-      ...state,
-      user: {...state.user!, display: action.payload},
-    }),
     [updateLocationThunk.fulfilled.type]: (
       state,
       action: PayloadAction<UpdateLocationThunkPaylaod>,
