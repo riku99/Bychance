@@ -9,16 +9,13 @@ import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
 } from '../thunks/users/updateLocation';
-import {
-  changeVideoEditDescriptionThunk,
-  ChangeVideoEditDescriptionPayload,
-} from '~/thunks/users/changeVideoEditDescription';
 import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {
   EditProfilePayload,
   ChangeShowReceiveMessagePayload,
   ChangeTalkRoomMessageReceiptPayload,
   ChangeUserDisplayPayload,
+  ChangeVideoEditDescriptionPayload,
 } from '~/hooks/users';
 
 export type User = {
@@ -124,6 +121,16 @@ const userSlice = createSlice({
       ...state,
       user: {...state.user!, display: action.payload},
     }),
+    setVideoDescription: (
+      state,
+      action: PayloadAction<ChangeVideoEditDescriptionPayload>,
+    ) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        videoEditDescription: action.payload,
+      },
+    }),
     saveEditData: (
       state,
       action: PayloadAction<UserState['temporarilySavedData']>,
@@ -223,16 +230,7 @@ const userSlice = createSlice({
         action,
       }) as UserState;
     },
-    [changeVideoEditDescriptionThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<ChangeVideoEditDescriptionPayload>,
-    ) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        videoEditDescription: action.payload,
-      },
-    }),
+
     [deleteLocationInfoThunk.fulfilled.type]: (state) => ({
       ...state,
       user: {
@@ -253,6 +251,7 @@ export const {
   setShowReceiveMessage,
   setTalkRoomMessageReceipt,
   setDisplay,
+  setVideoDescription,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

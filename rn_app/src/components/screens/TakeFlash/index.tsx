@@ -8,8 +8,7 @@ import {RNToasty} from 'react-native-toasty';
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
 import {RootState} from '~/stores';
-import {changeVideoEditDescriptionThunk} from '~/thunks/users/changeVideoEditDescription';
-import {useCustomDispatch} from '~/hooks/stores';
+import {useChangeVideoEditDescription} from '~/hooks/users';
 
 const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {
@@ -18,7 +17,7 @@ const takeVideoOptions = {
 };
 
 const videoEditDescriptionText =
-  '現在動画に関しては撮影したものを保存、投稿はできますが編集、加工ができません。🙇‍♂️🙇‍♀\nなのでインスタとかで加工したものを使ってください!🥺🌞';
+  '現在動画に関しては撮影したものを保存、投稿はできますが編集、加工ができません。🙇‍♂️🙇‍♀\nなのでインスタとかで加工したものを使ってください!';
 
 export const TakeFlashScreen = React.memo(() => {
   const [targetPhoto, setTargetPhoto] = useState<{
@@ -30,6 +29,8 @@ export const TakeFlashScreen = React.memo(() => {
   const cameraRef = useRef<RNCamera>(null);
 
   const [loading, setLoading] = useState(false);
+
+  const {changeVideoEditDescription} = useChangeVideoEditDescription();
 
   const takePhoto = useCallback(async () => {
     if (cameraRef.current) {
@@ -108,22 +109,16 @@ export const TakeFlashScreen = React.memo(() => {
     (state: RootState) => state.userReducer.user!.videoEditDescription,
   );
 
-  const dispatch = useCustomDispatch();
-
   useEffect(() => {
     if (!videoEditDesctiption) {
       Alert.alert('動画の編集について', videoEditDescriptionText, [
         {
           text: 'OK👌',
-          onPress: () => dispatch(changeVideoEditDescriptionThunk(true)),
-        },
-        {
-          text: 'しゃーなし👼',
-          onPress: () => dispatch(changeVideoEditDescriptionThunk(true)),
+          onPress: () => changeVideoEditDescription(true),
         },
       ]);
     }
-  }, [videoEditDesctiption, dispatch]);
+  }, [videoEditDesctiption, changeVideoEditDescription]);
 
   if (!targetPhoto && !targetVideo) {
     return (
