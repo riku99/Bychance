@@ -9,7 +9,11 @@ import {selectNearbyUser} from '~/stores/nearbyUsers';
 import {useApikit} from './apikit';
 import {User} from '~/types/users';
 import {baseUrl} from '~/constants/url';
-import {updateProfile} from '~/stores/user';
+import {
+  updateProfile,
+  setShowReceiveMessage,
+  setTalkRoomMessageReceipt,
+} from '~/stores/user';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -142,7 +146,7 @@ export const useEditProfile = () => {
 
       try {
         const response = await axios.patch<EditProfilePayload>(
-          `${baseUrl}/users?id=${credentials?.id}`,
+          `${baseUrl}/users?id=${232}`,
           {
             name,
             introduce,
@@ -176,5 +180,65 @@ export const useEditProfile = () => {
   return {
     editUser,
     isLoading,
+  };
+};
+
+export type ChangeShowReceiveMessagePayload = boolean;
+
+export const useChangeShowReceiveMessage = () => {
+  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+
+  const changeShowReceiveMessage = useCallback(
+    async ({showReceiveMessage}: {showReceiveMessage: boolean}) => {
+      const credentials = await checkKeychain();
+
+      try {
+        await axios.patch(
+          `${baseUrl}/users/showReceiveMessage?id=${credentials?.id}`,
+          {showReceiveMessage},
+          addBearer(credentials?.token),
+        );
+
+        dispatch(setShowReceiveMessage(showReceiveMessage));
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, handleApiError, addBearer, dispatch],
+  );
+
+  return {
+    changeShowReceiveMessage,
+  };
+};
+
+export type ChangeTalkRoomMessageReceiptPayload = boolean;
+
+export const useChangeTalkRoomMessageReceipt = () => {
+  const {addBearer, checkKeychain, dispatch, handleApiError} = useApikit();
+
+  const changeTalkRoomMessageReceipt = useCallback(
+    async ({receipt}: {receipt: boolean}) => {
+      const credentials = await checkKeychain();
+
+      try {
+        await axios.patch(
+          `${baseUrl}/users/talkRoomMessageReceipt?id=${credentials?.id}`,
+          {receipt},
+          addBearer(credentials?.token),
+        );
+
+        dispatch(setTalkRoomMessageReceipt(receipt));
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, dispatch],
+  );
+
+  return {
+    changeTalkRoomMessageReceipt,
   };
 };

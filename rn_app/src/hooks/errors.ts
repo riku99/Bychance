@@ -5,15 +5,16 @@ import * as Keychain from 'react-native-keychain';
 import {AxiosError} from 'axios';
 
 import {RootState} from '~/stores';
-import {setLogin} from '~/stores/sessions';
 import {resetError, setError} from '~/stores/errors';
 import {useApikit} from './apikit';
 import {ApiError} from '~/types/errors';
 import {useCustomDispatch} from './stores';
+import {useResetDispatch} from './stores';
 
 export const useHandleErrors = () => {
   const {toast, dispatch} = useApikit();
   const error = useSelector((state: RootState) => state.errorsReducer.apiError);
+  const {resetDispatch} = useResetDispatch();
 
   useEffect(() => {
     if (error) {
@@ -29,7 +30,7 @@ export const useHandleErrors = () => {
             {
               text: 'OK',
               onPress: () => {
-                dispatch(setLogin(false));
+                resetDispatch();
               },
             },
           ]);
@@ -41,7 +42,7 @@ export const useHandleErrors = () => {
       }
       dispatch(resetError());
     }
-  }, [error, toast, dispatch]);
+  }, [error, toast, resetDispatch, dispatch]);
 };
 
 export const useHandleApiErrors = () => {

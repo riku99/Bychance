@@ -17,16 +17,12 @@ import {
   changeVideoEditDescriptionThunk,
   ChangeVideoEditDescriptionPayload,
 } from '~/thunks/users/changeVideoEditDescription';
-import {
-  changeTalkRoomMessageReceiptThunk,
-  ChangeTalkRoomMessageReceiptPaylpad,
-} from '~/thunks/users/changeTalkRoomMessageReceipt';
-import {
-  ChangeShowReceiveMessagePayload,
-  changeShowReceiveMessageThunk,
-} from '~/thunks/users/changeShowReceiveMessage';
 import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
-import {EditProfilePayload} from '~/hooks/users';
+import {
+  EditProfilePayload,
+  ChangeShowReceiveMessagePayload,
+  ChangeTalkRoomMessageReceiptPayload,
+} from '~/hooks/users';
 
 export type User = {
   id: string;
@@ -107,6 +103,26 @@ const userSlice = createSlice({
         },
       };
     },
+    setShowReceiveMessage: (
+      state,
+      action: PayloadAction<ChangeShowReceiveMessagePayload>,
+    ) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        showReceiveMessage: action.payload,
+      },
+    }),
+    setTalkRoomMessageReceipt: (
+      state,
+      action: PayloadAction<ChangeTalkRoomMessageReceiptPayload>,
+    ) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        talkRoomMessageReceipt: action.payload,
+      },
+    }),
     saveEditData: (
       state,
       action: PayloadAction<UserState['temporarilySavedData']>,
@@ -223,26 +239,6 @@ const userSlice = createSlice({
         videoEditDescription: action.payload,
       },
     }),
-    [changeTalkRoomMessageReceiptThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<ChangeTalkRoomMessageReceiptPaylpad>,
-    ) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        talkRoomMessageReceipt: action.payload,
-      },
-    }),
-    [changeShowReceiveMessageThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<ChangeShowReceiveMessagePayload>,
-    ) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        showReceiveMessage: action.payload,
-      },
-    }),
     [deleteLocationInfoThunk.fulfilled.type]: (state) => ({
       ...state,
       user: {
@@ -260,6 +256,8 @@ export const {
   setUser,
   updateProfile,
   resetUser,
+  setShowReceiveMessage,
+  setTalkRoomMessageReceipt,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

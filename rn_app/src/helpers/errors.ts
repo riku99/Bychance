@@ -3,10 +3,8 @@ import {Alert} from 'react-native';
 import * as Keychain from 'react-native-keychain';
 
 import {RejectPayload} from '~/thunks/types';
-import {logoutThunk} from '~/thunks/session/logout';
 import {BasicAxiosError} from '~/types';
 import {showBottomToast} from '~/stores/bottomToast';
-import {loguotAction} from '~/thunks/session/logout';
 
 export const alertSomeError = () => {
   Alert.alert(
@@ -53,7 +51,7 @@ export const handleBasicApiErrorWithDispatch = ({
     switch (axiosError.response?.data.errorType) {
       case 'loginError':
         Keychain.resetGenericPassword();
-        requestLogin(() => dispatch(loguotAction));
+        // requestLogin(() => dispatch(loguotAction));
         return {errorType: 'loginError'};
       case 'invalidError':
         dispatch(
@@ -92,5 +90,5 @@ export const handleBasicApiErrorWithDispatch = ({
 export const handleCredentialsError = (
   dispatch: ThunkDispatch<unknown, unknown, any>,
 ) => {
-  requestLogin(() => dispatch(logoutThunk.fulfilled.type));
+  // requestLogin(() => dispatch(logoutThunk.fulfilled.type));
 };

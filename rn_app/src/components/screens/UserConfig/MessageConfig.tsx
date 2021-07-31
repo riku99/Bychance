@@ -3,12 +3,13 @@ import {View, Switch, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
-import {useCustomDispatch} from '~/hooks/stores';
-import {changeTalkRoomMessageReceiptThunk} from '~/thunks/users/changeTalkRoomMessageReceipt';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
-import {changeShowReceiveMessageThunk} from '~/thunks/users/changeShowReceiveMessage';
+import {
+  useChangeShowReceiveMessage,
+  useChangeTalkRoomMessageReceipt,
+} from '~/hooks/users';
 
 export const MessageConfig = React.memo(() => {
   const talkRoomMessageReceipt = useSelector(
@@ -34,33 +35,32 @@ export const MessageConfig = React.memo(() => {
     setShowReceiveMessageDescription,
   ] = useState(false);
 
-  const dispatch = useCustomDispatch();
+  const {changeShowReceiveMessage} = useChangeShowReceiveMessage();
+  const {changeTalkRoomMessageReceipt} = useChangeTalkRoomMessageReceipt();
 
   const onMessageReceiptSwitchValueChange = useCallback(
     async (v: boolean) => {
       setSwitchValueForMessageReceipt(v);
-      const result = await dispatch(
-        changeTalkRoomMessageReceiptThunk({receipt: v}),
-      );
-      // 設定の変更がうまく行かなかった場合はスイッチのvalueも戻す
-      if (!changeTalkRoomMessageReceiptThunk.fulfilled.match(result)) {
+      const result = await changeTalkRoomMessageReceipt({receipt: v});
+
+      // 失敗したらスイッチを元に戻す
+      if (!result) {
         setSwitchValueForMessageReceipt(!v);
       }
     },
-    [dispatch],
+    [changeTalkRoomMessageReceipt],
   );
 
   const onShowReceiveMessageSwitchValueChange = useCallback(
     async (v: boolean) => {
       setSwitchValueForShowRecieveMessage(v);
-      const result = await dispatch(
-        changeShowReceiveMessageThunk({showReceiveMessage: v}),
-      );
-      if (!changeShowReceiveMessageThunk.fulfilled.match(result)) {
+      const result = await changeShowReceiveMessage({showReceiveMessage: v});
+
+      if (!result) {
         setSwitchValueForShowRecieveMessage(!v);
       }
     },
-    [dispatch],
+    [changeShowReceiveMessage],
   );
 
   const list = useMemo(() => {

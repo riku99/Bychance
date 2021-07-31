@@ -9,67 +9,7 @@ import {RootState} from '~/stores/index';
 import {baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
 import {SuccessfullLoginData} from '~/types/login';
-import {setLogin} from '~/stores/sessions';
-import {setUser, resetUser} from '~/stores/user';
-import {setPosts, resetPosts} from '~/stores/posts';
-import {setTalkRooms, resetTalkRooms} from '~/stores/talkRooms';
-import {
-  setTalkRoomMessages,
-  resetTalkRoomMessages,
-} from '~/stores/talkRoomMessages';
-import {setFlashes, resetFlashes} from '~/stores/flashes';
-import {setChatPartners, resetChatPartners} from '~/stores/chatPartners';
-import {setFlashStamps, resetFlashStamps} from '~/stores/flashStamps';
-import {useCustomDispatch} from './stores';
-
-const useSuccessfullLoginDispatch = () => {
-  const dispatch = useCustomDispatch();
-
-  const loginDispatch = useCallback(
-    ({
-      user,
-      posts,
-      rooms,
-      messages,
-      flashes,
-      chatPartners,
-      flashStamps,
-    }: SuccessfullLoginData) => {
-      dispatch(setUser(user));
-      dispatch(setPosts(posts));
-      dispatch(setTalkRooms(rooms));
-      dispatch(setTalkRoomMessages(messages));
-      dispatch(setFlashes(flashes));
-      dispatch(setChatPartners(chatPartners));
-      dispatch(setFlashStamps(flashStamps));
-      dispatch(setLogin(true));
-    },
-    [dispatch],
-  );
-
-  return {
-    loginDispatch,
-  };
-};
-
-const useResetDispatch = () => {
-  const dispatch = useCustomDispatch();
-
-  const resetDispatch = useCallback(() => {
-    dispatch(setLogin(false));
-    dispatch(resetPosts());
-    dispatch(resetTalkRooms());
-    dispatch(resetTalkRoomMessages());
-    dispatch(resetFlashes());
-    dispatch(resetChatPartners());
-    dispatch(resetFlashStamps());
-    dispatch(resetUser());
-  }, [dispatch]);
-
-  return {
-    resetDispatch,
-  };
-};
+import {useResetDispatch, useSuccessfullLoginDispatch} from './stores';
 
 export const useSessionloginProccess = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
