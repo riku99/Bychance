@@ -1,18 +1,15 @@
 import {useEffect} from 'react';
-import {AppState} from 'react-native';
 import BackgroundGeolocation, {
   Location,
 } from 'react-native-background-geolocation';
 import {useCustomDispatch} from './stores';
 
-import {
-  updateLocationThunk,
-  patchLocation,
-} from '~/thunks/users/updateLocation';
-import {checkKeychain} from '~/helpers/credentials';
+import {useUpdateLocation} from '~/hooks/users';
 
 export const useBackgroundGeolocation = () => {
   const dispatch = useCustomDispatch();
+
+  const {updateLocation} = useUpdateLocation();
 
   useEffect(() => {
     BackgroundGeolocation.onLocation(
@@ -21,21 +18,8 @@ export const useBackgroundGeolocation = () => {
         // https://transistorsoft.github.io/react-native-background-geolocation/classes/backgroundgeolocation.html#onlocation
         if (!location.sample) {
           console.log('位置情報が更新されました');
-          console.log(location);
           const {latitude, longitude} = location.coords;
-          if (AppState.currentState === 'active') {
-            dispatch(
-              updateLocationThunk({
-                lat: latitude,
-                lng: longitude,
-              }),
-            );
-          } else {
-            const credentials = await checkKeychain();
-            if (credentials) {
-              patchLocation({lat: latitude, lng: longitude, credentials});
-            }
-          }
+          await updateLocation({lat: latitude, lng: longitude});
         }
       },
       (_error) => {
@@ -76,5 +60,5 @@ export const useBackgroundGeolocation = () => {
       BackgroundGeolocation.removeListeners();
     };
     return cleanup;
-  }, [dispatch]);
+  }, [dispatch, updateLocation]);
 };

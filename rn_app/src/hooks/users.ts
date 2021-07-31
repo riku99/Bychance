@@ -1,4 +1,5 @@
 import {useCallback, useState} from 'react';
+import {AppState} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
@@ -370,6 +371,7 @@ export const useRefreshUser = () => {
         if (response.data.isMyData) {
           const {user, posts, flashes, flashStamps} = response.data;
 
+          console.log(user);
           dispatch(setUser(user));
           dispatch(setPosts(posts));
           dispatch(setFlashes(flashes));
@@ -388,5 +390,38 @@ export const useRefreshUser = () => {
 
   return {
     refreshUser,
+  };
+};
+
+export const useUpdateLocation = () => {
+  const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
+
+  const updateLocation = useCallback(
+    async ({lat, lng}: {lat: number; lng: number}) => {
+      const credentials = await checkKeychain();
+
+      try {
+        await axios.patch(
+          `${baseUrl}/users/location?id=${credentials?.id}`,
+          {
+            lat,
+            lng,
+          },
+          addBearer(credentials?.token),
+        );
+
+        // バックグラウンド、キル状態の時はdispatchする必要ない(activeになった時に更新するから)のでアクティブの時のみdispatchしている。(あとアクティブじゃない時にJSのコードちゃんと動くのか微妙だった気がする。)
+        if (AppState.currentState === 'active') {
+          dispatch(setLocation({lat, lng}));
+        }
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, dispatch],
+  );
+
+  return {
+    updateLocation,
   };
 };

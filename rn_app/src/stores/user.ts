@@ -1,10 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {
-  updateLocationThunk,
-  UpdateLocationThunkPaylaod,
-} from '../thunks/users/updateLocation';
-import {
   EditProfilePayload,
   ChangeShowReceiveMessagePayload,
   ChangeTalkRoomMessageReceiptPayload,
@@ -215,15 +211,6 @@ const userSlice = createSlice({
     resetEditData: (state) => ({
       ...state,
       temporarilySavedData: undefined,
-    }),
-  },
-  extraReducers: {
-    [updateLocationThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<UpdateLocationThunkPaylaod>,
-    ) => ({
-      ...state,
-      user: {...state.user!, lat: action.payload.lat, lng: action.payload.lng},
     }),
   },
 });
