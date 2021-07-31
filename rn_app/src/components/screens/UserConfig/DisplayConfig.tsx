@@ -4,18 +4,15 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '~/stores';
-import {changeUserDisplayThunk} from '~/thunks/users/changeUserDisplay';
-import {useCustomDispatch} from '~/hooks/stores';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
+import {useChangeUserDisplay} from '~/hooks/users';
 
 export const DisplayConfig = React.memo(() => {
   const userDisplay = useSelector((state: RootState) => {
     return state.userReducer.user!.display;
   });
-
-  const dispatch = useCustomDispatch();
 
   const [switchForDisplay, setSwitchForDisplay] = useState(userDisplay);
   const [
@@ -23,15 +20,18 @@ export const DisplayConfig = React.memo(() => {
     setShowDisplayDescriptionModal,
   ] = useState(false);
 
+  const {changeUserDisplay} = useChangeUserDisplay();
+
   const onUserDisplaySwitchValueChange = useCallback(
     async (v: boolean) => {
       setSwitchForDisplay(v);
-      const result = await dispatch(changeUserDisplayThunk(v));
-      if (!changeUserDisplayThunk.fulfilled.match(result)) {
+      const result = await changeUserDisplay(v);
+
+      if (!result) {
         setSwitchForDisplay(!v);
       }
     },
-    [setSwitchForDisplay, dispatch],
+    [setSwitchForDisplay, changeUserDisplay],
   );
 
   const navigation = useNavigation();

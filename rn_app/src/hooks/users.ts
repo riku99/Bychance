@@ -13,6 +13,7 @@ import {
   updateProfile,
   setShowReceiveMessage,
   setTalkRoomMessageReceipt,
+  setDisplay,
 } from '~/stores/user';
 
 export const useSelectTamporarilySavedUserEditData = () => {
@@ -240,5 +241,36 @@ export const useChangeTalkRoomMessageReceipt = () => {
 
   return {
     changeTalkRoomMessageReceipt,
+  };
+};
+
+export type ChangeUserDisplayPayload = boolean;
+
+export const useChangeUserDisplay = () => {
+  const {handleApiError, addBearer, dispatch, checkKeychain} = useApikit();
+
+  const changeUserDisplay = useCallback(
+    async (display: boolean) => {
+      const credentials = await checkKeychain();
+      try {
+        await axios.patch(
+          `${baseUrl}/users/display?id=${credentials?.id}`,
+          {
+            display,
+          },
+          addBearer(credentials?.token),
+        );
+
+        dispatch(setDisplay(display));
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, dispatch],
+  );
+
+  return {
+    changeUserDisplay,
   };
 };

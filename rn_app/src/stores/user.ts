@@ -22,6 +22,7 @@ import {
   EditProfilePayload,
   ChangeShowReceiveMessagePayload,
   ChangeTalkRoomMessageReceiptPayload,
+  ChangeUserDisplayPayload,
 } from '~/hooks/users';
 
 export type User = {
@@ -122,6 +123,10 @@ const userSlice = createSlice({
         ...state.user!,
         talkRoomMessageReceipt: action.payload,
       },
+    }),
+    setDisplay: (state, action: PayloadAction<ChangeUserDisplayPayload>) => ({
+      ...state,
+      user: {...state.user!, display: action.payload},
     }),
     saveEditData: (
       state,
@@ -258,6 +263,7 @@ export const {
   resetUser,
   setShowReceiveMessage,
   setTalkRoomMessageReceipt,
+  setDisplay,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;
