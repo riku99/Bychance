@@ -5,14 +5,16 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
-import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {useCustomDispatch} from '~/hooks/stores';
 import {notAuthLocationProviderAlert} from '~/helpers/alert';
 import {showBottomToast} from '~/thunks/re-modules';
 import {manualLocationUpdate} from '~/stores/otherSettings';
+import {useDeleteLocation} from '~/hooks/users';
 
 export const LocationConfig = React.memo(() => {
   const dispatch = useCustomDispatch();
+
+  const {deleteLocaiton} = useDeleteLocation();
 
   const aboutLocationInfoModalRef = useRef<Modalize | null>(null);
   const list: List = useMemo(() => {
@@ -24,7 +26,7 @@ export const LocationConfig = React.memo(() => {
             {
               text: '削除',
               onPress: async () => {
-                await dispatch(deleteLocationInfoThunk());
+                await deleteLocaiton();
               },
               style: 'destructive',
             },
@@ -84,7 +86,7 @@ export const LocationConfig = React.memo(() => {
         },
       },
     ];
-  }, [dispatch]);
+  }, [dispatch, deleteLocaiton]);
 
   return (
     <View style={commonStyles.container}>

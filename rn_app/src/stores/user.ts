@@ -9,7 +9,6 @@ import {
   updateLocationThunk,
   UpdateLocationThunkPaylaod,
 } from '../thunks/users/updateLocation';
-import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
 import {
   EditProfilePayload,
   ChangeShowReceiveMessagePayload,
@@ -131,6 +130,17 @@ const userSlice = createSlice({
         videoEditDescription: action.payload,
       },
     }),
+    setLocation: (
+      state,
+      actoin: PayloadAction<{lat: number | null; lng: number | null}>,
+    ) => ({
+      ...state,
+      user: {
+        ...state.user!,
+        lat: actoin.payload.lat,
+        lng: actoin.payload.lng,
+      },
+    }),
     saveEditData: (
       state,
       action: PayloadAction<UserState['temporarilySavedData']>,
@@ -230,15 +240,6 @@ const userSlice = createSlice({
         action,
       }) as UserState;
     },
-
-    [deleteLocationInfoThunk.fulfilled.type]: (state) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        lat: null,
-        lng: null,
-      },
-    }),
   },
 });
 
@@ -252,6 +253,7 @@ export const {
   setTalkRoomMessageReceipt,
   setDisplay,
   setVideoDescription,
+  setLocation,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

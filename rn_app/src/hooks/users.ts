@@ -15,6 +15,7 @@ import {
   setTalkRoomMessageReceipt,
   setDisplay,
   setVideoDescription,
+  setLocation,
 } from '~/stores/user';
 
 export const useSelectTamporarilySavedUserEditData = () => {
@@ -302,5 +303,35 @@ export const useChangeVideoEditDescription = () => {
 
   return {
     changeVideoEditDescription,
+  };
+};
+
+export const useDeleteLocation = () => {
+  const {
+    checkKeychain,
+    addBearer,
+    dispatch,
+    toast,
+    handleApiError,
+  } = useApikit();
+
+  const deleteLocaiton = useCallback(async () => {
+    const credentials = await checkKeychain();
+
+    try {
+      await axios.delete(
+        `${baseUrl}/users/location?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+
+      toast?.show('削除しました', {type: 'success'});
+      dispatch(setLocation({lat: null, lng: null}));
+    } catch (e) {
+      handleApiError(e);
+    }
+  }, [checkKeychain, addBearer, toast, dispatch, handleApiError]);
+
+  return {
+    deleteLocaiton,
   };
 };
