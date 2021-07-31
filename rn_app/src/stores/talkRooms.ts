@@ -18,7 +18,6 @@ import {
   createDeleteRoomThunk,
   CreateDeleteRoomThunkPayload,
 } from '~/thunks/deleteTalkRooms/createDeleteTalkRoom';
-import {logoutThunk} from '~/thunks/session/logout';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
 
@@ -44,6 +43,7 @@ export const RoomsSlice = createSlice({
     setTalkRooms: (state, action: PayloadAction<TalkRoom[]>) => {
       talkRoomsAdapter.addMany(state, action.payload);
     },
+    resetTalkRooms: () => talkRoomsAdapter.getInitialState(),
     resetUnreadNumber: (state, actions: PayloadAction<{roomId: number}>) => {
       talkRoomsAdapter.updateOne(state, {
         id: actions.payload.roomId,
@@ -54,9 +54,6 @@ export const RoomsSlice = createSlice({
     },
   },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => {
-      return talkRoomsAdapter.getInitialState();
-    },
     [createRoomThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateRoomThunkPayload>,
@@ -143,7 +140,11 @@ export const RoomsSlice = createSlice({
   },
 });
 
-export const {resetUnreadNumber, setTalkRooms} = RoomsSlice.actions;
+export const {
+  resetUnreadNumber,
+  setTalkRooms,
+  resetTalkRooms,
+} = RoomsSlice.actions;
 
 export const talkRoomSelectors = talkRoomsAdapter.getSelectors();
 

@@ -13,7 +13,6 @@ import {
   createFlashThunk,
   CreateFlashThunkPaylaod,
 } from '../thunks/flashes/createFlash';
-import {logoutThunk} from '~/thunks/session/logout';
 import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
@@ -45,9 +44,9 @@ const flashesSlice = createSlice({
     setFlashes: (state, action: PayloadAction<Flash[]>) => {
       flashesAdapter.addMany(state, action.payload);
     },
+    resetFlashes: () => flashesAdapter.getInitialState(),
   },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => flashesAdapter.getInitialState(),
     [createFlashThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateFlashThunkPaylaod>,
@@ -73,4 +72,4 @@ export const selectAllFlashes = (state: RootState) => {
 
 export const flashesReducer = flashesSlice.reducer;
 
-export const {setFlashes} = flashesSlice.actions;
+export const {setFlashes, resetFlashes} = flashesSlice.actions;

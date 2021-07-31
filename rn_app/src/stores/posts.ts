@@ -12,7 +12,6 @@ import {
   deletePostThunk,
   DeletePostThunkPaylaod,
 } from '../thunks/posts/deletePost';
-import {logoutThunk} from '~/thunks/session/logout';
 import {RootState} from '.';
 import {refreshUser} from '~/stores/helpers/refreshUser';
 import {
@@ -45,11 +44,12 @@ const postSlice = createSlice({
     setPosts: (state, action: PayloadAction<Post[]>) => {
       postsAdaper.addMany(state, action.payload);
     },
-  },
-  extraReducers: {
-    [logoutThunk.fulfilled.type]: () => {
+    resetPosts: () => {
+      console.log('ok');
       return postsAdaper.getInitialState();
     },
+  },
+  extraReducers: {
     [createPostThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreatePostThunkPayload>,
@@ -84,4 +84,4 @@ export const selectAllPosts = (state: RootState) => {
 
 export const postsReducer = postSlice.reducer;
 
-export const {setPosts} = postSlice.actions;
+export const {setPosts, resetPosts} = postSlice.actions;

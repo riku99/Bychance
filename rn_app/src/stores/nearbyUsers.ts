@@ -15,7 +15,6 @@ import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
 } from '../thunks/flashes/createAlreadyViewedFlashes';
-import {logoutThunk} from '~/thunks/session/logout';
 
 // NearbyUserは位置情報により取得したユーザーなので必ずlat, lngが存在する。AnotherUserはトーク相手とかも含まれるので位置情報のデータが必ず含まれるとは限らない
 export type NearbyUser = Omit<AnotherUser, 'lat' | 'lng'> & {
@@ -35,11 +34,10 @@ export type NearbyUsersState = ReturnType<
 const nearbyUsersSlice = createSlice({
   name: 'nearbyUsers',
   initialState: nearbyUsersAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    resetNearbyUsers: () => nearbyUsersAdapter.getInitialState(),
+  },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => {
-      return nearbyUsersAdapter.getInitialState();
-    },
     [getNearbyUsersThunk.fulfilled.type]: (
       state,
       action: PayloadAction<GetNearbyUsersPayload>,
@@ -79,3 +77,5 @@ export const selectNearbyUserAlreadyViewed = (
     return [];
   }
 };
+
+export const {resetNearbyUsers} = nearbyUsersSlice.actions;

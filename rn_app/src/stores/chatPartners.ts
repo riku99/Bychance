@@ -17,7 +17,6 @@ import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
 } from '../thunks/users/refreshUser';
-import {logoutThunk} from '~/thunks/session/logout';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
@@ -40,11 +39,9 @@ export const chatPartnersSlice = createSlice({
     setChatPartners: (state, action: PayloadAction<AnotherUser[]>) => {
       chatPartnersAdapter.addMany(state, action.payload);
     },
+    resetChatPartners: () => chatPartnersAdapter.getInitialState(),
   },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => {
-      return chatPartnersAdapter.getInitialState();
-    },
     [createRoomThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateRoomThunkPayload>,
@@ -131,4 +128,4 @@ const selectIds = (state: RootState['chatPartnersReducer']) =>
 
 export const chatPartnersReducer = chatPartnersSlice.reducer;
 
-export const {setChatPartners} = chatPartnersSlice.actions;
+export const {setChatPartners, resetChatPartners} = chatPartnersSlice.actions;

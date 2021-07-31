@@ -1,6 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {logoutThunk} from '~/thunks/session/logout';
 import {TalkRoomMessage, receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from './types';
 
@@ -57,9 +56,9 @@ const otherSettingsSlice = createSlice({
       ...state,
       manualLocationUpdate: aciton.payload,
     }),
+    resetSettings: () => initialState,
   },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => initialState,
     [receiveTalkRoomMessage.type]: (
       state,
       action: PayloadAction<ReceivedMessageData>,
@@ -83,6 +82,7 @@ export const {
   creatingPost,
   resetRecievedMessage,
   manualLocationUpdate,
+  resetSettings,
 } = otherSettingsSlice.actions;
 
 export const otherSettingsReducer = otherSettingsSlice.reducer;

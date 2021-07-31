@@ -10,13 +10,16 @@ import {baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
 import {SuccessfullLoginData} from '~/types/login';
 import {setLogin} from '~/stores/sessions';
-import {setUser} from '~/stores/user';
-import {setPosts} from '~/stores/posts';
-import {setTalkRooms} from '~/stores/talkRooms';
-import {setTalkRoomMessages} from '~/stores/talkRoomMessages';
-import {setFlashes} from '~/stores/flashes';
-import {setChatPartners} from '~/stores/chatPartners';
-import {setFlashStamps} from '~/stores/flashStamps';
+import {setUser, resetUser} from '~/stores/user';
+import {setPosts, resetPosts} from '~/stores/posts';
+import {setTalkRooms, resetTalkRooms} from '~/stores/talkRooms';
+import {
+  setTalkRoomMessages,
+  resetTalkRoomMessages,
+} from '~/stores/talkRoomMessages';
+import {setFlashes, resetFlashes} from '~/stores/flashes';
+import {setChatPartners, resetChatPartners} from '~/stores/chatPartners';
+import {setFlashStamps, resetFlashStamps} from '~/stores/flashStamps';
 import {useCustomDispatch} from './stores';
 
 const useSuccessfullLoginDispatch = () => {
@@ -46,6 +49,25 @@ const useSuccessfullLoginDispatch = () => {
 
   return {
     loginDispatch,
+  };
+};
+
+const useResetDispatch = () => {
+  const dispatch = useCustomDispatch();
+
+  const resetDispatch = useCallback(() => {
+    dispatch(setLogin(false));
+    dispatch(resetPosts());
+    dispatch(resetTalkRooms());
+    dispatch(resetTalkRoomMessages());
+    dispatch(resetFlashes());
+    dispatch(resetChatPartners());
+    dispatch(resetFlashStamps());
+    dispatch(resetUser());
+  }, [dispatch]);
+
+  return {
+    resetDispatch,
   };
 };
 
@@ -154,7 +176,9 @@ export const useSampleLogin = () => {
 };
 
 export const useLogout = () => {
-  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+  const {checkKeychain, handleApiError, addBearer} = useApikit();
+
+  const {resetDispatch} = useResetDispatch();
 
   const logout = useCallback(async () => {
     const credentials = await checkKeychain();
@@ -166,12 +190,11 @@ export const useLogout = () => {
       );
 
       await Keychain.resetGenericPassword(); // ログアウトするからキーチェーンの中身リセット
-      dispatch(setLogin(false));
-      dispatch(setUser());
+      resetDispatch();
     } catch (e) {
       handleApiError(e);
     }
-  }, [checkKeychain, handleApiError, addBearer, dispatch]);
+  }, [checkKeychain, handleApiError, addBearer, resetDispatch]);
 
   return {
     logout,

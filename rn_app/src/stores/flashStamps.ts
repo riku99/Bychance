@@ -17,7 +17,6 @@ import {
   refreshUserThunk,
   RefreshUserThunkPaylaod,
 } from '~/thunks/users/refreshUser';
-import {logoutThunk} from '~/thunks/session/logout';
 import {
   CreateFlashThunkPaylaod,
   createFlashThunk,
@@ -49,6 +48,7 @@ const flashStampsSlice = createSlice({
     setFlashStamps: (state, action: PayloadAction<FlashStamp[]>) => {
       flashStampsAdapter.addMany(state, action.payload);
     },
+    resetFlashStamps: () => flashStampsAdapter.getInitialState(),
   },
   extraReducers: {
     [createFlashStampThunk.fulfilled.type]: (
@@ -98,7 +98,6 @@ const flashStampsSlice = createSlice({
     ) => {
       flashStampsAdapter.addOne(state, aciton.payload.stamps);
     },
-    [logoutThunk.fulfilled.type]: () => flashStampsAdapter.getInitialState(),
   },
 });
 
@@ -109,4 +108,4 @@ export const selectFlashStampEntites = (state: RootState) =>
 
 export const flashStampsReducer = flashStampsSlice.reducer;
 
-export const {setFlashStamps} = flashStampsSlice.actions;
+export const {setFlashStamps, resetFlashStamps} = flashStampsSlice.actions;

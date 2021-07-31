@@ -26,7 +26,6 @@ import {
   changeShowReceiveMessageThunk,
 } from '~/thunks/users/changeShowReceiveMessage';
 import {deleteLocationInfoThunk} from '~/thunks/users/deleteLocation';
-import {logoutThunk} from '~/thunks/session/logout';
 import {EditProfilePayload} from '~/hooks/users';
 
 export type User = {
@@ -70,16 +69,13 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User | undefined>) => {
-      if (!action.payload) {
-        return initialState;
-      }
-
+    setUser: (state, action: PayloadAction<User>) => {
       return {
         ...state,
         user: action.payload,
       };
     },
+    resetUser: () => initialState,
     updateProfile: (state, action: PayloadAction<EditProfilePayload>) => {
       const {
         name,
@@ -193,7 +189,6 @@ const userSlice = createSlice({
     }),
   },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => initialState,
     [changeUserDisplayThunk.fulfilled.type]: (
       state,
       action: PayloadAction<EidtUserDisplayThunkPayload>,
@@ -264,6 +259,7 @@ export const {
   resetEditData,
   setUser,
   updateProfile,
+  resetUser,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

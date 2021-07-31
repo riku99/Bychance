@@ -8,7 +8,6 @@ import {
   createMessageThunk,
   CreateMessageThunkPayload,
 } from '../thunks/talkRoomMessages/createTalkRoomMessage';
-import {logoutThunk} from '~/thunks/session/logout';
 import {RootState} from './index';
 import {ReceivedMessageData} from './types';
 
@@ -34,6 +33,7 @@ const talkRoomMessagesSlice = createSlice({
     setTalkRoomMessages: (state, action: PayloadAction<TalkRoomMessage[]>) => {
       talkRoomMessagesAdapter.addMany(state, action.payload);
     },
+    resetTalkRoomMessages: () => talkRoomMessagesAdapter.getInitialState(),
     receiveTalkRoomMessage: (
       state,
       action: PayloadAction<ReceivedMessageData>,
@@ -42,9 +42,6 @@ const talkRoomMessagesSlice = createSlice({
     },
   },
   extraReducers: {
-    [logoutThunk.fulfilled.type]: () => {
-      return talkRoomMessagesAdapter.getInitialState();
-    },
     [createMessageThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateMessageThunkPayload>,
@@ -73,6 +70,7 @@ export const selectMessages = (state: RootState, messageIds: number[]) => {
 export const {
   receiveTalkRoomMessage,
   setTalkRoomMessages,
+  resetTalkRoomMessages,
 } = talkRoomMessagesSlice.actions;
 
 export const talkRoomMessageReducer = talkRoomMessagesSlice.reducer;

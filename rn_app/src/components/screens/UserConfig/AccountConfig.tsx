@@ -4,12 +4,9 @@ import {useNavigation} from '@react-navigation/native';
 
 import {commonStyles} from './constants';
 import {ConfigList} from './List';
-import {useCustomDispatch} from '~/hooks/stores';
-import {logoutThunk} from '~/thunks/session/logout';
 import {useLogout} from '~/hooks/sessions';
 
 export const AccountConfig = React.memo(() => {
-  const dispatch = useCustomDispatch();
   const navigation = useNavigation();
 
   const {logout} = useLogout();
