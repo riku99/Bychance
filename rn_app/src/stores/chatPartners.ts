@@ -37,7 +37,7 @@ export const chatPartnersSlice = createSlice({
   initialState: chatPartnersAdapter.getInitialState(),
   reducers: {
     setChatPartners: (state, action: PayloadAction<AnotherUser[]>) => {
-      chatPartnersAdapter.addMany(state, action.payload);
+      chatPartnersAdapter.upsertMany(state, action.payload);
     },
     resetChatPartners: () => chatPartnersAdapter.getInitialState(),
   },

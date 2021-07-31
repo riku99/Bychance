@@ -31,7 +31,7 @@ const talkRoomMessagesSlice = createSlice({
   initialState: talkRoomMessagesAdapter.getInitialState(),
   reducers: {
     setTalkRoomMessages: (state, action: PayloadAction<TalkRoomMessage[]>) => {
-      talkRoomMessagesAdapter.addMany(state, action.payload);
+      talkRoomMessagesAdapter.upsertMany(state, action.payload);
     },
     resetTalkRoomMessages: () => talkRoomMessagesAdapter.getInitialState(),
     receiveTalkRoomMessage: (

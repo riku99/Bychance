@@ -42,7 +42,7 @@ const flashesSlice = createSlice({
   initialState: flashesAdapter.getInitialState(),
   reducers: {
     setFlashes: (state, action: PayloadAction<Flash[]>) => {
-      flashesAdapter.addMany(state, action.payload);
+      flashesAdapter.upsertMany(state, action.payload);
     },
     resetFlashes: () => flashesAdapter.getInitialState(),
   },

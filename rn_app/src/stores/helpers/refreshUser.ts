@@ -45,7 +45,7 @@ export const refreshUser = (arg: State & Action) => {
     }
 
     if (arg.slice === 'post') {
-      return arg.adaper.setAll(arg.state, arg.action.payload.posts);
+      return arg.adaper.upsertMany(arg.state, arg.action.payload.posts);
     }
   } else {
     const updatedObj = {

@@ -42,10 +42,9 @@ const postSlice = createSlice({
   initialState: postsAdaper.getInitialState(),
   reducers: {
     setPosts: (state, action: PayloadAction<Post[]>) => {
-      postsAdaper.addMany(state, action.payload);
+      postsAdaper.upsertMany(state, action.payload);
     },
     resetPosts: () => {
-      console.log('ok');
       return postsAdaper.getInitialState();
     },
   },

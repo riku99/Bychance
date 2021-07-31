@@ -33,9 +33,8 @@ export const refreshUserThunk = createAsyncThunk<
 
   if (credentials) {
     try {
-      const response = await axios.patch<RefreshUserThunkPaylaod>(
-        `${origin}/users/refresh?id=${credentials.id}`,
-        {userId},
+      const response = await axios.get<RefreshUserThunkPaylaod>(
+        `${origin}/users/refresh/${userId}?id=${credentials.id}`,
         headers(credentials.token),
       );
 

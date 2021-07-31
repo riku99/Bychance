@@ -7,7 +7,7 @@ import {UserPageFrom} from '~/navigations/UserPage';
 import {selectChatPartner} from '~/stores/chatPartners';
 import {selectNearbyUser} from '~/stores/nearbyUsers';
 import {useApikit} from './apikit';
-import {User} from '~/types/users';
+import {User, AnotherUser} from '~/types/users';
 import {baseUrl} from '~/constants/url';
 import {
   updateProfile,
@@ -16,7 +16,14 @@ import {
   setDisplay,
   setVideoDescription,
   setLocation,
+  setUser,
 } from '~/stores/user';
+import {Post} from '~/types/posts';
+import {Flash} from '~/types/flashes';
+import {FlashStamp} from '~/types/flashStamps';
+import {setPosts} from '~/stores/posts';
+import {setFlashes} from '~/stores/flashes';
+import {setFlashStamps} from '~/stores/flashStamps';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -333,5 +340,46 @@ export const useDeleteLocation = () => {
 
   return {
     deleteLocaiton,
+  };
+};
+
+export type RefreshUserResponse =
+  | {
+      isMyData: true;
+      user: User;
+      posts: Post[];
+      flashes: Flash[];
+      flashStamps: FlashStamp[];
+    }
+  | {isMyData: false; data: {user: AnotherUser; flashStamps: FlashStamp[]}};
+
+export const useRefreshUser = () => {
+  const {dispatch, addBearer, handleApiError, checkKeychain} = useApikit();
+
+  const refreshUser = useCallback(
+    async ({userId}: {userId: string}) => {
+      const credentials = await checkKeychain();
+
+      try {
+        const response = await axios.get<RefreshUserResponse>(
+          `${baseUrl}/users/refresh/${userId}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+
+        if (response.data.isMyData) {
+          const {user, posts, flashes, flashStamps} = response.data;
+
+          dispatch(setUser(user));
+          dispatch(setPosts(posts));
+        }
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [addBearer, handleApiError, checkKeychain],
+  );
+
+  return {
+    refreshUser,
   };
 };
