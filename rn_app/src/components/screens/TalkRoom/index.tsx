@@ -16,11 +16,13 @@ import {selectMessages} from '../../../stores/talkRoomMessages';
 import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
 import {selectChatPartner} from '../../../stores/chatPartners';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
-import {createMessageThunk} from '../../../thunks/talkRoomMessages/createTalkRoomMessage';
-import {createReadMessagesThunk} from '../../../thunks/talkRoomMessages/createReadTalkRoomMessage';
 import {TalkRoomStackParamList} from '../../../navigations/TalkRoom';
 import {UserAvatar} from '../../utils/Avatar';
 import {useCustomDispatch} from '~/hooks/stores';
+import {
+  useCreateReadTalkRoomMessages,
+  useCreateTalkRoomMessage,
+} from '~/hooks/talkRoomMessages';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'ChatRoom'>;
 
@@ -98,6 +100,9 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
 
   const dispatch = useCustomDispatch();
 
+  const {createReadTalkRoomMessages} = useCreateReadTalkRoomMessages();
+  const {createMessage} = useCreateTalkRoomMessage();
+
   // チャットルームを開いている時にメッセージを受け取った時のためのセレクタ
   const receivedMessage = useSelector((state: RootState) => {
     return state.otherSettingsReducer.receivedMessage;
@@ -135,13 +140,11 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
       // ルームを開いている状態で取得したメッセージなので未読数を0にする
       dispatch(resetUnreadNumber({roomId: room.id}));
       // 既読データをサーバの方で作成
-      dispatch(
-        createReadMessagesThunk({
-          roomId: room.id,
-          unreadNumber: 1,
-          partnerId: route.params.partnerId,
-        }),
-      );
+      createReadTalkRoomMessages({
+        roomId: room.id,
+        unreadNumber: 1,
+        partnerId: route.params.partnerId,
+      });
     }
   }, [
     receivedMessage,
@@ -149,8 +152,9 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
     partner?.avatar,
     route.params.partnerId,
     onAvatarPress,
-    dispatch,
     messageIds,
+    createReadTalkRoomMessages,
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -160,19 +164,23 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
       const unsubscribe = navigation.addListener('focus', () => {
         if (room.unreadNumber !== 0) {
           dispatch(resetUnreadNumber({roomId: room.id}));
-          dispatch(
-            createReadMessagesThunk({
-              roomId: room.id,
-              unreadNumber: room.unreadNumber,
-              partnerId: route.params.partnerId,
-            }),
-          );
+          createReadTalkRoomMessages({
+            roomId: room.id,
+            unreadNumber: room.unreadNumber,
+            partnerId: route.params.partnerId,
+          });
         }
       });
 
       return unsubscribe;
     }
-  }, [navigation, room, dispatch, route.params.partnerId]);
+  }, [
+    navigation,
+    room,
+    dispatch,
+    route.params.partnerId,
+    createReadTalkRoomMessages,
+  ]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -186,35 +194,54 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
   const onSend = useCallback(
     async (text: string) => {
       if (room) {
-        const result = await dispatch(
-          createMessageThunk({
-            roomId: room.id,
-            partnerId: route.params.partnerId,
+        const temporaryId = Math.random().toString(32).substring(2); //一時的なIDのためのランダムな文字列
+        setMessages([
+          {
+            _id: temporaryId,
             text,
-            // isFirstMessage: room.messages.length ? false : true, 初回メッセージかどうかはサーバ側で判断するようにしたのでこのデータは必要ない
-          }),
-        );
-        if (createMessageThunk.fulfilled.match(result)) {
-          if (result.payload.talkRoomPresence) {
-            const _message = result.payload.message;
-            // 送信したメッセージを追加
-            setMessages([
+            createdAt: new Date(),
+            user: {
+              _id: myId,
+            },
+          },
+          ...messages,
+        ]);
+        const result = await createMessage({
+          roomId: room.id,
+          partnerId: route.params.partnerId,
+          text,
+        });
+        if (result) {
+          setMessages((current) => {
+            const filtered = current.filter(
+              (message) => message._id !== temporaryId,
+            );
+
+            return [
               {
-                _id: _message.id,
-                text: _message.text,
-                createdAt: new Date(_message.timestamp),
+                _id: result.id,
+                text: result.text,
+                createdAt: new Date(result.timestamp),
                 user: {
-                  _id: _message.userId,
+                  _id: result.userId,
                 },
               },
-              ...messages,
-            ]);
-          }
+              ...filtered,
+            ];
+          });
+        } else {
+          setMessages((current) =>
+            current.filter((message) => message._id !== temporaryId),
+          );
         }
       }
     },
-    [room, dispatch, route.params.partnerId, messages],
+    [room, route.params.partnerId, messages, createMessage, myId],
   );
+
+  useEffect(() => {
+    console.log('re-render');
+  }, [createMessage]);
 
   return <TalkRoom messages={messages} userId={myId} onSend={onSend} />;
 };

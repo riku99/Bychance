@@ -3,7 +3,6 @@ import {AppState, AppStateStatus} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {useSelector} from 'react-redux';
 
-import {useCustomDispatch} from './stores';
 import {useHandleDeviceToken} from './deviceToken';
 import {RootState} from '~/stores';
 import {useRefreshUser} from '~/hooks/users';

@@ -3,13 +3,8 @@ import {
   PayloadAction,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
-import {RNToasty} from 'react-native-toasty';
 
 import {RootState} from './index';
-import {
-  createMessageThunk,
-  CreateMessageThunkPayload,
-} from '../thunks/talkRoomMessages/createTalkRoomMessage';
 import {
   createRoomThunk,
   CreateRoomThunkPayload,
@@ -43,6 +38,16 @@ export const RoomsSlice = createSlice({
     setTalkRooms: (state, action: PayloadAction<TalkRoom[]>) => {
       talkRoomsAdapter.upsertMany(state, action.payload);
     },
+    updateTalkRoom: (
+      state,
+      action: PayloadAction<{id: number; changes: Partial<TalkRoom>}>,
+    ) => {
+      const {id, changes} = action.payload;
+      talkRoomsAdapter.updateOne(state, {
+        id,
+        changes,
+      });
+    },
     resetTalkRooms: () => talkRoomsAdapter.getInitialState(),
     resetUnreadNumber: (state, actions: PayloadAction<{roomId: number}>) => {
       talkRoomsAdapter.updateOne(state, {
@@ -69,37 +74,6 @@ export const RoomsSlice = createSlice({
           messages: [],
           unreadNumber: 0,
           latestMessage: null,
-        });
-      }
-    },
-    [createMessageThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateMessageThunkPayload>,
-    ) => {
-      const {talkRoomId} = action.payload;
-      if (action.payload.talkRoomPresence) {
-        const relatedRoom = state.entities[action.payload.talkRoomId];
-        if (relatedRoom) {
-          talkRoomsAdapter.updateOne(state, {
-            id: talkRoomId,
-            changes: {
-              messages: [action.payload.message.id, ...relatedRoom.messages],
-              timestamp: action.payload.message.timestamp,
-              latestMessage: action.payload.message.text,
-            },
-          });
-        }
-      } else {
-        // talkRoomPresenceがfalse、つまり既にトークルームが相手によって削除されている場合
-        RNToasty.Show({
-          title: 'メンバーが存在しません',
-          position: 'center',
-        });
-        talkRoomsAdapter.updateOne(state, {
-          id: talkRoomId,
-          changes: {
-            partner: undefined,
-          },
         });
       }
     },
@@ -144,6 +118,7 @@ export const {
   resetUnreadNumber,
   setTalkRooms,
   resetTalkRooms,
+  updateTalkRoom,
 } = RoomsSlice.actions;
 
 export const talkRoomSelectors = talkRoomsAdapter.getSelectors();

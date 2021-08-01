@@ -3,11 +3,6 @@ import {
   PayloadAction,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
-
-import {
-  createMessageThunk,
-  CreateMessageThunkPayload,
-} from '../thunks/talkRoomMessages/createTalkRoomMessage';
 import {RootState} from './index';
 import {ReceivedMessageData} from './types';
 
@@ -33,22 +28,30 @@ const talkRoomMessagesSlice = createSlice({
     setTalkRoomMessages: (state, action: PayloadAction<TalkRoomMessage[]>) => {
       talkRoomMessagesAdapter.upsertMany(state, action.payload);
     },
+    addTalkRoomMessage: (
+      state,
+      action: PayloadAction<
+        | {
+            talkRoomPresence: true;
+            message: TalkRoomMessage;
+            talkRoomId: number;
+          }
+        | {
+            talkRoomPresence: false;
+            talkRoomId: number;
+          }
+      >,
+    ) => {
+      if (action.payload.talkRoomPresence) {
+        talkRoomMessagesAdapter.addOne(state, action.payload.message);
+      }
+    },
     resetTalkRoomMessages: () => talkRoomMessagesAdapter.getInitialState(),
     receiveTalkRoomMessage: (
       state,
       action: PayloadAction<ReceivedMessageData>,
     ) => {
       talkRoomMessagesAdapter.addOne(state, action.payload.message);
-    },
-  },
-  extraReducers: {
-    [createMessageThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateMessageThunkPayload>,
-    ) => {
-      if (action.payload.talkRoomPresence) {
-        talkRoomMessagesAdapter.addOne(state, action.payload.message);
-      }
     },
   },
 });
@@ -71,6 +74,7 @@ export const {
   receiveTalkRoomMessage,
   setTalkRoomMessages,
   resetTalkRoomMessages,
+  addTalkRoomMessage,
 } = talkRoomMessagesSlice.actions;
 
 export const talkRoomMessageReducer = talkRoomMessagesSlice.reducer;
