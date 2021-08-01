@@ -12,9 +12,9 @@ import Emoji from 'react-native-emoji';
 
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {AnotherUser} from '../../../stores/types';
-import {createRoomThunk} from '../../../thunks/rooms/createTalkRoom';
 import {RootNavigationProp} from '~/navigations/Root';
 import {useCustomDispatch} from '~/hooks/stores';
+import {useCreateTalkRoom} from '~/hooks/talkRooms';
 
 const gradientConfig: {
   colors: string[];
@@ -37,15 +37,17 @@ export const SendMessageButton = React.memo(({user}: Props) => {
 
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
+  const {createTalkRoom} = useCreateTalkRoom();
+
   const onPress = async () => {
-    const result = await dispatch(createRoomThunk({partner: user}));
-    if (createRoomThunk.fulfilled.match(result)) {
+    const result = await createTalkRoom({partner: user});
+    if (result) {
       dispatch(resetRecievedMessage());
       navigation.push('TalkRoomStack', {
         screen: 'ChatRoom',
         params: {
-          roomId: result.payload.roomId,
-          partnerId: result.payload.partner.id,
+          roomId: result.roomId,
+          partnerId: result.partner.id,
         },
       });
     }

@@ -6,15 +6,12 @@ import {
 
 import {RootState} from './index';
 import {
-  createRoomThunk,
-  CreateRoomThunkPayload,
-} from '../thunks/rooms/createTalkRoom';
-import {
   createDeleteRoomThunk,
   CreateDeleteRoomThunkPayload,
 } from '~/thunks/deleteTalkRooms/createDeleteTalkRoom';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
+import {TalkRoom} from '~/components/screens/TalkRoom/TaklRoom';
 
 export type TalkRoom = {
   id: number;
@@ -48,6 +45,9 @@ export const RoomsSlice = createSlice({
         changes,
       });
     },
+    addTalkRoom: (state, action: PayloadAction<TalkRoom>) => {
+      talkRoomsAdapter.addOne(state, action.payload);
+    },
     resetTalkRooms: () => talkRoomsAdapter.getInitialState(),
     resetUnreadNumber: (state, actions: PayloadAction<{roomId: number}>) => {
       talkRoomsAdapter.updateOne(state, {
@@ -59,24 +59,6 @@ export const RoomsSlice = createSlice({
     },
   },
   extraReducers: {
-    [createRoomThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateRoomThunkPayload>,
-    ) => {
-      const data = action.payload;
-      // トークルームがサーバー側でも存在しなかった場合(それが初めて作成された場合)、サーバー側では存在するがクライアント側には存在しない場合(作成した相手がメッセージを送っていない場合)はaddOneで新しく追加
-      const targetTaklRoom = state.entities[data.roomId];
-      if (!action.payload.presence || !targetTaklRoom) {
-        talkRoomsAdapter.addOne(state, {
-          id: data.roomId,
-          partner: data.partner.id,
-          timestamp: data.timestamp,
-          messages: [],
-          unreadNumber: 0,
-          latestMessage: null,
-        });
-      }
-    },
     [receiveTalkRoomMessage.type]: (
       state,
       action: PayloadAction<ReceivedMessageData>,
@@ -119,6 +101,7 @@ export const {
   setTalkRooms,
   resetTalkRooms,
   updateTalkRoom,
+  addTalkRoom,
 } = RoomsSlice.actions;
 
 export const talkRoomSelectors = talkRoomsAdapter.getSelectors();

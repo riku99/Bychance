@@ -8,7 +8,8 @@ import {UserPageFrom} from '~/navigations/UserPage';
 import {selectChatPartner} from '~/stores/chatPartners';
 import {selectNearbyUser} from '~/stores/nearbyUsers';
 import {useApikit} from './apikit';
-import {User, AnotherUser} from '~/types/users';
+import {User} from '~/types/users';
+import {AnotherUser} from '~/types/anotherUser';
 import {baseUrl} from '~/constants/url';
 import {
   updateProfile,
@@ -25,7 +26,7 @@ import {FlashStamp} from '~/types/flashStamps';
 import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
 import {setFlashStamps} from '~/stores/flashStamps';
-import {setChatPartner} from '~/stores/chatPartners';
+import {upsertChatPartner} from '~/stores/chatPartners';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -379,7 +380,7 @@ export const useRefreshUser = () => {
         } else {
           const {data} = response.data;
           dispatch(setFlashStamps(data.flashStamps));
-          dispatch(setChatPartner(data.user));
+          dispatch(upsertChatPartner(data.user));
         }
       } catch (e) {
         handleApiError(e);

@@ -1,6 +1,3 @@
-import {Post} from '~/stores/posts';
-import {FlashesData} from './flashes';
-
 export type User = {
   id: string;
   name: string;
@@ -19,9 +16,4 @@ export type User = {
   videoEditDescription: boolean;
   talkRoomMessageReceipt: boolean;
   showReceiveMessage: boolean;
-};
-
-export type AnotherUser = Omit<User, 'display'> & {
-  posts: Post[];
-  flashes: FlashesData;
 };

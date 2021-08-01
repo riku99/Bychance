@@ -13,10 +13,6 @@ import {
   GetNearbyUsersPayload,
 } from '../thunks/nearbyUsers/getNearbyUsers';
 import {
-  createRoomThunk,
-  CreateRoomThunkPayload,
-} from '../thunks/rooms/createTalkRoom';
-import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
 } from '../thunks/flashes/createAlreadyViewedFlashes';
@@ -34,23 +30,12 @@ export const chatPartnersSlice = createSlice({
     setChatPartners: (state, action: PayloadAction<AnotherUser[]>) => {
       chatPartnersAdapter.upsertMany(state, action.payload);
     },
-    setChatPartner: (state, action: PayloadAction<AnotherUser>) => {
-      chatPartnersAdapter.updateOne(state, {
-        id: action.payload.id,
-        changes: action.payload,
-      });
+    upsertChatPartner: (state, action: PayloadAction<AnotherUser>) => {
+      chatPartnersAdapter.upsertOne(state, action.payload);
     },
     resetChatPartners: () => chatPartnersAdapter.getInitialState(),
   },
   extraReducers: {
-    [createRoomThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateRoomThunkPayload>,
-    ) => {
-      if (!action.payload.presence) {
-        chatPartnersAdapter.addOne(state, action.payload.partner);
-      }
-    },
     [receiveTalkRoomMessage.type]: (
       state,
       action: PayloadAction<ReceivedMessageData>,
@@ -121,6 +106,6 @@ export const chatPartnersReducer = chatPartnersSlice.reducer;
 
 export const {
   setChatPartners,
-  setChatPartner,
+  upsertChatPartner,
   resetChatPartners,
 } = chatPartnersSlice.actions;
