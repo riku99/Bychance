@@ -5,10 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 
 import {
-  createPostThunk,
-  CreatePostThunkPayload,
-} from '../thunks/posts/createPost';
-import {
   deletePostThunk,
   DeletePostThunkPaylaod,
 } from '../thunks/posts/deletePost';
@@ -42,14 +38,11 @@ const postSlice = createSlice({
     resetPosts: () => {
       return postsAdaper.getInitialState();
     },
-  },
-  extraReducers: {
-    [createPostThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreatePostThunkPayload>,
-    ) => {
+    addPost: (state, action: PayloadAction<Post>) => {
       postsAdaper.addOne(state, action.payload);
     },
+  },
+  extraReducers: {
     [deletePostThunk.fulfilled.type]: (
       state,
       action: PayloadAction<DeletePostThunkPaylaod>,
@@ -67,4 +60,4 @@ export const selectAllPosts = (state: RootState) => {
 
 export const postsReducer = postSlice.reducer;
 
-export const {setPosts, resetPosts} = postSlice.actions;
+export const {setPosts, resetPosts, addPost} = postSlice.actions;

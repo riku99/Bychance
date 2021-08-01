@@ -15,12 +15,12 @@ import Video from 'react-native-video';
 import {RNToasty} from 'react-native-toasty';
 
 import {creatingPost} from '../../../stores/otherSettings';
-import {createPostThunk} from '../../../thunks/posts/createPost';
 import {CreatePostStackNavigationProp} from '../../../navigations/types';
 import {displayShortMessage} from '../../../helpers/topShortMessage';
 import {getExtention} from '~/utils';
 import {Post} from '~/stores/posts';
 import {useCustomDispatch} from '~/hooks/stores';
+import {useCreatePost} from '~/hooks/posts';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -37,7 +37,9 @@ export const CreatePost = ({navigation}: Props) => {
 
   const dispatch = useCustomDispatch();
 
-  const createPost = useCallback(async () => {
+  const {createPost} = useCreatePost();
+
+  const onPress = useCallback(async () => {
     if (data?.uri) {
       if (text.length > 150) {
         RNToasty.Show({
@@ -50,17 +52,18 @@ export const CreatePost = ({navigation}: Props) => {
       navigation.goBack();
       const ext = getExtention(data.uri);
       if (!ext) {
-        displayShortMessage('無効なデータです', 'warning');
+        RNToasty.Show({
+          title: '無効なデータです',
+          position: 'center',
+        });
         dispatch(creatingPost());
         return;
       }
       const source = await fs.readFile(data.uri, 'base64');
-      await dispatch(
-        createPostThunk({text, source, ext, sourceType: data.sourceType}),
-      );
+      await createPost({text, source, ext, sourceType: data.sourceType});
       dispatch(creatingPost());
     }
-  }, [dispatch, navigation, data, text]);
+  }, [dispatch, navigation, data, text, createPost]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -70,13 +73,13 @@ export const CreatePost = ({navigation}: Props) => {
               title="投稿"
               buttonStyle={{backgroundColor: 'transparent'}}
               titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
-              onPress={createPost}
+              onPress={onPress}
               activeOpacity={1}
             />
           )
         : undefined,
     });
-  }, [navigation, data, text, dispatch, createPost]);
+  }, [navigation, data, text, dispatch, createPost, onPress]);
 
   useEffect(() => {
     if (isFocused) {
