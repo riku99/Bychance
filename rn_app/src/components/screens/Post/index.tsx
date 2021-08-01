@@ -3,12 +3,11 @@ import {useSelector} from 'react-redux';
 
 import {Post} from './Post';
 import {RootState} from '../../../stores/index';
-import {deletePostThunk} from '../../../thunks/posts/deletePost';
 import {
   MyPageStackRouteProp,
   UserPageStackRouteProp,
 } from '../../../navigations/types';
-import {useCustomDispatch} from '~/hooks/stores';
+import {useDeletePost} from '~/hooks/posts';
 
 type Props = {
   route: MyPageStackRouteProp<'Post'> | UserPageStackRouteProp<'Post'>;
@@ -18,10 +17,12 @@ export const Container = React.memo(({route}: Props) => {
   const user = useSelector((state: RootState) => {
     return state.userReducer.user!.id;
   });
-  const dispatch = useCustomDispatch();
 
-  const deletePost = async (postId: number) => {
-    await dispatch(deletePostThunk({postId}));
+  const {deletePost} = useDeletePost();
+
+  const _deletePost = async (postId: number) => {
+    deletePost({postId});
   };
-  return <Post post={route.params} user={user} deletePost={deletePost} />;
+
+  return <Post post={route.params} user={user} deletePost={_deletePost} />;
 });

@@ -4,10 +4,6 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {
-  deletePostThunk,
-  DeletePostThunkPaylaod,
-} from '../thunks/posts/deletePost';
 import {RootState} from '.';
 
 export type Post = {
@@ -41,12 +37,7 @@ const postSlice = createSlice({
     addPost: (state, action: PayloadAction<Post>) => {
       postsAdaper.addOne(state, action.payload);
     },
-  },
-  extraReducers: {
-    [deletePostThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<DeletePostThunkPaylaod>,
-    ) => {
+    removePost: (state, action: PayloadAction<number>) => {
       postsAdaper.removeOne(state, action.payload);
     },
   },
@@ -60,4 +51,4 @@ export const selectAllPosts = (state: RootState) => {
 
 export const postsReducer = postSlice.reducer;
 
-export const {setPosts, resetPosts, addPost} = postSlice.actions;
+export const {setPosts, resetPosts, addPost, removePost} = postSlice.actions;

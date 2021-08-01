@@ -3,7 +3,7 @@ import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 
 import {baseUrl} from '~/constants/url';
-import {addPost} from '~/stores/posts';
+import {addPost, removePost} from '~/stores/posts';
 import {Post} from '~/types/posts';
 
 export const useCreatePost = () => {
@@ -48,5 +48,39 @@ export const useCreatePost = () => {
 
   return {
     createPost,
+  };
+};
+
+export const useDeletePost = () => {
+  const {
+    checkKeychain,
+    addBearer,
+    handleApiError,
+    toast,
+    dispatch,
+  } = useApikit();
+
+  const deletePost = useCallback(
+    async ({postId}: {postId: number}) => {
+      const credentials = await checkKeychain();
+
+      try {
+        await axios.delete(
+          `${baseUrl}/posts/${postId}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+
+        dispatch(removePost(postId));
+        toast?.show('削除しました', {type: 'success'});
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+
+    [checkKeychain, addBearer, handleApiError, toast, dispatch],
+  );
+
+  return {
+    deletePost,
   };
 };

@@ -50,6 +50,7 @@ export const Post = ({post, user, deletePost}: Props) => {
                 Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
                   {
                     text: 'はい',
+                    style: 'destructive',
                     onPress: () => {
                       deletePost(post.id);
                       navigation.goBack();
