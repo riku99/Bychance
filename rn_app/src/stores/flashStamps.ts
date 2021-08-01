@@ -10,10 +10,6 @@ import {
   createFlashStampThunk,
 } from '~/thunks/flashStamps/createFlashStamp';
 import {
-  getNearbyUsersThunk,
-  GetNearbyUsersPayload,
-} from '~/thunks/nearbyUsers/getNearbyUsers';
-import {
   CreateFlashThunkPaylaod,
   createFlashThunk,
 } from '~/thunks/flashes/createFlash';
@@ -71,12 +67,6 @@ const flashStampsSlice = createSlice({
           });
         }
       }
-    },
-    [getNearbyUsersThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<GetNearbyUsersPayload>,
-    ) => {
-      flashStampsAdapter.upsertMany(state, action.payload.flashStampsData);
     },
     [createFlashThunk.fulfilled.type]: (
       state,

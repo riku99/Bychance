@@ -8,10 +8,6 @@ import {RootState} from './index';
 import {AnotherUser} from './types';
 import {updateAlreadyViewed} from './helpers/createViewedFlashes';
 import {
-  getNearbyUsersThunk,
-  GetNearbyUsersPayload,
-} from '../thunks/nearbyUsers/getNearbyUsers';
-import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
 } from '../thunks/flashes/createAlreadyViewedFlashes';
@@ -35,15 +31,12 @@ const nearbyUsersSlice = createSlice({
   name: 'nearbyUsers',
   initialState: nearbyUsersAdapter.getInitialState(),
   reducers: {
+    setNearbyUsers: (state, action: PayloadAction<NearbyUsers>) => {
+      nearbyUsersAdapter.setAll(state, action.payload);
+    },
     resetNearbyUsers: () => nearbyUsersAdapter.getInitialState(),
   },
   extraReducers: {
-    [getNearbyUsersThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<GetNearbyUsersPayload>,
-    ) => {
-      nearbyUsersAdapter.setAll(state, action.payload.usersData);
-    },
     [createAlreadyViewdFlashThunk.fulfilled.type]: (
       state,
       action: PayloadAction<CreateAlreadyViewdFlashThunkPayload>,
@@ -78,4 +71,4 @@ export const selectNearbyUserAlreadyViewed = (
   }
 };
 
-export const {resetNearbyUsers} = nearbyUsersSlice.actions;
+export const {resetNearbyUsers, setNearbyUsers} = nearbyUsersSlice.actions;

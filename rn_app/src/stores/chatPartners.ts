@@ -9,10 +9,6 @@ import {RootState} from './index';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {updateAlreadyViewed} from './helpers/createViewedFlashes';
 import {
-  getNearbyUsersThunk,
-  GetNearbyUsersPayload,
-} from '../thunks/nearbyUsers/getNearbyUsers';
-import {
   createAlreadyViewdFlashThunk,
   CreateAlreadyViewdFlashThunkPayload,
 } from '../thunks/flashes/createAlreadyViewedFlashes';
@@ -34,6 +30,12 @@ export const chatPartnersSlice = createSlice({
       chatPartnersAdapter.upsertOne(state, action.payload);
     },
     resetChatPartners: () => chatPartnersAdapter.getInitialState(),
+    updateChatPartners: (
+      state,
+      action: PayloadAction<{id: string; changes: AnotherUser}[]>,
+    ) => {
+      chatPartnersAdapter.updateMany(state, action.payload);
+    },
   },
   extraReducers: {
     [receiveTalkRoomMessage.type]: (
@@ -49,22 +51,6 @@ export const chatPartnersSlice = createSlice({
       action: PayloadAction<CreateAlreadyViewdFlashThunkPayload>,
     ) => {
       updateAlreadyViewed(state, action, {slice: chatPartnersSlice.name});
-    },
-    [getNearbyUsersThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<GetNearbyUsersPayload>,
-    ) => {
-      const result = action.payload;
-      const forUpdateArray: {id: string; changes: AnotherUser}[] = [];
-      const ids = selectIds(state);
-      ids.forEach((n) => {
-        const target = result.usersData.find((data) => data.id === n);
-        if (target) {
-          const updateObj = {id: target.id, changes: target};
-          forUpdateArray.push(updateObj);
-        }
-      });
-      chatPartnersAdapter.updateMany(state, forUpdateArray);
     },
   },
 });
@@ -99,7 +85,7 @@ export const selectChatPartnerAlreadyViewed = (
   }
 };
 
-const selectIds = (state: RootState['chatPartnersReducer']) =>
+export const selectChatPartnerIds = (state: RootState['chatPartnersReducer']) =>
   chatPartnersSelector.selectIds(state);
 
 export const chatPartnersReducer = chatPartnersSlice.reducer;
@@ -108,4 +94,5 @@ export const {
   setChatPartners,
   upsertChatPartner,
   resetChatPartners,
+  updateChatPartners,
 } = chatPartnersSlice.actions;

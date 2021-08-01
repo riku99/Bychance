@@ -14,15 +14,12 @@ import {shallowEqual, useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackgroundGeolocation from 'react-native-background-geolocation';
-import {unwrapResult} from '@reduxjs/toolkit';
 
 import {List} from './List';
 import {Map} from './Map';
 import {RangeSelectButton} from './RangeSelectBottun';
 import {RootState} from '~/stores';
 import {NearbyUser, selectNearbyUsersArray} from '~/stores/nearbyUsers';
-import {getNearbyUsersThunk} from '~/thunks/nearbyUsers/getNearbyUsers';
-import {useCustomDispatch} from '~/hooks/stores';
 import {NearbyUsers} from '~/stores/nearbyUsers';
 import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/navigations/Root';
@@ -34,7 +31,7 @@ import {
   notAuthLocationProviderAlert,
   notLocationInfoAlert,
 } from '~/helpers/alert';
-import {useToast} from 'react-native-fast-toast';
+import {useGetNearbyUsers} from '~/hooks/nearbyUsers';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -114,35 +111,18 @@ export const NearbyUsersScreen = React.memo(() => {
     }
   }, [keyword, users]);
 
-  const dispatch = useCustomDispatch();
+  const {getNearbyUsers} = useGetNearbyUsers();
 
   const [firstLoading, setFirstLoading] = useState(true);
-
-  const bottomToast = useToast();
-
-  const fetchUsers = useCallback(async () => {
-    if (lat && lng) {
-      try {
-        const resultAction = await dispatch(
-          getNearbyUsersThunk({lat, lng, range}),
-        );
-        unwrapResult(resultAction);
-      } catch (err) {
-        if (err.message) {
-          bottomToast?.show(err.message, {type: err.toastType});
-        }
-      }
-    }
-  }, [dispatch, lat, lng, range, bottomToast]);
 
   useEffect(() => {
     const _get = async () => {
       setFirstLoading(true);
-      await fetchUsers();
+      await getNearbyUsers({lat, lng, range});
       setFirstLoading(false);
     };
     _get();
-  }, [fetchUsers]);
+  }, [getNearbyUsers, lat, lng, range]);
 
   useFocusEffect(
     useCallback(() => {
@@ -276,8 +256,8 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   const refreshUsers = useCallback(async () => {
-    await fetchUsers();
-  }, [fetchUsers]);
+    await getNearbyUsers({lat, lng, range});
+  }, [lat, lng, range, getNearbyUsers]);
 
   const {top} = useSafeAreaInsets();
 
