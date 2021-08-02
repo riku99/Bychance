@@ -10,11 +10,10 @@ import {
 import {shallowEqual, useSelector} from 'react-redux';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
-import {createFlashStampThunk} from '~/thunks/flashStamps/createFlashStamp';
-import {useCustomDispatch} from '~/hooks/stores';
 import {Flash} from '~/stores/flashes';
 import {RootState} from '~/stores';
 import {selectFlashStampEntites} from '~/stores/flashStamps';
+import {useCreateFlashStamps} from '~/hooks/flashStamps';
 
 type StampData = {
   label: string;
@@ -108,7 +107,7 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
     setStampData(_stampData);
   }, [_stampData]);
 
-  const dispatch = useCustomDispatch();
+  const {createFlashStamps} = useCreateFlashStamps();
 
   const createStamp = useCallback(
     async ({value}: {value: string}) => {
@@ -126,15 +125,9 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
           return st;
         });
       });
-      await dispatch(
-        createFlashStampThunk({
-          flashId: flash.id,
-          value,
-          ownerId: userId,
-        }),
-      );
+      createFlashStamps({flashId: flash.id, value});
     },
-    [dispatch, flash.id, userId],
+    [createFlashStamps, flash.id],
   );
 
   return (

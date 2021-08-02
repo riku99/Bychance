@@ -6,10 +6,6 @@ import {
 
 import {RootState} from './index';
 import {
-  CreateFlashStampPayload,
-  createFlashStampThunk,
-} from '~/thunks/flashStamps/createFlashStamp';
-import {
   CreateFlashThunkPaylaod,
   createFlashThunk,
 } from '~/thunks/flashes/createFlash';
@@ -40,34 +36,15 @@ const flashStampsSlice = createSlice({
     setFlashStamps: (state, action: PayloadAction<FlashStamp[]>) => {
       flashStampsAdapter.upsertMany(state, action.payload);
     },
+    updateFlashStamp: (
+      state,
+      action: PayloadAction<{id: number; changes: FlashStamp}>,
+    ) => {
+      flashStampsAdapter.updateOne(state, action.payload);
+    },
     resetFlashStamps: () => flashStampsAdapter.getInitialState(),
   },
   extraReducers: {
-    [createFlashStampThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateFlashStampPayload>,
-    ) => {
-      const {flashId, value, userId} = action.payload;
-      const targetData = state.entities[flashId];
-      if (targetData) {
-        const targetValue = targetData.data[value];
-        if (targetValue) {
-          flashStampsAdapter.updateOne(state, {
-            id: flashId,
-            changes: {
-              flashId: targetData.flashId,
-              data: {
-                ...targetData.data,
-                [value]: {
-                  number: targetValue.number += 1,
-                  userIds: [...targetValue.userIds, userId],
-                },
-              },
-            },
-          });
-        }
-      }
-    },
     [createFlashThunk.fulfilled.type]: (
       state,
       aciton: PayloadAction<CreateFlashThunkPaylaod>,
@@ -82,6 +59,13 @@ const flashStampsSelector = flashStampsAdapter.getSelectors();
 export const selectFlashStampEntites = (state: RootState) =>
   flashStampsSelector.selectEntities(state.flashStampsReducer);
 
+export const selectFlashStamp = (state: RootState, id: number) =>
+  flashStampsSelector.selectById(state.flashStampsReducer, id);
+
 export const flashStampsReducer = flashStampsSlice.reducer;
 
-export const {setFlashStamps, resetFlashStamps} = flashStampsSlice.actions;
+export const {
+  setFlashStamps,
+  resetFlashStamps,
+  updateFlashStamp,
+} = flashStampsSlice.actions;

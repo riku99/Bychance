@@ -48,7 +48,7 @@ export const useGetNearbyUsers = () => {
           }
         });
 
-        dispatch(updateChatPartners(array));
+        dispatch(updateChatPartners(array)); // ユーザーを取得し、トーク相手に同じユーザーがいた場合更新する。ただ、ユーザーページを開いた時に更新するから必要ではないかも
         dispatch(setFlashStamps(flashStampsData));
       } catch (e) {
         handleApiError(e);
