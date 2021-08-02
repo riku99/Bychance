@@ -5,10 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from './index';
-import {
-  CreateFlashThunkPaylaod,
-  createFlashThunk,
-} from '~/thunks/flashes/createFlash';
 
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 
@@ -42,15 +38,10 @@ const flashStampsSlice = createSlice({
     ) => {
       flashStampsAdapter.updateOne(state, action.payload);
     },
-    resetFlashStamps: () => flashStampsAdapter.getInitialState(),
-  },
-  extraReducers: {
-    [createFlashThunk.fulfilled.type]: (
-      state,
-      aciton: PayloadAction<CreateFlashThunkPaylaod>,
-    ) => {
-      flashStampsAdapter.addOne(state, aciton.payload.stamps);
+    addFlashStamp: (state, action: PayloadAction<FlashStamp>) => {
+      flashStampsAdapter.addOne(state, action.payload);
     },
+    resetFlashStamps: () => flashStampsAdapter.getInitialState(),
   },
 });
 
@@ -68,4 +59,5 @@ export const {
   setFlashStamps,
   resetFlashStamps,
   updateFlashStamp,
+  addFlashStamp,
 } = flashStampsSlice.actions;

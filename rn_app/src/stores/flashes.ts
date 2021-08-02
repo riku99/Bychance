@@ -9,10 +9,6 @@ import {
   deleteFlashThunk,
   DeleteFlashThunkPayload,
 } from '../thunks/flashes/deleteFlash';
-import {
-  createFlashThunk,
-  CreateFlashThunkPaylaod,
-} from '../thunks/flashes/createFlash';
 
 export type Flash = {
   id: number;
@@ -39,13 +35,12 @@ const flashesSlice = createSlice({
     setFlashes: (state, action: PayloadAction<Flash[]>) => {
       flashesAdapter.upsertMany(state, action.payload);
     },
+    addFlash: (state, action: PayloadAction<Flash>) => {
+      flashesAdapter.addOne(state, action.payload);
+    },
     resetFlashes: () => flashesAdapter.getInitialState(),
   },
   extraReducers: {
-    [createFlashThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateFlashThunkPaylaod>,
-    ) => flashesAdapter.addOne(state, action.payload.flash),
     [deleteFlashThunk.fulfilled.type]: (
       state,
       action: PayloadAction<DeleteFlashThunkPayload>,
@@ -61,4 +56,4 @@ export const selectAllFlashes = (state: RootState) => {
 
 export const flashesReducer = flashesSlice.reducer;
 
-export const {setFlashes, resetFlashes} = flashesSlice.actions;
+export const {setFlashes, resetFlashes, addFlash} = flashesSlice.actions;

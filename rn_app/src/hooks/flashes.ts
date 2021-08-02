@@ -1,24 +1,34 @@
 import {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
+import {default as axios} from 'axios';
 
 import {createFlashThunk} from '~/thunks/flashes/createFlash';
 import {creatingFlash} from '~/stores/otherSettings';
 import {getExtention} from '~/utils';
-import {useCustomDispatch} from '~/hooks/stores';
 import {showBottomToast} from '~/stores/bottomToast';
 import {useApikit} from './apikit';
-import {axios} from '~/thunks/re-modules';
 import {baseUrl} from '~/constants/url';
 import {store} from '~/stores';
 import {updateChatPartner} from '~/stores/chatPartners';
 import {AnotherUser} from '~/stores/types';
 import {updateNearbyUser} from '~/stores/nearbyUsers';
 import {NearbyUser} from '~/types/nearbyUsers';
+import {addFlash} from '~/stores/flashes';
+import {Flash} from '~/types/flashes';
+import {FlashStamp} from '~/types/FlashStamps';
+import {addFlashStamp} from '~/stores/flashStamps';
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
-  const dispatch = useCustomDispatch();
+
+  const {
+    dispatch,
+    addBearer,
+    checkKeychain,
+    handleApiError,
+    toast,
+  } = useApikit();
 
   return useCallback(
     async ({sourceType, uri}: {sourceType: 'image' | 'video'; uri: string}) => {
@@ -37,17 +47,30 @@ export const useCreateFlash = () => {
         return;
       }
 
-      await dispatch(
-        createFlashThunk({
-          source: await fs.readFile(uri, 'base64'),
-          sourceType,
-          ext,
-        }),
-      );
+      const credentials = await checkKeychain();
+
+      try {
+        const response = await axios.post<{flash: Flash; stamps: FlashStamp}>(
+          `${baseUrl}/flashes?id=${credentials?.id}`,
+          {
+            source: await fs.readFile(uri, 'base64'),
+            sourceType,
+            ext,
+          },
+          addBearer(credentials?.token),
+        );
+
+        toast?.show('追加しました', {type: 'success'});
+
+        dispatch(addFlash(response.data.flash));
+        dispatch(addFlashStamp(response.data.stamps));
+      } catch (e) {
+        handleApiError(e);
+      }
 
       dispatch(creatingFlash());
     },
-    [dispatch, navigation],
+    [dispatch, navigation, checkKeychain, addBearer, handleApiError, toast],
   );
 };
 
