@@ -3,8 +3,7 @@ import {TouchableOpacity, StyleSheet, Text, Alert} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
 
-import {deleteFlashThunk} from '../../../thunks/flashes/deleteFlash';
-import {useCustomDispatch} from '~/hooks/stores';
+import {useDeleteFlash} from '~/hooks/flashes';
 
 type Props = {
   flashId: number;
@@ -33,15 +32,16 @@ export const Modal = ({
   videoDuration,
   progressAnimation,
 }: Props) => {
-  const dispatch = useCustomDispatch();
+  const {deleteFlash} = useDeleteFlash();
 
-  const deleteFlash = useCallback(async () => {
+  const onDeletePress = useCallback(async () => {
     Alert.alert('本当に削除してもよろしいですか?', '', [
       {
         text: '削除',
         style: 'destructive',
         onPress: async () => {
-          await dispatch(deleteFlashThunk({flashId}));
+          // await dispatch(deleteFlashThunk({flashId}));
+          await deleteFlash({flashId});
           modalizeRef.current?.close();
         },
       },
@@ -52,7 +52,7 @@ export const Modal = ({
         },
       },
     ]);
-  }, [dispatch, modalizeRef, flashId]);
+  }, [deleteFlash, modalizeRef, flashId]);
 
   const modalList = useMemo(
     () => [
@@ -61,11 +61,11 @@ export const Modal = ({
         icon: 'delete-outline',
         titleStyle: {fontSize: 18, color: '#f74a4a'},
         onPress: () => {
-          deleteFlash();
+          onDeletePress();
         },
       },
     ],
-    [deleteFlash],
+    [onDeletePress],
   );
 
   return (

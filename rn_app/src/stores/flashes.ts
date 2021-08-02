@@ -5,10 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from './index';
-import {
-  deleteFlashThunk,
-  DeleteFlashThunkPayload,
-} from '../thunks/flashes/deleteFlash';
 
 export type Flash = {
   id: number;
@@ -38,13 +34,10 @@ const flashesSlice = createSlice({
     addFlash: (state, action: PayloadAction<Flash>) => {
       flashesAdapter.addOne(state, action.payload);
     },
+    removeFlash: (state, action: PayloadAction<number>) => {
+      flashesAdapter.removeOne(state, action.payload);
+    },
     resetFlashes: () => flashesAdapter.getInitialState(),
-  },
-  extraReducers: {
-    [deleteFlashThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<DeleteFlashThunkPayload>,
-    ) => flashesAdapter.removeOne(state, action.payload),
   },
 });
 
@@ -56,4 +49,9 @@ export const selectAllFlashes = (state: RootState) => {
 
 export const flashesReducer = flashesSlice.reducer;
 
-export const {setFlashes, resetFlashes, addFlash} = flashesSlice.actions;
+export const {
+  setFlashes,
+  resetFlashes,
+  addFlash,
+  removeFlash,
+} = flashesSlice.actions;

@@ -3,7 +3,6 @@ import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
 import {default as axios} from 'axios';
 
-import {createFlashThunk} from '~/thunks/flashes/createFlash';
 import {creatingFlash} from '~/stores/otherSettings';
 import {getExtention} from '~/utils';
 import {showBottomToast} from '~/stores/bottomToast';
@@ -14,7 +13,7 @@ import {updateChatPartner} from '~/stores/chatPartners';
 import {AnotherUser} from '~/stores/types';
 import {updateNearbyUser} from '~/stores/nearbyUsers';
 import {NearbyUser} from '~/types/nearbyUsers';
-import {addFlash} from '~/stores/flashes';
+import {addFlash, removeFlash} from '~/stores/flashes';
 import {Flash} from '~/types/flashes';
 import {FlashStamp} from '~/types/FlashStamps';
 import {addFlashStamp} from '~/stores/flashStamps';
@@ -72,6 +71,39 @@ export const useCreateFlash = () => {
     },
     [dispatch, navigation, checkKeychain, addBearer, handleApiError, toast],
   );
+};
+
+export const useDeleteFlash = () => {
+  const {
+    checkKeychain,
+    handleApiError,
+    toast,
+    dispatch,
+    addBearer,
+  } = useApikit();
+
+  const deleteFlash = useCallback(
+    async ({flashId}: {flashId: number}) => {
+      const credentials = await checkKeychain();
+      try {
+        await axios.delete(
+          `${baseUrl}/flashes/${flashId}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+
+        toast?.show('削除しました', {type: 'success'});
+
+        dispatch(removeFlash(flashId));
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, handleApiError, toast, dispatch, addBearer],
+  );
+
+  return {
+    deleteFlash,
+  };
 };
 
 export const useCreateAlreadyViewedFlash = () => {
