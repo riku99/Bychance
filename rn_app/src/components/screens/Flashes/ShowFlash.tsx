@@ -25,14 +25,13 @@ import {FlashesData} from '~/stores/types';
 import {RootState} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {FlashUserData} from '../../../navigations/Flashes';
-import {createAlreadyViewdFlashThunk} from '../../../thunks/flashes/createAlreadyViewedFlashes';
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '~/hooks/users';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {Stamps} from './Stamps';
-import {useCustomDispatch} from '~/hooks/stores';
+import {useCreateAlreadyViewedFlash} from '~/hooks/flashes';
 
 type Props = {
   flashesData: FlashesData;
@@ -121,18 +120,16 @@ export const ShowFlash = React.memo(
       FlashStackNavigationProp<'Flashes'>
     >();
 
-    const dispatch = useCustomDispatch();
+    const {createAlreadyViewedFlash} = useCreateAlreadyViewedFlash();
 
-    const createAlreadyViewdFlash = useCallback(
+    const onViewed = useCallback(
       async ({flashId}: {flashId: number}) => {
         const existing = flashesData.alreadyViewed.includes(flashId);
         if (!existing && !isMyData) {
-          await dispatch(
-            createAlreadyViewdFlashThunk({flashId, userId: userData.userId}),
-          );
+          createAlreadyViewedFlash({flashId, userId: userData.userId});
         }
       },
-      [dispatch, userData.userId, flashesData, isMyData],
+      [userData.userId, flashesData, isMyData, createAlreadyViewedFlash],
     );
 
     // プログレスバーのアニメーション
@@ -158,7 +155,7 @@ export const ShowFlash = React.memo(
             duration: -progressValue.current / (progressBarWidth / duration),
             useNativeDriver: true,
           }).start((e) => {
-            createAlreadyViewdFlash({flashId: currentFlash.id});
+            onViewed({flashId: currentFlash.id});
             // アニメーションが終了した、つまりタップによるスキップなく最後まで完了した場合
             if (e.finished) {
               // 進行してたプログレスバーがラストだった場合
@@ -173,7 +170,7 @@ export const ShowFlash = React.memo(
         }
       },
       [
-        createAlreadyViewdFlash,
+        onViewed,
         currentFlash.id,
         entityLength,
         flashesData.entities,

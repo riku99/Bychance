@@ -372,7 +372,6 @@ export const useRefreshUser = () => {
         if (response.data.isMyData) {
           const {user, posts, flashes, flashStamps} = response.data;
 
-          console.log(user);
           dispatch(setUser(user));
           dispatch(setPosts(posts));
           dispatch(setFlashes(flashes));

@@ -6,11 +6,6 @@ import {
 
 import {RootState} from './index';
 import {AnotherUser} from './types';
-import {updateAlreadyViewed} from './helpers/createViewedFlashes';
-import {
-  createAlreadyViewdFlashThunk,
-  CreateAlreadyViewdFlashThunkPayload,
-} from '../thunks/flashes/createAlreadyViewedFlashes';
 
 // NearbyUserは位置情報により取得したユーザーなので必ずlat, lngが存在する。AnotherUserはトーク相手とかも含まれるので位置情報のデータが必ず含まれるとは限らない
 export type NearbyUser = Omit<AnotherUser, 'lat' | 'lng'> & {
@@ -35,13 +30,11 @@ const nearbyUsersSlice = createSlice({
       nearbyUsersAdapter.setAll(state, action.payload);
     },
     resetNearbyUsers: () => nearbyUsersAdapter.getInitialState(),
-  },
-  extraReducers: {
-    [createAlreadyViewdFlashThunk.fulfilled.type]: (
+    updateNearbyUser: (
       state,
-      action: PayloadAction<CreateAlreadyViewdFlashThunkPayload>,
+      action: PayloadAction<{id: string; changes: NearbyUser}>,
     ) => {
-      updateAlreadyViewed(state, action, {slice: nearbyUsersSlice.name});
+      nearbyUsersAdapter.updateOne(state, action.payload);
     },
   },
 });
@@ -71,4 +64,8 @@ export const selectNearbyUserAlreadyViewed = (
   }
 };
 
-export const {resetNearbyUsers, setNearbyUsers} = nearbyUsersSlice.actions;
+export const {
+  resetNearbyUsers,
+  setNearbyUsers,
+  updateNearbyUser,
+} = nearbyUsersSlice.actions;

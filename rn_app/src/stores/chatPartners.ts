@@ -7,11 +7,6 @@ import {
 import {AnotherUser, ReceivedMessageData} from './types';
 import {RootState} from './index';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
-import {updateAlreadyViewed} from './helpers/createViewedFlashes';
-import {
-  createAlreadyViewdFlashThunk,
-  CreateAlreadyViewdFlashThunkPayload,
-} from '../thunks/flashes/createAlreadyViewedFlashes';
 
 export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
@@ -36,6 +31,12 @@ export const chatPartnersSlice = createSlice({
     ) => {
       chatPartnersAdapter.updateMany(state, action.payload);
     },
+    updateChatPartner: (
+      state,
+      action: PayloadAction<{id: string; changes: AnotherUser}>,
+    ) => {
+      chatPartnersAdapter.updateOne(state, action.payload);
+    },
   },
   extraReducers: {
     [receiveTalkRoomMessage.type]: (
@@ -45,12 +46,6 @@ export const chatPartnersSlice = createSlice({
       if (action.payload.isFirstMessage) {
         chatPartnersAdapter.upsertOne(state, action.payload.sender);
       }
-    },
-    [createAlreadyViewdFlashThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateAlreadyViewdFlashThunkPayload>,
-    ) => {
-      updateAlreadyViewed(state, action, {slice: chatPartnersSlice.name});
     },
   },
 });
@@ -95,4 +90,5 @@ export const {
   upsertChatPartner,
   resetChatPartners,
   updateChatPartners,
+  updateChatPartner,
 } = chatPartnersSlice.actions;
