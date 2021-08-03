@@ -5,10 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from './index';
-import {
-  createDeleteRoomThunk,
-  CreateDeleteRoomThunkPayload,
-} from '~/thunks/deleteTalkRooms/createDeleteTalkRoom';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
 import {TalkRoom} from '~/components/screens/TalkRoom/TaklRoom';
@@ -48,6 +44,9 @@ export const RoomsSlice = createSlice({
     addTalkRoom: (state, action: PayloadAction<TalkRoom>) => {
       talkRoomsAdapter.addOne(state, action.payload);
     },
+    removeTalkRoom: (state, action: PayloadAction<number>) => {
+      talkRoomsAdapter.removeOne(state, action.payload);
+    },
     resetTalkRooms: () => talkRoomsAdapter.getInitialState(),
     resetUnreadNumber: (state, actions: PayloadAction<{roomId: number}>) => {
       talkRoomsAdapter.updateOne(state, {
@@ -86,13 +85,6 @@ export const RoomsSlice = createSlice({
         });
       }
     },
-    [createDeleteRoomThunk.fulfilled.type]: (
-      state,
-      action: PayloadAction<CreateDeleteRoomThunkPayload>,
-    ) => {
-      talkRoomsAdapter.removeOne(state, action.payload.talkRoomId);
-      // cahtPartners, talkRoomMessagesは削除このdispatchの時点で削除しないが、次回ロードの時には含まれないのでとりあえずそれでいい。
-    },
   },
 });
 
@@ -102,6 +94,7 @@ export const {
   resetTalkRooms,
   updateTalkRoom,
   addTalkRoom,
+  removeTalkRoom,
 } = RoomsSlice.actions;
 
 export const talkRoomSelectors = talkRoomsAdapter.getSelectors();

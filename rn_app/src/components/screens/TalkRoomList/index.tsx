@@ -9,13 +9,12 @@ import {TalkRoom} from '../../../stores/talkRooms';
 import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {RootNavigationProp} from '../../../navigations/Root';
 import {useCustomDispatch} from '~/hooks/stores';
-import {useSelectAllRooms} from '~/hooks/talkRooms';
+import {useSelectAllRooms, useDeleteTalkRoom} from '~/hooks/talkRooms';
 import {useSelectChatPartnerEntities} from '~/hooks/chatPartners';
-import {createDeleteRoomThunk} from '~/thunks/deleteTalkRooms/createDeleteTalkRoom';
-import {displayShortMessage} from '~/helpers/topShortMessage';
 
 export const TalkRoomListPage = () => {
   const dispatch = useCustomDispatch();
+  const {deleteTalkRoom} = useDeleteTalkRoom();
 
   const rooms = useSelectAllRooms();
 
@@ -44,7 +43,8 @@ export const TalkRoomListPage = () => {
           text: '削除',
           style: 'destructive',
           onPress: async () => {
-            await dispatch(createDeleteRoomThunk({talkRoomId}));
+            deleteTalkRoom({talkRoomId});
+            // await dispatch(createDeleteRoomThunk({talkRoomId}));
           },
         },
         {
@@ -52,7 +52,7 @@ export const TalkRoomListPage = () => {
         },
       ]);
     },
-    [dispatch],
+    [deleteTalkRoom],
   );
 
   return (

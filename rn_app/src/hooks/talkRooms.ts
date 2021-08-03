@@ -3,7 +3,12 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
 import {RootState} from '~/stores';
-import {selectAllTalkRooms, addTalkRoom, selectRoom} from '~/stores/talkRooms';
+import {
+  selectAllTalkRooms,
+  addTalkRoom,
+  selectRoom,
+  removeTalkRoom,
+} from '~/stores/talkRooms';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';
@@ -61,6 +66,41 @@ export const useCreateTalkRoom = () => {
 
   return {
     createTalkRoom,
+  };
+};
+
+export const useDeleteTalkRoom = () => {
+  const {
+    addBearer,
+    checkKeychain,
+    handleApiError,
+    toast,
+    dispatch,
+  } = useApikit();
+
+  const deleteTalkRoom = useCallback(
+    async ({talkRoomId}: {talkRoomId: number}) => {
+      const credentials = await checkKeychain();
+
+      try {
+        await axios.delete(
+          `${baseUrl}/talkRooms/${talkRoomId}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+
+        toast?.show('削除しました', {type: 'success'});
+
+        dispatch(removeTalkRoom(talkRoomId));
+        // cahtPartners, talkRoomMessagesは削除このの時点で削除しないが、次回ロードの時には含まれないのでとりあえずそれでいい。
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, toast, dispatch],
+  );
+
+  return {
+    deleteTalkRoom,
   };
 };
 

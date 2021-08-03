@@ -1,25 +1,27 @@
 import {useCallback} from 'react';
 import {default as axios} from 'axios';
 
-import {headers} from '~/helpers/requestHeaders';
-import {origin} from '~/constants/url';
-
-import {useApis} from './apis';
+import {baseUrl} from '~/constants/url';
+import {useApikit} from './apikit';
 
 export const useHandleDeviceToken = () => {
-  const {handleApi} = useApis();
+  const {checkKeychain, addBearer, handleApiError} = useApikit();
 
   const postDeviceToken = useCallback(
     async (deviceToken: string) => {
-      await handleApi(async (credentials) => {
+      const credentials = await checkKeychain();
+
+      try {
         await axios.post(
-          `${origin}/deviceToken?id=${credentials.id}`,
+          `${baseUrl}/deviceToken?id=${credentials?.id}`,
           {token: deviceToken},
-          headers(credentials.token),
+          addBearer(credentials?.token),
         );
-      });
+      } catch (e) {
+        handleApiError(e);
+      }
     },
-    [handleApi],
+    [checkKeychain, addBearer, handleApiError],
   );
 
   return {

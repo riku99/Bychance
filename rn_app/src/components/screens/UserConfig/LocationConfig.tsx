@@ -2,18 +2,17 @@ import React, {useMemo, useRef} from 'react';
 import {View, StyleSheet, Text, Alert, Dimensions} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+import {useToast} from 'react-native-fast-toast';
 
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
-import {useCustomDispatch} from '~/hooks/stores';
 import {notAuthLocationProviderAlert} from '~/helpers/alert';
-import {showBottomToast} from '~/thunks/re-modules';
 import {useDeleteLocation} from '~/hooks/users';
 
 export const LocationConfig = React.memo(() => {
-  const dispatch = useCustomDispatch();
-
   const {deleteLocaiton} = useDeleteLocation();
+
+  const toast = useToast();
 
   const aboutLocationInfoModalRef = useRef<Modalize | null>(null);
   const list: List = useMemo(() => {
@@ -57,14 +56,7 @@ export const LocationConfig = React.memo(() => {
                       extras: {manual: true},
                     }); // 成功したらBackgroundGeolocation.onLocationが実行される
                   } catch {
-                    dispatch(
-                      showBottomToast({
-                        data: {
-                          type: 'danger',
-                          message: '更新に失敗しました',
-                        },
-                      }),
-                    );
+                    toast?.show('更新に失敗しました', {type: 'danger'});
                     return;
                   }
                 },
@@ -85,7 +77,7 @@ export const LocationConfig = React.memo(() => {
         },
       },
     ];
-  }, [dispatch, deleteLocaiton]);
+  }, [deleteLocaiton, toast]);
 
   return (
     <View style={commonStyles.container}>
