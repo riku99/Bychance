@@ -36,7 +36,7 @@
     "@wwimmo/react-native-sketch-canvas": "git+https://github.com/riku99/react-native-sketch-image.git",
     "@xmartlabs/react-native-line": "^2.1.0",
     "axios": "^0.20.0",
-    "bychance-components": "^1.1.7",
+    "bychance-components": "^1.1.8",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-background-fetch": "^4.0.1",
