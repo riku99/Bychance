@@ -11,12 +11,15 @@ import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
+import {Recommendation} from '~/components/screens/Recommendation';
+import {color} from 'react-native-reanimated';
 
 type TabList = {
   Profile: undefined;
   CreatePost: undefined;
   ChatList: undefined;
   Search: undefined;
+  Recommendation: undefined;
 };
 
 const RootTab = createBottomTabNavigator<TabList>();
@@ -34,7 +37,7 @@ export const Tabs = React.memo(() => {
     <RootTab.Navigator
       initialRouteName="Profile"
       tabBarOptions={{
-        showLabel: false,
+        // showLabel: false,
         activeTintColor: normalStyles.mainColor,
         inactiveTintColor: '#b8b8b8',
       }}>
@@ -43,8 +46,9 @@ export const Tabs = React.memo(() => {
         component={NearbyUsersStackScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <MIcon name="search" size={27} color={color} />
+            <MIcon name="search" size={24} color={color} />
           ),
+          tabBarLabel: '見つける',
         }}
       />
       <RootTab.Screen
@@ -54,8 +58,19 @@ export const Tabs = React.memo(() => {
           tabBarIcon: ({color}) => (
             <MIcon name="chat-bubble-outline" size={24} color={color} />
           ),
+          tabBarLabel: 'メッセージ',
           tabBarBadge:
             unreadMessagesNumber !== 0 ? unreadMessagesNumber : undefined,
+        }}
+      />
+      <RootTab.Screen
+        name="Recommendation"
+        component={Recommendation}
+        options={{
+          tabBarIcon: ({color}) => (
+            <MIcon name="store" size={24} color={color} />
+          ),
+          tabBarLabel: '近くのおすすめ',
         }}
       />
       <RootTab.Screen
@@ -65,6 +80,7 @@ export const Tabs = React.memo(() => {
           tabBarIcon: ({color}) => (
             <MIcon name="add-circle-outline" size={24} color={color} />
           ),
+          tabBarLabel: '投稿',
         }}
       />
       <RootTab.Screen
@@ -74,6 +90,7 @@ export const Tabs = React.memo(() => {
           tabBarIcon: ({color}) => (
             <MIcon name="person-outline" size={24} color={color} />
           ),
+          tabBarLabel: 'マイページ',
         }}
       />
     </RootTab.Navigator>

@@ -16,7 +16,6 @@ import {RNToasty} from 'react-native-toasty';
 
 import {creatingPost} from '../../../stores/otherSettings';
 import {CreatePostStackNavigationProp} from '../../../navigations/types';
-import {displayShortMessage} from '../../../helpers/topShortMessage';
 import {getExtention} from '~/utils';
 import {Post} from '~/stores/posts';
 import {useCustomDispatch} from '~/hooks/stores';
