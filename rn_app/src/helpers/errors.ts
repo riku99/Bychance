@@ -4,7 +4,6 @@ import * as Keychain from 'react-native-keychain';
 
 import {RejectPayload} from '~/thunks/types';
 import {BasicAxiosError} from '~/types';
-import {showBottomToast} from '~/stores/bottomToast';
 
 export const alertSomeError = () => {
   Alert.alert(

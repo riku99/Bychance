@@ -1,46 +1,42 @@
 import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 
-import {checkKeychain} from '~/helpers/credentials';
-import {origin} from '~/constants/url';
-import {headers} from '~/helpers/requestHeaders';
+import {baseUrl} from '~/constants/url';
 import {PrivateZone} from '~/types';
-import {useCustomDispatch} from './stores';
-import {
-  handleCredentialsError,
-  handleBasicApiErrorWithDispatch,
-} from '~/helpers/errors';
-import {showBottomToast} from '~/stores/bottomToast';
+import {useApikit} from './apikit';
 
 export const usePrivateZone = () => {
-  const dispatch = useCustomDispatch();
-
   const [result, setResult] = useState<PrivateZone[]>();
   const [fetchLoading, setfetchLoading] = useState<boolean>(true);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
+  const {
+    dispatch,
+    checkKeychain,
+    addBearer,
+    handleApiError,
+    toast,
+  } = useApikit();
+
   useEffect(() => {
     const _fetch = async () => {
       const credentials = await checkKeychain();
-      if (credentials) {
-        try {
-          const _result = await axios.get<PrivateZone[]>(
-            `${origin}/privateZone?id=${credentials.id}`,
-            headers(credentials.token),
-          );
-          setResult(_result.data);
-        } catch (e) {
-          handleBasicApiErrorWithDispatch({e, dispatch});
-        }
-      } else {
-        handleCredentialsError(dispatch);
+      try {
+        const _result = await axios.get<PrivateZone[]>(
+          `${baseUrl}/privateZone?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+        setfetchLoading(false);
+        setResult(_result.data);
+      } catch (e) {
+        handleApiError(e);
       }
       setfetchLoading(false);
     };
 
     _fetch();
-  }, [dispatch]);
+  }, [dispatch, checkKeychain, handleApiError, addBearer]);
 
   const createPrivateZone = useCallback(
     async ({
@@ -55,38 +51,26 @@ export const usePrivateZone = () => {
       setPostLoading(true);
       const credentials = await checkKeychain();
 
-      if (credentials) {
-        try {
-          const _result = await axios.post<PrivateZone>(
-            `${origin}/privateZone?id=${credentials.id}`,
-            {
-              address,
-              lat,
-              lng,
-            },
-            headers(credentials.token),
-          );
+      try {
+        const _result = await axios.post<PrivateZone>(
+          `${baseUrl}/privateZone?id=${credentials?.id}`,
+          {
+            address,
+            lat,
+            lng,
+          },
+          addBearer(credentials?.token),
+        );
 
-          setPostLoading(false);
-          dispatch(
-            showBottomToast({
-              data: {
-                message: '作成しました',
-                timestamp: new Date().toString(),
-                type: 'success',
-              },
-            }),
-          );
-          return _result.data;
-        } catch (e) {
-          handleBasicApiErrorWithDispatch({e, dispatch});
-        }
-      } else {
-        handleCredentialsError(dispatch);
+        setPostLoading(false);
+        toast?.show('作成しました', {type: 'success'});
+        return _result.data;
+      } catch (e) {
+        handleApiError(e);
       }
       setPostLoading(false);
     },
-    [dispatch],
+    [addBearer, checkKeychain, handleApiError, toast],
   );
 
   const deletePrivateZone = useCallback(
@@ -95,33 +79,21 @@ export const usePrivateZone = () => {
 
       const credentials = await checkKeychain();
 
-      if (credentials) {
-        try {
-          await axios.delete(
-            `${origin}/privateZone/${id}?id=${credentials.id}`,
-            headers(credentials.token),
-          );
+      try {
+        await axios.delete(
+          `${baseUrl}/privateZone/${id}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
 
-          dispatch(
-            showBottomToast({
-              data: {
-                message: '削除しました',
-                timestamp: new Date().toString(),
-                type: 'success',
-              },
-            }),
-          );
-          setDeleteLoading(false);
-          return true;
-        } catch (e) {
-          handleBasicApiErrorWithDispatch({e, dispatch});
-        }
-      } else {
-        handleCredentialsError(dispatch);
+        toast?.show('削除しました', {type: 'success'});
+        setDeleteLoading(false);
+        return true;
+      } catch (e) {
+        handleApiError(e);
       }
       setDeleteLoading(false);
     },
-    [dispatch],
+    [addBearer, checkKeychain, handleApiError, toast],
   );
 
   return {

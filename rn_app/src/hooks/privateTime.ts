@@ -1,47 +1,37 @@
 import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 
-import {checkKeychain} from '~/helpers/credentials';
-import {origin} from '~/constants/url';
-import {headers} from '~/helpers/requestHeaders';
+import {baseUrl} from '~/constants/url';
 import {PrivateTime} from '~/types';
-import {
-  handleCredentialsError,
-  handleBasicApiErrorWithDispatch,
-} from '~/helpers/errors';
-import {showBottomToast} from '~/stores/bottomToast';
-import {useCustomDispatch} from './stores';
+import {useApikit} from './apikit';
 
 export const usePrivateTime = () => {
-  const dispatch = useCustomDispatch();
   const [postLoading, setPostLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [fetchResult, setFetchResult] = useState<PrivateTime[]>();
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  const {checkKeychain, addBearer, handleApiError, toast} = useApikit();
+
   useEffect(() => {
     const _fetch = async () => {
       const credentials = await checkKeychain();
 
-      if (credentials) {
-        try {
-          const _result = await axios.get<PrivateTime[]>(
-            `${origin}/privateTime?id=${credentials.id}`,
-            headers(credentials.token),
-          );
-
-          setFetchLoading(false);
-          setFetchResult(_result.data);
-        } catch (e) {
-          handleBasicApiErrorWithDispatch({e, dispatch});
-        }
-      } else {
-        handleCredentialsError(dispatch);
+      try {
+        const _result = await axios.get<PrivateTime[]>(
+          `${baseUrl}/privateTime?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+        setFetchLoading(false);
+        setFetchResult(_result.data);
+      } catch (e) {
+        handleApiError(e);
       }
       setFetchLoading(false);
     };
+
     _fetch();
-  }, [dispatch]);
+  }, [checkKeychain, addBearer, handleApiError, toast]);
 
   const createPrivateTime = useCallback(
     async ({
@@ -57,34 +47,21 @@ export const usePrivateTime = () => {
     }) => {
       setPostLoading(true);
       const credentials = await checkKeychain();
-      if (credentials) {
-        try {
-          const apiResult = await axios.post<PrivateTime>(
-            `${origin}/privateTime?id=${credentials.id}`,
-            {startHours, startMinutes, endHours, endMinutes},
-            headers(credentials.token),
-          );
-          setPostLoading(false);
-          dispatch(
-            showBottomToast({
-              data: {
-                message: '作成しました',
-                type: 'success',
-                timestamp: new Date().toString(),
-              },
-            }),
-          );
-
-          return apiResult.data;
-        } catch (e) {
-          handleBasicApiErrorWithDispatch({e, dispatch});
-        }
-      } else {
-        handleCredentialsError(dispatch);
+      try {
+        const apiResult = await axios.post<PrivateTime>(
+          `${baseUrl}/privateTime?id=${credentials?.id}`,
+          {startHours, startMinutes, endHours, endMinutes},
+          addBearer(credentials?.token),
+        );
+        setPostLoading(false);
+        toast?.show('作成しました', {type: 'success'});
+        return apiResult.data;
+      } catch (e) {
+        handleApiError(e);
       }
       setPostLoading(false);
     },
-    [dispatch],
+    [checkKeychain, addBearer, handleApiError, toast],
   );
 
   const deletePrivateTime = useCallback(
@@ -93,34 +70,21 @@ export const usePrivateTime = () => {
 
       const credentials = await checkKeychain();
 
-      if (credentials) {
-        try {
-          await axios.delete(
-            `${origin}/privateTime/${id}?id=${credentials.id}`,
-            headers(credentials.token),
-          );
-
-          setDeleteLoading(false);
-          dispatch(
-            showBottomToast({
-              data: {
-                message: '削除しました',
-                type: 'success',
-                timestamp: new Date().toString(),
-              },
-            }),
-          );
-          return true;
-        } catch (e) {
-          handleBasicApiErrorWithDispatch({e, dispatch});
-        }
-      } else {
-        handleCredentialsError(dispatch);
+      try {
+        await axios.delete(
+          `${baseUrl}/privateTime/${id}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+        setDeleteLoading(false);
+        toast?.show('削除しました', {type: 'success'});
+        return true;
+      } catch (e) {
+        handleApiError(e);
       }
 
       setDeleteLoading(false);
     },
-    [dispatch],
+    [checkKeychain, addBearer, handleApiError, toast],
   );
 
   return {
