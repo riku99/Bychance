@@ -12,7 +12,6 @@ import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
 import {Recommendation} from '~/components/screens/Recommendation';
-import {color} from 'react-native-reanimated';
 
 type TabList = {
   Profile: undefined;

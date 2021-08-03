@@ -9,6 +9,7 @@ import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPage} from '../components/screens/UserPage';
 import {normalStyles} from '~/constants/styles';
+import Logo from '~/assets/logo.svg';
 
 export type MyPageStackParamList = {
   MyPage: undefined;
@@ -32,20 +33,7 @@ export const MyPageStackScreen = () => {
         component={UserPage}
         options={{
           headerTitle: () => null,
-          headerLeft: () => (
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{
-                  marginLeft: 20,
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  color: normalStyles.headerTitleColor,
-                }}>
-                マイページ
-              </Text>
-              <Emoji name="open_hands" style={{fontSize: 30}} />
-            </View>
-          ),
+          headerLeft: () => <Logo height="70%" width={140} />,
           headerRight: () => <MenuBar />,
         }}
       />
