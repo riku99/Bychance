@@ -10,7 +10,6 @@ import {
 } from '~/hooks/pushNotification';
 import {useActive} from '~/hooks/active';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
-import {useSetupBottomToast} from '~/hooks/bottomToast';
 import {useHandleErrors} from '~/hooks/errors';
 
 export const Main = React.memo(() => {
@@ -26,9 +25,6 @@ export const Main = React.memo(() => {
 
   // 位置情報周り
   useBackgroundGeolocation();
-
-  // 下から出てくるトーストのセットアップ
-  useSetupBottomToast();
 
   // エラーをdispatchしたときの処理
   useHandleErrors();

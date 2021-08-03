@@ -5,7 +5,6 @@ import {default as axios} from 'axios';
 
 import {creatingFlash} from '~/stores/otherSettings';
 import {getExtention} from '~/utils';
-import {showBottomToast} from '~/stores/bottomToast';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {store} from '~/stores';
@@ -35,14 +34,7 @@ export const useCreateFlash = () => {
       navigation.goBack();
       const ext = getExtention(uri);
       if (!ext) {
-        dispatch(
-          showBottomToast({
-            data: {
-              type: 'danger',
-              message: '無効なデータです',
-            },
-          }),
-        );
+        toast?.show('無効なデータです', {type: 'danger'});
         return;
       }
 

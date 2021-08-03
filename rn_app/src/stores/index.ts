@@ -9,7 +9,6 @@ import {flashesReducer} from './flashes';
 import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';
 import {flashStampsReducer} from './flashStamps';
-import {bottomToastReducer} from './bottomToast';
 import {errorsReducer} from './errors';
 
 const rootReducer = combineReducers({
@@ -23,7 +22,6 @@ const rootReducer = combineReducers({
   nearbyUsersReducer,
   otherSettingsReducer,
   flashStampsReducer,
-  bottomToastReducer,
   errorsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
