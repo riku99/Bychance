@@ -1,14 +1,11 @@
 import React from 'react';
-import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Emoji from 'react-native-emoji';
 
 import {Container as Post} from '../components/screens/Post';
 import {Post as PostType} from '../stores/posts';
 import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPage} from '../components/screens/UserPage';
-import {normalStyles} from '~/constants/styles';
 import Logo from '~/assets/logo.svg';
 
 export type MyPageStackParamList = {

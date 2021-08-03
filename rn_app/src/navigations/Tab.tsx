@@ -11,7 +11,7 @@ import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
-import {Recommendation} from '~/components/screens/Recommendation';
+import {RecommendationStackScreen} from './Recommendation';
 
 type TabList = {
   Profile: undefined;
@@ -64,7 +64,7 @@ export const Tabs = React.memo(() => {
       />
       <RootTab.Screen
         name="Recommendation"
-        component={Recommendation}
+        component={RecommendationStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <MIcon name="store" size={24} color={color} />
