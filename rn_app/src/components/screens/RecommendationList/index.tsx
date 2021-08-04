@@ -1,54 +1,53 @@
-import React, {useMemo} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
-  RecommendationList as _RecommendationList,
-  Recommendation,
-} from 'bychance-components/src';
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+  RefreshControl,
+  ScrollView,
+} from 'react-native';
+import {RecommendationList as _RecommendationList} from 'bychance-components';
 
 import {useGetRecommendations} from '~/hooks/recommendations';
 
 export const RecommendationList = React.memo(() => {
-  const {result, isLoading} = useGetRecommendations();
+  const {result, isLoading, fetchRecommendations} = useGetRecommendations();
 
-  const listData = useMemo((): Recommendation[] | void => {
-    if (result) {
-      return result.map((data) => {
-        const {id, title, text, client, coupon, images} = data;
-        const {
-          instagram,
-          twitter,
-          url,
-          address,
-          image,
-          lat,
-          lng,
-          name,
-        } = client;
-        const imaegsData = images.map(({url: _url}) => _url);
-        return {
-          id,
-          name,
-          title,
-          text,
-          coupon,
-          images: imaegsData,
-          instagram,
-          twitter,
-          url,
-          address,
-          avatar: image,
-          lat,
-          lng,
-        };
-      });
-    }
-  }, [result]);
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchRecommendations();
+    setRefreshing(false);
+  }, [fetchRecommendations]);
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <View style={styles.container}>
-      {listData && listData?.length ? (
-        <_RecommendationList listData={listData} onItemPress={() => {}} />
-      ) : null}
+      {result && result.length ? (
+        <_RecommendationList
+          listData={result}
+          onItemPress={() => {}}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+      ) : (
+        <ScrollView
+          contentContainerStyle={{
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          <Text style={styles.noText}>この範囲にはありません🐱</Text>
+        </ScrollView>
+      )}
     </View>
   );
 });
@@ -56,5 +55,8 @@ export const RecommendationList = React.memo(() => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+  },
+  noText: {
+    color: 'gray',
   },
 });
