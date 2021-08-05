@@ -1,11 +1,21 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
+import {Recommendation} from 'bychance-components';
 
 import {RecommendationList} from '~/components/screens/RecommendationList';
+import {RecommendationDetail} from '~/components/screens/RecommendationDetail';
 
-type RecommendationStackParamList = {
+export type RecommendationStackParamList = {
   List: undefined;
+  Detail: Recommendation;
 };
+
+export type RecommendationsNavigationProp<
+  T extends keyof RecommendationStackParamList
+> = StackNavigationProp<RecommendationStackParamList, T>;
 
 const Stack = createStackNavigator<RecommendationStackParamList>();
 
@@ -16,6 +26,16 @@ export const RecommendationStackScreen = React.memo(() => {
         name="List"
         component={RecommendationList}
         options={{headerTitle: '近くのおすすめ'}}
+      />
+      <Stack.Screen
+        name="Detail"
+        component={RecommendationDetail}
+        options={{
+          headerTransparent: true,
+          headerBackTitleVisible: false,
+          headerTitle: '',
+          headerTintColor: 'white',
+        }}
       />
     </Stack.Navigator>
   );

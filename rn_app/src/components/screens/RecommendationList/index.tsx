@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,19 +7,34 @@ import {
   RefreshControl,
   ScrollView,
 } from 'react-native';
-import {RecommendationList as _RecommendationList} from 'bychance-components';
+import {
+  RecommendationList as _RecommendationList,
+  Recommendation,
+} from 'bychance-components';
+import {useNavigation} from '@react-navigation/native';
 
 import {useGetRecommendations} from '~/hooks/recommendations';
+import {RecommendationsNavigationProp} from '~/navigations/Recommendation';
 
 export const RecommendationList = React.memo(() => {
   const {result, isLoading, fetchRecommendations} = useGetRecommendations();
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const navigation = useNavigation<RecommendationsNavigationProp<'List'>>();
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchRecommendations();
     setRefreshing(false);
   }, [fetchRecommendations]);
+
+  const onPress = useCallback(
+    (r: Recommendation) => {
+      navigation.navigate('Detail', r);
+    },
+    [navigation],
+  );
 
   if (isLoading) {
     return <ActivityIndicator />;
@@ -30,7 +45,7 @@ export const RecommendationList = React.memo(() => {
       {result && result.length ? (
         <_RecommendationList
           listData={result}
-          onItemPress={() => {}}
+          onItemPress={(data) => onPress(data)}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
