@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useCallback} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
 import {RecommendationDetail as _RecommendationDetail} from 'bychance-components';
 import {useRoute, RouteProp} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
@@ -7,12 +7,28 @@ import {Button} from 'react-native-elements';
 import {RecommendationStackParamList} from '~/navigations/Recommendation';
 
 export const RecommendationDetail = React.memo(() => {
-  const data = useRoute<RouteProp<RecommendationStackParamList, 'Detail'>>();
+  const {setListData, ...data} = useRoute<
+    RouteProp<RecommendationStackParamList, 'Detail'>
+  >().params;
+
+  const onHideButtonPress = useCallback(() => {
+    Alert.alert('非表示にしますか?', '再度表示することはできません', [
+      {
+        text: '非表示',
+        style: 'destructive',
+        onPress: () =>
+          setListData((current) => current.filter((d) => d.id !== data.id)),
+      },
+      {
+        text: 'キャンセル',
+      },
+    ]);
+  }, [data.id, setListData]);
 
   return (
     <View style={styles.container}>
       <_RecommendationDetail
-        data={data.params}
+        data={data}
         BottomButton={() => (
           <Button
             title="非表示にする"
@@ -20,6 +36,7 @@ export const RecommendationDetail = React.memo(() => {
             titleStyle={{fontWeight: 'bold'}}
             containerStyle={styles.buttonContainer}
             buttonStyle={styles.button}
+            onPress={onHideButtonPress}
           />
         )}
       />

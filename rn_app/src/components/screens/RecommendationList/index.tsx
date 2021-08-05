@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -18,10 +18,15 @@ import {RecommendationsNavigationProp} from '~/navigations/Recommendation';
 
 export const RecommendationList = React.memo(() => {
   const {result, isLoading, fetchRecommendations} = useGetRecommendations();
-
+  const [listData, setListData] = useState<Recommendation[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-
   const navigation = useNavigation<RecommendationsNavigationProp<'List'>>();
+
+  useEffect(() => {
+    if (result) {
+      setListData(result);
+    }
+  }, [result]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -31,7 +36,10 @@ export const RecommendationList = React.memo(() => {
 
   const onPress = useCallback(
     (r: Recommendation) => {
-      navigation.navigate('Detail', r);
+      navigation.navigate('Detail', {
+        ...r,
+        setListData: setListData,
+      });
     },
     [navigation],
   );
@@ -42,9 +50,9 @@ export const RecommendationList = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      {result && result.length ? (
+      {listData && listData.length ? (
         <_RecommendationList
-          listData={result}
+          listData={listData}
           onItemPress={(data) => onPress(data)}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -52,11 +60,7 @@ export const RecommendationList = React.memo(() => {
         />
       ) : (
         <ScrollView
-          contentContainerStyle={{
-            height: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          contentContainerStyle={styles.noItemContainer}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
@@ -70,6 +74,11 @@ export const RecommendationList = React.memo(() => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+  },
+  noItemContainer: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   noText: {
     color: 'gray',

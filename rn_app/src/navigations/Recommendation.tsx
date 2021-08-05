@@ -10,7 +10,9 @@ import {RecommendationDetail} from '~/components/screens/RecommendationDetail';
 
 export type RecommendationStackParamList = {
   List: undefined;
-  Detail: Recommendation;
+  Detail: Recommendation & {
+    setListData: React.Dispatch<React.SetStateAction<Recommendation[]>>;
+  };
 };
 
 export type RecommendationsNavigationProp<
