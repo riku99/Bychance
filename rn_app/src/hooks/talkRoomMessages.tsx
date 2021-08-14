@@ -3,7 +3,6 @@ import {AppState, AppStateStatus, View} from 'react-native';
 import {default as axios} from 'axios';
 import {RNToasty} from 'react-native-toasty';
 import io, {Socket} from 'socket.io-client';
-import {useSelector} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 
 import {useApikit} from './apikit';
@@ -12,7 +11,6 @@ import {TalkRoomMessage} from '~/types/talkRoomMessage';
 import {addTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {store} from '~/stores';
 import {updateTalkRoom, selectRoom} from '~/stores/talkRooms';
-import {RootState} from '~/stores';
 import {useMyId} from './users';
 import {ReceivedMessageData} from '~/stores/types';
 import {useCustomDispatch} from './stores';
@@ -138,33 +136,48 @@ export const useCreateTalkRoomMessage = () => {
   };
 };
 
-const _origin = 'http://localhost:4001';
-
 // active時にソケット通信でメッセージ受け取れるようにセットアップ
 export const useSetupTalkRoomMessageSocket = () => {
   const id = useMyId();
   const [socket, setSocket] = useState<Socket>();
   const dispatch = useCustomDispatch();
 
+  // 初回レンダリングではonChangeが実行されないのでここでサブスクリプション
+  useEffect(() => {
+    if (id) {
+      setSocket(io(`${origin}/talkRoomMessages`, {query: {id}}));
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (!id && socket) {
+      // @ts-ignore
+      socket.removeAllListeners();
+      socket.disconnect();
+      setSocket(undefined);
+    }
+  }, [id, socket]);
+
   useEffect(() => {
     // active時に毎回サブスクリプションする
-    const onActive = (nextAppState: AppStateStatus) => {
+    const onChange = (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active') {
         if (id && !socket) {
-          setSocket(io(`${_origin}/talkRoomMessages`, {query: {id}}));
+          setSocket(io(`${origin}/talkRoomMessages`, {query: {id}}));
         }
       } else {
         if (socket) {
+          // @ts-ignore
+          socket.removeAllListeners();
           socket.disconnect();
           setSocket(undefined);
         }
       }
     };
-
-    AppState.addEventListener('change', onActive);
+    AppState.addEventListener('change', onChange);
 
     return () => {
-      AppState.removeEventListener('change', onActive);
+      AppState.removeEventListener('change', onChange);
     };
   }, [id, dispatch, socket]);
 
@@ -193,4 +206,10 @@ export const useSetupTalkRoomMessageSocket = () => {
       });
     }
   }, [socket, dispatch]);
+
+  // https://socket.io/docs/v3/client-socket-instance/
+  // disconnectイベントはサーバーが落ちた時とかに発火される。他にも理由いくつかある。
+  // サーバー側からのsocket.disconnect()が起こった時、そしてクライアント側からsocket.disconnect()が起こった時には再接続は自動で行われない。逆に他の理由では行われる
+  // クライアント側でdisconectした場合は再接続を試みる必要はないし、現在サーバー側でdisconnectしている場面もないので手動で再接続を試みる必要はない。なのでdisconnectイベントのハンドラはいったん必要ない
+  // socket.on('disconnect', (reason) => {});
 };
