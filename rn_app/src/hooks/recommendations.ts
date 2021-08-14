@@ -82,3 +82,35 @@ export const useGetRecommendations = () => {
     fetchRecommendations,
   };
 };
+
+export const useHideRecommendation = () => {
+  const {checkKeychain, addBearer, handleApiError, toast} = useApikit();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const hideRecommendation = useCallback(
+    async ({id}: {id: number}) => {
+      setIsLoading(true);
+      const credentials = await checkKeychain();
+
+      try {
+        await axios.post(
+          `${baseUrl}/userHideRecommendations?id=${credentials?.id}`,
+          {id},
+          addBearer(credentials?.token),
+        );
+
+        toast?.show('非表示にしました', {type: 'success'});
+      } catch (e) {
+        handleApiError(e);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, toast],
+  );
+
+  return {
+    hideRecommendation,
+    isLoading,
+  };
+};

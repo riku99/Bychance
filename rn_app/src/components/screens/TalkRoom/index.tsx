@@ -239,9 +239,5 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
     [room, route.params.partnerId, messages, createMessage, myId],
   );
 
-  useEffect(() => {
-    console.log('re-render');
-  }, [createMessage]);
-
   return <TalkRoom messages={messages} userId={myId} onSend={onSend} />;
 };

@@ -1,29 +1,38 @@
 import React, {useCallback} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {RecommendationDetail as _RecommendationDetail} from 'bychance-components';
-import {useRoute, RouteProp} from '@react-navigation/native';
+import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
 import {RecommendationStackParamList} from '~/navigations/Recommendation';
+import {useHideRecommendation} from '~/hooks/recommendations';
+import {ToastLoading} from '~/components/utils/ToastLoading';
 
 export const RecommendationDetail = React.memo(() => {
   const {setListData, ...data} = useRoute<
     RouteProp<RecommendationStackParamList, 'Detail'>
   >().params;
 
+  const navigation = useNavigation();
+
+  const {hideRecommendation, isLoading} = useHideRecommendation();
+
   const onHideButtonPress = useCallback(() => {
     Alert.alert('非表示にしますか?', '再度表示することはできません', [
       {
         text: '非表示',
         style: 'destructive',
-        onPress: () =>
-          setListData((current) => current.filter((d) => d.id !== data.id)),
+        onPress: async () => {
+          await hideRecommendation({id: data.id});
+          setListData((current) => current.filter((d) => d.id !== data.id));
+          navigation.goBack();
+        },
       },
       {
         text: 'キャンセル',
       },
     ]);
-  }, [data.id, setListData]);
+  }, [data.id, setListData, hideRecommendation, navigation]);
 
   return (
     <View style={styles.container}>
@@ -40,6 +49,7 @@ export const RecommendationDetail = React.memo(() => {
           />
         )}
       />
+      {isLoading && <ToastLoading />}
     </View>
   );
 });

@@ -11,10 +11,12 @@ import {
 import {useActive} from '~/hooks/active';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useHandleErrors} from '~/hooks/errors';
+import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
 
 export const Main = React.memo(() => {
   // socket周り
-  useTalkRoomMessagesIo();
+  // useTalkRoomMessagesIo();
+  useSetupTalkRoomMessageSocket();
 
   // push通知周り
   usePushNotificationReqest();
