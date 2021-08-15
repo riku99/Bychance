@@ -19,3 +19,9 @@ export type GetTalkRoomDataResponse = {
     avatar: string | null;
   };
 }[];
+
+export type CreateTalkRoomResponse = {
+  presence: boolean;
+  roomId: number;
+  timestamp: string;
+};

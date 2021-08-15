@@ -36,6 +36,7 @@ export const TalkRoomSlice = createSlice({
     removeTalkRoom: (state, action: PayloadAction<number>) => {
       talkRoomsAdapter.removeOne(state, action.payload);
     },
+    upsertTalkRoom: () => {},
   },
 });
 

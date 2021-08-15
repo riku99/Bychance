@@ -15,7 +15,10 @@ import {
   addTalkRoom,
   removeTalkRoom,
 } from '~/stores/_talkRooms';
-import {GetTalkRoomDataResponse} from '~/types/response/talkRooms';
+import {
+  GetTalkRoomDataResponse,
+  CreateTalkRoomResponse,
+} from '~/types/response/talkRooms';
 import {useMyId} from './users';
 
 export const useCreateTalkRoom = () => {
@@ -26,11 +29,7 @@ export const useCreateTalkRoom = () => {
       const credentials = await checkKeychain();
 
       try {
-        const response = await axios.post<{
-          presence: boolean;
-          roomId: number;
-          timestamp: string;
-        }>(
+        const response = await axios.post<CreateTalkRoomResponse>(
           `${baseUrl}/talkRooms?id=${credentials?.id}`,
           {partnerId: partner.id},
           addBearer(credentials?.token),
@@ -97,7 +96,6 @@ export const useDeleteTalkRoom = () => {
         toast?.show('削除しました', {type: 'success'});
 
         dispatch(removeTalkRoom(talkRoomId));
-        // cahtPartners, talkRoomMessagesは削除このの時点で削除しないが、次回ロードの時には含まれないのでとりあえずそれでいい。
       } catch (e) {
         handleApiError(e);
       }

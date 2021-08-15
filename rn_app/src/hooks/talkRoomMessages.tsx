@@ -15,6 +15,7 @@ import {UserAvatar} from '~/components/utils/Avatar';
 import {
   GetTalkRoomMessagesResponse,
   CreateTalkRoomMessageResponse,
+  RecieveTalkRoomMessageWithSocket,
 } from '~/types/response/talkRoomMessages';
 import {useSelectRoom} from './talkRooms';
 import {updateTalkRoom} from '~/stores/_talkRooms';
@@ -183,27 +184,31 @@ export const useSetupTalkRoomMessageSocket = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('recieveTalkRoomMessage', (data: ReceivedMessageData) => {
-        dispatch(receiveTalkRoomMessage(data));
-        if (AppState.currentState === 'active' && data.show) {
-          showMessage({
-            message: data.sender.name,
-            description: data.message.text,
-            style: {backgroundColor: '#00163b'},
-            titleStyle: {color: 'white', marginLeft: 10},
-            textStyle: {color: 'white', marginLeft: 10},
-            icon: 'default',
-            duration: 2000,
-            renderFlashMessageIcon: () => {
-              return (
-                <View style={{marginRight: 5}}>
-                  <UserAvatar size={40} image={data.sender.avatar} />
-                </View>
-              );
-            },
-          });
-        }
-      });
+      socket.on(
+        'recieveTalkRoomMessage',
+        (data: RecieveTalkRoomMessageWithSocket) => {
+          // dispatch(receiveTalkRoomMessage(data));
+
+          if (AppState.currentState === 'active' && data.show) {
+            showMessage({
+              message: data.sender.name,
+              description: data.message.text,
+              style: {backgroundColor: '#00163b'},
+              titleStyle: {color: 'white', marginLeft: 10},
+              textStyle: {color: 'white', marginLeft: 10},
+              icon: 'default',
+              duration: 2000,
+              renderFlashMessageIcon: () => {
+                return (
+                  <View style={{marginRight: 5}}>
+                    <UserAvatar size={40} image={data.sender.avatar} />
+                  </View>
+                );
+              },
+            });
+          }
+        },
+      );
     }
   }, [socket, dispatch]);
 

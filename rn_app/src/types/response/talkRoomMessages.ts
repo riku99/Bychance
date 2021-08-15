@@ -23,3 +23,19 @@ export type CreateTalkRoomMessageResponse =
         roomId: number;
       };
     };
+
+export type RecieveTalkRoomMessageWithSocket = {
+  message: {
+    id: number;
+    userId: string;
+    roomId: number;
+    text: string;
+    createdAt: string;
+  };
+  sender: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
+  show: boolean;
+};
