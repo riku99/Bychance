@@ -147,7 +147,7 @@ export const useGetTalkRoomData = () => {
 
 export const useSelectAllRooms = () => {
   const rooms = useSelector(
-    (state: RootState) => selectAllTalkRooms(state),
+    (state: RootState) => _selectAllTalkRoom(state),
     shallowEqual,
   );
   return rooms;

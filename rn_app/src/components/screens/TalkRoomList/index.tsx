@@ -15,11 +15,8 @@ import {useSelectChatPartnerEntities} from '~/hooks/chatPartners';
 export const TalkRoomListPage = () => {
   const dispatch = useCustomDispatch();
   const {deleteTalkRoom} = useDeleteTalkRoom();
-
   const rooms = useSelectAllRooms();
-
   const chatPartnerEntities = useSelectChatPartnerEntities();
-
   const navigationToChatRoom = useNavigation<RootNavigationProp<'Tab'>>();
 
   const pushChatRoom = ({
@@ -63,13 +60,12 @@ export const TalkRoomListPage = () => {
         renderItem={(room) => (
           <TalkRoomListItem
             room={room.item}
-            avatar={chatPartnerEntities[room.item.partner]?.avatar}
-            name={chatPartnerEntities[room.item.partner]?.name}
-            onPress={() =>
-              pushChatRoom({
-                room: room.item,
-                partnerId: room.item.partner,
-              })
+            onPress={
+              () => {}
+              // pushChatRoom({
+              //   room: room.item,
+              //   partnerId: room.item.partner,
+              // })
             }
           />
         )}

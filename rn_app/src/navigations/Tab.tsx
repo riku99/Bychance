@@ -1,10 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useSelector} from 'react-redux';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {RootState} from '../stores/index';
-import {getAllUnreadMessagesNumber} from '../stores/talkRooms';
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
@@ -25,9 +22,6 @@ type TabList = {
 const RootTab = createBottomTabNavigator<TabList>();
 
 export const Tabs = React.memo(() => {
-  const unreadMessagesNumber = useSelector((state: RootState) => {
-    return getAllUnreadMessagesNumber(state);
-  });
   const unreadMessageNumber = useGetUnreadNumber();
 
   // このフックはuseNavigationを使うのでstackに渡されているコンポーネントの中じゃないと使えない
