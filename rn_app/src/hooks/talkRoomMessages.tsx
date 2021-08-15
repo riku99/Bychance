@@ -29,38 +29,41 @@ export const useCreateReadTalkRoomMessages = ({
   talkRoomId: number;
 }) => {
   const room = useSelectRoom(talkRoomId);
-  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
+  const ids = room?.unreadMessages.map((d) => d.id);
+  const {addBearer, checkKeychain, dispatch} = useApikit();
 
-  const createReadTalkRoomMessages = useCallback(async () => {
-    if (room && room.unreadMessages.length) {
-      const ids = room.unreadMessages.map((d) => d.id);
+  const createReadTalkRoomMessages = useCallback(
+    async (_ids?: number[]) => {
       try {
-        const credentials = await checkKeychain();
-        await axios.post(
-          `${baseUrl}/talk_rooms/${talkRoomId}/messages/read?id=${credentials?.id}`,
-          {
-            ids,
-          },
-          addBearer(credentials?.token),
-        );
-
-        dispatch(
-          updateTalkRoom({
-            id: talkRoomId,
-            changes: {
-              unreadMessages: [],
+        if (_ids && _ids.length) {
+          const credentials = await checkKeychain();
+          await axios.post(
+            `${baseUrl}/talk_rooms/${talkRoomId}/messages/read?id=${credentials?.id}`,
+            {
+              ids: _ids,
             },
-          }),
-        );
+            addBearer(credentials?.token),
+          );
+
+          dispatch(
+            updateTalkRoom({
+              id: talkRoomId,
+              changes: {
+                unreadMessages: [],
+              },
+            }),
+          );
+        }
       } catch (e) {
-        handleApiError(e);
+        // handleApiError(e);
       }
-    }
-  }, [addBearer, checkKeychain, handleApiError, room, talkRoomId, dispatch]);
+    },
+    [addBearer, checkKeychain, talkRoomId, dispatch],
+  );
 
   useEffect(() => {
-    createReadTalkRoomMessages();
-  }, [createReadTalkRoomMessages]);
+    createReadTalkRoomMessages(ids);
+  }, [createReadTalkRoomMessages, ids]);
 
   return {
     createReadTalkRoomMessages,
@@ -111,42 +114,6 @@ export const useCreateTalkRoomMessage = () => {
             }),
           );
         }
-
-        // dispatch(addTalkRoomMessage(response.data));
-
-        // if (response.data.talkRoomPresence) {
-        //   const {timestamp, id, text: _text} = response.data.message;
-        //   const room = selectRoom(store.getState(), roomId);
-        //   if (room) {
-        //     dispatch(
-        //       updateTalkRoom({
-        //         id: roomId,
-        //         changes: {
-        //           messages: [id, ...room?.messages],
-        //           timestamp,
-        //           latestMessage: _text,
-        //         },
-        //       }),
-        //     );
-        //   }
-
-        //   return response.data.message;
-        // } else {
-        //   // talkRoomPresenceがfalse、つまり既にトークルームが相手によって削除されている場合
-        //   RNToasty.Show({
-        //     title: 'メンバーが存在しません',
-        //     position: 'center',
-        //   });
-
-        //   dispatch(
-        //     updateTalkRoom({
-        //       id: roomId,
-        //       changes: {
-        //         partner: undefined,
-        //       },
-        //     }),
-        //   );
-        // }
       } catch (e) {
         handleApiError(e);
       }
@@ -238,7 +205,7 @@ export const useSetupTalkRoomMessageSocket = () => {
 };
 
 export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
-  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
   const [result, setResult] = useState<
     GetTalkRoomMessagesResponse['messages']
   >();
@@ -252,14 +219,33 @@ export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
           addBearer(credentials?.token),
         );
 
-        console.log(response.data);
-        setResult(response.data.messages);
+        if (response.data.roomPresence) {
+          setResult(response.data.messages);
+        } else {
+          RNToasty.Show({
+            title: 'メンバーが存在しません',
+            position: 'center',
+          });
+          dispatch(
+            updateTalkRoom({
+              id: talkRoomId,
+              changes: {
+                unreadMessages: [],
+                partner: {
+                  id: '',
+                  name: '',
+                  avatar: null,
+                },
+              },
+            }),
+          );
+        }
       } catch (e) {
         handleApiError(e);
       }
     };
     _get();
-  }, [addBearer, checkKeychain, talkRoomId, handleApiError]);
+  }, [addBearer, checkKeychain, talkRoomId, handleApiError, dispatch]);
 
   return {
     result,

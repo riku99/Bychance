@@ -39,7 +39,9 @@ export const TalkRoom = ({route, navigation}: Props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const myId = useMyId();
   const {createMessage} = useCreateTalkRoomMessage();
-  const {} = useCreateReadTalkRoomMessages({talkRoomId});
+  const {createReadTalkRoomMessages} = useCreateReadTalkRoomMessages({
+    talkRoomId,
+  });
 
   useEffect(() => {
     if (result?.length) {

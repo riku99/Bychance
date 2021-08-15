@@ -1,4 +1,5 @@
 export type GetTalkRoomMessagesResponse = {
+  roomPresence: boolean;
   messages: {
     id: number;
     userId: string;
