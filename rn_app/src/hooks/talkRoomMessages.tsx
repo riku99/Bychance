@@ -18,7 +18,8 @@ import {
   RecieveTalkRoomMessageWithSocket,
 } from '~/types/response/talkRoomMessages';
 import {useSelectRoom} from './talkRooms';
-import {updateTalkRoom} from '~/stores/_talkRooms';
+import {updateTalkRoom, upsertTalkRoom, selectRoom} from '~/stores/_talkRooms';
+import {store} from '~/stores';
 
 export const useCreateReadTalkRoomMessages = ({
   talkRoomId,
@@ -188,7 +189,23 @@ export const useSetupTalkRoomMessageSocket = () => {
         'recieveTalkRoomMessage',
         (data: RecieveTalkRoomMessageWithSocket) => {
           // dispatch(receiveTalkRoomMessage(data));
-
+          const {message, sender} = data;
+          const room = selectRoom(store.getState(), message.roomId);
+          dispatch(
+            upsertTalkRoom({
+              id: message.roomId,
+              unreadMessages: room
+                ? [{id: message.id}, ...room.unreadMessages]
+                : [{id: message.id}],
+              lastMessage: message.text,
+              timestamp: message.createdAt,
+              partner: {
+                id: sender.id,
+                name: sender.name,
+                avatar: sender.avatar,
+              },
+            }),
+          );
           if (AppState.currentState === 'active' && data.show) {
             showMessage({
               message: data.sender.name,
