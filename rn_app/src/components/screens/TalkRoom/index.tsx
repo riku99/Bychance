@@ -70,6 +70,19 @@ export const TalkRoom = ({route, navigation}: Props) => {
   });
 
   const onSend = async (text: string) => {
+    const temporaryId = Math.random().toString(32).substring(2); //一時的なIDのためのランダムな文字列
+    const newMessage = {
+      _id: temporaryId,
+      text,
+      createdAt: new Date(),
+      user: {
+        _id: myId,
+      },
+    };
+
+    // レスポンス待ってセットすると若干のタイムラグがあるので先に仮のデータをセット
+    setMessages((current) => [newMessage, ...current]);
+
     const _result = await createMessage({
       roomId: talkRoomId,
       partnerId: partner.id,
@@ -78,28 +91,34 @@ export const TalkRoom = ({route, navigation}: Props) => {
 
     if (_result) {
       const {message} = _result;
-      setMessages((current) => [
-        {
-          _id: message.id,
-          text: message.text,
-          createdAt: new Date(message.createdAt),
-          user: {
-            _id: message.userId,
-            avatar:
-              message.userId !== myId
-                ? () => (
-                    <UserAvatar
-                      image={partner.avatar}
-                      size={'small'}
-                      opacity={1}
-                      // onPress={onAvatarPress}
-                    />
-                  )
-                : undefined,
+      // レスポンス取得した仮のデータを変更する
+      setMessages((current) => {
+        const filtered = current.filter((m) => m._id !== temporaryId);
+        return [
+          {
+            _id: message.id,
+            text: message.text,
+            createdAt: new Date(message.createdAt),
+            user: {
+              _id: message.userId,
+              avatar:
+                message.userId !== myId
+                  ? () => (
+                      <UserAvatar
+                        image={partner.avatar}
+                        size={'small'}
+                        opacity={1}
+                        // onPress={onAvatarPress}
+                      />
+                    )
+                  : undefined,
+            },
           },
-        },
-        ...current,
-      ]);
+          ...filtered,
+        ];
+      });
+    } else {
+      setMessages((current) => current.filter((m) => m._id !== temporaryId)); // レスポンス取得できなかったら仮データも削除
     }
   };
 
@@ -273,23 +292,23 @@ export const TalkRoom = ({route, navigation}: Props) => {
   //         partnerId: route.params.partnerId,
   //         text,
   //       });
-  //       if (result) {
-  //         setMessages((current) => {
-  //           const filtered = current.filter(
-  //             (message) => message._id !== temporaryId,
-  //           );
-  //           return [
-  //             {
-  //               _id: result.id,
-  //               text: result.text,
-  //               createdAt: new Date(result.timestamp),
-  //               user: {
-  //                 _id: result.userId,
-  //               },
-  //             },
-  //             ...filtered,
-  //           ];
-  //         });
+  // if (result) {
+  //   setMessages((current) => {
+  //     const filtered = current.filter(
+  //       (message) => message._id !== temporaryId,
+  //     );
+  //     return [
+  //       {
+  //         _id: result.id,
+  //         text: result.text,
+  //         createdAt: new Date(result.timestamp),
+  //         user: {
+  //           _id: result.userId,
+  //         },
+  //       },
+  //       ...filtered,
+  //     ];
+  //   });
   //       } else {
   //         setMessages((current) =>
   //           current.filter((message) => message._id !== temporaryId),
