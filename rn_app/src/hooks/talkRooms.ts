@@ -4,16 +4,16 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
 import {RootState, store} from '~/stores';
-import {removeTalkRoom} from '~/stores/talkRooms';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';
 import {upsertChatPartner} from '~/stores/chatPartners';
 import {
   setTalkRooms,
-  selectAllTalkRooms as _selectAllTalkRoom,
+  selectAllTalkRooms,
   selectRoom,
   addTalkRoom,
+  removeTalkRoom,
 } from '~/stores/_talkRooms';
 import {GetTalkRoomDataResponse} from '~/types/response/talkRooms';
 import {useMyId} from './users';
@@ -122,7 +122,6 @@ export const useGetTalkRoomData = () => {
           `${baseUrl}/users/${id}/talk_rooms?id=${credentials?.id}`,
           addBearer(credentials?.token),
         );
-        console.log(response.data);
 
         const storedData = response.data.map((d) => {
           const partner = d.sender.id === id ? d.recipient : d.sender;
@@ -164,7 +163,7 @@ export const useGetTalkRoomData = () => {
 
 export const useSelectAllRooms = () => {
   const rooms = useSelector(
-    (state: RootState) => _selectAllTalkRoom(state),
+    (state: RootState) => selectAllTalkRooms(state),
     shallowEqual,
   );
   return rooms;
@@ -180,7 +179,7 @@ export const useSelectRoom = (id: number) => {
 
 export const useGetUnreadNumber = () => {
   const allData = useSelector(
-    (state: RootState) => _selectAllTalkRoom(state),
+    (state: RootState) => selectAllTalkRooms(state),
     shallowEqual,
   );
   let number: number = 0;
