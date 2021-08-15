@@ -11,7 +11,10 @@ import {
 import {useActive} from '~/hooks/active';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useHandleErrors} from '~/hooks/errors';
-import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
+import {
+  useSetupTalkRoomMessageSocket,
+  useGetTalkRoomData,
+} from '~/hooks/talkRoomMessages';
 
 export const Main = React.memo(() => {
   // socket周り
@@ -30,6 +33,8 @@ export const Main = React.memo(() => {
 
   // エラーをdispatchしたときの処理
   useHandleErrors();
+
+  useGetTalkRoomData();
 
   return (
     <View style={styles.container}>

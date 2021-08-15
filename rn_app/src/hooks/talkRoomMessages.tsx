@@ -16,6 +16,7 @@ import {ReceivedMessageData} from '~/stores/types';
 import {useCustomDispatch} from './stores';
 import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {UserAvatar} from '~/components/utils/Avatar';
+import {GetTalkRoomDataResponse} from '~/types/response/talkRooms';
 
 export const useCreateReadTalkRoomMessages = () => {
   const {addBearer, checkKeychain, handleApiError} = useApikit();
@@ -212,4 +213,27 @@ export const useSetupTalkRoomMessageSocket = () => {
   // サーバー側からのsocket.disconnect()が起こった時、そしてクライアント側からsocket.disconnect()が起こった時には再接続は自動で行われない。逆に他の理由では行われる
   // クライアント側でdisconectした場合は再接続を試みる必要はないし、現在サーバー側でdisconnectしている場面もないので手動で再接続を試みる必要はない。なのでdisconnectイベントのハンドラはいったん必要ない
   // socket.on('disconnect', (reason) => {});
+};
+
+export const useGetTalkRoomData = () => {
+  const {checkKeychain, addBearer, handleApiError} = useApikit();
+  const id = useMyId();
+
+  useEffect(() => {
+    const _get = async () => {
+      if (id) {
+        try {
+          const credentials = await checkKeychain();
+          const response = await axios.get<GetTalkRoomDataResponse>(
+            `${baseUrl}/users/${id}/talk_rooms?id=${credentials?.id}`,
+            addBearer(credentials?.token),
+          );
+          console.log(response.data);
+        } catch (e) {
+          handleApiError(e);
+        }
+      }
+    };
+    _get();
+  }, [id, checkKeychain, handleApiError, addBearer]);
 };
