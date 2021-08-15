@@ -3,5 +3,6 @@ export type GetTalkRoomMessagesResponse = {
     id: number;
     userId: string;
     text: string;
+    createdAt: string;
   }[];
 };

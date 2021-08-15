@@ -9,7 +9,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 
-import {TalkRoom} from './TaklRoom';
+import {Chat} from './Chat';
 import {TalkRoomStackNavigationProp} from '../../../navigations/types';
 import {RootState} from '../../../stores/index';
 import {selectMessages} from '../../../stores/talkRoomMessages';
@@ -24,6 +24,7 @@ import {
   useCreateTalkRoomMessage,
 } from '~/hooks/talkRoomMessages';
 import {useGetMessages} from '~/hooks/talkRoomMessages';
+import {useMyId} from '~/hooks/users';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'TalkRoom'>;
 
@@ -32,9 +33,42 @@ type Props = {
   navigation: TalkRoomStackNavigationProp<'TalkRoom'>;
 };
 
-export const TalkRoomScreen = ({route, navigation}: Props) => {
-  const {talkRoomId} = route.params;
+export const TalkRoom = ({route, navigation}: Props) => {
+  const {talkRoomId, partner} = route.params;
   const {result} = useGetMessages({talkRoomId});
+  const [messages, setMessages] = useState<IMessage[]>();
+  const myId = useMyId();
+
+  useEffect(() => {
+    if (result?.length) {
+      const iData = result.map((d) => ({
+        _id: d.id,
+        text: d.text,
+        createdAt: new Date(d.createdAt),
+        user: {
+          _id: d.userId,
+          avatar: () => (
+            <UserAvatar
+              image={partner.avatar}
+              size={'small'}
+              opacity={1}
+              // onPress={onAvatarPress}
+            />
+          ),
+        },
+      }));
+      setMessages(iData);
+    }
+  }, [result, partner.avatar]);
+
+  const onSend = () => {};
+
+  if (!messages?.length) {
+    return null;
+  }
+
+  return <Chat messages={messages} userId={myId} onSend={onSend} />;
+
   // const myId = useSelector((state: RootState) => state.userReducer.user!.id);
   // const room = useSelector((state: RootState) => {
   //   const _room = selectRoom(state, route.params.roomId);
@@ -73,12 +107,12 @@ export const TalkRoomScreen = ({route, navigation}: Props) => {
   //         user: {
   //           _id: m.userId,
   //           avatar: () => (
-  //             <UserAvatar
-  //               image={partner?.avatar}
-  //               size={'small'}
-  //               opacity={1}
-  //               onPress={onAvatarPress}
-  //             />
+  // <UserAvatar
+  //   image={partner?.avatar}
+  //   size={'small'}
+  //   opacity={1}
+  //   onPress={onAvatarPress}
+  // />;
   //           ),
   //         },
   //       };

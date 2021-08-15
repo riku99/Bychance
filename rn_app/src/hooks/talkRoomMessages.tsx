@@ -217,7 +217,9 @@ export const useSetupTalkRoomMessageSocket = () => {
 
 export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
   const {addBearer, checkKeychain, handleApiError} = useApikit();
-  const [result, setResult] = useState<GetTalkRoomMessagesResponse>();
+  const [result, setResult] = useState<
+    GetTalkRoomMessagesResponse['messages']
+  >();
 
   useEffect(() => {
     const _get = async () => {
@@ -229,7 +231,7 @@ export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
         );
 
         console.log(response.data);
-        setResult(response.data);
+        setResult(response.data.messages);
       } catch (e) {
         handleApiError(e);
       }

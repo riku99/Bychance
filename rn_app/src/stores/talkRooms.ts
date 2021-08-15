@@ -7,7 +7,7 @@ import {
 import {RootState} from './index';
 import {receiveTalkRoomMessage} from './talkRoomMessages';
 import {ReceivedMessageData} from '~/stores/types';
-import {TalkRoom} from '~/components/screens/TalkRoom/TaklRoom';
+import {TalkRoom} from '~/components/screens/TalkRoom/Chat';
 
 export type TalkRoom = {
   id: number;
