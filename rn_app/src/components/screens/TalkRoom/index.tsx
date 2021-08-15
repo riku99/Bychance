@@ -61,6 +61,12 @@ export const TalkRoom = ({route, navigation}: Props) => {
     }
   }, [result, partner.avatar]);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: partner.name,
+    });
+  });
+
   const onSend = () => {};
 
   if (!messages?.length) {
@@ -260,5 +266,4 @@ export const TalkRoom = ({route, navigation}: Props) => {
   //   [room, route.params.partnerId, messages, createMessage, myId],
   // );
   // return <TalkRoom messages={messages} userId={myId} onSend={onSend} />;
-  return null;
 };
