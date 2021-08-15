@@ -1,4 +1,5 @@
 import {useCallback, useEffect} from 'react';
+import {AppState, AppStateStatus} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
@@ -37,6 +38,7 @@ export const useCreateTalkRoom = () => {
 
         const {presence, roomId, timestamp} = response.data;
         const room = selectRoom(store.getState(), roomId);
+        // トークルームがサーバー側でも存在しなかった場合(それが初めて作成された場合)、サーバー側では存在するがクライアント側には存在しない場合(作成した相手がメッセージを送っていない場合)はaddOneで新しく追加
         if (!presence || !room) {
           dispatch(
             addTalkRoom({
@@ -51,17 +53,6 @@ export const useCreateTalkRoom = () => {
               timestamp,
             }),
           );
-          // トークルームがサーバー側でも存在しなかった場合(それが初めて作成された場合)、サーバー側では存在するがクライアント側には存在しない場合(作成した相手がメッセージを送っていない場合)はaddOneで新しく追加
-          // dispatch(
-          //   addTalkRoom({
-          //     id: roomId,
-          //     partner: partner.id,
-          //     timestamp,
-          //     messages: [],
-          //     unreadNumber: 0,
-          //     latestMessage: null,
-          //   }),
-          // );
         }
 
         if (!presence) {
@@ -123,40 +114,52 @@ export const useGetTalkRoomData = () => {
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
   const id = useMyId();
 
+  const getTalkRoomData = useCallback(async () => {
+    if (id) {
+      try {
+        const credentials = await checkKeychain();
+        const response = await axios.get<GetTalkRoomDataResponse>(
+          `${baseUrl}/users/${id}/talk_rooms?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+        console.log(response.data);
+
+        const storedData = response.data.map((d) => {
+          const partner = d.sender.id === id ? d.recipient : d.sender;
+          const timestamp = d.updatedAt;
+          const lastMessage = d.lastMessage.length ? d.lastMessage[0].text : '';
+          const {updatedAt, sender, recipient, ...restData} = d; //eslint-disable-line
+          return {
+            ...restData,
+            partner,
+            timestamp,
+            lastMessage,
+          };
+        });
+
+        dispatch(setTalkRooms(storedData));
+      } catch (e) {
+        handleApiError(e);
+      }
+    }
+  }, [id, checkKeychain, handleApiError, addBearer, dispatch]);
+
   useEffect(() => {
-    const _get = async () => {
-      if (id) {
-        try {
-          const credentials = await checkKeychain();
-          const response = await axios.get<GetTalkRoomDataResponse>(
-            `${baseUrl}/users/${id}/talk_rooms?id=${credentials?.id}`,
-            addBearer(credentials?.token),
-          );
-          console.log(response.data);
+    getTalkRoomData();
+  }, [getTalkRoomData]);
 
-          const storedData = response.data.map((d) => {
-            const partner = d.sender.id === id ? d.recipient : d.sender;
-            const timestamp = d.updatedAt;
-            const lastMessage = d.lastMessage.length
-              ? d.lastMessage[0].text
-              : '';
-            const {updatedAt, sender, recipient, ...restData} = d; //eslint-disable-line
-            return {
-              ...restData,
-              partner,
-              timestamp,
-              lastMessage,
-            };
-          });
-
-          dispatch(setTalkRooms(storedData));
-        } catch (e) {
-          handleApiError(e);
-        }
+  useEffect(() => {
+    const onActive = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        getTalkRoomData();
       }
     };
-    _get();
-  }, [id, checkKeychain, handleApiError, addBearer, dispatch]);
+    AppState.addEventListener('change', onActive);
+
+    return () => {
+      AppState.removeEventListener('change', onActive);
+    };
+  }, [getTalkRoomData]);
 };
 
 export const useSelectAllRooms = () => {
