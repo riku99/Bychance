@@ -1,6 +1,6 @@
-export type GetTalkRoomDataResponse = {
+export type TalkRoom = {
   id: number;
-  updatedAt: string;
+  timestamp: string;
   unreadMessages: {
     id: number;
   }[];
@@ -8,14 +8,9 @@ export type GetTalkRoomDataResponse = {
     id: number;
     text: string;
   }[];
-  sender: {
+  partner: {
     id: string;
     name: string;
     avatar: string;
   };
-  recipient: {
-    id: string;
-    name: string;
-    avatar: string;
-  };
-}[];
+};

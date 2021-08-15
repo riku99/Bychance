@@ -11,10 +11,8 @@ import {
 import {useActive} from '~/hooks/active';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useHandleErrors} from '~/hooks/errors';
-import {
-  useSetupTalkRoomMessageSocket,
-  useGetTalkRoomData,
-} from '~/hooks/talkRoomMessages';
+import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
+import {useGetTalkRoomData} from '~/hooks/talkRooms';
 
 export const Main = React.memo(() => {
   // socket周り

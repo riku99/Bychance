@@ -10,6 +10,7 @@ import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';
 import {flashStampsReducer} from './flashStamps';
 import {errorsReducer} from './errors';
+import {_talkRoomReducer} from './_talkRooms';
 
 const rootReducer = combineReducers({
   sessionReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   otherSettingsReducer,
   flashStampsReducer,
   errorsReducer,
+  _talkRoomReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

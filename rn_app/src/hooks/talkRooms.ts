@@ -1,4 +1,4 @@
-import {useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
@@ -14,6 +14,9 @@ import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';
 import {store} from '~/stores';
 import {upsertChatPartner} from '~/stores/chatPartners';
+import {setTalkRooms} from '~/stores/_talkRooms';
+import {GetTalkRoomDataResponse} from '~/types/response/talkRooms';
+import {useMyId} from './users';
 
 export const useCreateTalkRoom = () => {
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
@@ -102,6 +105,42 @@ export const useDeleteTalkRoom = () => {
   return {
     deleteTalkRoom,
   };
+};
+
+export const useGetTalkRoomData = () => {
+  const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
+  const id = useMyId();
+
+  useEffect(() => {
+    const _get = async () => {
+      if (id) {
+        try {
+          const credentials = await checkKeychain();
+          const response = await axios.get<GetTalkRoomDataResponse>(
+            `${baseUrl}/users/${id}/talk_rooms?id=${credentials?.id}`,
+            addBearer(credentials?.token),
+          );
+          console.log(response.data);
+
+          const storedData = response.data.map((d) => {
+            const partner = d.sender.id === id ? d.recipient : d.sender;
+            const timestamp = d.updatedAt;
+            const {updatedAt, sender, recipient, ...restData} = d; //eslint-disable-line
+            return {
+              ...restData,
+              partner,
+              timestamp,
+            };
+          });
+
+          dispatch(setTalkRooms(storedData));
+        } catch (e) {
+          handleApiError(e);
+        }
+      }
+    };
+    _get();
+  }, [id, checkKeychain, handleApiError, addBearer, dispatch]);
 };
 
 export const useSelectAllRooms = () => {
