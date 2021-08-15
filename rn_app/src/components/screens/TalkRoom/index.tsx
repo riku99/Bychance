@@ -36,8 +36,9 @@ type Props = {
 export const TalkRoom = ({route, navigation}: Props) => {
   const {talkRoomId, partner} = route.params;
   const {result} = useGetMessages({talkRoomId});
-  const [messages, setMessages] = useState<IMessage[]>();
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const myId = useMyId();
+  const {createMessage} = useCreateTalkRoomMessage();
 
   useEffect(() => {
     if (result?.length) {
@@ -67,7 +68,39 @@ export const TalkRoom = ({route, navigation}: Props) => {
     });
   });
 
-  const onSend = () => {};
+  const onSend = async (text: string) => {
+    const _result = await createMessage({
+      roomId: talkRoomId,
+      partnerId: partner.id,
+      text,
+    });
+
+    if (_result) {
+      const {message} = _result;
+      setMessages((current) => [
+        {
+          _id: message.id,
+          text: message.text,
+          createdAt: new Date(message.createdAt),
+          user: {
+            _id: message.userId,
+            avatar:
+              message.userId !== myId
+                ? () => (
+                    <UserAvatar
+                      image={partner.avatar}
+                      size={'small'}
+                      opacity={1}
+                      // onPress={onAvatarPress}
+                    />
+                  )
+                : undefined,
+          },
+        },
+        ...current,
+      ]);
+    }
+  };
 
   if (!messages?.length) {
     return null;

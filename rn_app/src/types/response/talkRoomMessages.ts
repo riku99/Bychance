@@ -6,3 +6,19 @@ export type GetTalkRoomMessagesResponse = {
     createdAt: string;
   }[];
 };
+
+export type CreateTalkRoomMessageResponse =
+  | {
+      talkRoomPrecence: false;
+      talkRoomId: number;
+    }
+  | {
+      talkRoomPrecence: true;
+      message: {
+        text: string;
+        createdAt: string;
+        id: number;
+        userId: string;
+        roomId: number;
+      };
+    };

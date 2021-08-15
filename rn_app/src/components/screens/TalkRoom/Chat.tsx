@@ -11,7 +11,7 @@ import {
 type Props = {
   messages: IMessage[];
   userId: string;
-  onSend: (text: string) => void;
+  onSend: (text: string) => Promise<void>;
 };
 
 export const Chat = React.memo(({messages, userId, onSend}: Props) => {

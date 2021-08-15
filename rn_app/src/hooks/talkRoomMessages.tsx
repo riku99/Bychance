@@ -16,7 +16,10 @@ import {ReceivedMessageData} from '~/stores/types';
 import {useCustomDispatch} from './stores';
 import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {UserAvatar} from '~/components/utils/Avatar';
-import {GetTalkRoomMessagesResponse} from '~/types/response/talkRoomMessages';
+import {
+  GetTalkRoomMessagesResponse,
+  CreateTalkRoomMessageResponse,
+} from '~/types/response/talkRoomMessages';
 
 export const useCreateReadTalkRoomMessages = () => {
   const {addBearer, checkKeychain, handleApiError} = useApikit();
@@ -70,61 +73,54 @@ export const useCreateTalkRoomMessage = () => {
       const credentials = await checkKeychain();
 
       try {
-        const response = await axios.post<
-          | {
-              talkRoomPresence: true;
-              message: TalkRoomMessage;
-              talkRoomId: number;
-            }
-          | {
-              talkRoomPresence: false;
-              talkRoomId: number;
-            }
-        >(
-          `${baseUrl}/talkRoomMessages?id=${credentials?.id}`,
+        const response = await axios.post<CreateTalkRoomMessageResponse>(
+          `${baseUrl}/talk_rooms/${roomId}/messages?id=${credentials?.id}`,
           {
-            talkRoomId: roomId,
             text,
             partnerId,
           },
           addBearer(credentials?.token),
         );
 
-        dispatch(addTalkRoomMessage(response.data));
-
-        if (response.data.talkRoomPresence) {
-          const {timestamp, id, text: _text} = response.data.message;
-          const room = selectRoom(store.getState(), roomId);
-          if (room) {
-            dispatch(
-              updateTalkRoom({
-                id: roomId,
-                changes: {
-                  messages: [id, ...room?.messages],
-                  timestamp,
-                  latestMessage: _text,
-                },
-              }),
-            );
-          }
-
-          return response.data.message;
-        } else {
-          // talkRoomPresenceがfalse、つまり既にトークルームが相手によって削除されている場合
-          RNToasty.Show({
-            title: 'メンバーが存在しません',
-            position: 'center',
-          });
-
-          dispatch(
-            updateTalkRoom({
-              id: roomId,
-              changes: {
-                partner: undefined,
-              },
-            }),
-          );
+        if (response.data.talkRoomPrecence) {
+          return response.data;
         }
+
+        // dispatch(addTalkRoomMessage(response.data));
+
+        // if (response.data.talkRoomPresence) {
+        //   const {timestamp, id, text: _text} = response.data.message;
+        //   const room = selectRoom(store.getState(), roomId);
+        //   if (room) {
+        //     dispatch(
+        //       updateTalkRoom({
+        //         id: roomId,
+        //         changes: {
+        //           messages: [id, ...room?.messages],
+        //           timestamp,
+        //           latestMessage: _text,
+        //         },
+        //       }),
+        //     );
+        //   }
+
+        //   return response.data.message;
+        // } else {
+        //   // talkRoomPresenceがfalse、つまり既にトークルームが相手によって削除されている場合
+        //   RNToasty.Show({
+        //     title: 'メンバーが存在しません',
+        //     position: 'center',
+        //   });
+
+        //   dispatch(
+        //     updateTalkRoom({
+        //       id: roomId,
+        //       changes: {
+        //         partner: undefined,
+        //       },
+        //     }),
+        //   );
+        // }
       } catch (e) {
         handleApiError(e);
       }
