@@ -94,6 +94,22 @@ export const useCreateTalkRoomMessage = () => {
 
         if (response.data.talkRoomPrecence) {
           return response.data;
+        } else {
+          // talkRoomPresenceがfalse、つまり既にトークルームが相手によって削除されている場合
+          RNToasty.Show({
+            title: 'メンバーが存在しません',
+            position: 'center',
+          });
+
+          dispatch(
+            updateTalkRoom({
+              id: roomId,
+              changes: {
+                unreadMessages: [],
+                partner: undefined,
+              },
+            }),
+          );
         }
 
         // dispatch(addTalkRoomMessage(response.data));

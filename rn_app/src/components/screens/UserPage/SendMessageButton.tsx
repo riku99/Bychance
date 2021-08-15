@@ -44,10 +44,14 @@ export const SendMessageButton = React.memo(({user}: Props) => {
     if (result) {
       dispatch(resetRecievedMessage());
       navigation.push('TalkRoomStack', {
-        screen: 'ChatRoom',
+        screen: 'TalkRoom',
         params: {
-          roomId: result.roomId,
-          partnerId: result.partner.id,
+          talkRoomId: result.roomId,
+          partner: {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+          },
         },
       });
     }

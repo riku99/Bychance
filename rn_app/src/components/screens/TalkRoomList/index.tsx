@@ -19,19 +19,19 @@ export const TalkRoomListPage = () => {
   const chatPartnerEntities = useSelectChatPartnerEntities();
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
-  const pushChatRoom = ({
-    room,
-    partnerId,
-  }: {
-    room: TalkRoom;
-    partnerId: string;
-  }) => {
-    dispatch(resetRecievedMessage());
-    navigationToChatRoom.navigate('TalkRoomStack', {
-      screen: 'ChatRoom',
-      params: {roomId: room.id, partnerId},
-    });
-  };
+  // const pushChatRoom = ({
+  //   room,
+  //   partnerId,
+  // }: {
+  //   room: TalkRoom;
+  //   partnerId: string;
+  // }) => {
+  //   dispatch(resetRecievedMessage());
+  //   navigationToChatRoom.navigate('TalkRoomStack', {
+  //     screen: 'ChatRoom',
+  //     params: {roomId: room.id, partnerId},
+  //   });
+  // };
 
   const onItemPress = (data: {
     talkRoomId: number;

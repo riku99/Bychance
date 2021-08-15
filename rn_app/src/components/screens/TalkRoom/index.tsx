@@ -122,10 +122,6 @@ export const TalkRoom = ({route, navigation}: Props) => {
     }
   };
 
-  if (!messages?.length) {
-    return null;
-  }
-
   return <Chat messages={messages} userId={myId} onSend={onSend} />;
 
   // const myId = useSelector((state: RootState) => state.userReducer.user!.id);
