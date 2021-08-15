@@ -6,11 +6,11 @@ export type TalkRoom = {
   }[];
   lastMessage: {
     id: number;
-    text: string;
+    text: string | null;
   }[];
   partner: {
     id: string;
     name: string;
-    avatar: string;
+    avatar: string | null;
   };
 };

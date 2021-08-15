@@ -11,11 +11,11 @@ export type GetTalkRoomDataResponse = {
   sender: {
     id: string;
     name: string;
-    avatar: string;
+    avatar: string | null;
   };
   recipient: {
     id: string;
     name: string;
-    avatar: string;
+    avatar: string | null;
   };
 }[];
