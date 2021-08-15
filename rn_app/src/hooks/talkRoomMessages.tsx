@@ -106,7 +106,11 @@ export const useCreateTalkRoomMessage = () => {
               id: roomId,
               changes: {
                 unreadMessages: [],
-                partner: undefined,
+                partner: {
+                  id: '',
+                  name: '',
+                  avatar: '',
+                },
               },
             }),
           );
