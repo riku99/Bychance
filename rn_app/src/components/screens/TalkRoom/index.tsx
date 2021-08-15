@@ -1,24 +1,11 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {shallowEqual, useSelector} from 'react-redux';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 
 import {Chat} from './Chat';
 import {TalkRoomStackNavigationProp} from '../../../navigations/types';
-import {RootState} from '../../../stores/index';
-import {selectMessages} from '../../../stores/talkRoomMessages';
-import {resetUnreadNumber, selectRoom} from '../../../stores/talkRooms';
-import {selectChatPartner} from '../../../stores/chatPartners';
-import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {TalkRoomStackParamList} from '../../../navigations/TalkRoom';
 import {UserAvatar} from '../../utils/Avatar';
-import {useCustomDispatch} from '~/hooks/stores';
 import {
   useCreateReadTalkRoomMessages,
   useCreateTalkRoomMessage,
@@ -39,7 +26,7 @@ export const TalkRoom = ({route, navigation}: Props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const myId = useMyId();
   const {createMessage} = useCreateTalkRoomMessage();
-  const {createReadTalkRoomMessages} = useCreateReadTalkRoomMessages({
+  useCreateReadTalkRoomMessages({
     talkRoomId,
   });
 

@@ -3,7 +3,6 @@ import {View, StyleSheet} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 
 import {RootStackScreen} from '~/navigations/Root';
-import {useTalkRoomMessagesIo} from '~/hooks/socketio';
 import {
   usePushNotificationReqest,
   useRegisterDeviceToken,

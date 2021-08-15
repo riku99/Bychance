@@ -5,18 +5,12 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 
 import {TalkRoomListItem} from './TalkRoomListItem';
 import {SwipeHiddenItems, hiddenRowItemWidth} from './SwipeHiddenItems';
-import {TalkRoom} from '../../../stores/talkRooms';
-import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {RootNavigationProp} from '../../../navigations/Root';
-import {useCustomDispatch} from '~/hooks/stores';
 import {useSelectAllRooms, useDeleteTalkRoom} from '~/hooks/talkRooms';
-import {useSelectChatPartnerEntities} from '~/hooks/chatPartners';
 
 export const TalkRoomListPage = () => {
-  const dispatch = useCustomDispatch();
   const {deleteTalkRoom} = useDeleteTalkRoom();
   const rooms = useSelectAllRooms();
-  const chatPartnerEntities = useSelectChatPartnerEntities();
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   // const pushChatRoom = ({

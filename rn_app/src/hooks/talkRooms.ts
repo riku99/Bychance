@@ -3,7 +3,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
 import {RootState, store} from '~/stores';
-import {addTalkRoom, removeTalkRoom} from '~/stores/talkRooms';
+import {removeTalkRoom} from '~/stores/talkRooms';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';
@@ -12,6 +12,7 @@ import {
   setTalkRooms,
   selectAllTalkRooms as _selectAllTalkRoom,
   selectRoom,
+  addTalkRoom,
 } from '~/stores/_talkRooms';
 import {GetTalkRoomDataResponse} from '~/types/response/talkRooms';
 import {useMyId} from './users';
@@ -37,17 +38,30 @@ export const useCreateTalkRoom = () => {
         const {presence, roomId, timestamp} = response.data;
         const room = selectRoom(store.getState(), roomId);
         if (!presence || !room) {
-          // トークルームがサーバー側でも存在しなかった場合(それが初めて作成された場合)、サーバー側では存在するがクライアント側には存在しない場合(作成した相手がメッセージを送っていない場合)はaddOneで新しく追加
           dispatch(
             addTalkRoom({
               id: roomId,
-              partner: partner.id,
+              partner: {
+                id: partner.id,
+                avatar: partner.avatar,
+                name: partner.name,
+              },
+              unreadMessages: [],
+              lastMessage: '',
               timestamp,
-              messages: [],
-              unreadNumber: 0,
-              latestMessage: null,
             }),
           );
+          // トークルームがサーバー側でも存在しなかった場合(それが初めて作成された場合)、サーバー側では存在するがクライアント側には存在しない場合(作成した相手がメッセージを送っていない場合)はaddOneで新しく追加
+          // dispatch(
+          //   addTalkRoom({
+          //     id: roomId,
+          //     partner: partner.id,
+          //     timestamp,
+          //     messages: [],
+          //     unreadNumber: 0,
+          //     latestMessage: null,
+          //   }),
+          // );
         }
 
         if (!presence) {
@@ -123,11 +137,15 @@ export const useGetTalkRoomData = () => {
           const storedData = response.data.map((d) => {
             const partner = d.sender.id === id ? d.recipient : d.sender;
             const timestamp = d.updatedAt;
+            const lastMessage = d.lastMessage.length
+              ? d.lastMessage[0].text
+              : '';
             const {updatedAt, sender, recipient, ...restData} = d; //eslint-disable-line
             return {
               ...restData,
               partner,
               timestamp,
+              lastMessage,
             };
           });
 

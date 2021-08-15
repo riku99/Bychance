@@ -14,7 +14,7 @@ type Props = {
 export const TalkRoomListItem = React.memo(({room, onPress}: Props) => {
   const badgeNumber = room.unreadMessages.length;
   const {name, avatar} = room.partner;
-  const lastMessage = room.lastMessage[0].text;
+  const lastMessage = room.lastMessage;
 
   return (
     <ListItem key={room.id} onPress={onPress}>

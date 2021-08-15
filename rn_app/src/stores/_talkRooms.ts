@@ -30,12 +30,19 @@ export const TalkRoomSlice = createSlice({
         changes,
       });
     },
+    addTalkRoom: (state, action: PayloadAction<TalkRoom>) => {
+      talkRoomsAdapter.addOne(state, action);
+    },
   },
 });
 
 export const _talkRoomReducer = TalkRoomSlice.reducer;
 
-export const {setTalkRooms, updateTalkRoom} = TalkRoomSlice.actions;
+export const {
+  setTalkRooms,
+  updateTalkRoom,
+  addTalkRoom,
+} = TalkRoomSlice.actions;
 
 const selectors = talkRoomsAdapter.getSelectors();
 

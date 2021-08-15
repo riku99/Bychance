@@ -7,10 +7,6 @@ import {showMessage} from 'react-native-flash-message';
 
 import {useApikit} from './apikit';
 import {baseUrl, origin} from '~/constants/url';
-import {TalkRoomMessage} from '~/types/talkRoomMessage';
-import {addTalkRoomMessage} from '~/stores/talkRoomMessages';
-import {store} from '~/stores';
-import {selectRoom} from '~/stores/talkRooms';
 import {useMyId} from './users';
 import {ReceivedMessageData} from '~/stores/types';
 import {useCustomDispatch} from './stores';
@@ -55,13 +51,14 @@ export const useCreateReadTalkRoomMessages = ({
           );
         }
       } catch (e) {
-        // handleApiError(e);
+        // handleApiError(e); メッセージ取得の際のエラーとかぶるのでこっちではトースト出さない
       }
     },
     [addBearer, checkKeychain, talkRoomId, dispatch],
   );
 
   useEffect(() => {
+    // トークルームが初回レンダリングされた時はsotreにある未読データを既読にする
     createReadTalkRoomMessages(ids);
   }, [createReadTalkRoomMessages, ids]);
 
