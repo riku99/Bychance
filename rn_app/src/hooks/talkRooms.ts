@@ -1,8 +1,8 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
-import {RootState} from '~/stores';
+import {RootState, store} from '~/stores';
 import {
   selectAllTalkRooms,
   addTalkRoom,
@@ -12,9 +12,11 @@ import {
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';
-import {store} from '~/stores';
 import {upsertChatPartner} from '~/stores/chatPartners';
-import {setTalkRooms} from '~/stores/_talkRooms';
+import {
+  setTalkRooms,
+  selectAllTalkRooms as _selectAllTalkRoom,
+} from '~/stores/_talkRooms';
 import {GetTalkRoomDataResponse} from '~/types/response/talkRooms';
 import {useMyId} from './users';
 
@@ -149,4 +151,13 @@ export const useSelectAllRooms = () => {
     shallowEqual,
   );
   return rooms;
+};
+
+export const useGetUnreadNumber = () => {
+  const allData = useSelector((state: RootState) => _selectAllTalkRoom(state));
+  let number: number = 0;
+  for (let room of allData) {
+    number! += room.unreadMessages.length;
+  }
+  return number;
 };

@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import {TalkRoom} from '~/types/store/talkRooms';
+import {RootState} from './index';
 
 const talkRoomsAdapter = createEntityAdapter<TalkRoom>({
   selectId: (r) => r.id,
@@ -25,3 +26,8 @@ export const TalkRoomSlice = createSlice({
 export const _talkRoomReducer = TalkRoomSlice.reducer;
 
 export const {setTalkRooms} = TalkRoomSlice.actions;
+
+const selectors = talkRoomsAdapter.getSelectors();
+
+export const selectAllTalkRooms = (state: RootState) =>
+  selectors.selectAll(state._talkRoomReducer);

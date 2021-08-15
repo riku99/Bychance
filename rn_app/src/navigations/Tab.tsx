@@ -12,6 +12,7 @@ import {ChatListStackScreen} from './ChatList';
 import {normalStyles} from '~/constants/styles';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
 import {RecommendationStackScreen} from './Recommendation';
+import {useGetUnreadNumber} from '~/hooks/talkRooms';
 
 type TabList = {
   Profile: undefined;
@@ -27,6 +28,7 @@ export const Tabs = React.memo(() => {
   const unreadMessagesNumber = useSelector((state: RootState) => {
     return getAllUnreadMessagesNumber(state);
   });
+  const unreadMessageNumber = useGetUnreadNumber();
 
   // このフックはuseNavigationを使うのでstackに渡されているコンポーネントの中じゃないと使えない
   // stackの中で最初にレンダリングされるのがこのコンポーネントなのでとりあえずここに置く
@@ -58,8 +60,7 @@ export const Tabs = React.memo(() => {
             <MIcon name="chat-bubble-outline" size={24} color={color} />
           ),
           tabBarLabel: 'メッセージ',
-          tabBarBadge:
-            unreadMessagesNumber !== 0 ? unreadMessagesNumber : undefined,
+          tabBarBadge: unreadMessageNumber ? unreadMessageNumber : undefined,
         }}
       />
       <RootTab.Screen
