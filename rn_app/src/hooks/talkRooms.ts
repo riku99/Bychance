@@ -3,12 +3,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
 import {RootState, store} from '~/stores';
-import {
-  selectAllTalkRooms,
-  addTalkRoom,
-  selectRoom,
-  removeTalkRoom,
-} from '~/stores/talkRooms';
+import {addTalkRoom, selectRoom, removeTalkRoom} from '~/stores/talkRooms';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';

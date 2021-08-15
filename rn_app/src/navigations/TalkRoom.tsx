@@ -5,7 +5,14 @@ import {TalkRoomScreen} from '../components/screens/TalkRoom';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 
 export type TalkRoomStackParamList = {
-  ChatRoom: {roomId: number; partnerId: string};
+  TalkRoom: {
+    talkRoomId: number;
+    partner: {
+      id: string;
+      name: string;
+      avatar: string | null;
+    };
+  };
 } & UserPageScreenGroupParamList;
 
 const Stack = createStackNavigator<TalkRoomStackParamList>();
@@ -13,7 +20,7 @@ const Stack = createStackNavigator<TalkRoomStackParamList>();
 export const TalkRoomStackScreen = React.memo(() => {
   return (
     <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
-      <Stack.Screen name="ChatRoom" component={TalkRoomScreen} />
+      <Stack.Screen name="TalkRoom" component={TalkRoomScreen} />
       {Object.entries(userPageScreensGroup).map(([name, component]) => (
         <Stack.Screen
           key={name}

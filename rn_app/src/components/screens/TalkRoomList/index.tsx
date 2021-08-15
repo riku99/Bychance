@@ -17,7 +17,7 @@ export const TalkRoomListPage = () => {
   const {deleteTalkRoom} = useDeleteTalkRoom();
   const rooms = useSelectAllRooms();
   const chatPartnerEntities = useSelectChatPartnerEntities();
-  const navigationToChatRoom = useNavigation<RootNavigationProp<'Tab'>>();
+  const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   const pushChatRoom = ({
     room,
@@ -30,6 +30,20 @@ export const TalkRoomListPage = () => {
     navigationToChatRoom.navigate('TalkRoomStack', {
       screen: 'ChatRoom',
       params: {roomId: room.id, partnerId},
+    });
+  };
+
+  const onItemPress = (data: {
+    talkRoomId: number;
+    partner: {
+      id: string;
+      name: string;
+      avatar: string | null;
+    };
+  }) => {
+    navigation.navigate('TalkRoomStack', {
+      screen: 'TalkRoom',
+      params: data,
     });
   };
 
@@ -61,7 +75,13 @@ export const TalkRoomListPage = () => {
           <TalkRoomListItem
             room={room.item}
             onPress={
-              () => {}
+              () => {
+                const {id, partner} = room.item;
+                onItemPress({
+                  talkRoomId: id,
+                  partner,
+                });
+              }
               // pushChatRoom({
               //   room: room.item,
               //   partnerId: room.item.partner,
