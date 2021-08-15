@@ -10,7 +10,7 @@ import {baseUrl, origin} from '~/constants/url';
 import {TalkRoomMessage} from '~/types/talkRoomMessage';
 import {addTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {store} from '~/stores';
-import {updateTalkRoom, selectRoom} from '~/stores/talkRooms';
+import {selectRoom} from '~/stores/talkRooms';
 import {useMyId} from './users';
 import {ReceivedMessageData} from '~/stores/types';
 import {useCustomDispatch} from './stores';
@@ -20,37 +20,47 @@ import {
   GetTalkRoomMessagesResponse,
   CreateTalkRoomMessageResponse,
 } from '~/types/response/talkRoomMessages';
+import {useSelectRoom} from './talkRooms';
+import {updateTalkRoom} from '~/stores/_talkRooms';
 
-export const useCreateReadTalkRoomMessages = () => {
-  const {addBearer, checkKeychain, handleApiError} = useApikit();
+export const useCreateReadTalkRoomMessages = ({
+  talkRoomId,
+}: {
+  talkRoomId: number;
+}) => {
+  const room = useSelectRoom(talkRoomId);
+  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
 
-  const createReadTalkRoomMessages = useCallback(
-    async ({
-      roomId,
-      unreadNumber,
-      partnerId,
-    }: {
-      roomId: number;
-      unreadNumber: number;
-      partnerId: string;
-    }) => {
-      const credentials = await checkKeychain();
+  const createReadTalkRoomMessages = useCallback(async () => {
+    if (room && room.unreadMessages.length) {
+      const ids = room.unreadMessages.map((d) => d.id);
       try {
-        axios.post(
-          `${baseUrl}/readTalkRoomMessages?id=${credentials?.id}`,
+        const credentials = await checkKeychain();
+        await axios.post(
+          `${baseUrl}/talk_rooms/${talkRoomId}/messages/read?id=${credentials?.id}`,
           {
-            talkRoomId: roomId,
-            partnerId,
-            unreadNumber,
+            ids,
           },
           addBearer(credentials?.token),
+        );
+
+        dispatch(
+          updateTalkRoom({
+            id: talkRoomId,
+            changes: {
+              unreadMessages: [],
+            },
+          }),
         );
       } catch (e) {
         handleApiError(e);
       }
-    },
-    [addBearer, checkKeychain, handleApiError],
-  );
+    }
+  }, [addBearer, checkKeychain, handleApiError, room, talkRoomId, dispatch]);
+
+  useEffect(() => {
+    createReadTalkRoomMessages();
+  }, [createReadTalkRoomMessages]);
 
   return {
     createReadTalkRoomMessages,

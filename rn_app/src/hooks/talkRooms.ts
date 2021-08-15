@@ -3,7 +3,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 
 import {RootState, store} from '~/stores';
-import {addTalkRoom, selectRoom, removeTalkRoom} from '~/stores/talkRooms';
+import {addTalkRoom, removeTalkRoom} from '~/stores/talkRooms';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';
@@ -11,6 +11,7 @@ import {upsertChatPartner} from '~/stores/chatPartners';
 import {
   setTalkRooms,
   selectAllTalkRooms as _selectAllTalkRoom,
+  selectRoom,
 } from '~/stores/_talkRooms';
 import {GetTalkRoomDataResponse} from '~/types/response/talkRooms';
 import {useMyId} from './users';
@@ -148,8 +149,19 @@ export const useSelectAllRooms = () => {
   return rooms;
 };
 
+export const useSelectRoom = (id: number) => {
+  const room = useSelector(
+    (state: RootState) => selectRoom(state, id),
+    shallowEqual,
+  );
+  return room;
+};
+
 export const useGetUnreadNumber = () => {
-  const allData = useSelector((state: RootState) => _selectAllTalkRoom(state));
+  const allData = useSelector(
+    (state: RootState) => _selectAllTalkRoom(state),
+    shallowEqual,
+  );
   let number: number = 0;
   for (let room of allData) {
     number! += room.unreadMessages.length;

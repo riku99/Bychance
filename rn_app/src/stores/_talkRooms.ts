@@ -20,14 +20,27 @@ export const TalkRoomSlice = createSlice({
     setTalkRooms: (state, action: PayloadAction<TalkRoom[]>) => {
       talkRoomsAdapter.setMany(state, action.payload);
     },
+    updateTalkRoom: (
+      state,
+      action: PayloadAction<{id: number; changes: Partial<TalkRoom>}>,
+    ) => {
+      const {id, changes} = action.payload;
+      talkRoomsAdapter.updateOne(state, {
+        id,
+        changes,
+      });
+    },
   },
 });
 
 export const _talkRoomReducer = TalkRoomSlice.reducer;
 
-export const {setTalkRooms} = TalkRoomSlice.actions;
+export const {setTalkRooms, updateTalkRoom} = TalkRoomSlice.actions;
 
 const selectors = talkRoomsAdapter.getSelectors();
 
 export const selectAllTalkRooms = (state: RootState) =>
   selectors.selectAll(state._talkRoomReducer);
+
+export const selectRoom = (state: RootState, id: number) =>
+  selectors.selectById(state._talkRoomReducer, id);
