@@ -93,6 +93,15 @@ export const useCreateTalkRoomMessage = () => {
         );
 
         if (response.data.talkRoomPrecence) {
+          dispatch(
+            updateTalkRoom({
+              id: roomId,
+              changes: {
+                lastMessage: text,
+              },
+            }),
+          );
+
           return response.data;
         } else {
           // talkRoomPresenceがfalse、つまり既にトークルームが相手によって削除されている場合
