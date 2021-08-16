@@ -40,6 +40,7 @@ export const UserTabView = React.memo(
     userInformationTabViewRef,
   }: Props) => {
     const {data} = useGetUserPosts(userId);
+
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
       {key: 'Posts'; title: 'Posts'},

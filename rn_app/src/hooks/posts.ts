@@ -2,6 +2,7 @@ import {useCallback} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 import useSWR from 'swr';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {baseUrl} from '~/constants/url';
 import {Post} from '~/types/posts';
@@ -79,6 +80,7 @@ export const useDeletePost = () => {
 
 export const useGetUserPosts = (userId: string) => {
   const {checkKeychain, addBearer, handleApiError} = useApikit();
+
   const fetcher = async () => {
     try {
       const credentials = await checkKeychain();
@@ -93,7 +95,18 @@ export const useGetUserPosts = (userId: string) => {
     }
   };
 
-  const {data} = useSWR(`${baseUrl}/posts/${userId}/posts`, fetcher);
+  const {data, revalidate} = useSWR(
+    `${baseUrl}/posts/${userId}/posts`,
+    fetcher,
+    {
+      revalidateOnFocus: true,
+    },
+  );
+
+  const reFetch = useCallback(() => {
+    revalidate();
+  }, [revalidate]);
+  useFocusEffect(reFetch);
 
   return {
     data,
