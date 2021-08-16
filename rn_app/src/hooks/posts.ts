@@ -95,15 +95,7 @@ export const useGetUserPosts = (userId: string) => {
     }
   };
 
-  const {data, revalidate} = useSWR(
-    `${baseUrl}/users/${userId}/posts`,
-    fetcher,
-  );
-
-  const reFetch = useCallback(() => {
-    revalidate();
-  }, [revalidate]);
-  useFocusEffect(reFetch);
+  const {data, revalidate} = useSWR(`/users/${userId}/posts`, fetcher);
 
   return {
     data,

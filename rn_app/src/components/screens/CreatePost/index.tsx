@@ -61,7 +61,7 @@ export const CreatePost = ({navigation}: Props) => {
       }
       const source = await fs.readFile(data.uri, 'base64');
       await createPost({text, source, ext, sourceType: data.sourceType});
-      mutate(`${baseUrl}/users/${myId}/posts`);
+      mutate(`/users/${myId}/posts`); // SWR全体に再検証を伝える
       dispatch(creatingPost());
     }
   }, [dispatch, navigation, data, text, createPost, myId]);

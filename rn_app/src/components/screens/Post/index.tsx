@@ -1,4 +1,5 @@
 import React from 'react';
+import {mutate} from 'swr';
 
 import {Post} from './Post';
 import {
@@ -21,6 +22,7 @@ export const Container = React.memo(({route}: Props) => {
 
   const _deletePost = async (postId: number) => {
     await deletePost({postId});
+    mutate(`/users/${myId}/posts`);
     navigation.goBack();
   };
 
