@@ -1,10 +1,12 @@
 import {useCallback} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
+import useSWR from 'swr';
 
 import {baseUrl} from '~/constants/url';
 import {addPost, removePost} from '~/stores/posts';
 import {Post} from '~/types/posts';
+import {GetUserPostsResponse} from '~/types/response/posts';
 
 export const useCreatePost = () => {
   const {
@@ -82,5 +84,28 @@ export const useDeletePost = () => {
 
   return {
     deletePost,
+  };
+};
+
+export const useGetUserPosts = (userId: string) => {
+  const {checkKeychain, addBearer, handleApiError} = useApikit();
+  const fetcher = async () => {
+    try {
+      const credentials = await checkKeychain();
+      const response = await axios.get<GetUserPostsResponse>(
+        `${baseUrl}/users/${userId}/posts?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+
+      return response.data;
+    } catch (e) {
+      handleApiError(e);
+    }
+  };
+
+  const {data} = useSWR(`${baseUrl}/posts/${userId}/posts`, fetcher);
+
+  return {
+    data,
   };
 };

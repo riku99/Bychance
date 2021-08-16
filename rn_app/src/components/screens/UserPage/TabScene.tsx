@@ -5,14 +5,24 @@ import {
   RefreshControl,
   ListRenderItem,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 import {Post} from '~/stores/posts';
 import {useRefreshUser} from '~/hooks/users';
 
+type PostData = {
+  id: number;
+  text: string | null;
+  url: string;
+  createdAt: string;
+  userId: string;
+  sourceType: 'image' | 'video';
+};
+
 type FlatListTabSceneProps = {
-  renderItem?: ListRenderItem<Post>;
-  renderData?: Post[];
+  renderItem?: ListRenderItem<PostData>;
+  renderData?: PostData[];
   userId: string;
   scrollY: Animated.Value;
   tabViewRef: React.RefObject<FlatList>;

@@ -13,7 +13,14 @@ import {
 import {getThumbnailUrl} from '~/helpers/video';
 
 type Props = {
-  post: Post;
+  post: {
+    id: number;
+    text: string | null;
+    url: string;
+    createdAt: string;
+    userId: string;
+    sourceType: 'image' | 'video';
+  };
   index: number;
 };
 
@@ -37,13 +44,13 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
 
   const sourceType = useMemo(() => post.sourceType, [post.sourceType]);
 
-  // SkeltonLoaingコンポーネント作ったけど結構重くなってしまうのでいったん使わない
   return (
     <View style={styles.posts}>
       <TouchableOpacity
         key={post.id}
         activeOpacity={1}
-        onPress={() => onPress(post)}>
+        // onPress={() => onPress(post)}>
+      >
         <View
           style={[
             styles.postWrapper,
@@ -82,7 +89,6 @@ const styles = StyleSheet.create({
   },
   postWrapper: {
     backgroundColor: normalStyles.imageBackGroundColor,
-    borderRadius: 10,
     marginBottom: 2,
   },
   playIcon: {

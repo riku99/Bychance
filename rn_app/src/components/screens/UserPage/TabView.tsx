@@ -20,6 +20,7 @@ import {normalStyles} from '~/constants/styles';
 import {UserInformationRouteInTabView} from './UserInformationInTabView';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
+import {useGetUserPosts} from '~/hooks/posts';
 
 type Props = {
   userId: string;
@@ -41,6 +42,7 @@ export const UserTabView = React.memo(
     postsTabViewRef,
     userInformationTabViewRef,
   }: Props) => {
+    const {data} = useGetUserPosts(userId);
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
       {key: 'Posts'; title: 'Posts'},
@@ -105,10 +107,10 @@ export const UserTabView = React.memo(
           return (
             <FlatListTabScene
               userId={userId}
-              renderData={posts}
-              renderItem={({item, index}) => (
-                <TabViewPost post={item} index={index} />
-              )}
+              renderData={data}
+              renderItem={({item, index}) => {
+                return <TabViewPost post={item} index={index} />;
+              }}
               tabViewRef={postsTabViewRef}
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
