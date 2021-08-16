@@ -7,6 +7,7 @@ import {
 } from '../../../navigations/types';
 import {useDeletePost} from '~/hooks/posts';
 import {useMyId} from '~/hooks/users';
+import {useNavigation} from '@react-navigation/native';
 
 type Props = {
   route: MyPageStackRouteProp<'Post'> | UserPageStackRouteProp<'Post'>;
@@ -16,9 +17,11 @@ export const Container = React.memo(({route}: Props) => {
   const myId = useMyId();
 
   const {deletePost} = useDeletePost();
+  const navigation = useNavigation();
 
   const _deletePost = async (postId: number) => {
-    deletePost({postId});
+    await deletePost({postId});
+    navigation.goBack();
   };
 
   return <Post post={route.params} user={myId} deletePost={_deletePost} />;

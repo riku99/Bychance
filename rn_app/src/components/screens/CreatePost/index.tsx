@@ -13,13 +13,15 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 import Video from 'react-native-video';
 import {RNToasty} from 'react-native-toasty';
+import {mutate} from 'swr';
 
 import {creatingPost} from '../../../stores/otherSettings';
 import {CreatePostStackNavigationProp} from '../../../navigations/types';
 import {getExtention} from '~/utils';
-import {Post} from '~/stores/posts';
 import {useCustomDispatch} from '~/hooks/stores';
 import {useCreatePost} from '~/hooks/posts';
+import {useMyId} from '~/hooks/users';
+import {baseUrl} from '~/constants/url';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -27,15 +29,14 @@ type Props = {
 
 export const CreatePost = ({navigation}: Props) => {
   const isFocused = useIsFocused();
+  const myId = useMyId();
 
   const [data, setData] = useState<{
     uri: string;
-    sourceType: Post['sourceType'];
+    sourceType: 'image' | 'video';
   } | null>();
   const [text, setText] = useState('');
-
   const dispatch = useCustomDispatch();
-
   const {createPost} = useCreatePost();
 
   const onPress = useCallback(async () => {
@@ -60,9 +61,10 @@ export const CreatePost = ({navigation}: Props) => {
       }
       const source = await fs.readFile(data.uri, 'base64');
       await createPost({text, source, ext, sourceType: data.sourceType});
+      mutate(`${baseUrl}/users/${myId}/posts`);
       dispatch(creatingPost());
     }
-  }, [dispatch, navigation, data, text, createPost]);
+  }, [dispatch, navigation, data, text, createPost, myId]);
 
   useEffect(() => {
     navigation.setOptions({

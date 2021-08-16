@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Text, Dimensions, Alert} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {format} from 'date-fns';
 
@@ -18,7 +17,6 @@ type Props = {
 };
 
 export const Post = ({post, user, deletePost}: Props) => {
-  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -54,9 +52,8 @@ export const Post = ({post, user, deletePost}: Props) => {
                   {
                     text: 'はい',
                     style: 'destructive',
-                    onPress: () => {
+                    onPress: async () => {
                       deletePost(post.id);
-                      navigation.goBack();
                     },
                   },
                   {text: 'いいえ'},

@@ -96,11 +96,8 @@ export const useGetUserPosts = (userId: string) => {
   };
 
   const {data, revalidate} = useSWR(
-    `${baseUrl}/posts/${userId}/posts`,
+    `${baseUrl}/users/${userId}/posts`,
     fetcher,
-    {
-      revalidateOnFocus: true,
-    },
   );
 
   const reFetch = useCallback(() => {
@@ -110,5 +107,6 @@ export const useGetUserPosts = (userId: string) => {
 
   return {
     data,
+    revalidate,
   };
 };
