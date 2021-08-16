@@ -5,7 +5,6 @@ import {default as axios} from 'axios';
 
 import {RootState} from '~/stores/index';
 import {UserPageFrom} from '~/navigations/UserPage';
-import {selectChatPartner} from '~/stores/chatPartners';
 import {selectNearbyUser} from '~/stores/nearbyUsers';
 import {useApikit} from './apikit';
 import {User} from '~/types/users';
@@ -26,7 +25,6 @@ import {FlashStamp} from '~/types/flashStamps';
 import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
 import {setFlashStamps} from '~/stores/flashStamps';
-import {upsertChatPartner} from '~/stores/chatPartners';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -51,7 +49,7 @@ export const useAnotherUser = ({
         case 'nearbyUsers':
           return selectNearbyUser(state, userId);
         case 'chatRoom':
-          return selectChatPartner(state, userId);
+        // return selectChatPartner(state, userId);
       }
     }
   }, shallowEqual);
@@ -379,7 +377,7 @@ export const useRefreshUser = () => {
         } else {
           const {data} = response.data;
           dispatch(setFlashStamps(data.flashStamps));
-          dispatch(upsertChatPartner(data.user));
+          // dispatch(upsertChatPartner(data.user));
         }
       } catch (e) {
         handleApiError(e);

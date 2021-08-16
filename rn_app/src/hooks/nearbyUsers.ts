@@ -3,11 +3,8 @@ import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 
 import {baseUrl} from '~/constants/url';
-import {updateChatPartners, selectChatPartnerIds} from '~/stores/chatPartners';
 import {NearbyUsers} from '~/types/nearbyUsers';
 import {FlashStamp} from '~/types/flashStamps';
-import {store} from '~/stores';
-import {AnotherUser} from '~/types/anotherUser';
 import {setFlashStamps} from '~/stores/flashStamps';
 import {setNearbyUsers} from '~/stores/nearbyUsers';
 
@@ -39,16 +36,6 @@ export const useGetNearbyUsers = () => {
 
         dispatch(setNearbyUsers(usersData));
 
-        const array: {id: string; changes: AnotherUser}[] = [];
-        const ids = selectChatPartnerIds(store.getState().chatPartnersReducer);
-        ids.forEach((n) => {
-          const target = usersData.find((data) => data.id === n);
-          if (target) {
-            array.push({id: target.id, changes: target});
-          }
-        });
-
-        dispatch(updateChatPartners(array)); // ユーザーを取得し、トーク相手に同じユーザーがいた場合更新する。ただ、ユーザーページを開いた時に更新するから必要ではないかも
         dispatch(setFlashStamps(flashStampsData));
       } catch (e) {
         handleApiError(e);

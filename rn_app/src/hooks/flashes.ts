@@ -8,7 +8,6 @@ import {getExtention} from '~/utils';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {store} from '~/stores';
-import {updateChatPartner} from '~/stores/chatPartners';
 import {AnotherUser} from '~/stores/types';
 import {updateNearbyUser} from '~/stores/nearbyUsers';
 import {NearbyUser} from '~/types/nearbyUsers';
@@ -154,20 +153,13 @@ export const useCreateAlreadyViewedFlash = () => {
         );
 
         const nearbyUser = store.getState().nearbyUsersReducer.entities[userId];
-        const chatPartner = store.getState().chatPartnersReducer.entities[
-          userId
-        ];
-        const [result1, result2] = await Promise.all([
+        const [result1] = await Promise.all([
           createUpdateObj({user: nearbyUser, flashId}),
-          createUpdateObj({user: chatPartner, flashId}),
+          createUpdateObj({flashId}),
         ]);
 
         if (result1) {
           dispatch(updateNearbyUser(result1));
-        }
-
-        if (result2) {
-          dispatch(updateChatPartner(result2));
         }
       } catch (e) {
         handleApiError(e);

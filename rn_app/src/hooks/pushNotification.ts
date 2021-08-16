@@ -58,9 +58,9 @@ export const useTalkRoomMessagesPushNotification = () => {
 
       // .push ではなく .navigate にすることで既にrouteに存在するすスタックを探す。そのため、既にトークルームが開かれている場合2重になることがない。pushだと新しいスタックが追加されるので2重になってしまう
       navigation.navigate('TalkRoomStack', {
-        screen: 'ChatRoom',
+        screen: 'TalkRoom',
         params: {
-          roomId: Number(talkRoomId),
+          talkRoomId: Number(talkRoomId),
           partnerId: partnerId,
         },
       });

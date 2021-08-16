@@ -7,13 +7,7 @@ import {AnyAction} from 'redux';
 import {setLogin} from '~/stores/sessions';
 import {setUser, resetUser} from '~/stores/user';
 import {setPosts, resetPosts} from '~/stores/posts';
-import {setTalkRooms, resetTalkRooms} from '~/stores/talkRooms';
-import {
-  setTalkRoomMessages,
-  resetTalkRoomMessages,
-} from '~/stores/talkRoomMessages';
 import {setFlashes, resetFlashes} from '~/stores/flashes';
-import {setChatPartners, resetChatPartners} from '~/stores/chatPartners';
 import {setFlashStamps, resetFlashStamps} from '~/stores/flashStamps';
 import {SuccessfullLoginData} from '~/types/login';
 
@@ -29,21 +23,10 @@ export const useSuccessfullLoginDispatch = () => {
   const dispatch = useCustomDispatch();
 
   const loginDispatch = useCallback(
-    ({
-      user,
-      posts,
-      rooms,
-      messages,
-      flashes,
-      chatPartners,
-      flashStamps,
-    }: SuccessfullLoginData) => {
+    ({user, posts, flashes, flashStamps}: SuccessfullLoginData) => {
       dispatch(setUser(user));
       dispatch(setPosts(posts));
-      dispatch(setTalkRooms(rooms));
-      dispatch(setTalkRoomMessages(messages));
       dispatch(setFlashes(flashes));
-      dispatch(setChatPartners(chatPartners));
       dispatch(setFlashStamps(flashStamps));
       dispatch(setLogin(true));
     },
@@ -61,10 +44,7 @@ export const useResetDispatch = () => {
   const resetDispatch = useCallback(() => {
     dispatch(setLogin(false));
     dispatch(resetPosts());
-    dispatch(resetTalkRooms());
-    dispatch(resetTalkRoomMessages());
     dispatch(resetFlashes());
-    dispatch(resetChatPartners());
     dispatch(resetFlashStamps());
     dispatch(resetUser());
   }, [dispatch]);

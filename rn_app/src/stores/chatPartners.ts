@@ -1,94 +1,94 @@
-import {
-  createSlice,
-  PayloadAction,
-  createEntityAdapter,
-} from '@reduxjs/toolkit';
+// import {
+//   createSlice,
+//   PayloadAction,
+//   createEntityAdapter,
+// } from '@reduxjs/toolkit';
 
-import {AnotherUser, ReceivedMessageData} from './types';
-import {RootState} from './index';
-import {receiveTalkRoomMessage} from './talkRoomMessages';
+// import {AnotherUser, ReceivedMessageData} from './types';
+// import {RootState} from './index';
+// import {receiveTalkRoomMessage} from './talkRoomMessages';
 
-export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
+// export const chatPartnersAdapter = createEntityAdapter<AnotherUser>({});
 
-export type ChatPartnersState = ReturnType<
-  typeof chatPartnersAdapter.getInitialState
->;
+// export type ChatPartnersState = ReturnType<
+//   typeof chatPartnersAdapter.getInitialState
+// >;
 
-export const chatPartnersSlice = createSlice({
-  name: 'chatPartners',
-  initialState: chatPartnersAdapter.getInitialState(),
-  reducers: {
-    setChatPartners: (state, action: PayloadAction<AnotherUser[]>) => {
-      chatPartnersAdapter.upsertMany(state, action.payload);
-    },
-    upsertChatPartner: (state, action: PayloadAction<AnotherUser>) => {
-      chatPartnersAdapter.upsertOne(state, action.payload);
-    },
-    resetChatPartners: () => chatPartnersAdapter.getInitialState(),
-    updateChatPartners: (
-      state,
-      action: PayloadAction<{id: string; changes: AnotherUser}[]>,
-    ) => {
-      chatPartnersAdapter.updateMany(state, action.payload);
-    },
-    updateChatPartner: (
-      state,
-      action: PayloadAction<{id: string; changes: AnotherUser}>,
-    ) => {
-      chatPartnersAdapter.updateOne(state, action.payload);
-    },
-  },
-  extraReducers: {
-    [receiveTalkRoomMessage.type]: (
-      state,
-      action: PayloadAction<ReceivedMessageData>,
-    ) => {
-      if (action.payload.isFirstMessage) {
-        chatPartnersAdapter.upsertOne(state, action.payload.sender);
-      }
-    },
-  },
-});
+// export const chatPartnersSlice = createSlice({
+//   name: 'chatPartners',
+//   initialState: chatPartnersAdapter.getInitialState(),
+//   reducers: {
+//     setChatPartners: (state, action: PayloadAction<AnotherUser[]>) => {
+//       chatPartnersAdapter.upsertMany(state, action.payload);
+//     },
+//     upsertChatPartner: (state, action: PayloadAction<AnotherUser>) => {
+//       chatPartnersAdapter.upsertOne(state, action.payload);
+//     },
+//     resetChatPartners: () => chatPartnersAdapter.getInitialState(),
+//     updateChatPartners: (
+//       state,
+//       action: PayloadAction<{id: string; changes: AnotherUser}[]>,
+//     ) => {
+//       chatPartnersAdapter.updateMany(state, action.payload);
+//     },
+//     updateChatPartner: (
+//       state,
+//       action: PayloadAction<{id: string; changes: AnotherUser}>,
+//     ) => {
+//       chatPartnersAdapter.updateOne(state, action.payload);
+//     },
+//   },
+//   extraReducers: {
+//     [receiveTalkRoomMessage.type]: (
+//       state,
+//       action: PayloadAction<ReceivedMessageData>,
+//     ) => {
+//       if (action.payload.isFirstMessage) {
+//         chatPartnersAdapter.upsertOne(state, action.payload.sender);
+//       }
+//     },
+//   },
+// });
 
-const chatPartnersSelector = chatPartnersAdapter.getSelectors();
+// const chatPartnersSelector = chatPartnersAdapter.getSelectors();
 
-export type ReturnTypeOfSelectChatPartnerEntities = ReturnType<
-  typeof selectChatPartnerEntities
->;
-export const selectChatPartnerEntities = (state: RootState) => {
-  return chatPartnersSelector.selectEntities(state.chatPartnersReducer);
-};
+// export type ReturnTypeOfSelectChatPartnerEntities = ReturnType<
+//   typeof selectChatPartnerEntities
+// >;
+// export const selectChatPartnerEntities = (state: RootState) => {
+//   return chatPartnersSelector.selectEntities(state.chatPartnersReducer);
+// };
 
-export const selectChatPartner = (state: RootState, partnerId: string) => {
-  return chatPartnersSelector.selectById(state.chatPartnersReducer, partnerId);
-};
+// export const selectChatPartner = (state: RootState, partnerId: string) => {
+//   return chatPartnersSelector.selectById(state.chatPartnersReducer, partnerId);
+// };
 
-export const selectChatPartnerAlreadyViewed = (
-  state: RootState,
-  userId: string,
-) => {
-  const user = chatPartnersSelector.selectById(
-    state.chatPartnersReducer,
-    userId,
-  );
-  if (user) {
-    return user.flashes.alreadyViewed;
-  } else {
-    // ユーザーがいない場合はそもそもselectChatPartnerAlreadyViewedが実行されない
-    // なのでこのブロックが実行されることは基本的にない
-    return [];
-  }
-};
+// export const selectChatPartnerAlreadyViewed = (
+//   state: RootState,
+//   userId: string,
+// ) => {
+//   const user = chatPartnersSelector.selectById(
+//     state.chatPartnersReducer,
+//     userId,
+//   );
+//   if (user) {
+//     return user.flashes.alreadyViewed;
+//   } else {
+//     // ユーザーがいない場合はそもそもselectChatPartnerAlreadyViewedが実行されない
+//     // なのでこのブロックが実行されることは基本的にない
+//     return [];
+//   }
+// };
 
-export const selectChatPartnerIds = (state: RootState['chatPartnersReducer']) =>
-  chatPartnersSelector.selectIds(state);
+// export const selectChatPartnerIds = (state: RootState['chatPartnersReducer']) =>
+//   chatPartnersSelector.selectIds(state);
 
-export const chatPartnersReducer = chatPartnersSlice.reducer;
+// export const chatPartnersReducer = chatPartnersSlice.reducer;
 
-export const {
-  setChatPartners,
-  upsertChatPartner,
-  resetChatPartners,
-  updateChatPartners,
-  updateChatPartner,
-} = chatPartnersSlice.actions;
+// export const {
+//   setChatPartners,
+//   upsertChatPartner,
+//   resetChatPartners,
+//   updateChatPartners,
+//   updateChatPartner,
+// } = chatPartnersSlice.actions;

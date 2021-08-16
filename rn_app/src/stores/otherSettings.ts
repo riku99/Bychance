@@ -1,20 +1,15 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
-import {TalkRoomMessage, receiveTalkRoomMessage} from './talkRoomMessages';
-import {ReceivedMessageData} from './types';
+import {createSlice} from '@reduxjs/toolkit';
 
 type InitialState = {
   displayedMenu?: boolean;
   creatingPost?: boolean;
   creatingFlash?: boolean;
-  receivedMessage?: TalkRoomMessage;
 };
 
 const initialState: InitialState = {
   displayedMenu: false,
   creatingPost: false,
   creatingFlash: false,
-  receivedMessage: undefined,
 };
 
 const otherSettingsSlice = createSlice({
@@ -51,22 +46,6 @@ const otherSettingsSlice = createSlice({
       receivedMessage: undefined,
     }),
     resetSettings: () => initialState,
-  },
-  extraReducers: {
-    [receiveTalkRoomMessage.type]: (
-      state,
-      action: PayloadAction<ReceivedMessageData>,
-    ) => {
-      if (
-        !state.receivedMessage ||
-        state.receivedMessage.id !== action.payload.message.id
-      ) {
-        return {
-          ...state,
-          receivedMessage: action.payload.message,
-        };
-      }
-    },
   },
 });
 

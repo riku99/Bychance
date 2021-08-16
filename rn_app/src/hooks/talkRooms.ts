@@ -7,7 +7,6 @@ import {RootState, store} from '~/stores';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {AnotherUser} from '~/types/anotherUser';
-import {upsertChatPartner} from '~/stores/chatPartners';
 import {
   setTalkRooms,
   selectAllTalkRooms,
@@ -52,10 +51,6 @@ export const useCreateTalkRoom = () => {
               timestamp,
             }),
           );
-        }
-
-        if (!presence) {
-          dispatch(upsertChatPartner(partner));
         }
 
         return {
