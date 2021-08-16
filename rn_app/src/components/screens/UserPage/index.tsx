@@ -35,7 +35,6 @@ import {
 } from '../../../navigations/UserPage';
 import {UserPageNavigationProp} from '../../../navigations/types';
 import {RootState} from '../../../stores/index';
-import {selectAllPosts} from '../../../stores/posts';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
@@ -64,22 +63,6 @@ export const UserPage = ({route, navigation}: Props) => {
     from: routeParams?.from,
     userId: routeParams?.userId,
   });
-
-  const myPosts = useSelector((state: RootState) => {
-    if (isMe) {
-      return selectAllPosts(state);
-    }
-  });
-
-  const posts = useMemo(() => {
-    if (myPosts) {
-      return myPosts!;
-    } else if (anotherUser) {
-      return anotherUser.posts;
-    } else {
-      return [];
-    }
-  }, [anotherUser, myPosts]);
 
   const myFlashes = useSelector((state: RootState) => {
     if (isMe) {
@@ -304,7 +287,6 @@ export const UserPage = ({route, navigation}: Props) => {
             userId={user.id}
             containerHeight={containerHeight}
             profileContainerHeight={profileContainerHeight}
-            posts={posts}
             scrollY={scrollY}
             postsTabViewRef={postsTabViewRef}
             userInformationTabViewRef={userInformationTabViewRef}

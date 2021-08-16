@@ -1,7 +1,6 @@
 import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import {sessionReducer} from './sessions';
 import {userReducer} from './user';
-import {postsReducer} from './posts';
 import {flashesReducer} from './flashes';
 import {nearbyUsersReducer} from './nearbyUsers';
 import {otherSettingsReducer} from './otherSettings';
@@ -12,7 +11,6 @@ import {_talkRoomReducer} from './_talkRooms';
 const rootReducer = combineReducers({
   sessionReducer,
   userReducer,
-  postsReducer,
   flashesReducer,
   nearbyUsersReducer,
   otherSettingsReducer,

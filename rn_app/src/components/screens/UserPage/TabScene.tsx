@@ -5,10 +5,8 @@ import {
   RefreshControl,
   ListRenderItem,
   FlatList,
-  ActivityIndicator,
 } from 'react-native';
 
-import {Post} from '~/stores/posts';
 import {useRefreshUser} from '~/hooks/users';
 
 type PostData = {

@@ -22,7 +22,6 @@ import {
 import {Post} from '~/types/posts';
 import {Flash} from '~/types/flashes';
 import {FlashStamp} from '~/types/flashStamps';
-import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
 import {setFlashStamps} from '~/stores/flashStamps';
 
@@ -368,10 +367,9 @@ export const useRefreshUser = () => {
         );
 
         if (response.data.isMyData) {
-          const {user, posts, flashes, flashStamps} = response.data;
+          const {user, flashes, flashStamps} = response.data;
 
           dispatch(setUser(user));
-          dispatch(setPosts(posts));
           dispatch(setFlashes(flashes));
           dispatch(setFlashStamps(flashStamps));
         } else {

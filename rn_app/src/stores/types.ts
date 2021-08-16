@@ -1,11 +1,9 @@
 import {User} from './user';
-import {Post} from './posts';
 import {Flash} from './flashes';
 import {FlashStamp} from './flashStamps';
 
 export type ClientData = {
   user: User;
-  posts: Post[];
   flashes: Flash[];
   chatPartners: AnotherUser[];
   flashStamps: FlashStamp[];
@@ -19,6 +17,5 @@ export type FlashesData = {
 };
 
 export type AnotherUser = Omit<User, 'display'> & {
-  posts: Post[];
   flashes: FlashesData;
 };

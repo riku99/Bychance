@@ -15,7 +15,6 @@ import {
 } from 'react-native-tab-view';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {Post} from '../../../stores/posts';
 import {normalStyles} from '~/constants/styles';
 import {UserInformationRouteInTabView} from './UserInformationInTabView';
 import {TabViewPost} from './Posts';
@@ -26,7 +25,6 @@ type Props = {
   userId: string;
   containerHeight: number;
   profileContainerHeight: number;
-  posts: Post[];
   scrollY: Animated.Value;
   postsTabViewRef: React.RefObject<FlatList>;
   userInformationTabViewRef: React.RefObject<ScrollView>;
@@ -37,7 +35,6 @@ export const UserTabView = React.memo(
     userId,
     containerHeight,
     profileContainerHeight,
-    posts,
     scrollY,
     postsTabViewRef,
     userInformationTabViewRef,

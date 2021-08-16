@@ -6,7 +6,6 @@ import {AppDispatch} from '~/stores/index';
 import {AnyAction} from 'redux';
 import {setLogin} from '~/stores/sessions';
 import {setUser, resetUser} from '~/stores/user';
-import {setPosts, resetPosts} from '~/stores/posts';
 import {setFlashes, resetFlashes} from '~/stores/flashes';
 import {setFlashStamps, resetFlashStamps} from '~/stores/flashStamps';
 import {SuccessfullLoginData} from '~/types/login';
@@ -23,9 +22,8 @@ export const useSuccessfullLoginDispatch = () => {
   const dispatch = useCustomDispatch();
 
   const loginDispatch = useCallback(
-    ({user, posts, flashes, flashStamps}: SuccessfullLoginData) => {
+    ({user, flashes, flashStamps}: SuccessfullLoginData) => {
       dispatch(setUser(user));
-      dispatch(setPosts(posts));
       dispatch(setFlashes(flashes));
       dispatch(setFlashStamps(flashStamps));
       dispatch(setLogin(true));
@@ -43,7 +41,6 @@ export const useResetDispatch = () => {
 
   const resetDispatch = useCallback(() => {
     dispatch(setLogin(false));
-    dispatch(resetPosts());
     dispatch(resetFlashes());
     dispatch(resetFlashStamps());
     dispatch(resetUser());

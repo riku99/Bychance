@@ -4,7 +4,6 @@ import {default as axios} from 'axios';
 import useSWR from 'swr';
 
 import {baseUrl} from '~/constants/url';
-import {addPost, removePost} from '~/stores/posts';
 import {Post} from '~/types/posts';
 import {GetUserPostsResponse} from '~/types/response/posts';
 
@@ -13,7 +12,7 @@ export const useCreatePost = () => {
     checkKeychain,
     addBearer,
     handleApiError,
-    dispatch,
+
     toast,
   } = useApikit();
 
@@ -38,14 +37,12 @@ export const useCreatePost = () => {
           addBearer(credentials?.token),
         );
 
-        dispatch(addPost(response.data));
-
         toast?.show('投稿しました', {type: 'success'});
       } catch (e) {
         handleApiError(e);
       }
     },
-    [checkKeychain, addBearer, handleApiError, dispatch, toast],
+    [checkKeychain, addBearer, handleApiError, toast],
   );
 
   return {
@@ -54,13 +51,7 @@ export const useCreatePost = () => {
 };
 
 export const useDeletePost = () => {
-  const {
-    checkKeychain,
-    addBearer,
-    handleApiError,
-    toast,
-    dispatch,
-  } = useApikit();
+  const {checkKeychain, addBearer, handleApiError, toast} = useApikit();
 
   const deletePost = useCallback(
     async ({postId}: {postId: number}) => {
@@ -72,14 +63,13 @@ export const useDeletePost = () => {
           addBearer(credentials?.token),
         );
 
-        dispatch(removePost(postId));
         toast?.show('削除しました', {type: 'success'});
       } catch (e) {
         handleApiError(e);
       }
     },
 
-    [checkKeychain, addBearer, handleApiError, toast, dispatch],
+    [checkKeychain, addBearer, handleApiError, toast],
   );
 
   return {

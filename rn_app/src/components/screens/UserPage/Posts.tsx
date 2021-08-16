@@ -4,7 +4,6 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {Post} from '../../../stores/posts';
 import {normalStyles} from '../../../constants/styles';
 import {
   UserPageNavigationProp,
