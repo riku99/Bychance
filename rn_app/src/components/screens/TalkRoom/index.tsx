@@ -1,6 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 import {Chat} from './Chat';
 import {TalkRoomStackNavigationProp} from '../../../navigations/types';
@@ -12,6 +13,8 @@ import {
 } from '~/hooks/talkRoomMessages';
 import {useGetMessages} from '~/hooks/talkRoomMessages';
 import {useMyId} from '~/hooks/users';
+import {selectRoom} from '~/stores/_talkRooms';
+import {RootState} from '~/stores';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'TalkRoom'>;
 
@@ -26,6 +29,12 @@ export const TalkRoom = ({route, navigation}: Props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const myId = useMyId();
   const {createMessage} = useCreateTalkRoomMessage();
+  const lastMessage = useSelector((state: RootState) => {
+    const room = selectRoom(state, talkRoomId);
+    if (room) {
+      return room.lastMessage;
+    }
+  });
   useCreateReadTalkRoomMessages({
     talkRoomId,
   });

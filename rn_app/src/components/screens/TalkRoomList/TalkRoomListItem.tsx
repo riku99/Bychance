@@ -24,7 +24,7 @@ export const TalkRoomListItem = React.memo(({room, onPress}: Props) => {
           {name ? name : 'メンバーが存在しません'}
         </ListItem.Title>
         <ListItem.Subtitle style={styles.subtitle}>
-          {lastMessage && lastMessage}
+          {lastMessage && lastMessage.text}
         </ListItem.Subtitle>
       </ListItem.Content>
       {badgeNumber !== 0 && (

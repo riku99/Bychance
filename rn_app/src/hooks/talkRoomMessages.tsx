@@ -8,9 +8,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useApikit} from './apikit';
 import {baseUrl, origin} from '~/constants/url';
 import {useMyId} from './users';
-import {ReceivedMessageData} from '~/stores/types';
 import {useCustomDispatch} from './stores';
-import {receiveTalkRoomMessage} from '~/stores/talkRoomMessages';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {
   GetTalkRoomMessagesResponse,
@@ -95,11 +93,17 @@ export const useCreateTalkRoomMessage = () => {
         );
 
         if (response.data.talkRoomPrecence) {
+          const {text: _text, userId, id, createdAt} = response.data.message;
           dispatch(
             updateTalkRoom({
               id: roomId,
               changes: {
-                lastMessage: text,
+                lastMessage: {
+                  id,
+                  text: _text,
+                  userId,
+                  createdAt,
+                },
               },
             }),
           );
@@ -197,7 +201,12 @@ export const useSetupTalkRoomMessageSocket = () => {
               unreadMessages: room
                 ? [{id: message.id}, ...room.unreadMessages]
                 : [{id: message.id}],
-              lastMessage: message.text,
+              lastMessage: {
+                id: message.id,
+                text: message.text,
+                userId: message.userId,
+                createdAt: message.createdAt,
+              },
               timestamp: message.createdAt,
               partner: {
                 id: sender.id,

@@ -4,7 +4,12 @@ export type TalkRoom = {
   unreadMessages: {
     id: number;
   }[];
-  lastMessage: string;
+  lastMessage: {
+    id: number;
+    text: string;
+    userId: string;
+    createdAt: string;
+  } | null;
   partner: {
     id: string;
     name: string;

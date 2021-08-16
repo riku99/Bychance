@@ -7,6 +7,8 @@ export type GetTalkRoomDataResponse = {
   lastMessage: {
     id: number;
     text: string;
+    userId: string;
+    createdAt: string;
   }[];
   sender: {
     id: string;

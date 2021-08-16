@@ -48,7 +48,7 @@ export const useCreateTalkRoom = () => {
                 name: partner.name,
               },
               unreadMessages: [],
-              lastMessage: '',
+              lastMessage: null,
               timestamp,
             }),
           );
@@ -124,7 +124,7 @@ export const useGetTalkRoomData = () => {
         const storedData = response.data.map((d) => {
           const partner = d.sender.id === id ? d.recipient : d.sender;
           const timestamp = d.updatedAt;
-          const lastMessage = d.lastMessage.length ? d.lastMessage[0].text : '';
+          const lastMessage = d.lastMessage.length ? d.lastMessage[0] : null;
           const {updatedAt, sender, recipient, ...restData} = d; //eslint-disable-line
           return {
             ...restData,
