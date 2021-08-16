@@ -37,7 +37,7 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
     UserPageNavigationProp<'UserPage'> & MyPageNavigationProp<'MyPage'>
   >();
 
-  const onPress = (_post: Post) => {
+  const onPress = (_post: Props['post']) => {
     navigation.navigate('Post', _post);
   };
 
@@ -48,8 +48,7 @@ export const TabViewPost = React.memo(({post, index}: Props) => {
       <TouchableOpacity
         key={post.id}
         activeOpacity={1}
-        // onPress={() => onPress(post)}>
-      >
+        onPress={() => onPress(post)}>
         <View
           style={[
             styles.postWrapper,

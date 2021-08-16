@@ -1,22 +1,19 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
 
 import {Post} from './Post';
-import {RootState} from '../../../stores/index';
 import {
   MyPageStackRouteProp,
   UserPageStackRouteProp,
 } from '../../../navigations/types';
 import {useDeletePost} from '~/hooks/posts';
+import {useMyId} from '~/hooks/users';
 
 type Props = {
   route: MyPageStackRouteProp<'Post'> | UserPageStackRouteProp<'Post'>;
 };
 
 export const Container = React.memo(({route}: Props) => {
-  const user = useSelector((state: RootState) => {
-    return state.userReducer.user!.id;
-  });
+  const myId = useMyId();
 
   const {deletePost} = useDeletePost();
 
@@ -24,5 +21,5 @@ export const Container = React.memo(({route}: Props) => {
     deletePost({postId});
   };
 
-  return <Post post={route.params} user={user} deletePost={_deletePost} />;
+  return <Post post={route.params} user={myId} deletePost={_deletePost} />;
 });

@@ -2,15 +2,23 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Container as Post} from '../components/screens/Post';
-import {Post as PostType} from '../stores/posts';
 import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPage} from '../components/screens/UserPage';
 import Logo from '~/assets/logo.svg';
 
+export type PostScreenType = {
+  id: number;
+  url: string;
+  text: string | null;
+  userId: string;
+  createdAt: string;
+  sourceType: 'image' | 'video';
+};
+
 export type MyPageStackParamList = {
   MyPage: undefined;
-  Post: PostType;
+  Post: PostScreenType;
 };
 
 const Stack = createStackNavigator<MyPageStackParamList>();
@@ -46,7 +54,7 @@ export type UserPageScreenGroupParamList = {
     userId: string;
     from?: UserPageFrom;
   };
-  Post: PostType;
+  Post: PostScreenType;
 };
 
 // stackで使われるscreenのグループ。Tabに渡されるMyPageStackScreenとは分けて使う

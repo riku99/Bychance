@@ -4,14 +4,15 @@ import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import {format} from 'date-fns';
 
-import {Post as PostType} from '../../../stores/posts';
 import {normalStyles} from '../../../constants/styles';
 import {ScrollView} from 'react-native-gesture-handler';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
+import {PostScreenType} from '~/navigations/UserPage';
 
 type Props = {
-  post: PostType;
+  post: PostScreenType;
   user: string;
   deletePost: (id: number) => void;
 };
@@ -41,7 +42,9 @@ export const Post = ({post, user, deletePost}: Props) => {
           )}
         </View>
         <View style={styles.upperBox}>
-          <Text style={styles.date}>{post.date}</Text>
+          <Text style={styles.date}>
+            {format(new Date(post.createdAt), 'yyyy/MM/dd')}
+          </Text>
           {user === post.userId && (
             <Button
               icon={<Icon name="delete-outline" color="#999999" />}
