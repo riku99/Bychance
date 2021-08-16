@@ -4,6 +4,7 @@ import {default as axios} from 'axios';
 import {RNToasty} from 'react-native-toasty';
 import io, {Socket} from 'socket.io-client';
 import {showMessage} from 'react-native-flash-message';
+import useSWR from 'swr';
 
 import {useApikit} from './apikit';
 import {baseUrl, origin} from '~/constants/url';
@@ -247,48 +248,43 @@ export const useSetupTalkRoomMessageSocket = () => {
 
 export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
   const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
-  const [result, setResult] = useState<
-    GetTalkRoomMessagesResponse['messages']
-  >();
+  const fetcher = async () => {
+    try {
+      const credentials = await checkKeychain();
+      const response = await axios.get<GetTalkRoomMessagesResponse>(
+        `${baseUrl}/talk_rooms/${talkRoomId}/messages?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
 
-  useEffect(() => {
-    const _get = async () => {
-      try {
-        const credentials = await checkKeychain();
-        const response = await axios.get<GetTalkRoomMessagesResponse>(
-          `${baseUrl}/talk_rooms/${talkRoomId}/messages?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
-
-        if (response.data.roomPresence) {
-          setResult(response.data.messages);
-        } else {
-          RNToasty.Show({
-            title: 'メンバーが存在しません',
-            position: 'center',
-          });
-          dispatch(
-            updateTalkRoom({
-              id: talkRoomId,
-              changes: {
-                unreadMessages: [],
-                partner: {
-                  id: '',
-                  name: '',
-                  avatar: null,
-                },
+      if (response.data.roomPresence) {
+        return response.data.messages;
+      } else {
+        RNToasty.Show({
+          title: 'メンバーが存在しません',
+          position: 'center',
+        });
+        dispatch(
+          updateTalkRoom({
+            id: talkRoomId,
+            changes: {
+              unreadMessages: [],
+              partner: {
+                id: '',
+                name: '',
+                avatar: null,
               },
-            }),
-          );
-        }
-      } catch (e) {
-        handleApiError(e);
+            },
+          }),
+        );
       }
-    };
-    _get();
-  }, [addBearer, checkKeychain, talkRoomId, handleApiError, dispatch]);
+    } catch (e) {
+      handleApiError(e);
+    }
+  };
+
+  const {data, error} = useSWR(`/talk_rooms/${talkRoomId}/messages`, fetcher);
 
   return {
-    result,
+    result: data,
   };
 };
