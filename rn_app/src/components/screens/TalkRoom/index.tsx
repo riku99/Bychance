@@ -6,7 +6,6 @@ import {useSelector} from 'react-redux';
 import {Chat} from './Chat';
 import {TalkRoomStackNavigationProp} from '../../../navigations/types';
 import {TalkRoomStackParamList} from '../../../navigations/TalkRoom';
-import {UserAvatar} from '../../utils/Avatar';
 import {
   useCreateReadTalkRoomMessages,
   useCreateTalkRoomMessage,
@@ -47,19 +46,36 @@ export const TalkRoom = ({route, navigation}: Props) => {
         createdAt: new Date(d.createdAt),
         user: {
           _id: d.userId,
-          avatar: () => (
-            <UserAvatar
-              image={partner.avatar}
-              size={'small'}
-              opacity={1}
-              // onPress={onAvatarPress}
-            />
-          ),
+          avatar:
+            d.userId !== myId && partner.avatar ? partner.avatar : undefined,
         },
       }));
       setMessages(iData);
     }
-  }, [result, partner.avatar]);
+  }, [result, partner.avatar, myId]);
+
+  useEffect(() => {
+    if (lastMessage && myId !== lastMessage.userId) {
+      setMessages((current) => {
+        const filtered = current.filter((d) => d._id !== lastMessage.id);
+        return [
+          {
+            _id: lastMessage.id,
+            text: lastMessage.text,
+            createdAt: new Date(lastMessage.createdAt),
+            user: {
+              _id: lastMessage.userId,
+              avatar:
+                lastMessage.userId !== myId && partner.avatar
+                  ? partner.avatar
+                  : undefined,
+            },
+          },
+          ...filtered,
+        ];
+      });
+    }
+  }, [lastMessage, myId, partner.avatar]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -100,15 +116,8 @@ export const TalkRoom = ({route, navigation}: Props) => {
             user: {
               _id: message.userId,
               avatar:
-                message.userId !== myId
-                  ? () => (
-                      <UserAvatar
-                        image={partner.avatar}
-                        size={'small'}
-                        opacity={1}
-                        // onPress={onAvatarPress}
-                      />
-                    )
+                message.userId !== myId && partner.avatar
+                  ? partner.avatar
                   : undefined,
             },
           },
