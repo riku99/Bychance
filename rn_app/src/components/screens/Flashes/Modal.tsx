@@ -2,11 +2,15 @@ import React, {useMemo, useCallback} from 'react';
 import {TouchableOpacity, StyleSheet, Text, Alert} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
+import {mutate} from 'swr';
 
 import {useDeleteFlash} from '~/hooks/flashes';
+import {userPageUrlKey} from '~/hooks/users';
+import {UserPageInfo} from '~/types/response/users';
 
 type Props = {
   flashId: number;
+  userId: string;
   modalizeRef: React.RefObject<Modalize>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,6 +29,7 @@ type Props = {
 
 export const Modal = ({
   flashId,
+  userId,
   modalizeRef,
   setShowModal,
   setIsPaused,
@@ -40,8 +45,26 @@ export const Modal = ({
         text: '削除',
         style: 'destructive',
         onPress: async () => {
-          // await dispatch(deleteFlashThunk({flashId}));
-          await deleteFlash({flashId});
+          const result = await deleteFlash({flashId});
+          if (result) {
+            mutate(
+              userPageUrlKey(userId),
+              (currentData: UserPageInfo) => {
+                const newData = currentData.flashesData.entities.filter(
+                  (d) => d.id !== flashId,
+                );
+
+                return {
+                  ...currentData,
+                  flashesData: {
+                    ...currentData.flashesData,
+                    entities: newData,
+                  },
+                };
+              },
+              false,
+            );
+          }
           modalizeRef.current?.close();
         },
       },
@@ -52,7 +75,7 @@ export const Modal = ({
         },
       },
     ]);
-  }, [deleteFlash, modalizeRef, flashId]);
+  }, [deleteFlash, modalizeRef, flashId, userId]);
 
   const modalList = useMemo(
     () => [
@@ -108,6 +131,7 @@ export const Modal = ({
         </ListItem>
       ))}
       <TouchableOpacity
+        activeOpacity={1}
         style={styles.modalCancel}
         onPress={() => {
           modalizeRef.current?.close();

@@ -554,6 +554,7 @@ export const ShowFlash = React.memo(
               currentProgressBar={currentProgressBar}
               videoDuration={videoDuration}
               progressAnimation={progressAnimation}
+              userId={user.id}
             />
           </>
         )}

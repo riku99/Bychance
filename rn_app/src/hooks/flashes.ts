@@ -65,13 +65,7 @@ export const useCreateFlash = () => {
 };
 
 export const useDeleteFlash = () => {
-  const {
-    checkKeychain,
-    handleApiError,
-    toast,
-    dispatch,
-    addBearer,
-  } = useApikit();
+  const {checkKeychain, handleApiError, toast, addBearer} = useApikit();
 
   const deleteFlash = useCallback(
     async ({flashId}: {flashId: number}) => {
@@ -83,13 +77,12 @@ export const useDeleteFlash = () => {
         );
 
         toast?.show('削除しました', {type: 'success'});
-
-        dispatch(removeFlash(flashId));
+        return true;
       } catch (e) {
         handleApiError(e);
       }
     },
-    [checkKeychain, handleApiError, toast, dispatch, addBearer],
+    [checkKeychain, handleApiError, toast, addBearer],
   );
 
   return {

@@ -25,6 +25,7 @@ export const ShowModalButton = ({
       title="..."
       titleStyle={{fontSize: 30}}
       buttonStyle={{backgroundColor: 'transparent'}}
+      activeOpacity={1}
       onPress={() => {
         modalizeRef.current?.open();
         setShowModal(true);

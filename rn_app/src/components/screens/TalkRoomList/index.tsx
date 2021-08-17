@@ -13,20 +13,6 @@ export const TalkRoomListPage = () => {
   const rooms = useSelectAllRooms();
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
-  // const pushChatRoom = ({
-  //   room,
-  //   partnerId,
-  // }: {
-  //   room: TalkRoom;
-  //   partnerId: string;
-  // }) => {
-  //   dispatch(resetRecievedMessage());
-  //   navigationToChatRoom.navigate('TalkRoomStack', {
-  //     screen: 'ChatRoom',
-  //     params: {roomId: room.id, partnerId},
-  //   });
-  // };
-
   const onItemPress = (data: {
     talkRoomId: number;
     partner: {
@@ -68,19 +54,13 @@ export const TalkRoomListPage = () => {
         renderItem={(room) => (
           <TalkRoomListItem
             room={room.item}
-            onPress={
-              () => {
-                const {id, partner} = room.item;
-                onItemPress({
-                  talkRoomId: id,
-                  partner,
-                });
-              }
-              // pushChatRoom({
-              //   room: room.item,
-              //   partnerId: room.item.partner,
-              // })
-            }
+            onPress={() => {
+              const {id, partner} = room.item;
+              onItemPress({
+                talkRoomId: id,
+                partner,
+              });
+            }}
           />
         )}
         renderHiddenItem={(room) => (
