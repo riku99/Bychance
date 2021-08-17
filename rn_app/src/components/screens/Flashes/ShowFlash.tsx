@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import {mutate} from 'swr';
 
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
@@ -27,11 +28,12 @@ import {FlashStackNavigationProp} from '../../../navigations/types';
 import {FlashUserData} from '../../../navigations/Flashes';
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
 // import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
-import {useMyId} from '~/hooks/users';
+import {useMyId, userPageUrlKey} from '~/hooks/users';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {Stamps} from './Stamps';
 import {useCreateAlreadyViewedFlash} from '~/hooks/flashes';
+import {UserPageInfo} from '~/types/response/users';
 
 type Props = {
   flashes: {
@@ -124,17 +126,42 @@ export const ShowFlash = React.memo(
       FlashStackNavigationProp<'Flashes'>
     >();
 
-    //const {createAlreadyViewedFlash} = useCreateAlreadyViewedFlash();
+    const {createAlreadyViewedFlash} = useCreateAlreadyViewedFlash();
 
     const onViewed = useCallback(
       async ({flashId}: {flashId: number}) => {
         const existing = viewerViewedFlasheIds.includes(flashId);
         if (!existing && !isMyData) {
           //　閲覧データ作成
-          // createAlreadyViewedFlash({flashId, userId: userData.userId});
+          createAlreadyViewedFlash({flashId, userId: user.id});
+          mutate(
+            userPageUrlKey(user.id),
+            (current: UserPageInfo) => {
+              const currentIds = current.flashesData.viewerViewedFlasheIds;
+              const _existing = currentIds.includes(flashId);
+              if (_existing) {
+                return current;
+              }
+              const newViewedData = [
+                ...current.flashesData.viewerViewedFlasheIds,
+                flashId,
+              ];
+              return {
+                ...current,
+                flashesData: {
+                  ...current.flashesData,
+                  viewerViewedFlasheIds: newViewedData,
+                  viewedAllFlashes:
+                    current.flashesData.entities.length ===
+                    newViewedData.length,
+                },
+              };
+            },
+            false,
+          );
         }
       },
-      [viewerViewedFlasheIds, isMyData],
+      [viewerViewedFlasheIds, isMyData, createAlreadyViewedFlash, user.id],
     );
 
     // プログレスバーのアニメーション
