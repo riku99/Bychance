@@ -40,7 +40,12 @@ import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
-import {useUser, useRefreshUser} from '~/hooks/users';
+import {
+  useUser,
+  useRefreshUser,
+  useGetUserPageInfo,
+  useMyId,
+} from '~/hooks/users';
 
 // BottomTabに渡される時のプロップス
 type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
@@ -63,6 +68,10 @@ export const UserPage = ({route, navigation}: Props) => {
     from: routeParams?.from,
     userId: routeParams?.userId,
   });
+
+  const myId = useMyId();
+  const {data} = useGetUserPageInfo(myId);
+  console.log(data);
 
   const myFlashes = useSelector((state: RootState) => {
     if (isMe) {

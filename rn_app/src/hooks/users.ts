@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react';
 import {AppState} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
+import useSWR from 'swr';
 
 import {RootState} from '~/stores/index';
 import {UserPageFrom} from '~/navigations/UserPage';
@@ -24,6 +25,7 @@ import {Flash} from '~/types/flashes';
 import {FlashStamp} from '~/types/flashStamps';
 import {setFlashes} from '~/stores/flashes';
 import {setFlashStamps} from '~/stores/flashStamps';
+import {UserPageInfo} from '~/types/response/users';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -419,5 +421,28 @@ export const useUpdateLocation = () => {
 
   return {
     updateLocation,
+  };
+};
+
+export const useGetUserPageInfo = (userId: string) => {
+  const {checkKeychain, addBearer, handleApiError} = useApikit();
+  const fetcher = useCallback(async () => {
+    try {
+      const credentials = await checkKeychain();
+      const response = await axios.get<UserPageInfo>(
+        `${baseUrl}/users/${userId}/page_info?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+
+      return response.data;
+    } catch (e) {
+      handleApiError(e);
+    }
+  }, [checkKeychain, addBearer, userId, handleApiError]);
+
+  const {data} = useSWR(`users/${userId}/page_info`, fetcher);
+
+  return {
+    data,
   };
 };

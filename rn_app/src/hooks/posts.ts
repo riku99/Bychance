@@ -2,10 +2,8 @@ import {useCallback} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 import useSWR from 'swr';
-import {useFocusEffect} from '@react-navigation/native';
 
 import {baseUrl} from '~/constants/url';
-import {Post} from '~/types/posts';
 import {GetUserPostsResponse} from '~/types/response/posts';
 
 export const useCreatePost = () => {
@@ -32,7 +30,7 @@ export const useCreatePost = () => {
       const credentials = await checkKeychain();
 
       try {
-        const response = await axios.post<Post>(
+        await axios.post(
           `${baseUrl}/posts?id=${credentials?.id}`,
           {text, source, ext, sourceType},
           addBearer(credentials?.token),
