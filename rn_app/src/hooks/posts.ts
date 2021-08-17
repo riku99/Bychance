@@ -4,7 +4,7 @@ import {default as axios} from 'axios';
 import useSWR from 'swr';
 
 import {baseUrl} from '~/constants/url';
-import {GetUserPostsResponse} from '~/types/response/posts';
+import {GetUserPostsResponse, CreatePostResponse} from '~/types/response/posts';
 
 export const useCreatePost = () => {
   const {
@@ -30,13 +30,14 @@ export const useCreatePost = () => {
       const credentials = await checkKeychain();
 
       try {
-        await axios.post(
+        const response = await axios.post<CreatePostResponse>(
           `${baseUrl}/posts?id=${credentials?.id}`,
           {text, source, ext, sourceType},
           addBearer(credentials?.token),
         );
 
         toast?.show('投稿しました', {type: 'success'});
+        return response.data;
       } catch (e) {
         handleApiError(e);
       }

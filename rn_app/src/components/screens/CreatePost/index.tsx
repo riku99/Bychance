@@ -20,8 +20,8 @@ import {CreatePostStackNavigationProp} from '../../../navigations/types';
 import {getExtention} from '~/utils';
 import {useCustomDispatch} from '~/hooks/stores';
 import {useCreatePost} from '~/hooks/posts';
-import {useMyId} from '~/hooks/users';
-import {baseUrl} from '~/constants/url';
+import {useMyId, userPageUrlKey} from '~/hooks/users';
+import {UserPageInfo} from '~/types/response/users';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -60,8 +60,21 @@ export const CreatePost = ({navigation}: Props) => {
         return;
       }
       const source = await fs.readFile(data.uri, 'base64');
-      await createPost({text, source, ext, sourceType: data.sourceType});
-      mutate(`/users/${myId}/posts`); // SWR全体に再検証を伝える
+      const result = await createPost({
+        text,
+        source,
+        ext,
+        sourceType: data.sourceType,
+      });
+      // 再検証なしで手動でデータ更新
+      mutate(
+        userPageUrlKey(myId),
+        (current: UserPageInfo) => ({
+          ...current,
+          posts: [result, ...current.posts],
+        }),
+        false,
+      );
       dispatch(creatingPost());
     }
   }, [dispatch, navigation, data, text, createPost, myId]);

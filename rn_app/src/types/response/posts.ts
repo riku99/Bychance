@@ -1,8 +1,5 @@
-export type GetUserPostsResponse = {
-  id: number;
-  text: string | null;
-  url: string;
-  createdAt: string;
-  userId: string;
-  sourceType: 'image' | 'video';
-}[];
+import {Post} from '../domain/Post';
+
+export type GetUserPostsResponse = Post[];
+
+export type CreatePostResponse = Post;

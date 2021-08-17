@@ -424,6 +424,7 @@ export const useUpdateLocation = () => {
   };
 };
 
+export const userPageUrlKey = (id: string) => `users/${id}/page_info`;
 export const useGetUserPageInfo = (userId: string) => {
   const {checkKeychain, addBearer, handleApiError} = useApikit();
   const fetcher = useCallback(async () => {
@@ -440,7 +441,7 @@ export const useGetUserPageInfo = (userId: string) => {
     }
   }, [checkKeychain, addBearer, userId, handleApiError]);
 
-  const {data} = useSWR(`users/${userId}/page_info`, fetcher);
+  const {data} = useSWR(userPageUrlKey(userId), fetcher);
 
   return {
     data,

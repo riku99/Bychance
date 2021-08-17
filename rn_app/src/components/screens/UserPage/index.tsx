@@ -71,27 +71,12 @@ export const UserPage = ({route, navigation}: Props) => {
 
   const myId = useMyId();
   const {data} = useGetUserPageInfo(myId);
-  console.log(data);
 
   const myFlashes = useSelector((state: RootState) => {
     if (isMe) {
       return selectAllFlashes(state);
     }
   }, shallowEqual);
-
-  const _snsLinkData = useMemo(() => {
-    if (user) {
-      const {instagram, twitter, youtube, tiktok} = user;
-      return {instagram, twitter, youtube, tiktok};
-    } else {
-      return {
-        instagram: null,
-        twitter: null,
-        youtube: null,
-        tiktok: null,
-      };
-    }
-  }, [user]);
 
   const avatarOuterType: 'gradation' | 'silver' | 'none' = useMemo(() => {
     if (me) {

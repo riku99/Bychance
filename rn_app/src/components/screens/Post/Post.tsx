@@ -45,6 +45,7 @@ export const Post = ({post, user, deletePost}: Props) => {
           </Text>
           {user === post.userId && (
             <Button
+              activeOpacity={1}
               icon={<Icon name="delete-outline" color="#999999" />}
               buttonStyle={{backgroundColor: 'transparent'}}
               onPress={() => {
