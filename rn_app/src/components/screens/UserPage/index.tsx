@@ -121,7 +121,7 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, [navigation, user, route.name]);
 
-  const flashesNavigationParam = useMemo(() => {
+  const f_lashesNavigationParam = useMemo(() => {
     if (me && isMe && myFlashes?.length) {
       return {
         isMyData: true as const,
@@ -203,6 +203,26 @@ export const UserPage = ({route, navigation}: Props) => {
 
     return unsubscribe;
   }, [navigation, videoPaused]);
+
+  const flashesNavigationParam = useMemo(() => {
+    if (data) {
+      return {
+        isMyData: isMe,
+        startingIndex: 0,
+        data: [
+          {
+            flashes: data.flashesData.entities,
+            user: {
+              id: data.id,
+              name: data.name,
+              avatar: data.avatar,
+            },
+            viewerViewedFlasheIds: data.flashesData.viewerViewedFlasheIds,
+          },
+        ],
+      };
+    }
+  }, [data, isMe]);
 
   const onAvatarPress = useCallback(() => {
     if (flashesNavigationParam) {

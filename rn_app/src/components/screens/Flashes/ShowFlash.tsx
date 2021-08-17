@@ -26,7 +26,7 @@ import {RootState} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {FlashUserData} from '../../../navigations/Flashes';
 import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
-import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
+// import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId} from '~/hooks/users';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
@@ -34,63 +34,67 @@ import {Stamps} from './Stamps';
 import {useCreateAlreadyViewedFlash} from '~/hooks/flashes';
 
 type Props = {
-  flashesData: FlashesData;
-  userData: FlashUserData;
+  flashes: {
+    id: number;
+    source: string;
+    sourceType: 'image' | 'video';
+    createdAt: string;
+    viewed: {userId: string}[];
+  }[];
+  user: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
   isDisplayed: boolean;
   scrolling: boolean;
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   scrollToNextOrBackScreen: () => void;
+  viewerViewedFlasheIds: number[];
 };
 
 export const ShowFlash = React.memo(
   ({
-    flashesData,
-    userData,
+    flashes,
+    user,
     isDisplayed,
     scrolling,
     showModal,
     setShowModal,
     scrollToNextOrBackScreen,
+    viewerViewedFlasheIds,
   }: Props) => {
-    const referenceId = useMyId();
+    const myId = useMyId();
 
-    const isMyData = useMemo(() => referenceId === userData.userId, [
-      referenceId,
-      userData.userId,
-    ]);
-
-    const entityLength = useMemo(() => flashesData.entities.length, [
-      flashesData.entities,
-    ]);
-
-    const progressBarWidth = useMemo(() => {
-      return MAX_PROGRESS_BAR / entityLength;
-    }, [entityLength]);
+    const isMyData = myId === user.id;
+    const entityLength = flashes.length;
+    const progressBarWidth = MAX_PROGRESS_BAR / entityLength;
 
     // flashesData.alreadyViewedLengthでデータは取れるが、storeの更新を即座に反映させるためにセレクタを使いstoreから取得
-    const alreadyViewedLength = useSelector((state: RootState) => {
-      if (userData.from && userData.userId) {
-        switch (userData.from) {
-          case 'nearbyUsers':
-            return selectNearbyUserAlreadyViewed(state, userData.userId).length;
-          case 'chatRoom':
-            return selectChatPartnerAlreadyViewed(state, userData.userId)
-              .length;
-        }
-      } else {
-        0;
-      }
-    });
+    // const alreadyViewedLength = useSelector((state: RootState) => {
+    //   if (userData.from && userData.userId) {
+    //     switch (userData.from) {
+    //       case 'nearbyUsers':
+    //         return selectNearbyUserAlreadyViewed(state, userData.userId).length;
+    //       case 'chatRoom':
+    //         return selectChatPartnerAlreadyViewed(state, userData.userId)
+    //           .length;
+    //     }
+    //   } else {
+    //     0;
+    //   }
+    // });
 
+    const alreadyViewedLength = viewerViewedFlasheIds.length;
     // 実際に表示されているentity
     // このコンポーネントがFlatListにより表示されて最初のレンダリングの際、既に見たものがある場合それを飛ばしている
     // ただ、まだ何も見ていない、または全て見ている(alreadyViewedLengthとentityの数が同じ)場合は最初のものを指定
     const [currentFlash, setCurrentFlash] = useState(() => {
       if (alreadyViewedLength && alreadyViewedLength !== entityLength) {
-        return flashesData.entities[alreadyViewedLength];
+        return flashes[alreadyViewedLength];
       } else {
-        return flashesData.entities[0];
+        return flashes[0];
       }
     });
 
@@ -120,23 +124,24 @@ export const ShowFlash = React.memo(
       FlashStackNavigationProp<'Flashes'>
     >();
 
-    const {createAlreadyViewedFlash} = useCreateAlreadyViewedFlash();
+    //const {createAlreadyViewedFlash} = useCreateAlreadyViewedFlash();
 
     const onViewed = useCallback(
       async ({flashId}: {flashId: number}) => {
-        const existing = flashesData.alreadyViewed.includes(flashId);
+        const existing = viewerViewedFlasheIds.includes(flashId);
         if (!existing && !isMyData) {
-          createAlreadyViewedFlash({flashId, userId: userData.userId});
+          //　閲覧データ作成
+          // createAlreadyViewedFlash({flashId, userId: userData.userId});
         }
       },
-      [userData.userId, flashesData, isMyData, createAlreadyViewedFlash],
+      [viewerViewedFlasheIds, isMyData],
     );
 
     // プログレスバーのアニメーション
     const progressAnimation = useCallback(
       ({
         progressNumber,
-        duration = 5000,
+        duration = 4000,
         restart = false,
       }: {
         progressNumber: number;
@@ -164,16 +169,16 @@ export const ShowFlash = React.memo(
                 return;
               }
               currentProgressBar.current += 1;
-              setCurrentFlash(flashesData.entities[currentProgressBar.current]);
+              setCurrentFlash(flashes[currentProgressBar.current]);
             }
           });
         }
       },
       [
+        flashes,
         onViewed,
         currentFlash.id,
         entityLength,
-        flashesData.entities,
         progressAnim,
         progressBarWidth,
         scrollToNextOrBackScreen,
@@ -185,10 +190,10 @@ export const ShowFlash = React.memo(
     useEffect(() => {
       // アイテムが削除された場合
       if (entityLength < firstEntitiesLength.current) {
-        setCurrentFlash(flashesData.entities[currentProgressBar.current]);
+        setCurrentFlash(flashes[currentProgressBar.current]);
       }
       firstEntitiesLength.current = entityLength;
-    }, [entityLength, flashesData.entities]);
+    }, [entityLength, flashes]);
 
     // このコンポーネントが表示された、表示されている時の責務を定義
     useEffect(() => {
@@ -280,7 +285,7 @@ export const ShowFlash = React.memo(
         progressAnim[currentProgressBar.current].setValue(0);
         if (currentProgressBar.current < entityLength - 1) {
           currentProgressBar.current += 1;
-          setCurrentFlash(flashesData.entities[currentProgressBar.current]);
+          setCurrentFlash(flashes[currentProgressBar.current]);
           videoDuration.current = undefined;
         } else {
           scrollToNextOrBackScreen();
@@ -297,7 +302,7 @@ export const ShowFlash = React.memo(
               -progressBarWidth,
             );
             videoDuration.current = undefined;
-            setCurrentFlash(flashesData.entities[currentProgressBar.current]);
+            setCurrentFlash(flashes[currentProgressBar.current]);
           } else {
             if (!loading) {
               progressAnimation({
@@ -488,7 +493,7 @@ export const ShowFlash = React.memo(
 
             <View style={[styles.info, {top: top + 10}]}>
               <ProgressBar
-                flashesData={flashesData}
+                flashes={flashes}
                 entityLength={entityLength}
                 alreadyViewedLength={
                   alreadyViewedLength ? alreadyViewedLength : 0
@@ -499,15 +504,16 @@ export const ShowFlash = React.memo(
                 firstEntitiesLength={firstEntitiesLength}
               />
               <InfoItems
-                userData={userData}
-                timestamp={currentFlash.timestamp}
+                user={user}
+                timestamp={currentFlash.createdAt}
                 setIsNavigatedToProfile={setIsNavigatedToProfile}
               />
             </View>
 
-            <View style={styles.stampsContainer}>
-              <Stamps flash={currentFlash} userId={userData.userId} />
-            </View>
+            {/* スタンプデータの取得処理修正する。ストア消す */}
+            {/* <View style={styles.stampsContainer}>
+              <Stamps flash={currentFlash} userId={user.id} />
+            </View> */}
 
             {isMyData && (
               <View style={styles.showModalButtonContainer}>
@@ -525,7 +531,7 @@ export const ShowFlash = React.memo(
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
                 <MIcon name="remove-red-eye" color="white" size={30} />
                 <Text style={{color: 'white', fontWeight: '500'}}>
-                  {currentFlash.viewsNumber}
+                  {currentFlash.viewed.length}
                 </Text>
               </View>
             </View>

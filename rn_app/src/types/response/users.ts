@@ -34,8 +34,9 @@ export type UserPageInfo = {
         userId: string;
         flashId: number;
       }[];
+      viewed: {userId: string}[];
     }[];
-    viewedFlasheIds: number[];
+    viewerViewedFlasheIds: number[];
     viewedAllFlashes: boolean;
   };
 };

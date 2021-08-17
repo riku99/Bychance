@@ -18,6 +18,7 @@ import {RootState} from '../../../stores/index';
 import {selectAllFlashes} from '../../../stores/flashes';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
+import {useMyId} from '~/hooks/users';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;
@@ -25,26 +26,14 @@ type Props = {
 };
 
 export const FlashesPage = ({route, navigation}: Props) => {
-  const {isMyData, startingIndex, dataArray} = route.params;
-
+  const {startingIndex, data, isMyData} = route.params;
   const flatListRef = useRef<FlatList>(null);
-
-  const myFlashes = useSelector((state: RootState) => {
-    if (isMyData) {
-      const flashes = selectAllFlashes(state);
-      if (flashes) {
-        return flashes;
-      } else {
-        throw new Error('存在しません');
-      }
-    }
-  }, shallowEqual);
 
   // FlatListに渡される複数のアイテムのうち、どのアイテムが実際に画面に表示されているのかを管理るためのオブジェクト
   const [displayManagementTable, setDisplayManagementTable] = useState(() => {
     let obj: {[key: number]: boolean} = {};
     if (!isMyData) {
-      for (let i = 0; i < dataArray.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         obj[i] = i === startingIndex ? true : false;
       }
     } else {
@@ -59,7 +48,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
   // アイテムがラストのものだったらバックスクリーン、次がある場合はscrollToindexで次のアイテムを表示(FlastListなのでここでレンダリング)
   const scrollToNextOrBackScreen = useCallback(() => {
     if (flatListRef.current) {
-      if (currentDisplayedIndex.current < dataArray.length - 1) {
+      if (currentDisplayedIndex.current < data.length - 1) {
         flatListRef.current.scrollToIndex({
           index: currentDisplayedIndex.current + 1,
         });
@@ -67,7 +56,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
         navigation.goBack();
       }
     }
-  }, [dataArray.length, navigation]);
+  }, [data.length, navigation]);
 
   const [scrolling, setScrolling] = useState(false);
 
@@ -92,31 +81,6 @@ export const FlashesPage = ({route, navigation}: Props) => {
 
     return unsubscribe;
   }, [navigation]);
-
-  // FlatListのdataに渡した配列(dataArray)の中のアイテムが{item}に渡される
-  // flashesDataが存在しない場合は自分のデータを表示する時なのでセレクタで取得したデータを使いオブジェクトを生成
-  // そうでない場合はそのまま返す
-  const getData = ({
-    item,
-  }: {
-    item: FlashesStackParamList['Flashes']['dataArray'][number];
-  }): {
-    flashesData: FlashesData;
-    userData: FlashesStackParamList['Flashes']['dataArray'][number]['userData'];
-  } => {
-    if (item.flashesData) {
-      return item;
-    } else {
-      return {
-        flashesData: {
-          entities: myFlashes!,
-          alreadyViewed: [],
-          isAllAlreadyViewed: false,
-        },
-        userData: item.userData,
-      };
-    }
-  };
 
   // Top以外からスタートの時(startingIndexが0以外)その画面から始まるが、内部的にはスクロールされることになる
   // そのスクロールが完了したかのデータを保持
@@ -144,13 +108,18 @@ export const FlashesPage = ({route, navigation}: Props) => {
   };
 
   // アイテムが1つの場合、それを削除するとデータはなくなる。その場合はバックさせたい
+  // useEffect(() => {
+  //   if (!myFlashes?.length && !dataArray[0].flashesData) {
+  //     navigation.goBack();
+  //   }
+  // }, [myFlashes, dataArray, navigation]);
   useEffect(() => {
-    if (!myFlashes?.length && !dataArray[0].flashesData) {
+    if (!data[0].flashes.length) {
       navigation.goBack();
     }
-  }, [myFlashes, dataArray, navigation]);
+  }, [data, navigation]);
 
-  if (!myFlashes?.length && !dataArray[0].flashesData) {
+  if (!data[0].flashes.length) {
     return (
       <View style={{backgroundColor: 'black', width: '100%', height: '100%'}} />
     );
@@ -160,18 +129,19 @@ export const FlashesPage = ({route, navigation}: Props) => {
     <View style={[styles.container]}>
       <FlatList
         ref={flatListRef}
-        data={dataArray}
-        keyExtractor={(item) => item.userData.userId}
+        data={data}
+        keyExtractor={(item) => item.user.id}
         renderItem={({item, index}) => (
           <View style={{height, width}}>
             <ShowFlash
-              flashesData={getData({item}).flashesData}
-              userData={getData({item}).userData}
+              flashes={item.flashes}
+              user={item.user}
               isDisplayed={displayManagementTable[index]}
               scrolling={scrolling}
               showModal={showModal}
               setShowModal={setShowModal}
               scrollToNextOrBackScreen={scrollToNextOrBackScreen}
+              viewerViewedFlasheIds={item.viewerViewedFlasheIds}
             />
           </View>
         )}

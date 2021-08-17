@@ -10,28 +10,30 @@ import {getTimeDiff} from '~/utils';
 import {useUser} from '~/hooks/users';
 
 type Props = {
-  userData: FlashUserData;
+  user: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
   timestamp: string;
   setIsNavigatedToProfile: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const InfoItems = ({
-  userData,
+  user,
   timestamp,
   setIsNavigatedToProfile,
 }: Props) => {
-  const {user} = useUser({from: userData.from, userId: userData.userId});
-
   const navigation = useNavigation<FlashStackNavigationProp<'Flashes'>>();
 
   const timeDiff = getTimeDiff(timestamp);
 
   const onUserPress = () => {
-    setIsNavigatedToProfile(true);
-    navigation.navigate('UserPage', {
-      userId: userData.userId,
-      from: userData.from,
-    });
+    // setIsNavigatedToProfile(true);
+    // navigation.navigate('UserPage', {
+    //   userId: userData.userId,
+    //   from: userData.from,
+    // });
   };
 
   return (

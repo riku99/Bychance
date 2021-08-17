@@ -9,25 +9,40 @@ import {
 import {FlashesPage} from '../components/screens/Flashes';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {FlashesData} from '~/stores/types';
+import {Flash} from '~/types/domain/Flashes';
+
+type N = {
+  isMyData: boolean;
+  startingIndex: number;
+  data: {
+    flashes: Flash[];
+    user: {
+      id: string;
+      name: string;
+      avatar: string | null;
+    };
+    viewerViewedFlasheIds: number[];
+  }[];
+};
 
 export type FlashesStackParamList = {
-  Flashes:
-    | {
-        isMyData: false;
-        startingIndex: number;
-        dataArray: {
-          flashesData: FlashesData;
-          userData: {userId: string; from: UserPageFrom};
-        }[];
-      }
-    | {
-        isMyData: true;
-        startingIndex: 0;
-        dataArray: {
-          flashesData: undefined;
-          userData: {userId: string; from: undefined};
-        }[];
-      };
+  Flashes: N;
+  // | {
+  //     isMyData: false;
+  //     startingIndex: number;
+  //     dataArray: {
+  //       flashesData: FlashesData;
+  //       userData: {userId: string; from: UserPageFrom};
+  //     }[];
+  //   }
+  // | {
+  //     isMyData: true;
+  //     startingIndex: 0;
+  //     dataArray: {
+  //       flashesData: undefined;
+  //       userData: {userId: string; from: undefined};
+  //     }[];
+  //   };
 } & UserPageScreenGroupParamList;
 
 export type FlashUserData = FlashesStackParamList['Flashes']['dataArray'][number]['userData'];

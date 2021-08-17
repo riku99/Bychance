@@ -4,7 +4,13 @@ import {View, StyleSheet, Dimensions, Animated} from 'react-native';
 import {FlashesData} from '~/stores/types';
 
 type Props = {
-  flashesData: FlashesData;
+  flashes: {
+    id: number;
+    source: string;
+    sourceType: 'image' | 'video';
+    createdAt: string;
+    viewed: {userId: string}[];
+  }[];
   entityLength: number;
   alreadyViewedLength: number;
   progressAnim: {[key: number]: Animated.Value};
@@ -14,7 +20,7 @@ type Props = {
 };
 
 export const ProgressBar = ({
-  flashesData,
+  flashes,
   entityLength,
   alreadyViewedLength,
   progressAnim,
@@ -56,7 +62,7 @@ export const ProgressBar = ({
 
   return (
     <View style={styles.progressBarConteiner}>
-      {flashesData.entities.map((f, i) => {
+      {flashes.map((f, i) => {
         setAnimValue(i);
         return (
           <View
