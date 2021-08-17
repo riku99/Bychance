@@ -19,7 +19,6 @@ import {normalStyles} from '~/constants/styles';
 import {UserInformationRouteInTabView} from './UserInformationInTabView';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
-import {useGetUserPosts} from '~/hooks/posts';
 
 type Props = {
   userId: string;

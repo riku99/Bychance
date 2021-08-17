@@ -435,6 +435,7 @@ export const useGetUserPageInfo = (userId: string) => {
         addBearer(credentials?.token),
       );
 
+      console.log(response.data);
       return response.data;
     } catch (e) {
       handleApiError(e);

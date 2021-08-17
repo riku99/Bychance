@@ -70,7 +70,9 @@ export const UserPage = ({route, navigation}: Props) => {
   });
 
   const myId = useMyId();
-  const {data} = useGetUserPageInfo(myId);
+  const {data} = useGetUserPageInfo(
+    routeParams?.userId ? routeParams.userId : myId,
+  );
 
   const myFlashes = useSelector((state: RootState) => {
     if (isMe) {

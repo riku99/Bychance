@@ -20,18 +20,22 @@ export type UserPageInfo = {
     userId: string;
     sourceType: 'image' | 'video';
   }[];
-  flashes: {
-    id: number;
-    source: string;
-    createdAt: string;
-    sourceType: 'image' | 'video';
-    userId: string;
-    stamps: {
+  flashesData: {
+    entities: {
       id: number;
+      source: string;
       createdAt: string;
-      value: StampValues;
+      sourceType: 'image' | 'video';
       userId: string;
-      flashId: number;
+      stamps: {
+        id: number;
+        createdAt: string;
+        value: StampValues;
+        userId: string;
+        flashId: number;
+      }[];
     }[];
-  }[];
+    viewedFlasheIds: number[];
+    viewedAllFlashes: boolean;
+  };
 };
