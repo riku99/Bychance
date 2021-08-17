@@ -8,17 +8,11 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
-import {shallowEqual, useSelector} from 'react-redux';
 
 import {ShowFlash} from './ShowFlash';
-import {FlashesData} from '~/stores/types';
 import {FlashesRouteProp} from '../../../navigations/types';
-import {FlashesStackParamList} from '../../../navigations/Flashes';
-import {RootState} from '../../../stores/index';
-import {selectAllFlashes} from '../../../stores/flashes';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
-import {useMyId} from '~/hooks/users';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;

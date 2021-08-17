@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   GestureResponderEvent,
 } from 'react-native';
-import {useSelector} from 'react-redux';
 import Video, {OnLoadData} from 'react-native-video';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
@@ -22,12 +21,7 @@ import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
 import {ShowModalButton} from './ShowModalButton';
 import {Modal} from './Modal';
-import {FlashesData} from '~/stores/types';
-import {RootState} from '../../../stores/index';
 import {FlashStackNavigationProp} from '../../../navigations/types';
-import {FlashUserData} from '../../../navigations/Flashes';
-import {selectNearbyUserAlreadyViewed} from '../../../stores/nearbyUsers';
-// import {selectChatPartnerAlreadyViewed} from '../../../stores/chatPartners';
 import {useMyId, userPageUrlKey} from '~/hooks/users';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
@@ -72,21 +66,6 @@ export const ShowFlash = React.memo(
     const isMyData = myId === user.id;
     const entityLength = flashes.length;
     const progressBarWidth = MAX_PROGRESS_BAR / entityLength;
-
-    // flashesData.alreadyViewedLengthでデータは取れるが、storeの更新を即座に反映させるためにセレクタを使いstoreから取得
-    // const alreadyViewedLength = useSelector((state: RootState) => {
-    //   if (userData.from && userData.userId) {
-    //     switch (userData.from) {
-    //       case 'nearbyUsers':
-    //         return selectNearbyUserAlreadyViewed(state, userData.userId).length;
-    //       case 'chatRoom':
-    //         return selectChatPartnerAlreadyViewed(state, userData.userId)
-    //           .length;
-    //     }
-    //   } else {
-    //     0;
-    //   }
-    // });
 
     const alreadyViewedLength = viewerViewedFlasheIds.length;
     // 実際に表示されているentity

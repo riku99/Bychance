@@ -4,10 +4,8 @@ import {useNavigation} from '@react-navigation/native';
 
 import {UserAvatar} from '../../utils/Avatar';
 import {FlashStackNavigationProp} from '../../../navigations/types';
-import {FlashUserData} from '../../../navigations/Flashes';
 import {BackButton} from '~/components/utils/BackButton';
 import {getTimeDiff} from '~/utils';
-import {useUser} from '~/hooks/users';
 
 type Props = {
   user: {
