@@ -79,7 +79,7 @@ export const UserPage = ({route, navigation}: Props) => {
     }
   }, shallowEqual);
 
-  const snsLinkData = useMemo(() => {
+  const _snsLinkData = useMemo(() => {
     if (user) {
       const {instagram, twitter, youtube, tiktok} = user;
       return {instagram, twitter, youtube, tiktok};
@@ -247,6 +247,25 @@ export const UserPage = ({route, navigation}: Props) => {
     return state.otherSettingsReducer.displayedMenu;
   });
 
+  if (!data) {
+    //スケルトンとか追加するかも
+    return null;
+  }
+
+  const {
+    introduce,
+    name,
+    avatar,
+    backGroundItem,
+    backGroundItemType,
+    instagram,
+    twitter,
+    youtube,
+    tiktok,
+    posts,
+  } = data;
+  const snsLinkData = {instagram, twitter, youtube, tiktok};
+
   return (
     <>
       {user ? (
@@ -262,7 +281,7 @@ export const UserPage = ({route, navigation}: Props) => {
               },
             ]}>
             <Text style={{lineHeight: oneIntroduceTextLineHeght}}>
-              {user.introduce}
+              {introduce}
             </Text>
           </Animated.View>
 
@@ -294,6 +313,7 @@ export const UserPage = ({route, navigation}: Props) => {
 
           <UserTabView
             userId={user.id}
+            posts={posts}
             containerHeight={containerHeight}
             profileContainerHeight={profileContainerHeight}
             scrollY={scrollY}
@@ -307,8 +327,8 @@ export const UserPage = ({route, navigation}: Props) => {
               {transform: [{translateY: y}]},
             ]}>
             <BackGroundItem
-              source={user.backGroundItem}
-              sourceType={user.backGroundItemType}
+              source={backGroundItem}
+              sourceType={backGroundItemType}
               onPress={onBackGroundItemPress}
               videoPaused={videoPaused}
             />
@@ -324,15 +344,13 @@ export const UserPage = ({route, navigation}: Props) => {
             ]}>
             <View style={{alignItems: 'center'}}>
               <Avatar
-                source={user.avatar}
+                source={avatar}
                 outerType={avatarOuterType}
                 onPress={onAvatarPress}
               />
 
               <View style={styles.nameContainer}>
-                <Text style={{fontWeight: 'bold', fontSize: 16}}>
-                  {user.name}
-                </Text>
+                <Text style={{fontWeight: 'bold', fontSize: 16}}>{name}</Text>
               </View>
             </View>
           </Animated.View>

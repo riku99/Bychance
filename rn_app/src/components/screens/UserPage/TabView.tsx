@@ -23,6 +23,14 @@ import {useGetUserPosts} from '~/hooks/posts';
 
 type Props = {
   userId: string;
+  posts: {
+    id: number;
+    text: string | null;
+    url: string;
+    createdAt: string;
+    userId: string;
+    sourceType: 'image' | 'video';
+  }[];
   containerHeight: number;
   profileContainerHeight: number;
   scrollY: Animated.Value;
@@ -33,13 +41,14 @@ type Props = {
 export const UserTabView = React.memo(
   ({
     userId,
+    posts,
     containerHeight,
     profileContainerHeight,
     scrollY,
     postsTabViewRef,
     userInformationTabViewRef,
   }: Props) => {
-    const {data} = useGetUserPosts(userId);
+    // const {data} = useGetUserPosts(userId);
 
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
@@ -105,7 +114,7 @@ export const UserTabView = React.memo(
           return (
             <FlatListTabScene
               userId={userId}
-              renderData={data}
+              renderData={posts}
               renderItem={({item, index}) => {
                 return <TabViewPost post={item} index={index} />;
               }}
