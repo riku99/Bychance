@@ -81,24 +81,16 @@ export const UserPage = ({route, navigation}: Props) => {
   }, shallowEqual);
 
   const avatarOuterType: 'gradation' | 'silver' | 'none' = useMemo(() => {
-    if (me) {
-      if (myFlashes && myFlashes.length) {
-        return 'gradation';
-      } else {
-        return 'none';
-      }
-    } else {
-      if (anotherUser?.flashes.entities.length) {
-        if (!anotherUser.flashes.isAllAlreadyViewed) {
-          return 'gradation';
-        } else {
-          return 'silver';
-        }
-      } else {
-        return 'none';
-      }
+    if (!data) {
+      return 'none';
     }
-  }, [anotherUser?.flashes, myFlashes, me]);
+
+    if (data.flashesData.viewedAllFlashes) {
+      return 'silver';
+    } else {
+      return 'gradation';
+    }
+  }, [data]);
 
   const [containerHeight, setContainerHeight] = useState(0);
 
