@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useLayoutEffect} from 'react';
 import {RouteProp} from '@react-navigation/native';
 
 import {useUserPageInfo, useMyId} from '~/hooks/users';
@@ -21,12 +21,15 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
   const id = useMyId();
   const {data} = useUserPageInfo(id);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({headerTitle: data?.name});
+  }, [data?.name, navigation, route.name]);
+
   const propsData = useMemo(() => {
     if (!data) {
       return;
     }
-    const {videoEditDescription, ...restData} = data; // eslint-disable-line
-    const {posts, flashesData, ...userData} = restData; // eslint-disable-line
+    const {posts, flashesData, ...userData} = data; // eslint-disable-line
     return {
       user: userData,
       posts,

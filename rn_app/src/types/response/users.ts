@@ -11,7 +11,6 @@ export type UserPageInfo = {
   twitter: string | null;
   youtube: string | null;
   tiktok: string | null;
-  videoEditDescription?: boolean;
   posts: {
     id: number;
     text: string | null;

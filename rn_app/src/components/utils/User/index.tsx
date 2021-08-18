@@ -1,11 +1,4 @@
-import React, {
-  useMemo,
-  useRef,
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from 'react';
+import React, {useMemo, useRef, useState, useEffect, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -15,7 +8,6 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import {RouteProp} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import {UIActivityIndicator} from 'react-native-indicators';
@@ -30,31 +22,14 @@ import {MoreReadBottun} from './MoreReadButton';
 import {IntroduceModal} from './IntoduceModal';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIcons} from './SnsIcons';
-import {MyPageStackParamList} from '../../../navigations/UserPage';
 import {RootState} from '../../../stores/index';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
-import {useUserPageInfo, useMyId} from '~/hooks/users';
+import {useMyId} from '~/hooks/users';
 import {StampValues} from '~/types/domain/Flashes';
-import {
-  UserPageScreenGroupParamList,
-  UserPageNavigationProp,
-} from '~/navigations/UserPage';
-
-// BottomTabに渡される時のプロップス
-type MyPageStackScreenProp = RouteProp<MyPageStackParamList, 'MyPage'>;
-// StackNavigationに渡される時のプロップス
-type ProfileStackScreenProp = RouteProp<
-  UserPageScreenGroupParamList,
-  'UserPage'
->;
-
-type Props = {
-  route: MyPageStackScreenProp | ProfileStackScreenProp;
-  navigation: RootNavigationProp<'Tab'> & UserPageNavigationProp<'UserPage'>;
-};
+import {UserPageNavigationProp} from '~/navigations/UserPage';
 
 type _Props = {
   data: {
@@ -205,12 +180,6 @@ export const User = ({data}: _Props) => {
 
     return unsubscribe;
   }, [navigation, videoPaused]);
-
-  // useLayoutEffect(() => {
-  //   if (route.name === 'UserPage') {
-  //     navigation.setOptions({headerTitle: data?.name});
-  //   }
-  // }, [data?.name, navigation, route.name]);
 
   const flashesNavigationParam = useMemo(() => {
     return {
