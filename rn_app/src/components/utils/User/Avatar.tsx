@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {UserAvatarWithOuter} from '../../utils/Avatar';
+import {UserAvatarWithOuter} from '../Avatar';
 
 type AvatarProps = {
   source: string | null;

@@ -13,9 +13,9 @@ export type MyPageNavigationProp<
   T extends keyof MyPageStackParamList
 > = StackNavigationProp<MyPageStackParamList, T>;
 
-export type UserPageNavigationProp<
-  T extends keyof UserPageScreenGroupParamList
-> = StackNavigationProp<UserPageScreenGroupParamList, T>;
+// export type UserPageNavigationProp<
+//   T extends keyof UserPageScreenGroupParamList
+// > = StackNavigationProp<UserPageScreenGroupParamList, T>;
 
 export type TalkRoomStackNavigationProp<
   T extends keyof TalkRoomStackParamList

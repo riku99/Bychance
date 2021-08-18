@@ -11,7 +11,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Emoji from 'react-native-emoji';
 
 import {resetRecievedMessage} from '../../../stores/otherSettings';
-import {AnotherUser} from '../../../stores/types';
 import {RootNavigationProp} from '~/navigations/Root';
 import {useCustomDispatch} from '~/hooks/stores';
 import {useCreateTalkRoom} from '~/hooks/talkRooms';
@@ -29,10 +28,12 @@ const gradientConfig: {
 };
 
 type Props = {
-  user: AnotherUser;
+  id: string;
+  name: string;
+  avatar: string | null;
 };
 
-export const SendMessageButton = React.memo(({user}: Props) => {
+export const SendMessageButton = React.memo(({id, name, avatar}: Props) => {
   const dispatch = useCustomDispatch();
 
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
@@ -40,7 +41,7 @@ export const SendMessageButton = React.memo(({user}: Props) => {
   const {createTalkRoom} = useCreateTalkRoom();
 
   const onPress = async () => {
-    const result = await createTalkRoom({partner: user});
+    const result = await createTalkRoom({id, name, avatar});
     if (result) {
       dispatch(resetRecievedMessage());
       navigation.push('TalkRoomStack', {
@@ -48,9 +49,9 @@ export const SendMessageButton = React.memo(({user}: Props) => {
         params: {
           talkRoomId: result.roomId,
           partner: {
-            id: user.id,
-            name: user.name,
-            avatar: user.avatar,
+            id,
+            name,
+            avatar,
           },
         },
       });

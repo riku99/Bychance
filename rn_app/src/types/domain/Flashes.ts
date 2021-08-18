@@ -1,4 +1,4 @@
-type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
+export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai';
 
 type FlasheStamp = {
   id: number;

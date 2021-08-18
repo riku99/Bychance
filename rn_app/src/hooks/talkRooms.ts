@@ -6,7 +6,6 @@ import {default as axios} from 'axios';
 import {RootState, store} from '~/stores';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
-import {AnotherUser} from '~/types/anotherUser';
 import {
   setTalkRooms,
   selectAllTalkRooms,
@@ -24,7 +23,7 @@ export const useCreateTalkRoom = () => {
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
 
   const createTalkRoom = useCallback(
-    async ({partner}: {partner: AnotherUser}) => {
+    async (partner: {id: string; name: string; avatar: string | null}) => {
       const credentials = await checkKeychain();
 
       try {

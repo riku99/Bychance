@@ -1,10 +1,13 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 
 import {Container as Post} from '../components/screens/Post';
 import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {UserPage} from '../components/screens/UserPage';
+import {UserPage} from '~/components/screens/UserPage';
 import Logo from '~/assets/logo.svg';
 
 export type PostScreenType = {
@@ -20,6 +23,10 @@ export type MyPageStackParamList = {
   MyPage: undefined;
   Post: PostScreenType;
 };
+
+export type UserPageNavigationProp<
+  T extends keyof UserPageScreenGroupParamList
+> = StackNavigationProp<UserPageScreenGroupParamList, T>;
 
 const Stack = createStackNavigator<MyPageStackParamList>();
 

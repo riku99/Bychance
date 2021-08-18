@@ -425,7 +425,7 @@ export const useUpdateLocation = () => {
 };
 
 export const userPageUrlKey = (id: string) => `users/${id}/page_info`;
-export const useGetUserPageInfo = (userId: string) => {
+export const useUserPageInfo = (userId: string) => {
   const {checkKeychain, addBearer, handleApiError} = useApikit();
   const fetcher = useCallback(async () => {
     try {
