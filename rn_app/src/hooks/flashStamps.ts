@@ -1,4 +1,4 @@
-import {useCallback} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 
@@ -6,6 +6,7 @@ import {baseUrl} from '~/constants/url';
 import {StampValues} from '~/types/flashStamps';
 import {updateFlashStamp, selectFlashStamp} from '~/stores/flashStamps';
 import {store} from '~/stores';
+import {GetFlashStampsResponse} from '~/types/response/flashStamps';
 
 export const useCreateFlashStamps = () => {
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
@@ -61,4 +62,23 @@ export const useCreateFlashStamps = () => {
   return {
     createFlashStamps,
   };
+};
+
+export const useFlashStamps = ({flashId}: {flashId: number}) => {
+  const {checkKeychain, addBearer} = useApikit();
+
+  useEffect(() => {
+    const _get = async () => {
+      try {
+        const credentials = await checkKeychain();
+        const response = await axios.get<GetFlashStampsResponse>(
+          `${baseUrl}/flashes/${flashId}/stamps?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+
+        console.log(response.data);
+      } catch (e) {}
+    };
+    _get();
+  }, [flashId, addBearer, checkKeychain]);
 };

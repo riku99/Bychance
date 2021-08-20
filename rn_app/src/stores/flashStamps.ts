@@ -30,7 +30,7 @@ const flashStampsSlice = createSlice({
   initialState: flashStampsAdapter.getInitialState(),
   reducers: {
     setFlashStamps: (state, action: PayloadAction<FlashStamp[]>) => {
-      flashStampsAdapter.upsertMany(state, action.payload);
+      flashStampsAdapter.setMany(state, action.payload);
     },
     updateFlashStamp: (
       state,

@@ -15,6 +15,7 @@ import {setUser} from '~/stores/user';
 import {setLogin} from '~/stores/sessions';
 import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
+import {setFlashStamps} from '~/stores/flashStamps';
 
 export const useSessionloginProccess = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
@@ -35,12 +36,14 @@ export const useSessionloginProccess = () => {
           );
 
           const {user, posts, flashes} = response.data;
+
           const flashesWithoutStampData = flashes.map((f) => {
             const {stamps, ...data} = f; // eslint-disable-line
             return data;
           });
 
           console.log(response.data);
+
           dispatch(setUser(user));
           dispatch(setPosts(posts));
           dispatch(setFlashes(flashesWithoutStampData));

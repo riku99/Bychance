@@ -69,8 +69,8 @@ type _Props = {
         // }[];
         viewed: {userId: string}[];
       }[];
-      viewerViewedFlasheIds?: number[];
-      viewedAllFlashes?: boolean;
+      viewerViewedFlasheIds?: number[]; //自分のデータの場合閲覧記録はいらない(常に最初のデータから表示するので)MYPageからなら渡さない
+      viewedAllFlashes?: boolean; // 自分のデータの場合は閲覧記録関係ないので渡さない
     };
   };
 };
