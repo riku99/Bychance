@@ -9,6 +9,7 @@ import {setUser, resetUser} from '~/stores/user';
 import {setFlashes, resetFlashes} from '~/stores/flashes';
 import {setFlashStamps, resetFlashStamps} from '~/stores/flashStamps';
 import {SuccessfullLoginData} from '~/types/login';
+import {LoginData} from '~/types/response/session';
 
 // AppDispatchの型付けを毎回やるのめんどいのでカスタムdispatchとして定義
 export const useCustomDispatch = () => {
@@ -22,7 +23,7 @@ export const useSuccessfullLoginDispatch = () => {
   const dispatch = useCustomDispatch();
 
   const loginDispatch = useCallback(
-    ({user, flashes, flashStamps}: SuccessfullLoginData) => {
+    ({user, flashes, flashStamps}: LoginData) => {
       dispatch(setUser(user));
       dispatch(setFlashes(flashes));
       dispatch(setFlashStamps(flashStamps));

@@ -10,6 +10,11 @@ import {baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
 import {SuccessfullLoginData} from '~/types/login';
 import {useResetDispatch, useSuccessfullLoginDispatch} from './stores';
+import {LoginData} from '~/types/response/session';
+import {setUser} from '~/stores/user';
+import {setLogin} from '~/stores/sessions';
+import {setPosts} from '~/stores/posts';
+import {setFlashes} from '~/stores/flashes';
 
 export const useSessionloginProccess = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
@@ -24,12 +29,22 @@ export const useSessionloginProccess = () => {
       if (credentials) {
         const {id, token} = credentials;
         try {
-          const response = await axios.get<SuccessfullLoginData>(
-            `${baseUrl}/sessions/sessionLogin?id=${id}`,
+          const response = await axios.get<LoginData>(
+            `${baseUrl}/login_data?id=${id}`,
             addBearer(token),
           );
 
-          loginDispatch(response.data);
+          const {user, posts, flashes} = response.data;
+          const flashesWithoutStampData = flashes.map((f) => {
+            const {stamps, ...data} = f; // eslint-disable-line
+            return data;
+          });
+
+          console.log(response.data);
+          dispatch(setUser(user));
+          dispatch(setPosts(posts));
+          dispatch(setFlashes(flashesWithoutStampData));
+          dispatch(setLogin(true));
         } catch (e) {
           handleApiError(e);
         }

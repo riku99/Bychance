@@ -7,10 +7,12 @@ import {otherSettingsReducer} from './otherSettings';
 import {flashStampsReducer} from './flashStamps';
 import {errorsReducer} from './errors';
 import {_talkRoomReducer} from './_talkRooms';
+import {postsReducer} from './posts';
 
 const rootReducer = combineReducers({
   sessionReducer,
   userReducer,
+  postsReducer,
   flashesReducer,
   nearbyUsersReducer,
   otherSettingsReducer,

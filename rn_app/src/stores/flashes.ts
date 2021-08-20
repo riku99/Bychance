@@ -10,14 +10,15 @@ export type Flash = {
   id: number;
   source: string;
   sourceType: 'image' | 'video';
-  timestamp: string;
-  viewsNumber: number;
+  createdAt: string;
+  userId: string;
+  viewed: {userId: string}[];
 };
 
 export const flashesAdapter = createEntityAdapter<Flash>({
   selectId: (flash) => flash.id,
   sortComparer: (a, b) =>
-    new Date(b.timestamp) < new Date(a.timestamp) ? 1 : -1,
+    new Date(b.createdAt) < new Date(a.createdAt) ? 1 : -1,
 });
 
 export type FlashesAdapter = typeof flashesAdapter;
@@ -29,7 +30,7 @@ const flashesSlice = createSlice({
   initialState: flashesAdapter.getInitialState(),
   reducers: {
     setFlashes: (state, action: PayloadAction<Flash[]>) => {
-      flashesAdapter.upsertMany(state, action.payload);
+      flashesAdapter.setMany(state, action.payload);
     },
     addFlash: (state, action: PayloadAction<Flash>) => {
       flashesAdapter.addOne(state, action.payload);

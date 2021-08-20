@@ -12,8 +12,8 @@ export type User = {
   id: string;
   name: string;
   avatar: string | null;
-  introduce: string;
-  statusMessage: string;
+  introduce: string | null;
+  statusMessage: string | null;
   display: boolean;
   lat: number | null;
   lng: number | null;
@@ -29,7 +29,7 @@ export type User = {
 };
 
 export type UserState = {
-  user?: User;
+  user: User | null;
   temporarilySavedData?: {
     name?: string;
     introduce?: string;
@@ -43,7 +43,9 @@ export type UserState = {
 
 // export type User = NonNullable<UserState['user']>;
 
-const initialState: UserState = {};
+const initialState: UserState = {
+  user: null,
+};
 
 const userSlice = createSlice({
   name: 'user',
