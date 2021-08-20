@@ -2,11 +2,8 @@ import React, {useMemo, useCallback} from 'react';
 import {TouchableOpacity, StyleSheet, Text, Alert} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
-import {mutate} from 'swr';
 
 import {useDeleteFlash} from '~/hooks/flashes';
-import {userPageUrlKey} from '~/hooks/users';
-import {UserPageInfo} from '~/types/response/users';
 
 type Props = {
   flashId: number;
@@ -45,26 +42,8 @@ export const Modal = ({
         text: '削除',
         style: 'destructive',
         onPress: async () => {
-          const result = await deleteFlash({flashId});
-          if (result) {
-            mutate(
-              userPageUrlKey(userId),
-              (currentData: UserPageInfo) => {
-                const newData = currentData.flashesData.entities.filter(
-                  (d) => d.id !== flashId,
-                );
+          await deleteFlash({flashId});
 
-                return {
-                  ...currentData,
-                  flashesData: {
-                    ...currentData.flashesData,
-                    entities: newData,
-                  },
-                };
-              },
-              false,
-            );
-          }
           modalizeRef.current?.close();
         },
       },
@@ -75,7 +54,7 @@ export const Modal = ({
         },
       },
     ]);
-  }, [deleteFlash, modalizeRef, flashId, userId]);
+  }, [deleteFlash, modalizeRef, flashId]);
 
   const modalList = useMemo(
     () => [

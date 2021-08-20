@@ -28,7 +28,6 @@ import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
 import {useMyId} from '~/hooks/users';
-import {StampValues} from '~/types/domain/Flashes';
 import {UserPageNavigationProp} from '~/navigations/UserPage';
 
 type _Props = {

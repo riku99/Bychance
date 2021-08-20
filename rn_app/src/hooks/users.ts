@@ -23,8 +23,6 @@ import {
 import {Post} from '~/types/posts';
 import {Flash} from '~/types/flashes';
 import {FlashStamp} from '~/types/flashStamps';
-import {setFlashes} from '~/stores/flashes';
-import {setFlashStamps} from '~/stores/flashStamps';
 import {UserPageInfo} from '~/types/response/users';
 
 export const useSelectTamporarilySavedUserEditData = () => {
@@ -372,12 +370,8 @@ export const useRefreshUser = () => {
           const {user, flashes, flashStamps} = response.data;
 
           dispatch(setUser(user));
-          dispatch(setFlashes(flashes));
-          dispatch(setFlashStamps(flashStamps));
         } else {
           const {data} = response.data;
-          dispatch(setFlashStamps(data.flashStamps));
-          // dispatch(upsertChatPartner(data.user));
         }
       } catch (e) {
         handleApiError(e);
@@ -435,7 +429,6 @@ export const useUserPageInfo = (userId: string) => {
         addBearer(credentials?.token),
       );
 
-      console.log(response.data);
       return response.data;
     } catch (e) {
       handleApiError(e);

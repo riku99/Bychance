@@ -25,6 +25,10 @@ export type MyPageStackParamList = {
   Post: PostScreenType;
 };
 
+export type MyPageNavigationProp<
+  T extends keyof MyPageStackParamList
+> = StackNavigationProp<MyPageStackParamList, T>;
+
 export type UserPageNavigationProp<
   T extends keyof UserPageScreenGroupParamList
 > = StackNavigationProp<UserPageScreenGroupParamList, T>;

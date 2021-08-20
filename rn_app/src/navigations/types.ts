@@ -9,9 +9,9 @@ import {CreatePostStackParamList} from './CreatePost';
 import {FlashesStackParamList} from './Flashes';
 
 // navigationの型たち 順次修正していく
-export type MyPageNavigationProp<
-  T extends keyof MyPageStackParamList
-> = StackNavigationProp<MyPageStackParamList, T>;
+// export type MyPageNavigationProp<
+//   T extends keyof MyPageStackParamList
+// > = StackNavigationProp<MyPageStackParamList, T>;
 
 // export type UserPageNavigationProp<
 //   T extends keyof UserPageScreenGroupParamList

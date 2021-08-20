@@ -14,7 +14,6 @@ import {NearbyUser} from '~/types/nearbyUsers';
 import {addFlash, removeFlash} from '~/stores/flashes';
 import {Flash} from '~/types/flashes';
 import {FlashStamp} from '~/types/FlashStamps';
-import {addFlashStamp} from '~/stores/flashStamps';
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
@@ -51,9 +50,6 @@ export const useCreateFlash = () => {
         );
 
         toast?.show('追加しました', {type: 'success'});
-
-        dispatch(addFlash(response.data.flash));
-        dispatch(addFlashStamp(response.data.stamps));
       } catch (e) {
         handleApiError(e);
       }
@@ -65,7 +61,13 @@ export const useCreateFlash = () => {
 };
 
 export const useDeleteFlash = () => {
-  const {checkKeychain, handleApiError, toast, addBearer} = useApikit();
+  const {
+    checkKeychain,
+    handleApiError,
+    toast,
+    addBearer,
+    dispatch,
+  } = useApikit();
 
   const deleteFlash = useCallback(
     async ({flashId}: {flashId: number}) => {
@@ -76,13 +78,13 @@ export const useDeleteFlash = () => {
           addBearer(credentials?.token),
         );
 
+        dispatch(removeFlash(flashId));
         toast?.show('削除しました', {type: 'success'});
-        return true;
       } catch (e) {
         handleApiError(e);
       }
     },
-    [checkKeychain, handleApiError, toast, addBearer],
+    [checkKeychain, handleApiError, toast, addBearer, dispatch],
   );
 
   return {

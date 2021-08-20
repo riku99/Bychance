@@ -1,12 +1,9 @@
 import {User} from './user';
 import {Flash} from './flashes';
-import {FlashStamp} from './flashStamps';
 
 export type ClientData = {
   user: User;
   flashes: Flash[];
-  chatPartners: AnotherUser[];
-  flashStamps: FlashStamp[];
 };
 
 // 自分以外のユーザーが持つデータ。データそのもの(entiites)以外にも閲覧データとか必要なので定義

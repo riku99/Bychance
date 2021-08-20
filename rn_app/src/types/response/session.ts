@@ -34,13 +34,6 @@ export type LoginData = {
     createdAt: string;
     sourceType: 'image' | 'video';
     userId: string;
-    stamps: {
-      id: number;
-      createdAt: string;
-      value: StampValues;
-      userId: string;
-      flashId: number;
-    }[];
     viewed: {userId: string}[];
   }[];
 };

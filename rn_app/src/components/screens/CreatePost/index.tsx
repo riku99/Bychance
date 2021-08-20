@@ -13,15 +13,13 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 import Video from 'react-native-video';
 import {RNToasty} from 'react-native-toasty';
-import {mutate} from 'swr';
 
 import {creatingPost} from '../../../stores/otherSettings';
 import {CreatePostStackNavigationProp} from '../../../navigations/types';
 import {getExtention} from '~/utils';
 import {useCustomDispatch} from '~/hooks/stores';
 import {useCreatePost} from '~/hooks/posts';
-import {useMyId, userPageUrlKey} from '~/hooks/users';
-import {UserPageInfo} from '~/types/response/users';
+import {addPost} from '~/stores/posts';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -29,7 +27,6 @@ type Props = {
 
 export const CreatePost = ({navigation}: Props) => {
   const isFocused = useIsFocused();
-  const myId = useMyId();
 
   const [data, setData] = useState<{
     uri: string;
@@ -66,18 +63,12 @@ export const CreatePost = ({navigation}: Props) => {
         ext,
         sourceType: data.sourceType,
       });
-      // 再検証なしで手動でデータ更新
-      mutate(
-        userPageUrlKey(myId),
-        (current: UserPageInfo) => ({
-          ...current,
-          posts: [result, ...current.posts],
-        }),
-        false,
-      );
+      if (result) {
+        dispatch(addPost(result));
+      }
       dispatch(creatingPost());
     }
-  }, [dispatch, navigation, data, text, createPost, myId]);
+  }, [dispatch, navigation, data, text, createPost]);
 
   useEffect(() => {
     navigation.setOptions({

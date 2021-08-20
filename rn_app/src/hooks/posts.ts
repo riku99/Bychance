@@ -5,6 +5,7 @@ import useSWR from 'swr';
 
 import {baseUrl} from '~/constants/url';
 import {GetUserPostsResponse, CreatePostResponse} from '~/types/response/posts';
+import {removePost} from '~/stores/posts';
 
 export const useCreatePost = () => {
   const {
@@ -51,7 +52,13 @@ export const useCreatePost = () => {
 };
 
 export const useDeletePost = () => {
-  const {checkKeychain, addBearer, handleApiError, toast} = useApikit();
+  const {
+    checkKeychain,
+    addBearer,
+    handleApiError,
+    toast,
+    dispatch,
+  } = useApikit();
 
   const deletePost = useCallback(
     async ({postId}: {postId: number}) => {
@@ -63,13 +70,14 @@ export const useDeletePost = () => {
           addBearer(credentials?.token),
         );
 
+        dispatch(removePost(postId));
         toast?.show('削除しました', {type: 'success'});
       } catch (e) {
         handleApiError(e);
       }
     },
 
-    [checkKeychain, addBearer, handleApiError, toast],
+    [checkKeychain, addBearer, handleApiError, toast, dispatch],
   );
 
   return {

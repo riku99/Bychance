@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react';
+import {useCallback} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 import useSWR from 'swr';

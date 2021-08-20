@@ -8,7 +8,7 @@ import {normalStyles} from '../../../constants/styles';
 import {
   UserPageNavigationProp,
   MyPageNavigationProp,
-} from '../../../navigations/types';
+} from '~/navigations/UserPage';
 import {getThumbnailUrl} from '~/helpers/video';
 
 type Props = {

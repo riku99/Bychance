@@ -282,7 +282,7 @@ export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
     }
   };
 
-  const {data, error} = useSWR(`/talk_rooms/${talkRoomId}/messages`, fetcher);
+  const {data} = useSWR(`/talk_rooms/${talkRoomId}/messages`, fetcher);
 
   return {
     result: data,

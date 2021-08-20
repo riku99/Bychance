@@ -1,5 +1,3 @@
-type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
-
 export type UserPageInfo = {
   id: string;
   name: string;
@@ -26,13 +24,6 @@ export type UserPageInfo = {
       createdAt: string;
       sourceType: 'image' | 'video';
       userId: string;
-      stamps: {
-        id: number;
-        createdAt: string;
-        value: StampValues;
-        userId: string;
-        flashId: number;
-      }[];
       viewed: {userId: string}[];
     }[];
     viewerViewedFlasheIds: number[];
