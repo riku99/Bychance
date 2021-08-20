@@ -1,4 +1,4 @@
-import React, {useCallback, useLayoutEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -7,52 +7,41 @@ import {
   Dimensions,
   TextStyle,
 } from 'react-native';
-import {shallowEqual, useSelector} from 'react-redux';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
-import {Flash} from '~/stores/flashes';
-import {RootState} from '~/stores';
-import {selectFlashStampEntites} from '~/stores/flashStamps';
-import {useCreateFlashStamps} from '~/hooks/flashStamps';
-
-type StampData = {
-  label: string;
-  value: string;
-  number: number;
-  style?: TextStyle;
-  disabled: boolean;
-};
+import {useFlashStamps} from '~/hooks/flashStamps';
+import {useMyId} from '~/hooks/users';
 
 type Props = {
-  flash: Flash;
-  userId: string;
+  flashId: number;
 };
 
-export const Stamps = React.memo(({flash, userId}: Props) => {
-  const myId = useSelector((state: RootState) => state.userReducer.user!.id);
+const thumbsUp = 'thumbsUp';
+const yusyo = 'yusyo';
+const yoi = 'yoi';
+const itibann = 'itibann';
+const seikai = 'seikai';
 
-  const stampValuesData = useSelector(
-    (state: RootState) => selectFlashStampEntites(state)[flash.id],
-    shallowEqual,
-  );
+export const Stamps = React.memo(({flashId}: Props) => {
+  const myId = useMyId();
+  const {data, createFlashStamps} = useFlashStamps({flashId});
 
-  const _stampData: StampData[] = useMemo(() => {
+  const _stampData = useMemo(() => {
+    if (!data) {
+      return [];
+    }
     return [
       {
         label: '👍',
-        value: 'thumbsUp',
-        number: stampValuesData ? stampValuesData.data.thumbsUp.number : 0,
-        disabled: stampValuesData
-          ? stampValuesData.data.thumbsUp.userIds.includes(myId)
-          : false,
+        value: thumbsUp,
+        number: data.thumbsUp ? data.thumbsUp.userIds.length : 0,
+        disabled: data.thumbsUp ? data.thumbsUp.userIds.includes(myId) : false,
       },
       {
         label: '優勝',
-        value: 'yusyo',
-        number: stampValuesData ? stampValuesData.data.yusyo.number : 0,
-        disabled: stampValuesData
-          ? stampValuesData.data.yusyo.userIds.includes(myId)
-          : false,
+        value: yusyo,
+        number: data.yusyo ? data.yusyo.userIds.length : 0,
+        disabled: data.yusyo ? data.yusyo.userIds.includes(myId) : false,
         style: {
           fontFamily: 'Hiragino Sans',
           fontWeight: '700',
@@ -60,11 +49,9 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
       },
       {
         label: 'シンプルに\n良い',
-        value: 'yoi',
-        number: stampValuesData ? stampValuesData.data.yoi.number : 0,
-        disabled: stampValuesData
-          ? stampValuesData.data.yoi.userIds.includes(myId)
-          : false,
+        value: yoi,
+        number: data.yoi ? data.yoi.userIds.length : 0,
+        disabled: data.yoi ? data.yoi.userIds.includes(myId) : false,
         style: {
           fontSize: 9.5,
           fontFamily: 'Hiragino Sans',
@@ -74,11 +61,9 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
       },
       {
         label: 'お前が\n1番',
-        value: 'itibann',
-        number: stampValuesData ? stampValuesData.data.itibann.number : 0,
-        disabled: stampValuesData
-          ? stampValuesData.data.itibann.userIds.includes(myId)
-          : false,
+        value: itibann,
+        number: data.itibann ? data.itibann.userIds.length : 0,
+        disabled: data.itibann ? data.itibann.userIds.includes(myId) : false,
         style: {
           fontSize: 11,
           fontWeight: '700',
@@ -87,11 +72,9 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
       },
       {
         label: '見て正解',
-        value: 'seikai',
-        number: stampValuesData ? stampValuesData.data.seikai.number : 0,
-        disabled: stampValuesData
-          ? stampValuesData.data.seikai.userIds.includes(myId)
-          : false,
+        value: seikai,
+        number: data.seikai ? data.seikai.userIds.length : 0,
+        disabled: data.seikai ? data.seikai.userIds.includes(myId) : false,
         style: {
           fontSize: 11,
           fontWeight: '700',
@@ -99,64 +82,46 @@ export const Stamps = React.memo(({flash, userId}: Props) => {
         },
       },
     ];
-  }, [stampValuesData, myId]);
-
-  const [stampData, setStampData] = useState<StampData[]>(_stampData);
-
-  useLayoutEffect(() => {
-    setStampData(_stampData);
-  }, [_stampData]);
-
-  const {createFlashStamps} = useCreateFlashStamps();
+  }, [data, myId]);
 
   const createStamp = useCallback(
     async ({value}: {value: string}) => {
-      setStampData((current) => {
-        return current.map((st) => {
-          if (st.value === value) {
-            const newData = {
-              ...st,
-              number: st.number,
-              disabled: true,
-            };
-            return newData;
-          }
-
-          return st;
-        });
-      });
-      createFlashStamps({flashId: flash.id, value});
+      createFlashStamps({value, userId: myId});
     },
-    [createFlashStamps, flash.id],
+    [createFlashStamps, myId],
   );
 
   return (
     <View style={styles.container}>
-      {stampData.map((data) => {
+      {_stampData.map((_data) => {
         return (
           <TouchableOpacity
             style={[
               styles.stamp,
               {
-                backgroundColor: data.disabled
+                backgroundColor: _data.disabled
                   ? 'rgba(88,88,88,0.85)'
                   : 'rgba(133,133,133,0.85)',
               },
             ]}
-            key={data.label}
+            key={_data.label}
             activeOpacity={1}
-            disabled={data.disabled}
+            disabled={_data.disabled}
             onPress={() => {
               ReactNativeHapticFeedback.trigger('impactMedium', {
                 enableVibrateFallback: true,
               });
-              data.number += 1;
-              createStamp({value: data.value});
+              _data.number += 1;
+              createStamp({value: _data.value});
             }}>
-            <Text style={[styles.stampText, {...data.style}]}>
-              {data.label}
+            <Text
+              style={[
+                styles.stampText,
+                _data.style ? (_data.style as TextStyle) : undefined,
+              ]}>
+              {_data.label}
             </Text>
-            <Text style={styles.stampNumber}>{data.number}</Text>
+            <Text style={styles.stampNumber}>{_data.number}</Text>
           </TouchableOpacity>
         );
       })}

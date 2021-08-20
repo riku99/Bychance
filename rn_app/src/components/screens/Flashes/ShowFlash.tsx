@@ -28,7 +28,6 @@ import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {Stamps} from './Stamps';
 import {useCreateAlreadyViewedFlash} from '~/hooks/flashes';
 import {UserPageInfo} from '~/types/response/users';
-import {useFlashStamps} from '~/hooks/flashStamps';
 
 type Props = {
   flashes: {
@@ -460,8 +459,6 @@ export const ShowFlash = React.memo(
 
     const {top} = useSafeAreaInsets();
 
-    useFlashStamps({flashId: currentFlash.id});
-
     return (
       <View style={styles.container}>
         {!!entityLength && (
@@ -525,9 +522,9 @@ export const ShowFlash = React.memo(
               />
             </View>
 
-            {/* <View style={styles.stampsContainer}>
-              <Stamps flash={currentFlash} userId={user.id} />
-            </View> */}
+            <View style={styles.stampsContainer}>
+              <Stamps flashId={currentFlash.id} />
+            </View>
 
             {isMyData && (
               <View style={styles.showModalButtonContainer}>
