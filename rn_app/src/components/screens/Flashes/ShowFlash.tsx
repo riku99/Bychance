@@ -67,7 +67,10 @@ export const ShowFlash = React.memo(
     const entityLength = flashes.length;
     const progressBarWidth = MAX_PROGRESS_BAR / entityLength;
 
-    const alreadyViewedLength = viewerViewedFlasheIds.length;
+    const alreadyViewedLength = viewerViewedFlasheIds
+      ? viewerViewedFlasheIds.length
+      : 0;
+
     // 実際に表示されているentity
     // このコンポーネントがFlatListにより表示されて最初のレンダリングの際、既に見たものがある場合それを飛ばしている
     // ただ、まだ何も見ていない、または全て見ている(alreadyViewedLengthとentityの数が同じ)場合は最初のものを指定
@@ -109,6 +112,9 @@ export const ShowFlash = React.memo(
 
     const onViewed = useCallback(
       async ({flashId}: {flashId: number}) => {
+        if (!viewerViewedFlasheIds) {
+          return;
+        }
         const existing = viewerViewedFlasheIds.includes(flashId);
         if (!existing && !isMyData) {
           //　閲覧データ作成

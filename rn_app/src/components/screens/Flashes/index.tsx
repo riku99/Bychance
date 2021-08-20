@@ -102,11 +102,6 @@ export const FlashesPage = ({route, navigation}: Props) => {
   };
 
   // アイテムが1つの場合、それを削除するとデータはなくなる。その場合はバックさせたい
-  // useEffect(() => {
-  //   if (!myFlashes?.length && !dataArray[0].flashesData) {
-  //     navigation.goBack();
-  //   }
-  // }, [myFlashes, dataArray, navigation]);
   useEffect(() => {
     if (!data[0].flashes.length) {
       navigation.goBack();

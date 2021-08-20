@@ -16,7 +16,7 @@ type N = {
       name: string;
       avatar: string | null;
     };
-    viewerViewedFlasheIds: number[];
+    viewerViewedFlasheIds?: number[];
   }[];
 };
 

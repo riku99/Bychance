@@ -60,17 +60,17 @@ type _Props = {
         createdAt: string;
         sourceType: 'image' | 'video';
         userId: string;
-        stamps: {
-          id: number;
-          createdAt: string;
-          value: StampValues;
-          userId: string;
-          flashId: number;
-        }[];
+        // stamps: {
+        //   id: number;
+        //   createdAt: string;
+        //   value: StampValues;
+        //   userId: string;
+        //   flashId: number;
+        // }[];
         viewed: {userId: string}[];
       }[];
-      viewerViewedFlasheIds: number[];
-      viewedAllFlashes: boolean;
+      viewerViewedFlasheIds?: number[];
+      viewedAllFlashes?: boolean;
     };
   };
 };

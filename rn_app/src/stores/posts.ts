@@ -4,6 +4,8 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
+import {RootState} from '.';
+
 export type Post = {
   id: number;
   text: string | null;
@@ -44,3 +46,8 @@ const postSlice = createSlice({
 export const postsReducer = postSlice.reducer;
 
 export const {setPosts, resetPosts, addPost, removePost} = postSlice.actions;
+
+const selectors = postsAdaper.getSelectors();
+
+export const getAllPosts = (state: RootState) =>
+  selectors.selectAll(state.postsReducer);

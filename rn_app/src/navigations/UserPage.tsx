@@ -9,6 +9,7 @@ import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPage} from '~/components/screens/UserPage';
 import Logo from '~/assets/logo.svg';
+import {MyPage} from '~/components/screens/MyPage';
 
 export type PostScreenType = {
   id: number;
@@ -42,7 +43,7 @@ export const MyPageStackScreen = () => {
       }}>
       <Stack.Screen
         name="MyPage"
-        component={UserPage}
+        component={MyPage}
         options={{
           headerTitle: () => null,
           headerLeft: () => <Logo height="70%" width={140} />,

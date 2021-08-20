@@ -14,5 +14,5 @@ export type Flash = {
   sourceType: 'image' | 'video';
   createdAt: string;
   viewed: {userId: string}[];
-  stamps: FlasheStamp[];
+  // stamps: FlasheStamp[];
 };

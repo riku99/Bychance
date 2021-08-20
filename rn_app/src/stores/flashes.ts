@@ -44,7 +44,7 @@ const flashesSlice = createSlice({
 
 const flashesSelector = flashesAdapter.getSelectors();
 
-export const selectAllFlashes = (state: RootState) => {
+export const getAllFlashes = (state: RootState) => {
   return flashesSelector.selectAll(state.flashesReducer);
 };
 

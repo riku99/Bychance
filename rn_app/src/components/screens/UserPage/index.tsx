@@ -1,7 +1,7 @@
 import React, {useMemo, useLayoutEffect} from 'react';
 import {RouteProp} from '@react-navigation/native';
 
-import {useUserPageInfo, useMyId} from '~/hooks/users';
+import {useUserPageInfo} from '~/hooks/users';
 import {
   UserPageScreenGroupParamList,
   UserPageNavigationProp,
@@ -18,8 +18,7 @@ type Props = {
   navigation: UserPageNavigationProp<'UserPage'>;
 };
 export const UserPage = React.memo(({route, navigation}: Props) => {
-  const id = useMyId();
-  const {data} = useUserPageInfo(id);
+  const {data} = useUserPageInfo(route.params.userId);
 
   useLayoutEffect(() => {
     navigation.setOptions({headerTitle: data?.name});
