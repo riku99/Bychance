@@ -40,12 +40,21 @@ const postSlice = createSlice({
     removePost: (state, action: PayloadAction<number>) => {
       postsAdaper.removeOne(state, action.payload);
     },
+    upsertPosts: (state, action: PayloadAction<Post[]>) => {
+      postsAdaper.upsertMany(state, action.payload);
+    },
   },
 });
 
 export const postsReducer = postSlice.reducer;
 
-export const {setPosts, resetPosts, addPost, removePost} = postSlice.actions;
+export const {
+  setPosts,
+  resetPosts,
+  addPost,
+  removePost,
+  upsertPosts,
+} = postSlice.actions;
 
 const selectors = postsAdaper.getSelectors();
 

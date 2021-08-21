@@ -39,6 +39,9 @@ const flashesSlice = createSlice({
       flashesAdapter.removeOne(state, action.payload);
     },
     resetFlashes: () => flashesAdapter.getInitialState(),
+    upsertFlashes: (state, action: PayloadAction<Flash[]>) => {
+      flashesAdapter.upsertMany(state, action.payload);
+    },
   },
 });
 
@@ -55,4 +58,5 @@ export const {
   resetFlashes,
   addFlash,
   removeFlash,
+  upsertFlashes,
 } = flashesSlice.actions;

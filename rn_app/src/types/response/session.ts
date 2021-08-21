@@ -1,5 +1,3 @@
-import {StampValues} from '../domain/Flashes';
-
 export type LoginData = {
   user: {
     id: string;

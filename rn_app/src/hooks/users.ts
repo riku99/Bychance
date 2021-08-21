@@ -19,11 +19,14 @@ import {
   setVideoDescription,
   setLocation,
   setUser,
+  updateUser,
 } from '~/stores/user';
 import {Post} from '~/types/posts';
 import {Flash} from '~/types/flashes';
 import {FlashStamp} from '~/types/flashStamps';
-import {UserPageInfo} from '~/types/response/users';
+import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
+import {upsertPosts} from '~/stores/posts';
+import {upsertFlashes} from '~/stores/flashes';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -343,45 +346,29 @@ export const useDeleteLocation = () => {
   };
 };
 
-export type RefreshUserResponse =
-  | {
-      isMyData: true;
-      user: User;
-      posts: Post[];
-      flashes: Flash[];
-      flashStamps: FlashStamp[];
-    }
-  | {isMyData: false; data: {user: AnotherUser; flashStamps: FlashStamp[]}};
-
-export const useRefreshUser = () => {
+export const useRefreshMyData = () => {
   const {dispatch, addBearer, handleApiError, checkKeychain} = useApikit();
 
-  const refreshUser = useCallback(
-    async ({userId}: {userId: string}) => {
+  const refreshData = useCallback(async () => {
+    try {
       const credentials = await checkKeychain();
+      const response = await axios.get<RefreshMyDataResponse>(
+        `${baseUrl}/my_refresh_data?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
 
-      try {
-        const response = await axios.get<RefreshUserResponse>(
-          `${baseUrl}/users/refresh/${userId}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
-
-        if (response.data.isMyData) {
-          const {user, flashes, flashStamps} = response.data;
-
-          dispatch(setUser(user));
-        } else {
-          const {data} = response.data;
-        }
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [addBearer, handleApiError, checkKeychain, dispatch],
-  );
+      console.log(response.data);
+      const {posts, flashes, ...userData} = response.data;
+      dispatch(updateUser(userData));
+      dispatch(upsertPosts(posts));
+      dispatch(upsertFlashes(flashes));
+    } catch (e) {
+      handleApiError(e);
+    }
+  }, [addBearer, handleApiError, checkKeychain, dispatch]);
 
   return {
-    refreshUser,
+    refreshData,
   };
 };
 

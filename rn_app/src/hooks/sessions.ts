@@ -96,7 +96,7 @@ export const useLineLogin = () => {
       // if (e.message === 'User cancelled or interrupted the login process.') {
       // }
     }
-  }, [addBearer, loginDispatch]);
+  }, [addBearer]);
 
   return {
     lineLogin,

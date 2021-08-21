@@ -1,10 +1,11 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
 import {User} from '~/components/utils/User';
 import {getAllPosts} from '~/stores/posts';
 import {getAllFlashes} from '~/stores/flashes';
+import {useRefreshMyData} from '~/hooks/users';
 
 export const MyPage = React.memo(() => {
   const user = useSelector(
@@ -22,6 +23,12 @@ export const MyPage = React.memo(() => {
     shallowEqual,
   );
 
+  const {refreshData} = useRefreshMyData();
+
+  const refresh = async () => {
+    await refreshData();
+  };
+
   if (!user || !posts || !flashes) {
     return null;
   }
@@ -35,6 +42,7 @@ export const MyPage = React.memo(() => {
           entities: flashes,
         },
       }}
+      refresh={refresh}
     />
   );
 });

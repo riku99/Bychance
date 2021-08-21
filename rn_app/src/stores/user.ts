@@ -58,6 +58,15 @@ const userSlice = createSlice({
       };
     },
     resetUser: () => initialState,
+    updateUser: (state, action: PayloadAction<Partial<User>>) => {
+      return {
+        ...state,
+        user: {
+          ...state.user!,
+          ...action.payload,
+        },
+      };
+    },
     updateProfile: (state, action: PayloadAction<EditProfilePayload>) => {
       const {
         name,
@@ -228,6 +237,7 @@ export const {
   setDisplay,
   setVideoDescription,
   setLocation,
+  updateUser,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

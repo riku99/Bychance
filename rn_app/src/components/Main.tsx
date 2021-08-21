@@ -7,7 +7,6 @@ import {
   usePushNotificationReqest,
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification';
-import {useActive} from '~/hooks/active';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useHandleErrors} from '~/hooks/errors';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
@@ -23,7 +22,7 @@ export const Main = React.memo(() => {
   useRegisterDeviceToken();
 
   // アクティブになった時の処理
-  useActive();
+  // useActive();
 
   // 位置情報周り
   useBackgroundGeolocation();

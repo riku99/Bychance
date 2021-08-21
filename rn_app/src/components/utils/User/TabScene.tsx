@@ -7,8 +7,6 @@ import {
   FlatList,
 } from 'react-native';
 
-import {useRefreshUser} from '~/hooks/users';
-
 type PostData = {
   id: number;
   text: string | null;
@@ -108,13 +106,11 @@ export const ScrollViewTabScene = React.memo(
   }: ScrollViewTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
-    const {refreshUser} = useRefreshUser();
-
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
-      await refreshUser({userId});
+
       setRefreshing(false);
-    }, [refreshUser, userId]);
+    }, []);
 
     return (
       <Animated.ScrollView
