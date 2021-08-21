@@ -59,13 +59,6 @@ type _Props = {
         createdAt: string;
         sourceType: 'image' | 'video';
         userId: string;
-        // stamps: {
-        //   id: number;
-        //   createdAt: string;
-        //   value: StampValues;
-        //   userId: string;
-        //   flashId: number;
-        // }[];
         viewed: {userId: string}[];
       }[];
       viewerViewedFlasheIds?: number[]; //自分のデータの場合閲覧記録はいらない(常に最初のデータから表示するので)MYPageからなら渡さない
@@ -181,6 +174,10 @@ export const User = ({data}: _Props) => {
   }, [navigation, videoPaused]);
 
   const flashesNavigationParam = useMemo(() => {
+    if (!flashesData.entities.length) {
+      return;
+    }
+
     return {
       isMyData: isMe,
       startingIndex: 0,

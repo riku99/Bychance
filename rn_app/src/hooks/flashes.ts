@@ -12,8 +12,7 @@ import {AnotherUser} from '~/stores/types';
 import {updateNearbyUser} from '~/stores/nearbyUsers';
 import {NearbyUser} from '~/types/nearbyUsers';
 import {addFlash, removeFlash} from '~/stores/flashes';
-import {Flash} from '~/types/flashes';
-import {FlashStamp} from '~/types/FlashStamps';
+import {CreateFlashResponse} from '~/types/response/flashes';
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
@@ -39,7 +38,7 @@ export const useCreateFlash = () => {
       const credentials = await checkKeychain();
 
       try {
-        const response = await axios.post<{flash: Flash; stamps: FlashStamp}>(
+        const response = await axios.post<CreateFlashResponse>(
           `${baseUrl}/flashes?id=${credentials?.id}`,
           {
             source: await fs.readFile(uri, 'base64'),
@@ -49,6 +48,7 @@ export const useCreateFlash = () => {
           addBearer(credentials?.token),
         );
 
+        dispatch(addFlash({...response.data, viewed: []}));
         toast?.show('追加しました', {type: 'success'});
       } catch (e) {
         handleApiError(e);
