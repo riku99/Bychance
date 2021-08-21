@@ -435,9 +435,10 @@ export const useUserPageInfo = (userId: string) => {
     }
   }, [checkKeychain, addBearer, userId, handleApiError]);
 
-  const {data} = useSWR(userPageUrlKey(userId), fetcher);
+  const {data, mutate} = useSWR(userPageUrlKey(userId), fetcher);
 
   return {
     data,
+    mutate,
   };
 };

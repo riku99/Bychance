@@ -28,6 +28,7 @@ type FlatListTabSceneProps = {
   onMomentumScrollEnd: () => void;
   paddingTopHeight: number;
   tabViewContainerMinHeight: number;
+  refresh: () => Promise<void>;
 };
 
 export const FlatListTabScene = React.memo(
@@ -41,16 +42,15 @@ export const FlatListTabScene = React.memo(
     renderItem,
     paddingTopHeight,
     tabViewContainerMinHeight,
+    refresh,
   }: FlatListTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
-    const {refreshUser} = useRefreshUser();
-
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
-      await refreshUser({userId});
+      await refresh();
       setRefreshing(false);
-    }, [refreshUser, userId]);
+    }, [refresh]);
 
     return (
       <Animated.FlatList

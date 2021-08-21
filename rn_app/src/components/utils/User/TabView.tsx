@@ -35,6 +35,7 @@ type Props = {
   scrollY: Animated.Value;
   postsTabViewRef: React.RefObject<FlatList>;
   userInformationTabViewRef: React.RefObject<ScrollView>;
+  refresh: () => Promise<void>;
 };
 
 export const UserTabView = React.memo(
@@ -46,6 +47,7 @@ export const UserTabView = React.memo(
     scrollY,
     postsTabViewRef,
     userInformationTabViewRef,
+    refresh,
   }: Props) => {
     // const {data} = useGetUserPosts(userId);
 
@@ -123,6 +125,7 @@ export const UserTabView = React.memo(
               onMomentumScrollEnd={syncScrollOffset}
               paddingTopHeight={paddingTopHeight}
               tabViewContainerMinHeight={tabViewContainerMinHeight}
+              refresh={refresh}
             />
           );
         case 'UserInformation':

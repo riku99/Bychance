@@ -18,7 +18,7 @@ type Props = {
   navigation: UserPageNavigationProp<'UserPage'>;
 };
 export const UserPage = React.memo(({route, navigation}: Props) => {
-  const {data} = useUserPageInfo(route.params.userId);
+  const {data, mutate} = useUserPageInfo(route.params.userId);
 
   useLayoutEffect(() => {
     navigation.setOptions({headerTitle: data?.name});
@@ -36,9 +36,13 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     };
   }, [data]);
 
+  const refresh = async () => {
+    await mutate();
+  };
+
   if (!propsData) {
     return null;
   }
 
-  return <User data={propsData} />;
+  return <User data={propsData} refresh={refresh} />;
 });

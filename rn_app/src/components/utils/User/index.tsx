@@ -65,9 +65,10 @@ type _Props = {
       viewedAllFlashes?: boolean; // 自分のデータの場合は閲覧記録関係ないので渡さない
     };
   };
+  refresh: () => Promise<void>;
 };
 
-export const User = ({data}: _Props) => {
+export const User = ({data, refresh}: _Props) => {
   const {user, flashesData, posts} = data;
   const {
     id,
@@ -278,6 +279,7 @@ export const User = ({data}: _Props) => {
         scrollY={scrollY}
         postsTabViewRef={postsTabViewRef}
         userInformationTabViewRef={userInformationTabViewRef}
+        refresh={refresh}
       />
 
       <Animated.View
