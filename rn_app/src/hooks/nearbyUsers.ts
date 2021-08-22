@@ -1,50 +1,48 @@
-import {useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 
 import {baseUrl} from '~/constants/url';
 import {NearbyUsers} from '~/types/nearbyUsers';
 import {FlashStamp} from '~/types/flashStamps';
-import {setFlashStamps} from '~/stores/flashStamps';
-import {setNearbyUsers} from '~/stores/nearbyUsers';
+import {GetNearbyUsersReponse} from '~/types/response/nearbyUsers';
 
-export const useGetNearbyUsers = () => {
-  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+export const useNearbyUsers = () => {
+  const [users, setUsers] = useState<GetNearbyUsersReponse>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [range, setRange] = useState(0.1);
+  const {checkKeychain, handleApiError, addBearer} = useApikit();
 
-  const getNearbyUsers = useCallback(
-    async ({
-      lat,
-      lng,
-      range,
-    }: {
-      lat: number | null;
-      lng: number | null;
-      range: number;
-    }) => {
-      const credentials = await checkKeychain();
+  const getNearbyUsers = useCallback(async () => {
+    const credentials = await checkKeychain();
 
-      try {
-        const response = await axios.get<{
-          usersData: NearbyUsers;
-          flashStampsData: FlashStamp[];
-        }>(
-          `${baseUrl}/nearbyUsers?id=${credentials?.id}&lat=${lat}&lng=${lng}&range=${range}`,
-          addBearer(credentials?.token),
-        );
+    try {
+      const response = await axios.get<GetNearbyUsersReponse>(
+        `${baseUrl}/users/nearby?id=${credentials?.id}&range=${range}`,
+        addBearer(credentials?.token),
+      );
 
-        const {usersData, flashStampsData} = response.data;
+      setUsers(response.data);
+    } catch (e) {
+      handleApiError(e);
+    }
+  }, [checkKeychain, addBearer, handleApiError, range]);
 
-        dispatch(setNearbyUsers(usersData));
-
-        dispatch(setFlashStamps(flashStampsData));
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [checkKeychain, addBearer, handleApiError, dispatch],
-  );
+  // リフレッシュ以外の取得。初回レンダリング後とレンジが変化した時
+  useEffect(() => {
+    const _get = async () => {
+      setIsLoading(true);
+      await getNearbyUsers();
+      setIsLoading(false);
+    };
+    _get();
+  }, [getNearbyUsers]);
 
   return {
+    users,
+    isLoading,
+    range,
+    setRange,
     getNearbyUsers,
   };
 };

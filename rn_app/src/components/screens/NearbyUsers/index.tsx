@@ -31,7 +31,7 @@ import {
   notAuthLocationProviderAlert,
   notLocationInfoAlert,
 } from '~/helpers/alert';
-import {useGetNearbyUsers} from '~/hooks/nearbyUsers';
+import {useNearbyUsers} from '~/hooks/nearbyUsers';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -69,6 +69,8 @@ export const TabViewContext = createContext<TabViewContextType>({
 });
 
 export const NearbyUsersScreen = React.memo(() => {
+  const {users, isLoading, range, setRange, getNearbyUsers} = useNearbyUsers();
+
   const scrollY = useRef(new Animated.Value(0)).current;
   const transformY = scrollY.interpolate({
     inputRange: [0, SEARCH_TAB_HEIGHT],
@@ -84,12 +86,6 @@ export const NearbyUsersScreen = React.memo(() => {
   const lng = useSelector((state: RootState) => {
     const _lng = state.userReducer.user!.lng;
     return _lng;
-  }, shallowEqual);
-
-  const [range, setRange] = useState(0.1);
-
-  const users = useSelector((state: RootState) => {
-    return selectNearbyUsersArray(state);
   }, shallowEqual);
 
   const [keyword, setKeyword] = useState('');
@@ -111,18 +107,14 @@ export const NearbyUsersScreen = React.memo(() => {
     }
   }, [keyword, users]);
 
-  const {getNearbyUsers} = useGetNearbyUsers();
-
-  const [firstLoading, setFirstLoading] = useState(true);
-
-  useEffect(() => {
-    const _get = async () => {
-      setFirstLoading(true);
-      await getNearbyUsers({lat, lng, range});
-      setFirstLoading(false);
-    };
-    _get();
-  }, [getNearbyUsers, lat, lng, range]);
+  // useEffect(() => {
+  //   const _get = async () => {
+  //     setFirstLoading(true);
+  //     await getNearbyUsers({lat, lng, range});
+  //     setFirstLoading(false);
+  //   };
+  //   _get();
+  // }, [getNearbyUsers, lat, lng, range]);
 
   useFocusEffect(
     useCallback(() => {
@@ -148,30 +140,30 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
-  const preloadUriGroup = useMemo(() => {
-    return JSON.stringify(
-      users
-        .filter((user) => user.flashes.entities.length)
-        .map((user) =>
-          user.flashes.entities.map((e) => {
-            const uri =
-              e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
-            return {
-              uri,
-            };
-          }),
-        ),
-    );
-  }, [users]);
+  // const preloadUriGroup = useMemo(() => {
+  //   return JSON.stringify(
+  //     users
+  //       .filter((user) => user.flashes.entities.length)
+  //       .map((user) =>
+  //         user.flashes.entities.map((e) => {
+  //           const uri =
+  //             e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
+  //           return {
+  //             uri,
+  //           };
+  //         }),
+  //       ),
+  //   );
+  // }, [users]);
 
   // preload用uriの中身が変更した場合はそれをオブジェクトに戻しpreloadを実行。
   // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
-  useEffect(() => {
-    const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
-    preData.forEach((data) => {
-      FastImage.preload(data);
-    });
-  }, [preloadUriGroup]);
+  // useEffect(() => {
+  //   const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
+  //   preData.forEach((data) => {
+  //     FastImage.preload(data);
+  //   });
+  // }, [preloadUriGroup]);
 
   const searchStackNavigation = useNavigation<
     NearbyUsersStackNavigationProp<'NearbyUsers'>
@@ -190,19 +182,19 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
-  const sequenceFlashesAndUserData = useMemo(() => {
-    if (users.length) {
-      const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
-        (data) =>
-          data.flashes.entities.length && !data.flashes.isAllAlreadyViewed,
-      );
-      const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
-        flashesData: user.flashes,
-        userData: {userId: user.id, from: 'nearbyUsers'} as const,
-      }));
-      return data;
-    }
-  }, [users]);
+  // const sequenceFlashesAndUserData = useMemo(() => {
+  //   if (users.length) {
+  //     const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
+  //       (data) =>
+  //         data.flashes.entities.length && !data.flashes.isAllAlreadyViewed,
+  //     );
+  //     const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
+  //       flashesData: user.flashes,
+  //       userData: {userId: user.id, from: 'nearbyUsers'} as const,
+  //     }));
+  //     return data;
+  //   }
+  // }, [users]);
 
   const onAvatarPress = useCallback(
     ({
@@ -256,8 +248,8 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   const refreshUsers = useCallback(async () => {
-    await getNearbyUsers({lat, lng, range});
-  }, [lat, lng, range, getNearbyUsers]);
+    await getNearbyUsers();
+  }, [getNearbyUsers]);
 
   const {top} = useSafeAreaInsets();
 

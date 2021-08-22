@@ -9,7 +9,6 @@ import {UserPageFrom} from '~/navigations/UserPage';
 import {selectNearbyUser} from '~/stores/nearbyUsers';
 import {useApikit} from './apikit';
 import {User} from '~/types/users';
-import {AnotherUser} from '~/types/anotherUser';
 import {baseUrl} from '~/constants/url';
 import {
   updateProfile,
@@ -18,12 +17,8 @@ import {
   setDisplay,
   setVideoDescription,
   setLocation,
-  setUser,
   updateUser,
 } from '~/stores/user';
-import {Post} from '~/types/posts';
-import {Flash} from '~/types/flashes';
-import {FlashStamp} from '~/types/flashStamps';
 import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes} from '~/stores/flashes';
@@ -357,7 +352,6 @@ export const useRefreshMyData = () => {
         addBearer(credentials?.token),
       );
 
-      console.log(response.data);
       const {posts, flashes, ...userData} = response.data;
       dispatch(updateUser(userData));
       dispatch(upsertPosts(posts));
