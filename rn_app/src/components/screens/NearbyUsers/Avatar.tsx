@@ -1,75 +1,50 @@
-import React, {useMemo} from 'react';
+import React, {useContext} from 'react';
 
 import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
-import {AnotherUser} from '~/stores/types';
-import {FlashesData} from '~/stores/types';
+import {UserData, TabViewContext} from '.';
 
 type Props = {
-  // user: AnotherUser;
-  url: string | null;
-  size?: number | 'small' | 'medium' | 'large';
-  viewedAllFlashes: boolean;
-  // onAvatarPress?: ({
-  //   isAllAlreadyViewed,
-  //   userId,
-  //   flashesData,
-  // }:
-  //   | {
-  //       isAllAlreadyViewed: true;
-  //       userId: string;
-  //       flashesData: FlashesData;
-  //     }
-  //   | {
-  //       isAllAlreadyViewed: false;
-  //       userId: string;
-  //       flashesData: undefined;
-  //     }) => void;
+  user: UserData;
+  size?: number | 'medium';
 };
 
-export const Avatar = React.memo(
-  ({url, onAvatarPress, size = 'medium'}: Props) => {
-    return null;
+export const Avatar = React.memo(({user, size = 'medium'}: Props) => {
+  const {onAvatarPress} = useContext(TabViewContext);
+  return (
+    <UserAvatarWithOuter
+      image={user.avatar}
+      onPress={() => {
+        if (!onAvatarPress) {
+          return;
+        }
+        const userData = {
+          id: user.id,
+          name: user.name,
+          avatar: user.avatar,
+        };
 
-    // if (user.flashes.entities.length && !user.flashes.isAllAlreadyViewed) {
-    //   return (
-    //     <UserAvatarWithOuter
-    //       image={url}
-    //       size={size}
-    //       outerType="gradation"
-    //       onPress={() => {
-    //         if (onAvatarPress) {
-    //           // onAvatarPress({
-    //           //   userId: user.id,
-    //           //   isAllAlreadyViewed: false,
-    //           //   flashesData: undefined,
-    //           // });
-    //         }
-    //       }}
-    //     />
-    //   );
-    // }
-
-    // if (user.flashes.entities.length && user.flashes.isAllAlreadyViewed) {
-    //   return (
-    //     <UserAvatarWithOuter
-    //       image={user.avatar}
-    //       size={size}
-    //       outerType="silver"
-    //       onPress={() => {
-    //         if (onAvatarPress) {
-    //           onAvatarPress({
-    //             userId: user.id,
-    //             isAllAlreadyViewed: true,
-    //             flashesData: user.flashes,
-    //           });
-    //         }
-    //       }}
-    //     />
-    //   );
-    // }
-
-    // return (
-    //   <UserAvatarWithOuter image={user.avatar} size={size} outerType="none" />
-    // );
-  },
-);
+        if (!user.flashesData.viewedAllFlashes) {
+          onAvatarPress({
+            viewedAllFlashes: false,
+            flashes: undefined,
+            user: userData,
+          });
+        } else {
+          onAvatarPress({
+            viewedAllFlashes: true,
+            flashes: user.flashesData.entities,
+            user: userData,
+          });
+        }
+      }}
+      size={size}
+      outerType={
+        !user.flashesData.entities.length
+          ? 'none'
+          : user.flashesData.viewedAllFlashes
+          ? 'silver'
+          : 'gradation'
+      }
+    />
+  );
+});

@@ -122,25 +122,27 @@ export const ShowFlash = React.memo(
           mutate(
             userPageUrlKey(user.id),
             (current: UserPageInfo) => {
-              const currentIds = current.flashesData.viewerViewedFlasheIds;
-              const _existing = currentIds.includes(flashId);
-              if (_existing) {
-                return current;
+              if (current) {
+                const currentIds = current.flashesData.viewerViewedFlasheIds;
+                const _existing = currentIds.includes(flashId);
+                if (_existing) {
+                  return current;
+                }
+                const newViewedData = [
+                  ...current.flashesData.viewerViewedFlasheIds,
+                  flashId,
+                ];
+                return {
+                  ...current,
+                  flashesData: {
+                    ...current.flashesData,
+                    viewerViewedFlasheIds: newViewedData,
+                    viewedAllFlashes:
+                      current.flashesData.entities.length ===
+                      newViewedData.length,
+                  },
+                };
               }
-              const newViewedData = [
-                ...current.flashesData.viewerViewedFlasheIds,
-                flashId,
-              ];
-              return {
-                ...current,
-                flashesData: {
-                  ...current.flashesData,
-                  viewerViewedFlasheIds: newViewedData,
-                  viewedAllFlashes:
-                    current.flashesData.entities.length ===
-                    newViewedData.length,
-                },
-              };
             },
             false,
           );

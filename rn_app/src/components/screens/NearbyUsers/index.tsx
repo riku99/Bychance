@@ -2,33 +2,28 @@ import React, {
   useRef,
   useState,
   createContext,
-  useEffect,
   useMemo,
   useCallback,
+  useEffect,
 } from 'react';
 import {StyleSheet, Animated, View} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SearchBar} from 'react-native-elements';
 import {shallowEqual, useSelector} from 'react-redux';
-import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+import FastImage from 'react-native-fast-image';
 
 import {List} from './List';
 import {Map} from './Map';
 import {RangeSelectButton} from './RangeSelectBottun';
 import {RootState} from '~/stores';
-import {NearbyUser, selectNearbyUsersArray} from '~/stores/nearbyUsers';
-import {NearbyUsers} from '~/stores/nearbyUsers';
+import {NearbyUser} from '~/stores/nearbyUsers';
 import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/navigations/Root';
-import {FlashesData} from '~/stores/types';
 import {NearbyUsersStackNavigationProp} from '~/navigations/NearbyUsers';
-import {
-  FlashesStackParamList,
-  FlashesScreenPrarams,
-} from '~/navigations/Flashes';
+import {FlashesScreenPrarams} from '~/navigations/Flashes';
 import {normalStyles} from '~/constants/styles';
 import {
   notAuthLocationProviderAlert,
@@ -38,12 +33,14 @@ import {useNearbyUsers} from '~/hooks/nearbyUsers';
 
 const Tab = createMaterialTopTabNavigator();
 
-type UserData = {
+export type UserData = {
   id: string;
   name: string;
   avatar: string | null;
   statusMessage: string | null;
   introduce: string | null;
+  lat: number;
+  lng: number;
   flashesData: {
     entities: {
       id: number;
@@ -57,11 +54,11 @@ type UserData = {
     viewerViewedFlasheIds: number[];
     viewedAllFlashes: boolean;
   };
-}[];
+};
 
 type TabViewContextType = {
   keyword: string;
-  users: UserData;
+  users: UserData[];
   lng?: number | null;
   lat?: number | null;
   navigateToUserPage?: (user: NearbyUser) => void;
@@ -101,7 +98,7 @@ export const TabViewContext = createContext<TabViewContextType>({
 });
 
 export const NearbyUsersScreen = React.memo(() => {
-  const {users, isLoading, range, setRange, getNearbyUsers} = useNearbyUsers();
+  const {users, isLoading, setRange, getNearbyUsers} = useNearbyUsers();
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const transformY = scrollY.interpolate({
@@ -179,24 +176,22 @@ export const NearbyUsersScreen = React.memo(() => {
 
   // preload用uriの中身が変更した場合はそれをオブジェクトに戻しpreloadを実行。
   // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
-  // useEffect(() => {
-  //   const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
-  //   preData.forEach((data) => {
-  //     FastImage.preload(data);
-  //   });
-  // }, [preloadUriGroup]);
+  useEffect(() => {
+    const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
+    preData.forEach((data) => {
+      FastImage.preload(data);
+    });
+  }, [preloadUriGroup]);
 
   const searchStackNavigation = useNavigation<
     NearbyUsersStackNavigationProp<'NearbyUsers'>
   >();
-
   const rootStackNavigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   const navigateToUserPage = useCallback(
     (user: NearbyUser) => {
       searchStackNavigation.navigate('UserPage', {
         userId: user.id,
-        from: 'nearbyUsers',
       });
     },
     [searchStackNavigation],

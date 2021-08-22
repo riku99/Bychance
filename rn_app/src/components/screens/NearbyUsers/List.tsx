@@ -11,17 +11,10 @@ import {ListItem} from 'react-native-elements';
 
 import {Avatar} from './Avatar';
 import {TabViewContext} from './index';
-import {UserAvatarWithOuter} from '~/components/utils/Avatar';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
-  const {
-    users,
-    onAvatarPress,
-    navigateToUserPage,
-    refreshUsers,
-    firstLoading,
-  } = useContext(TabViewContext);
+  const {users, refreshUsers, firstLoading} = useContext(TabViewContext);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -95,42 +88,7 @@ export const List = React.memo(() => {
                     //   navigateToUserPage(u.id);
                     // }
                   }}>
-                  {/* <Avatar user={u} onAvatarPress={onAvatarPress} /> */}
-                  <UserAvatarWithOuter
-                    image={u.avatar}
-                    onPress={() => {
-                      if (!onAvatarPress) {
-                        return;
-                      }
-                      const user = {
-                        id: u.id,
-                        name: u.name,
-                        avatar: u.avatar,
-                      };
-
-                      if (!u.flashesData.viewedAllFlashes) {
-                        onAvatarPress({
-                          viewedAllFlashes: false,
-                          flashes: undefined,
-                          user,
-                        });
-                      } else {
-                        onAvatarPress({
-                          viewedAllFlashes: true,
-                          flashes: u.flashesData.entities,
-                          user,
-                        });
-                      }
-                    }}
-                    size="medium"
-                    outerType={
-                      !u.flashesData.entities.length
-                        ? 'none'
-                        : u.flashesData.viewedAllFlashes
-                        ? 'silver'
-                        : 'gradation'
-                    }
-                  />
+                  <Avatar user={u} />
                   <ListItem.Content>
                     <ListItem.Title style={{fontWeight: '500', fontSize: 15}}>
                       {u.name}

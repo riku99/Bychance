@@ -5,9 +5,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {UIActivityIndicator} from 'react-native-indicators';
 
-import {TabViewContext} from './index';
+import {TabViewContext, UserData} from './index';
 import {Avatar} from './Avatar';
-import {NearbyUser} from '~/stores/nearbyUsers';
 import {mainButtonGradientConfig} from '~/constants/styles';
 
 export const Map = React.memo(() => {
@@ -33,27 +32,40 @@ export const Map = React.memo(() => {
     }
   }, [lat, lng]);
 
-  const onMarkerPress = (user: NearbyUser) => {
+  // MarkerでpointerEvent使えなくてAvatarのonPress実行できないのでMarkerコンポーネントから実行
+  const onMarkerPress = (user: UserData) => {
     if (onAvatarPress && navigateToUserPage) {
-      if (user.flashes.entities.length && !user.flashes.isAllAlreadyViewed) {
+      if (
+        user.flashesData.entities.length &&
+        !user.flashesData.viewedAllFlashes
+      ) {
         onAvatarPress({
-          userId: user.id,
-          isAllAlreadyViewed: false,
-          flashesData: undefined,
+          viewedAllFlashes: false,
+          flashes: undefined,
+          user: {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+          },
         });
         return;
       } else if (
-        user.flashes.entities.length &&
-        user.flashes.isAllAlreadyViewed
+        user.flashesData.entities.length &&
+        user.flashesData.viewedAllFlashes
       ) {
         onAvatarPress({
-          userId: user.id,
-          isAllAlreadyViewed: true,
-          flashesData: user.flashes,
+          viewedAllFlashes: true,
+          flashes: user.flashesData.entities,
+          user: {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+          },
         });
         return;
       } else {
-        navigateToUserPage(user);
+        // navigateToUserPage(user);
+        console.log('navigateします');
       }
     }
   };
