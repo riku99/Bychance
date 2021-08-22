@@ -6,7 +6,7 @@ import {FlashesPage} from '../components/screens/Flashes';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {Flash} from '~/types/domain/Flashes';
 
-type N = {
+export type FlashesScreenPrarams = {
   isMyData: boolean;
   startingIndex: number;
   data: {
@@ -21,7 +21,7 @@ type N = {
 };
 
 export type FlashesStackParamList = {
-  Flashes: N;
+  Flashes: FlashesScreenPrarams;
 } & UserPageScreenGroupParamList;
 
 const Stack = createStackNavigator<FlashesStackParamList>();

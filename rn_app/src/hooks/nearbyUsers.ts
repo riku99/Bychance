@@ -22,6 +22,7 @@ export const useNearbyUsers = () => {
         addBearer(credentials?.token),
       );
 
+      console.log(response.data);
       setUsers(response.data);
     } catch (e) {
       handleApiError(e);

@@ -25,7 +25,10 @@ import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/navigations/Root';
 import {FlashesData} from '~/stores/types';
 import {NearbyUsersStackNavigationProp} from '~/navigations/NearbyUsers';
-import {FlashesStackParamList} from '~/navigations/Flashes';
+import {
+  FlashesStackParamList,
+  FlashesScreenPrarams,
+} from '~/navigations/Flashes';
 import {normalStyles} from '~/constants/styles';
 import {
   notAuthLocationProviderAlert,
@@ -35,26 +38,55 @@ import {useNearbyUsers} from '~/hooks/nearbyUsers';
 
 const Tab = createMaterialTopTabNavigator();
 
+type UserData = {
+  id: string;
+  name: string;
+  avatar: string | null;
+  statusMessage: string | null;
+  introduce: string | null;
+  flashesData: {
+    entities: {
+      id: number;
+      source: string;
+      sourceType: 'image' | 'video';
+      userId: string;
+      viewed: {userId: string}[];
+      createdAt: string;
+      specificUserViewed: {flashId: number}[];
+    }[];
+    viewerViewedFlasheIds: number[];
+    viewedAllFlashes: boolean;
+  };
+}[];
+
 type TabViewContextType = {
   keyword: string;
-  users: NearbyUsers;
+  users: UserData;
   lng?: number | null;
   lat?: number | null;
   navigateToUserPage?: (user: NearbyUser) => void;
   onAvatarPress?: ({
-    isAllAlreadyViewed,
-    userId,
-    flashesData,
+    viewedAllFlashes,
+    flashes,
+    user,
   }:
     | {
-        isAllAlreadyViewed: true;
-        userId: string;
-        flashesData: FlashesData;
+        viewedAllFlashes: true;
+        flashes: FlashesScreenPrarams['data'][number]['flashes'];
+        user: {
+          id: string;
+          name: string;
+          avatar: string | null;
+        };
       }
     | {
-        isAllAlreadyViewed: false;
-        userId: string;
-        flashesData: undefined;
+        viewedAllFlashes: false;
+        flashes: undefined;
+        user: {
+          id: string;
+          name: string;
+          avatar: string | null;
+        };
       }) => void;
   refreshUsers?: () => Promise<void>;
   firstLoading: boolean;
@@ -82,14 +114,12 @@ export const NearbyUsersScreen = React.memo(() => {
     const _lat = state.userReducer.user!.lat;
     return _lat;
   }, shallowEqual);
-
   const lng = useSelector((state: RootState) => {
     const _lng = state.userReducer.user!.lng;
     return _lng;
   }, shallowEqual);
 
   const [keyword, setKeyword] = useState('');
-
   const filteredUsers = useMemo(() => {
     if (keyword === '') {
       return users;
@@ -106,15 +136,6 @@ export const NearbyUsersScreen = React.memo(() => {
       return matchedUsers;
     }
   }, [keyword, users]);
-
-  // useEffect(() => {
-  //   const _get = async () => {
-  //     setFirstLoading(true);
-  //     await getNearbyUsers({lat, lng, range});
-  //     setFirstLoading(false);
-  //   };
-  //   _get();
-  // }, [getNearbyUsers, lat, lng, range]);
 
   useFocusEffect(
     useCallback(() => {
@@ -140,21 +161,21 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
-  // const preloadUriGroup = useMemo(() => {
-  //   return JSON.stringify(
-  //     users
-  //       .filter((user) => user.flashes.entities.length)
-  //       .map((user) =>
-  //         user.flashes.entities.map((e) => {
-  //           const uri =
-  //             e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
-  //           return {
-  //             uri,
-  //           };
-  //         }),
-  //       ),
-  //   );
-  // }, [users]);
+  const preloadUriGroup = useMemo(() => {
+    return JSON.stringify(
+      users
+        .filter((user) => user.flashesData.entities.length)
+        .map((user) =>
+          user.flashesData.entities.map((e) => {
+            const uri =
+              e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
+            return {
+              uri,
+            };
+          }),
+        ),
+    );
+  }, [users]);
 
   // preload用uriの中身が変更した場合はそれをオブジェクトに戻しpreloadを実行。
   // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
@@ -182,59 +203,75 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
-  // const sequenceFlashesAndUserData = useMemo(() => {
-  //   if (users.length) {
-  //     const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
-  //       (data) =>
-  //         data.flashes.entities.length && !data.flashes.isAllAlreadyViewed,
-  //     );
-  //     const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
-  //       flashesData: user.flashes,
-  //       userData: {userId: user.id, from: 'nearbyUsers'} as const,
-  //     }));
-  //     return data;
-  //   }
-  // }, [users]);
+  const sequenceFlashesAndUserData = useMemo(() => {
+    if (users.length) {
+      const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
+        (data) =>
+          data.flashesData.entities.length &&
+          !data.flashesData.viewedAllFlashes,
+      );
+      const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
+        flashes: user.flashesData.entities,
+        user: {
+          id: user.id,
+          name: user.name,
+          avatar: user.avatar,
+        },
+        viewerViewedFlasheIds: user.flashesData.viewerViewedFlasheIds,
+      }));
+      return data;
+    }
+    return [];
+  }, [users]);
 
   const onAvatarPress = useCallback(
     ({
-      isAllAlreadyViewed,
-      userId,
-      flashesData,
+      viewedAllFlashes,
+      flashes,
+      user,
     }:
       | {
-          isAllAlreadyViewed: true;
-          userId: string;
-          flashesData: FlashesData;
+          viewedAllFlashes: true;
+          flashes: FlashesScreenPrarams['data'][number]['flashes'];
+          user: {
+            id: string;
+            name: string;
+            avatar: string | null;
+          };
         }
       | {
-          isAllAlreadyViewed: false;
-          userId: string;
-          flashesData: undefined;
+          viewedAllFlashes: false;
+          flashes: undefined;
+          user: {
+            id: string;
+            name: string;
+            avatar: string | null;
+          };
         }) => {
-      let navigationParams: FlashesStackParamList['Flashes'];
-      // isAllAlreadyViewedがtrueであれば連続して表示せずにそのユーザーのもののみ表示させる
-      // なのでこの場合はそのユーザーのデータを引数でうける
-      if (isAllAlreadyViewed && flashesData) {
+      let navigationParams: FlashesScreenPrarams;
+      // viewedAllFlashesがtrueであれば連続して表示せずにそのユーザーのもののみ表示させる。なのでこの場合はそのユーザーのデータを引数でうける
+      if (viewedAllFlashes && flashes) {
         navigationParams = {
           isMyData: false,
           startingIndex: 0,
-          dataArray: [
+          data: [
             {
-              flashesData: flashesData,
-              userData: {userId: userId, from: 'nearbyUsers'},
+              flashes,
+              user,
             },
           ],
         };
+
         // isAllAlreadyViewedがfalseの場合他のユーザーのものも連続で表示させる必要があるのでsequenceFlashesAndUserDataを渡す
-      } else if (!isAllAlreadyViewed && sequenceFlashesAndUserData) {
+      } else if (!viewedAllFlashes && sequenceFlashesAndUserData) {
         const startingIndex = sequenceFlashesAndUserData!.findIndex(
-          (item) => item.userData.userId === userId,
+          (item) => item.user.id === user.id,
         );
+
         navigationParams = {
           isMyData: false,
           startingIndex,
-          dataArray: sequenceFlashesAndUserData,
+          data: sequenceFlashesAndUserData,
         };
       }
       if (navigationParams!) {
@@ -262,7 +299,7 @@ export const NearbyUsersScreen = React.memo(() => {
       lat,
       lng,
       refreshUsers,
-      firstLoading,
+      firstLoading: isLoading,
     }),
     [
       filteredUsers,
@@ -272,7 +309,7 @@ export const NearbyUsersScreen = React.memo(() => {
       lat,
       lng,
       refreshUsers,
-      firstLoading,
+      isLoading,
     ],
   );
 
