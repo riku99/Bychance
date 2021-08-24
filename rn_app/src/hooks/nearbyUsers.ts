@@ -8,6 +8,7 @@ import {FlashStamp} from '~/types/flashStamps';
 import {GetNearbyUsersReponse} from '~/types/response/nearbyUsers';
 import {upsertFlashes} from '~/stores/flashes';
 import {useMyId} from './users';
+import {upsertUsers} from '~/stores/_users';
 
 export const useNearbyUsers = () => {
   const [users, setUsers] = useState<GetNearbyUsersReponse>([]);
@@ -25,7 +26,7 @@ export const useNearbyUsers = () => {
         addBearer(credentials?.token),
       );
 
-      console.log(response.data);
+      setUsers([]);
 
       let storedFlashesData: any[] = [];
       response.data.forEach((d) => {
@@ -38,10 +39,15 @@ export const useNearbyUsers = () => {
         });
       });
 
+      const storedUsersData = response.data.map((d) => ({
+        id: d.id,
+        name: d.name,
+        avatar: d.avatar,
+      }));
+
       console.log(storedFlashesData);
       dispatch(upsertFlashes(storedFlashesData));
-      setUsers(response.data);
-      // setUsers([]);
+      dispatch(upsertUsers(storedUsersData));
     } catch (e) {
       handleApiError(e);
     }

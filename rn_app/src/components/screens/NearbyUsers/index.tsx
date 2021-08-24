@@ -158,30 +158,30 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
-  const preloadUriGroup = useMemo(() => {
-    return JSON.stringify(
-      users
-        .filter((user) => user.flashesData.entities.length)
-        .map((user) =>
-          user.flashesData.entities.map((e) => {
-            const uri =
-              e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
-            return {
-              uri,
-            };
-          }),
-        ),
-    );
-  }, [users]);
+  // const preloadUriGroup = useMemo(() => {
+  //   return JSON.stringify(
+  //     users
+  //       .filter((user) => user.flashesData.entities.length)
+  //       .map((user) =>
+  //         user.flashesData.entities.map((e) => {
+  //           const uri =
+  //             e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
+  //           return {
+  //             uri,
+  //           };
+  //         }),
+  //       ),
+  //   );
+  // }, [users]);
 
   // preload用uriの中身が変更した場合はそれをオブジェクトに戻しpreloadを実行。
   // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
-  useEffect(() => {
-    const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
-    preData.forEach((data) => {
-      FastImage.preload(data);
-    });
-  }, [preloadUriGroup]);
+  // useEffect(() => {
+  //   const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
+  //   preData.forEach((data) => {
+  //     FastImage.preload(data);
+  //   });
+  // }, [preloadUriGroup]);
 
   const searchStackNavigation = useNavigation<
     NearbyUsersStackNavigationProp<'NearbyUsers'>
@@ -198,26 +198,26 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
-  // const sequenceFlashesAndUserData = useMemo(() => {
-  //   if (users.length) {
-  //     const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
-  //       (data) =>
-  //         data.flashesData.entities.length &&
-  //         !data.flashesData.viewedAllFlashes,
-  //     );
-  //     const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
-  //       flashes: user.flashesData.entities,
-  //       user: {
-  //         id: user.id,
-  //         name: user.name,
-  //         avatar: user.avatar,
-  //       },
-  //       viewerViewedFlasheIds: user.flashesData.viewerViewedFlasheIds,
-  //     }));
-  //     return data;
-  //   }
-  //   return [];
-  // }, [users]);
+  const sequenceFlashesAndUserData = useMemo(() => {
+    //   if (users.length) {
+    //     const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
+    //       (data) =>
+    //         data.flashesData.entities.length &&
+    //         !data.flashesData.viewedAllFlashes,
+    //     );
+    //     const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
+    //       flashes: user.flashesData.entities,
+    //       user: {
+    //         id: user.id,
+    //         name: user.name,
+    //         avatar: user.avatar,
+    //       },
+    //       viewerViewedFlasheIds: user.flashesData.viewerViewedFlasheIds,
+    //     }));
+    //     return data;
+    //   }
+    return [];
+  }, [users]);
 
   const onAvatarPress = useCallback(
     ({
@@ -243,38 +243,36 @@ export const NearbyUsersScreen = React.memo(() => {
             avatar: string | null;
           };
         }) => {
-      let navigationParams: FlashesScreenPrarams;
-      // viewedAllFlashesがtrueであれば連続して表示せずにそのユーザーのもののみ表示させる。なのでこの場合はそのユーザーのデータを引数でうける
-      if (viewedAllFlashes && flashes) {
-        navigationParams = {
-          isMyData: false,
-          startingIndex: 0,
-          data: [
-            {
-              flashes,
-              user,
-            },
-          ],
-        };
-
-        // isAllAlreadyViewedがfalseの場合他のユーザーのものも連続で表示させる必要があるのでsequenceFlashesAndUserDataを渡す
-      } else if (!viewedAllFlashes && sequenceFlashesAndUserData) {
-        const startingIndex = sequenceFlashesAndUserData!.findIndex(
-          (item) => item.user.id === user.id,
-        );
-
-        navigationParams = {
-          isMyData: false,
-          startingIndex,
-          data: sequenceFlashesAndUserData,
-        };
-      }
-      if (navigationParams!) {
-        rootStackNavigation.navigate('Flashes', {
-          screen: 'Flashes',
-          params: navigationParams!,
-        });
-      }
+      // let navigationParams: FlashesScreenPrarams;
+      // // viewedAllFlashesがtrueであれば連続して表示せずにそのユーザーのもののみ表示させる。なのでこの場合はそのユーザーのデータを引数でうける
+      // if (viewedAllFlashes && flashes) {
+      //   navigationParams = {
+      //     isMyData: false,
+      //     startingIndex: 0,
+      //     data: [
+      //       {
+      //         flashes,
+      //         user,
+      //       },
+      //     ],
+      //   };
+      //   // isAllAlreadyViewedがfalseの場合他のユーザーのものも連続で表示させる必要があるのでsequenceFlashesAndUserDataを渡す
+      // } else if (!viewedAllFlashes && sequenceFlashesAndUserData) {
+      //   const startingIndex = sequenceFlashesAndUserData!.findIndex(
+      //     (item) => item.user.id === user.id,
+      //   );
+      //   navigationParams = {
+      //     isMyData: false,
+      //     startingIndex,
+      //     data: sequenceFlashesAndUserData,
+      //   };
+      // }
+      // if (navigationParams!) {
+      //   rootStackNavigation.navigate('Flashes', {
+      //     screen: 'Flashes',
+      //     params: navigationParams!,
+      //   });
+      // }
     },
     [rootStackNavigation, sequenceFlashesAndUserData],
   );
