@@ -46,7 +46,6 @@ type Props = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   scrollToNextOrBackScreen: () => void;
-  // viewerViewedFlasheIds: number[];
 };
 
 export const ShowFlash = React.memo(
@@ -58,8 +57,7 @@ export const ShowFlash = React.memo(
     showModal,
     setShowModal,
     scrollToNextOrBackScreen,
-  }: // viewerViewedFlasheIds,
-  Props) => {
+  }: Props) => {
     const myId = useMyId();
 
     const isMyData = myId === user.id;

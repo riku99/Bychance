@@ -23,26 +23,17 @@ type Props = {
 };
 
 export const FlashesPage = ({route, navigation}: Props) => {
-  // const {startingIndex, data, isMyData} = route.params;
   const {startingIndex, userIds} = route.params;
   const data = useSelector(
     (state: RootState) => selectFlashesByUserIds(state, userIds),
     shallowEqual,
   );
-  console.log(data);
 
   const flatListRef = useRef<FlatList>(null);
 
   // FlatListに渡される複数のアイテムのうち、どのアイテムが実際に画面に表示されているのかを管理るためのオブジェクト
   const [displayManagementTable, setDisplayManagementTable] = useState(() => {
     let obj: {[key: number]: boolean} = {};
-    // if (!isMyData) {
-    //   for (let i = 0; i < data.length; i++) {
-    //     obj[i] = i === startingIndex ? true : false;
-    //   }
-    // } else {
-    //   obj[startingIndex] = true;
-    // }
     for (let i = 0; i < data.length; i++) {
       obj[i] = i === startingIndex ? true : false;
     }

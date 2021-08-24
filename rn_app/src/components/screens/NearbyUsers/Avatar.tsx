@@ -51,20 +51,6 @@ export const Avatar = React.memo(({user, size = 'medium'}: Props) => {
             userId: user.id,
           });
         }
-
-        // if (!user.flashesData.viewedAllFlashes) {
-        //   onAvatarPress({
-        //     viewedAllFlashes: false,
-        //     flashes: undefined,
-        //     user: userData,
-        //   });
-        // } else {
-        //   onAvatarPress({
-        //     viewedAllFlashes: true,
-        //     flashes: user.flashesData.entities,
-        //     user: userData,
-        //   });
-        // }
       }}
       size={size}
       outerType={outerType}
