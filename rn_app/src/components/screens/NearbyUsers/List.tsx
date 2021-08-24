@@ -11,6 +11,7 @@ import {ListItem} from 'react-native-elements';
 
 import {Avatar} from './Avatar';
 import {TabViewContext} from './index';
+import {Name} from './Name';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
@@ -90,8 +91,8 @@ export const List = React.memo(() => {
                   }}>
                   <Avatar user={u} />
                   <ListItem.Content>
-                    <ListItem.Title style={{fontWeight: '500', fontSize: 15}}>
-                      {u.name}
+                    <ListItem.Title>
+                      <Name id={u.id} name={u.name} />
                     </ListItem.Title>
                     <ListItem.Subtitle style={styles.subtitle}>
                       {u.statusMessage}

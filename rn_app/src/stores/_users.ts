@@ -29,3 +29,6 @@ const selectors = usersAdapter.getSelectors();
 
 export const selectUserAvatar = (state: RootState, id: string) =>
   selectors.selectById(state._usersReducer, id)?.avatar;
+
+export const selectUserName = (state: RootState, id: string) =>
+  selectors.selectById(state._usersReducer, id)?.name;
