@@ -58,6 +58,27 @@ export const selectFlashesByIds = (state: RootState, ids: number[]) => {
     .filter((f): f is Exclude<typeof f, undefined> => f !== undefined);
 };
 
+export const selectFlashesByUserIds = (state: RootState, userIds: string[]) => {
+  return userIds.map((userId) => {
+    const fl = getAllFlashes(state).filter((f) => f.userId === userId);
+    return fl;
+  });
+};
+
+export const selectNotAllViewedUserIds = (
+  state: RootState,
+  userIds: string[],
+) => {
+  return selectFlashesByUserIds(state, userIds)
+    .map((fs, idx) => {
+      const v = fs.every((f) => f.viewerViewed);
+      if (!v) {
+        return userIds[idx];
+      }
+    })
+    .filter((_f): _f is Exclude<typeof _f, undefined> => _f !== undefined);
+};
+
 export const flashesReducer = flashesSlice.reducer;
 
 export const {

@@ -30,6 +30,10 @@ import {
   notLocationInfoAlert,
 } from '~/helpers/alert';
 import {useNearbyUsers} from '~/hooks/nearbyUsers';
+import {
+  selectFlashesByUserIds,
+  selectNotAllViewedUserIds,
+} from '~/stores/flashes';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -63,28 +67,12 @@ type TabViewContextType = {
   lat?: number | null;
   navigateToUserPage?: (user: NearbyUser) => void;
   onAvatarPress?: ({
-    viewedAllFlashes,
-    flashes,
-    user,
-  }:
-    | {
-        viewedAllFlashes: true;
-        flashes: FlashesScreenPrarams['data'][number]['flashes'];
-        user: {
-          id: string;
-          name: string;
-          avatar: string | null;
-        };
-      }
-    | {
-        viewedAllFlashes: false;
-        flashes: undefined;
-        user: {
-          id: string;
-          name: string;
-          avatar: string | null;
-        };
-      }) => void;
+    userId,
+    type,
+  }: {
+    userId: string;
+    type: 'one' | 'sequence';
+  }) => void;
   refreshUsers?: () => Promise<void>;
   firstLoading: boolean;
 };
@@ -207,52 +195,38 @@ export const NearbyUsersScreen = React.memo(() => {
     [searchStackNavigation],
   );
 
+  const sequenceData = useSelector((state: RootState) => {
+    const ids = filteredUsers.map((u) => u.id);
+    return selectNotAllViewedUserIds(state, ids);
+  }, shallowEqual);
+  console.log(sequenceData);
+
   // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
-  const sequenceFlashesAndUserData = useMemo(() => {
-    //   if (users.length) {
-    //     const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
-    //       (data) =>
-    //         data.flashesData.entities.length &&
-    //         !data.flashesData.viewedAllFlashes,
-    //     );
-    //     const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
-    //       flashes: user.flashesData.entities,
-    //       user: {
-    //         id: user.id,
-    //         name: user.name,
-    //         avatar: user.avatar,
-    //       },
-    //       viewerViewedFlasheIds: user.flashesData.viewerViewedFlasheIds,
-    //     }));
-    //     return data;
-    //   }
-    return [];
-  }, [users]);
+  // userIdsを返す
 
   const onAvatarPress = useCallback(
-    ({
-      viewedAllFlashes,
-      flashes,
-      user,
-    }:
-      | {
-          viewedAllFlashes: true;
-          flashes: FlashesScreenPrarams['data'][number]['flashes'];
-          user: {
-            id: string;
-            name: string;
-            avatar: string | null;
-          };
-        }
-      | {
-          viewedAllFlashes: false;
-          flashes: undefined;
-          user: {
-            id: string;
-            name: string;
-            avatar: string | null;
-          };
-        }) => {
+    ({userId, type}: {userId: string; type: 'one' | 'sequence'}) => {
+      if (type === 'one') {
+        rootStackNavigation.navigate('Flashes', {
+          screen: 'Flashes',
+          params: {
+            startingIndex: 0,
+            userIds: [userId],
+          },
+        });
+        return;
+      }
+
+      if (type === 'sequence') {
+        const startingIndex = sequenceData!.findIndex((s) => s === userId);
+        rootStackNavigation.navigate('Flashes', {
+          screen: 'Flashes',
+          params: {
+            startingIndex: startingIndex,
+            userIds: sequenceData,
+          },
+        });
+      }
       // let navigationParams: FlashesScreenPrarams;
       // // viewedAllFlashesがtrueであれば連続して表示せずにそのユーザーのもののみ表示させる。なのでこの場合はそのユーザーのデータを引数でうける
       // if (viewedAllFlashes && flashes) {
@@ -266,15 +240,15 @@ export const NearbyUsersScreen = React.memo(() => {
       //       },
       //     ],
       //   };
-      //   // isAllAlreadyViewedがfalseの場合他のユーザーのものも連続で表示させる必要があるのでsequenceFlashesAndUserDataを渡す
-      // } else if (!viewedAllFlashes && sequenceFlashesAndUserData) {
-      //   const startingIndex = sequenceFlashesAndUserData!.findIndex(
+      //   // isAllAlreadyViewedがfalseの場合他のユーザーのものも連続で表示させる必要があるのでsequenceDataを渡す
+      // } else if (!viewedAllFlashes && sequenceData) {
+      //   const startingIndex = sequenceData!.findIndex(
       //     (item) => item.user.id === user.id,
       //   );
       //   navigationParams = {
       //     isMyData: false,
       //     startingIndex,
-      //     data: sequenceFlashesAndUserData,
+      //     data: sequenceData,
       //   };
       // }
       // if (navigationParams!) {
@@ -284,7 +258,7 @@ export const NearbyUsersScreen = React.memo(() => {
       //   });
       // }
     },
-    [rootStackNavigation, sequenceFlashesAndUserData],
+    [rootStackNavigation, sequenceData],
   );
 
   const refreshUsers = useCallback(async () => {

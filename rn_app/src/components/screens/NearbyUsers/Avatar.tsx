@@ -33,28 +33,38 @@ export const Avatar = React.memo(({user, size = 'medium'}: Props) => {
     <UserAvatarWithOuter
       image={url}
       onPress={() => {
-        if (!onAvatarPress) {
+        if (!onAvatarPress || outerType === 'none') {
           return;
         }
-        const userData = {
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-        };
 
-        if (!user.flashesData.viewedAllFlashes) {
+        if (outerType === 'silver') {
           onAvatarPress({
-            viewedAllFlashes: false,
-            flashes: undefined,
-            user: userData,
+            type: 'one',
+            userId: user.id,
           });
-        } else {
+          return;
+        }
+
+        if (outerType === 'gradation') {
           onAvatarPress({
-            viewedAllFlashes: true,
-            flashes: user.flashesData.entities,
-            user: userData,
+            type: 'sequence',
+            userId: user.id,
           });
         }
+
+        // if (!user.flashesData.viewedAllFlashes) {
+        //   onAvatarPress({
+        //     viewedAllFlashes: false,
+        //     flashes: undefined,
+        //     user: userData,
+        //   });
+        // } else {
+        //   onAvatarPress({
+        //     viewedAllFlashes: true,
+        //     flashes: user.flashesData.entities,
+        //     user: userData,
+        //   });
+        // }
       }}
       size={size}
       outerType={outerType}

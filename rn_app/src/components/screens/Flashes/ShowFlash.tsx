@@ -36,18 +36,17 @@ type Props = {
     sourceType: 'image' | 'video';
     createdAt: string;
     viewed: {userId: string}[];
+    viewerViewed: boolean;
   }[];
   user: {
     id: string;
-    name: string;
-    avatar: string | null;
   };
   isDisplayed: boolean;
   scrolling: boolean;
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   scrollToNextOrBackScreen: () => void;
-  viewerViewedFlasheIds: number[];
+  // viewerViewedFlasheIds: number[];
 };
 
 export const ShowFlash = React.memo(
@@ -59,17 +58,18 @@ export const ShowFlash = React.memo(
     showModal,
     setShowModal,
     scrollToNextOrBackScreen,
-    viewerViewedFlasheIds,
-  }: Props) => {
+  }: // viewerViewedFlasheIds,
+  Props) => {
     const myId = useMyId();
 
     const isMyData = myId === user.id;
     const entityLength = flashes.length;
     const progressBarWidth = MAX_PROGRESS_BAR / entityLength;
 
-    const alreadyViewedLength = viewerViewedFlasheIds
-      ? viewerViewedFlasheIds.length
-      : 0;
+    const alreadyViewedIds = flashes
+      .filter((f) => f.viewerViewed)
+      .map((f) => f.id);
+    const alreadyViewedLength = alreadyViewedIds.length;
 
     // 実際に表示されているentity
     // このコンポーネントがFlatListにより表示されて最初のレンダリングの際、既に見たものがある場合それを飛ばしている
@@ -112,10 +112,7 @@ export const ShowFlash = React.memo(
 
     const onViewed = useCallback(
       async ({flashId}: {flashId: number}) => {
-        if (!viewerViewedFlasheIds) {
-          return;
-        }
-        const existing = viewerViewedFlasheIds.includes(flashId);
+        const existing = alreadyViewedIds.includes(flashId);
         if (!existing && !isMyData) {
           //　閲覧データ作成
           createAlreadyViewedFlash({flashId, userId: user.id});
@@ -148,7 +145,7 @@ export const ShowFlash = React.memo(
           );
         }
       },
-      [viewerViewedFlasheIds, isMyData, createAlreadyViewedFlash, user.id],
+      [alreadyViewedIds, isMyData, createAlreadyViewedFlash, user.id],
     );
 
     // プログレスバーのアニメーション

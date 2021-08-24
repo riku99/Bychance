@@ -1,17 +1,18 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 import {UserAvatar} from '../../utils/Avatar';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {BackButton} from '~/components/utils/BackButton';
 import {getTimeDiff} from '~/utils';
+import {selectUserName, selectUserAvatar} from '~/stores/_users';
+import {RootState} from '~/stores';
 
 type Props = {
   user: {
     id: string;
-    name: string;
-    avatar: string | null;
   };
   timestamp: string;
   setIsNavigatedToProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,6 +23,12 @@ export const InfoItems = ({
   timestamp,
   setIsNavigatedToProfile,
 }: Props) => {
+  const name = useSelector((state: RootState) =>
+    selectUserName(state, user.id),
+  );
+  const avatar = useSelector((state: RootState) =>
+    selectUserAvatar(state, user.id),
+  );
   const navigation = useNavigation<FlashStackNavigationProp<'Flashes'>>();
 
   const timeDiff = getTimeDiff(timestamp);
@@ -40,9 +47,9 @@ export const InfoItems = ({
         style={styles.userInfo}
         onPress={onUserPress}
         activeOpacity={1}>
-        <UserAvatar image={user?.avatar} size="small" opacity={1} />
+        <UserAvatar image={avatar} size="small" opacity={1} />
         <Text style={styles.userName}>
-          {user ? user.name : 'ユーザーが存在しません'}
+          {name ? name : 'ユーザーが存在しません'}
         </Text>
         <Text style={styles.timestamp}>
           {timeDiff < 24 ? timeDiff.toString() + '時間前' : '1日前'}

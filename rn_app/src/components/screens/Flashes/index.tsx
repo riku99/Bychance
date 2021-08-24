@@ -8,11 +8,14 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
+import {shallowEqual, useSelector} from 'react-redux';
 
 import {ShowFlash} from './ShowFlash';
 import {FlashesRouteProp} from '../../../navigations/types';
 import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
+import {RootState} from '~/stores';
+import {selectFlashesByUserIds} from '~/stores/flashes';
 
 type Props = {
   route: FlashesRouteProp<'Flashes'>;
@@ -20,18 +23,28 @@ type Props = {
 };
 
 export const FlashesPage = ({route, navigation}: Props) => {
-  const {startingIndex, data, isMyData} = route.params;
+  // const {startingIndex, data, isMyData} = route.params;
+  const {startingIndex, userIds} = route.params;
+  const data = useSelector(
+    (state: RootState) => selectFlashesByUserIds(state, userIds),
+    shallowEqual,
+  );
+  console.log(data);
+
   const flatListRef = useRef<FlatList>(null);
 
   // FlatListに渡される複数のアイテムのうち、どのアイテムが実際に画面に表示されているのかを管理るためのオブジェクト
   const [displayManagementTable, setDisplayManagementTable] = useState(() => {
     let obj: {[key: number]: boolean} = {};
-    if (!isMyData) {
-      for (let i = 0; i < data.length; i++) {
-        obj[i] = i === startingIndex ? true : false;
-      }
-    } else {
-      obj[startingIndex] = true;
+    // if (!isMyData) {
+    //   for (let i = 0; i < data.length; i++) {
+    //     obj[i] = i === startingIndex ? true : false;
+    //   }
+    // } else {
+    //   obj[startingIndex] = true;
+    // }
+    for (let i = 0; i < data.length; i++) {
+      obj[i] = i === startingIndex ? true : false;
     }
     return obj;
   });
@@ -101,14 +114,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
     }
   };
 
-  // アイテムが1つの場合、それを削除するとデータはなくなる。その場合はバックさせたい
-  useEffect(() => {
-    if (!data[0].flashes.length) {
-      navigation.goBack();
-    }
-  }, [data, navigation]);
-
-  if (!data[0].flashes.length) {
+  if (!data[0].length) {
     return (
       <View style={{backgroundColor: 'black', width: '100%', height: '100%'}} />
     );
@@ -119,18 +125,17 @@ export const FlashesPage = ({route, navigation}: Props) => {
       <FlatList
         ref={flatListRef}
         data={data}
-        keyExtractor={(item) => item.user.id}
+        keyExtractor={(item, idx) => idx.toString()}
         renderItem={({item, index}) => (
           <View style={{height, width}}>
             <ShowFlash
-              flashes={item.flashes}
-              user={item.user}
+              flashes={item}
+              user={{id: userIds[index]}}
               isDisplayed={displayManagementTable[index]}
               scrolling={scrolling}
               showModal={showModal}
               setShowModal={setShowModal}
               scrollToNextOrBackScreen={scrollToNextOrBackScreen}
-              viewerViewedFlasheIds={item.viewerViewedFlasheIds}
             />
           </View>
         )}
