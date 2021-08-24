@@ -6,17 +6,12 @@ export type GetNearbyUsersReponse = {
   introduce: string | null;
   lat: number;
   lng: number;
-  flashesData: {
-    entities: {
-      id: number;
-      source: string;
-      sourceType: 'image' | 'video';
-      userId: string;
-      createdAt: string;
-      viewed: {userId: string}[];
-      specificUserViewed: {flashId: number}[];
-    }[];
-    viewerViewedFlasheIds: number[];
-    viewedAllFlashes: boolean;
-  };
+  flashes: {
+    id: number;
+    source: string;
+    sourceType: 'image' | 'video';
+    userId: string;
+    createdAt: string;
+    viewed: {userId: string}[];
+  }[];
 }[];

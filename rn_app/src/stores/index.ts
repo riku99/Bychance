@@ -7,6 +7,7 @@ import {otherSettingsReducer} from './otherSettings';
 import {errorsReducer} from './errors';
 import {_talkRoomReducer} from './_talkRooms';
 import {postsReducer} from './posts';
+import {_usersReducer} from './_users';
 
 const rootReducer = combineReducers({
   sessionReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   otherSettingsReducer,
   errorsReducer,
   _talkRoomReducer,
+  _usersReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

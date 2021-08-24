@@ -6,12 +6,15 @@ import {baseUrl} from '~/constants/url';
 import {NearbyUsers} from '~/types/nearbyUsers';
 import {FlashStamp} from '~/types/flashStamps';
 import {GetNearbyUsersReponse} from '~/types/response/nearbyUsers';
+import {upsertFlashes} from '~/stores/flashes';
+import {useMyId} from './users';
 
 export const useNearbyUsers = () => {
   const [users, setUsers] = useState<GetNearbyUsersReponse>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [range, setRange] = useState(0.1);
-  const {checkKeychain, handleApiError, addBearer} = useApikit();
+  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+  const myId = useMyId();
 
   const getNearbyUsers = useCallback(async () => {
     const credentials = await checkKeychain();
@@ -23,11 +26,26 @@ export const useNearbyUsers = () => {
       );
 
       console.log(response.data);
+
+      let storedFlashesData: any[] = [];
+      response.data.forEach((d) => {
+        d.flashes.forEach((f) => {
+          const viewerViewed = f.viewed.some((v) => v.userId === myId);
+          storedFlashesData.push({
+            ...f,
+            viewerViewed,
+          });
+        });
+      });
+
+      console.log(storedFlashesData);
+      dispatch(upsertFlashes(storedFlashesData));
       setUsers(response.data);
+      // setUsers([]);
     } catch (e) {
       handleApiError(e);
     }
-  }, [checkKeychain, addBearer, handleApiError, range]);
+  }, [checkKeychain, addBearer, handleApiError, range, myId, dispatch]);
 
   // リフレッシュ以外の取得。初回レンダリング後とレンジが変化した時
   useEffect(() => {

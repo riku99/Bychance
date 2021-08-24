@@ -198,26 +198,26 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
-  const sequenceFlashesAndUserData = useMemo(() => {
-    if (users.length) {
-      const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
-        (data) =>
-          data.flashesData.entities.length &&
-          !data.flashesData.viewedAllFlashes,
-      );
-      const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
-        flashes: user.flashesData.entities,
-        user: {
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-        },
-        viewerViewedFlasheIds: user.flashesData.viewerViewedFlasheIds,
-      }));
-      return data;
-    }
-    return [];
-  }, [users]);
+  // const sequenceFlashesAndUserData = useMemo(() => {
+  //   if (users.length) {
+  //     const haveFlashEntitiesAndNotAllAlreadyViewedUser = users.filter(
+  //       (data) =>
+  //         data.flashesData.entities.length &&
+  //         !data.flashesData.viewedAllFlashes,
+  //     );
+  //     const data = haveFlashEntitiesAndNotAllAlreadyViewedUser.map((user) => ({
+  //       flashes: user.flashesData.entities,
+  //       user: {
+  //         id: user.id,
+  //         name: user.name,
+  //         avatar: user.avatar,
+  //       },
+  //       viewerViewedFlasheIds: user.flashesData.viewerViewedFlasheIds,
+  //     }));
+  //     return data;
+  //   }
+  //   return [];
+  // }, [users]);
 
   const onAvatarPress = useCallback(
     ({
