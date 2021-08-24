@@ -38,22 +38,22 @@ export type UserData = {
   name: string;
   avatar: string | null;
   statusMessage: string | null;
-  introduce: string | null;
   lat: number;
   lng: number;
-  flashesData: {
-    entities: {
-      id: number;
-      source: string;
-      sourceType: 'image' | 'video';
-      userId: string;
-      viewed: {userId: string}[];
-      createdAt: string;
-      specificUserViewed: {flashId: number}[];
-    }[];
-    viewerViewedFlasheIds: number[];
-    viewedAllFlashes: boolean;
-  };
+  flashIds: number[];
+  // flashesData: {
+  //   entities: {
+  //     id: number;
+  //     source: string;
+  //     sourceType: 'image' | 'video';
+  //     userId: string;
+  //     viewed: {userId: string}[];
+  //     createdAt: string;
+  //     specificUserViewed: {flashId: number}[];
+  //   }[];
+  //   viewerViewedFlasheIds: number[];
+  //   viewedAllFlashes: boolean;
+  // };
 };
 
 type TabViewContextType = {
@@ -98,7 +98,17 @@ export const TabViewContext = createContext<TabViewContextType>({
 });
 
 export const NearbyUsersScreen = React.memo(() => {
-  const {users, isLoading, setRange, getNearbyUsers} = useNearbyUsers();
+  const {data, isLoading, setRange, getNearbyUsers} = useNearbyUsers();
+  const users = useMemo(() => {
+    return data.map((d) => {
+      const {flashes, ...restData} = d;
+      const flashIds = flashes.map((f) => f.id);
+      return {
+        ...restData,
+        flashIds,
+      };
+    });
+  }, [data]);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const transformY = scrollY.interpolate({

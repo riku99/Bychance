@@ -11,7 +11,7 @@ import {useMyId} from './users';
 import {upsertUsers} from '~/stores/_users';
 
 export const useNearbyUsers = () => {
-  const [users, setUsers] = useState<GetNearbyUsersReponse>([]);
+  const [data, setData] = useState<GetNearbyUsersReponse>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [range, setRange] = useState(0.1);
   const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
@@ -26,7 +26,7 @@ export const useNearbyUsers = () => {
         addBearer(credentials?.token),
       );
 
-      setUsers([]);
+      setData(response.data);
 
       let storedFlashesData: any[] = [];
       response.data.forEach((d) => {
@@ -64,7 +64,7 @@ export const useNearbyUsers = () => {
   }, [getNearbyUsers]);
 
   return {
-    users,
+    data,
     isLoading,
     range,
     setRange,

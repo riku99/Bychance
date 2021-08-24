@@ -46,10 +46,16 @@ const flashesSlice = createSlice({
   },
 });
 
-const flashesSelector = flashesAdapter.getSelectors();
+const selectors = flashesAdapter.getSelectors();
 
 export const getAllFlashes = (state: RootState) => {
-  return flashesSelector.selectAll(state.flashesReducer);
+  return selectors.selectAll(state.flashesReducer);
+};
+
+export const selectFlashesByIds = (state: RootState, ids: number[]) => {
+  return ids
+    .map((i) => selectors.selectById(state.flashesReducer, i))
+    .filter((f): f is Exclude<typeof f, undefined> => f !== undefined);
 };
 
 export const flashesReducer = flashesSlice.reducer;
