@@ -5,19 +5,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {UIActivityIndicator} from 'react-native-indicators';
 
-import {TabViewContext, UserData} from './index';
+import {TabViewContext} from './index';
 import {Avatar} from './Avatar';
 import {mainButtonGradientConfig} from '~/constants/styles';
 
 export const Map = React.memo(() => {
-  const {
-    lat,
-    lng,
-    users,
-    onAvatarPress,
-    navigateToUserPage,
-    refreshUsers,
-  } = useContext(TabViewContext);
+  const {lat, lng, users, refreshUsers} = useContext(TabViewContext);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -31,44 +24,6 @@ export const Map = React.memo(() => {
       };
     }
   }, [lat, lng]);
-
-  // MarkerでpointerEvent使えなくてAvatarのonPress実行できないのでMarkerコンポーネントから実行
-  const onMarkerPress = (user: UserData) => {
-    if (onAvatarPress && navigateToUserPage) {
-      if (
-        user.flashesData.entities.length &&
-        !user.flashesData.viewedAllFlashes
-      ) {
-        onAvatarPress({
-          viewedAllFlashes: false,
-          flashes: undefined,
-          user: {
-            id: user.id,
-            name: user.name,
-            avatar: user.avatar,
-          },
-        });
-        return;
-      } else if (
-        user.flashesData.entities.length &&
-        user.flashesData.viewedAllFlashes
-      ) {
-        onAvatarPress({
-          viewedAllFlashes: true,
-          flashes: user.flashesData.entities,
-          user: {
-            id: user.id,
-            name: user.name,
-            avatar: user.avatar,
-          },
-        });
-        return;
-      } else {
-        // navigateToUserPage(user);
-        console.log('navigateします');
-      }
-    }
-  };
 
   const onRefreshButtonPress = useCallback(async () => {
     if (refreshUsers) {
@@ -85,12 +40,7 @@ export const Map = React.memo(() => {
         initialRegion={region}
         showsUserLocation={true}>
         {users.map((user) => (
-          <Marker
-            key={user.id}
-            coordinate={{latitude: user.lat, longitude: user.lng}}
-            onPress={() => onMarkerPress(user)}>
-            <Avatar user={user} size={35} />
-          </Marker>
+          <Avatar user={user} size={35} marker key={user.id} />
         ))}
       </MapView>
       <TouchableOpacity
