@@ -22,6 +22,7 @@ import {
 import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes} from '~/stores/flashes';
+import {upsertUsers} from '~/stores/_users';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -412,14 +413,25 @@ export const useUserPageInfo = (userId: string) => {
       );
 
       console.log(response.data);
-      const storedFlashesData = response.data.flashes.map((f) => {
+      const data = response.data;
+      const storedFlashesData = data.flashes.map((f) => {
         const viewerViewed = f.viewed.some((v) => v.userId === myId);
         return {
           ...f,
           viewerViewed,
         };
       });
+
       dispatch(upsertFlashes(storedFlashesData));
+      dispatch(
+        upsertUsers([
+          {
+            id: data.id,
+            name: data.name,
+            avatar: data.avatar,
+          },
+        ]),
+      );
       // return response.data;
     } catch (e) {
       handleApiError(e);

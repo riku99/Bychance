@@ -6,7 +6,7 @@ import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
 import {UserData, TabViewContext} from '.';
 import {RootState} from '~/stores';
 import {selectUserAvatar} from '~/stores/_users';
-import {selectFlashesByIds, selectFlashesByUserId} from '~/stores/flashes';
+import {selectFlashesByUserId} from '~/stores/flashes';
 
 type Props = {
   user: UserData;
@@ -19,7 +19,7 @@ export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
   const storedUrl = useSelector((state: RootState) =>
     selectUserAvatar(state, user.id),
   );
-  const url = storedUrl ? storedUrl : user.avatar;
+  const url = storedUrl ? storedUrl : storedUrl === null ? null : user.avatar;
 
   const flashes = useSelector(
     (state: RootState) => selectFlashesByUserId(state, user.id),
