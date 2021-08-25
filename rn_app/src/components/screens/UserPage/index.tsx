@@ -30,11 +30,11 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     if (!data) {
       return;
     }
-    const {posts, flashesData, ...userData} = data; // eslint-disable-line
+    const {posts, ...userData} = data; // eslint-disable-line
     return {
       user: userData,
       posts,
-      flashesData,
+      flashesData: {entities: []},
     };
   }, [data]);
 

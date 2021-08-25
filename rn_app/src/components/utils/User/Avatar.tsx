@@ -8,6 +8,13 @@ type AvatarProps = {
   onPress?: () => void;
 };
 
+type Props = {
+  user: {
+    id: string;
+    avatar: string | null;
+  };
+};
+
 export const Avatar = React.memo(
   ({source, outerType, onPress}: AvatarProps) => {
     return (

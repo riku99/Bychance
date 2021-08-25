@@ -22,7 +22,7 @@ import {
 import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes} from '~/stores/flashes';
-import {upsertUsers} from '~/stores/_users';
+import {upsertUsers, selectUserAvatar} from '~/stores/_users';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -412,7 +412,6 @@ export const useUserPageInfo = (userId: string) => {
         addBearer(credentials?.token),
       );
 
-      console.log(response.data);
       const data = response.data;
       const storedFlashesData = data.flashes.map((f) => {
         const viewerViewed = f.viewed.some((v) => v.userId === myId);
@@ -432,7 +431,7 @@ export const useUserPageInfo = (userId: string) => {
           },
         ]),
       );
-      // return response.data;
+      return response.data;
     } catch (e) {
       handleApiError(e);
     }
@@ -444,4 +443,17 @@ export const useUserPageInfo = (userId: string) => {
     data,
     mutate,
   };
+};
+
+export const useUserAvatar = ({
+  userId,
+  avatarUrl,
+}: {
+  userId: string;
+  avatarUrl: string | null;
+}) => {
+  const storedUrl = useSelector((state: RootState) =>
+    selectUserAvatar(state, userId),
+  );
+  return storedUrl ? storedUrl : storedUrl === null ? null : avatarUrl;
 };

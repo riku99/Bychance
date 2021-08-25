@@ -204,13 +204,13 @@ export const User = ({data, refresh}: _Props) => {
   ]);
 
   const onAvatarPress = useCallback(() => {
-    if (flashesNavigationParam) {
-      setVideoPaused(true);
-      navigation.navigate('Flashes', {
-        screen: 'Flashes',
-        params: flashesNavigationParam,
-      });
-    }
+    // if (flashesNavigationParam) {
+    //   setVideoPaused(true);
+    //   navigation.navigate('Flashes', {
+    //     screen: 'Flashes',
+    //     params: flashesNavigationParam,
+    //   });
+    // }
   }, [flashesNavigationParam, navigation]);
 
   const creatingPost = useSelector(

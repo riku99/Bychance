@@ -5,8 +5,8 @@ import {Marker} from 'react-native-maps';
 import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
 import {UserData, TabViewContext} from '.';
 import {RootState} from '~/stores';
-import {selectUserAvatar} from '~/stores/_users';
 import {selectFlashesByUserId} from '~/stores/flashes';
+import {useUserAvatar} from '~/hooks/users';
 
 type Props = {
   user: UserData;
@@ -16,10 +16,7 @@ type Props = {
 
 export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
   const {onAvatarPress, navigateToUserPage} = useContext(TabViewContext);
-  const storedUrl = useSelector((state: RootState) =>
-    selectUserAvatar(state, user.id),
-  );
-  const url = storedUrl ? storedUrl : storedUrl === null ? null : user.avatar;
+  const url = useUserAvatar({userId: user.id, avatarUrl: user.avatar});
 
   const flashes = useSelector(
     (state: RootState) => selectFlashesByUserId(state, user.id),
