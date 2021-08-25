@@ -45,19 +45,6 @@ export type UserData = {
   lat: number;
   lng: number;
   flashIds: number[];
-  // flashesData: {
-  //   entities: {
-  //     id: number;
-  //     source: string;
-  //     sourceType: 'image' | 'video';
-  //     userId: string;
-  //     viewed: {userId: string}[];
-  //     createdAt: string;
-  //     specificUserViewed: {flashId: number}[];
-  //   }[];
-  //   viewerViewedFlasheIds: number[];
-  //   viewedAllFlashes: boolean;
-  // };
 };
 
 type TabViewContextType = {
@@ -156,30 +143,29 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 
   // オブジェクトの内容が変化した時のみpreloadを再実行したいので中身を検証するためにstringにする。
-  // const preloadUriGroup = useMemo(() => {
-  //   return JSON.stringify(
-  //     users
-  //       .filter((user) => user.flashesData.entities.length)
-  //       .map((user) =>
-  //         user.flashesData.entities.map((e) => {
-  //           const uri =
-  //             e.sourceType === 'image' ? e.source : getThumbnailUrl(e.source);
-  //           return {
-  //             uri,
-  //           };
-  //         }),
-  //       ),
-  //   );
-  // }, [users]);
+  const preloadUriGroup = useMemo(() => {
+    return JSON.stringify(
+      data
+        .filter((d) => d.flashes.length)
+        .map((fs) =>
+          fs.flashes.map((f) =>
+            f.sourceType === 'image' ? f.source : getThumbnailUrl(f.source),
+          ),
+        ),
+    );
+  }, [data]);
 
   // preload用uriの中身が変更した場合はそれをオブジェクトに戻しpreloadを実行。
   // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
-  // useEffect(() => {
-  //   const preData = JSON.parse(preloadUriGroup) as {uri: string}[][];
-  //   preData.forEach((data) => {
-  //     FastImage.preload(data);
-  //   });
-  // }, [preloadUriGroup]);
+  useEffect(() => {
+    console.log('preload');
+    const preData = JSON.parse(preloadUriGroup) as string[][];
+    console.log(preData);
+    preData.forEach((_data) => {
+      const formated = _data.map((d) => ({uri: d}));
+      FastImage.preload(formated);
+    });
+  }, [preloadUriGroup]);
 
   const searchStackNavigation = useNavigation<
     NearbyUsersStackNavigationProp<'NearbyUsers'>

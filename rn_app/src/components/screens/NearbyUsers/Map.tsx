@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {UIActivityIndicator} from 'react-native-indicators';
