@@ -6,7 +6,7 @@ import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
 import {UserData, TabViewContext} from '.';
 import {RootState} from '~/stores';
 import {selectFlashesByUserId} from '~/stores/flashes';
-import {useUserAvatar} from '~/hooks/users';
+import {useUserAvatar, useAvatarOuterType} from '~/hooks/users';
 
 type Props = {
   user: UserData;
@@ -17,17 +17,7 @@ type Props = {
 export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
   const {onAvatarPress, navigateToUserPage} = useContext(TabViewContext);
   const url = useUserAvatar({userId: user.id, avatarUrl: user.avatar});
-
-  const flashes = useSelector(
-    (state: RootState) => selectFlashesByUserId(state, user.id),
-    shallowEqual,
-  );
-
-  const outerType = !flashes.length
-    ? 'none'
-    : flashes.every((f) => f.viewerViewed)
-    ? 'silver'
-    : 'gradation';
+  const outerType = useAvatarOuterType({userId: user.id});
 
   const onPress = () => {
     if (outerType === 'none') {

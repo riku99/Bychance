@@ -21,7 +21,7 @@ import {
 } from '~/stores/user';
 import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
-import {upsertFlashes} from '~/stores/flashes';
+import {upsertFlashes, selectFlashesByUserId} from '~/stores/flashes';
 import {upsertUsers, selectUserAvatar} from '~/stores/_users';
 
 export const useSelectTamporarilySavedUserEditData = () => {
@@ -456,4 +456,17 @@ export const useUserAvatar = ({
     selectUserAvatar(state, userId),
   );
   return storedUrl ? storedUrl : storedUrl === null ? null : avatarUrl;
+};
+
+export const useAvatarOuterType = ({userId}: {userId: string}) => {
+  const flashes = useSelector(
+    (state: RootState) => selectFlashesByUserId(state, userId),
+    shallowEqual,
+  );
+
+  return !flashes.length
+    ? 'none'
+    : flashes.every((f) => f.viewerViewed)
+    ? 'silver'
+    : 'gradation';
 };
