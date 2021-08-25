@@ -59,8 +59,6 @@ export const MyPageStackScreen = () => {
   );
 };
 
-export type UserPageFrom = 'nearbyUsers' | 'chatRoom';
-
 export type UserPageScreenGroupParamList = {
   UserPage: {
     userId: string;

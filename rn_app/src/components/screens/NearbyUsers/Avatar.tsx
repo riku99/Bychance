@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
-  const {onAvatarPress} = useContext(TabViewContext);
+  const {onAvatarPress, navigateToUserPage} = useContext(TabViewContext);
   const storedUrl = useSelector((state: RootState) =>
     selectUserAvatar(state, user.id),
   );
@@ -32,7 +32,15 @@ export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
     : 'gradation';
 
   const onPress = () => {
-    if (!onAvatarPress || outerType === 'none') {
+    if (outerType === 'none') {
+      if (marker && navigateToUserPage) {
+        navigateToUserPage(user.id);
+      } else {
+        return;
+      }
+    }
+
+    if (!onAvatarPress) {
       return;
     }
 

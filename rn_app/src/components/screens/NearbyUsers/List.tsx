@@ -15,7 +15,9 @@ import {Name} from './Name';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
-  const {users, refreshUsers, firstLoading} = useContext(TabViewContext);
+  const {users, refreshUsers, firstLoading, navigateToUserPage} = useContext(
+    TabViewContext,
+  );
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -85,9 +87,9 @@ export const List = React.memo(() => {
                   containerStyle={{height: 72}}
                   key={u.id}
                   onPress={() => {
-                    // if (navigateToUserPage) {
-                    //   navigateToUserPage(u.id);
-                    // }
+                    if (navigateToUserPage) {
+                      navigateToUserPage(u.id);
+                    }
                   }}>
                   <Avatar user={u} />
                   <ListItem.Content>

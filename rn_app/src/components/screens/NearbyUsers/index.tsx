@@ -19,21 +19,16 @@ import {List} from './List';
 import {Map} from './Map';
 import {RangeSelectButton} from './RangeSelectBottun';
 import {RootState} from '~/stores';
-import {NearbyUser} from '~/stores/nearbyUsers';
 import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/navigations/Root';
 import {NearbyUsersStackNavigationProp} from '~/navigations/NearbyUsers';
-import {FlashesScreenPrarams} from '~/navigations/Flashes';
 import {normalStyles} from '~/constants/styles';
 import {
   notAuthLocationProviderAlert,
   notLocationInfoAlert,
 } from '~/helpers/alert';
 import {useNearbyUsers} from '~/hooks/nearbyUsers';
-import {
-  selectFlashesByUserIds,
-  selectNotAllViewedUserIds,
-} from '~/stores/flashes';
+import {selectNotAllViewedUserIds} from '~/stores/flashes';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -52,7 +47,7 @@ type TabViewContextType = {
   users: UserData[];
   lng?: number | null;
   lat?: number | null;
-  navigateToUserPage?: (user: NearbyUser) => void;
+  navigateToUserPage?: (userId: string) => void;
   onAvatarPress?: ({
     userId,
     type,
@@ -158,9 +153,7 @@ export const NearbyUsersScreen = React.memo(() => {
   // preload用uriの中身が変更した場合はそれをオブジェクトに戻しpreloadを実行。
   // preloadUriGroupをstringにせずにオブジェクトのまま依存関係に持たせていたら、preloadUriGroupの中身は変わっていなくてもnearbyUsersが変更する度にpreloadが走ってしまう。
   useEffect(() => {
-    console.log('preload');
     const preData = JSON.parse(preloadUriGroup) as string[][];
-    console.log(preData);
     preData.forEach((_data) => {
       const formated = _data.map((d) => ({uri: d}));
       FastImage.preload(formated);
@@ -173,9 +166,9 @@ export const NearbyUsersScreen = React.memo(() => {
   const rootStackNavigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   const navigateToUserPage = useCallback(
-    (user: NearbyUser) => {
+    (userId: string) => {
       searchStackNavigation.navigate('UserPage', {
-        userId: user.id,
+        userId,
       });
     },
     [searchStackNavigation],
@@ -185,7 +178,6 @@ export const NearbyUsersScreen = React.memo(() => {
     const ids = filteredUsers.map((u) => u.id);
     return selectNotAllViewedUserIds(state, ids);
   }, shallowEqual);
-  console.log(sequenceData);
 
   // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
   // userIdsを返す
@@ -213,36 +205,6 @@ export const NearbyUsersScreen = React.memo(() => {
           },
         });
       }
-      // let navigationParams: FlashesScreenPrarams;
-      // // viewedAllFlashesがtrueであれば連続して表示せずにそのユーザーのもののみ表示させる。なのでこの場合はそのユーザーのデータを引数でうける
-      // if (viewedAllFlashes && flashes) {
-      //   navigationParams = {
-      //     isMyData: false,
-      //     startingIndex: 0,
-      //     data: [
-      //       {
-      //         flashes,
-      //         user,
-      //       },
-      //     ],
-      //   };
-      //   // isAllAlreadyViewedがfalseの場合他のユーザーのものも連続で表示させる必要があるのでsequenceDataを渡す
-      // } else if (!viewedAllFlashes && sequenceData) {
-      //   const startingIndex = sequenceData!.findIndex(
-      //     (item) => item.user.id === user.id,
-      //   );
-      //   navigationParams = {
-      //     isMyData: false,
-      //     startingIndex,
-      //     data: sequenceData,
-      //   };
-      // }
-      // if (navigationParams!) {
-      //   rootStackNavigation.navigate('Flashes', {
-      //     screen: 'Flashes',
-      //     params: navigationParams!,
-      //   });
-      // }
     },
     [rootStackNavigation, sequenceData],
   );
