@@ -401,7 +401,8 @@ export const useUpdateLocation = () => {
 
 export const userPageUrlKey = (id: string) => `users/${id}/page_info`;
 export const useUserPageInfo = (userId: string) => {
-  const {checkKeychain, addBearer, handleApiError} = useApikit();
+  const myId = useMyId();
+  const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
   const fetcher = useCallback(async () => {
     try {
       const credentials = await checkKeychain();
@@ -410,11 +411,20 @@ export const useUserPageInfo = (userId: string) => {
         addBearer(credentials?.token),
       );
 
-      return response.data;
+      console.log(response.data);
+      const storedFlashesData = response.data.flashes.map((f) => {
+        const viewerViewed = f.viewed.some((v) => v.userId === myId);
+        return {
+          ...f,
+          viewerViewed,
+        };
+      });
+      dispatch(upsertFlashes(storedFlashesData));
+      // return response.data;
     } catch (e) {
       handleApiError(e);
     }
-  }, [checkKeychain, addBearer, userId, handleApiError]);
+  }, [checkKeychain, addBearer, userId, handleApiError, myId, dispatch]);
 
   const {data, mutate} = useSWR(userPageUrlKey(userId), fetcher);
 

@@ -17,18 +17,14 @@ export type UserPageInfo = {
     userId: string;
     sourceType: 'image' | 'video';
   }[];
-  flashesData: {
-    entities: {
-      id: number;
-      source: string;
-      createdAt: string;
-      sourceType: 'image' | 'video';
-      userId: string;
-      viewed: {userId: string}[];
-    }[];
-    viewerViewedFlasheIds: number[];
-    viewedAllFlashes: boolean;
-  };
+  flashes: {
+    id: number;
+    source: string;
+    sourceType: 'image' | 'video';
+    userId: string;
+    createdAt: string;
+    viewed: {userId: string}[];
+  }[];
 };
 
 export type RefreshMyDataResponse = {

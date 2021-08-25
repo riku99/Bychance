@@ -45,7 +45,6 @@ export const useNearbyUsers = () => {
         avatar: d.avatar,
       }));
 
-      console.log(storedFlashesData);
       dispatch(upsertFlashes(storedFlashesData));
       dispatch(upsertUsers(storedUsersData));
     } catch (e) {

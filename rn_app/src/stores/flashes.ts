@@ -58,6 +58,11 @@ export const selectFlashesByIds = (state: RootState, ids: number[]) => {
     .filter((f): f is Exclude<typeof f, undefined> => f !== undefined);
 };
 
+export const selectFlashesByUserId = (state: RootState, userId: string) => {
+  const all = getAllFlashes(state);
+  return all.filter((f) => f.userId === userId);
+};
+
 export const selectFlashesByUserIds = (state: RootState, userIds: string[]) => {
   return userIds.map((userId) => {
     const fl = getAllFlashes(state).filter((f) => f.userId === userId);

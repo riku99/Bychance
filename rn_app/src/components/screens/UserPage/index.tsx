@@ -21,7 +21,9 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
   const {data, mutate} = useUserPageInfo(route.params.userId);
 
   useLayoutEffect(() => {
-    navigation.setOptions({headerTitle: data?.name});
+    navigation.setOptions({
+      headerTitle: data?.name ? data.name : 'ユーザーが存在しません',
+    });
   }, [data?.name, navigation, route.name]);
 
   const propsData = useMemo(() => {

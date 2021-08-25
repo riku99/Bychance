@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {Marker} from 'react-native-maps';
 
 import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
 import {UserData, TabViewContext} from '.';
 import {RootState} from '~/stores';
 import {selectUserAvatar} from '~/stores/_users';
-import {selectFlashesByIds} from '~/stores/flashes';
+import {selectFlashesByIds, selectFlashesByUserId} from '~/stores/flashes';
 
 type Props = {
   user: UserData;
@@ -21,8 +21,9 @@ export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
   );
   const url = storedUrl ? storedUrl : user.avatar;
 
-  const flashes = useSelector((state: RootState) =>
-    selectFlashesByIds(state, user.flashIds),
+  const flashes = useSelector(
+    (state: RootState) => selectFlashesByUserId(state, user.id),
+    shallowEqual,
   );
 
   const outerType = !flashes.length
