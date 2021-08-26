@@ -2,17 +2,25 @@ import {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
 import {default as axios} from 'axios';
+import {useSelector} from 'react-redux';
 
 import {getExtention} from '~/utils';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
-import {store} from '~/stores';
+import {RootState, store} from '~/stores';
 import {AnotherUser} from '~/stores/types';
 import {updateNearbyUser} from '~/stores/nearbyUsers';
 import {NearbyUser} from '~/types/nearbyUsers';
 import {addFlash, removeFlash} from '~/stores/flashes';
 import {CreateFlashResponse} from '~/types/response/flashes';
 import {useCreatingFlash} from '~/hooks/appState';
+import {useCustomDispatch} from './stores';
+import {
+  selectFlashesByUserId,
+  removeFlashes,
+  upsertFlashes,
+} from '~/stores/flashes';
+import {Flash} from '~/types/store/flashes';
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
@@ -175,5 +183,28 @@ export const useCreateAlreadyViewedFlash = () => {
 
   return {
     createAlreadyViewedFlash,
+  };
+};
+
+export const useRefreshUserFlashes = (userId: string) => {
+  const dispatch = useCustomDispatch();
+
+  const current = useSelector((state: RootState) =>
+    selectFlashesByUserId(state, userId),
+  );
+
+  const refreshFlashes = useCallback(
+    ({flashes}: {flashes: Flash[]}) => {
+      const nIds = flashes.map((f) => f.id);
+      const removed = current.map((_) => _.id).filter((c) => !nIds.includes(c));
+
+      dispatch(removeFlashes(removed));
+      dispatch(upsertFlashes(flashes));
+    },
+    [current, dispatch],
+  );
+
+  return {
+    refreshFlashes,
   };
 };

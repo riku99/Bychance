@@ -22,6 +22,7 @@ import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes, selectFlashesByUserId} from '~/stores/flashes';
 import {upsertUsers, selectUserAvatar} from '~/stores/_users';
 import {useRefreshUserPosts} from './posts';
+import {useRefreshUserFlashes} from './flashes';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -349,6 +350,7 @@ export const useUserPageInfo = (userId: string) => {
   const myId = useMyId();
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
   const {refreshPosts} = useRefreshUserPosts(userId);
+  const {refreshFlashes} = useRefreshUserFlashes(userId);
   const fetcher = useCallback(async () => {
     try {
       const credentials = await checkKeychain();
@@ -367,6 +369,7 @@ export const useUserPageInfo = (userId: string) => {
       });
 
       refreshPosts({posts: response.data.posts});
+      refreshFlashes({flashes: storedFlashesData});
       dispatch(upsertFlashes(storedFlashesData));
       dispatch(
         upsertUsers([
@@ -389,6 +392,7 @@ export const useUserPageInfo = (userId: string) => {
     myId,
     dispatch,
     refreshPosts,
+    refreshFlashes,
   ]);
 
   const {data, mutate} = useSWR(userPageUrlKey(userId), fetcher);
