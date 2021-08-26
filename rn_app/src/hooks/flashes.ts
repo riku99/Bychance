@@ -3,7 +3,6 @@ import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
 import {default as axios} from 'axios';
 
-import {creatingFlash} from '~/stores/otherSettings';
 import {getExtention} from '~/utils';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
@@ -13,6 +12,7 @@ import {updateNearbyUser} from '~/stores/nearbyUsers';
 import {NearbyUser} from '~/types/nearbyUsers';
 import {addFlash, removeFlash} from '~/stores/flashes';
 import {CreateFlashResponse} from '~/types/response/flashes';
+import {useCreatingFlash} from '~/hooks/appState';
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
@@ -25,9 +25,11 @@ export const useCreateFlash = () => {
     toast,
   } = useApikit();
 
+  const {setCreatingFlash} = useCreatingFlash();
+
   return useCallback(
     async ({sourceType, uri}: {sourceType: 'image' | 'video'; uri: string}) => {
-      dispatch(creatingFlash());
+      setCreatingFlash(true);
       navigation.goBack();
       const ext = getExtention(uri);
       if (!ext) {
@@ -54,9 +56,17 @@ export const useCreateFlash = () => {
         handleApiError(e);
       }
 
-      dispatch(creatingFlash());
+      setCreatingFlash(false);
     },
-    [dispatch, navigation, checkKeychain, addBearer, handleApiError, toast],
+    [
+      dispatch,
+      navigation,
+      checkKeychain,
+      addBearer,
+      handleApiError,
+      toast,
+      setCreatingFlash,
+    ],
   );
 };
 

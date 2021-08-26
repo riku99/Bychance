@@ -5,7 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from './index';
-import {AnotherUser} from './types';
 import {NearbyUser} from '~/types/store/nearbyUsers';
 
 export type NearbyUsers = NearbyUser[];
