@@ -17,7 +17,6 @@ type Props = {
     id: string;
   };
   timestamp: string;
-  setIsNavigatedToProfile: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const InfoItems = ({user, timestamp}: Props) => {

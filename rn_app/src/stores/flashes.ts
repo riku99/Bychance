@@ -33,6 +33,17 @@ const flashesSlice = createSlice({
     upsertFlashes: (state, action: PayloadAction<Flash[]>) => {
       flashesAdapter.upsertMany(state, action.payload);
     },
+    updateFlash: (
+      state,
+      action: PayloadAction<{id: number; changes: Partial<Flash>}>,
+    ) => {
+      flashesAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: {
+          ...action.payload.changes,
+        },
+      });
+    },
   },
 });
 
@@ -83,4 +94,5 @@ export const {
   removeFlash,
   upsertFlashes,
   removeFlashes,
+  updateFlash,
 } = flashesSlice.actions;

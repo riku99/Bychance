@@ -7,10 +7,7 @@ import {useSelector} from 'react-redux';
 import {getExtention} from '~/utils';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
-import {RootState, store} from '~/stores';
-import {AnotherUser} from '~/stores/types';
-import {updateNearbyUser} from '~/stores/nearbyUsers';
-import {NearbyUser} from '~/types/nearbyUsers';
+import {RootState} from '~/stores';
 import {addFlash, removeFlash} from '~/stores/flashes';
 import {CreateFlashResponse} from '~/types/response/flashes';
 import {useCreatingFlash} from '~/hooks/appState';
@@ -19,6 +16,7 @@ import {
   selectFlashesByUserId,
   removeFlashes,
   upsertFlashes,
+  updateFlash,
 } from '~/stores/flashes';
 import {Flash} from '~/types/store/flashes';
 
@@ -58,7 +56,7 @@ export const useCreateFlash = () => {
           addBearer(credentials?.token),
         );
 
-        dispatch(addFlash({...response.data, viewed: []}));
+        dispatch(addFlash({...response.data, viewed: [], viewerViewed: false}));
         toast?.show('追加しました', {type: 'success'});
       } catch (e) {
         handleApiError(e);
@@ -110,79 +108,41 @@ export const useDeleteFlash = () => {
   };
 };
 
-export const useCreateAlreadyViewedFlash = () => {
-  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
+export const useViewed = () => {
+  const {addBearer, dispatch, checkKeychain} = useApikit();
 
-  const createUpdateObj = useCallback(
-    <T extends AnotherUser | NearbyUser>({
-      user,
+  const createViewed = useCallback(
+    async ({
       flashId,
+      userIds,
     }: {
-      user?: T;
       flashId: number;
-    }): Promise<{id: string; changes: T} | void> => {
-      return new Promise((resolve) => {
-        if (user) {
-          const viewedId = user.flashes.alreadyViewed.includes(flashId);
-          if (!viewedId) {
-            const f = user.flashes;
-            const alreadyAllViewed =
-              f.alreadyViewed.length + 1 === f.entities.length;
-            const viewed = f.alreadyViewed;
-            const updateData = {
-              id: user.id,
-              changes: {
-                ...user,
-                flashes: {
-                  ...f,
-                  alreadyViewed: [...viewed, flashId],
-                  isAllAlreadyViewed: alreadyAllViewed,
-                },
-              },
-            };
-
-            resolve(updateData);
-          } else {
-            resolve();
-          }
-        } else {
-          resolve();
-        }
-      });
-    },
-    [],
-  );
-
-  const createAlreadyViewedFlash = useCallback(
-    async ({flashId, userId}: {flashId: number; userId: string}) => {
-      const credentials = await checkKeychain();
+      userIds: {userId: string}[];
+    }) => {
       try {
+        const credentials = await checkKeychain();
         await axios.post(
-          `${baseUrl}/viewedFlashes?id=${credentials?.id}`,
-          {
-            flashId,
-          },
+          `${baseUrl}/flashes/viewed?id=${credentials?.id}`,
+          {flashId},
           addBearer(credentials?.token),
         );
 
-        const nearbyUser = store.getState().nearbyUsersReducer.entities[userId];
-        const [result1] = await Promise.all([
-          createUpdateObj({user: nearbyUser, flashId}),
-          createUpdateObj({flashId}),
-        ]);
-
-        if (result1) {
-          dispatch(updateNearbyUser(result1));
-        }
-      } catch (e) {
-        handleApiError(e);
-      }
+        dispatch(
+          updateFlash({
+            id: flashId,
+            changes: {
+              viewerViewed: true,
+              viewed: userIds,
+            },
+          }),
+        );
+      } catch (e) {}
     },
-    [checkKeychain, addBearer, handleApiError, dispatch, createUpdateObj],
+    [addBearer, dispatch, checkKeychain],
   );
 
   return {
-    createAlreadyViewedFlash,
+    createViewed,
   };
 };
 
