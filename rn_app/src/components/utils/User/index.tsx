@@ -123,11 +123,10 @@ export const User = ({data, refresh}: _Props) => {
     }
   }, [introduceHeight, lineNumber]);
 
-  const [videoPaused, setVideoPaused] = useState(false);
   const onBackGroundItemPress = useCallback(() => {
     if (backGroundItem && backGroundItemType) {
       if (backGroundItemType === 'video') {
-        setVideoPaused(true);
+        // setVideoPaused(true);
       }
       navigation.navigate('UserBackGroundView', {
         source: backGroundItem,
@@ -148,54 +147,15 @@ export const User = ({data, refresh}: _Props) => {
   }, [backGroundItem, backGroundItemType]);
 
   // BackGroundItemViewから戻ってきた時にビデオが停止されていた場合再開させたい
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (videoPaused) {
-        setVideoPaused(false);
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     if (videoPaused) {
+  //       setVideoPaused(false);
+  //     }
+  //   });
 
-    return unsubscribe;
-  }, [navigation, videoPaused]);
-
-  // const flashesNavigationParam = useMemo(() => {
-  //   if (!flashesData.entities.length) {
-  //     return;
-  //   }
-
-  //   return {
-  //     isMyData: isMe,
-  //     startingIndex: 0,
-  //     data: [
-  //       {
-  //         flashes: flashesData.entities,
-  //         user: {
-  //           id,
-  //           name,
-  //           avatar,
-  //         },
-  //         viewerViewedFlasheIds: flashesData.viewerViewedFlasheIds,
-  //       },
-  //     ],
-  //   };
-  // }, [
-  //   id,
-  //   name,
-  //   avatar,
-  //   isMe,
-  //   flashesData.entities,
-  //   flashesData.viewerViewedFlasheIds,
-  // ]);
-
-  const onAvatarPress = useCallback(() => {
-    // if (flashesNavigationParam) {
-    //   setVideoPaused(true);
-    //   navigation.navigate('Flashes', {
-    //     screen: 'Flashes',
-    //     params: flashesNavigationParam,
-    //   });
-    // }
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation, videoPaused]);
 
   const creatingPost = useSelector(
     (state: RootState) => state.otherSettingsReducer.creatingPost,
@@ -275,7 +235,6 @@ export const User = ({data, refresh}: _Props) => {
           source={backGroundItem}
           sourceType={backGroundItemType}
           onPress={onBackGroundItemPress}
-          videoPaused={videoPaused}
         />
       </Animated.View>
 

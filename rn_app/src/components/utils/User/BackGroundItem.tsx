@@ -4,16 +4,18 @@ import FastImage from 'react-native-fast-image';
 
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {SkeltonLoadingView} from '~/components/utils/SkeltonLoadingView';
+import {useBackGroundItemVideoPaused} from '~/hooks/appState';
 
 type Props = {
   source: string | null;
   sourceType: 'image' | 'video' | null;
   onPress: () => void;
-  videoPaused: boolean;
 };
 
 export const BackGroundItem = React.memo(
-  ({source, sourceType, onPress, videoPaused}: Props) => {
+  ({source, sourceType, onPress}: Props) => {
+    const {videoPaused, setVideoPaused} = useBackGroundItemVideoPaused();
+
     if (!source) {
       return null;
     }
