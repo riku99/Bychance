@@ -9,6 +9,7 @@ import {BackButton} from '~/components/utils/BackButton';
 import {getTimeDiff} from '~/utils';
 import {selectUserName, selectUserAvatar} from '~/stores/_users';
 import {RootState} from '~/stores';
+import {useMyId, useMyName} from '~/hooks/users';
 
 type Props = {
   user: {
@@ -23,22 +24,30 @@ export const InfoItems = ({
   timestamp,
   setIsNavigatedToProfile,
 }: Props) => {
-  const name = useSelector((state: RootState) =>
-    selectUserName(state, user.id),
-  );
-  const avatar = useSelector((state: RootState) =>
-    selectUserAvatar(state, user.id),
-  );
+  const myId = useMyId();
+  const name = useSelector((state: RootState) => {
+    if (user.id === myId) {
+      return state.userReducer.user!.name;
+    } else {
+      return selectUserName(state, user.id);
+    }
+  });
+  const avatar = useSelector((state: RootState) => {
+    if (user.id === myId) {
+      return state.userReducer.user!.avatar;
+    } else {
+      return selectUserAvatar(state, user.id);
+    }
+  });
   const navigation = useNavigation<FlashStackNavigationProp<'Flashes'>>();
 
   const timeDiff = getTimeDiff(timestamp);
 
   const onUserPress = () => {
     // setIsNavigatedToProfile(true);
-    // navigation.navigate('UserPage', {
-    //   userId: userData.userId,
-    //   from: userData.from,
-    // });
+    navigation.navigate('UserPage', {
+      userId: user.id,
+    });
   };
 
   return (

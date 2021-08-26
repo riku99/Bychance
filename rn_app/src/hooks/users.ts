@@ -34,6 +34,9 @@ export const useSelectTamporarilySavedUserEditData = () => {
 export const useMyId = () =>
   useSelector((state: RootState) => state.userReducer.user!.id);
 
+export const useMyName = () =>
+  useSelector((state: RootState) => state.userReducer.user!.name);
+
 type EditArg = {
   name: string;
   introduce: string;
