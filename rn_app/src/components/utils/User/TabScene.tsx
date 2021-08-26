@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 
-import {selectPostsByUserid} from '~/stores/posts';
+import {selectPostsByUserId} from '~/stores/posts';
 import {RootState} from '~/stores';
 
 type PostData = {
@@ -47,7 +47,7 @@ export const FlatListTabScene = React.memo(
     const [refreshing, setRefreshing] = useState(false);
 
     const posts = useSelector(
-      (state: RootState) => selectPostsByUserid(state, userId),
+      (state: RootState) => selectPostsByUserId(state, userId),
       shallowEqual,
     );
 

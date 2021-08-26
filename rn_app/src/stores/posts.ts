@@ -5,15 +5,16 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from '.';
+import {Post} from '~/types/store/posts';
 
-export type Post = {
-  id: number;
-  text: string | null;
-  url: string;
-  sourceType: 'image' | 'video';
-  createdAt: string;
-  userId: string;
-};
+// export type Post = {
+//   id: number;
+//   text: string | null;
+//   url: string;
+//   sourceType: 'image' | 'video';
+//   createdAt: string;
+//   userId: string;
+// };
 
 const postsAdaper = createEntityAdapter<Post>({
   selectId: (post) => post.id,
@@ -40,6 +41,9 @@ const postSlice = createSlice({
     removePost: (state, action: PayloadAction<number>) => {
       postsAdaper.removeOne(state, action.payload);
     },
+    removePosts: (state, action: PayloadAction<number[]>) => {
+      postsAdaper.removeMany(state, action.payload);
+    },
     upsertPosts: (state, action: PayloadAction<Post[]>) => {
       postsAdaper.upsertMany(state, action.payload);
     },
@@ -54,6 +58,7 @@ export const {
   addPost,
   removePost,
   upsertPosts,
+  removePosts,
 } = postSlice.actions;
 
 const selectors = postsAdaper.getSelectors();
@@ -61,7 +66,7 @@ const selectors = postsAdaper.getSelectors();
 export const getAllPosts = (state: RootState) =>
   selectors.selectAll(state.postsReducer);
 
-export const selectPostsByUserid = (state: RootState, userId: string) => {
+export const selectPostsByUserId = (state: RootState, userId: string) => {
   const all = getAllPosts(state);
   return all.filter((a) => a.userId === userId);
 };

@@ -2,10 +2,19 @@ import {useCallback} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 import useSWR from 'swr';
+import {shallowEqual, useSelector} from 'react-redux';
 
 import {baseUrl} from '~/constants/url';
 import {GetUserPostsResponse, CreatePostResponse} from '~/types/response/posts';
-import {removePost} from '~/stores/posts';
+import {
+  removePost,
+  selectPostsByUserId,
+  removePosts,
+  upsertPosts,
+} from '~/stores/posts';
+import {useCustomDispatch} from './stores';
+import {Post} from '~/types/store/posts';
+import {RootState} from '~/stores';
 
 export const useCreatePost = () => {
   const {
@@ -107,5 +116,32 @@ export const useGetUserPosts = (userId: string) => {
   return {
     data,
     revalidate,
+  };
+};
+
+export const useRefreshUserPosts = (userId: string) => {
+  const dispatch = useCustomDispatch();
+
+  const current = useSelector(
+    (state: RootState) => selectPostsByUserId(state, userId),
+    shallowEqual,
+  );
+
+  const refreshPosts = useCallback(
+    ({posts}: {posts: Post[]}) => {
+      const nIds = posts.map((p) => p.id);
+      const removed = current.map((_) => _.id).filter((c) => !nIds.includes(c));
+
+      if (removed.length) {
+        dispatch(removePosts(removed));
+      }
+
+      dispatch(upsertPosts(posts));
+    },
+    [current, dispatch],
+  );
+
+  return {
+    refreshPosts,
   };
 };

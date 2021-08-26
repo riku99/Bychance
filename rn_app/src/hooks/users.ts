@@ -21,6 +21,7 @@ import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes, selectFlashesByUserId} from '~/stores/flashes';
 import {upsertUsers, selectUserAvatar} from '~/stores/_users';
+import {useRefreshUserPosts} from './posts';
 
 export const useSelectTamporarilySavedUserEditData = () => {
   const savedEditData = useSelector((state: RootState) => {
@@ -347,6 +348,7 @@ export const userPageUrlKey = (id: string) => `users/${id}/page_info`;
 export const useUserPageInfo = (userId: string) => {
   const myId = useMyId();
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
+  const {refreshPosts} = useRefreshUserPosts(userId);
   const fetcher = useCallback(async () => {
     try {
       const credentials = await checkKeychain();
@@ -364,7 +366,7 @@ export const useUserPageInfo = (userId: string) => {
         };
       });
 
-      dispatch(upsertPosts(response.data.posts));
+      refreshPosts({posts: response.data.posts});
       dispatch(upsertFlashes(storedFlashesData));
       dispatch(
         upsertUsers([
@@ -379,7 +381,15 @@ export const useUserPageInfo = (userId: string) => {
     } catch (e) {
       handleApiError(e);
     }
-  }, [checkKeychain, addBearer, userId, handleApiError, myId, dispatch]);
+  }, [
+    checkKeychain,
+    addBearer,
+    userId,
+    handleApiError,
+    myId,
+    dispatch,
+    refreshPosts,
+  ]);
 
   const {data, mutate} = useSWR(userPageUrlKey(userId), fetcher);
 
