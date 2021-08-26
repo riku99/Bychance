@@ -34,7 +34,6 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     return {
       user: userData,
       posts,
-      flashesData: {entities: []},
     };
   }, [data]);
 

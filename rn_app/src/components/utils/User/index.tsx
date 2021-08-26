@@ -46,24 +46,12 @@ type _Props = {
       userId: string;
       sourceType: 'image' | 'video';
     }[];
-    flashesData: {
-      entities: {
-        id: number;
-        source: string;
-        createdAt: string;
-        sourceType: 'image' | 'video';
-        userId: string;
-        viewed: {userId: string}[];
-      }[];
-      viewerViewedFlasheIds?: number[]; //自分のデータの場合閲覧記録はいらない(常に最初のデータから表示するので)MYPageからなら渡さない
-      viewedAllFlashes?: boolean; // 自分のデータの場合は閲覧記録関係ないので渡さない
-    };
   };
   refresh: () => Promise<void>;
 };
 
 export const User = ({data, refresh}: _Props) => {
-  const {user, posts} = data;
+  const {user} = data;
   const {
     id,
     name,
@@ -89,7 +77,6 @@ export const User = ({data, refresh}: _Props) => {
     extrapolateRight: 'clamp',
   });
 
-  // 2つの子コンポーネントで必要なrefなのでこのコンポーネントから渡す
   const postsTabViewRef = useRef<FlatList>(null);
   const userInformationTabViewRef = useRef<ScrollView>(null);
 
@@ -156,7 +143,6 @@ export const User = ({data, refresh}: _Props) => {
 
       <UserTabView
         userId={id}
-        posts={posts}
         containerHeight={containerHeight}
         profileContainerHeight={profileContainerHeight}
         scrollY={scrollY}

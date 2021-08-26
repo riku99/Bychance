@@ -22,14 +22,6 @@ import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
 
 type Props = {
   userId: string;
-  posts: {
-    id: number;
-    text: string | null;
-    url: string;
-    createdAt: string;
-    userId: string;
-    sourceType: 'image' | 'video';
-  }[];
   containerHeight: number;
   profileContainerHeight: number;
   scrollY: Animated.Value;
@@ -41,7 +33,6 @@ type Props = {
 export const UserTabView = React.memo(
   ({
     userId,
-    posts,
     containerHeight,
     profileContainerHeight,
     scrollY,
@@ -49,8 +40,6 @@ export const UserTabView = React.memo(
     userInformationTabViewRef,
     refresh,
   }: Props) => {
-    // const {data} = useGetUserPosts(userId);
-
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
       {key: 'Posts'; title: 'Posts'},
@@ -115,7 +104,6 @@ export const UserTabView = React.memo(
           return (
             <FlatListTabScene
               userId={userId}
-              renderData={posts}
               renderItem={({item, index}) => {
                 return <TabViewPost post={item} index={index} />;
               }}

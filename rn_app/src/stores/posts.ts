@@ -60,3 +60,8 @@ const selectors = postsAdaper.getSelectors();
 
 export const getAllPosts = (state: RootState) =>
   selectors.selectAll(state.postsReducer);
+
+export const selectPostsByUserid = (state: RootState, userId: string) => {
+  const all = getAllPosts(state);
+  return all.filter((a) => a.userId === userId);
+};

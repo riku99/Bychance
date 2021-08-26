@@ -6,6 +6,10 @@ import {
   ListRenderItem,
   FlatList,
 } from 'react-native';
+import {shallowEqual, useSelector} from 'react-redux';
+
+import {selectPostsByUserid} from '~/stores/posts';
+import {RootState} from '~/stores';
 
 type PostData = {
   id: number;
@@ -18,7 +22,6 @@ type PostData = {
 
 type FlatListTabSceneProps = {
   renderItem?: ListRenderItem<PostData>;
-  renderData?: PostData[];
   userId: string;
   scrollY: Animated.Value;
   tabViewRef: React.RefObject<FlatList>;
@@ -36,13 +39,17 @@ export const FlatListTabScene = React.memo(
     tabViewRef,
     onScrollEndDrag,
     onMomentumScrollEnd,
-    renderData,
     renderItem,
     paddingTopHeight,
     tabViewContainerMinHeight,
     refresh,
   }: FlatListTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
+
+    const posts = useSelector(
+      (state: RootState) => selectPostsByUserid(state, userId),
+      shallowEqual,
+    );
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
@@ -53,7 +60,7 @@ export const FlatListTabScene = React.memo(
     return (
       <Animated.FlatList
         ref={tabViewRef}
-        data={renderData}
+        data={posts}
         keyExtractor={(item) => String(item.id)}
         renderItem={renderItem}
         numColumns={3}
