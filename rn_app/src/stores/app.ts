@@ -5,6 +5,7 @@ type InitialState = {
   creatingPost: boolean;
   creatingFlash: boolean;
   displayedMenu: boolean;
+  pauseFlashProgress: boolean;
 };
 
 const initialState: InitialState = {
@@ -12,6 +13,7 @@ const initialState: InitialState = {
   creatingPost: false,
   creatingFlash: false,
   displayedMenu: false,
+  pauseFlashProgress: false,
 };
 
 const appSlice = createSlice({

@@ -80,3 +80,21 @@ export const useDisplayedMenu = () => {
     setDisplayedMenu,
   };
 };
+
+export const usePauseFlashPregress = () => {
+  const dispatch = useCustomDispatch();
+  const pauseFlashProgress = useSelector(
+    (state: RootState) => state.appReducer.pauseFlashProgress,
+  );
+  const setPauseFlashProgress = useCallback(
+    (v: boolean) => {
+      dispatch(setAppState({pauseFlashProgress: v}));
+    },
+    [dispatch],
+  );
+
+  return {
+    pauseFlashProgress,
+    setPauseFlashProgress,
+  };
+};

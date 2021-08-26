@@ -9,7 +9,8 @@ import {BackButton} from '~/components/utils/BackButton';
 import {getTimeDiff} from '~/utils';
 import {selectUserName, selectUserAvatar} from '~/stores/_users';
 import {RootState} from '~/stores';
-import {useMyId, useMyName} from '~/hooks/users';
+import {useMyId} from '~/hooks/users';
+import {usePauseFlashPregress} from '~/hooks/appState';
 
 type Props = {
   user: {
@@ -19,11 +20,7 @@ type Props = {
   setIsNavigatedToProfile: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const InfoItems = ({
-  user,
-  timestamp,
-  setIsNavigatedToProfile,
-}: Props) => {
+export const InfoItems = ({user, timestamp}: Props) => {
   const myId = useMyId();
   const name = useSelector((state: RootState) => {
     if (user.id === myId) {
@@ -40,11 +37,11 @@ export const InfoItems = ({
     }
   });
   const navigation = useNavigation<FlashStackNavigationProp<'Flashes'>>();
-
+  const {setPauseFlashProgress} = usePauseFlashPregress();
   const timeDiff = getTimeDiff(timestamp);
 
   const onUserPress = () => {
-    // setIsNavigatedToProfile(true);
+    setPauseFlashProgress(true);
     navigation.navigate('UserPage', {
       userId: user.id,
     });

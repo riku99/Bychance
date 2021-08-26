@@ -28,6 +28,7 @@ import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {Stamps} from './Stamps';
 import {useCreateAlreadyViewedFlash} from '~/hooks/flashes';
 import {UserPageInfo} from '~/types/response/users';
+import {usePauseFlashPregress} from '~/hooks/appState';
 
 type Props = {
   flashes: {
@@ -85,6 +86,7 @@ export const ShowFlash = React.memo(
     const _loading = useRef(true); // setTimeout内でロードしている場合はshowLoadをtureにする、という処理が存在する。その中でloadingを使い条件分岐を行うとsetLoadingが非同期で値を変えるため期待しない動きになってしまう。同期的に値を変えることを可能にするためにuseRefのデータを定義
     const loadingTimeout = useRef<ReturnType<typeof setTimeout>>(); // timeoutをクリアするためこいつにいれる
 
+    const {pauseFlashProgress, setPauseFlashProgress} = usePauseFlashPregress();
     const [isPaused, setIsPaused] = useState(false);
     const [isNavigatedToPofile, setIsNavigatedToProfile] = useState(false);
 
@@ -224,38 +226,40 @@ export const ShowFlash = React.memo(
       }
     }, [isDisplayed, progressAnim, progressBarWidth, currentFlash.sourceType]);
 
-    // profileに移動した時の責務
     useEffect(() => {
-      if (isNavigatedToPofile) {
+      if (pauseFlashProgress) {
         progressAnim[currentProgressBar.current].stopAnimation();
         progressAnim[currentProgressBar.current].setValue(-progressBarWidth);
         if (currentFlash.sourceType === 'video') {
           videoRef.current!.seek(0);
+          setIsPaused(true); // いらないかも
         }
+      } else {
+        setIsPaused(false);
+        progressAnimation({
+          progressNumber: currentProgressBar.current,
+          duration: videoDuration.current,
+        });
       }
     }, [
-      isNavigatedToPofile,
+      pauseFlashProgress,
       progressAnim,
       currentProgressBar,
       progressBarWidth,
       currentFlash.sourceType,
+      progressAnimation,
     ]);
 
     // profileから戻ってきた時のリスナーを定義する副作用
     useEffect(() => {
       const unsbscribe = flashStackNavigation.addListener('focus', () => {
-        if (isNavigatedToPofile) {
-          setIsPaused(false);
-          progressAnimation({
-            progressNumber: currentProgressBar.current,
-            duration: videoDuration.current,
-          });
-          setIsNavigatedToProfile(false);
+        if (pauseFlashProgress) {
+          setPauseFlashProgress(false);
         }
       });
 
       return unsbscribe;
-    }, [flashStackNavigation, isNavigatedToPofile, progressAnimation]);
+    }, [setPauseFlashProgress, pauseFlashProgress, flashStackNavigation]);
 
     const scrollRef = useRef(false);
 
@@ -512,11 +516,7 @@ export const ShowFlash = React.memo(
                 currentProgressBar={currentProgressBar}
                 firstEntitiesLength={firstEntitiesLength}
               />
-              <InfoItems
-                user={user}
-                timestamp={currentFlash.createdAt}
-                setIsNavigatedToProfile={setIsNavigatedToProfile}
-              />
+              <InfoItems user={user} timestamp={currentFlash.createdAt} />
             </View>
 
             <View style={styles.stampsContainer}>
