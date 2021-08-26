@@ -3,12 +3,6 @@ import React from 'react';
 import {UserAvatarWithOuter} from '../Avatar';
 import {useUserAvatar, useAvatarOuterType} from '~/hooks/users';
 
-type AvatarProps = {
-  source: string | null;
-  outerType: 'gradation' | 'silver' | 'none';
-  onPress?: () => void;
-};
-
 type Props = {
   id: string;
   avatar: string | null;

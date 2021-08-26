@@ -69,7 +69,7 @@ type _Props = {
 };
 
 export const User = ({data, refresh}: _Props) => {
-  const {user, flashesData, posts} = data;
+  const {user, posts} = data;
   const {
     id,
     name,
@@ -88,22 +88,6 @@ export const User = ({data, refresh}: _Props) => {
   const navigation = useNavigation<
     RootNavigationProp<'Tab'> & UserPageNavigationProp<'UserPage'>
   >();
-
-  const avatarOuterType: 'gradation' | 'silver' | 'none' = useMemo(() => {
-    if (!data) {
-      return 'none';
-    }
-
-    if (data.flashesData.entities.length) {
-      if (data.flashesData.viewedAllFlashes) {
-        return 'silver';
-      } else {
-        return 'gradation';
-      }
-    } else {
-      return 'none';
-    }
-  }, [data]);
 
   const [containerHeight, setContainerHeight] = useState(0);
 
@@ -174,34 +158,34 @@ export const User = ({data, refresh}: _Props) => {
     return unsubscribe;
   }, [navigation, videoPaused]);
 
-  const flashesNavigationParam = useMemo(() => {
-    if (!flashesData.entities.length) {
-      return;
-    }
+  // const flashesNavigationParam = useMemo(() => {
+  //   if (!flashesData.entities.length) {
+  //     return;
+  //   }
 
-    return {
-      isMyData: isMe,
-      startingIndex: 0,
-      data: [
-        {
-          flashes: flashesData.entities,
-          user: {
-            id,
-            name,
-            avatar,
-          },
-          viewerViewedFlasheIds: flashesData.viewerViewedFlasheIds,
-        },
-      ],
-    };
-  }, [
-    id,
-    name,
-    avatar,
-    isMe,
-    flashesData.entities,
-    flashesData.viewerViewedFlasheIds,
-  ]);
+  //   return {
+  //     isMyData: isMe,
+  //     startingIndex: 0,
+  //     data: [
+  //       {
+  //         flashes: flashesData.entities,
+  //         user: {
+  //           id,
+  //           name,
+  //           avatar,
+  //         },
+  //         viewerViewedFlasheIds: flashesData.viewerViewedFlasheIds,
+  //       },
+  //     ],
+  //   };
+  // }, [
+  //   id,
+  //   name,
+  //   avatar,
+  //   isMe,
+  //   flashesData.entities,
+  //   flashesData.viewerViewedFlasheIds,
+  // ]);
 
   const onAvatarPress = useCallback(() => {
     // if (flashesNavigationParam) {
@@ -211,7 +195,7 @@ export const User = ({data, refresh}: _Props) => {
     //     params: flashesNavigationParam,
     //   });
     // }
-  }, [flashesNavigationParam, navigation]);
+  }, [navigation]);
 
   const creatingPost = useSelector(
     (state: RootState) => state.otherSettingsReducer.creatingPost,
@@ -304,11 +288,7 @@ export const User = ({data, refresh}: _Props) => {
           },
         ]}>
         <View style={{alignItems: 'center'}}>
-          <Avatar
-            source={avatar}
-            outerType={avatarOuterType}
-            onPress={onAvatarPress}
-          />
+          <Avatar id={id} avatar={avatar} />
 
           <View style={styles.nameContainer}>
             <Text style={{fontWeight: 'bold', fontSize: 16}}>{name}</Text>
