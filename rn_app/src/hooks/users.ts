@@ -299,9 +299,13 @@ export const useRefreshMyData = () => {
       );
 
       const {posts, flashes, ...userData} = response.data;
+      const storedFlashesData = flashes.map((f) => ({
+        ...f,
+        viewerViewed: false,
+      }));
       dispatch(updateUser(userData));
       dispatch(upsertPosts(posts));
-      dispatch(upsertFlashes(flashes));
+      dispatch(upsertFlashes(storedFlashesData));
     } catch (e) {
       handleApiError(e);
     }

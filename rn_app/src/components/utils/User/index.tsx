@@ -38,14 +38,6 @@ type _Props = {
       youtube: string | null;
       tiktok: string | null;
     };
-    posts: {
-      id: number;
-      text: string | null;
-      url: string;
-      createdAt: string;
-      userId: string;
-      sourceType: 'image' | 'video';
-    }[];
   };
   refresh: () => Promise<void>;
 };

@@ -3,17 +3,11 @@ import {shallowEqual, useSelector} from 'react-redux';
 
 import {RootState} from '~/stores';
 import {User} from '~/components/utils/User';
-import {getAllPosts} from '~/stores/posts';
 import {useRefreshMyData} from '~/hooks/users';
 
 export const MyPage = React.memo(() => {
   const user = useSelector(
     (state: RootState) => state.userReducer.user!,
-    shallowEqual,
-  );
-
-  const posts = useSelector(
-    (state: RootState) => getAllPosts(state),
     shallowEqual,
   );
 
@@ -23,7 +17,7 @@ export const MyPage = React.memo(() => {
     await refreshData();
   };
 
-  if (!user || !posts) {
+  if (!user) {
     return null;
   }
 
@@ -31,7 +25,6 @@ export const MyPage = React.memo(() => {
     <User
       data={{
         user,
-        posts,
       }}
       refresh={refresh}
     />
