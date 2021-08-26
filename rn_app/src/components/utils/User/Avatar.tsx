@@ -18,6 +18,9 @@ export const Avatar = React.memo(({id, avatar}: Props) => {
   const {setVideoPaused} = useBackGroundItemVideoPaused();
 
   const onAavatarPress = () => {
+    if (outerType === 'none') {
+      return;
+    }
     setVideoPaused(true);
     navigation.navigate('Flashes', {
       screen: 'Flashes',

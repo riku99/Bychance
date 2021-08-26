@@ -208,12 +208,6 @@ export const ShowFlash = React.memo(
           videoRef.current!.seek(0);
           setIsPaused(true); // いらないかも
         }
-      } else {
-        setIsPaused(false);
-        progressAnimation({
-          progressNumber: currentProgressBar.current,
-          duration: videoDuration.current,
-        });
       }
     }, [
       pauseFlashProgress,
@@ -224,16 +218,26 @@ export const ShowFlash = React.memo(
       progressAnimation,
     ]);
 
-    // profileから戻ってきた時のリスナーを定義する副作用
+    // focus時のリスナー
     useEffect(() => {
       const unsbscribe = flashStackNavigation.addListener('focus', () => {
         if (pauseFlashProgress) {
           setPauseFlashProgress(false);
+          setIsPaused(false);
+          progressAnimation({
+            progressNumber: currentProgressBar.current,
+            duration: videoDuration.current,
+          });
         }
       });
 
       return unsbscribe;
-    }, [setPauseFlashProgress, pauseFlashProgress, flashStackNavigation]);
+    }, [
+      setPauseFlashProgress,
+      pauseFlashProgress,
+      flashStackNavigation,
+      progressAnimation,
+    ]);
 
     const {prefetch} = usePrefetchStamps();
     useEffect(() => {

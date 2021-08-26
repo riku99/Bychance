@@ -97,7 +97,6 @@ export const usePrefetchStamps = () => {
 
   const prefetch = useCallback(
     (id: number) => {
-      console.log('prefetch' + id);
       globalMutate(getFlashStampsKey(id), () => fetch(id));
     },
     [fetch],
