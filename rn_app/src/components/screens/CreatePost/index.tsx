@@ -14,12 +14,12 @@ import fs from 'react-native-fs';
 import Video from 'react-native-video';
 import {RNToasty} from 'react-native-toasty';
 
-import {creatingPost} from '../../../stores/otherSettings';
 import {CreatePostStackNavigationProp} from '../../../navigations/types';
 import {getExtention} from '~/utils';
 import {useCustomDispatch} from '~/hooks/stores';
 import {useCreatePost} from '~/hooks/posts';
 import {addPost} from '~/stores/posts';
+import {useCreateingPost} from '~/hooks/appState';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -27,6 +27,7 @@ type Props = {
 
 export const CreatePost = ({navigation}: Props) => {
   const isFocused = useIsFocused();
+  const {setCreatingPost} = useCreateingPost();
 
   const [data, setData] = useState<{
     uri: string;
@@ -45,7 +46,7 @@ export const CreatePost = ({navigation}: Props) => {
         });
         return;
       }
-      dispatch(creatingPost());
+      setCreatingPost(true);
       navigation.goBack();
       const ext = getExtention(data.uri);
       if (!ext) {
@@ -53,7 +54,7 @@ export const CreatePost = ({navigation}: Props) => {
           title: '無効なデータです',
           position: 'center',
         });
-        dispatch(creatingPost());
+        setCreatingPost(false);
         return;
       }
       const source = await fs.readFile(data.uri, 'base64');
@@ -66,9 +67,9 @@ export const CreatePost = ({navigation}: Props) => {
       if (result) {
         dispatch(addPost(result));
       }
-      dispatch(creatingPost());
+      setCreatingPost(false);
     }
-  }, [dispatch, navigation, data, text, createPost]);
+  }, [setCreatingPost, dispatch, navigation, data, text, createPost]);
 
   useEffect(() => {
     navigation.setOptions({

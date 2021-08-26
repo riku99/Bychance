@@ -62,3 +62,21 @@ export const useCreatingFlash = () => {
     setCreatingFlash,
   };
 };
+
+export const useDisplayedMenu = () => {
+  const dispatch = useCustomDispatch();
+  const displayedMenu = useSelector(
+    (state: RootState) => state.appReducer.displayedMenu,
+  );
+  const setDisplayedMenu = useCallback(
+    (v: boolean) => {
+      dispatch(setAppState({displayedMenu: v}));
+    },
+    [dispatch],
+  );
+
+  return {
+    displayedMenu,
+    setDisplayedMenu,
+  };
+};

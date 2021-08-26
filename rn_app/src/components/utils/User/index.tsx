@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState, useEffect, useCallback} from 'react';
+import React, {useMemo, useRef, useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,7 +8,6 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
 
 import {UserTabView, stickyTabHeight} from './TabView';
 import {Avatar} from './Avatar';
@@ -19,7 +18,6 @@ import {MoreReadBottun} from './MoreReadButton';
 import {IntroduceModal} from './IntoduceModal';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIcons} from './SnsIcons';
-import {RootState} from '../../../stores/index';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
@@ -115,10 +113,6 @@ export const User = ({data, refresh}: _Props) => {
       }
     }
   }, [introduceHeight, lineNumber]);
-
-  const displayedMenu = useSelector((state: RootState) => {
-    return state.otherSettingsReducer.displayedMenu;
-  });
 
   if (!data) {
     //スケルトンとか追加するかも
@@ -249,7 +243,7 @@ export const User = ({data, refresh}: _Props) => {
         </View>
       )}
 
-      {displayedMenu && isMe && <Menu />}
+      {isMe && <Menu />}
     </View>
   );
 };

@@ -1,19 +1,19 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
-import {useDispatch} from 'react-redux';
 
-import {displayMenu} from '../../../stores/otherSettings';
 import {normalStyles} from '~/constants/styles';
+import {useDisplayedMenu} from '~/hooks/appState';
 
 export const MenuBar = React.memo(() => {
-  const dispatch = useDispatch();
+  const {setDisplayedMenu} = useDisplayedMenu();
+
   return (
     <Button
       icon={{name: 'menu', size: 25, color: normalStyles.headerTitleColor}}
       buttonStyle={styles.button}
       onPress={() => {
-        dispatch(displayMenu());
+        setDisplayedMenu(true);
       }}
       activeOpacity={1}
     />

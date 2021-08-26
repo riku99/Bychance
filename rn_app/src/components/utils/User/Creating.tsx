@@ -9,7 +9,7 @@ export const CreatingPost = () => {
 
   return (
     <>
-      {!creatingPost && (
+      {creatingPost && (
         <>
           <Text style={styles.text}>作成中です</Text>
           <View style={{width: 17}}>
@@ -26,7 +26,7 @@ export const CreatingFlash = () => {
 
   return (
     <>
-      {!creatingFlash && (
+      {creatingFlash && (
         <>
           <Text style={styles.text}>作成中です</Text>
           <View style={{width: 17}}>

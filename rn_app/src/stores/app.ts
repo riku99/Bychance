@@ -4,12 +4,14 @@ type InitialState = {
   userBackGroundItemVideoPaused: boolean;
   creatingPost: boolean;
   creatingFlash: boolean;
+  displayedMenu: boolean;
 };
 
 const initialState: InitialState = {
   userBackGroundItemVideoPaused: false,
   creatingPost: false,
   creatingFlash: false,
+  displayedMenu: false,
 };
 
 const appSlice = createSlice({

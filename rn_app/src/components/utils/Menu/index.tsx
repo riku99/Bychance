@@ -1,31 +1,21 @@
 import React, {useMemo, useEffect, useRef, useCallback} from 'react';
 import {View, Dimensions, StyleSheet} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
 import {ListItem, Icon} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 
-import {RootState} from '../../../stores/index';
-import {displayMenu} from '../../../stores/otherSettings';
 import {RootStackParamList} from '~/navigations/Root';
+import {useDisplayedMenu} from '~/hooks/appState';
 
 export const Menu = React.memo(() => {
-  const isVisible = useSelector((state: RootState) => {
-    return state.otherSettingsReducer.displayedMenu!;
-  });
+  const {displayedMenu, setDisplayedMenu} = useDisplayedMenu();
 
   const modalizeRef = useRef<Modalize>(null);
   useEffect(() => {
-    if (isVisible) {
+    if (displayedMenu) {
       modalizeRef.current?.open();
     }
-  }, [isVisible]);
-
-  const dispatch = useDispatch();
-
-  const dispatchDiplayMenu = () => {
-    dispatch(displayMenu());
-  };
+  }, [displayedMenu]);
 
   const navigation = useNavigation();
 
@@ -96,7 +86,7 @@ export const Menu = React.memo(() => {
     <Modalize
       ref={modalizeRef}
       modalHeight={height / 2}
-      onClose={dispatchDiplayMenu}
+      onClose={() => setDisplayedMenu(false)}
       scrollViewProps={{
         scrollEnabled: false,
       }}>
