@@ -11,7 +11,6 @@ import {
 import {useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import {UIActivityIndicator} from 'react-native-indicators';
-import {useNavigation} from '@react-navigation/native';
 
 import {UserTabView, stickyTabHeight} from './TabView';
 import {Avatar} from './Avatar';
@@ -23,12 +22,10 @@ import {IntroduceModal} from './IntoduceModal';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIcons} from './SnsIcons';
 import {RootState} from '../../../stores/index';
-import {RootNavigationProp} from '~/navigations/Root';
 import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
 import {useMyId} from '~/hooks/users';
-import {UserPageNavigationProp} from '~/navigations/UserPage';
 
 type _Props = {
   data: {
@@ -85,9 +82,6 @@ export const User = ({data, refresh}: _Props) => {
   const snsLinkData = {instagram, twitter, youtube, tiktok};
   const myId = useMyId();
   const isMe = id === myId;
-  const navigation = useNavigation<
-    RootNavigationProp<'Tab'> & UserPageNavigationProp<'UserPage'>
-  >();
 
   const [containerHeight, setContainerHeight] = useState(0);
 
@@ -122,18 +116,6 @@ export const User = ({data, refresh}: _Props) => {
       }
     }
   }, [introduceHeight, lineNumber]);
-
-  const onBackGroundItemPress = useCallback(() => {
-    if (backGroundItem && backGroundItemType) {
-      if (backGroundItemType === 'video') {
-        // setVideoPaused(true);
-      }
-      navigation.navigate('UserBackGroundView', {
-        source: backGroundItem,
-        sourceType: backGroundItemType,
-      });
-    }
-  }, [navigation, backGroundItem, backGroundItemType]);
 
   useEffect(() => {
     // サムネイルのpreload
@@ -223,7 +205,6 @@ export const User = ({data, refresh}: _Props) => {
         <BackGroundItem
           source={backGroundItem}
           sourceType={backGroundItemType}
-          onPress={onBackGroundItemPress}
         />
       </Animated.View>
 

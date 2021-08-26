@@ -6,57 +6,64 @@ import {useNavigation} from '@react-navigation/native';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {SkeltonLoadingView} from '~/components/utils/SkeltonLoadingView';
 import {useBackGroundItemVideoPaused} from '~/hooks/appState';
+import {RootNavigationProp} from '~/navigations/Root';
 
 type Props = {
   source: string | null;
   sourceType: 'image' | 'video' | null;
-  onPress: () => void;
 };
 
-export const BackGroundItem = React.memo(
-  ({source, sourceType, onPress}: Props) => {
-    const {videoPaused, setVideoPaused} = useBackGroundItemVideoPaused();
-    const navigation = useNavigation();
-
-    useEffect(() => {
-      const unsbscribe = navigation.addListener('focus', () => {
-        if (videoPaused) {
-          setVideoPaused(false);
-        }
+export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
+  const {videoPaused, setVideoPaused} = useBackGroundItemVideoPaused();
+  const navigation = useNavigation<RootNavigationProp<'Tab'>>();
+  const onPress = () => {
+    if (source && sourceType) {
+      setVideoPaused(true);
+      navigation.navigate('UserBackGroundView', {
+        source,
+        sourceType,
       });
-
-      return unsbscribe;
-    }, [navigation, videoPaused, setVideoPaused]);
-
-    if (!source) {
-      return null;
     }
+  };
 
-    return (
-      <>
-        <SkeltonLoadingView />
-        <TouchableOpacity
-          style={styles.sourceContainer}
-          onPress={onPress}
-          activeOpacity={1}>
-          {sourceType === 'image' ? (
-            <FastImage source={{uri: source}} style={styles.sourceStyle} />
-          ) : (
-            <VideoWithThumbnail
-              video={{
-                source: {uri: source},
-                resizeMode: 'cover',
-                ignoreSilentSwitch: 'obey',
-                paused: videoPaused,
-              }}
-            />
-          )}
-          <View style={styles.blurStyle} />
-        </TouchableOpacity>
-      </>
-    );
-  },
-);
+  useEffect(() => {
+    const unsbscribe = navigation.addListener('focus', () => {
+      if (videoPaused) {
+        setVideoPaused(false);
+      }
+    });
+
+    return unsbscribe;
+  }, [navigation, videoPaused, setVideoPaused]);
+
+  if (!source) {
+    return null;
+  }
+
+  return (
+    <>
+      <SkeltonLoadingView />
+      <TouchableOpacity
+        style={styles.sourceContainer}
+        onPress={onPress}
+        activeOpacity={1}>
+        {sourceType === 'image' ? (
+          <FastImage source={{uri: source}} style={styles.sourceStyle} />
+        ) : (
+          <VideoWithThumbnail
+            video={{
+              source: {uri: source},
+              resizeMode: 'cover',
+              ignoreSilentSwitch: 'obey',
+              paused: videoPaused,
+            }}
+          />
+        )}
+        <View style={styles.blurStyle} />
+      </TouchableOpacity>
+    </>
+  );
+});
 
 const styles = StyleSheet.create({
   sourceStyle: {
