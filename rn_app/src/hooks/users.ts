@@ -20,7 +20,7 @@ import {
 import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes, selectFlashesByUserId} from '~/stores/flashes';
-import {upsertUsers, selectUserAvatar} from '~/stores/_users';
+import {upsertUsers, selectUserAvatar, selectUserName} from '~/stores/_users';
 import {useRefreshUserPosts} from './posts';
 import {useRefreshUserFlashes} from './flashes';
 
@@ -435,3 +435,6 @@ export const useAvatarOuterType = ({userId}: {userId: string}) => {
     ? 'silver'
     : 'gradation';
 };
+
+export const useUserName = (id: string) =>
+  useSelector((state: RootState) => selectUserName(state, id));

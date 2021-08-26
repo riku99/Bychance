@@ -1,7 +1,7 @@
 import React, {useMemo, useLayoutEffect} from 'react';
 import {RouteProp} from '@react-navigation/native';
 
-import {useUserPageInfo} from '~/hooks/users';
+import {useUserPageInfo, useUserName} from '~/hooks/users';
 import {
   UserPageScreenGroupParamList,
   UserPageNavigationProp,
@@ -20,11 +20,17 @@ type Props = {
 export const UserPage = React.memo(({route, navigation}: Props) => {
   const {data, mutate} = useUserPageInfo(route.params.userId);
 
+  const name = useUserName(route.params.userId);
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: data?.name ? data.name : 'ユーザーが存在しません',
+      headerTitle: data?.name
+        ? data.name
+        : name
+        ? name
+        : 'ユーザーが存在しません',
     });
-  }, [data?.name, navigation, route.name]);
+  }, [data, navigation, route.name, name]);
 
   const propsData = useMemo(() => {
     if (!data) {
