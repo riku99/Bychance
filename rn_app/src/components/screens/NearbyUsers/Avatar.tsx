@@ -1,11 +1,8 @@
 import React, {useContext} from 'react';
-import {shallowEqual, useSelector} from 'react-redux';
 import {Marker} from 'react-native-maps';
 
 import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
 import {UserData, TabViewContext} from '.';
-import {RootState} from '~/stores';
-import {selectFlashesByUserId} from '~/stores/flashes';
 import {useUserAvatar, useAvatarOuterType} from '~/hooks/users';
 
 type Props = {

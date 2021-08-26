@@ -1,7 +1,9 @@
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import {UserAvatarWithOuter} from '../Avatar';
 import {useUserAvatar, useAvatarOuterType} from '~/hooks/users';
+import {RootNavigationProp} from '~/navigations/Root';
 
 type Props = {
   id: string;
@@ -11,12 +13,24 @@ type Props = {
 export const Avatar = React.memo(({id, avatar}: Props) => {
   const url = useUserAvatar({userId: id, avatarUrl: avatar});
   const outerType = useAvatarOuterType({userId: id});
+  const navigation = useNavigation<RootNavigationProp<'Tab'>>();
+
+  const onAavatarPress = () => {
+    navigation.navigate('Flashes', {
+      screen: 'Flashes',
+      params: {
+        startingIndex: 0,
+        userIds: [id],
+      },
+    });
+  };
+
   return (
     <UserAvatarWithOuter
       size="large"
       image={url}
       opacity={1}
-      onPress={() => {}}
+      onPress={onAavatarPress}
       outerType={outerType}
     />
   );

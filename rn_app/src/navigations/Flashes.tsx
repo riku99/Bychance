@@ -4,25 +4,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
 import {FlashesPage} from '../components/screens/Flashes';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {Flash} from '~/types/domain/Flashes';
 
 type F = {
   startingIndex: number;
   userIds: string[];
-};
-
-export type FlashesScreenPrarams = {
-  isMyData: boolean;
-  startingIndex: number;
-  data: {
-    flashes: Flash[];
-    user: {
-      id: string;
-      name: string;
-      avatar: string | null;
-    };
-    viewerViewedFlasheIds?: number[];
-  }[];
 };
 
 export type FlashesStackParamList = {
