@@ -9,8 +9,6 @@ import {
   FlatList,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import FastImage from 'react-native-fast-image';
-import {UIActivityIndicator} from 'react-native-indicators';
 
 import {UserTabView, stickyTabHeight} from './TabView';
 import {Avatar} from './Avatar';
@@ -26,6 +24,7 @@ import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
 import {useMyId} from '~/hooks/users';
+import {CreatingPost, CreatingFlash} from './Creating';
 
 type _Props = {
   data: {
@@ -117,25 +116,6 @@ export const User = ({data, refresh}: _Props) => {
     }
   }, [introduceHeight, lineNumber]);
 
-  useEffect(() => {
-    // サムネイルのpreload
-    if (backGroundItemType === 'video' && backGroundItem) {
-      FastImage.preload([
-        {
-          uri: backGroundItem,
-        },
-      ]);
-    }
-  }, [backGroundItem, backGroundItemType]);
-
-  const creatingPost = useSelector(
-    (state: RootState) => state.otherSettingsReducer.creatingPost,
-  );
-
-  const creatingFlash = useSelector(
-    (state: RootState) => state.otherSettingsReducer.creatingFlash,
-  );
-
   const displayedMenu = useSelector((state: RootState) => {
     return state.otherSettingsReducer.displayedMenu;
   });
@@ -160,29 +140,23 @@ export const User = ({data, refresh}: _Props) => {
         <Text style={{lineHeight: oneIntroduceTextLineHeght}}>{introduce}</Text>
       </Animated.View>
 
-      {creatingPost && (
+      {isMe && (
         <Animated.View
           style={[
             styles.creatingPostContaienr,
             {transform: [{translateY: y}]},
           ]}>
-          <Text style={styles.creatingPostText}>作成中です</Text>
-          <View style={{width: 17}}>
-            <UIActivityIndicator size={14} color="gray" />
-          </View>
+          <CreatingPost />
         </Animated.View>
       )}
 
-      {creatingFlash && (
+      {isMe && (
         <Animated.View
           style={[
             styles.creatingFlashContaienr,
             {transform: [{translateY: y}]},
           ]}>
-          <Text style={styles.creatingPostText}>作成中です</Text>
-          <View style={{width: 17}}>
-            <UIActivityIndicator size={14} color="gray" />
-          </View>
+          <CreatingFlash />
         </Animated.View>
       )}
 
@@ -359,10 +333,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  creatingPostText: {
-    fontSize: 14,
-    color: 'gray',
   },
   creatingFlashContaienr: {
     position: 'absolute',

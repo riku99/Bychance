@@ -26,3 +26,39 @@ export const useBackGroundItemVideoPaused = () => {
     setVideoPaused,
   };
 };
+
+export const useCreateingPost = () => {
+  const dispatch = useCustomDispatch();
+  const creatingPost = useSelector(
+    (state: RootState) => state.appReducer.creatingPost,
+  );
+  const setCreatingPost = useCallback(
+    (v: boolean) => {
+      dispatch(setAppState({creatingPost: v}));
+    },
+    [dispatch],
+  );
+
+  return {
+    creatingPost,
+    setCreatingPost,
+  };
+};
+
+export const useCreatingFlash = () => {
+  const dispatch = useCustomDispatch();
+  const creatingFlash = useSelector(
+    (state: RootState) => state.appReducer.creatingFlash,
+  );
+  const setCreatingFlash = useCallback(
+    (v: boolean) => {
+      dispatch(setAppState({creatingFlash: v}));
+    },
+    [dispatch],
+  );
+
+  return {
+    creatingFlash,
+    setCreatingFlash,
+  };
+};
