@@ -29,6 +29,7 @@ import {
 } from '~/helpers/alert';
 import {useNearbyUsers} from '~/hooks/nearbyUsers';
 import {selectNotAllViewedUserIds} from '~/stores/flashes';
+import {usePrefetchStamps} from '~/hooks/flashStamps';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -159,6 +160,14 @@ export const NearbyUsersScreen = React.memo(() => {
       FastImage.preload(formated);
     });
   }, [preloadUriGroup]);
+
+  const {prefetch} = usePrefetchStamps();
+  useEffect(() => {
+    const firstFlashIds = users.map((u) => u.flashIds[0]); // ここではそれぞれのユーザーの最初のものだけprefetchする(stratingIndexがどこからか不確定なため)。2つめ以降は表示するスクリーンで行う
+    firstFlashIds.forEach((id) => {
+      prefetch(id);
+    });
+  }, [prefetch, users]);
 
   const searchStackNavigation = useNavigation<
     NearbyUsersStackNavigationProp<'NearbyUsers'>

@@ -1,7 +1,7 @@
 import {useCallback} from 'react';
 import {useApikit} from './apikit';
 import {default as axios} from 'axios';
-import useSWR from 'swr';
+import useSWR, {mutate as globalMutate} from 'swr';
 
 import {baseUrl} from '~/constants/url';
 import {StampValues} from '~/types/flashStamps';
@@ -76,5 +76,34 @@ export const useFlashStamps = ({flashId}: {flashId: number}) => {
   return {
     data,
     createFlashStamps,
+  };
+};
+
+export const usePrefetchStamps = () => {
+  const {addBearer, checkKeychain} = useApikit();
+  const fetch = useCallback(
+    async (id: number) => {
+      try {
+        const credentials = await checkKeychain();
+        const response = await axios.get(
+          `${baseUrl}${getFlashStampsKey(id)}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+        return response.data;
+      } catch (e) {}
+    },
+    [addBearer, checkKeychain],
+  );
+
+  const prefetch = useCallback(
+    (id: number) => {
+      console.log('prefetch' + id);
+      globalMutate(getFlashStampsKey(id), () => fetch(id));
+    },
+    [fetch],
+  );
+
+  return {
+    prefetch,
   };
 };

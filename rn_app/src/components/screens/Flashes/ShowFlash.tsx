@@ -27,6 +27,7 @@ import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {Stamps} from './Stamps';
 import {useViewed} from '~/hooks/flashes';
 import {usePauseFlashPregress} from '~/hooks/appState';
+import {usePrefetchStamps} from '~/hooks/flashStamps';
 
 type Props = {
   flashes: {
@@ -198,6 +199,7 @@ export const ShowFlash = React.memo(
       }
     }, [isDisplayed, progressAnim, progressBarWidth, currentFlash.sourceType]);
 
+    //pauseFlashProgressがいじられた時
     useEffect(() => {
       if (pauseFlashProgress) {
         progressAnim[currentProgressBar.current].stopAnimation();
@@ -232,6 +234,14 @@ export const ShowFlash = React.memo(
 
       return unsbscribe;
     }, [setPauseFlashProgress, pauseFlashProgress, flashStackNavigation]);
+
+    const {prefetch} = usePrefetchStamps();
+    useEffect(() => {
+      const ids = flashes.map((f) => f.id);
+      ids.forEach((i) => {
+        prefetch(i);
+      });
+    }, [prefetch, flashes]);
 
     const scrollRef = useRef(false);
 
