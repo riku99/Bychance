@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -129,5 +129,16 @@ export const TalkRoom = ({route, navigation}: Props) => {
     }
   };
 
-  return <Chat messages={messages} userId={myId} onSend={onSend} />;
+  const onAvatarPress = useCallback(() => {
+    navigation.navigate('UserPage', {userId: partner.id});
+  }, [partner.id, navigation]);
+
+  return (
+    <Chat
+      messages={messages}
+      userId={myId}
+      onSend={onSend}
+      onAvatarPress={onAvatarPress}
+    />
+  );
 };
