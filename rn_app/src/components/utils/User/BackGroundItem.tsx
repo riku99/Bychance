@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/native';
 
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {SkeltonLoadingView} from '~/components/utils/SkeltonLoadingView';
@@ -15,6 +16,17 @@ type Props = {
 export const BackGroundItem = React.memo(
   ({source, sourceType, onPress}: Props) => {
     const {videoPaused, setVideoPaused} = useBackGroundItemVideoPaused();
+    const navigation = useNavigation();
+
+    useEffect(() => {
+      const unsbscribe = navigation.addListener('focus', () => {
+        if (videoPaused) {
+          setVideoPaused(false);
+        }
+      });
+
+      return unsbscribe;
+    }, [navigation, videoPaused, setVideoPaused]);
 
     if (!source) {
       return null;

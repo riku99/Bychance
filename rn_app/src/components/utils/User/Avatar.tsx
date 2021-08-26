@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {UserAvatarWithOuter} from '../Avatar';
 import {useUserAvatar, useAvatarOuterType} from '~/hooks/users';
 import {RootNavigationProp} from '~/navigations/Root';
+import {useBackGroundItemVideoPaused} from '~/hooks/appState';
 
 type Props = {
   id: string;
@@ -14,8 +15,10 @@ export const Avatar = React.memo(({id, avatar}: Props) => {
   const url = useUserAvatar({userId: id, avatarUrl: avatar});
   const outerType = useAvatarOuterType({userId: id});
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
+  const {setVideoPaused} = useBackGroundItemVideoPaused();
 
   const onAavatarPress = () => {
+    setVideoPaused(true);
     navigation.navigate('Flashes', {
       screen: 'Flashes',
       params: {

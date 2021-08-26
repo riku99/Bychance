@@ -146,17 +146,6 @@ export const User = ({data, refresh}: _Props) => {
     }
   }, [backGroundItem, backGroundItemType]);
 
-  // BackGroundItemViewから戻ってきた時にビデオが停止されていた場合再開させたい
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     if (videoPaused) {
-  //       setVideoPaused(false);
-  //     }
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation, videoPaused]);
-
   const creatingPost = useSelector(
     (state: RootState) => state.otherSettingsReducer.creatingPost,
   );
