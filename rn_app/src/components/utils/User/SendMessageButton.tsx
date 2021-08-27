@@ -10,9 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Emoji from 'react-native-emoji';
 
-import {resetRecievedMessage} from '../../../stores/otherSettings';
 import {RootNavigationProp} from '~/navigations/Root';
-import {useCustomDispatch} from '~/hooks/stores';
 import {useCreateTalkRoom} from '~/hooks/talkRooms';
 
 const gradientConfig: {
@@ -34,8 +32,6 @@ type Props = {
 };
 
 export const SendMessageButton = React.memo(({id, name, avatar}: Props) => {
-  const dispatch = useCustomDispatch();
-
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   const {createTalkRoom} = useCreateTalkRoom();
@@ -43,7 +39,6 @@ export const SendMessageButton = React.memo(({id, name, avatar}: Props) => {
   const onPress = async () => {
     const result = await createTalkRoom({id, name, avatar});
     if (result) {
-      dispatch(resetRecievedMessage());
       navigation.push('TalkRoomStack', {
         screen: 'TalkRoom',
         params: {

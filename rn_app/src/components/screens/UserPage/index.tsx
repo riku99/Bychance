@@ -1,5 +1,7 @@
-import React, {useMemo, useLayoutEffect} from 'react';
+import React, {useMemo, useLayoutEffect, useState} from 'react';
+import {View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
+import Modal from 'react-native-modal';
 
 import {useUserPageInfo, useUserName} from '~/hooks/users';
 import {
@@ -7,6 +9,7 @@ import {
   UserPageNavigationProp,
 } from '~/navigations/UserPage';
 import {User} from '~/components/utils/User';
+import {MoreHoriz} from './MoreHoriz';
 
 type ProfileStackScreenProp = RouteProp<
   UserPageScreenGroupParamList,
@@ -19,11 +22,18 @@ type Props = {
 };
 export const UserPage = React.memo(({route, navigation}: Props) => {
   const {data, mutate} = useUserPageInfo(route.params.userId);
-
   const name = useUserName(route.params.userId);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerRight: () => (
+        <MoreHoriz
+          onPress={() => {
+            setMenuVisible(true);
+          }}
+        />
+      ),
       headerTitle: data?.name
         ? data.name
         : name
@@ -51,5 +61,16 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     return null;
   }
 
-  return <User data={propsData} refresh={refresh} />;
+  return (
+    <>
+      <User data={propsData} refresh={refresh} />
+      <Modal
+        isVisible={menuVisible}
+        backdropOpacity={0.25}
+        style={{justifyContent: 'flex-end', marginBottom: 20}}
+        onBackdropPress={() => setMenuVisible(false)}>
+        <View style={{width: '100%', height: '60%', backgroundColor: 'red'}} />
+      </Modal>
+    </>
+  );
 });
