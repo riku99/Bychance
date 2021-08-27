@@ -10,6 +10,7 @@ import {
 } from '~/navigations/UserPage';
 import {User} from '~/components/utils/User';
 import {MoreHoriz} from './MoreHoriz';
+import {InstaLikeModal} from '~/components/utils/InstaLikeModal';
 
 type ProfileStackScreenProp = RouteProp<
   UserPageScreenGroupParamList,
@@ -69,7 +70,7 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
         backdropOpacity={0.25}
         style={{justifyContent: 'flex-end', marginBottom: 20}}
         onBackdropPress={() => setMenuVisible(false)}>
-        <View style={{width: '100%', height: '60%', backgroundColor: 'red'}} />
+        <InstaLikeModal />
       </Modal>
     </>
   );
