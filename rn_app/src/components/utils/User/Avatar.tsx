@@ -38,6 +38,7 @@ export const Avatar = React.memo(({id, avatar}: Props) => {
       opacity={1}
       onPress={onAavatarPress}
       outerType={outerType}
+      outerDuration={1300}
     />
   );
 });

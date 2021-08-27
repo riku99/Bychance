@@ -30,12 +30,18 @@ export const UserAvatar = React.memo(
   },
 );
 
-type _Props = Props & {outerType: 'gradation' | 'silver' | 'none'};
+type _Props = Props & {
+  outerType: 'gradation' | 'silver' | 'none';
+  outerDuration?: number;
+};
 
 export const UserAvatarWithOuter = React.memo(
-  ({image, size, onPress, outerType, opacity = 1}: _Props) => {
+  ({image, size, onPress, outerType, outerDuration, opacity = 1}: _Props) => {
     return (
-      <UserProfileOuter avatarSize={size} outerType={outerType}>
+      <UserProfileOuter
+        avatarSize={size}
+        outerType={outerType}
+        outerDuration={outerDuration}>
         <UserAvatar
           image={image}
           size={size}

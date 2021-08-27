@@ -6948,6 +6948,13 @@ react-native-camera@^3.40.0:
   dependencies:
     prop-types "^15.6.2"
 
+react-native-circular-progress-gradient@1.3.8:
+  version "1.3.8"
+  resolved "https://registry.yarnpkg.com/react-native-circular-progress-gradient/-/react-native-circular-progress-gradient-1.3.8.tgz#102e107d5821695ad2f379792ac5400f42ed1dd1"
+  integrity sha512-gIEjiIe07eMOqawG+j28vVNWjq2A1VqvqVFsyAaV1hxEJJlx+AJGX3vVr0z6U1hwuhKE7hbL/9jPAquPTHJPfw==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-color-picker@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/react-native-color-picker/-/react-native-color-picker-0.6.0.tgz#3b06eaaa0dfa9d90b45bf37bbb13776625c1fd2b"
