@@ -1,11 +1,12 @@
 import {useMemo} from 'react';
 import {Alert} from 'react-native';
 
-import {useCreateBlcok} from './block';
+import {useCreateBlcok, useDeleteBlock} from './block';
 import {useUserBlock} from './users';
 
 export const useUserPageModalList = ({userId}: {userId?: string}) => {
   const {block, isLoading: blockLoading} = useCreateBlcok();
+  const {deleteBlock, isLoading: deleteLoading} = useDeleteBlock();
   const _block = useUserBlock(userId);
 
   const list = useMemo(() => {
@@ -18,6 +19,17 @@ export const useUserPageModalList = ({userId}: {userId?: string}) => {
       alertButtonText: !_block ? 'ブロックする' : '解除する',
     };
 
+    const onBlockPress = () => {
+      if (!userId) {
+        return;
+      }
+      if (!_block) {
+        block({blockTo: userId});
+      } else {
+        deleteBlock({userId});
+      }
+    };
+
     return [
       {
         title: modalText.title,
@@ -28,9 +40,7 @@ export const useUserPageModalList = ({userId}: {userId?: string}) => {
               {
                 text: modalText.alertButtonText,
                 style: 'destructive',
-                onPress: () => {
-                  block({blockTo: userId});
-                },
+                onPress: onBlockPress,
               },
               {
                 text: 'キャンセル',
@@ -48,10 +58,11 @@ export const useUserPageModalList = ({userId}: {userId?: string}) => {
         onPress: () => {},
       },
     ];
-  }, [block, userId, _block]);
+  }, [block, userId, _block, deleteBlock]);
 
   return {
     list,
     blockLoading,
+    deleteLoading,
   };
 };

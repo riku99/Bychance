@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react';
 import {default as axios} from 'axios';
 import {RNToasty} from 'react-native-toasty';
-import {useSelector} from 'react-redux';
 
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
@@ -37,6 +36,39 @@ export const useCreateBlcok = () => {
 
   return {
     block,
+    isLoading,
+  };
+};
+
+export const useDeleteBlock = () => {
+  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const deleteBlock = useCallback(
+    async ({userId}: {userId: string}) => {
+      setIsLoading(true);
+      try {
+        const credentials = await checkKeychain();
+        await axios.delete(
+          `${baseUrl}/users/${userId}/block?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+
+        RNToasty.Show({
+          title: '解除しました',
+          position: 'center',
+        });
+      } catch (e) {
+        handleApiError(e);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [addBearer, checkKeychain, handleApiError],
+  );
+
+  return {
+    deleteBlock,
     isLoading,
   };
 };

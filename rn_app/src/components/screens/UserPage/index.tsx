@@ -59,8 +59,10 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     await mutate();
   };
 
-  const {list, blockLoading} = useUserPageModalList({userId: data?.id});
-  const toastLoading = blockLoading;
+  const {list, blockLoading, deleteLoading} = useUserPageModalList({
+    userId: data?.id,
+  });
+  const toastLoading = blockLoading || deleteLoading;
 
   if (!propsData) {
     return null;
