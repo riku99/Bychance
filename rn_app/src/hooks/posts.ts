@@ -16,6 +16,12 @@ import {useCustomDispatch} from './stores';
 import {Post} from '~/types/store/posts';
 import {RootState} from '~/stores';
 
+export const usePosts = ({userId}: {userId: string}) =>
+  useSelector(
+    (state: RootState) => selectPostsByUserId(state, userId),
+    shallowEqual,
+  );
+
 export const useCreatePost = () => {
   const {
     checkKeychain,

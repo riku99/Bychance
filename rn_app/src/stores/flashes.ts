@@ -47,6 +47,18 @@ const flashesSlice = createSlice({
   },
 });
 
+export const flashesReducer = flashesSlice.reducer;
+
+export const {
+  setFlashes,
+  resetFlashes,
+  addFlash,
+  removeFlash,
+  upsertFlashes,
+  removeFlashes,
+  updateFlash,
+} = flashesSlice.actions;
+
 const selectors = flashesAdapter.getSelectors();
 
 export const getAllFlashes = (state: RootState) => {
@@ -84,15 +96,3 @@ export const selectNotAllViewedUserIds = (
     })
     .filter((_f): _f is Exclude<typeof _f, undefined> => _f !== undefined);
 };
-
-export const flashesReducer = flashesSlice.reducer;
-
-export const {
-  setFlashes,
-  resetFlashes,
-  addFlash,
-  removeFlash,
-  upsertFlashes,
-  removeFlashes,
-  updateFlash,
-} = flashesSlice.actions;

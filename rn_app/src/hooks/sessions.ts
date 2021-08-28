@@ -9,7 +9,7 @@ import {RootState} from '~/stores/index';
 import {baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
 import {SuccessfullLoginData} from '~/types/login';
-import {useResetDispatch, useSuccessfullLoginDispatch} from './stores';
+import {useResetDispatch} from './stores';
 import {LoginData} from '~/types/response/session';
 import {setUser} from '~/stores/user';
 import {setLogin} from '~/stores/sessions';
@@ -18,8 +18,6 @@ import {setFlashes} from '~/stores/flashes';
 
 export const useSessionloginProccess = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
-
-  const {loginDispatch} = useSuccessfullLoginDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -47,7 +45,7 @@ export const useSessionloginProccess = () => {
       setIsLoading(false);
     };
     loginProccess();
-  }, [dispatch, checkKeychain, addBearer, handleApiError, loginDispatch]);
+  }, [dispatch, checkKeychain, addBearer, handleApiError]);
 
   return {
     isLoading,
@@ -56,8 +54,6 @@ export const useSessionloginProccess = () => {
 
 export const useLineLogin = () => {
   const {addBearer} = useApikit();
-
-  const {loginDispatch} = useSuccessfullLoginDispatch();
 
   const lineLogin = useCallback(async () => {
     try {
@@ -104,8 +100,6 @@ export const useLineLogin = () => {
 };
 
 export const useSampleLogin = () => {
-  const {loginDispatch} = useSuccessfullLoginDispatch();
-
   const sampleLogin = useCallback(async () => {
     const response = await axios.get<
       SuccessfullLoginData & {accessToken: string}
@@ -117,8 +111,7 @@ export const useSampleLogin = () => {
     );
 
     const {accessToken, ...data} = response.data; // eslint-disable-line
-    loginDispatch(data);
-  }, [loginDispatch]);
+  }, []);
 
   return {
     sampleLogin,

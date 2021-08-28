@@ -5,36 +5,43 @@ import {RNToasty} from 'react-native-toasty';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {updateUser} from '~/stores/_users';
+import {useRemovePostsAndFlashesDispatch} from './stores';
 
-export const useCreateBlcok = () => {
+export const useCreateBlcok = ({blockTo}: {blockTo: string}) => {
   const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
   const [isLoading, setIsLoading] = useState(false);
+  const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId: blockTo});
 
-  const block = useCallback(
-    async ({blockTo}: {blockTo: string}) => {
-      setIsLoading(true);
-      try {
-        const credentials = await checkKeychain();
+  const block = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const credentials = await checkKeychain();
 
-        await axios.post(
-          `${baseUrl}/users/block?id=${credentials?.id}`,
-          {blockTo},
-          addBearer(credentials?.token),
-        );
+      await axios.post(
+        `${baseUrl}/users/block?id=${credentials?.id}`,
+        {blockTo},
+        addBearer(credentials?.token),
+      );
 
-        RNToasty.Show({
-          title: 'ブロックしました',
-          position: 'center',
-        });
-        dispatch(updateUser({id: blockTo, changes: {block: true}}));
-      } catch (e) {
-        handleApiError(e);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [handleApiError, addBearer, checkKeychain, dispatch],
-  );
+      RNToasty.Show({
+        title: 'ブロックしました',
+        position: 'center',
+      });
+      dispatch(updateUser({id: blockTo, changes: {block: true}}));
+      removeDispatch();
+    } catch (e) {
+      handleApiError(e);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    handleApiError,
+    addBearer,
+    checkKeychain,
+    dispatch,
+    blockTo,
+    removeDispatch,
+  ]);
 
   return {
     block,

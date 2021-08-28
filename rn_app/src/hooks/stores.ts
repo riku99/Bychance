@@ -5,9 +5,11 @@ import {ThunkDispatch} from '@reduxjs/toolkit';
 import {AppDispatch} from '~/stores/index';
 import {AnyAction} from 'redux';
 import {setLogin} from '~/stores/sessions';
-import {setUser, resetUser} from '~/stores/user';
-import {setFlashes, resetFlashes} from '~/stores/flashes';
-import {LoginData} from '~/types/response/session';
+import {resetUser} from '~/stores/user';
+import {resetFlashes, removeFlashes} from '~/stores/flashes';
+import {removePosts} from '~/stores/posts';
+import {useFlashes} from './flashes';
+import {usePosts} from './posts';
 
 // AppDispatchの型付けを毎回やるのめんどいのでカスタムdispatchとして定義
 export const useCustomDispatch = () => {
@@ -15,23 +17,6 @@ export const useCustomDispatch = () => {
     ThunkDispatch<any, any, AnyAction> & AppDispatch
   >();
   return dispatch;
-};
-
-export const useSuccessfullLoginDispatch = () => {
-  const dispatch = useCustomDispatch();
-
-  const loginDispatch = useCallback(
-    ({user, flashes}: LoginData) => {
-      dispatch(setUser(user));
-      dispatch(setFlashes(flashes));
-      dispatch(setLogin(true));
-    },
-    [dispatch],
-  );
-
-  return {
-    loginDispatch,
-  };
 };
 
 export const useResetDispatch = () => {
@@ -45,5 +30,24 @@ export const useResetDispatch = () => {
 
   return {
     resetDispatch,
+  };
+};
+
+export const useRemovePostsAndFlashesDispatch = ({
+  userId,
+}: {
+  userId: string;
+}) => {
+  const dispatch = useCustomDispatch();
+  const flasheIds = useFlashes({userId}).map((f) => f.id);
+  const postIds = usePosts({userId}).map((p) => p.id);
+
+  const removeDispatch = useCallback(() => {
+    dispatch(removeFlashes(flasheIds));
+    dispatch(removePosts(postIds));
+  }, [dispatch, flasheIds, postIds]);
+
+  return {
+    removeDispatch,
   };
 };

@@ -4,8 +4,8 @@ import {Alert} from 'react-native';
 import {useCreateBlcok, useDeleteBlock} from './block';
 import {useUserBlock} from './users';
 
-export const useUserPageModalList = ({userId}: {userId?: string}) => {
-  const {block, isLoading: blockLoading} = useCreateBlcok();
+export const useUserPageModalList = ({userId}: {userId: string}) => {
+  const {block, isLoading: blockLoading} = useCreateBlcok({blockTo: userId});
   const {deleteBlock, isLoading: deleteLoading} = useDeleteBlock();
   const _block = useUserBlock(userId);
 
@@ -24,7 +24,7 @@ export const useUserPageModalList = ({userId}: {userId?: string}) => {
         return;
       }
       if (!_block) {
-        block({blockTo: userId});
+        block();
       } else {
         deleteBlock({userId});
       }

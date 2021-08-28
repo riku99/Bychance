@@ -2,7 +2,7 @@ import {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
 import {default as axios} from 'axios';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 
 import {getExtention} from '~/utils';
 import {useApikit} from './apikit';
@@ -19,6 +19,12 @@ import {
   updateFlash,
 } from '~/stores/flashes';
 import {Flash} from '~/types/store/flashes';
+
+export const useFlashes = ({userId}: {userId: string}) =>
+  useSelector(
+    (state: RootState) => selectFlashesByUserId(state, userId),
+    shallowEqual,
+  );
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
