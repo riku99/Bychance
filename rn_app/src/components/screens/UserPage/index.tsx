@@ -1,5 +1,4 @@
 import React, {useMemo, useLayoutEffect, useState} from 'react';
-import {View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 
@@ -11,6 +10,7 @@ import {
 import {User} from '~/components/utils/User';
 import {MoreHoriz} from './MoreHoriz';
 import {InstaLikeModal} from '~/components/utils/InstaLikeModal';
+import {useUserPageModalList} from '~/hooks/modal';
 
 type ProfileStackScreenProp = RouteProp<
   UserPageScreenGroupParamList,
@@ -58,6 +58,8 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     await mutate();
   };
 
+  const {list} = useUserPageModalList({userId: data?.id});
+
   if (!propsData) {
     return null;
   }
@@ -65,13 +67,15 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
   return (
     <>
       <User data={propsData} refresh={refresh} />
-      <Modal
-        isVisible={menuVisible}
-        backdropOpacity={0.25}
-        style={{justifyContent: 'flex-end', marginBottom: 20}}
-        onBackdropPress={() => setMenuVisible(false)}>
-        <InstaLikeModal />
-      </Modal>
+      {data && (
+        <Modal
+          isVisible={menuVisible}
+          backdropOpacity={0.25}
+          style={{justifyContent: 'flex-end', marginBottom: 20}}
+          onBackdropPress={() => setMenuVisible(false)}>
+          <InstaLikeModal list={list} onCancel={() => setMenuVisible(false)} />
+        </Modal>
+      )}
     </>
   );
 });

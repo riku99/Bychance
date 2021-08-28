@@ -2,27 +2,30 @@ import React from 'react';
 import {View, StyleSheet, Text, Pressable} from 'react-native';
 import {Divider} from 'react-native-elements';
 
-const list = [
-  {
-    title: 'ブロックする',
-    color: 'red',
-  },
-  {
-    title: 'このアカウントについて',
-  },
-  {
-    title: 'プロフィールURLをコピー',
-  },
-];
+type ListItem = {
+  title: string;
+  color?: string;
+  onPress: () => void;
+};
 
-export const InstaLikeModal = React.memo(() => {
+type Props = {
+  list: ListItem[];
+  onCancel: () => void;
+};
+
+export const InstaLikeModal = React.memo(({onCancel, list}: Props) => {
   return (
     <View>
       <View style={styles.itemsContainer}>
         {list.map((l, idx) => (
           <View key={idx}>
             <Divider style={{width: '100%'}} color="#e6e6e6" />
-            <Pressable style={styles.item}>
+            <Pressable
+              style={({pressed}) => ({
+                ...styles.item,
+                backgroundColor: pressed ? '#f5f5f5' : undefined,
+              })}
+              onPress={l.onPress}>
               <Text
                 style={[
                   styles.itemTitle,
@@ -34,18 +37,20 @@ export const InstaLikeModal = React.memo(() => {
           </View>
         ))}
       </View>
-      <View style={[styles.cancelContainer, styles.item]}>
+      <Pressable
+        style={[styles.cancelContainer, styles.item]}
+        onPress={onCancel}>
         <Text style={styles.itemTitle}>キャンセル</Text>
-      </View>
+      </Pressable>
     </View>
   );
 });
 
 const styles = StyleSheet.create({
-  container: {},
   itemsContainer: {
     backgroundColor: 'white',
     borderRadius: 15,
+    overflow: 'hidden',
   },
   item: {
     height: 50,
