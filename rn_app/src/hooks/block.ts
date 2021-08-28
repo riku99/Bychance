@@ -4,9 +4,10 @@ import {RNToasty} from 'react-native-toasty';
 
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
+import {updateUser} from '~/stores/_users';
 
 export const useCreateBlcok = () => {
-  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
   const [isLoading, setIsLoading] = useState(false);
 
   const block = useCallback(
@@ -25,13 +26,14 @@ export const useCreateBlcok = () => {
           title: 'ブロックしました',
           position: 'center',
         });
+        dispatch(updateUser({id: blockTo, changes: {block: true}}));
       } catch (e) {
         handleApiError(e);
       } finally {
         setIsLoading(false);
       }
     },
-    [handleApiError, addBearer, checkKeychain],
+    [handleApiError, addBearer, checkKeychain, dispatch],
   );
 
   return {
@@ -41,7 +43,7 @@ export const useCreateBlcok = () => {
 };
 
 export const useDeleteBlock = () => {
-  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
   const [isLoading, setIsLoading] = useState(false);
 
   const deleteBlock = useCallback(
@@ -58,13 +60,14 @@ export const useDeleteBlock = () => {
           title: '解除しました',
           position: 'center',
         });
+        dispatch(updateUser({id: userId, changes: {block: false}}));
       } catch (e) {
         handleApiError(e);
       } finally {
         setIsLoading(false);
       }
     },
-    [addBearer, checkKeychain, handleApiError],
+    [addBearer, checkKeychain, handleApiError, dispatch],
   );
 
   return {

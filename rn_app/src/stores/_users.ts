@@ -18,12 +18,21 @@ const UsersSlice = createSlice({
     upsertUsers: (state, action: PayloadAction<User[]>) => {
       usersAdapter.upsertMany(state, action.payload);
     },
+    updateUser: (
+      state,
+      action: PayloadAction<{id: string; changes: Partial<User>}>,
+    ) => {
+      usersAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: action.payload.changes,
+      });
+    },
   },
 });
 
 export const _usersReducer = UsersSlice.reducer;
 
-export const {upsertUsers} = UsersSlice.actions;
+export const {upsertUsers, updateUser} = UsersSlice.actions;
 
 const selectors = usersAdapter.getSelectors();
 
