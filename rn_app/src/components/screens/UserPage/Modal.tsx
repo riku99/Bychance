@@ -1,7 +1,4 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import Modal from 'react-native-modal';
-import {onChange} from 'react-native-reanimated';
 
 import {InstaLikeModal} from '~/components/utils/InstaLikeModal';
 import {useUserPageModalList} from '~/hooks/modal';
@@ -14,7 +11,7 @@ type Props = {
 
 export const MoreHorizModal = React.memo(
   ({userId, isVisble, closeModal}: Props) => {
-    const {list, blockLoading, deleteLoading} = useUserPageModalList({
+    const {list} = useUserPageModalList({
       userId,
     });
 

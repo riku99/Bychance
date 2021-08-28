@@ -9,6 +9,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Root from './components/Root';
 import {normalStyles} from '~/constants/styles';
 import {Dimensions} from 'react-native';
+import {ToastLoading} from '~/components/utils/ToastLoading';
 
 const App: () => React.ReactNode = () => {
   return (
@@ -21,6 +22,7 @@ const App: () => React.ReactNode = () => {
           dangerIcon={<MIcon name="clear" color="white" size={17} />}
           style={{width: bottomToastWidth}}>
           <Root />
+          <ToastLoading />
         </ToastProvider>
       </Provider>
     </NavigationContainer>

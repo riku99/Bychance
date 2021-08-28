@@ -7,18 +7,13 @@ import {AuthStackScreen} from '~/navigations/Auth';
 
 const Root = React.memo(() => {
   const login = useLoginSelect();
-
   const {isLoading} = useSessionloginProccess();
 
   if (isLoading) {
     return null;
   }
 
-  if (login) {
-    return <Main />;
-  } else {
-    return <AuthStackScreen />;
-  }
+  return <>{login ? <Main /> : <AuthStackScreen />}</>;
 });
 
 export default Root;

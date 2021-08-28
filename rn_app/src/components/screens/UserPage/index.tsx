@@ -8,7 +8,6 @@ import {
 } from '~/navigations/UserPage';
 import {User} from '~/components/utils/User';
 import {MoreHoriz} from './MoreHoriz';
-import {ToastLoading} from '~/components/utils/ToastLoading';
 import {MoreHorizModal} from './Modal';
 
 type ProfileStackScreenProp = RouteProp<
@@ -71,7 +70,6 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
           closeModal={() => setMenuVisible(false)}
         />
       )}
-      {/* {toastLoading && <ToastLoading />} */}
     </>
   );
 });

@@ -98,3 +98,21 @@ export const usePauseFlashPregress = () => {
     setPauseFlashProgress,
   };
 };
+
+export const useToastLoading = () => {
+  const dispatch = useCustomDispatch();
+  const toastLoading = useSelector(
+    (state: RootState) => state.appReducer.toastLoading,
+  );
+  const setToastLoading = useCallback(
+    (v: boolean) => {
+      dispatch(setAppState({toastLoading: v}));
+    },
+    [dispatch],
+  );
+
+  return {
+    toastLoading,
+    setToastLoading,
+  };
+};

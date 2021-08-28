@@ -1,13 +1,15 @@
 import {useMemo} from 'react';
 import {Alert} from 'react-native';
 
-import {useCreateBlcok, useDeleteBlock} from './block';
+import {useCreateBlock, useDeleteBlock} from './block';
 import {useUserBlock} from './users';
+import {useRemovePostsAndFlashesDispatch} from './stores';
 
 export const useUserPageModalList = ({userId}: {userId: string}) => {
-  const {block, isLoading: blockLoading} = useCreateBlcok({blockTo: userId});
-  const {deleteBlock, isLoading: deleteLoading} = useDeleteBlock();
+  const {block} = useCreateBlock();
+  const {deleteBlock} = useDeleteBlock();
   const _block = useUserBlock(userId);
+  const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId});
 
   const list = useMemo(() => {
     const modalText = {
@@ -19,12 +21,15 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
       alertButtonText: !_block ? 'ブロックする' : '解除する',
     };
 
-    const onBlockPress = () => {
+    const onBlockPress = async () => {
       if (!userId) {
         return;
       }
       if (!_block) {
-        block();
+        const result = await block({blockTo: userId});
+        if (result) {
+          removeDispatch();
+        }
       } else {
         deleteBlock({userId});
       }
@@ -58,11 +63,9 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
         onPress: () => {},
       },
     ];
-  }, [block, userId, _block, deleteBlock]);
+  }, [block, userId, _block, deleteBlock, removeDispatch]);
 
   return {
     list,
-    blockLoading,
-    deleteLoading,
   };
 };

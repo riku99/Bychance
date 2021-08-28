@@ -1,7 +1,15 @@
 import React from 'react';
 import {View, ActivityIndicator, StyleSheet} from 'react-native';
 
+import {useToastLoading} from '~/hooks/appState';
+
 export const ToastLoading = React.memo(() => {
+  const {toastLoading} = useToastLoading();
+
+  if (!toastLoading) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.indicatorContainer}>

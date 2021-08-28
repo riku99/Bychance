@@ -5,57 +5,51 @@ import {RNToasty} from 'react-native-toasty';
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
 import {updateUser} from '~/stores/_users';
-import {useRemovePostsAndFlashesDispatch} from './stores';
+import {useToastLoading} from './appState';
 
-export const useCreateBlcok = ({blockTo}: {blockTo: string}) => {
+export const useCreateBlock = () => {
   const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
-  const [isLoading, setIsLoading] = useState(false);
-  const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId: blockTo});
+  const {setToastLoading} = useToastLoading();
 
-  const block = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const credentials = await checkKeychain();
+  const block = useCallback(
+    async ({blockTo}: {blockTo: string}) => {
+      setToastLoading(true);
+      try {
+        const credentials = await checkKeychain();
 
-      await axios.post(
-        `${baseUrl}/users/block?id=${credentials?.id}`,
-        {blockTo},
-        addBearer(credentials?.token),
-      );
+        await axios.post(
+          `${baseUrl}/users/block?id=${credentials?.id}`,
+          {blockTo},
+          addBearer(credentials?.token),
+        );
 
-      RNToasty.Show({
-        title: 'ブロックしました',
-        position: 'center',
-      });
-      dispatch(updateUser({id: blockTo, changes: {block: true}}));
-      removeDispatch();
-    } catch (e) {
-      handleApiError(e);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [
-    handleApiError,
-    addBearer,
-    checkKeychain,
-    dispatch,
-    blockTo,
-    removeDispatch,
-  ]);
+        RNToasty.Show({
+          title: 'ブロックしました',
+          position: 'center',
+        });
+        dispatch(updateUser({id: blockTo, changes: {block: true}}));
+        setToastLoading(false);
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      } finally {
+      }
+    },
+    [handleApiError, addBearer, checkKeychain, dispatch, setToastLoading],
+  );
 
   return {
     block,
-    isLoading,
   };
 };
 
 export const useDeleteBlock = () => {
   const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
-  const [isLoading, setIsLoading] = useState(false);
+  const {setToastLoading} = useToastLoading();
 
   const deleteBlock = useCallback(
     async ({userId}: {userId: string}) => {
-      setIsLoading(true);
+      setToastLoading(true);
       try {
         const credentials = await checkKeychain();
         await axios.delete(
@@ -71,14 +65,13 @@ export const useDeleteBlock = () => {
       } catch (e) {
         handleApiError(e);
       } finally {
-        setIsLoading(false);
+        setToastLoading(false);
       }
     },
-    [addBearer, checkKeychain, handleApiError, dispatch],
+    [addBearer, checkKeychain, handleApiError, dispatch, setToastLoading],
   );
 
   return {
     deleteBlock,
-    isLoading,
   };
 };
