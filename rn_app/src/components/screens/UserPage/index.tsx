@@ -11,6 +11,7 @@ import {User} from '~/components/utils/User';
 import {MoreHoriz} from './MoreHoriz';
 import {InstaLikeModal} from '~/components/utils/InstaLikeModal';
 import {useUserPageModalList} from '~/hooks/modal';
+import {ToastLoading} from '~/components/utils/ToastLoading';
 
 type ProfileStackScreenProp = RouteProp<
   UserPageScreenGroupParamList,
@@ -58,7 +59,8 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     await mutate();
   };
 
-  const {list} = useUserPageModalList({userId: data?.id});
+  const {list, blockLoading} = useUserPageModalList({userId: data?.id});
+  const toastLoading = blockLoading;
 
   if (!propsData) {
     return null;
@@ -76,6 +78,7 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
           <InstaLikeModal list={list} onCancel={() => setMenuVisible(false)} />
         </Modal>
       )}
+      {toastLoading && <ToastLoading />}
     </>
   );
 });

@@ -4,7 +4,7 @@ import {Alert} from 'react-native';
 import {useCreateBlcok} from './block';
 
 export const useUserPageModalList = ({userId}: {userId?: string}) => {
-  const {block} = useCreateBlcok();
+  const {block, isLoading: blockLoading} = useCreateBlcok();
 
   const list = useMemo(
     () => [
@@ -29,7 +29,6 @@ export const useUserPageModalList = ({userId}: {userId?: string}) => {
                 },
               ],
             );
-            // block({blockTo: userId});
           }
         },
       },
@@ -47,5 +46,6 @@ export const useUserPageModalList = ({userId}: {userId?: string}) => {
 
   return {
     list,
+    blockLoading,
   };
 };

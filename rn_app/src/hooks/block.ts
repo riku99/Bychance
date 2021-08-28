@@ -1,5 +1,6 @@
 import {useCallback, useState} from 'react';
 import {default as axios} from 'axios';
+import {RNToasty} from 'react-native-toasty';
 
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
@@ -19,6 +20,11 @@ export const useCreateBlcok = () => {
           {blockTo},
           addBearer(credentials?.token),
         );
+
+        RNToasty.Show({
+          title: 'ブロックしました',
+          position: 'center',
+        });
       } catch (e) {
         handleApiError(e);
       } finally {
