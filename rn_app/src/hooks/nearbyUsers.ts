@@ -43,6 +43,7 @@ export const useNearbyUsers = () => {
         id: d.id,
         name: d.name,
         avatar: d.avatar,
+        block: false,
       }));
 
       dispatch(upsertFlashes(storedFlashesData));

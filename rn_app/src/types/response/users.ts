@@ -25,6 +25,7 @@ export type UserPageInfo = {
     createdAt: string;
     viewed: {userId: string}[];
   }[];
+  blockTo: boolean;
 };
 
 export type RefreshMyDataResponse = {

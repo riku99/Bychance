@@ -384,6 +384,7 @@ export const useUserPageInfo = (userId: string) => {
             id: data.id,
             name: data.name,
             avatar: data.avatar,
+            block: data.blockTo,
           },
         ]),
       );
