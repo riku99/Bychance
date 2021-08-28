@@ -32,3 +32,6 @@ export const selectUserAvatar = (state: RootState, id: string) =>
 
 export const selectUserName = (state: RootState, id: string) =>
   selectors.selectById(state._usersReducer, id)?.name;
+
+export const selectUserBlock = (state: RootState, id: string) =>
+  selectors.selectById(state._usersReducer, id)?.block;

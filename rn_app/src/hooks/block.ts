@@ -1,6 +1,7 @@
 import {useCallback, useState} from 'react';
 import {default as axios} from 'axios';
 import {RNToasty} from 'react-native-toasty';
+import {useSelector} from 'react-redux';
 
 import {useApikit} from './apikit';
 import {baseUrl} from '~/constants/url';
