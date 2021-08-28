@@ -4,12 +4,12 @@ import axios from 'axios';
 import {baseUrl} from '~/constants/url';
 import {PrivateTime} from '~/types';
 import {useApikit} from './apikit';
+import {useToastLoading} from './appState';
 
 export const usePrivateTime = () => {
-  const [postLoading, setPostLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [fetchResult, setFetchResult] = useState<PrivateTime[]>();
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const {setToastLoading} = useToastLoading();
 
   const {checkKeychain, addBearer, handleApiError, toast} = useApikit();
 
@@ -45,7 +45,7 @@ export const usePrivateTime = () => {
       endHours: number;
       endMinutes: number;
     }) => {
-      setPostLoading(true);
+      setToastLoading(true);
       const credentials = await checkKeychain();
       try {
         const apiResult = await axios.post<PrivateTime>(
@@ -53,20 +53,20 @@ export const usePrivateTime = () => {
           {startHours, startMinutes, endHours, endMinutes},
           addBearer(credentials?.token),
         );
-        setPostLoading(false);
+        setToastLoading(false);
         toast?.show('作成しました', {type: 'success'});
         return apiResult.data;
       } catch (e) {
         handleApiError(e);
       }
-      setPostLoading(false);
+      setToastLoading(false);
     },
-    [checkKeychain, addBearer, handleApiError, toast],
+    [checkKeychain, addBearer, handleApiError, toast, setToastLoading],
   );
 
   const deletePrivateTime = useCallback(
     async (id: number) => {
-      setDeleteLoading(true);
+      setToastLoading(true);
 
       const credentials = await checkKeychain();
 
@@ -75,24 +75,22 @@ export const usePrivateTime = () => {
           `${baseUrl}/privateTime/${id}?id=${credentials?.id}`,
           addBearer(credentials?.token),
         );
-        setDeleteLoading(false);
+        setToastLoading(false);
         toast?.show('削除しました', {type: 'success'});
         return true;
       } catch (e) {
         handleApiError(e);
       }
 
-      setDeleteLoading(false);
+      setToastLoading(false);
     },
-    [checkKeychain, addBearer, handleApiError, toast],
+    [checkKeychain, addBearer, handleApiError, toast, setToastLoading],
   );
 
   return {
-    postLoading,
     createPrivateTime,
     fetchLoading,
     fetchResult,
     deletePrivateTime,
-    deleteLoading,
   };
 };

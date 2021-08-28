@@ -18,16 +18,13 @@ import {AboutPrivateTimeModal} from './AboutPrivateTimeModal';
 import {Modalize} from 'react-native-modalize';
 import {normalStyles} from '~/constants/styles';
 import {usePrivateTime} from '~/hooks/privateTime';
-import {ToastLoading} from '~/components/utils/ToastLoading';
 import {formatMinutes} from '~/utils';
 
 export const Time = React.memo(() => {
   const {
-    postLoading,
     createPrivateTime,
     fetchLoading,
     fetchResult,
-    deleteLoading,
     deletePrivateTime,
   } = usePrivateTime();
 
@@ -218,7 +215,6 @@ export const Time = React.memo(() => {
         confirmTextIOS="OK"
         cancelTextIOS="キャンセル"
       />
-      {(postLoading || deleteLoading) && <ToastLoading />}
     </View>
   );
 });
