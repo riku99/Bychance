@@ -20,7 +20,6 @@ import {credentials} from '~/credentials';
 import {normalStyles} from '~/constants/styles';
 import {formatAddress} from '~/utils';
 import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
-import {ToastLoading} from '~/components/utils/ToastLoading';
 import {usePrivateZone} from '~/hooks/privateZone';
 import {PrivateZone} from '~/types';
 import {commonStyles} from './common';
@@ -31,9 +30,7 @@ export const Zone = React.memo(() => {
   const {
     result: _privateZone,
     fetchLoading,
-    postLoading,
     createPrivateZone,
-    deleteLoading,
     deletePrivateZone,
   } = usePrivateZone();
 
@@ -191,7 +188,6 @@ export const Zone = React.memo(() => {
       </View>
 
       <AboutPrivateZoneModal modalRef={aboutPrivateZoneModalRef} />
-      {(postLoading || deleteLoading) && <ToastLoading />}
       <SafeAreaView />
     </View>
   );

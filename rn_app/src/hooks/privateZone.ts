@@ -4,12 +4,12 @@ import axios from 'axios';
 import {baseUrl} from '~/constants/url';
 import {PrivateZone} from '~/types';
 import {useApikit} from './apikit';
+import {useToastLoading} from './appState';
 
 export const usePrivateZone = () => {
   const [result, setResult] = useState<PrivateZone[]>();
   const [fetchLoading, setfetchLoading] = useState<boolean>(true);
-  const [postLoading, setPostLoading] = useState<boolean>(false);
-  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const {setToastLoading} = useToastLoading();
 
   const {
     dispatch,
@@ -48,7 +48,7 @@ export const usePrivateZone = () => {
       lat: number;
       lng: number;
     }) => {
-      setPostLoading(true);
+      setToastLoading(true);
       const credentials = await checkKeychain();
 
       try {
@@ -62,20 +62,20 @@ export const usePrivateZone = () => {
           addBearer(credentials?.token),
         );
 
-        setPostLoading(false);
+        setToastLoading(false);
         toast?.show('作成しました', {type: 'success'});
         return _result.data;
       } catch (e) {
         handleApiError(e);
       }
-      setPostLoading(false);
+      setToastLoading(false);
     },
-    [addBearer, checkKeychain, handleApiError, toast],
+    [addBearer, checkKeychain, handleApiError, toast, setToastLoading],
   );
 
   const deletePrivateZone = useCallback(
     async (id: number): Promise<boolean | void> => {
-      setDeleteLoading(true);
+      setToastLoading(true);
 
       const credentials = await checkKeychain();
 
@@ -86,22 +86,20 @@ export const usePrivateZone = () => {
         );
 
         toast?.show('削除しました', {type: 'success'});
-        setDeleteLoading(false);
+        setToastLoading(false);
         return true;
       } catch (e) {
         handleApiError(e);
       }
-      setDeleteLoading(false);
+      setToastLoading(false);
     },
-    [addBearer, checkKeychain, handleApiError, toast],
+    [addBearer, checkKeychain, handleApiError, toast, setToastLoading],
   );
 
   return {
     result,
     fetchLoading,
-    postLoading,
     createPrivateZone,
-    deleteLoading,
     deletePrivateZone,
   };
 };
