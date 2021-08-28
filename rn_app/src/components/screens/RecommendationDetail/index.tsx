@@ -6,7 +6,6 @@ import {Button} from 'react-native-elements';
 
 import {RecommendationStackParamList} from '~/navigations/Recommendation';
 import {useHideRecommendation} from '~/hooks/recommendations';
-import {ToastLoading} from '~/components/utils/ToastLoading';
 
 export const RecommendationDetail = React.memo(() => {
   const {setListData, ...data} = useRoute<
@@ -15,7 +14,7 @@ export const RecommendationDetail = React.memo(() => {
 
   const navigation = useNavigation();
 
-  const {hideRecommendation, isLoading} = useHideRecommendation();
+  const {hideRecommendation} = useHideRecommendation();
 
   const onHideButtonPress = useCallback(() => {
     Alert.alert('非表示にしますか?', '再度表示することはできません', [
@@ -49,7 +48,6 @@ export const RecommendationDetail = React.memo(() => {
           />
         )}
       />
-      {isLoading && <ToastLoading />}
     </View>
   );
 });

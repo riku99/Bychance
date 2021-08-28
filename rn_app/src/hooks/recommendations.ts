@@ -8,6 +8,7 @@ import {Recommendation} from 'bychance-components';
 
 import {baseUrl} from '~/constants/url';
 import {RootState} from '~/stores';
+import {useToastLoading} from './appState';
 
 export const useGetRecommendations = () => {
   const {checkKeychain, addBearer, handleApiError} = useApikit();
@@ -85,11 +86,11 @@ export const useGetRecommendations = () => {
 
 export const useHideRecommendation = () => {
   const {checkKeychain, addBearer, handleApiError, toast} = useApikit();
-  const [isLoading, setIsLoading] = useState(false);
+  const {setToastLoading} = useToastLoading();
 
   const hideRecommendation = useCallback(
     async ({id}: {id: number}) => {
-      setIsLoading(true);
+      setToastLoading(true);
       const credentials = await checkKeychain();
 
       try {
@@ -103,14 +104,13 @@ export const useHideRecommendation = () => {
       } catch (e) {
         handleApiError(e);
       } finally {
-        setIsLoading(false);
+        setToastLoading(false);
       }
     },
-    [checkKeychain, addBearer, handleApiError, toast],
+    [checkKeychain, addBearer, handleApiError, toast, setToastLoading],
   );
 
   return {
     hideRecommendation,
-    isLoading,
   };
 };
