@@ -19,6 +19,7 @@ import {
 import {useSelectRoom} from './talkRooms';
 import {updateTalkRoom, upsertTalkRoom, selectRoom} from '~/stores/_talkRooms';
 import {store} from '~/stores';
+import {upsertUsers} from '~/stores/_users';
 
 export const useCreateReadTalkRoomMessages = ({
   talkRoomId,
@@ -124,8 +125,6 @@ export const useCreateTalkRoomMessage = () => {
                 unreadMessages: [],
                 partner: {
                   id: '',
-                  name: '',
-                  avatar: '',
                 },
               },
             }),
@@ -193,9 +192,17 @@ export const useSetupTalkRoomMessageSocket = () => {
       socket.on(
         'recieveTalkRoomMessage',
         (data: RecieveTalkRoomMessageWithSocket) => {
-          // dispatch(receiveTalkRoomMessage(data));
           const {message, sender} = data;
           const room = selectRoom(store.getState(), message.roomId);
+          dispatch(
+            upsertUsers([
+              {
+                ...sender,
+                block: false,
+              },
+            ]),
+          );
+
           dispatch(
             upsertTalkRoom({
               id: message.roomId,
@@ -211,8 +218,6 @@ export const useSetupTalkRoomMessageSocket = () => {
               timestamp: message.createdAt,
               partner: {
                 id: sender.id,
-                name: sender.name,
-                avatar: sender.avatar,
               },
             }),
           );
@@ -270,8 +275,6 @@ export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
               unreadMessages: [],
               partner: {
                 id: '',
-                name: '',
-                avatar: null,
               },
             },
           }),
