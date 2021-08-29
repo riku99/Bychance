@@ -18,6 +18,7 @@ import {
   CreateTalkRoomResponse,
 } from '~/types/response/talkRooms';
 import {useMyId} from './users';
+import {upsertUsers} from '~/stores/_users';
 
 export const useCreateTalkRoom = () => {
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
@@ -128,7 +129,18 @@ export const useGetTalkRoomData = () => {
           };
         });
 
+        const _userData = response.data.map((d) => {
+          const partner = d.sender.id === id ? d.recipient : d.sender;
+          const block = partner.blocked.some((b) => b.blockBy === id);
+          const {blocked, ...data} = partner; // eslint-disable-line
+          return {
+            ...data,
+            block,
+          };
+        });
+
         dispatch(setTalkRooms(storedData));
+        dispatch(upsertUsers(_userData));
       } catch (e) {
         handleApiError(e);
       }

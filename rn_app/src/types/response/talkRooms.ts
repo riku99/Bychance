@@ -1,3 +1,10 @@
+type Blocked = {
+  id: number;
+  createdAt: string;
+  blockBy: string;
+  blockTo: string;
+}[];
+
 export type GetTalkRoomDataResponse = {
   id: number;
   updatedAt: string;
@@ -14,11 +21,13 @@ export type GetTalkRoomDataResponse = {
     id: string;
     name: string;
     avatar: string | null;
+    blocked: Blocked;
   };
   recipient: {
     id: string;
     name: string;
     avatar: string | null;
+    blocked: Blocked;
   };
 }[];
 
