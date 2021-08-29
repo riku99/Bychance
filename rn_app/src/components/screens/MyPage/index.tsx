@@ -27,6 +27,7 @@ export const MyPage = React.memo(() => {
         user,
       }}
       refresh={refresh}
+      type="MyPage"
     />
   );
 });

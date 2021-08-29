@@ -13,7 +13,7 @@ type Props = {
 
 export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
   const {onAvatarPress, navigateToUserPage} = useContext(TabViewContext);
-  const url = useUserAvatar({userId: user.id, avatarUrl: user.avatar});
+  const url = useUserAvatar({userId: user.id});
   const outerType = useAvatarOuterType({userId: user.id});
 
   const onPress = () => {

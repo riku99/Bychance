@@ -40,9 +40,10 @@ type _Props = {
     };
   };
   refresh: () => Promise<void>;
+  type: 'UserPage' | 'MyPage';
 };
 
-export const User = ({data, refresh}: _Props) => {
+export const User = ({data, refresh, type}: _Props) => {
   const {user} = data;
   const {
     id,

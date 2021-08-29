@@ -62,7 +62,7 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
 
   return (
     <>
-      <User data={propsData} refresh={refresh} />
+      <User data={propsData} refresh={refresh} type="UserPage" />
       {data && (
         <MoreHorizModal
           userId={data.id}

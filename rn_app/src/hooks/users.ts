@@ -42,6 +42,9 @@ export const useMyId = () =>
 export const useMyName = () =>
   useSelector((state: RootState) => state.userReducer.user!.name);
 
+export const useMyAvatar = () =>
+  useSelector((state: RootState) => state.userReducer.user!.avatar);
+
 type EditArg = {
   name: string;
   introduce: string;
@@ -416,18 +419,8 @@ export const useUserPageInfo = (userId: string) => {
   };
 };
 
-export const useUserAvatar = ({
-  userId,
-  avatarUrl,
-}: {
-  userId: string;
-  avatarUrl?: string | null;
-}) => {
-  const storedUrl = useSelector((state: RootState) =>
-    selectUserAvatar(state, userId),
-  );
-  return storedUrl ? storedUrl : storedUrl === null ? null : avatarUrl;
-};
+export const useUserAvatar = ({userId}: {userId: string}) =>
+  useSelector((state: RootState) => selectUserAvatar(state, userId));
 
 export const useAvatarOuterType = ({userId}: {userId: string}) => {
   const flashes = useSelector(
