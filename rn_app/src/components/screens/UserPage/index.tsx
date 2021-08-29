@@ -1,7 +1,7 @@
-import React, {useMemo, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {RouteProp} from '@react-navigation/native';
 
-import {useUserPageInfo, useUserName} from '~/hooks/users';
+import {useUserPageInfo, useUserName, useUserAvatar} from '~/hooks/users';
 import {
   UserPageScreenGroupParamList,
   UserPageNavigationProp,
@@ -21,7 +21,9 @@ type Props = {
 };
 export const UserPage = React.memo(({route, navigation}: Props) => {
   const {data, mutate} = useUserPageInfo(route.params.userId);
-  const name = useUserName(route.params.userId);
+  const name = useUserName(route.params.userId) || data?.name;
+  const avatar =
+    useUserAvatar({userId: route.params.userId}) || data?.avatar || null;
   const [menuVisible, setMenuVisible] = useState(false);
 
   useLayoutEffect(() => {
@@ -41,28 +43,31 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     });
   }, [data, navigation, route.name, name]);
 
-  const propsData = useMemo(() => {
-    if (!data) {
-      return;
-    }
-    const {posts, ...userData} = data; // eslint-disable-line
-    return {
-      user: userData,
-      posts,
-    };
-  }, [data]);
-
   const refresh = async () => {
     await mutate();
   };
 
-  if (!propsData) {
+  if (!data || !name) {
     return null;
   }
 
   return (
     <>
-      <User data={propsData} refresh={refresh} />
+      <User
+        id={data.id}
+        name={name}
+        avatar={avatar}
+        introduce={data.introduce}
+        backGroundItem={data.backGroundItem}
+        backGroundItemType={data.backGroundItemType}
+        snsData={{
+          instagram: data.instagram,
+          twitter: data.twitter,
+          youtube: data.youtube,
+          tiktok: data.tiktok,
+        }}
+        refresh={refresh}
+      />
       {data && (
         <MoreHorizModal
           userId={data.id}
