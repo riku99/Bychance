@@ -3,8 +3,6 @@ import {useApikit} from './apikit';
 import {default as axios} from 'axios';
 
 import {baseUrl} from '~/constants/url';
-import {NearbyUsers} from '~/types/nearbyUsers';
-import {FlashStamp} from '~/types/flashStamps';
 import {GetNearbyUsersReponse} from '~/types/response/nearbyUsers';
 import {upsertFlashes} from '~/stores/flashes';
 import {useMyId} from './users';

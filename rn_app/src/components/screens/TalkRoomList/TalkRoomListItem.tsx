@@ -5,6 +5,7 @@ import {ListItem, Badge} from 'react-native-elements';
 import {UserAvatar} from '../../utils/Avatar';
 import {normalStyles} from '~/constants/styles';
 import {TalkRoom} from '~/types/store/talkRooms';
+import {useUserName, useUserAvatar} from '~/hooks/users';
 
 type Props = {
   room: TalkRoom;
@@ -13,8 +14,11 @@ type Props = {
 
 export const TalkRoomListItem = React.memo(({room, onPress}: Props) => {
   const badgeNumber = room.unreadMessages.length;
-  const {name, avatar} = room.partner;
   const lastMessage = room.lastMessage;
+  const avatar = useUserAvatar({
+    userId: room.partner.id,
+  });
+  const name = useUserName(room.partner.id);
 
   return (
     <ListItem key={room.id} onPress={onPress}>

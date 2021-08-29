@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useCallback} from 'react';
 import {default as axios} from 'axios';
 import {RNToasty} from 'react-native-toasty';
 

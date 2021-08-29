@@ -421,7 +421,7 @@ export const useUserAvatar = ({
   avatarUrl,
 }: {
   userId: string;
-  avatarUrl: string | null;
+  avatarUrl?: string | null;
 }) => {
   const storedUrl = useSelector((state: RootState) =>
     selectUserAvatar(state, userId),
