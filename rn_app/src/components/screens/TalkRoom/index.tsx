@@ -11,9 +11,10 @@ import {
   useCreateTalkRoomMessage,
 } from '~/hooks/talkRoomMessages';
 import {useGetMessages} from '~/hooks/talkRoomMessages';
-import {useMyId} from '~/hooks/users';
+import {useMyId, useUserAvatar, useUserName} from '~/hooks/users';
 import {selectRoom} from '~/stores/_talkRooms';
 import {RootState} from '~/stores';
+import {UserAvatar} from '~/components/utils/Avatar';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'TalkRoom'>;
 
@@ -24,6 +25,8 @@ type Props = {
 
 export const TalkRoom = ({route, navigation}: Props) => {
   const {talkRoomId, partner} = route.params;
+  const avatar = useUserAvatar({userId: partner.id});
+  const name = useUserName(partner.id);
   const {result} = useGetMessages({talkRoomId});
   const [messages, setMessages] = useState<IMessage[]>([]);
   const myId = useMyId();
@@ -47,12 +50,14 @@ export const TalkRoom = ({route, navigation}: Props) => {
         user: {
           _id: d.userId,
           avatar:
-            d.userId !== myId && partner.avatar ? partner.avatar : undefined,
+            d.userId !== myId && avatar
+              ? avatar
+              : () => <UserAvatar image={null} size="small" />,
         },
       }));
       setMessages(iData);
     }
-  }, [result, partner.avatar, myId]);
+  }, [result, avatar, myId]);
 
   useEffect(() => {
     if (lastMessage && myId !== lastMessage.userId) {
@@ -66,20 +71,20 @@ export const TalkRoom = ({route, navigation}: Props) => {
             user: {
               _id: lastMessage.userId,
               avatar:
-                lastMessage.userId !== myId && partner.avatar
-                  ? partner.avatar
-                  : undefined,
+                lastMessage.userId !== myId && avatar
+                  ? avatar
+                  : () => <UserAvatar image={null} size="small" />,
             },
           },
           ...filtered,
         ];
       });
     }
-  }, [lastMessage, myId, partner.avatar]);
+  }, [lastMessage, myId, avatar]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: partner.name,
+      headerTitle: name ? name : 'ユーザーが存在しません',
     });
   });
 
@@ -116,9 +121,9 @@ export const TalkRoom = ({route, navigation}: Props) => {
             user: {
               _id: message.userId,
               avatar:
-                message.userId !== myId && partner.avatar
-                  ? partner.avatar
-                  : undefined,
+                message.userId !== myId && avatar
+                  ? avatar
+                  : () => <UserAvatar image={null} size="small" />,
             },
           },
           ...filtered,
