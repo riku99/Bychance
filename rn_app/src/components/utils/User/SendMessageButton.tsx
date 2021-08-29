@@ -27,17 +27,15 @@ const gradientConfig: {
 
 type Props = {
   id: string;
-  name: string;
-  avatar: string | null;
 };
 
-export const SendMessageButton = React.memo(({id, name, avatar}: Props) => {
+export const SendMessageButton = React.memo(({id}: Props) => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
 
   const {createTalkRoom} = useCreateTalkRoom();
 
   const onPress = async () => {
-    const result = await createTalkRoom({id, name, avatar});
+    const result = await createTalkRoom({id});
     if (result) {
       navigation.push('TalkRoomStack', {
         screen: 'TalkRoom',
@@ -45,8 +43,6 @@ export const SendMessageButton = React.memo(({id, name, avatar}: Props) => {
           talkRoomId: result.roomId,
           partner: {
             id,
-            name,
-            avatar,
           },
         },
       });

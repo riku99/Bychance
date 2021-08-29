@@ -1,33 +1,41 @@
 import React from 'react';
-import {shallowEqual, useSelector} from 'react-redux';
 
-import {RootState} from '~/stores';
 import {User} from '~/components/utils/User';
-import {useRefreshMyData} from '~/hooks/users';
+import {
+  useMyId,
+  useMyName,
+  useRefreshMyData,
+  useMyIntroduce,
+  useMyBackGroundItem,
+  useMyBackGroundItemType,
+  useMySNSData,
+  useMyAvatar,
+} from '~/hooks/users';
 
 export const MyPage = React.memo(() => {
-  const user = useSelector(
-    (state: RootState) => state.userReducer.user!,
-    shallowEqual,
-  );
-
+  const id = useMyId();
+  const name = useMyName();
+  const avatar = useMyAvatar();
+  const introduce = useMyIntroduce();
+  const backGroundItem = useMyBackGroundItem();
+  const backGroundItemType = useMyBackGroundItemType();
+  const snsData = useMySNSData();
   const {refreshData} = useRefreshMyData();
 
   const refresh = async () => {
     await refreshData();
   };
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <User
-      data={{
-        user,
-      }}
+      id={id}
+      name={name}
+      avatar={avatar}
+      introduce={introduce}
+      backGroundItem={backGroundItem}
+      backGroundItemType={backGroundItemType}
+      snsData={snsData}
       refresh={refresh}
-      type="MyPage"
     />
   );
 });

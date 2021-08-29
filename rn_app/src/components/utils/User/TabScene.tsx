@@ -103,7 +103,6 @@ type ScrollViewTabSceneProps = {
 export const ScrollViewTabScene = React.memo(
   ({
     children,
-    userId,
     scrollY,
     tabViewRef,
     onScrollEndDrag,

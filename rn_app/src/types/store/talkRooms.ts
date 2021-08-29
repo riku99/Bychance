@@ -12,7 +12,5 @@ export type TalkRoom = {
   } | null;
   partner: {
     id: string;
-    name: string;
-    avatar: string | null;
   };
 };

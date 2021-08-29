@@ -9,8 +9,6 @@ export type TalkRoomStackParamList = {
     talkRoomId: number;
     partner: {
       id: string;
-      name: string;
-      avatar: string | null;
     };
   };
 } & UserPageScreenGroupParamList;

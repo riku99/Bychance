@@ -17,8 +17,6 @@ export const TalkRoomListPage = () => {
     talkRoomId: number;
     partner: {
       id: string;
-      name: string;
-      avatar: string | null;
     };
   }) => {
     navigation.navigate('TalkRoomStack', {

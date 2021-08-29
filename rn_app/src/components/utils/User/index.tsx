@@ -25,39 +25,32 @@ import {useMyId} from '~/hooks/users';
 import {CreatingPost, CreatingFlash} from './Creating';
 
 type _Props = {
-  data: {
-    user: {
-      id: string;
-      name: string;
-      avatar: string | null;
-      introduce: string | null;
-      backGroundItem: string | null;
-      backGroundItemType: 'image' | 'video' | null;
-      instagram: string | null;
-      twitter: string | null;
-      youtube: string | null;
-      tiktok: string | null;
-    };
+  id: string;
+  name: string;
+  avatar: string | null;
+  introduce: string | null;
+  backGroundItem: string | null;
+  backGroundItemType: 'image' | 'video' | null;
+  snsData: {
+    instagram: string | null;
+    twitter: string | null;
+    youtube: string | null;
+    tiktok: string | null;
   };
   refresh: () => Promise<void>;
-  type: 'UserPage' | 'MyPage';
 };
 
-export const User = ({data, refresh, type}: _Props) => {
-  const {user} = data;
-  const {
-    id,
-    name,
-    avatar,
-    introduce,
-    backGroundItem,
-    backGroundItemType,
-    instagram,
-    twitter,
-    youtube,
-    tiktok,
-  } = user;
-  const snsLinkData = {instagram, twitter, youtube, tiktok};
+export const User = ({
+  id,
+  name,
+  avatar,
+  introduce,
+  backGroundItem,
+  backGroundItemType,
+  snsData,
+  refresh,
+}: _Props) => {
+  const snsLinkData = snsData;
   const myId = useMyId();
   const isMe = id === myId;
 
@@ -75,10 +68,10 @@ export const User = ({data, refresh, type}: _Props) => {
 
   const lineNumber = useMemo(
     () =>
-      data?.user.introduce?.split(/\n|\r\n|\r/).length
-        ? data.user.introduce?.split(/\n|\r\n|\r/).length
+      introduce?.split(/\n|\r\n|\r/).length
+        ? introduce?.split(/\n|\r\n|\r/).length
         : 0,
-    [data?.user.introduce],
+    [introduce],
   );
 
   const [introduceHeight, setIntroduceHeight] = useState(0);
@@ -93,11 +86,6 @@ export const User = ({data, refresh, type}: _Props) => {
       }
     }
   }, [introduceHeight, lineNumber]);
-
-  if (!data) {
-    //スケルトンとか追加するかも
-    return null;
-  }
 
   return (
     <View
@@ -164,7 +152,7 @@ export const User = ({data, refresh, type}: _Props) => {
           },
         ]}>
         <View style={{alignItems: 'center'}}>
-          <Avatar id={id} avatar={avatar} />
+          <Avatar id={id} url={avatar} />
 
           <View style={styles.nameContainer}>
             <Text style={{fontWeight: 'bold', fontSize: 16}}>{name}</Text>
@@ -181,11 +169,7 @@ export const User = ({data, refresh, type}: _Props) => {
           },
         ]}>
         <View style={{width: '50%'}}>
-          {isMe ? (
-            <EditButton />
-          ) : (
-            <SendMessageButton id={id} name={name} avatar={avatar} />
-          )}
+          {isMe ? <EditButton /> : <SendMessageButton id={id} />}
         </View>
       </Animated.View>
 

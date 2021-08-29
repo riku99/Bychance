@@ -24,7 +24,7 @@ export const useCreateTalkRoom = () => {
   const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
 
   const createTalkRoom = useCallback(
-    async (partner: {id: string; name: string; avatar: string | null}) => {
+    async (partner: {id: string}) => {
       const credentials = await checkKeychain();
 
       try {
@@ -43,8 +43,6 @@ export const useCreateTalkRoom = () => {
               id: roomId,
               partner: {
                 id: partner.id,
-                avatar: partner.avatar,
-                name: partner.name,
               },
               unreadMessages: [],
               lastMessage: null,

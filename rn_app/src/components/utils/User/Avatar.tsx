@@ -2,23 +2,16 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 import {UserAvatarWithOuter} from '../Avatar';
-import {
-  useUserAvatar,
-  useAvatarOuterType,
-  useMyId,
-  useMyAvatar,
-} from '~/hooks/users';
+import {useAvatarOuterType} from '~/hooks/users';
 import {RootNavigationProp} from '~/navigations/Root';
 import {useBackGroundItemVideoPaused} from '~/hooks/appState';
 
 type Props = {
   id: string;
+  url: string | null;
 };
 
-export const Avatar = React.memo(({id}: Props) => {
-  const isMe = useMyId() === id;
-  const myUrl = useMyAvatar();
-  const url = useUserAvatar({userId: id});
+export const Avatar = React.memo(({id, url}: Props) => {
   const outerType = useAvatarOuterType({userId: id});
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
   const {setVideoPaused} = useBackGroundItemVideoPaused();
@@ -40,7 +33,7 @@ export const Avatar = React.memo(({id}: Props) => {
   return (
     <UserAvatarWithOuter
       size="large"
-      image={isMe ? myUrl : url}
+      image={url}
       opacity={1}
       onPress={onAavatarPress}
       outerType={outerType}

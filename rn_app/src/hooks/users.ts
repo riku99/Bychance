@@ -45,6 +45,26 @@ export const useMyName = () =>
 export const useMyAvatar = () =>
   useSelector((state: RootState) => state.userReducer.user!.avatar);
 
+export const useMyIntroduce = () =>
+  useSelector((state: RootState) => state.userReducer.user!.introduce);
+
+export const useMyBackGroundItem = () =>
+  useSelector((state: RootState) => state.userReducer.user!.backGroundItem);
+
+export const useMyBackGroundItemType = () =>
+  useSelector((state: RootState) => state.userReducer.user!.backGroundItemType);
+
+export const useMySNSData = () =>
+  useSelector((state: RootState) => {
+    const {instagram, twitter, youtube, tiktok} = state.userReducer.user!;
+    return {
+      instagram,
+      twitter,
+      youtube,
+      tiktok,
+    };
+  }, shallowEqual);
+
 type EditArg = {
   name: string;
   introduce: string;
@@ -375,6 +395,17 @@ export const useUserPageInfo = (userId: string) => {
       );
 
       const data = response.data;
+      dispatch(
+        upsertUsers([
+          {
+            id: data.id,
+            name: data.name,
+            avatar: data.avatar,
+            block: data.blockTo,
+          },
+        ]),
+      );
+
       const storedFlashesData = data.flashes.map((f) => {
         const viewerViewed = f.viewed.some((v) => v.userId === myId);
         return {
@@ -386,16 +417,7 @@ export const useUserPageInfo = (userId: string) => {
       refreshPosts({posts: response.data.posts});
       refreshFlashes({flashes: storedFlashesData});
       dispatch(upsertFlashes(storedFlashesData));
-      dispatch(
-        upsertUsers([
-          {
-            id: data.id,
-            name: data.name,
-            avatar: data.avatar,
-            block: data.blockTo,
-          },
-        ]),
-      );
+
       return response.data;
     } catch (e) {
       handleApiError(e);
