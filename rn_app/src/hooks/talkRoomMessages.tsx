@@ -194,6 +194,8 @@ export const useSetupTalkRoomMessageSocket = () => {
         (data: RecieveTalkRoomMessageWithSocket) => {
           const {message, sender} = data;
           const room = selectRoom(store.getState(), message.roomId);
+
+          // 受け取る側にユーザーデータ追加。これないと「ユーザーが存在しません」になる
           dispatch(
             upsertUsers([
               {

@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
   },
   listTitleStyle: {
     fontSize: 17,
+    fontWeight: '500',
     color: '#575757',
   },
 });

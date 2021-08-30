@@ -4,6 +4,7 @@ import {Modalize} from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
 
 import {useDeleteFlash} from '~/hooks/flashes';
+import {InstaLikeModal} from '~/components/utils/InstaLikeModal';
 
 type Props = {
   flashId: number;
@@ -134,4 +135,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+});
+
+type _Props = {
+  isVisible: boolean;
+  closeModal: () => void;
+};
+
+export const _Modal = React.memo(({isVisible, closeModal}: _Props) => {
+  return (
+    <InstaLikeModal
+      isVisible={isVisible}
+      list={[{title: '削除', color: 'red', onPress: () => {}}]}
+      onCancel={closeModal}
+      onBackdropPress={closeModal}
+    />
+  );
 });

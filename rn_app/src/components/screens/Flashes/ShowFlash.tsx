@@ -15,11 +15,12 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import {Button} from 'react-native-elements';
 
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
 import {ShowModalButton} from './ShowModalButton';
-import {Modal} from './Modal';
+import {Modal, _Modal} from './Modal';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {useMyId} from '~/hooks/users';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
@@ -101,6 +102,8 @@ export const ShowFlash = React.memo(
     const videoRef = useRef<Video>(null);
     const firstEntitiesLength = useRef(entityLength);
     const modalizeRef = useRef<Modalize>(null);
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     const flashStackNavigation = useNavigation<
       FlashStackNavigationProp<'Flashes'>
@@ -511,12 +514,22 @@ export const ShowFlash = React.memo(
 
             {isMyData && (
               <View style={styles.showModalButtonContainer}>
-                <ShowModalButton
+                {/* <ShowModalButton
                   modalizeRef={modalizeRef}
                   setShowModal={setShowModal}
                   setIsPaused={setIsPaused}
                   currentProgressBar={currentProgressBar}
                   progressAnim={progressAnim}
+                /> */}
+                <Button
+                  icon={{name: 'more-horiz', size: 22, color: '#ffffff'}}
+                  buttonStyle={{backgroundColor: 'transparent'}}
+                  activeOpacity={1}
+                  onPress={() => {
+                    setModalVisible(true);
+                    setIsPaused(true);
+                    progressAnim[currentProgressBar.current].stopAnimation();
+                  }}
                 />
               </View>
             )}
@@ -534,7 +547,7 @@ export const ShowFlash = React.memo(
               <ActivityIndicator size="large" style={styles.indicator} />
             )}
 
-            <Modal
+            {/* <Modal
               flashId={currentFlash.id}
               modalizeRef={modalizeRef}
               setShowModal={setShowModal}
@@ -543,6 +556,18 @@ export const ShowFlash = React.memo(
               videoDuration={videoDuration}
               progressAnimation={progressAnimation}
               userId={user.id}
+            /> */}
+            <_Modal
+              isVisible={modalVisible}
+              closeModal={() => {
+                setModalVisible(false);
+                setIsPaused(false);
+                progressAnimation({
+                  progressNumber: currentProgressBar.current,
+                  duration: videoDuration ? videoDuration.current : undefined,
+                  restart: true,
+                });
+              }}
             />
           </>
         )}

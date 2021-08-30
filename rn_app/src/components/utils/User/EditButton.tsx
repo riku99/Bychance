@@ -3,7 +3,6 @@ import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
-import {normalStyles} from '~/constants/styles';
 import {RootNavigationProp} from '~/navigations/Root';
 
 export const EditButton = React.memo(() => {
@@ -29,11 +28,11 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 30,
     alignSelf: 'center',
-    borderColor: normalStyles.mainTextColor,
+    borderColor: 'black',
     borderWidth: 1,
   },
   editButtonTitle: {
-    color: normalStyles.mainTextColor,
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 14,
   },
