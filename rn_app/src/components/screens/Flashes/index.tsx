@@ -58,8 +58,6 @@ export const FlashesPage = ({route, navigation}: Props) => {
 
   const [scrolling, setScrolling] = useState(false);
 
-  const [showModal, setShowModal] = useState(false);
-
   // 個々の環境によってstatuBarの設定を変更
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -130,8 +128,6 @@ export const FlashesPage = ({route, navigation}: Props) => {
               user={{id: userIds[index]}}
               isDisplayed={displayManagementTable[index]}
               scrolling={scrolling}
-              showModal={showModal}
-              setShowModal={setShowModal}
               scrollToNextOrBackScreen={scrollToNextOrBackScreen}
             />
           </View>
@@ -146,7 +142,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
           offset: height * index,
           index,
         })}
-        scrollEnabled={!showModal}
+        // scrollEnabled={!showModal}
         initialScrollIndex={startingIndex}
         initialNumToRender={2}
         maxToRenderPerBatch={2}

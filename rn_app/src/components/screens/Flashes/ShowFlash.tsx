@@ -10,7 +10,6 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import Video, {OnLoadData} from 'react-native-video';
-import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -19,7 +18,6 @@ import {Button} from 'react-native-elements';
 
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
-import {ShowModalButton} from './ShowModalButton';
 import {Modal} from './Modal';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {useMyId} from '~/hooks/users';
@@ -44,8 +42,8 @@ type Props = {
   };
   isDisplayed: boolean;
   scrolling: boolean;
-  showModal: boolean;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  // showModal: boolean;
+  // setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   scrollToNextOrBackScreen: () => void;
 };
 
@@ -55,8 +53,6 @@ export const ShowFlash = React.memo(
     user,
     isDisplayed,
     scrolling,
-    showModal,
-    setShowModal,
     scrollToNextOrBackScreen,
   }: Props) => {
     const myId = useMyId();
@@ -101,7 +97,6 @@ export const ShowFlash = React.memo(
     const videoDuration = useRef<number | undefined>(undefined);
     const videoRef = useRef<Video>(null);
     const firstEntitiesLength = useRef(entityLength);
-    const modalizeRef = useRef<Modalize>(null);
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -276,7 +271,6 @@ export const ShowFlash = React.memo(
       currentFlash.sourceType,
       progressAnim,
       progressAnimation,
-      showModal,
       isDisplayed,
       showLoading,
     ]);
@@ -458,7 +452,6 @@ export const ShowFlash = React.memo(
                 <TouchableOpacity
                   activeOpacity={1}
                   delayLongPress={100}
-                  disabled={showModal}
                   onPress={(e) => onScreenPres(e)}
                   onLongPress={onScreenLongPress}
                   onPressOut={onScreenPressOut}>
