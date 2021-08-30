@@ -42,8 +42,6 @@ type Props = {
   };
   isDisplayed: boolean;
   scrolling: boolean;
-  // showModal: boolean;
-  // setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   scrollToNextOrBackScreen: () => void;
 };
 

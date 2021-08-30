@@ -11,21 +11,24 @@ import {normalStyles} from '~/constants/styles';
 import {Dimensions} from 'react-native';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 
+import {Intoro} from '~/components/screens/Intoro';
+
 const App: () => React.ReactNode = () => {
   return (
-    <NavigationContainer theme={MyTheme}>
-      <Provider store={store}>
-        <ToastProvider
-          placement="bottom"
-          offset={toastOffset}
-          successIcon={<MIcon name="done" color="white" size={17} />}
-          dangerIcon={<MIcon name="clear" color="white" size={17} />}
-          style={{width: bottomToastWidth}}>
-          <Root />
-          <ToastLoading />
-        </ToastProvider>
-      </Provider>
-    </NavigationContainer>
+    <Intoro />
+    // <NavigationContainer theme={MyTheme}>
+    //   <Provider store={store}>
+    //     <ToastProvider
+    //       placement="bottom"
+    //       offset={toastOffset}
+    //       successIcon={<MIcon name="done" color="white" size={17} />}
+    //       dangerIcon={<MIcon name="clear" color="white" size={17} />}
+    //       style={{width: bottomToastWidth}}>
+    //       <Root />
+    //       <ToastLoading />
+    //     </ToastProvider>
+    //   </Provider>
+    // </NavigationContainer>
   );
 };
 
