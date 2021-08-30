@@ -25,7 +25,7 @@ type Props = {
   }) => void;
 };
 
-export const Modal = ({
+export const _Modal = ({
   flashId,
   userId,
   modalizeRef,
@@ -140,15 +140,46 @@ const styles = StyleSheet.create({
 type _Props = {
   isVisible: boolean;
   closeModal: () => void;
+  flashId: number;
+  setIsVisible: (v: boolean) => void;
 };
 
-export const _Modal = React.memo(({isVisible, closeModal}: _Props) => {
-  return (
-    <InstaLikeModal
-      isVisible={isVisible}
-      list={[{title: '削除', color: 'red', onPress: () => {}}]}
-      onCancel={closeModal}
-      onBackdropPress={closeModal}
-    />
-  );
-});
+export const Modal = React.memo(
+  ({isVisible, closeModal, flashId, setIsVisible}: _Props) => {
+    const {deleteFlash} = useDeleteFlash();
+
+    const list = useMemo(
+      () => [
+        {
+          title: '削除',
+          color: 'red',
+          onPress: () => {
+            Alert.alert('本当に削除してもよろしいですか?', '', [
+              {
+                text: '削除',
+                style: 'destructive',
+                onPress: () => {
+                  setIsVisible(false);
+                  deleteFlash({flashId});
+                },
+              },
+              {
+                text: 'キャンセル',
+              },
+            ]);
+          },
+        },
+      ],
+      [deleteFlash, flashId, setIsVisible],
+    );
+
+    return (
+      <InstaLikeModal
+        isVisible={isVisible}
+        list={list}
+        onCancel={closeModal}
+        onBackdropPress={closeModal}
+      />
+    );
+  },
+);

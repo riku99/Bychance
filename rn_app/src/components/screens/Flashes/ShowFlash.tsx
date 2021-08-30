@@ -20,7 +20,7 @@ import {Button} from 'react-native-elements';
 import {ProgressBar} from './ProgressBar';
 import {InfoItems} from './InfoItems';
 import {ShowModalButton} from './ShowModalButton';
-import {Modal, _Modal} from './Modal';
+import {Modal} from './Modal';
 import {FlashStackNavigationProp} from '../../../navigations/types';
 import {useMyId} from '~/hooks/users';
 import {WideRangeSourceContainer} from '~/components/utils/WideRangeSourceContainer';
@@ -514,13 +514,6 @@ export const ShowFlash = React.memo(
 
             {isMyData && (
               <View style={styles.showModalButtonContainer}>
-                {/* <ShowModalButton
-                  modalizeRef={modalizeRef}
-                  setShowModal={setShowModal}
-                  setIsPaused={setIsPaused}
-                  currentProgressBar={currentProgressBar}
-                  progressAnim={progressAnim}
-                /> */}
                 <Button
                   icon={{name: 'more-horiz', size: 22, color: '#ffffff'}}
                   buttonStyle={{backgroundColor: 'transparent'}}
@@ -547,18 +540,10 @@ export const ShowFlash = React.memo(
               <ActivityIndicator size="large" style={styles.indicator} />
             )}
 
-            {/* <Modal
+            <Modal
               flashId={currentFlash.id}
-              modalizeRef={modalizeRef}
-              setShowModal={setShowModal}
-              setIsPaused={setIsPaused}
-              currentProgressBar={currentProgressBar}
-              videoDuration={videoDuration}
-              progressAnimation={progressAnimation}
-              userId={user.id}
-            /> */}
-            <_Modal
               isVisible={modalVisible}
+              setIsVisible={setModalVisible}
               closeModal={() => {
                 setModalVisible(false);
                 setIsPaused(false);
