@@ -2,12 +2,21 @@ import React from 'react';
 import {View, StyleSheet, Text, SafeAreaView} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Button} from 'react-native-elements';
+import Swiper from 'react-native-swiper';
 
 export const Check = () => {
   return <Icon name="done" size={27} color="#ff6e7f" />;
 };
 
-export const Screen1 = () => {
+type Props = {
+  swipreRef: React.RefObject<Swiper>;
+};
+
+export const Screen1 = ({swipreRef}: Props) => {
+  const onPress = () => {
+    swipreRef.current?.scrollTo(1);
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.contents}>
@@ -53,6 +62,7 @@ export const Screen1 = () => {
             alignSelf: 'center',
             backgroundColor: '#ff6e7f',
           }}
+          onPress={onPress}
         />
       </SafeAreaView>
     </View>
