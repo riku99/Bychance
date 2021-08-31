@@ -9,7 +9,7 @@ type Props = {
   swipreRef: React.RefObject<Swiper>;
 };
 
-export const Screen1 = ({swipreRef}: Props) => {
+export const Welcom = ({swipreRef}: Props) => {
   const onPress = () => {
     swipreRef.current?.scrollTo(1);
   };

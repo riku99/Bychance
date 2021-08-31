@@ -1,10 +1,11 @@
 import React, {useRef} from 'react';
 import Swiper from 'react-native-swiper';
 
-import {Screen1} from './Screen1';
-import {Screen2} from './Screen2';
-import {Screen3} from './Screen3';
-import {Screen4} from './Screen4';
+import {Welcom} from './Welcom';
+import {AboutLocation} from './AboutLocation';
+import {AboutDisplay} from './AboutDisplay';
+import {Last} from './Last';
+import {AboutNotification} from './AboutNotification';
 
 export const Intoro = React.memo(() => {
   const swipeRef = useRef<Swiper>(null);
@@ -12,13 +13,14 @@ export const Intoro = React.memo(() => {
   return (
     <Swiper
       loop={false}
-      // scrollEnabled={false}
+      scrollEnabled={false}
       showsPagination={false}
       ref={swipeRef}>
-      <Screen1 swipreRef={swipeRef} />
-      <Screen2 swipreRef={swipeRef} />
-      <Screen3 swipreRef={swipeRef} />
-      <Screen4 />
+      <Welcom swipreRef={swipeRef} />
+      <AboutNotification swipeRef={swipeRef} index={1} />
+      <AboutLocation swipeRef={swipeRef} index={2} />
+      <AboutDisplay swipeRef={swipeRef} index={3} />
+      <Last />
     </Swiper>
   );
 });

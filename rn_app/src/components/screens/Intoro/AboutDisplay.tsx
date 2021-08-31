@@ -5,19 +5,19 @@ import Swiper from 'react-native-swiper';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 type Props = {
-  swipreRef: React.RefObject<Swiper>;
+  swipeRef: React.RefObject<Swiper>;
+  index: number;
 };
 
-export const Screen3 = ({swipreRef}: Props) => {
+export const AboutDisplay = ({swipeRef, index}: Props) => {
   const setPrivateZone = useRef(false);
   const navigation = useNavigation();
 
   const swipe = useCallback(() => {
     if (setPrivateZone.current) {
-      console.log('to');
-      swipreRef.current?.scrollTo(3);
+      swipeRef.current?.scrollTo(index + 1);
     }
-  }, [swipreRef]);
+  }, [swipeRef, index]);
 
   useFocusEffect(swipe);
 

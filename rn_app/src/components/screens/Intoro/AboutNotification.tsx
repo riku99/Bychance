@@ -1,29 +1,36 @@
 import React from 'react';
 import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
+import Swiper from 'react-native-swiper';
 
-export const Screen4 = () => {
+type Props = {
+  swipeRef: React.RefObject<Swiper>;
+  index: number;
+};
+
+export const AboutNotification = ({swipeRef, index}: Props) => {
   const onButtonPress = () => {
-    // settingでintro画面消す
+    // TODO: プッシュ通知の設定
+    swipeRef.current?.scrollTo(index + 1);
   };
 
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <Text style={styles.title}>お疲れ様でした</Text>
-        <Text style={styles.thank}>
-          他にも設定できることがあるので確認してみてください!
+        <Text style={styles.title}>プッシュ通知について</Text>
+        <Text style={styles.desc}>
+          アプリ内でメッセージの受信などを通知します
           {'\n'}
           {'\n'}
-          ご協力ありがとうございました!😍
+          なおこの設定はお使いの端末から再度設定することができます👍
         </Text>
         <Button
-          title="開始する"
-          containerStyle={{marginTop: 40}}
+          title="設定する"
           buttonStyle={styles.button}
           titleStyle={{fontWeight: 'bold'}}
-          activeOpacity={1}
+          containerStyle={{marginTop: 30}}
           onPress={onButtonPress}
+          activeOpacity={1}
         />
       </SafeAreaView>
     </View>
@@ -40,16 +47,16 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginTop: 20,
   },
-  thank: {
-    marginTop: 20,
-    fontSize: 17,
-    color: '#7a7a7a',
-    fontWeight: 'bold',
-  },
   button: {
     borderRadius: 20,
     width: '90%',
     alignSelf: 'center',
     backgroundColor: '#ff6e7f',
+  },
+  desc: {
+    marginTop: 20,
+    fontSize: 17,
+    color: '#7a7a7a',
+    fontWeight: 'bold',
   },
 });
