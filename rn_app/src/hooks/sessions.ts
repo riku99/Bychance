@@ -15,6 +15,7 @@ import {setUser} from '~/stores/user';
 import {setLogin} from '~/stores/sessions';
 import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
+import {setSetitngs} from '~/stores/settings';
 
 export const useSessionloginProccess = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
@@ -33,10 +34,17 @@ export const useSessionloginProccess = () => {
           );
 
           const {user, posts, flashes} = response.data;
+          const settings = {
+            display: user.display,
+            videoEditDescription: user.videoEditDescription,
+            talkRoomMessageReceipt: user.talkRoomMessageReceipt,
+            showReceiveMessage: user.showReceiveMessage,
+          };
 
           dispatch(setUser(user));
           dispatch(setPosts(posts));
           dispatch(setFlashes(flashes));
+          dispatch(setSetitngs(settings));
           dispatch(setLogin(true));
         } catch (e) {
           handleApiError(e);

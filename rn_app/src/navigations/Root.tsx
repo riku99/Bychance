@@ -57,11 +57,11 @@ export const RootStackScreen = React.memo(() => {
         headerBackTitleVisible: false,
         headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
-      <RootStack.Screen
+      {/* <RootStack.Screen
         name="Intoro"
         component={Intoro}
         options={{headerShown: false}}
-      />
+      /> */}
       <RootStack.Screen
         name="Tab"
         component={Tabs}
