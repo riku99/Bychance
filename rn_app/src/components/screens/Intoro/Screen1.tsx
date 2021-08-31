@@ -34,7 +34,7 @@ export const Screen1 = ({swipreRef}: Props) => {
           <View style={styles.listItem}>
             <Check />
             <Text style={styles.itemTitle}>
-              メッセージをあまりにしつこくしない
+              メッセージをあまりにしつこく送らない
               {'\n'}
               (設定で受け取らないようにできます)
             </Text>

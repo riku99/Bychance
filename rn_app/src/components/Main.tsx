@@ -30,6 +30,7 @@ export const Main = React.memo(() => {
   // エラーをdispatchしたときの処理
   useHandleErrors();
 
+  // アクティブになるたびにトークルーム更新とか
   useGetTalkRoomData();
 
   return (

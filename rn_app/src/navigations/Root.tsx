@@ -21,6 +21,7 @@ import {User} from '~/stores/user';
 import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
+import {Intoro} from '~/components/screens/Intoro';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -38,6 +39,7 @@ export type RootStackParamList = {
   PrivateConfig: {
     goTo: 'zone' | 'time';
   };
+  Intoro: undefined;
 };
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
@@ -55,6 +57,11 @@ export const RootStackScreen = React.memo(() => {
         headerBackTitleVisible: false,
         headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
+      <RootStack.Screen
+        name="Intoro"
+        component={Intoro}
+        options={{headerShown: false}}
+      />
       <RootStack.Screen
         name="Tab"
         component={Tabs}
