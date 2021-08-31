@@ -1,12 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, Text, SafeAreaView} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
 
-export const Check = () => {
-  return <Icon name="done" size={27} color="#ff6e7f" />;
-};
+import {Check} from './Check';
 
 type Props = {
   swipreRef: React.RefObject<Swiper>;
@@ -22,10 +19,10 @@ export const Screen1 = ({swipreRef}: Props) => {
       <SafeAreaView style={styles.contents}>
         <Text style={styles.hello}>ようこそ!</Text>
         <Text style={styles.what}>
-          このアプリは、自分の周りの何気ない出来事やお店・イベント・人をちょっとだけ繋ぐ、そんなアプリです❣️
+          このアプリは、自分の周りの何気ない出来事やお店・イベント・人をちょっとだけ繋ぐ、そんなSNSです❣️
           {'\n'}
           {'\n'}
-          みんなが気持ちよく使えるように以下のことにご協力ください。
+          みんなが気持ちよく使えるように以下のことに同意してください。
         </Text>
         <View style={styles.list}>
           <View style={styles.listItem}>
@@ -37,7 +34,7 @@ export const Screen1 = ({swipreRef}: Props) => {
           <View style={styles.listItem}>
             <Check />
             <Text style={styles.itemTitle}>
-              メッセージをしつこくしない
+              メッセージをあまりにしつこくしない
               {'\n'}
               (設定で受け取らないようにできます)
             </Text>
@@ -56,12 +53,7 @@ export const Screen1 = ({swipreRef}: Props) => {
           titleStyle={{fontWeight: 'bold'}}
           activeOpacity={1}
           containerStyle={{marginTop: 50}}
-          buttonStyle={{
-            borderRadius: 20,
-            width: '90%',
-            alignSelf: 'center',
-            backgroundColor: '#ff6e7f',
-          }}
+          buttonStyle={styles.button}
           onPress={onPress}
         />
       </SafeAreaView>
@@ -98,5 +90,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 10,
     fontWeight: 'bold',
+  },
+  button: {
+    borderRadius: 20,
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#ff6e7f',
   },
 });

@@ -10,7 +10,7 @@ export const Intoro = React.memo(() => {
   return (
     <Swiper
       loop={false}
-      scrollEnabled={false}
+      // scrollEnabled={false}
       showsPagination={false}
       ref={swipeRef}>
       <Screen1 swipreRef={swipeRef} />
