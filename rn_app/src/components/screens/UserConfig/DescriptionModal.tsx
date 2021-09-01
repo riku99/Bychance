@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import Modal from 'react-native-modal';
 
 type Props = {
@@ -10,9 +10,7 @@ type Props = {
 export const DescriptionModal = React.memo(
   ({isVisible, description}: Props) => {
     return (
-      <Modal
-        isVisible={isVisible}
-        onBackdropPress={() => setShowReceiveMessageDescription(false)}>
+      <Modal isVisible={isVisible} onBackdropPress={() => {}}>
         <View
           style={{
             width: '85%',

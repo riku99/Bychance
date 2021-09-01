@@ -34,14 +34,21 @@ export const useSessionloginProccess = () => {
           );
 
           const {user, posts, flashes} = response.data;
+          const {
+            display,
+            videoEditDescription,
+            showReceiveMessage,
+            talkRoomMessageReceipt,
+            ...storedUser
+          } = user;
           const settings = {
-            display: user.display,
-            videoEditDescription: user.videoEditDescription,
-            talkRoomMessageReceipt: user.talkRoomMessageReceipt,
-            showReceiveMessage: user.showReceiveMessage,
+            display,
+            videoEditDescription,
+            talkRoomMessageReceipt,
+            showReceiveMessage,
           };
 
-          dispatch(setUser(user));
+          dispatch(setUser(storedUser));
           dispatch(setPosts(posts));
           dispatch(setFlashes(flashes));
           dispatch(setSetitngs(settings));

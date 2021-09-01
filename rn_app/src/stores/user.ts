@@ -1,12 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {
-  EditProfilePayload,
-  ChangeShowReceiveMessagePayload,
-  ChangeTalkRoomMessageReceiptPayload,
-  ChangeUserDisplayPayload,
-  ChangeVideoEditDescriptionPayload,
-} from '~/hooks/users';
+import {EditProfilePayload} from '~/hooks/users';
 
 export type User = {
   id: string;
@@ -14,7 +8,6 @@ export type User = {
   avatar: string | null;
   introduce: string | null;
   statusMessage: string | null;
-  // display: boolean;
   lat: number | null;
   lng: number | null;
   backGroundItem: string | null;
@@ -23,9 +16,6 @@ export type User = {
   twitter: string | null;
   youtube: string | null;
   tiktok: string | null;
-  // videoEditDescription: boolean;
-  // talkRoomMessageReceipt: boolean;
-  // showReceiveMessage: boolean;
 };
 
 export type UserState = {
@@ -40,8 +30,6 @@ export type UserState = {
     tiktok?: string | null;
   };
 };
-
-// export type User = NonNullable<UserState['user']>;
 
 const initialState: UserState = {
   user: null,
@@ -98,40 +86,6 @@ const userSlice = createSlice({
         },
       };
     },
-    setShowReceiveMessage: (
-      state,
-      action: PayloadAction<ChangeShowReceiveMessagePayload>,
-    ) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        showReceiveMessage: action.payload,
-      },
-    }),
-    setTalkRoomMessageReceipt: (
-      state,
-      action: PayloadAction<ChangeTalkRoomMessageReceiptPayload>,
-    ) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        talkRoomMessageReceipt: action.payload,
-      },
-    }),
-    setDisplay: (state, action: PayloadAction<ChangeUserDisplayPayload>) => ({
-      ...state,
-      user: {...state.user!, display: action.payload},
-    }),
-    setVideoDescription: (
-      state,
-      action: PayloadAction<ChangeVideoEditDescriptionPayload>,
-    ) => ({
-      ...state,
-      user: {
-        ...state.user!,
-        videoEditDescription: action.payload,
-      },
-    }),
     setLocation: (
       state,
       actoin: PayloadAction<{lat: number | null; lng: number | null}>,
@@ -232,10 +186,6 @@ export const {
   setUser,
   updateProfile,
   resetUser,
-  setShowReceiveMessage,
-  setTalkRoomMessageReceipt,
-  setDisplay,
-  setVideoDescription,
   setLocation,
   updateUser,
 } = userSlice.actions;

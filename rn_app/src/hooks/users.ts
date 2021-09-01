@@ -8,14 +8,7 @@ import {RootState} from '~/stores/index';
 import {useApikit} from './apikit';
 import {User} from '~/types/users';
 import {baseUrl} from '~/constants/url';
-import {
-  updateProfile,
-  setShowReceiveMessage,
-  setTalkRoomMessageReceipt,
-  setDisplay,
-  setLocation,
-  updateUser,
-} from '~/stores/user';
+import {updateProfile, setLocation, updateUser} from '~/stores/user';
 import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes, selectFlashesByUserId} from '~/stores/flashes';
@@ -166,12 +159,6 @@ export const useEditProfile = () => {
     isLoading,
   };
 };
-
-export type ChangeShowReceiveMessagePayload = boolean;
-
-export type ChangeTalkRoomMessageReceiptPayload = boolean;
-
-export type ChangeUserDisplayPayload = boolean;
 
 export const useDeleteLocation = () => {
   const {
