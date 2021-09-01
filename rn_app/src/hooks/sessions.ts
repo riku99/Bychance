@@ -39,6 +39,7 @@ export const useSessionloginProccess = () => {
             videoEditDescription,
             showReceiveMessage,
             talkRoomMessageReceipt,
+            intro,
             ...storedUser
           } = user;
           const settings = {
@@ -46,6 +47,7 @@ export const useSessionloginProccess = () => {
             videoEditDescription,
             talkRoomMessageReceipt,
             showReceiveMessage,
+            intro,
           };
 
           dispatch(setUser(storedUser));

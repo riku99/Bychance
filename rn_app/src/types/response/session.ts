@@ -17,6 +17,7 @@ export type LoginData = {
     display: boolean;
     lat: number | null;
     lng: number | null;
+    intro: true;
   };
   posts: {
     id: number;

@@ -3,4 +3,5 @@ export type Settings = {
   videoEditDescription?: boolean;
   talkRoomMessageReceipt?: boolean;
   showReceiveMessage?: boolean;
+  intro?: boolean;
 };
