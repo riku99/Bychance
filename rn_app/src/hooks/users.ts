@@ -169,66 +169,9 @@ export const useEditProfile = () => {
 
 export type ChangeShowReceiveMessagePayload = boolean;
 
-export const useChangeShowReceiveMessage = () => {
-  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
-
-  const changeShowReceiveMessage = useCallback(
-    async ({showReceiveMessage}: {showReceiveMessage: boolean}) => {
-      const credentials = await checkKeychain();
-
-      try {
-        await axios.patch(
-          `${baseUrl}/users/showReceiveMessage?id=${credentials?.id}`,
-          {showReceiveMessage},
-          addBearer(credentials?.token),
-        );
-
-        dispatch(setShowReceiveMessage(showReceiveMessage));
-        return true;
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [checkKeychain, handleApiError, addBearer, dispatch],
-  );
-
-  return {
-    changeShowReceiveMessage,
-  };
-};
-
 export type ChangeTalkRoomMessageReceiptPayload = boolean;
 
 export type ChangeUserDisplayPayload = boolean;
-
-export const useChangeUserDisplay = () => {
-  const {handleApiError, addBearer, dispatch, checkKeychain} = useApikit();
-
-  const changeUserDisplay = useCallback(
-    async (display: boolean) => {
-      const credentials = await checkKeychain();
-      try {
-        await axios.patch(
-          `${baseUrl}/users/display?id=${credentials?.id}`,
-          {
-            display,
-          },
-          addBearer(credentials?.token),
-        );
-
-        dispatch(setDisplay(display));
-        return true;
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [checkKeychain, addBearer, handleApiError, dispatch],
-  );
-
-  return {
-    changeUserDisplay,
-  };
-};
 
 export const useDeleteLocation = () => {
   const {

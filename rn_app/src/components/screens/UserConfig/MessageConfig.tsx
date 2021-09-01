@@ -1,23 +1,23 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {View, Switch, Text} from 'react-native';
-import {useSelector} from 'react-redux';
 
-import {RootState} from '~/stores';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
-import {useChangeShowReceiveMessage} from '~/hooks/users';
-import {useTalkRoomMessageReceipt} from '~/hooks/settings';
+import {
+  useTalkRoomMessageReceipt,
+  useShowReceiveMessage,
+} from '~/hooks/settings';
 
 export const MessageConfig = React.memo(() => {
   const {
     currentTalkRoomMessageReceipt,
     changeTalkRoomMessageReceipt,
   } = useTalkRoomMessageReceipt();
-
-  const currentShowReceiveMessage = useSelector(
-    (state: RootState) => state.userReducer!.user?.showReceiveMessage,
-  );
+  const {
+    changeShowReceiveMessage,
+    currentShowReceiveMessage,
+  } = useShowReceiveMessage();
 
   const [
     switchValueForMessageReceipt,
@@ -33,8 +33,6 @@ export const MessageConfig = React.memo(() => {
     showReceiveMessageDescription,
     setShowReceiveMessageDescription,
   ] = useState(false);
-
-  const {changeShowReceiveMessage} = useChangeShowReceiveMessage();
 
   const onMessageReceiptSwitchValueChange = useCallback(
     async (v: boolean) => {

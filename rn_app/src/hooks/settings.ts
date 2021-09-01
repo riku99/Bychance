@@ -119,3 +119,41 @@ export const useTalkRoomMessageReceipt = () => {
     setTalkRoomMessageReceipt,
   };
 };
+
+export const useShowReceiveMessage = () => {
+  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+  const currentShowReceiveMessage = useSelector(
+    (state: RootState) => state.settingsReducer.showReceiveMessage,
+  );
+  const setShowReceiveMessage = useCallback(
+    (v: boolean) => {
+      dispatch(setSetitngs({showReceiveMessage: v}));
+    },
+    [dispatch],
+  );
+
+  const changeShowReceiveMessage = useCallback(
+    async ({showReceiveMessage}: {showReceiveMessage: boolean}) => {
+      try {
+        const credentials = await checkKeychain();
+        await axios.put(
+          `${baseUrl}/users/showReceiveMessage?id=${credentials?.id}`,
+          {showReceiveMessage},
+          addBearer(credentials?.token),
+        );
+
+        setShowReceiveMessage(showReceiveMessage);
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, handleApiError, addBearer, setShowReceiveMessage],
+  );
+
+  return {
+    changeShowReceiveMessage,
+    currentShowReceiveMessage,
+    setShowReceiveMessage,
+  };
+};
