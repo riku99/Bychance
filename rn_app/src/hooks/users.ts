@@ -259,35 +259,6 @@ export const useChangeUserDisplay = () => {
   };
 };
 
-export type ChangeVideoEditDescriptionPayload = boolean;
-
-export const useChangeVideoEditDescription = () => {
-  const {addBearer, dispatch, checkKeychain, handleApiError} = useApikit();
-
-  const changeVideoEditDescription = useCallback(
-    async (bool: boolean) => {
-      const credentials = await checkKeychain();
-
-      try {
-        await axios.patch(
-          `${baseUrl}/users/videoEditDescription?id=${credentials?.id}`,
-          {videoEditDescription: bool},
-          addBearer(credentials?.token),
-        );
-
-        dispatch(setVideoDescription(bool));
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [checkKeychain, addBearer, handleApiError, dispatch],
-  );
-
-  return {
-    changeVideoEditDescription,
-  };
-};
-
 export const useDeleteLocation = () => {
   const {
     checkKeychain,

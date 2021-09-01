@@ -44,3 +44,40 @@ export const useDisplay = () => {
     changeDisplay,
   };
 };
+
+export const useVideoEditDescription = () => {
+  const {addBearer, dispatch, checkKeychain, handleApiError} = useApikit();
+  const currentVideoEditDesctiption = useSelector(
+    (state: RootState) => state.settingsReducer.videoEditDescription,
+  );
+  const setVideoEditDesciption = useCallback(
+    (v: boolean) => {
+      dispatch(setSetitngs({videoEditDescription: v}));
+    },
+    [dispatch],
+  );
+
+  const changeVideoEditDescription = useCallback(
+    async (bool: boolean) => {
+      try {
+        const credentials = await checkKeychain();
+        await axios.put(
+          `${baseUrl}/users/videoEditDescription?id=${credentials?.id}`,
+          {videoEditDescription: bool},
+          addBearer(credentials?.token),
+        );
+
+        setVideoEditDesciption(bool);
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, setVideoEditDesciption],
+  );
+
+  return {
+    currentVideoEditDesctiption,
+    changeVideoEditDescription,
+    setVideoEditDesciption,
+  };
+};

@@ -2,13 +2,11 @@ import React, {useState, useRef, useCallback, useEffect} from 'react';
 import {Alert} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
-import {useSelector} from 'react-redux';
 import {RNToasty} from 'react-native-toasty';
 
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
-import {RootState} from '~/stores';
-import {useChangeVideoEditDescription} from '~/hooks/users';
+import {useVideoEditDescription} from '~/hooks/settings';
 
 const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {
@@ -25,12 +23,12 @@ export const TakeFlashScreen = React.memo(() => {
   } | null>(null);
   const [targetVideo, setTargetVideo] = useState<{uri: string} | null>(null);
   const [recordingVideo, setRecordingVideo] = useState(false);
-
   const cameraRef = useRef<RNCamera>(null);
-
   const [loading, setLoading] = useState(false);
-
-  const {changeVideoEditDescription} = useChangeVideoEditDescription();
+  const {
+    changeVideoEditDescription,
+    currentVideoEditDesctiption,
+  } = useVideoEditDescription();
 
   const takePhoto = useCallback(async () => {
     if (cameraRef.current) {
@@ -105,12 +103,8 @@ export const TakeFlashScreen = React.memo(() => {
     setLoading(true);
   }, []);
 
-  const videoEditDesctiption = useSelector(
-    (state: RootState) => state.userReducer.user!.videoEditDescription,
-  );
-
   useEffect(() => {
-    if (!videoEditDesctiption) {
+    if (!currentVideoEditDesctiption) {
       Alert.alert('動画の編集について', videoEditDescriptionText, [
         {
           text: 'OK👌',
@@ -118,7 +112,7 @@ export const TakeFlashScreen = React.memo(() => {
         },
       ]);
     }
-  }, [videoEditDesctiption, changeVideoEditDescription]);
+  }, [currentVideoEditDesctiption, changeVideoEditDescription]);
 
   if (!targetPhoto && !targetVideo) {
     return (
