@@ -81,3 +81,41 @@ export const useVideoEditDescription = () => {
     setVideoEditDesciption,
   };
 };
+
+export const useTalkRoomMessageReceipt = () => {
+  const {addBearer, checkKeychain, dispatch, handleApiError} = useApikit();
+  const currentTalkRoomMessageReceipt = useSelector(
+    (state: RootState) => state.settingsReducer.talkRoomMessageReceipt,
+  );
+  const setTalkRoomMessageReceipt = useCallback(
+    (v: boolean) => {
+      dispatch(setSetitngs({talkRoomMessageReceipt: v}));
+    },
+    [dispatch],
+  );
+  const changeTalkRoomMessageReceipt = useCallback(
+    async ({receipt}: {receipt: boolean}) => {
+      const credentials = await checkKeychain();
+
+      try {
+        await axios.put(
+          `${baseUrl}/users/talkRoomMessageReceipt?id=${credentials?.id}`,
+          {receipt},
+          addBearer(credentials?.token),
+        );
+
+        setTalkRoomMessageReceipt(receipt);
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, setTalkRoomMessageReceipt],
+  );
+
+  return {
+    changeTalkRoomMessageReceipt,
+    currentTalkRoomMessageReceipt,
+    setTalkRoomMessageReceipt,
+  };
+};

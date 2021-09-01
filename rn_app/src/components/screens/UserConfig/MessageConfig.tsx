@@ -6,15 +6,14 @@ import {RootState} from '~/stores';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
-import {
-  useChangeShowReceiveMessage,
-  useChangeTalkRoomMessageReceipt,
-} from '~/hooks/users';
+import {useChangeShowReceiveMessage} from '~/hooks/users';
+import {useTalkRoomMessageReceipt} from '~/hooks/settings';
 
 export const MessageConfig = React.memo(() => {
-  const talkRoomMessageReceipt = useSelector(
-    (state: RootState) => state.userReducer.user!.talkRoomMessageReceipt,
-  );
+  const {
+    currentTalkRoomMessageReceipt,
+    changeTalkRoomMessageReceipt,
+  } = useTalkRoomMessageReceipt();
 
   const currentShowReceiveMessage = useSelector(
     (state: RootState) => state.userReducer!.user?.showReceiveMessage,
@@ -23,7 +22,7 @@ export const MessageConfig = React.memo(() => {
   const [
     switchValueForMessageReceipt,
     setSwitchValueForMessageReceipt,
-  ] = useState(talkRoomMessageReceipt);
+  ] = useState(!!currentTalkRoomMessageReceipt);
   const [showMessageReceiptModal, setShowMessageReceiptModal] = useState(false);
 
   const [
@@ -36,7 +35,6 @@ export const MessageConfig = React.memo(() => {
   ] = useState(false);
 
   const {changeShowReceiveMessage} = useChangeShowReceiveMessage();
-  const {changeTalkRoomMessageReceipt} = useChangeTalkRoomMessageReceipt();
 
   const onMessageReceiptSwitchValueChange = useCallback(
     async (v: boolean) => {

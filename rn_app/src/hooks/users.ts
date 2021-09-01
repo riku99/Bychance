@@ -13,7 +13,6 @@ import {
   setShowReceiveMessage,
   setTalkRoomMessageReceipt,
   setDisplay,
-  setVideoDescription,
   setLocation,
   updateUser,
 } from '~/stores/user';
@@ -199,34 +198,6 @@ export const useChangeShowReceiveMessage = () => {
 };
 
 export type ChangeTalkRoomMessageReceiptPayload = boolean;
-
-export const useChangeTalkRoomMessageReceipt = () => {
-  const {addBearer, checkKeychain, dispatch, handleApiError} = useApikit();
-
-  const changeTalkRoomMessageReceipt = useCallback(
-    async ({receipt}: {receipt: boolean}) => {
-      const credentials = await checkKeychain();
-
-      try {
-        await axios.patch(
-          `${baseUrl}/users/talkRoomMessageReceipt?id=${credentials?.id}`,
-          {receipt},
-          addBearer(credentials?.token),
-        );
-
-        dispatch(setTalkRoomMessageReceipt(receipt));
-        return true;
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [checkKeychain, addBearer, handleApiError, dispatch],
-  );
-
-  return {
-    changeTalkRoomMessageReceipt,
-  };
-};
 
 export type ChangeUserDisplayPayload = boolean;
 
