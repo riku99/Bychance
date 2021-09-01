@@ -1,37 +1,31 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {View, Switch, Text} from 'react-native';
-import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-import {RootState} from '~/stores';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
-import {useChangeUserDisplay} from '~/hooks/users';
+import {useDisplay} from '~/hooks/settings';
 
 export const DisplayConfig = React.memo(() => {
-  const userDisplay = useSelector((state: RootState) => {
-    return state.userReducer.user!.display;
-  });
+  const {currentDisplay, changeDisplay} = useDisplay();
 
-  const [switchForDisplay, setSwitchForDisplay] = useState(userDisplay);
+  const [switchForDisplay, setSwitchForDisplay] = useState(!!currentDisplay);
   const [
     showDisplayDescriptionModal,
     setShowDisplayDescriptionModal,
   ] = useState(false);
 
-  const {changeUserDisplay} = useChangeUserDisplay();
-
   const onUserDisplaySwitchValueChange = useCallback(
     async (v: boolean) => {
       setSwitchForDisplay(v);
-      const result = await changeUserDisplay(v);
+      const result = await changeDisplay(v);
 
       if (!result) {
         setSwitchForDisplay(!v);
       }
     },
-    [setSwitchForDisplay, changeUserDisplay],
+    [setSwitchForDisplay, changeDisplay],
   );
 
   const navigation = useNavigation();

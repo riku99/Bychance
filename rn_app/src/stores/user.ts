@@ -14,7 +14,7 @@ export type User = {
   avatar: string | null;
   introduce: string | null;
   statusMessage: string | null;
-  display: boolean;
+  // display: boolean;
   lat: number | null;
   lng: number | null;
   backGroundItem: string | null;
@@ -23,9 +23,9 @@ export type User = {
   twitter: string | null;
   youtube: string | null;
   tiktok: string | null;
-  videoEditDescription: boolean;
-  talkRoomMessageReceipt: boolean;
-  showReceiveMessage: boolean;
+  // videoEditDescription: boolean;
+  // talkRoomMessageReceipt: boolean;
+  // showReceiveMessage: boolean;
 };
 
 export type UserState = {
