@@ -1,15 +1,8 @@
-import React, {
-  useEffect,
-  useState,
-  useLayoutEffect,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, {useState, useLayoutEffect, useCallback, useMemo} from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
   ActivityIndicator,
   Pressable,
 } from 'react-native';
@@ -23,10 +16,7 @@ import {RNToasty} from 'react-native-toasty';
 
 import {RootNavigationProp} from '~/navigations/Root';
 import {RootState} from '../../../stores/index';
-import {resetEditData} from '../../../stores/user';
 import {UserEditNavigationProp} from '../../../navigations/types';
-import {useSelectTamporarilySavedUserEditData} from '~/hooks/users';
-import {useCustomDispatch} from '~/hooks/stores';
 import {normalStyles} from '~/constants/styles';
 import {SnsList} from '~/types';
 import {Avatar} from './Avatar';
@@ -111,32 +101,6 @@ export const UserEditPage = () => {
   const userEditNavigation = useNavigation<
     UserEditNavigationProp<'UserEdit'>
   >();
-
-  // useEffect(() => {
-  //   const unsbscribe = navigation.addListener('blur', () => {
-  //     dispatch(resetEditData());
-  //   });
-  //   return unsbscribe;
-  // }, [navigation, dispatch]);
-
-  // const navigateToNameEditPage = ({name}: {name: string}) =>
-  //   userEditNavigation.navigate('NameEdit', {type: 'name', name});
-
-  // const navigateToIntroduceEditPage = ({introduce}: {introduce: string}) =>
-  //   userEditNavigation.navigate('IntroduceEdit', {
-  //     type: 'introduce',
-  //     introduce,
-  //   });
-
-  // const navigateToStatusMessageEditPage = ({
-  //   statusMessage,
-  // }: {
-  //   statusMessage: string;
-  // }) =>
-  //   userEditNavigation.navigate('StatusMessageEdit', {
-  //     type: 'statusMessage',
-  //     statusMessage,
-  //   });
 
   const [instagram, setInstagram] = useState<string | null>(_instagram);
   const [twitter, setTwitter] = useState<string | null>(_twitter);
