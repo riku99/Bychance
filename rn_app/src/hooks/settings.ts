@@ -157,3 +157,39 @@ export const useShowReceiveMessage = () => {
     setShowReceiveMessage,
   };
 };
+
+export const useIntro = () => {
+  const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
+  const currentIntro = useSelector(
+    (state: RootState) => state.settingsReducer.intro,
+  );
+  const setIntro = useCallback(
+    (v: boolean) => {
+      dispatch(setSetitngs({intro: v}));
+    },
+    [dispatch],
+  );
+  const changeIntro = useCallback(
+    async (v: boolean) => {
+      try {
+        const credentials = await checkKeychain();
+        await axios.put(
+          `${baseUrl}/users/intro?id=${credentials?.id}`,
+          {intro: v},
+          addBearer(credentials?.token),
+        );
+
+        setIntro(v);
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, setIntro],
+  );
+
+  return {
+    currentIntro,
+    setIntro,
+    changeIntro,
+  };
+};

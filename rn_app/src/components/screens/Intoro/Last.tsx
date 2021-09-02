@@ -2,9 +2,12 @@ import React from 'react';
 import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 
+import {useIntro} from '~/hooks/settings';
+
 export const Last = () => {
+  const {changeIntro} = useIntro();
   const onButtonPress = () => {
-    // ToDo: settingでintro画面消す
+    changeIntro(true);
   };
 
   return (

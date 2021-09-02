@@ -22,6 +22,7 @@ import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
 import {Intoro} from '~/components/screens/Intoro';
+import {useIntro} from '~/hooks/settings';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -50,6 +51,8 @@ export type RootNavigationProp<
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = React.memo(() => {
+  const {currentIntro} = useIntro();
+
   return (
     <RootStack.Navigator
       mode="modal"
@@ -57,11 +60,13 @@ export const RootStackScreen = React.memo(() => {
         headerBackTitleVisible: false,
         headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
-      {/* <RootStack.Screen
-        name="Intoro"
-        component={Intoro}
-        options={{headerShown: false}}
-      /> */}
+      {!currentIntro && (
+        <RootStack.Screen
+          name="Intoro"
+          component={Intoro}
+          options={{headerShown: false}}
+        />
+      )}
       <RootStack.Screen
         name="Tab"
         component={Tabs}
