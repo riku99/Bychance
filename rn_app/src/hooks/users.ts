@@ -57,6 +57,9 @@ export const useMySNSData = () =>
     };
   }, shallowEqual);
 
+export const useMyStatusMessage = () =>
+  useSelector((state: RootState) => state.userReducer.user?.statusMessage);
+
 type EditArg = {
   name: string;
   introduce: string;

@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
@@ -33,7 +34,33 @@ import {BackGroundItem} from './BackGroundItem';
 import {SnsIconList} from './SnsIconList';
 import {SnsModal} from './SnsModal';
 import {getExtention} from '~/utils';
-import {useEditProfile} from '~/hooks/users';
+import {
+  useEditProfile,
+  useMyName,
+  useMyAvatar,
+  useMyIntroduce,
+  useMyStatusMessage,
+  useMyBackGroundItem,
+  useMyBackGroundItemType,
+  useMySNSData,
+} from '~/hooks/users';
+
+const EditItem = ({
+  label,
+  value,
+  onPress,
+}: {
+  label: string;
+  value: string;
+  onPress: () => void;
+}) => {
+  return (
+    <Pressable style={styles.editElenentContainer} onPress={onPress}>
+      <Text style={styles.elementLabel}>{label}</Text>
+      <Text style={styles.element}>{value}</Text>
+    </Pressable>
+  );
+};
 
 export const UserEditPage = () => {
   const user = useSelector((state: RootState) => {
@@ -53,44 +80,10 @@ export const UserEditPage = () => {
     };
   }, shallowEqual);
 
-  const savedEditData = useSelectTamporarilySavedUserEditData();
+  const [name, setName] = useState(useMyName());
 
-  const dispatch = useCustomDispatch();
-  const navigation = useNavigation<RootNavigationProp<'UserEditStack'>>();
-  const userEditNavigation = useNavigation<
-    UserEditNavigationProp<'UserEdit'>
-  >();
-
-  useEffect(() => {
-    const unsbscribe = navigation.addListener('blur', () => {
-      dispatch(resetEditData());
-    });
-    return unsbscribe;
-  }, [navigation, dispatch]);
-
-  const navigateToNameEditPage = ({name}: {name: string}) =>
-    userEditNavigation.navigate('NameEdit', {type: 'name', name});
-
-  const navigateToIntroduceEditPage = ({introduce}: {introduce: string}) =>
-    userEditNavigation.navigate('IntroduceEdit', {
-      type: 'introduce',
-      introduce,
-    });
-
-  const navigateToStatusMessageEditPage = ({
-    statusMessage,
-  }: {
-    statusMessage: string;
-  }) =>
-    userEditNavigation.navigate('StatusMessageEdit', {
-      type: 'statusMessage',
-      statusMessage,
-    });
-
-  const [name, setName] = useState(user.name);
-  const [introduce, setIntroduce] = useState(
-    user.introduce ? user.introduce : '',
-  );
+  const _introduce = useMyIntroduce();
+  const [introduce, setIntroduce] = useState(_introduce ? _introduce : '');
   const displayedIntroduce = useMemo(() => {
     if (introduce.length > 12) {
       return introduce.substr(0, 11) + ' ...';
@@ -102,12 +95,53 @@ export const UserEditPage = () => {
 
     return introduce;
   }, [introduce]);
-  const [message, setMessage] = useState(user.message ? user.message : '');
 
-  const [instagram, setInstagram] = useState<string | null>(user.instagram);
-  const [twitter, setTwitter] = useState<string | null>(user.twitter);
-  const [tiktok, setTiktok] = useState<string | null>(user.tiktok);
-  const [youtube, setYoutube] = useState<string | null>(user.youtube);
+  const _message = useMyStatusMessage();
+  const [message, setMessage] = useState(_message ? _message : '');
+  const {
+    instagram: _instagram,
+    twitter: _twitter,
+    tiktok: _tiktok,
+    youtube: _youtube,
+  } = useMySNSData();
+
+  const navigation = useNavigation<
+    RootNavigationProp<'UserEditStack'> & UserEditNavigationProp<'UserEdit'>
+  >();
+  const userEditNavigation = useNavigation<
+    UserEditNavigationProp<'UserEdit'>
+  >();
+
+  // useEffect(() => {
+  //   const unsbscribe = navigation.addListener('blur', () => {
+  //     dispatch(resetEditData());
+  //   });
+  //   return unsbscribe;
+  // }, [navigation, dispatch]);
+
+  // const navigateToNameEditPage = ({name}: {name: string}) =>
+  //   userEditNavigation.navigate('NameEdit', {type: 'name', name});
+
+  // const navigateToIntroduceEditPage = ({introduce}: {introduce: string}) =>
+  //   userEditNavigation.navigate('IntroduceEdit', {
+  //     type: 'introduce',
+  //     introduce,
+  //   });
+
+  // const navigateToStatusMessageEditPage = ({
+  //   statusMessage,
+  // }: {
+  //   statusMessage: string;
+  // }) =>
+  //   userEditNavigation.navigate('StatusMessageEdit', {
+  //     type: 'statusMessage',
+  //     statusMessage,
+  //   });
+
+  const [instagram, setInstagram] = useState<string | null>(_instagram);
+  const [twitter, setTwitter] = useState<string | null>(_twitter);
+  const [tiktok, setTiktok] = useState<string | null>(_tiktok);
+  const [youtube, setYoutube] = useState<string | null>(_youtube);
   const [snsModalType, setSnsModalType] = useState<null | SnsList>(null);
 
   const snsModalProps = useMemo(() => {
@@ -141,24 +175,12 @@ export const UserEditPage = () => {
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    if (savedEditData?.name) {
-      setName(savedEditData?.name);
-    }
-    if (savedEditData?.introduce || savedEditData?.introduce === '') {
-      const _data = savedEditData.introduce.replace(/\n{2,}/g, '\n');
-      setIntroduce(_data);
-    }
-    if (savedEditData?.statusMessage || savedEditData?.statusMessage === '') {
-      setMessage(savedEditData.statusMessage);
-    }
-  }, [savedEditData]);
-
+  const avatar = useMyAvatar();
   const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>();
   const [deleteAvatar, setDeleteAvatar] = useState(false);
   const displayedAvatar = useMemo(
-    () => (deleteAvatar ? null : selectedAvatar ? selectedAvatar : user.avatar),
-    [deleteAvatar, selectedAvatar, user.avatar],
+    () => (deleteAvatar ? null : selectedAvatar ? selectedAvatar : avatar),
+    [deleteAvatar, selectedAvatar, avatar],
   );
 
   const pickAvatarImage = useCallback(() => {
@@ -189,6 +211,8 @@ export const UserEditPage = () => {
     setDeleteAvatar(true);
   };
 
+  const backGroundItem = useMyBackGroundItem();
+  const backGroundItemType = useMyBackGroundItemType();
   const [selectedBackGroundItem, setSelectedBackGroundItem] = useState<
     | {
         sourceType: 'image' | 'video';
@@ -206,14 +230,14 @@ export const UserEditPage = () => {
           sourceType: selectedBackGroundItem.sourceType,
         }
       : {
-          uri: user.backGroundItem,
-          sourceType: user.backGroundItemType,
+          uri: backGroundItem,
+          sourceType: backGroundItemType,
         };
   }, [
     deleteBackGroundItem,
     selectedBackGroundItem,
-    user.backGroundItem,
-    user.backGroundItemType,
+    backGroundItem,
+    backGroundItemType,
   ]);
 
   const pickBackGraoundItem = useCallback(() => {
@@ -406,36 +430,39 @@ export const UserEditPage = () => {
       </View>
       <View style={styles.mainEditContainer}>
         <View style={styles.profileContainer}>
-          <TouchableOpacity
-            style={styles.editElenentContainer}
+          <EditItem
+            label="名前"
+            value={name}
             onPress={() => {
-              navigateToNameEditPage({
-                name,
+              userEditNavigation.navigate('FormPage', {
+                type: '名前',
+                value: name,
+                setValue: setName,
               });
-            }}>
-            <Text style={styles.elementLabel}>名前</Text>
-            <Text style={styles.element}>{name}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.editElenentContainer}
+            }}
+          />
+          <EditItem
+            label="自己紹介"
+            value={displayedIntroduce}
             onPress={() => {
-              navigateToIntroduceEditPage({
-                introduce,
+              userEditNavigation.navigate('FormPage', {
+                type: '自己紹介',
+                value: introduce,
+                setValue: setIntroduce,
               });
-            }}>
-            <Text style={styles.elementLabel}>自己紹介</Text>
-            <Text style={styles.element}>{displayedIntroduce}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.editElenentContainer}
-            onPress={() =>
-              navigateToStatusMessageEditPage({
-                statusMessage: message,
-              })
-            }>
-            <Text style={styles.elementLabel}>ステータス{'\n'}メッセージ</Text>
-            <Text style={styles.element}>{message}</Text>
-          </TouchableOpacity>
+            }}
+          />
+          <EditItem
+            label="ステータスメッセージ"
+            value={message}
+            onPress={() => {
+              userEditNavigation.navigate('FormPage', {
+                type: 'ステータスメッセージ',
+                value: message,
+                setValue: setMessage,
+              });
+            }}
+          />
         </View>
         <View style={styles.snsIconContainer}>
           <SnsIconList showSnsModal={showSnsModal} />
@@ -495,6 +522,7 @@ const styles = StyleSheet.create({
   elementLabel: {
     fontSize: 16,
     color: labelColor,
+    width: 80,
   },
   element: {
     position: 'absolute',

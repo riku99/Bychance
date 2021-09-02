@@ -3,12 +3,14 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {UserEditPage} from '../components/screens/UserEdit';
 import {EditUserItemPage} from '../components/screens/EditUserItem/Page';
+import {EditFormPage} from '~/components/screens/EditUserItem';
 
 export type UserEditStackParamList = {
   UserEdit: undefined;
   NameEdit: {type: 'name'; name: string};
   IntroduceEdit: {type: 'introduce'; introduce: string};
   StatusMessageEdit: {type: 'statusMessage'; statusMessage: string};
+  FormPage: {type: string; value: string | null; setValue: (s: string) => void};
 };
 
 const UserEditStack = createStackNavigator<UserEditStackParamList>();
@@ -23,6 +25,7 @@ export const UserEditStackScreen = React.memo(() => {
         name="StatusMessageEdit"
         component={EditUserItemPage}
       />
+      <UserEditStack.Screen name="FormPage" component={EditFormPage} />
     </UserEditStack.Navigator>
   );
 });
