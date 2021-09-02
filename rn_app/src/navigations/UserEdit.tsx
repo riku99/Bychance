@@ -16,12 +16,6 @@ export const UserEditStackScreen = React.memo(() => {
     <UserEditStack.Navigator>
       <UserEditStack.Screen name="UserEdit" component={UserEditPage} />
       <UserEditStack.Screen name="FormPage" component={EditFormPage} />
-      {/* <UserEditStack.Screen name="NameEdit" component={EditUserItemPage} />
-      <UserEditStack.Screen name="IntroduceEdit" component={EditUserItemPage} />
-      <UserEditStack.Screen
-        name="StatusMessageEdit"
-        component={EditUserItemPage}
-      /> */}
     </UserEditStack.Navigator>
   );
 });

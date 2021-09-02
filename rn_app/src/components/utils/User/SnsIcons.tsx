@@ -39,57 +39,56 @@ export const SnsIcons = React.memo(({snsLinkData}: Props) => {
     }
   }, []);
 
+  console.log(snsLinkData);
+
   return (
-    <>
-      <View>
-        <View style={styles.iconContainer}>
-          {snsLinkData.instagram && (
-            <SocialIcon
-              raised={false}
-              type="instagram"
-              underlayColor="pink"
-              onPress={() =>
-                handleSnsIconPress(
-                  `${snsBaseUrl.instagramBaseUrl}/${snsLinkData.instagram}`,
-                )
-              }
-              style={[styles.socialIcom, {backgroundColor: 'pink'}]}
-            />
-          )}
-          {snsLinkData.twitter && (
-            <SocialIcon
-              raised={false}
-              type="twitter"
-              onPress={() =>
-                handleSnsIconPress(
-                  `${snsBaseUrl.twitterBaseUrl}/${snsLinkData.twitter}`,
-                )
-              }
-              style={styles.socialIcom}
-            />
-          )}
-          {snsLinkData.youtube && (
-            <SocialIcon
-              raised={false}
-              type="youtube"
-              onPress={() => handleSnsIconPress(snsLinkData.youtube!)}
-              style={styles.socialIcom}
-            />
-          )}
-          {snsLinkData.tiktok && (
-            <TikTok
-              width={38}
-              style={{marginLeft: 10}}
-              onPress={() =>
-                handleSnsIconPress(
-                  `${snsBaseUrl.tiktokBaseUrl}/@${snsLinkData.tiktok}`,
-                )
-              }
-            />
-          )}
-        </View>
-      </View>
-    </>
+    <View style={styles.iconContainer}>
+      {snsLinkData.instagram && (
+        <SocialIcon
+          raised={false}
+          type="instagram"
+          underlayColor="pink"
+          onPress={() =>
+            handleSnsIconPress(
+              `${snsBaseUrl.instagramBaseUrl}/${snsLinkData.instagram}`,
+            )
+          }
+          style={[styles.socialIcon, {backgroundColor: 'pink'}]}
+        />
+      )}
+      {snsLinkData.twitter && (
+        <SocialIcon
+          raised={false}
+          type="twitter"
+          onPress={() =>
+            handleSnsIconPress(
+              `${snsBaseUrl.twitterBaseUrl}/${snsLinkData.twitter}`,
+            )
+          }
+          style={styles.socialIcon}
+        />
+      )}
+      {snsLinkData.youtube && (
+        <SocialIcon
+          raised={false}
+          type="youtube"
+          onPress={() => handleSnsIconPress(snsLinkData.youtube!)}
+          style={styles.socialIcon}
+        />
+      )}
+      {snsLinkData.tiktok && (
+        <TikTok
+          height="100%"
+          width={38}
+          style={{marginLeft: 10}}
+          onPress={() =>
+            handleSnsIconPress(
+              `${snsBaseUrl.tiktokBaseUrl}/@${snsLinkData.tiktok}`,
+            )
+          }
+        />
+      )}
+    </View>
   );
 });
 
@@ -97,8 +96,9 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     width: '100%',
+    height: 55,
   },
-  socialIcom: {
+  socialIcon: {
     width: 38,
     height: 38,
     marginLeft: 9,
