@@ -59,6 +59,7 @@ type TabViewContextType = {
   }) => void;
   refreshUsers?: () => Promise<void>;
   firstLoading: boolean;
+  scrollY: Animated.Value;
 };
 
 // createMaterialTopTabNavigatorでスクリーンを作る際に、componentにインラインで記述するとパフォーマンスの問題があるのでインラインの記述はしたくない
@@ -67,6 +68,7 @@ export const TabViewContext = createContext<TabViewContextType>({
   users: [],
   keyword: '',
   firstLoading: false,
+  scrollY: new Animated.Value(0),
 });
 
 export const NearbyUsersScreen = React.memo(() => {
@@ -82,10 +84,17 @@ export const NearbyUsersScreen = React.memo(() => {
     });
   }, [data]);
 
+  const {top} = useSafeAreaInsets();
+
   const scrollY = useRef(new Animated.Value(0)).current;
   const transformY = scrollY.interpolate({
     inputRange: [0, SEARCH_TAB_HEIGHT],
     outputRange: [0, -SEARCH_TAB_HEIGHT],
+    extrapolate: 'clamp',
+  });
+  const opacity = scrollY.interpolate({
+    inputRange: [0, SEARCH_TAB_HEIGHT],
+    outputRange: [1, 0],
     extrapolate: 'clamp',
   });
 
@@ -223,8 +232,6 @@ export const NearbyUsersScreen = React.memo(() => {
     await getNearbyUsers();
   }, [getNearbyUsers]);
 
-  const {top} = useSafeAreaInsets();
-
   const tabViewContextData = useMemo(
     () => ({
       users: filteredUsers,
@@ -235,6 +242,7 @@ export const NearbyUsersScreen = React.memo(() => {
       lng,
       refreshUsers,
       firstLoading: isLoading,
+      scrollY,
     }),
     [
       filteredUsers,
@@ -245,15 +253,18 @@ export const NearbyUsersScreen = React.memo(() => {
       lng,
       refreshUsers,
       isLoading,
+      scrollY,
     ],
   );
 
   return (
-    <View style={[styles.container, {paddingTop: top}]}>
+    <View style={[styles.container]}>
+      <View style={{backgroundColor: 'white', height: top}} />
       <Animated.View
         style={{
           ...styles.displayOptionsContainer,
           transform: [{translateY: transformY}],
+          opacity,
         }}>
         <SearchBar
           placeholder="キーワードを検索"
@@ -267,26 +278,29 @@ export const NearbyUsersScreen = React.memo(() => {
         />
       </Animated.View>
       <TabViewContext.Provider value={tabViewContextData}>
-        <Tab.Navigator
-          tabBarPosition="top"
-          tabBarOptions={{
-            activeTintColor: normalStyles.mainColor,
-            style: {marginTop: SEARCH_TAB_HEIGHT},
-            labelStyle: {
-              fontSize: 14,
-              fontWeight: '500',
-            },
-            indicatorStyle: {
-              backgroundColor: normalStyles.mainColor,
-            },
-            tabStyle: {
-              height: 45,
-              alignItems: 'center',
-            },
-          }}>
-          <Tab.Screen name="リスト" component={List} />
-          <Tab.Screen name="マップ" component={Map} />
-        </Tab.Navigator>
+        <Animated.View
+          style={{height: '100%', transform: [{translateY: transformY}]}}>
+          <Tab.Navigator
+            tabBarPosition="top"
+            tabBarOptions={{
+              activeTintColor: normalStyles.mainColor,
+              style: {marginTop: SEARCH_TAB_HEIGHT},
+              labelStyle: {
+                fontSize: 14,
+                fontWeight: '500',
+              },
+              indicatorStyle: {
+                backgroundColor: normalStyles.mainColor,
+              },
+              tabStyle: {
+                height: 45,
+                alignItems: 'center',
+              },
+            }}>
+            <Tab.Screen name="リスト" component={List} />
+            <Tab.Screen name="マップ" component={Map} />
+          </Tab.Navigator>
+        </Animated.View>
       </TabViewContext.Provider>
       <View style={styles.pickButtonContainer}>
         <RangeSelectButton setRange={setRange} />

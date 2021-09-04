@@ -5,6 +5,9 @@ import {
   Text,
   RefreshControl,
   ActivityIndicator,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem, SearchBar} from 'react-native-elements';
@@ -16,9 +19,13 @@ import {SEARCH_TAB_HEIGHT} from './styles';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
-  const {users, refreshUsers, firstLoading, navigateToUserPage} = useContext(
-    TabViewContext,
-  );
+  const {
+    users,
+    refreshUsers,
+    firstLoading,
+    navigateToUserPage,
+    scrollY,
+  } = useContext(TabViewContext);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -56,17 +63,17 @@ export const List = React.memo(() => {
                 onRefresh={() => onRefresh()}
               />
             }
-            // onScroll={Animated.event(
-            //   [{nativeEvent: {contentOffset: {y: scrollY}}}],
-            //   {
-            //     useNativeDriver: false,
-            //     listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-            //       if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
-            //         scrollY.setValue(SEARCH_TAB_HEIGHT);
-            //       }
-            //     },
-            //   },
-            // )}
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollY}}}],
+              {
+                useNativeDriver: false,
+                // listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+                //   if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
+                //     scrollY.setValue(SEARCH_TAB_HEIGHT);
+                //   }
+                // },
+              },
+            )}
             // onScrollEndDrag={(e) => {
             //   if (e.nativeEvent.contentOffset.y > offsetY.current) {
             //     offsetY.current = e.nativeEvent.contentOffset.y;
@@ -83,6 +90,66 @@ export const List = React.memo(() => {
             // }}
           >
             <View>
+              {users.map((u) => (
+                <ListItem
+                  containerStyle={{height: 72}}
+                  key={u.id}
+                  onPress={() => {
+                    if (navigateToUserPage) {
+                      navigateToUserPage(u.id);
+                    }
+                  }}>
+                  <Avatar user={u} />
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Name id={u.id} name={u.name} />
+                    </ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitle}>
+                      {u.statusMessage}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+              {users.map((u) => (
+                <ListItem
+                  containerStyle={{height: 72}}
+                  key={u.id}
+                  onPress={() => {
+                    if (navigateToUserPage) {
+                      navigateToUserPage(u.id);
+                    }
+                  }}>
+                  <Avatar user={u} />
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Name id={u.id} name={u.name} />
+                    </ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitle}>
+                      {u.statusMessage}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
+              {users.map((u) => (
+                <ListItem
+                  containerStyle={{height: 72}}
+                  key={u.id}
+                  onPress={() => {
+                    if (navigateToUserPage) {
+                      navigateToUserPage(u.id);
+                    }
+                  }}>
+                  <Avatar user={u} />
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      <Name id={u.id} name={u.name} />
+                    </ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitle}>
+                      {u.statusMessage}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                </ListItem>
+              ))}
               {users.map((u) => (
                 <ListItem
                   containerStyle={{height: 72}}
