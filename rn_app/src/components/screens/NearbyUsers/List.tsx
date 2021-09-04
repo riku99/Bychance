@@ -7,11 +7,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {ListItem} from 'react-native-elements';
+import {ListItem, SearchBar} from 'react-native-elements';
 
 import {Avatar} from './Avatar';
 import {TabViewContext} from './index';
 import {Name} from './Name';
+import {SEARCH_TAB_HEIGHT} from './styles';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {

@@ -30,6 +30,7 @@ import {
 import {useNearbyUsers} from '~/hooks/nearbyUsers';
 import {selectNotAllViewedUserIds} from '~/stores/flashes';
 import {usePrefetchStamps} from '~/hooks/flashStamps';
+import {SEARCH_TAB_HEIGHT} from './styles';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -270,6 +271,7 @@ export const NearbyUsersScreen = React.memo(() => {
           tabBarPosition="top"
           tabBarOptions={{
             activeTintColor: normalStyles.mainColor,
+            style: {marginTop: SEARCH_TAB_HEIGHT},
             labelStyle: {
               fontSize: 14,
               fontWeight: '500',
@@ -293,8 +295,6 @@ export const NearbyUsersScreen = React.memo(() => {
   );
 });
 
-const SEARCH_TAB_HEIGHT = 45;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -313,6 +313,11 @@ const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     height: SEARCH_TAB_HEIGHT,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   searchInputContainer: {
     width: '90%',
