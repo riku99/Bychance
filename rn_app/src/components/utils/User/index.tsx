@@ -18,7 +18,6 @@ import {MoreReadBottun} from './MoreReadButton';
 import {IntroduceModal} from './IntoduceModal';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIcons} from './SnsIcons';
-import {judgeMoreDeviceX} from '~/helpers/device';
 import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
 import {useMyId} from '~/hooks/users';
@@ -30,6 +29,8 @@ import {
   nameAndAvatarLeft,
   introduceContainerTop,
   creatingFlashContainerTop,
+  profileContainerHeight,
+  backgroundItemHeight,
 } from './styles';
 
 type _Props = {
@@ -217,17 +218,9 @@ export const User = ({
 
 const {height} = Dimensions.get('screen');
 
-const moreXHeight = judgeMoreDeviceX();
-
-const profileContainerHeight = moreXHeight ? height / 1.9 : height / 1.75;
-
 export const oneIntroduceTextLineHeght = 19.7;
-
 const introduceContainerHeight = height * 0.14;
-
 const snsIconsContainerTop = profileContainerHeight - stickyTabHeight - 12;
-
-const backgroundItemHeight = height * 0.16;
 
 const styles = StyleSheet.create({
   container: {
