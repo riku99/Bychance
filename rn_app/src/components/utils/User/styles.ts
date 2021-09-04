@@ -15,3 +15,4 @@ export const avatarContainerTop =
 export const nameContainerTop = avatarContainerTop + 97;
 export const nameAndAvatarLeft = 13;
 export const introduceContainerTop = nameContainerTop + 30;
+export const creatingFlashContainerTop = backgroundItemHeight + 13;

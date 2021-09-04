@@ -29,6 +29,7 @@ import {
   nameContainerTop,
   nameAndAvatarLeft,
   introduceContainerTop,
+  creatingFlashContainerTop,
 } from './styles';
 
 type _Props = {
@@ -199,11 +200,7 @@ export const User = ({
       )}
 
       <Animated.View
-        style={[
-          styles.animatedElement,
-          styles.snsIconsContainer,
-          {transform: [{translateY: y}]},
-        ]}>
+        style={[styles.snsIconsContainer, {transform: [{translateY: y}]}]}>
         <SnsIcons snsLinkData={snsLinkData} />
       </Animated.View>
 
@@ -226,14 +223,6 @@ const profileContainerHeight = moreXHeight ? height / 1.9 : height / 1.75;
 
 export const oneIntroduceTextLineHeght = 19.7;
 
-const nameContainerHeight = 19.5;
-
-const avatarAndNameContainerHeight =
-  (moreXHeight ? 119.5 : 113) - nameContainerHeight - 10;
-
-const avatarAndNameContainerTop = moreXHeight ? height * 0.115 : height * 0.1;
-
-// const introduceContainerTop = moreXHeight ? height * 0.273 : height * 0.284;
 const introduceContainerHeight = height * 0.14;
 
 const snsIconsContainerTop = profileContainerHeight - stickyTabHeight - 12;
@@ -278,9 +267,6 @@ const styles = StyleSheet.create({
     top: editProfileOrSendMessageButtonContainerTop,
     right: '4%',
   },
-  animatedElement: {
-    position: 'absolute',
-  },
   takeWideRangeSourceContainer: {
     position: 'absolute',
     bottom: '3%',
@@ -292,6 +278,7 @@ const styles = StyleSheet.create({
     right: '2%',
   },
   snsIconsContainer: {
+    position: 'absolute',
     top: snsIconsContainerTop,
     alignItems: 'center',
   },
@@ -305,8 +292,8 @@ const styles = StyleSheet.create({
   },
   creatingFlashContaienr: {
     position: 'absolute',
-    top: '22%',
-    left: 100,
+    top: creatingFlashContainerTop,
+    left: 108,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
