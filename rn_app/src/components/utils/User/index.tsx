@@ -37,16 +37,17 @@ type _Props = {
   id: string;
   name: string;
   avatar: string | null;
-  introduce: string | null;
-  backGroundItem: string | null;
-  backGroundItemType: 'image' | 'video' | null;
-  snsData: {
+  introduce?: string | null;
+  backGroundItem?: string | null;
+  backGroundItemType?: 'image' | 'video' | null;
+  snsData?: {
     instagram: string | null;
     twitter: string | null;
     youtube: string | null;
     tiktok: string | null;
   };
   refresh: () => Promise<void>;
+  isLoading?: boolean;
 };
 
 export const User = ({
@@ -58,6 +59,7 @@ export const User = ({
   backGroundItemType,
   snsData,
   refresh,
+  isLoading,
 }: _Props) => {
   const snsLinkData = snsData;
   const myId = useMyId();
@@ -139,6 +141,7 @@ export const User = ({
         postsTabViewRef={postsTabViewRef}
         userInformationTabViewRef={userInformationTabViewRef}
         refresh={refresh}
+        isLoading={isLoading}
       />
 
       <Animated.View

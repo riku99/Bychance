@@ -6,14 +6,14 @@ import TikTok from '~/assets/tiktok_logo.svg';
 import {snsBaseUrl} from '~/constants/sns';
 
 export type SnsLinkData = {
-  instagram: string | null;
-  twitter: string | null;
-  youtube: string | null;
-  tiktok: string | null;
+  instagram?: string | null;
+  twitter?: string | null;
+  youtube?: string | null;
+  tiktok?: string | null;
 };
 
 type Props = {
-  snsLinkData: SnsLinkData;
+  snsLinkData?: SnsLinkData;
 };
 
 export const SnsIcons = React.memo(({snsLinkData}: Props) => {
@@ -39,7 +39,9 @@ export const SnsIcons = React.memo(({snsLinkData}: Props) => {
     }
   }, []);
 
-  console.log(snsLinkData);
+  if (!snsLinkData) {
+    return null;
+  }
 
   return (
     <View style={styles.iconContainer}>

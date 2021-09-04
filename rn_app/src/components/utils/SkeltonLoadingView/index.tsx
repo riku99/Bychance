@@ -1,23 +1,19 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import {normalStyles} from '~/constants/styles';
 
-export const SkeltonLoadingView = React.memo(() => {
+type Props = {
+  children: JSX.Element;
+};
+
+export const SkeltonLoadingView = React.memo(({children}: Props) => {
   return (
     <SkeletonPlaceholder
       backgroundColor={normalStyles.imageBackGroundColor}
       speed={1000}
       highlightColor={'#fcfcfc'}>
-      <View style={styles.content} />
+      {children}
     </SkeletonPlaceholder>
   );
-});
-
-const styles = StyleSheet.create({
-  content: {
-    width: '100%',
-    height: '100%',
-  },
 });

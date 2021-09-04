@@ -28,6 +28,7 @@ type Props = {
   postsTabViewRef: React.RefObject<FlatList>;
   userInformationTabViewRef: React.RefObject<ScrollView>;
   refresh: () => Promise<void>;
+  isLoading?: boolean;
 };
 
 export const UserTabView = React.memo(
@@ -39,6 +40,7 @@ export const UserTabView = React.memo(
     postsTabViewRef,
     userInformationTabViewRef,
     refresh,
+    isLoading,
   }: Props) => {
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
@@ -114,6 +116,7 @@ export const UserTabView = React.memo(
               paddingTopHeight={paddingTopHeight}
               tabViewContainerMinHeight={tabViewContainerMinHeight}
               refresh={refresh}
+              isLoaidng={isLoading}
             />
           );
         case 'UserInformation':

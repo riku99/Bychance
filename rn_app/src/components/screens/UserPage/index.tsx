@@ -20,8 +20,8 @@ type Props = {
   navigation: UserPageNavigationProp<'UserPage'>;
 };
 export const UserPage = React.memo(({route, navigation}: Props) => {
-  const {data, mutate} = useUserPageInfo(route.params.userId);
-  const name = useUserName(route.params.userId) || data?.name;
+  const {data, mutate, isLoading} = useUserPageInfo(route.params.userId);
+  const name = useUserName(route.params.userId) || data?.name || 'f';
   const avatar =
     useUserAvatar({userId: route.params.userId}) || data?.avatar || null;
   const [menuVisible, setMenuVisible] = useState(false);
@@ -47,25 +47,35 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     await mutate();
   };
 
-  if (!data || !name) {
-    return null;
+  if (!data) {
+    return (
+      <User
+        id={route.params.userId}
+        name={name}
+        avatar={avatar}
+        refresh={refresh}
+        isLoading={isLoading}
+      />
+    );
   }
 
   return (
     <>
       <User
-        id={data.id}
+        id={route.params.userId}
         name={name}
         avatar={avatar}
         introduce={data.introduce}
         backGroundItem={data.backGroundItem}
         backGroundItemType={data.backGroundItemType}
-        snsData={{
-          instagram: data.instagram,
-          twitter: data.twitter,
-          youtube: data.youtube,
-          tiktok: data.tiktok,
-        }}
+        snsData={
+          data && {
+            instagram: data.instagram,
+            twitter: data.twitter,
+            youtube: data.youtube,
+            tiktok: data.tiktok,
+          }
+        }
         refresh={refresh}
       />
       {data && (

@@ -5,11 +5,13 @@ import {
   RefreshControl,
   ListRenderItem,
   FlatList,
+  View,
 } from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 
 import {selectPostsByUserId} from '~/stores/posts';
 import {RootState} from '~/stores';
+import {TabPostsLoading} from './TabPostsLoading';
 
 type PostData = {
   id: number;
@@ -30,6 +32,7 @@ type FlatListTabSceneProps = {
   paddingTopHeight: number;
   tabViewContainerMinHeight: number;
   refresh: () => Promise<void>;
+  isLoaidng?: boolean;
 };
 
 export const FlatListTabScene = React.memo(
@@ -43,6 +46,7 @@ export const FlatListTabScene = React.memo(
     paddingTopHeight,
     tabViewContainerMinHeight,
     refresh,
+    isLoaidng,
   }: FlatListTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
@@ -56,6 +60,14 @@ export const FlatListTabScene = React.memo(
       await refresh();
       setRefreshing(false);
     }, [refresh]);
+
+    if (!posts.length && isLoaidng) {
+      return (
+        <View style={{paddingTop: paddingTopHeight}}>
+          <TabPostsLoading />
+        </View>
+      );
+    }
 
     return (
       <Animated.FlatList

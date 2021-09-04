@@ -8,7 +8,7 @@ import {useBackGroundItemVideoPaused} from '~/hooks/appState';
 
 type Props = {
   id: string;
-  url: string | null;
+  url?: string | null;
 };
 
 export const Avatar = React.memo(({id, url}: Props) => {

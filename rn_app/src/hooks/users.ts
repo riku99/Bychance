@@ -308,11 +308,12 @@ export const useUserPageInfo = (userId: string) => {
     refreshFlashes,
   ]);
 
-  const {data, mutate} = useSWR(userPageUrlKey(userId), fetcher);
+  const {data, mutate, error} = useSWR(userPageUrlKey(userId), fetcher);
 
   return {
     data,
     mutate,
+    isLoading: !data && !error,
   };
 };
 

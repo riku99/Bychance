@@ -7,10 +7,12 @@ import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {SkeltonLoadingView} from '~/components/utils/SkeltonLoadingView';
 import {useBackGroundItemVideoPaused} from '~/hooks/appState';
 import {RootNavigationProp} from '~/navigations/Root';
+import {backgroundItemHeight} from './styles';
 
 type Props = {
-  source: string | null;
-  sourceType: 'image' | 'video' | null;
+  source?: string | null;
+  sourceType?: 'image' | 'video' | null;
+  isLoading?: boolean;
 };
 
 export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
@@ -36,13 +38,20 @@ export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
     return unsbscribe;
   }, [navigation, videoPaused, setVideoPaused]);
 
+  if (source === undefined) {
+    return (
+      <SkeltonLoadingView>
+        <View style={{height: backgroundItemHeight}} />
+      </SkeltonLoadingView>
+    );
+  }
+
   if (!source) {
     return null;
   }
 
   return (
     <>
-      <SkeltonLoadingView />
       <TouchableOpacity
         style={styles.sourceContainer}
         onPress={onPress}
