@@ -28,6 +28,7 @@ import {
   avatarContainerTop,
   nameContainerTop,
   nameAndAvatarLeft,
+  introduceContainerTop,
 } from './styles';
 
 type _Props = {
@@ -232,7 +233,7 @@ const avatarAndNameContainerHeight =
 
 const avatarAndNameContainerTop = moreXHeight ? height * 0.115 : height * 0.1;
 
-const introduceContainerTop = moreXHeight ? height * 0.273 : height * 0.284;
+// const introduceContainerTop = moreXHeight ? height * 0.273 : height * 0.284;
 const introduceContainerHeight = height * 0.14;
 
 const snsIconsContainerTop = profileContainerHeight - stickyTabHeight - 12;
