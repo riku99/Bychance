@@ -23,6 +23,7 @@ import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
 import {useMyId} from '~/hooks/users';
 import {CreatingPost, CreatingFlash} from './Creating';
+import {editProfileOrSendMessageButtonContainerTop} from './styles';
 
 type _Props = {
   id: string;
@@ -163,14 +164,11 @@ export const User = ({
       <Animated.View
         style={[
           styles.editProfileOrSendMessageButtonContainer,
-          styles.animatedElement,
           {
             transform: [{translateY: y}],
           },
         ]}>
-        <View style={{width: '50%'}}>
-          {isMe ? <EditButton /> : <SendMessageButton id={id} />}
-        </View>
+        {isMe ? <EditButton /> : <SendMessageButton id={id} />}
       </Animated.View>
 
       {moreReadButton && (
@@ -261,10 +259,10 @@ const styles = StyleSheet.create({
     marginTop: moreXHeight ? 15 : 13,
   },
   editProfileOrSendMessageButtonContainer: {
-    width: '100%',
-    top: moreXHeight ? height * 0.1 : height * 0.09,
-    left: '45%',
-    marginTop: avatarAndNameContainerHeight,
+    position: 'absolute',
+    width: '40%',
+    top: editProfileOrSendMessageButtonContainerTop,
+    right: '4%',
   },
   animatedElement: {
     position: 'absolute',

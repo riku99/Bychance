@@ -1,0 +1,12 @@
+import {Dimensions} from 'react-native';
+import {judgeMoreDeviceX} from '~/helpers/device';
+
+const {height} = Dimensions.get('screen');
+const moreXHeight = judgeMoreDeviceX();
+export const profileContainerHeight = moreXHeight
+  ? height / 1.9
+  : height / 1.75;
+export const oneIntroduceTextLineHeght = 19.7;
+export const backgroundItemHeight = height * 0.16;
+export const editProfileOrSendMessageButtonContainerTop =
+  backgroundItemHeight + 10;
