@@ -26,6 +26,8 @@ import {CreatingPost, CreatingFlash} from './Creating';
 import {
   editProfileOrSendMessageButtonContainerTop,
   avatarContainerTop,
+  nameContainerTop,
+  nameAndAvatarLeft,
 } from './styles';
 
 type _Props = {
@@ -157,22 +159,15 @@ export const User = ({
         <Avatar id={id} url={avatar} />
       </Animated.View>
 
-      {/* <Animated.View
+      <Animated.View
         style={[
-          styles.animatedElement,
-          styles.avatarAndNameContainer,
+          styles.nameContainer,
           {
             transform: [{translateY: y}],
           },
         ]}>
-        <View style={{alignItems: 'center'}}>
-          <Avatar id={id} url={avatar} />
-
-          <View style={styles.nameContainer}>
-            <Text style={{fontWeight: 'bold', fontSize: 16}}>{name}</Text>
-          </View>
-        </View>
-      </Animated.View> */}
+        <Text style={styles.name}>{name}</Text>
+      </Animated.View>
 
       <Animated.View
         style={[
@@ -265,16 +260,16 @@ const styles = StyleSheet.create({
   avatarContainer: {
     position: 'absolute',
     top: avatarContainerTop,
-    left: 10,
+    left: nameAndAvatarLeft,
   },
-  // avatarAndNameContainer: {
-  //   top: avatarAndNameContainerTop,
-  //   left: 10,
-  //   flexDirection: 'row',
-  //   alignSelf: 'flex-start',
-  // },
   nameContainer: {
-    marginTop: moreXHeight ? 15 : 13,
+    position: 'absolute',
+    top: nameContainerTop,
+    left: nameAndAvatarLeft,
+  },
+  name: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   editProfileOrSendMessageButtonContainer: {
     position: 'absolute',

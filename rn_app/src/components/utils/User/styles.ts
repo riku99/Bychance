@@ -12,3 +12,5 @@ export const editProfileOrSendMessageButtonContainerTop =
   backgroundItemHeight + 10;
 export const avatarContainerTop =
   backgroundItemHeight - (moreXHeight ? height * 0.04 : height * 0.045);
+export const nameContainerTop = avatarContainerTop + 97;
+export const nameAndAvatarLeft = 10;
