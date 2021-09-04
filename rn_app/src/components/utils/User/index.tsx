@@ -23,7 +23,10 @@ import {Menu} from '~/components/utils/Menu';
 import {normalStyles} from '~/constants/styles';
 import {useMyId} from '~/hooks/users';
 import {CreatingPost, CreatingFlash} from './Creating';
-import {editProfileOrSendMessageButtonContainerTop} from './styles';
+import {
+  editProfileOrSendMessageButtonContainerTop,
+  avatarContainerTop,
+} from './styles';
 
 type _Props = {
   id: string;
@@ -146,6 +149,16 @@ export const User = ({
 
       <Animated.View
         style={[
+          styles.avatarContainer,
+          {
+            transform: [{translateY: y}],
+          },
+        ]}>
+        <Avatar id={id} url={avatar} />
+      </Animated.View>
+
+      {/* <Animated.View
+        style={[
           styles.animatedElement,
           styles.avatarAndNameContainer,
           {
@@ -159,7 +172,7 @@ export const User = ({
             <Text style={{fontWeight: 'bold', fontSize: 16}}>{name}</Text>
           </View>
         </View>
-      </Animated.View>
+      </Animated.View> */}
 
       <Animated.View
         style={[
@@ -249,12 +262,17 @@ const styles = StyleSheet.create({
     width: '100%',
     height: introduceContainerHeight,
   },
-  avatarAndNameContainer: {
-    top: avatarAndNameContainerTop,
+  avatarContainer: {
+    position: 'absolute',
+    top: avatarContainerTop,
     left: 10,
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
   },
+  // avatarAndNameContainer: {
+  //   top: avatarAndNameContainerTop,
+  //   left: 10,
+  //   flexDirection: 'row',
+  //   alignSelf: 'flex-start',
+  // },
   nameContainer: {
     marginTop: moreXHeight ? 15 : 13,
   },

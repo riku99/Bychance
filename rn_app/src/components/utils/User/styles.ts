@@ -10,3 +10,5 @@ export const oneIntroduceTextLineHeght = 19.7;
 export const backgroundItemHeight = height * 0.16;
 export const editProfileOrSendMessageButtonContainerTop =
   backgroundItemHeight + 10;
+export const avatarContainerTop =
+  backgroundItemHeight - (moreXHeight ? height * 0.04 : height * 0.045);
