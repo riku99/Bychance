@@ -4,6 +4,7 @@ import MapView from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {UIActivityIndicator} from 'react-native-indicators';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {TabViewContext} from './index';
 import {Avatar} from './Avatar';
@@ -33,8 +34,10 @@ export const Map = React.memo(() => {
     }
   }, [refreshUsers]);
 
+  const {top} = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginTop: top}]}>
       <MapView
         style={styles.map}
         initialRegion={region}
