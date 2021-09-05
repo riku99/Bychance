@@ -6,7 +6,7 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-import {StyleSheet, Animated, View, SafeAreaView} from 'react-native';
+import {StyleSheet, Animated, View} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {
   createMaterialTopTabNavigator,
@@ -89,13 +89,9 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const {top} = useSafeAreaInsets();
 
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const transformY = scrollY.interpolate({
-    inputRange: [-SEARCH_TAB_HEIGHT - stickyTabHeight, 0],
-    // inputRange: [0, SEARCH_TAB_HEIGHT],
-    outputRange: [0, -SEARCH_TAB_HEIGHT + top],
-    extrapolate: 'clamp',
-  });
+  const scrollY = useRef(
+    new Animated.Value(-SEARCH_TAB_HEIGHT - stickyTabHeight),
+  ).current;
   const opacity = scrollY.interpolate({
     inputRange: [-SEARCH_TAB_HEIGHT - stickyTabHeight, -stickyTabHeight],
     outputRange: [1, 0],
@@ -296,8 +292,6 @@ export const NearbyUsersScreen = React.memo(() => {
     },
     [scrollY, keyword, top, opacity],
   );
-
-  scrollY.addListener((v) => console.log(v));
 
   return (
     <View style={[styles.container]}>

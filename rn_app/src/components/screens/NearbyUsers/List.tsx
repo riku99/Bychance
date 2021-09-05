@@ -6,12 +6,9 @@ import {
   RefreshControl,
   ActivityIndicator,
   Animated,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  SafeAreaView,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {ListItem, SearchBar} from 'react-native-elements';
+import {ListItem} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Avatar} from './Avatar';
@@ -39,171 +36,60 @@ export const List = React.memo(() => {
     setRefreshing(false);
   }, [refreshUsers]);
 
-  // const caluculateDuration = useCallback((n: number) => {
-  //   return n * 5;
-  // }, []);
-
   if (firstLoading) {
     return (
-      <View style={{marginTop: 10}}>
+      <View>
         <ActivityIndicator />
       </View>
     );
   }
 
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, {marginTop: 10}]}>
       {users.length ? (
-        <SafeAreaView>
-          <ScrollView
-            scrollEventThrottle={16}
-            contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
-            contentOffset={{
-              y: -SEARCH_TAB_HEIGHT - stickyTabHeight,
-              x: 0,
-            }}
-            contentContainerStyle={
-              {
-                // paddingTop: SEARCH_TAB_HEIGHT + stickyTabHeight,
-              }
-            }
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => onRefresh()}
-                progressViewOffset={120}
-              />
-            }
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollY}}}],
-              {
-                useNativeDriver: false,
-                // listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-                //   if (e.nativeEvent.contentOffset.y > SEARCH_TAB_HEIGHT) {
-                //     scrollY.setValue(SEARCH_TAB_HEIGHT);
-                //   }
-                // },
-              },
-            )}
-            // onScrollEndDrag={(e) => {
-            //   if (e.nativeEvent.contentOffset.y > offsetY.current) {
-            //     offsetY.current = e.nativeEvent.contentOffset.y;
-            //   } else if (e.nativeEvent.contentOffset.y < offsetY.current) {
-            //     Animated.timing(scrollY, {
-            //       toValue: 0,
-            //       duration: caluculateDuration(
-            //         offsetY.current > 80 ? 80 : offsetY.current,
-            //       ),
-            //       useNativeDriver: false,
-            //     }).start();
-            //     offsetY.current = e.nativeEvent.contentOffset.y;
-            //   }
-            // }}
-          >
-            <View style={{marginTop: 5}}>
-              {users.map((u) => (
-                <ListItem
-                  containerStyle={{height: 72}}
-                  key={u.id}
-                  onPress={() => {
-                    if (navigateToUserPage) {
-                      navigateToUserPage(u.id);
-                    }
-                  }}>
-                  <Avatar user={u} />
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      <Name id={u.id} name={u.name} />
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {u.statusMessage}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-              {users.map((u) => (
-                <ListItem
-                  containerStyle={{height: 72}}
-                  key={u.id}
-                  onPress={() => {
-                    if (navigateToUserPage) {
-                      navigateToUserPage(u.id);
-                    }
-                  }}>
-                  <Avatar user={u} />
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      <Name id={u.id} name={u.name} />
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {u.statusMessage}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-              {users.map((u) => (
-                <ListItem
-                  containerStyle={{height: 72}}
-                  key={u.id}
-                  onPress={() => {
-                    if (navigateToUserPage) {
-                      navigateToUserPage(u.id);
-                    }
-                  }}>
-                  <Avatar user={u} />
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      <Name id={u.id} name={u.name} />
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {u.statusMessage}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-              {users.map((u) => (
-                <ListItem
-                  containerStyle={{height: 72}}
-                  key={u.id}
-                  onPress={() => {
-                    if (navigateToUserPage) {
-                      navigateToUserPage(u.id);
-                    }
-                  }}>
-                  <Avatar user={u} />
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      <Name id={u.id} name={u.name} />
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {u.statusMessage}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-              {users.map((u) => (
-                <ListItem
-                  containerStyle={{height: 72}}
-                  key={u.id}
-                  onPress={() => {
-                    if (navigateToUserPage) {
-                      navigateToUserPage(u.id);
-                    }
-                  }}>
-                  <Avatar user={u} />
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      <Name id={u.id} name={u.name} />
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={styles.subtitle}>
-                      {u.statusMessage}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              ))}
-            </View>
-          </ScrollView>
-        </SafeAreaView>
+        <ScrollView
+          scrollEventThrottle={16}
+          contentContainerStyle={{marginTop: top}}
+          contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
+          contentOffset={{
+            y: -SEARCH_TAB_HEIGHT - stickyTabHeight,
+            x: 0,
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => onRefresh()}
+            />
+          }
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {
+              useNativeDriver: false,
+            },
+          )}>
+          <View>
+            {users.map((u) => (
+              <ListItem
+                containerStyle={{height: 72}}
+                key={u.id}
+                onPress={() => {
+                  if (navigateToUserPage) {
+                    navigateToUserPage(u.id);
+                  }
+                }}>
+                <Avatar user={u} />
+                <ListItem.Content>
+                  <ListItem.Title>
+                    <Name id={u.id} name={u.name} />
+                  </ListItem.Title>
+                  <ListItem.Subtitle style={styles.subtitle}>
+                    {u.statusMessage}
+                  </ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            ))}
+          </View>
+        </ScrollView>
       ) : (
         <View style={styles.noUser}>
           <ScrollView
