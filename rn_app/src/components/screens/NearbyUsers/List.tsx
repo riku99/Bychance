@@ -38,7 +38,7 @@ export const List = React.memo(() => {
 
   if (firstLoading) {
     return (
-      <View>
+      <View style={{marginTop: SEARCH_TAB_HEIGHT + stickyTabHeight + top + 10}}>
         <ActivityIndicator />
       </View>
     );
