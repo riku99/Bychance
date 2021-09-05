@@ -265,13 +265,9 @@ export const NearbyUsersScreen = React.memo(() => {
       return (
         <Animated.View
           style={[
+            styles.tabAndSearchBarContainer,
             {
-              top: 0,
-              position: 'absolute',
-              width: '100%',
-              zIndex: 1,
               transform: [{translateY: y}],
-              backgroundColor: 'white',
             },
           ]}>
           <Animated.View style={{opacity}}>
@@ -357,5 +353,12 @@ const styles = StyleSheet.create({
     right: '7%',
     width: 130,
     height: 40,
+  },
+  tabAndSearchBarContainer: {
+    top: 0,
+    position: 'absolute',
+    width: '100%',
+    zIndex: 1,
+    backgroundColor: 'white',
   },
 });

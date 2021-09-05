@@ -49,7 +49,7 @@ export const List = React.memo(() => {
       {users.length ? (
         <ScrollView
           scrollEventThrottle={16}
-          contentContainerStyle={{marginTop: top}}
+          contentContainerStyle={{marginTop: top, paddingBottom: top}}
           contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
           contentOffset={{
             y: -SEARCH_TAB_HEIGHT - stickyTabHeight,
