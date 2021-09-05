@@ -10,6 +10,7 @@ import {normalStyles} from '~/constants/styles';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
 import {RecommendationStackScreen} from './Recommendation';
 import {useGetUnreadNumber} from '~/hooks/talkRooms';
+import {useSetSafeArea} from '~/hooks/appState';
 
 type TabList = {
   Profile: undefined;
@@ -27,6 +28,8 @@ export const Tabs = React.memo(() => {
   // このフックはuseNavigationを使うのでstackに渡されているコンポーネントの中じゃないと使えない
   // stackの中で最初にレンダリングされるのがこのコンポーネントなのでとりあえずここに置く
   useTalkRoomMessagesPushNotification();
+
+  useSetSafeArea();
 
   return (
     <RootTab.Navigator

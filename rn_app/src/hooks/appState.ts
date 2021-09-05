@@ -1,5 +1,6 @@
-import {useCallback} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {RootState} from '~/stores';
 import {useCustomDispatch} from './stores';
@@ -114,5 +115,31 @@ export const useToastLoading = () => {
   return {
     toastLoading,
     setToastLoading,
+  };
+};
+
+export const useSetSafeArea = () => {
+  const {top} = useSafeAreaInsets();
+  const dispatch = useCustomDispatch();
+
+  useEffect(() => {
+    console.log('set');
+    dispatch(setAppState({safeArea: {top}}));
+  }, []); // eslint-disable-line
+};
+
+export const useSafeArea = () => {
+  const dispatch = useCustomDispatch();
+  const top = useSelector((state: RootState) => state.appReducer.safeArea.top);
+  const setSafeArea = useCallback(
+    ({top: _top}: {top: number}) => {
+      dispatch(setAppState({safeArea: {top: _top}}));
+    },
+    [dispatch],
+  );
+
+  return {
+    top,
+    setSafeArea,
   };
 };

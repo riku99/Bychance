@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Avatar} from './Avatar';
 import {TabViewContext} from './index';
 import {Name} from './Name';
 import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
+import {useSafeArea} from '~/hooks/appState';
 
 // アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
@@ -25,7 +25,7 @@ export const List = React.memo(() => {
     navigateToUserPage,
     scrollY,
   } = useContext(TabViewContext);
-  const {top} = useSafeAreaInsets();
+  const {top} = useSafeArea();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {

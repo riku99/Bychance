@@ -7,6 +7,9 @@ type InitialState = {
   displayedMenu: boolean;
   pauseFlashProgress: boolean;
   toastLoading: boolean;
+  safeArea: {
+    top: number;
+  };
 };
 
 const initialState: InitialState = {
@@ -16,6 +19,9 @@ const initialState: InitialState = {
   displayedMenu: false,
   pauseFlashProgress: false,
   toastLoading: false,
+  safeArea: {
+    top: 0,
+  },
 };
 
 const appSlice = createSlice({

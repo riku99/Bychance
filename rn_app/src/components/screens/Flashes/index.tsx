@@ -60,8 +60,8 @@ export const FlashesPage = ({route, navigation}: Props) => {
 
   // 個々の環境によってstatuBarの設定を変更
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      StatusBar.setHidden(!moreDeviceX ? true : false);
+    const unsubscribe = navigation.addListener('transitionEnd', () => {
+      StatusBar.setHidden(!moreDeviceX ? true : false, 'fade');
       StatusBar.setBarStyle('light-content');
     });
 

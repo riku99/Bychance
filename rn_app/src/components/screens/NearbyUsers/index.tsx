@@ -14,7 +14,6 @@ import {
 } from '@react-navigation/material-top-tabs';
 import {SearchBar} from 'react-native-elements';
 import {shallowEqual, useSelector} from 'react-redux';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import FastImage from 'react-native-fast-image';
 
@@ -34,6 +33,7 @@ import {useNearbyUsers} from '~/hooks/nearbyUsers';
 import {selectNotAllViewedUserIds} from '~/stores/flashes';
 import {usePrefetchStamps} from '~/hooks/flashStamps';
 import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
+import {useSafeArea} from '~/hooks/appState';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -87,7 +87,8 @@ export const NearbyUsersScreen = React.memo(() => {
     });
   }, [data]);
 
-  const {top} = useSafeAreaInsets();
+  const {top} = useSafeArea();
+  console.log(top);
 
   const scrollY = useRef(
     new Animated.Value(-SEARCH_TAB_HEIGHT - stickyTabHeight),
