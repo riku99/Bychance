@@ -6,9 +6,12 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-import {StyleSheet, Animated, View} from 'react-native';
+import {StyleSheet, Animated, View, SafeAreaView} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBar,
+} from '@react-navigation/material-top-tabs';
 import {SearchBar} from 'react-native-elements';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -30,7 +33,7 @@ import {
 import {useNearbyUsers} from '~/hooks/nearbyUsers';
 import {selectNotAllViewedUserIds} from '~/stores/flashes';
 import {usePrefetchStamps} from '~/hooks/flashStamps';
-import {SEARCH_TAB_HEIGHT} from './styles';
+import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -88,12 +91,13 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const transformY = scrollY.interpolate({
-    inputRange: [0, SEARCH_TAB_HEIGHT],
-    outputRange: [0, -SEARCH_TAB_HEIGHT],
+    inputRange: [-SEARCH_TAB_HEIGHT - stickyTabHeight, 0],
+    // inputRange: [0, SEARCH_TAB_HEIGHT],
+    outputRange: [0, -SEARCH_TAB_HEIGHT + top],
     extrapolate: 'clamp',
   });
   const opacity = scrollY.interpolate({
-    inputRange: [0, SEARCH_TAB_HEIGHT],
+    inputRange: [-SEARCH_TAB_HEIGHT - stickyTabHeight, -stickyTabHeight],
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
@@ -198,9 +202,6 @@ export const NearbyUsersScreen = React.memo(() => {
     return selectNotAllViewedUserIds(state, ids);
   }, shallowEqual);
 
-  // フラッシュを連続で表示(一人のを全て見たら次のユーザーのものにうつる)するためのデータ
-  // userIdsを返す
-
   const onAvatarPress = useCallback(
     ({userId, type}: {userId: string; type: 'one' | 'sequence'}) => {
       if (type === 'one') {
@@ -257,34 +258,56 @@ export const NearbyUsersScreen = React.memo(() => {
     ],
   );
 
+  const renderTabBar = useCallback(
+    (props: any) => {
+      const y = scrollY.interpolate({
+        inputRange: [-SEARCH_TAB_HEIGHT - stickyTabHeight, -stickyTabHeight],
+        outputRange: [top, -SEARCH_TAB_HEIGHT + top],
+        extrapolate: 'clamp',
+      });
+
+      return (
+        <Animated.View
+          style={[
+            {
+              top: 0,
+              position: 'absolute',
+              width: '100%',
+              zIndex: 1,
+              transform: [{translateY: y}],
+              backgroundColor: 'white',
+            },
+          ]}>
+          <Animated.View style={{opacity}}>
+            <SearchBar
+              placeholder="キーワードを検索"
+              inputContainerStyle={styles.searchInputContainer}
+              containerStyle={styles.searchContainer}
+              platform="default"
+              value={keyword}
+              onChangeText={(text) => {
+                setKeyword(text);
+              }}
+            />
+          </Animated.View>
+          <MaterialTopTabBar {...props} />
+        </Animated.View>
+      );
+    },
+    [scrollY, keyword, top, opacity],
+  );
+
+  scrollY.addListener((v) => console.log(v));
+
   return (
     <View style={[styles.container]}>
-      <View style={{backgroundColor: 'white', height: top}} />
-      <Animated.View
-        style={{
-          ...styles.displayOptionsContainer,
-          transform: [{translateY: transformY}],
-          opacity,
-        }}>
-        <SearchBar
-          placeholder="キーワードを検索"
-          inputContainerStyle={styles.searchInputContainer}
-          containerStyle={styles.searchContainer}
-          platform="default"
-          value={keyword}
-          onChangeText={(text) => {
-            setKeyword(text);
-          }}
-        />
-      </Animated.View>
       <TabViewContext.Provider value={tabViewContextData}>
-        <Animated.View
-          style={{height: '100%', transform: [{translateY: transformY}]}}>
+        <Animated.View style={{height: '100%'}}>
           <Tab.Navigator
+            tabBar={renderTabBar}
             tabBarPosition="top"
             tabBarOptions={{
               activeTintColor: normalStyles.mainColor,
-              style: {marginTop: SEARCH_TAB_HEIGHT},
               labelStyle: {
                 fontSize: 14,
                 fontWeight: '500',
@@ -314,24 +337,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   displayOptionsContainer: {
-    //backgroundColor: 'white',
-    //height: SEARCH_TAB_HEIGHT,
-    // position: 'absolute',
-    // top: 0,
-    // left: 0,
-    // right: 0,
-    // zIndex: 10,
-  },
-  searchContainer: {
     backgroundColor: 'white',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
     height: SEARCH_TAB_HEIGHT,
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     zIndex: 10,
+  },
+  searchContainer: {
+    backgroundColor: 'white',
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    height: SEARCH_TAB_HEIGHT,
   },
   searchInputContainer: {
     width: '90%',
