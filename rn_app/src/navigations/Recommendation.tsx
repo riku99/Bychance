@@ -23,12 +23,8 @@ const Stack = createStackNavigator<RecommendationStackParamList>();
 
 export const RecommendationStackScreen = React.memo(() => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="List"
-        component={RecommendationList}
-        options={{headerTitle: '近くのおすすめ'}}
-      />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="List" component={RecommendationList} />
       <Stack.Screen
         name="Detail"
         component={RecommendationDetail}

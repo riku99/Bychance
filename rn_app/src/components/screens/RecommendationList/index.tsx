@@ -10,7 +10,7 @@ import {
 import {
   RecommendationList as _RecommendationList,
   Recommendation,
-} from 'bychance-components';
+} from 'bychance-components/src';
 import {useNavigation} from '@react-navigation/native';
 
 import {useGetRecommendations} from '~/hooks/recommendations';
@@ -57,6 +57,9 @@ export const RecommendationList = React.memo(() => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          flatListProps={{
+            onScroll: () => console.log('scroll'),
+          }}
         />
       ) : (
         <ScrollView

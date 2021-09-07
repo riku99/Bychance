@@ -67,7 +67,6 @@ export const Tabs = React.memo(() => {
           tabBarIcon: ({color}) => (
             <MIcon name="store" size={24} color={color} />
           ),
-          tabBarLabel: '近くのおすすめ',
         }}
       />
       <RootTab.Screen
