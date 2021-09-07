@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -12,7 +12,7 @@ import {
 import {
   RecommendationList as _RecommendationList,
   Recommendation,
-} from 'bychance-components/src';
+} from 'bychance-components';
 import {useNavigation} from '@react-navigation/native';
 import {SearchBar} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -27,6 +27,18 @@ export const RecommendationList = React.memo(() => {
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<RecommendationsNavigationProp<'List'>>();
   const [tag, setTag] = useState('');
+
+  const filteredListData = useMemo(() => {
+    if (!tag) {
+      return listData;
+    }
+
+    if (tag.slice(0, 1) !== '#') {
+      return [];
+    }
+
+    return listData.filter((l) => l.text.includes(tag));
+  }, [listData, tag]);
 
   useEffect(() => {
     if (result) {
@@ -67,7 +79,7 @@ export const RecommendationList = React.memo(() => {
           value={tag}
           onChangeText={(t) => setTag(t)}
         />
-        {listData && listData.length ? (
+        {filteredListData && filteredListData.length ? (
           <View
             style={{
               height:
@@ -82,9 +94,26 @@ export const RecommendationList = React.memo(() => {
               flatListProps={{}}
             />
           </View>
+        ) : tag.slice(0, 1) !== '#' ? (
+          <View
+            style={{
+              height:
+                height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
+            }}>
+            <Text
+              style={[styles.noText, {alignSelf: 'center', marginTop: '50%'}]}>
+              # から始めて検索してみてください!!
+            </Text>
+          </View>
         ) : (
           <ScrollView
-            contentContainerStyle={styles.noItemContainer}
+            contentContainerStyle={[
+              styles.noItemContainer,
+              {
+                height:
+                  height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
+              },
+            ]}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }>
@@ -110,6 +139,7 @@ const styles = StyleSheet.create({
   },
   noText: {
     color: 'gray',
+    fontSize: 17,
   },
   searchContainer: {
     backgroundColor: 'white',

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import {View, StyleSheet, Alert, StatusBar} from 'react-native';
-import {RecommendationDetail as _RecommendationDetail} from 'bychance-components';
+import {RecommendationDetail as _RecommendationDetail} from 'bychance-components/src';
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
