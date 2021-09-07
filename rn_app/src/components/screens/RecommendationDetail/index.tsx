@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, StyleSheet, Alert, StatusBar} from 'react-native';
 import {RecommendationDetail as _RecommendationDetail} from 'bychance-components';
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
@@ -33,9 +33,16 @@ export const RecommendationDetail = React.memo(() => {
     ]);
   }, [data.id, setListData, hideRecommendation, navigation]);
 
+  useEffect(() => {
+    StatusBar.setBarStyle('light-content');
+
+    return () => {
+      StatusBar.setBarStyle('default');
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
       <_RecommendationDetail
         data={data}
         BottomButton={() => (

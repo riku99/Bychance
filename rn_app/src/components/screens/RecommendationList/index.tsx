@@ -21,114 +21,6 @@ import {useGetRecommendations} from '~/hooks/recommendations';
 import {RecommendationsNavigationProp} from '~/navigations/Recommendation';
 import {BOTTOM_TAB_HEIGHT} from '~/constants/bottomTabBar';
 
-const l = [
-  {
-    address: '千葉県習志野市秋津１丁目２−２',
-    avatar:
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/rClientProfileImage/ZG093v7uqIX2KKJjvv0bwzpG2iUgIkkL%2BWrY1wfCwwU%3D.webp',
-    coupon: true,
-    id: 3,
-    images: [
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/O3fDF326Nbc2jeiexs6EarjN4bed5NAMqFIgH1tvOgI%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/yEZsSAEQKfZzJoSm7DeZg6FR7OurK90SKmy3fJsHjrU%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/9pku03LwgJfi0hN7IxcYCJM1okytFF4VwwBQaVHZtmE%3D.webp',
-    ],
-    instagram: 'rik0999',
-    lat: 35.67403513326948,
-    lng: 140.012357054417,
-    name: 'Kuroカフェ',
-    text:
-      '最近できた美味しいラテが自慢のカフェです!️最近暑いのでアイスで飲んでいかれる方が多いです☺️当店のオススメは抹茶ラテのアイスとオリジナルドーナッツの組み合わせです!!ぜひ立ち寄ってみてください😊この画面を表示していただいた場合お一人様100円引きさせて頂きます。なお、お1人様1回限りとさせていただきます。',
-    title: 'オシャレなカフェでまったりしませんか??',
-    twitter: null,
-    url: 'https:',
-  },
-  {
-    address: '千葉県習志野市秋津１丁目２−２',
-    avatar:
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/rClientProfileImage/ZG093v7uqIX2KKJjvv0bwzpG2iUgIkkL%2BWrY1wfCwwU%3D.webp',
-    coupon: true,
-    id: 4,
-    images: [
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/O3fDF326Nbc2jeiexs6EarjN4bed5NAMqFIgH1tvOgI%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/yEZsSAEQKfZzJoSm7DeZg6FR7OurK90SKmy3fJsHjrU%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/9pku03LwgJfi0hN7IxcYCJM1okytFF4VwwBQaVHZtmE%3D.webp',
-    ],
-    instagram: 'rik0999',
-    lat: 35.67403513326948,
-    lng: 140.012357054417,
-    name: 'Kuroカフェ',
-    text:
-      '最近できた美味しいラテが自慢のカフェです!️最近暑いのでアイスで飲んでいかれる方が多いです☺️当店のオススメは抹茶ラテのアイスとオリジナルドーナッツの組み合わせです!!ぜひ立ち寄ってみてください😊この画面を表示していただいた場合お一人様100円引きさせて頂きます。なお、お1人様1回限りとさせていただきます。',
-    title: 'オシャレなカフェでまったりしませんか??',
-    twitter: null,
-    url: 'https:',
-  },
-  {
-    address: '千葉県習志野市秋津１丁目２−２',
-    avatar:
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/rClientProfileImage/ZG093v7uqIX2KKJjvv0bwzpG2iUgIkkL%2BWrY1wfCwwU%3D.webp',
-    coupon: true,
-    id: 5,
-    images: [
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/O3fDF326Nbc2jeiexs6EarjN4bed5NAMqFIgH1tvOgI%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/yEZsSAEQKfZzJoSm7DeZg6FR7OurK90SKmy3fJsHjrU%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/9pku03LwgJfi0hN7IxcYCJM1okytFF4VwwBQaVHZtmE%3D.webp',
-    ],
-    instagram: 'rik0999',
-    lat: 35.67403513326948,
-    lng: 140.012357054417,
-    name: 'Kuroカフェ',
-    text:
-      '最近できた美味しいラテが自慢のカフェです!️最近暑いのでアイスで飲んでいかれる方が多いです☺️当店のオススメは抹茶ラテのアイスとオリジナルドーナッツの組み合わせです!!ぜひ立ち寄ってみてください😊この画面を表示していただいた場合お一人様100円引きさせて頂きます。なお、お1人様1回限りとさせていただきます。',
-    title: 'オシャレなカフェでまったりしませんか??',
-    twitter: null,
-    url: 'https:',
-  },
-  {
-    address: '千葉県習志野市秋津１丁目２−２',
-    avatar:
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/rClientProfileImage/ZG093v7uqIX2KKJjvv0bwzpG2iUgIkkL%2BWrY1wfCwwU%3D.webp',
-    coupon: true,
-    id: 6,
-    images: [
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/O3fDF326Nbc2jeiexs6EarjN4bed5NAMqFIgH1tvOgI%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/yEZsSAEQKfZzJoSm7DeZg6FR7OurK90SKmy3fJsHjrU%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/9pku03LwgJfi0hN7IxcYCJM1okytFF4VwwBQaVHZtmE%3D.webp',
-    ],
-    instagram: 'rik0999',
-    lat: 35.67403513326948,
-    lng: 140.012357054417,
-    name: 'Kuroカフェ',
-    text:
-      '最近できた美味しいラテが自慢のカフェです!️最近暑いのでアイスで飲んでいかれる方が多いです☺️当店のオススメは抹茶ラテのアイスとオリジナルドーナッツの組み合わせです!!ぜひ立ち寄ってみてください😊この画面を表示していただいた場合お一人様100円引きさせて頂きます。なお、お1人様1回限りとさせていただきます。',
-    title: 'オシャレなカフェでまったりしませんか??',
-    twitter: null,
-    url: 'https:',
-  },
-  {
-    address: '千葉県習志野市秋津１丁目２−２',
-    avatar:
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/rClientProfileImage/ZG093v7uqIX2KKJjvv0bwzpG2iUgIkkL%2BWrY1wfCwwU%3D.webp',
-    coupon: true,
-    id: 7,
-    images: [
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/O3fDF326Nbc2jeiexs6EarjN4bed5NAMqFIgH1tvOgI%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/yEZsSAEQKfZzJoSm7DeZg6FR7OurK90SKmy3fJsHjrU%3D.webp',
-      'https://d3kod1lyh2qk33.cloudfront.net/23140a26-713b-4c97-9d0e-8ab98927fec2/recommendation/9pku03LwgJfi0hN7IxcYCJM1okytFF4VwwBQaVHZtmE%3D.webp',
-    ],
-    instagram: 'rik0999',
-    lat: 35.67403513326948,
-    lng: 140.012357054417,
-    name: 'Kuroカフェ',
-    text:
-      '最近できた美味しいラテが自慢のカフェです!️最近暑いのでアイスで飲んでいかれる方が多いです☺️当店のオススメは抹茶ラテのアイスとオリジナルドーナッツの組み合わせです!!ぜひ立ち寄ってみてください😊この画面を表示していただいた場合お一人様100円引きさせて頂きます。なお、お1人様1回限りとさせていただきます。',
-    title: 'オシャレなカフェでまったりしませんか??',
-    twitter: null,
-    url: 'https:',
-  },
-];
-
 export const RecommendationList = React.memo(() => {
   const {result, isLoading, fetchRecommendations} = useGetRecommendations();
   const [listData, setListData] = useState<Recommendation[]>([]);
@@ -182,7 +74,7 @@ export const RecommendationList = React.memo(() => {
                 height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
             }}>
             <_RecommendationList
-              listData={l}
+              listData={listData}
               onItemPress={(data) => onPress(data)}
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
