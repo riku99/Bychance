@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert, StatusBar} from 'react-native';
 import {RecommendationDetail as _RecommendationDetail} from 'bychance-components';
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
@@ -35,6 +35,7 @@ export const RecommendationDetail = React.memo(() => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
       <_RecommendationDetail
         data={data}
         BottomButton={() => (
