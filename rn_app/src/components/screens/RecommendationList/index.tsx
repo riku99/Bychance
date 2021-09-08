@@ -20,6 +20,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useGetRecommendations} from '~/hooks/recommendations';
 import {RecommendationsNavigationProp} from '~/navigations/Recommendation';
 import {BOTTOM_TAB_HEIGHT} from '~/constants/bottomTabBar';
+import {SkeltonList} from '~/components/screens/RecommendationDetail/Skelton';
 
 export const RecommendationList = React.memo(() => {
   const {result, isLoading, fetchRecommendations} = useGetRecommendations();
@@ -64,10 +65,6 @@ export const RecommendationList = React.memo(() => {
 
   const {bottom, top} = useSafeAreaInsets();
 
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-
   return (
     <View style={styles.container}>
       <SafeAreaView>
@@ -79,7 +76,9 @@ export const RecommendationList = React.memo(() => {
           value={tag}
           onChangeText={(t) => setTag(t)}
         />
-        {filteredListData && filteredListData.length ? (
+        {isLoading ? (
+          <SkeltonList style={styles.skeltonContainer} loop={2} />
+        ) : filteredListData && filteredListData.length ? (
           <View
             style={{
               height:
@@ -152,5 +151,9 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: '#f2f2f2',
     alignSelf: 'center',
+  },
+  skeltonContainer: {
+    paddingHorizontal: 30,
+    marginTop: 10,
   },
 });
