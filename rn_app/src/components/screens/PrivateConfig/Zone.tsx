@@ -11,11 +11,9 @@ import {
 } from 'react-native';
 import {Button, Divider} from 'react-native-elements';
 import MapView, {MapEvent, Marker} from 'react-native-maps';
-import {useSelector} from 'react-redux';
 import Geocoder from 'react-native-geocoding';
 import {Modalize} from 'react-native-modalize';
 
-import {RootState} from '~/stores';
 import {credentials} from '~/credentials';
 import {normalStyles} from '~/constants/styles';
 import {formatAddress} from '~/utils';
@@ -23,6 +21,7 @@ import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {usePrivateZone} from '~/hooks/privateZone';
 import {PrivateZone} from '~/types';
 import {commonStyles} from './common';
+import {useMyLng, useMyLat} from '~/hooks/users';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
@@ -51,8 +50,8 @@ export const Zone = React.memo(() => {
     }
   }, []);
 
-  const lat = useSelector((state: RootState) => state.userReducer.user!.lat);
-  const lng = useSelector((state: RootState) => state.userReducer.user!.lng);
+  const lat = useMyLat();
+  const lng = useMyLng();
 
   const region = useMemo(() => {
     if (lat && lng) {

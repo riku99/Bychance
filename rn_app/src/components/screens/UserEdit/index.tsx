@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import {shallowEqual, useSelector} from 'react-redux';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -15,7 +14,6 @@ import {MenuView} from '@react-native-menu/menu';
 import {RNToasty} from 'react-native-toasty';
 
 import {RootNavigationProp} from '~/navigations/Root';
-import {RootState} from '../../../stores/index';
 import {UserEditNavigationProp} from '../../../navigations/types';
 import {normalStyles} from '~/constants/styles';
 import {SnsList} from '~/types';
@@ -53,23 +51,6 @@ const EditItem = ({
 };
 
 export const UserEditPage = () => {
-  const user = useSelector((state: RootState) => {
-    const {instagram, twitter, youtube, tiktok} = state.userReducer.user!;
-    return {
-      id: state.userReducer.user!.id,
-      name: state.userReducer.user!.name,
-      introduce: state.userReducer.user!.introduce,
-      avatar: state.userReducer.user!.avatar,
-      message: state.userReducer.user!.statusMessage,
-      backGroundItem: state.userReducer.user!.backGroundItem,
-      backGroundItemType: state.userReducer.user!.backGroundItemType,
-      instagram,
-      twitter,
-      tiktok,
-      youtube,
-    };
-  }, shallowEqual);
-
   const [name, setName] = useState(useMyName());
 
   const _introduce = useMyIntroduce();
@@ -112,22 +93,22 @@ export const UserEditPage = () => {
     switch (snsModalType) {
       case 'instagram':
         return {
-          text: user.instagram,
+          text: instagram,
           setContents: setInstagram,
         };
       case 'twitter':
         return {
-          text: user.twitter,
+          text: twitter,
           setContents: setTwitter,
         };
       case 'youtube':
         return {
-          text: user.youtube,
+          text: youtube,
           setContents: setYoutube,
         };
       case 'tiktok':
         return {
-          text: user.tiktok,
+          text: tiktok,
           setContents: setTiktok,
         };
       default:
@@ -135,7 +116,7 @@ export const UserEditPage = () => {
           text: null,
         };
     }
-  }, [snsModalType, user.instagram, user.twitter, user.youtube, user.tiktok]);
+  }, [snsModalType, instagram, twitter, youtube, tiktok]);
 
   const isFocused = useIsFocused();
 

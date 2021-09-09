@@ -24,6 +24,9 @@ import {
 import {useRefreshUserPosts} from './posts';
 import {useRefreshUserFlashes} from './flashes';
 
+export const useUser = () =>
+  useSelector((state: RootState) => state.userReducer, shallowEqual);
+
 export const useMyId = () =>
   useSelector((state: RootState) => state.userReducer.id);
 
