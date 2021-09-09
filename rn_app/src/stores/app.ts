@@ -8,6 +8,7 @@ type InitialState = {
   pauseFlashProgress: boolean;
   toastLoading: boolean;
   safeArea: {
+    // useSafeAreaInsetsでtopは取れるが、StatuBarがhiddenになると0になってしまう。StatusBarがhiddenになっても値が欲しい場合あるのでstoreで保存
     top: number;
   };
 };

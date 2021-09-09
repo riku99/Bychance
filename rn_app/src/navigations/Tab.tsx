@@ -29,6 +29,7 @@ export const Tabs = React.memo(() => {
   // stackの中で最初にレンダリングされるのがこのコンポーネントなのでとりあえずここに置く
   useTalkRoomMessagesPushNotification();
 
+  // SafeAreaInsetesContext下にあるコンポーネントでしかこのフックは使えないが、ReactNavigationによりレンダリングされているのでここだと使用可能
   useSetSafeArea();
 
   return (

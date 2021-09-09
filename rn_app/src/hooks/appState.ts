@@ -123,7 +123,6 @@ export const useSetSafeArea = () => {
   const dispatch = useCustomDispatch();
 
   useEffect(() => {
-    console.log('set');
     dispatch(setAppState({safeArea: {top}}));
   }, []); // eslint-disable-line
 };

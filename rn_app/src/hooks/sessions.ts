@@ -70,7 +70,7 @@ export const useSessionloginProccess = () => {
 };
 
 export const useLineLogin = () => {
-  const {addBearer} = useApikit();
+  const {addBearer, dispatch} = useApikit();
 
   const lineLogin = useCallback(async () => {
     try {
@@ -84,9 +84,11 @@ export const useLineLogin = () => {
       await axios.post(`${baseUrl}/nonce`, {nonce});
 
       try {
-        const response = await axios.post<
-          SuccessfullLoginData & {accessToken: string}
-        >(`${baseUrl}/sessions/lineLogin`, {}, addBearer(idToken as string));
+        const response = await axios.post<LoginData & {accessToken: string}>(
+          `${baseUrl}/sessions/lineLogin`,
+          {},
+          addBearer(idToken as string),
+        );
 
         // 成功したらキーチェーンにcredentialsを保存
         await Keychain.resetGenericPassword();
@@ -95,9 +97,28 @@ export const useLineLogin = () => {
           response.data.accessToken,
         );
 
-        const {accessToken, ...restData} = response.data; // eslint-disable-line
+        const {user, posts, flashes} = response.data;
+        const {
+          display,
+          videoEditDescription,
+          showReceiveMessage,
+          talkRoomMessageReceipt,
+          intro,
+          ...storedUser
+        } = user;
+        const settings = {
+          display,
+          videoEditDescription,
+          talkRoomMessageReceipt,
+          showReceiveMessage,
+          intro,
+        };
 
-        // loginDispatch(restData);
+        dispatch(setUser(storedUser));
+        dispatch(setPosts(posts));
+        dispatch(setFlashes(flashes));
+        dispatch(setSetitngs(settings));
+        dispatch(setLogin(true));
       } catch (e) {
         Alert.alert(
           'エラーが発生しました。',
@@ -109,7 +130,7 @@ export const useLineLogin = () => {
       // if (e.message === 'User cancelled or interrupted the login process.') {
       // }
     }
-  }, [addBearer]);
+  }, [addBearer, dispatch]);
 
   return {
     lineLogin,
