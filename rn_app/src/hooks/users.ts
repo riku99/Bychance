@@ -6,10 +6,13 @@ import useSWR from 'swr';
 
 import {RootState} from '~/stores/index';
 import {useApikit} from './apikit';
-import {User} from '~/types/users';
 import {baseUrl} from '~/constants/url';
-import {updateProfile, setLocation, updateUser} from '~/stores/user';
-import {UserPageInfo, RefreshMyDataResponse} from '~/types/response/users';
+import {setLocation, updateUser} from '~/stores/user';
+import {
+  UserPageInfo,
+  RefreshMyDataResponse,
+  UpdateProfile,
+} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes, selectFlashesByUserId} from '~/stores/flashes';
 import {
@@ -21,34 +24,27 @@ import {
 import {useRefreshUserPosts} from './posts';
 import {useRefreshUserFlashes} from './flashes';
 
-export const useSelectTamporarilySavedUserEditData = () => {
-  const savedEditData = useSelector((state: RootState) => {
-    return state.userReducer.temporarilySavedData;
-  }, shallowEqual);
-  return savedEditData;
-};
-
 export const useMyId = () =>
-  useSelector((state: RootState) => state.userReducer.user!.id);
+  useSelector((state: RootState) => state.userReducer.id);
 
 export const useMyName = () =>
-  useSelector((state: RootState) => state.userReducer.user!.name);
+  useSelector((state: RootState) => state.userReducer.name);
 
 export const useMyAvatar = () =>
-  useSelector((state: RootState) => state.userReducer.user!.avatar);
+  useSelector((state: RootState) => state.userReducer.avatar);
 
 export const useMyIntroduce = () =>
-  useSelector((state: RootState) => state.userReducer.user!.introduce);
+  useSelector((state: RootState) => state.userReducer.introduce);
 
 export const useMyBackGroundItem = () =>
-  useSelector((state: RootState) => state.userReducer.user!.backGroundItem);
+  useSelector((state: RootState) => state.userReducer.backGroundItem);
 
 export const useMyBackGroundItemType = () =>
-  useSelector((state: RootState) => state.userReducer.user!.backGroundItemType);
+  useSelector((state: RootState) => state.userReducer.backGroundItemType);
 
 export const useMySNSData = () =>
   useSelector((state: RootState) => {
-    const {instagram, twitter, youtube, tiktok} = state.userReducer.user!;
+    const {instagram, twitter, youtube, tiktok} = state.userReducer;
     return {
       instagram,
       twitter,
@@ -58,7 +54,7 @@ export const useMySNSData = () =>
   }, shallowEqual);
 
 export const useMyStatusMessage = () =>
-  useSelector((state: RootState) => state.userReducer.user?.statusMessage);
+  useSelector((state: RootState) => state.userReducer.statusMessage);
 
 type EditArg = {
   name: string;
@@ -76,21 +72,6 @@ type EditArg = {
   youtube: string | null;
   tiktok: string | null;
 };
-
-export type EditProfilePayload = Pick<
-  User,
-  | 'id'
-  | 'name'
-  | 'introduce'
-  | 'avatar'
-  | 'statusMessage'
-  | 'backGroundItem'
-  | 'backGroundItemType'
-  | 'instagram'
-  | 'twitter'
-  | 'youtube'
-  | 'tiktok'
->;
 
 export const useEditProfile = () => {
   const {
@@ -125,7 +106,7 @@ export const useEditProfile = () => {
       const credentials = await checkKeychain();
 
       try {
-        const response = await axios.patch<EditProfilePayload>(
+        const response = await axios.patch<UpdateProfile>(
           `${baseUrl}/users?id=${credentials?.id}`,
           {
             name,
@@ -145,7 +126,8 @@ export const useEditProfile = () => {
           },
           addBearer(credentials?.token),
         );
-        dispatch(updateProfile(response.data));
+
+        dispatch(updateUser(response.data));
         toast?.show('更新しました', {type: 'success'});
       } catch (e) {
         setIsLoaidng(false);

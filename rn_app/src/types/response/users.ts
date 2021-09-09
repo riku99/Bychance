@@ -63,3 +63,17 @@ export type RefreshMyDataResponse = {
     viewed: {userId: string}[];
   }[];
 };
+
+export type UpdateProfile = {
+  id: string;
+  name: string;
+  avatar: string | null;
+  introduce: string | null;
+  statusMessage: string | null;
+  backGroundItem: string | null;
+  backGroundItemType: 'image' | 'video' | null | null;
+  instagram: string | null;
+  twitter: string | null;
+  youtube: string | null;
+  tiktok: string | null;
+};

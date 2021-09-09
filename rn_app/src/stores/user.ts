@@ -1,7 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {EditProfilePayload} from '~/hooks/users';
-
 export type User = {
   id: string;
   name: string;
@@ -18,72 +16,34 @@ export type User = {
   tiktok: string | null;
 };
 
-export type UserState = {
-  user: User | null;
-  temporarilySavedData?: {
-    name?: string;
-    introduce?: string;
-    statusMessage?: string;
-    instagram?: string | null;
-    twitter?: string | null;
-    youtube?: string | null;
-    tiktok?: string | null;
-  };
-};
-
-const initialState: UserState = {
-  user: null,
+const initialState: User = {
+  id: '',
+  name: '',
+  avatar: null,
+  introduce: '',
+  statusMessage: '',
+  lat: null,
+  lng: null,
+  backGroundItem: null,
+  backGroundItemType: null,
+  instagram: null,
+  twitter: null,
+  youtube: null,
+  tiktok: null,
 };
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: initialState,
+  initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      return {
-        ...state,
-        user: action.payload,
-      };
+      return action.payload;
     },
     resetUser: () => initialState,
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       return {
         ...state,
-        user: {
-          ...state.user!,
-          ...action.payload,
-        },
-      };
-    },
-    updateProfile: (state, action: PayloadAction<EditProfilePayload>) => {
-      const {
-        name,
-        introduce,
-        avatar,
-        statusMessage,
-        backGroundItem,
-        backGroundItemType,
-        instagram,
-        twitter,
-        youtube,
-        tiktok,
-      } = action.payload;
-
-      return {
-        ...state,
-        user: {
-          ...state.user!,
-          name,
-          introduce,
-          avatar,
-          statusMessage,
-          backGroundItemType,
-          backGroundItem,
-          instagram,
-          twitter,
-          youtube,
-          tiktok,
-        },
+        ...action.payload,
       };
     },
     setLocation: (
@@ -91,103 +51,18 @@ const userSlice = createSlice({
       actoin: PayloadAction<{lat: number | null; lng: number | null}>,
     ) => ({
       ...state,
-      user: {
-        ...state.user!,
-        lat: actoin.payload.lat,
-        lng: actoin.payload.lng,
-      },
+      lat: actoin.payload.lat,
+      lng: actoin.payload.lng,
     }),
-    saveEditData: (
-      state,
-      action: PayloadAction<UserState['temporarilySavedData']>,
-    ) => {
-      const currentTemporarilySavedData = state.temporarilySavedData;
-      if (action.payload?.name) {
-        return {
-          ...state,
-          temporarilySavedData: {
-            ...state.temporarilySavedData,
-            name: action.payload.name,
-          },
-        };
-      }
-      if (action.payload?.introduce || action.payload?.introduce === '') {
-        return {
-          ...state,
-          temporarilySavedData: {
-            ...state.temporarilySavedData,
-            introduce: action.payload.introduce,
-          },
-        };
-      }
-      if (
-        action.payload?.statusMessage ||
-        action.payload?.statusMessage === ''
-      ) {
-        return {
-          ...state,
-          temporarilySavedData: {
-            ...state.temporarilySavedData,
-            statusMessage: action.payload.statusMessage,
-          },
-        };
-      }
-      if (action.payload?.instagram || action.payload?.instagram === '') {
-        const {instagram} = action.payload;
-        return {
-          ...state,
-          temporarilySavedData: {
-            ...currentTemporarilySavedData,
-            instagram,
-          },
-        };
-      }
-      if (action.payload?.twitter || action.payload?.twitter === '') {
-        const {twitter} = action.payload;
-        return {
-          ...state,
-          temporarilySavedData: {
-            ...currentTemporarilySavedData,
-            twitter,
-          },
-        };
-      }
-      if (action.payload?.youtube || action.payload?.youtube === '') {
-        const {youtube} = action.payload;
-        return {
-          ...state,
-          temporarilySavedData: {
-            ...currentTemporarilySavedData,
-            youtube,
-          },
-        };
-      }
-      if (action.payload?.tiktok || action.payload?.tiktok === '') {
-        const {tiktok} = action.payload;
-        return {
-          ...state,
-          temporarilySavedData: {
-            ...currentTemporarilySavedData,
-            tiktok,
-          },
-        };
-      }
-    },
-    resetEditData: (state) => ({
-      ...state,
-      temporarilySavedData: undefined,
-    }),
+    // updateProfile: (state, action: PayloadAction<User>) => {
+    //   return {
+    //     ...state,
+    //     ...action.payload,
+    //   };
+    // },
   },
 });
 
-export const {
-  saveEditData,
-  resetEditData,
-  setUser,
-  updateProfile,
-  resetUser,
-  setLocation,
-  updateUser,
-} = userSlice.actions;
+export const {setUser, resetUser, setLocation, updateUser} = userSlice.actions;
 
 export const userReducer = userSlice.reducer;
