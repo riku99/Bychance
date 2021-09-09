@@ -56,6 +56,12 @@ export const useMySNSData = () =>
 export const useMyStatusMessage = () =>
   useSelector((state: RootState) => state.userReducer.statusMessage);
 
+export const useMyLat = () =>
+  useSelector((state: RootState) => state.userReducer.lat);
+
+export const useMyLng = () =>
+  useSelector((state: RootState) => state.userReducer.lng);
+
 type EditArg = {
   name: string;
   introduce: string;

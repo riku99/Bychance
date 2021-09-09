@@ -34,6 +34,7 @@ import {selectNotAllViewedUserIds} from '~/stores/flashes';
 import {usePrefetchStamps} from '~/hooks/flashStamps';
 import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
 import {useSafeArea} from '~/hooks/appState';
+import {useMyLat, useMyLng} from '~/hooks/users';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -88,7 +89,6 @@ export const NearbyUsersScreen = React.memo(() => {
   }, [data]);
 
   const {top} = useSafeArea();
-  console.log(top);
 
   const scrollY = useRef(
     new Animated.Value(-SEARCH_TAB_HEIGHT - stickyTabHeight),
@@ -99,14 +99,8 @@ export const NearbyUsersScreen = React.memo(() => {
     extrapolate: 'clamp',
   });
 
-  const lat = useSelector((state: RootState) => {
-    const _lat = state.userReducer.user!.lat;
-    return _lat;
-  }, shallowEqual);
-  const lng = useSelector((state: RootState) => {
-    const _lng = state.userReducer.user!.lng;
-    return _lng;
-  }, shallowEqual);
+  const lat = useMyLat();
+  const lng = useMyLng();
 
   const [keyword, setKeyword] = useState('');
   const filteredUsers = useMemo(() => {

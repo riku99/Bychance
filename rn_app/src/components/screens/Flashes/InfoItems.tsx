@@ -23,14 +23,14 @@ export const InfoItems = ({user, timestamp}: Props) => {
   const myId = useMyId();
   const name = useSelector((state: RootState) => {
     if (user.id === myId) {
-      return state.userReducer.user!.name;
+      return state.userReducer.name;
     } else {
       return selectUserName(state, user.id);
     }
   });
   const avatar = useSelector((state: RootState) => {
     if (user.id === myId) {
-      return state.userReducer.user!.avatar;
+      return state.userReducer.avatar;
     } else {
       return selectUserAvatar(state, user.id);
     }
