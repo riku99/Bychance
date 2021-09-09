@@ -3,18 +3,17 @@ import {Alert} from 'react-native';
 import {default as axios} from 'axios';
 import {useApikit} from './apikit';
 import {Recommendations} from '~/types/recommendations';
-import {useSelector} from 'react-redux';
 import {Recommendation} from 'bychance-components';
 
 import {baseUrl} from '~/constants/url';
-import {RootState} from '~/stores';
 import {useToastLoading} from './appState';
+import {useMyLat, useMyLng} from '~/hooks/users';
 
 export const useGetRecommendations = () => {
   const {checkKeychain, addBearer, handleApiError} = useApikit();
 
-  const lat = useSelector((state: RootState) => state.userReducer.user!.lat);
-  const lng = useSelector((state: RootState) => state.userReducer.user!.lng);
+  const lat = useMyLat();
+  const lng = useMyLng();
 
   const [result, setResult] = useState<Recommendation[]>();
   const [isLoading, setIsLoading] = useState(true);

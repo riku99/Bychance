@@ -1,14 +1,10 @@
 import React, {useRef, useEffect, useMemo, useState} from 'react';
 import {Dimensions, StyleSheet, View, Text, TextInput} from 'react-native';
-import {useSelector} from 'react-redux';
 import {Modalize} from 'react-native-modalize';
 import {Button} from 'react-native-elements';
 
 import {SnsList} from '~/types';
 import {normalStyles} from '~/constants/styles';
-import {useCustomDispatch} from '~/hooks/stores';
-import {saveEditData} from '~/stores/user';
-import {RootState} from '~/stores';
 import {X_HEIGHT} from '~/constants/device';
 
 type Props = {
@@ -22,14 +18,7 @@ export const SnsModal = React.memo(
   ({show, onClose, text, setContents}: Props) => {
     const modalRef = useRef<Modalize>(null);
     const inputRef = useRef<TextInput>(null);
-    const temporaryData = useSelector((state: RootState) => {
-      if (state.userReducer.temporarilySavedData) {
-        return state.userReducer.temporarilySavedData[show];
-      }
-    });
-    const [inputText, setInputText] = useState<string | null>(
-      temporaryData ? temporaryData : text,
-    );
+    const [inputText, setInputText] = useState<string | null>(text);
 
     useEffect(() => {
       if (show && modalRef.current) {
@@ -62,18 +51,11 @@ export const SnsModal = React.memo(
       }
     }, [show]);
 
-    const dispatch = useCustomDispatch();
-
     const onEndButtonPress = () => {
       if (modalRef.current) {
         modalRef.current.close();
         if (setContents) {
           setContents(inputText ? inputText : null);
-          dispatch(
-            saveEditData({
-              [show]: inputText,
-            }),
-          );
         }
       }
     };
