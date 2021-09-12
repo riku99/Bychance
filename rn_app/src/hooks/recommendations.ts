@@ -71,9 +71,12 @@ export const useGetRecommendations = () => {
   }, [checkKeychain, addBearer, handleApiError, lat, lng]);
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchRecommendations();
-    setIsLoading(false);
+    const _fetch = async () => {
+      setIsLoading(true);
+      await fetchRecommendations();
+      setIsLoading(false);
+    };
+    _fetch();
   }, [fetchRecommendations]);
 
   return {
