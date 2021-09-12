@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Tooltip} from 'react-native-elements/dist/tooltip/Tooltip';
@@ -67,7 +67,17 @@ export const Tabs = React.memo(() => {
                 <Tooltip
                   // @ts-ignore
                   ref={tooltipRef}
-                  popover={<Text>OK</Text>}>
+                  width={width * 0.9}
+                  height={50}
+                  backgroundColor="#404040"
+                  pointerColor="#404040"
+                  popover={
+                    <Text style={{color: 'white'}}>
+                      他のユーザーに自分が表示されている状態の時は、
+                      {'\n'}
+                      ここに自身のアイコンが表示されます
+                    </Text>
+                  }>
                   <UserAvatar size={22} image={avatarUrl} />
                 </Tooltip>
               </View>
@@ -120,6 +130,8 @@ export const Tabs = React.memo(() => {
     </RootTab.Navigator>
   );
 });
+
+const {width} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   avatarBadgeContainer: {
