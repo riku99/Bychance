@@ -1,4 +1,5 @@
 import React from 'react';
+import {View, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -11,6 +12,8 @@ import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
 import {RecommendationStackScreen} from './Recommendation';
 import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
+import {UserAvatar} from '~/components/utils/Avatar';
+import {useMyAvatar} from '~/hooks/users';
 
 type TabList = {
   Profile: undefined;
@@ -32,6 +35,8 @@ export const Tabs = React.memo(() => {
   // SafeAreaInsetesContext下にあるコンポーネントでしかこのフックは使えないが、ReactNavigationによりレンダリングされているのでここだと使用可能
   useSetSafeArea();
 
+  const avatarUrl = useMyAvatar();
+
   return (
     <RootTab.Navigator
       initialRouteName="Profile"
@@ -45,7 +50,13 @@ export const Tabs = React.memo(() => {
         component={NearbyUsersStackScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <MIcon name="search" size={24} color={color} />
+            // <MIcon name="search" size={24} color={color} />
+            <View>
+              <MIcon name="search" size={24} color={color} />
+              <View style={styles.avatarBadgeContainer}>
+                <UserAvatar size={22} image={avatarUrl} />
+              </View>
+            </View>
           ),
           tabBarLabel: '見つける',
         }}
@@ -93,4 +104,12 @@ export const Tabs = React.memo(() => {
       />
     </RootTab.Navigator>
   );
+});
+
+const styles = StyleSheet.create({
+  avatarBadgeContainer: {
+    position: 'absolute',
+    left: 16,
+    top: -5,
+  },
 });
