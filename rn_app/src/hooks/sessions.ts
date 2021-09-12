@@ -8,7 +8,6 @@ import * as Keychain from 'react-native-keychain';
 import {RootState} from '~/stores/index';
 import {baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
-import {SuccessfullLoginData} from '~/types/login';
 import {useResetDispatch} from './stores';
 import {LoginData} from '~/types/response/session';
 import {setUser} from '~/stores/user';
@@ -138,18 +137,40 @@ export const useLineLogin = () => {
 };
 
 export const useSampleLogin = () => {
+  const {dispatch} = useApikit();
   const sampleLogin = useCallback(async () => {
-    const response = await axios.get<
-      SuccessfullLoginData & {accessToken: string}
-    >(`${baseUrl}/sampleLogin`);
+    const response = await axios.get<LoginData & {accessToken: string}>(
+      `${baseUrl}/sampleLogin`,
+    );
     await Keychain.resetGenericPassword();
     await Keychain.setGenericPassword(
-      response.data.user.id,
+      String(response.data.user.id),
       response.data.accessToken,
     );
 
-    const {accessToken, ...data} = response.data; // eslint-disable-line
-  }, []);
+    const {user, posts, flashes} = response.data;
+    const {
+      display,
+      videoEditDescription,
+      showReceiveMessage,
+      talkRoomMessageReceipt,
+      intro,
+      ...storedUser
+    } = user;
+    const settings = {
+      display,
+      videoEditDescription,
+      talkRoomMessageReceipt,
+      showReceiveMessage,
+      intro,
+    };
+
+    dispatch(setUser(storedUser));
+    dispatch(setPosts(posts));
+    dispatch(setFlashes(flashes));
+    dispatch(setSetitngs(settings));
+    dispatch(setLogin(true));
+  }, [dispatch]);
 
   return {
     sampleLogin,

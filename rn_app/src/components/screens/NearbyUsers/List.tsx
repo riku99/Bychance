@@ -99,11 +99,12 @@ export const List = React.memo(() => {
                 onRefresh={() => onRefresh()}
               />
             }
-            contentContainerStyle={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-            }}>
+            contentOffset={{
+              y: -SEARCH_TAB_HEIGHT - stickyTabHeight,
+              x: 0,
+            }}
+            contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
+            contentContainerStyle={[styles.noUserScroll, {marginTop: top}]}>
             <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
           </ScrollView>
         </View>
@@ -127,5 +128,10 @@ const styles = StyleSheet.create({
   noUserText: {
     fontSize: 18,
     color: '#999999',
+    marginTop: '50%',
+  },
+  noUserScroll: {
+    alignItems: 'center',
+    flex: 1,
   },
 });

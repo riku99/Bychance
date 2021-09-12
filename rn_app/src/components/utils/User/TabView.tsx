@@ -128,6 +128,7 @@ export const UserTabView = React.memo(
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
               paddingTopHeight={paddingTopHeight}
+              currentRouteTabKey={tabRoute[tabIndex].key}
               tabViewContainerMinHeight={tabViewContainerMinHeight}>
               <UserInformationRouteInTabView />
             </ScrollViewTabScene>

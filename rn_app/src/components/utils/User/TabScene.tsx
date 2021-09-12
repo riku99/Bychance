@@ -110,6 +110,7 @@ type ScrollViewTabSceneProps = {
   onMomentumScrollEnd: () => void;
   paddingTopHeight: number;
   tabViewContainerMinHeight: number;
+  currentRouteTabKey: 'Posts' | 'UserInformation';
 };
 
 export const ScrollViewTabScene = React.memo(
@@ -121,6 +122,7 @@ export const ScrollViewTabScene = React.memo(
     onMomentumScrollEnd,
     paddingTopHeight,
     tabViewContainerMinHeight,
+    currentRouteTabKey,
   }: ScrollViewTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
@@ -139,12 +141,14 @@ export const ScrollViewTabScene = React.memo(
           minHeight: tabViewContainerMinHeight,
         }}
         showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {
-            useNativeDriver: true,
-          },
-        )}
+        onScroll={
+          // このビューじゃない方がレンダリングされている時に、スクロール中にボトムタブで切り替えるとこのonScrollが発火しておかしな位置になってしまうのでこのビューがレンダリングされている時のみAnimated.eventを実行する
+          currentRouteTabKey === 'UserInformation'
+            ? Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
+                useNativeDriver: true,
+              })
+            : undefined
+        }
         onScrollEndDrag={onScrollEndDrag}
         onMomentumScrollEnd={onMomentumScrollEnd}
         refreshControl={
