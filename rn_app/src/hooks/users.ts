@@ -335,6 +335,7 @@ export const useIsDisplayedToOtherUsers = () => {
 export const useGetIsDisplayedToOtherUsersOnActive = () => {
   const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
 
+  // 初回ロード時はActiveの処理は実行されないのでここで別に実行
   useEffect(() => {
     getIsDisplayedToOtherUsers();
   }, [getIsDisplayedToOtherUsers]);

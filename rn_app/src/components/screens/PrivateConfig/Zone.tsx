@@ -21,7 +21,7 @@ import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {usePrivateZone} from '~/hooks/privateZone';
 import {PrivateZone} from '~/types';
 import {commonStyles} from './common';
-import {useMyLng, useMyLat} from '~/hooks/users';
+import {useMyLng, useMyLat, useIsDisplayedToOtherUsers} from '~/hooks/users';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
@@ -32,6 +32,8 @@ export const Zone = React.memo(() => {
     createPrivateZone,
     deletePrivateZone,
   } = usePrivateZone();
+
+  const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
 
   const aboutPrivateZoneModalRef = useRef<Modalize>(null);
   const [currentPrivateZone, setCurrentPrivateZone] = useState<PrivateZone[]>(
@@ -93,6 +95,8 @@ export const Zone = React.memo(() => {
         lng: selectedCoordinate.lng,
       });
 
+      getIsDisplayedToOtherUsers();
+
       if (postResult) {
         setCurrentPrivateZone((c) => [postResult, ...c]);
       }
@@ -102,6 +106,7 @@ export const Zone = React.memo(() => {
     selectedCoordinate,
     selectedAddress,
     setCurrentPrivateZone,
+    getIsDisplayedToOtherUsers,
   ]);
 
   const onDeleteButtonPress = useCallback(
@@ -112,6 +117,9 @@ export const Zone = React.memo(() => {
           style: 'destructive',
           onPress: async () => {
             const result = await deletePrivateZone(id);
+
+            getIsDisplayedToOtherUsers();
+
             if (result) {
               setCurrentPrivateZone((c) => c.filter((z) => z.id !== id));
             }
@@ -122,7 +130,7 @@ export const Zone = React.memo(() => {
         },
       ]);
     },
-    [deletePrivateZone],
+    [deletePrivateZone, getIsDisplayedToOtherUsers],
   );
 
   return (
