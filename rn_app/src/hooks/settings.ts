@@ -201,7 +201,17 @@ export const useDisplayedUserTooltip = () => {
       state.settingsReducer.displayedToolTipAboutUserDisplay,
   );
 
-  const changeisplayedTooltipAboutUserDisplay = useCallback(() => {}, []);
+  const changeisplayedTooltipAboutUserDisplay = useCallback(async () => {
+    try {
+      const credentials = await checkKeychain();
+      await axios.put(
+        `${baseUrl}/users/displayedToolTipAboutUserDisplayToUser?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+    } catch (e) {
+      handleApiError(e);
+    }
+  }, [checkKeychain, addBearer, handleApiError]);
 
   return {
     currentDisplayedTooltipAboutUserDisplay,

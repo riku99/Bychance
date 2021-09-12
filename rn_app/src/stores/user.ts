@@ -14,6 +14,7 @@ export type User = {
   twitter: string | null;
   youtube: string | null;
   tiktok: string | null;
+  isDisplayedToOtherUsers: boolean; // 現在他のユーザーに表示されているかどうか
 };
 
 const initialState: User = {
@@ -30,6 +31,7 @@ const initialState: User = {
   twitter: null,
   youtube: null,
   tiktok: null,
+  isDisplayedToOtherUsers: false,
 };
 
 const userSlice = createSlice({
@@ -37,7 +39,10 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      return action.payload;
+      return {
+        ...state,
+        ...action.payload,
+      };
     },
     resetUser: () => initialState,
     updateUser: (state, action: PayloadAction<Partial<User>>) => {

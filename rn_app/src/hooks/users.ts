@@ -1,5 +1,5 @@
-import {useCallback, useState} from 'react';
-import {AppState} from 'react-native';
+import {useCallback, useEffect, useState} from 'react';
+import {AppState, AppStateStatus} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 import useSWR from 'swr';
@@ -306,6 +306,52 @@ export const useUserPageInfo = (userId: string) => {
     mutate,
     isLoading: !data && !error,
   };
+};
+
+export const useIsDisplayedToOtherUsers = () => {
+  const {checkKeychain, addBearer, dispatch} = useApikit();
+  const isDisplayedToOtherUsers = useSelector(
+    (state: RootState) => state.userReducer.isDisplayedToOtherUsers,
+  );
+  const getIsDisplayedToOtherUsers = useCallback(async () => {
+    try {
+      const credentials = await checkKeychain();
+      const response = await axios.get<boolean>(
+        `${baseUrl}/users/is_displayed?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+
+      console.log(response.data);
+      dispatch(updateUser({isDisplayedToOtherUsers: response.data}));
+    } catch (e) {}
+  }, [checkKeychain, addBearer, dispatch]);
+
+  return {
+    isDisplayedToOtherUsers,
+    getIsDisplayedToOtherUsers,
+  };
+};
+
+export const useGetIsDisplayedToOtherUsersOnActive = () => {
+  const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
+
+  useEffect(() => {
+    getIsDisplayedToOtherUsers();
+  }, [getIsDisplayedToOtherUsers]);
+
+  useEffect(() => {
+    const onActive = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        getIsDisplayedToOtherUsers();
+      }
+    };
+
+    AppState.addEventListener('change', onActive);
+
+    return () => {
+      AppState.removeEventListener('change', onActive);
+    };
+  }, [getIsDisplayedToOtherUsers]);
 };
 
 export const useUserAvatar = ({userId}: {userId: string}) =>

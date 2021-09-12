@@ -14,7 +14,7 @@ import {RecommendationStackScreen} from './Recommendation';
 import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
-import {useMyAvatar} from '~/hooks/users';
+import {useMyAvatar, useIsDisplayedToOtherUsers} from '~/hooks/users';
 import {useDisplayedUserTooltip} from '~/hooks/settings';
 
 type TabList = {
@@ -48,6 +48,8 @@ export const Tabs = React.memo(() => {
     }
   }, [currentDisplayedTooltipAboutUserDisplay]);
 
+  const {isDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
+
   return (
     <RootTab.Navigator
       initialRouteName="Profile"
@@ -63,24 +65,29 @@ export const Tabs = React.memo(() => {
           tabBarIcon: ({color}) => (
             <View>
               <MIcon name="search" size={24} color={color} />
-              <View style={styles.avatarBadgeContainer}>
-                <Tooltip
-                  // @ts-ignore
-                  ref={tooltipRef}
-                  width={width * 0.9}
-                  height={50}
-                  backgroundColor="#404040"
-                  pointerColor="#404040"
-                  popover={
-                    <Text style={{color: 'white'}}>
-                      他のユーザーに自分が表示されている状態の時は、
-                      {'\n'}
-                      ここに自身のアイコンが表示されます
-                    </Text>
-                  }>
-                  <UserAvatar size={22} image={avatarUrl} />
-                </Tooltip>
-              </View>
+              {isDisplayedToOtherUsers && (
+                <View style={styles.avatarBadgeContainer}>
+                  <Tooltip
+                    // @ts-ignore
+                    ref={tooltipRef}
+                    width={width * 0.9}
+                    height={50}
+                    backgroundColor="#404040"
+                    pointerColor="#404040"
+                    onClose={() => {
+                      console.log('ok');
+                    }}
+                    popover={
+                      <Text style={{color: 'white'}}>
+                        他のユーザーに自分が表示されている状態の時は、
+                        {'\n'}
+                        ここに自身のアイコンが表示されます
+                      </Text>
+                    }>
+                    <UserAvatar size={22} image={avatarUrl} />
+                  </Tooltip>
+                </View>
+              )}
             </View>
           ),
           tabBarLabel: '見つける',
