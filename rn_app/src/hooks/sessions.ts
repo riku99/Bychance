@@ -39,6 +39,7 @@ export const useSessionloginProccess = () => {
             showReceiveMessage,
             talkRoomMessageReceipt,
             intro,
+            displayedToolTipAboutUserDisplay,
             ...storedUser
           } = user;
           const settings = {
@@ -47,6 +48,7 @@ export const useSessionloginProccess = () => {
             talkRoomMessageReceipt,
             showReceiveMessage,
             intro,
+            displayedToolTipAboutUserDisplay,
           };
 
           dispatch(setUser(storedUser));

@@ -193,3 +193,18 @@ export const useIntro = () => {
     changeIntro,
   };
 };
+
+export const useDisplayedUserTooltip = () => {
+  const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
+  const currentDisplayedTooltipAboutUserDisplay = useSelector(
+    (state: RootState) =>
+      state.settingsReducer.displayedToolTipAboutUserDisplay,
+  );
+
+  const changeisplayedTooltipAboutUserDisplay = useCallback(() => {}, []);
+
+  return {
+    currentDisplayedTooltipAboutUserDisplay,
+    changeisplayedTooltipAboutUserDisplay,
+  };
+};

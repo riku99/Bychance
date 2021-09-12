@@ -1,7 +1,8 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import {Tooltip} from 'react-native-elements/dist/tooltip/Tooltip';
 
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
@@ -14,6 +15,7 @@ import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useMyAvatar} from '~/hooks/users';
+import {useDisplayedUserTooltip} from '~/hooks/settings';
 
 type TabList = {
   Profile: undefined;
@@ -37,6 +39,15 @@ export const Tabs = React.memo(() => {
 
   const avatarUrl = useMyAvatar();
 
+  const {currentDisplayedTooltipAboutUserDisplay} = useDisplayedUserTooltip();
+  const tooltipRef = useRef<typeof Tooltip | null>(null);
+  useEffect(() => {
+    if (!currentDisplayedTooltipAboutUserDisplay) {
+      // @ts-ignore
+      tooltipRef.current?.toggleTooltip();
+    }
+  }, [currentDisplayedTooltipAboutUserDisplay]);
+
   return (
     <RootTab.Navigator
       initialRouteName="Profile"
@@ -50,11 +61,15 @@ export const Tabs = React.memo(() => {
         component={NearbyUsersStackScreen}
         options={{
           tabBarIcon: ({color}) => (
-            // <MIcon name="search" size={24} color={color} />
             <View>
               <MIcon name="search" size={24} color={color} />
               <View style={styles.avatarBadgeContainer}>
-                <UserAvatar size={22} image={avatarUrl} />
+                <Tooltip
+                  // @ts-ignore
+                  ref={tooltipRef}
+                  popover={<Text>OK</Text>}>
+                  <UserAvatar size={22} image={avatarUrl} />
+                </Tooltip>
               </View>
             </View>
           ),
