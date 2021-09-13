@@ -1,10 +1,10 @@
 import React, {useCallback, useRef} from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, Pressable} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Tooltip} from 'react-native-elements/dist/tooltip/Tooltip';
 import {useFocusEffect} from '@react-navigation/native';
-import {Button} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
@@ -18,7 +18,6 @@ import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useMyAvatar, useIsDisplayedToOtherUsers} from '~/hooks/users';
 import {useToolTipAboutDisplayExperience} from '~/hooks/experiences';
-import {RootNavigationProp} from './Root';
 
 type TabList = {
   Profile: undefined;
@@ -58,6 +57,11 @@ export const Tabs = React.memo(() => {
     }, [displayedTooltip, isDisplayedToOtherUsers]),
   );
 
+  const onTooltipCloseButtonPress = () => {
+    // @ts-ignore
+    tooltipRef.current?.toggleTooltip();
+  };
+
   return (
     <RootTab.Navigator
       initialRouteName="Profile"
@@ -79,18 +83,25 @@ export const Tabs = React.memo(() => {
                     // @ts-ignore
                     ref={tooltipRef}
                     width={width * 0.9}
-                    height={50}
+                    height={60}
                     backgroundColor="#404040"
                     pointerColor="#404040"
-                    onClose={() => {
-                      console.log('ok');
-                    }}
+                    onClose={() => {}}
+                    backDropPressDisabled={true}
+                    toggleOnPress={false}
                     popover={
-                      <Text style={{color: 'white'}}>
-                        他のユーザーに自分が表示されている状態の時は、
-                        {'\n'}
-                        ここに自身のアイコンが表示されます
-                      </Text>
+                      <View>
+                        <Pressable
+                          style={styles.tooltipCloseButton}
+                          onPress={onTooltipCloseButtonPress}>
+                          <Icon name="close" size={22} color="#404040" />
+                        </Pressable>
+                        <Text style={{color: 'white'}}>
+                          他のユーザーに自分が表示されている状態の時は、
+                          {'\n'}
+                          ここに自身のアイコンが表示されます
+                        </Text>
+                      </View>
                     }>
                     <UserAvatar size={22} image={avatarUrl} />
                   </Tooltip>
@@ -153,5 +164,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 16,
     top: -5,
+  },
+  tooltipCloseButton: {
+    position: 'absolute',
+    bottom: 45,
   },
 });
