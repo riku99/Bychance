@@ -6,9 +6,11 @@ import {ConfigList} from './List';
 import {commonStyles} from './constants';
 import {CustomPopupModal} from '~/components/utils/PopupModal';
 import {useDisplay} from '~/hooks/settings';
+import {useIsDisplayedToOtherUsers} from '~/hooks/users';
 
 export const DisplayConfig = React.memo(() => {
   const {currentDisplay, changeDisplay} = useDisplay();
+  const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
 
   const [switchForDisplay, setSwitchForDisplay] = useState(!!currentDisplay);
   const [
@@ -21,11 +23,13 @@ export const DisplayConfig = React.memo(() => {
       setSwitchForDisplay(v);
       const result = await changeDisplay(v);
 
+      getIsDisplayedToOtherUsers();
+
       if (!result) {
         setSwitchForDisplay(!v);
       }
     },
-    [setSwitchForDisplay, changeDisplay],
+    [setSwitchForDisplay, changeDisplay, getIsDisplayedToOtherUsers],
   );
 
   const navigation = useNavigation();
