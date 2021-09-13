@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Tooltip} from 'react-native-elements/dist/tooltip/Tooltip';
 import {useFocusEffect} from '@react-navigation/native';
+import {Button} from 'react-native-elements';
 
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
@@ -17,6 +18,7 @@ import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useMyAvatar, useIsDisplayedToOtherUsers} from '~/hooks/users';
 import {useToolTipAboutDisplayExperience} from '~/hooks/experiences';
+import {RootNavigationProp} from './Root';
 
 type TabList = {
   Profile: undefined;
@@ -46,10 +48,13 @@ export const Tabs = React.memo(() => {
   const tooltipRef = useRef<typeof Tooltip | null>(null);
   useFocusEffect(
     useCallback(() => {
-      if (!displayedTooltip && isDisplayedToOtherUsers) {
-        // @ts-ignore
-        tooltipRef.current?.toggleTooltip();
-      }
+      // tooltipの表示若干遅らせないと、ボタンとかでgoBackしたときズレる
+      setTimeout(() => {
+        if (!displayedTooltip && isDisplayedToOtherUsers) {
+          // @ts-ignore
+          tooltipRef.current?.toggleTooltip();
+        }
+      }, 400);
     }, [displayedTooltip, isDisplayedToOtherUsers]),
   );
 
