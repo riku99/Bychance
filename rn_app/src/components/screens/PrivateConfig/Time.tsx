@@ -19,6 +19,7 @@ import {Modalize} from 'react-native-modalize';
 import {normalStyles} from '~/constants/styles';
 import {usePrivateTime} from '~/hooks/privateTime';
 import {formatMinutes} from '~/utils';
+import {useIsDisplayedToOtherUsers} from '~/hooks/users';
 
 export const Time = React.memo(() => {
   const {
@@ -27,6 +28,8 @@ export const Time = React.memo(() => {
     fetchResult,
     deletePrivateTime,
   } = usePrivateTime();
+
+  const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
 
   const [currentPrivateTime, setCurrentPrivateTime] = useState(fetchResult);
 
@@ -88,6 +91,8 @@ export const Time = React.memo(() => {
         endMinutes: endTime.minutes,
       });
 
+      getIsDisplayedToOtherUsers();
+
       if (_result) {
         setCurrentPrivateTime((c) => {
           if (c) {
@@ -107,6 +112,9 @@ export const Time = React.memo(() => {
         style: 'destructive',
         onPress: async () => {
           const _result = await deletePrivateTime(id);
+
+          getIsDisplayedToOtherUsers();
+
           if (_result) {
             setCurrentPrivateTime((c) => c?.filter((p) => p.id !== id));
           }
