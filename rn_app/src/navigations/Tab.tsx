@@ -1,8 +1,9 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Tooltip} from 'react-native-elements/dist/tooltip/Tooltip';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
@@ -15,7 +16,7 @@ import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useMyAvatar, useIsDisplayedToOtherUsers} from '~/hooks/users';
-import {useDisplayedUserTooltip} from '~/hooks/settings';
+import {useToolTipAboutDisplayExperience} from '~/hooks/experiences';
 
 type TabList = {
   Profile: undefined;
@@ -39,16 +40,18 @@ export const Tabs = React.memo(() => {
 
   const avatarUrl = useMyAvatar();
 
-  const {currentDisplayedTooltipAboutUserDisplay} = useDisplayedUserTooltip();
-  const tooltipRef = useRef<typeof Tooltip | null>(null);
-  useEffect(() => {
-    if (!currentDisplayedTooltipAboutUserDisplay) {
-      // @ts-ignore
-      tooltipRef.current?.toggleTooltip();
-    }
-  }, [currentDisplayedTooltipAboutUserDisplay]);
-
   const {isDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
+
+  const {displayedTooltip} = useToolTipAboutDisplayExperience();
+  const tooltipRef = useRef<typeof Tooltip | null>(null);
+  useFocusEffect(
+    useCallback(() => {
+      if (!displayedTooltip && isDisplayedToOtherUsers) {
+        // @ts-ignore
+        tooltipRef.current?.toggleTooltip();
+      }
+    }, [displayedTooltip, isDisplayedToOtherUsers]),
+  );
 
   return (
     <RootTab.Navigator

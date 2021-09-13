@@ -193,28 +193,3 @@ export const useIntro = () => {
     changeIntro,
   };
 };
-
-export const useDisplayedUserTooltip = () => {
-  const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
-  const currentDisplayedTooltipAboutUserDisplay = useSelector(
-    (state: RootState) =>
-      state.settingsReducer.displayedToolTipAboutUserDisplay,
-  );
-
-  const changeisplayedTooltipAboutUserDisplay = useCallback(async () => {
-    try {
-      const credentials = await checkKeychain();
-      await axios.put(
-        `${baseUrl}/users/displayedToolTipAboutUserDisplayToUser?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
-    } catch (e) {
-      handleApiError(e);
-    }
-  }, [checkKeychain, addBearer, handleApiError]);
-
-  return {
-    currentDisplayedTooltipAboutUserDisplay,
-    changeisplayedTooltipAboutUserDisplay,
-  };
-};
