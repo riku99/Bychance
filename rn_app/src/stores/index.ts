@@ -8,6 +8,7 @@ import {postsReducer} from './posts';
 import {_usersReducer} from './_users';
 import {appReducer} from './app';
 import {settingsReducer} from './settings';
+import {experiencesReducer} from './experiences';
 
 const rootReducer = combineReducers({
   sessionReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   _usersReducer,
   appReducer,
   settingsReducer,
+  experiencesReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
