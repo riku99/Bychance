@@ -7,10 +7,11 @@ import {useToast} from 'react-native-fast-toast';
 import {commonStyles} from './constants';
 import {ConfigList, List} from './List';
 import {notAuthLocationProviderAlert} from '~/helpers/alert';
-import {useDeleteLocation} from '~/hooks/users';
+import {useDeleteLocation, useIsDisplayedToOtherUsers} from '~/hooks/users';
 
 export const LocationConfig = React.memo(() => {
   const {deleteLocaiton} = useDeleteLocation();
+  const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
 
   const toast = useToast();
 
@@ -25,6 +26,7 @@ export const LocationConfig = React.memo(() => {
               text: '削除',
               onPress: async () => {
                 await deleteLocaiton();
+                getIsDisplayedToOtherUsers();
               },
               style: 'destructive',
             },
@@ -77,7 +79,7 @@ export const LocationConfig = React.memo(() => {
         },
       },
     ];
-  }, [deleteLocaiton, toast]);
+  }, [deleteLocaiton, toast, getIsDisplayedToOtherUsers]);
 
   return (
     <View style={commonStyles.container}>
