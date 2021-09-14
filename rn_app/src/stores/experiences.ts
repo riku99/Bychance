@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Experiences} from '~/types/store/experiences';
 
 const initialState: Experiences = {
-  toolTipAboutDisplay: false,
+  tooltipAboutDisplay: false,
 };
 
 const experiencesSlice = createSlice({

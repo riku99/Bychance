@@ -321,7 +321,6 @@ export const useIsDisplayedToOtherUsers = () => {
         addBearer(credentials?.token),
       );
 
-      console.log(response.data);
       dispatch(updateUser({isDisplayedToOtherUsers: response.data}));
     } catch (e) {}
   }, [checkKeychain, addBearer, dispatch]);

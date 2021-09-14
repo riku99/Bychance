@@ -17,7 +17,7 @@ import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useMyAvatar, useIsDisplayedToOtherUsers} from '~/hooks/users';
-import {useToolTipAboutDisplayExperience} from '~/hooks/experiences';
+import {useTooltipAboutDisplayExperience} from '~/hooks/experiences';
 
 type TabList = {
   Profile: undefined;
@@ -42,24 +42,27 @@ export const Tabs = React.memo(() => {
   const avatarUrl = useMyAvatar();
 
   const {isDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
-
-  const {displayedTooltip} = useToolTipAboutDisplayExperience();
+  const {
+    alreadyShowedTooltip,
+    changeTooltipData,
+  } = useTooltipAboutDisplayExperience();
   const tooltipRef = useRef<typeof Tooltip | null>(null);
   useFocusEffect(
     useCallback(() => {
       // tooltipの表示若干遅らせないと、ボタンとかでgoBackしたときズレる
       setTimeout(() => {
-        if (!displayedTooltip && isDisplayedToOtherUsers) {
+        if (!alreadyShowedTooltip && isDisplayedToOtherUsers) {
           // @ts-ignore
           tooltipRef.current?.toggleTooltip();
         }
       }, 400);
-    }, [displayedTooltip, isDisplayedToOtherUsers]),
+    }, [isDisplayedToOtherUsers, alreadyShowedTooltip]),
   );
 
   const onTooltipCloseButtonPress = () => {
     // @ts-ignore
     tooltipRef.current?.toggleTooltip();
+    changeTooltipData(true);
   };
 
   return (

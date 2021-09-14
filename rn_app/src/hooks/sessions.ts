@@ -40,7 +40,7 @@ export const useSessionloginProccess = () => {
             showReceiveMessage,
             talkRoomMessageReceipt,
             intro,
-            displayedToolTipAboutUserDisplay,
+            tooltipOfUsersDisplayShowed,
             ...storedUser
           } = user;
           const settings = {
@@ -57,7 +57,7 @@ export const useSessionloginProccess = () => {
           dispatch(setSetitngs(settings));
           dispatch(
             setExperiences({
-              toolTipAboutDisplay: displayedToolTipAboutUserDisplay,
+              tooltipAboutDisplay: tooltipOfUsersDisplayShowed,
             }),
           );
           dispatch(setLogin(true));

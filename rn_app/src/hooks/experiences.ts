@@ -7,27 +7,32 @@ import {RootState} from '~/stores';
 import {setExperiences} from '~/stores/experiences';
 import {useApikit} from './apikit';
 
-export const useToolTipAboutDisplayExperience = () => {
+export const useTooltipAboutDisplayExperience = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
-  const displayedTooltip = useSelector(
-    (state: RootState) =>
-      state.settingsReducer.displayedToolTipAboutUserDisplay,
+  const alreadyShowedTooltip = useSelector(
+    (state: RootState) => state.experiencesReducer.tooltipAboutDisplay,
   );
 
-  const changeisplayedTooltipAboutUserDisplay = useCallback(async () => {
-    try {
-      const credentials = await checkKeychain();
-      await axios.put(
-        `${baseUrl}/users/displayedToolTipAboutUserDisplayToUser?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
-    } catch (e) {
-      handleApiError(e);
-    }
-  }, [checkKeychain, addBearer, handleApiError]);
+  const changeTooltipData = useCallback(
+    async (value: boolean) => {
+      try {
+        const credentials = await checkKeychain();
+        await axios.put(
+          `${baseUrl}/users/tooltip_of_user_display_showed?id=${credentials?.id}`,
+          {value},
+          addBearer(credentials?.token),
+        );
+
+        dispatch(setExperiences({tooltipAboutDisplay: value}));
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [checkKeychain, addBearer, handleApiError, dispatch],
+  );
 
   return {
-    displayedTooltip,
-    changeisplayedTooltipAboutUserDisplay,
+    alreadyShowedTooltip,
+    changeTooltipData,
   };
 };

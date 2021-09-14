@@ -18,7 +18,7 @@ export type LoginData = {
     lat: number | null;
     lng: number | null;
     intro: boolean;
-    displayedToolTipAboutUserDisplay: boolean;
+    tooltipOfUsersDisplayShowed: boolean;
   };
   posts: {
     id: number;

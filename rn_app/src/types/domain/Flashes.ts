@@ -6,19 +6,3 @@ export type Flash = {
   viewed: {userId: string}[];
   [key: string]: any | undefined;
 };
-
-const a: Flash = {
-  id: 1,
-  source: 'de',
-  sourceType: 'image',
-  createdAt: 'ede',
-  viewed: [],
-  specificUserViewed: [
-    {
-      specificUserViewed: {
-        flashId: 1,
-      },
-    },
-  ],
-};
-console.log(a);
