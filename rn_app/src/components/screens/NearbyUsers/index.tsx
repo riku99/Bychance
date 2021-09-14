@@ -12,7 +12,7 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabBar,
 } from '@react-navigation/material-top-tabs';
-import {SearchBar} from 'react-native-elements';
+import {SearchBar, Icon} from 'react-native-elements';
 import {shallowEqual, useSelector} from 'react-redux';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import FastImage from 'react-native-fast-image';
@@ -293,6 +293,7 @@ export const NearbyUsersScreen = React.memo(() => {
             tabBarPosition="top"
             tabBarOptions={{
               activeTintColor: normalStyles.mainColor,
+              pressOpacity: 1,
               labelStyle: {
                 fontSize: 14,
                 fontWeight: '500',
@@ -304,9 +305,23 @@ export const NearbyUsersScreen = React.memo(() => {
                 height: 45,
                 alignItems: 'center',
               },
+              showLabel: false,
+              showIcon: true,
             }}>
-            <Tab.Screen name="リスト" component={List} />
-            <Tab.Screen name="マップ" component={Map} />
+            <Tab.Screen
+              name="リスト"
+              component={List}
+              options={{
+                tabBarIcon: ({color}) => <Icon name="list" color={color} />,
+              }}
+            />
+            <Tab.Screen
+              name="マップ"
+              component={Map}
+              options={{
+                tabBarIcon: ({color}) => <Icon name="map" color={color} />,
+              }}
+            />
           </Tab.Navigator>
         </Animated.View>
       </TabViewContext.Provider>

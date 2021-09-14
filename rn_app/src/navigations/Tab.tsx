@@ -79,7 +79,7 @@ export const Tabs = React.memo(() => {
         options={{
           tabBarIcon: ({color}) => (
             <View>
-              <MIcon name="search" size={24} color={color} />
+              <MIcon name="near-me" size={24} color={color} />
               {isDisplayedToOtherUsers && (
                 <View style={styles.avatarBadgeContainer}>
                   <Tooltip
@@ -112,7 +112,7 @@ export const Tabs = React.memo(() => {
               )}
             </View>
           ),
-          tabBarLabel: '見つける',
+          tabBarLabel: '近くのユーザー',
         }}
       />
       <RootTab.Screen
