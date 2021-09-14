@@ -72,6 +72,7 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.3.0",
     "react-native-skeleton-placeholder": "^4.0.0",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^12.1.1",
     "react-native-swipe-list-view": "^3.2.7",
     "react-native-swiper": "^1.6.0",
