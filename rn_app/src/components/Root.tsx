@@ -27,3 +27,16 @@ const Root = React.memo(() => {
 });
 
 export default Root;
+
+const c = async () => {
+  await fetch(
+    'https://g-sys.toyo.ac.jp/univision/action/sb/f01/Ussb011711?typeCssToApply=mobile',
+  )
+    .then((r) => {
+      r.json();
+    })
+    .then((v) => console.log(v))
+    .catch((e) => {
+      console.log(e);
+    });
+};

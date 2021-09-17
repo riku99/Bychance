@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 
@@ -21,9 +21,6 @@ export const Main = React.memo(() => {
   // push通知周り
   usePushNotificationReqest();
   useRegisterDeviceToken();
-
-  // アクティブになった時の処理
-  // useActive();
 
   // 位置情報周り
   useBackgroundGeolocation();

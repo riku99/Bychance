@@ -100,6 +100,7 @@ export const useCreateTalkRoomMessage = () => {
             updateTalkRoom({
               id: roomId,
               changes: {
+                timestamp: createdAt,
                 lastMessage: {
                   id,
                   text: _text,

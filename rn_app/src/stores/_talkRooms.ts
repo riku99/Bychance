@@ -10,7 +10,10 @@ import {RootState} from './index';
 const talkRoomsAdapter = createEntityAdapter<TalkRoom>({
   selectId: (r) => r.id,
   sortComparer: (a, b) =>
-    new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1, // 更新日時を基準に降順
+    new Date(a.lastMessage ? a.lastMessage.createdAt : a.timestamp) <
+    new Date(b.lastMessage ? b.lastMessage?.createdAt : b.timestamp)
+      ? 1
+      : -1, // 更新日時を基準に降順
 });
 
 export const TalkRoomSlice = createSlice({
