@@ -6,7 +6,7 @@ import {UserAvatar} from '~/components/utils/Avatar';
 import {defaultTheme} from '~/theme';
 
 type Props = {
-  id: string;
+  id: number;
   name: string;
   imageUrl: string | null;
 };
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 80,
-    padding: 6,
+    padding: 5,
   },
   buttonTitle: {
     fontSize: 13,

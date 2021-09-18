@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import {ListItem} from './ListItem';
+import {useGetApplyedGroup} from '~/hooks/applyingGroups';
 
 const data = [
   {
@@ -27,17 +28,19 @@ export const ApplyingGroup = () => {
     });
   }, [navigation]);
 
+  const {applyedGroup} = useGetApplyedGroup();
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contents}>
         <Text style={styles.title}>申請されているグループ</Text>
         <View style={styles.applyedList}>
-          {data.map((d) => (
+          {applyedGroup.map((d) => (
             <ListItem
               key={d.id}
               id={d.id}
-              name={d.name}
-              imageUrl={d.imageUrl}
+              name={d.applyingUser.name}
+              imageUrl={d.applyingUser.avatar}
             />
           ))}
         </View>
@@ -59,6 +62,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   applyedList: {
-    marginTop: 10,
+    marginTop: 6,
   },
 });

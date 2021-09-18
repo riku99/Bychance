@@ -5,6 +5,7 @@ import {default as axios} from 'axios';
 import {useMyId} from './users';
 import {origin, baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
+import {GetApplyedGroupResponse} from '~/types/response/applyingGroup';
 
 export const useSetupApplyingGroupSocket = () => {
   const id = useMyId();
@@ -64,5 +65,33 @@ export const useCreateApplyingGroup = () => {
 
   return {
     applyGroup,
+  };
+};
+
+export const useGetApplyedGroup = () => {
+  const [applyedGroup, setApplyedGroup] = useState<GetApplyedGroupResponse>([]);
+
+  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const getApplyedGroup = useCallback(async () => {
+    try {
+      const credentials = await checkKeychain();
+      const response = await axios.get<GetApplyedGroupResponse>(
+        `${baseUrl}/applying_groups/applyed?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+
+      setApplyedGroup(response.data);
+    } catch (e) {
+      handleApiError(e);
+    }
+  }, [addBearer, checkKeychain, handleApiError]);
+
+  useEffect(() => {
+    getApplyedGroup();
+  }, [getApplyedGroup]);
+
+  return {
+    applyedGroup,
+    getApplyedGroup,
   };
 };
