@@ -117,6 +117,7 @@ export const UserTabView = React.memo(
               tabViewContainerMinHeight={tabViewContainerMinHeight}
               refresh={refresh}
               isLoaidng={isLoading}
+              currentRouteTabKey={tabRoute[tabIndex].key}
             />
           );
         case 'UserInformation':

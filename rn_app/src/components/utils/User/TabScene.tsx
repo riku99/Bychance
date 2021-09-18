@@ -33,6 +33,7 @@ type FlatListTabSceneProps = {
   tabViewContainerMinHeight: number;
   refresh: () => Promise<void>;
   isLoaidng?: boolean;
+  currentRouteTabKey: 'Posts' | 'UserInformation';
 };
 
 export const FlatListTabScene = React.memo(
@@ -47,6 +48,7 @@ export const FlatListTabScene = React.memo(
     tabViewContainerMinHeight,
     refresh,
     isLoaidng,
+    currentRouteTabKey,
   }: FlatListTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
@@ -85,12 +87,13 @@ export const FlatListTabScene = React.memo(
           minHeight: tabViewContainerMinHeight,
         }}
         showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {
-            useNativeDriver: true,
-          },
-        )}
+        onScroll={
+          currentRouteTabKey === 'Posts'
+            ? Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
+                useNativeDriver: true,
+              })
+            : undefined
+        }
         onScrollEndDrag={onScrollEndDrag}
         onMomentumScrollEnd={onMomentumScrollEnd}
         refreshControl={
