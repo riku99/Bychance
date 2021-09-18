@@ -14,7 +14,28 @@ export const useSetupApplyingGroupSocket = () => {
     }
   }, [id]);
 
-  socket?.on('connect', () => {
-    console.log('connectt');
-  });
+  useEffect(() => {
+    if (!id && socket) {
+      // @ts-ignore
+      socket.removeAllListeners();
+      socket.disconnect();
+      setSocket(undefined);
+    }
+  }, [id, socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('applyGroup', (data) => {
+        console.log(data);
+      });
+    }
+  }, [socket]);
+
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket?.on('connect', () => {
+  //       console.log('connectt');
+  //     });
+  //   }
+  // }, [socket]);
 };
