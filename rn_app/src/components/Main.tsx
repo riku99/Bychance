@@ -11,11 +11,13 @@ import {useHandleErrors} from '~/hooks/errors';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
 import {useGetTalkRoomData} from '~/hooks/talkRooms';
 import {useGetIsDisplayedToOtherUsersOnActive} from '~/hooks/users';
+import {useSetupApplyingGroupSocket} from '~/hooks/applyingGroups';
 
 export const Main = React.memo(() => {
   // socket周り
   // useTalkRoomMessagesIo();
   useSetupTalkRoomMessageSocket();
+  useSetupApplyingGroupSocket();
 
   // push通知周り
   usePushNotificationReqest();
