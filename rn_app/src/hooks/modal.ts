@@ -12,13 +12,20 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
   const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId});
 
   const list = useMemo(() => {
-    const modalText = {
+    const blockText = {
       title: !_block ? 'ブロックする' : 'ブロック解除',
       alertTitle: !_block ? 'ブロックしますか?' : '解除しますか?',
       alertSubTitle: !_block
         ? 'ブロックされた人はあなたの投稿、フラッシュを見られなくなりあなたにメッセージを送っても届かなくなります。ブロックしたことは相手に通知されません。'
         : '',
       alertButtonText: !_block ? 'ブロックする' : '解除する',
+    };
+
+    const groupText = {
+      title: 'グループになることを申請する',
+      alertTitle: 'グループ申請しますか?',
+      alertSubTitle: 'マイページにこのユーザーのアイコンが表示されます',
+      alertButtonText: '申請する',
     };
 
     const onBlockPress = async () => {
@@ -37,13 +44,26 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
 
     return [
       {
-        title: modalText.title,
+        title: 'グループ申請',
+        onPress: () => {
+          Alert.alert(groupText.title, groupText.alertSubTitle, [
+            {
+              text: groupText.alertButtonText,
+            },
+            {
+              text: 'キャンセル',
+            },
+          ]);
+        },
+      },
+      {
+        title: blockText.title,
         color: 'red',
         onPress: () => {
           if (userId) {
-            Alert.alert(modalText.alertTitle, modalText.alertSubTitle, [
+            Alert.alert(blockText.alertTitle, blockText.alertSubTitle, [
               {
-                text: modalText.alertButtonText,
+                text: blockText.alertButtonText,
                 style: 'destructive',
                 onPress: onBlockPress,
               },
@@ -53,14 +73,6 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
             ]);
           }
         },
-      },
-      {
-        title: 'このアカウントについて',
-        onPress: () => {},
-      },
-      {
-        title: 'プロフィールURLをコピー',
-        onPress: () => {},
       },
     ];
   }, [block, userId, _block, deleteBlock, removeDispatch]);

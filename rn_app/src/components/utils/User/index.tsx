@@ -208,11 +208,11 @@ export const User = ({
         <SnsIcons snsLinkData={snsLinkData} />
       </Animated.View>
 
-      {isMe && (
+      {/* {isMe && (
         <View style={styles.takeWideRangeSourceContainer}>
           <TakeFlashButton />
         </View>
-      )}
+      )} */}
 
       {isMe && <Menu />}
     </View>
