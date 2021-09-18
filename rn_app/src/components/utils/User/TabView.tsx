@@ -167,7 +167,7 @@ export const UserTabView = React.memo(
                 />
               ) : (
                 <MIcon
-                  name="wysiwyg"
+                  name="group"
                   size={25}
                   color={focused ? normalStyles.mainColor : 'lightgray'}
                 />

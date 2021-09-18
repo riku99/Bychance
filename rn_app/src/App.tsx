@@ -5,6 +5,7 @@ import {store} from './stores/index';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {ToastProvider} from 'react-native-fast-toast';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import FlashMessage from 'react-native-flash-message';
 
 import Root from './components/Root';
 import {normalStyles} from '~/constants/styles';
@@ -22,6 +23,7 @@ const App: () => React.ReactNode = () => {
           dangerIcon={<MIcon name="clear" color="white" size={17} />}
           style={{width: bottomToastWidth}}>
           <Root />
+          <FlashMessage position="top" />
           <ToastLoading />
         </ToastProvider>
       </Provider>

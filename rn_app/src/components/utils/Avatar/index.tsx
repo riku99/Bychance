@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar} from 'react-native-elements';
+import {Avatar, AvatarProps} from 'react-native-elements';
 
 import {normalStyles} from '../../../constants/styles';
 import {UserProfileOuter} from '../AvatarOuter';
@@ -9,16 +9,21 @@ type Props = {
   size: 'small' | 'medium' | 'large' | number;
   opacity?: number;
   onPress?: () => any;
+  containerStyle?: AvatarProps['containerStyle'];
 };
 
 export const UserAvatar = React.memo(
-  ({image, size, onPress, opacity = 1}: Props) => {
+  ({image, size, onPress, containerStyle, opacity = 1}: Props) => {
     return (
       <Avatar
         rounded
         source={image ? {uri: image} : undefined}
         icon={!image ? {name: 'user', type: 'font-awesome'} : undefined}
-        containerStyle={!image ? {backgroundColor: '#BDBDBD'} : undefined}
+        containerStyle={
+          !image
+            ? [{backgroundColor: '#BDBDBD'}, containerStyle]
+            : containerStyle
+        }
         placeholderStyle={{
           backgroundColor: normalStyles.imageBackGroundColor,
         }}
