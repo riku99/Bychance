@@ -13,7 +13,7 @@ type Props = {
 
 export const ListItem = React.memo(({id, name, imageUrl}: Props) => {
   return (
-    <View style={styles.listItem} key={id}>
+    <View style={styles.listItem}>
       <UserAvatar image={imageUrl} size="medium" />
       <View style={styles.listItemRight}>
         <Text style={styles.listText}>

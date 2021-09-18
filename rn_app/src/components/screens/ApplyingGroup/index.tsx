@@ -33,7 +33,12 @@ export const ApplyingGroup = () => {
         <Text style={styles.title}>申請されているグループ</Text>
         <View style={styles.applyedList}>
           {data.map((d) => (
-            <ListItem id={d.id} name={d.name} imageUrl={d.imageUrl} />
+            <ListItem
+              key={d.id}
+              id={d.id}
+              name={d.name}
+              imageUrl={d.imageUrl}
+            />
           ))}
         </View>
       </ScrollView>
