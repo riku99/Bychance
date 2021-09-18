@@ -1,10 +1,8 @@
 import React, {useLayoutEffect} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Button} from 'react-native-elements';
 
-import {UserAvatar} from '~/components/utils/Avatar';
-import {defaultTheme} from '~/theme';
+import {ListItem} from './ListItem';
 
 const data = [
   {
@@ -35,40 +33,7 @@ export const ApplyingGroup = () => {
         <Text style={styles.title}>申請されているグループ</Text>
         <View style={styles.applyedList}>
           {data.map((d) => (
-            <View style={styles.listItem} key={d.id}>
-              <UserAvatar image={d.imageUrl} size="medium" />
-              <View style={styles.listItemRight}>
-                <Text style={styles.listText}>
-                  <Text style={styles.name}>{d.name}</Text>
-                  さんから申請されています。
-                </Text>
-                <View style={styles.buttons}>
-                  <Button
-                    title="参加する"
-                    titleStyle={styles.buttonTitle}
-                    buttonStyle={[
-                      styles.button,
-                      {
-                        backgroundColor: defaultTheme.pinkGrapefruit,
-                      },
-                    ]}
-                    activeOpacity={1}
-                  />
-                  <Button
-                    title="削除する"
-                    titleStyle={styles.buttonTitle}
-                    buttonStyle={[
-                      styles.button,
-                      {
-                        backgroundColor: defaultTheme.darkGray,
-                      },
-                    ]}
-                    containerStyle={{marginLeft: 15}}
-                    activeOpacity={1}
-                  />
-                </View>
-              </View>
-            </View>
+            <ListItem id={d.id} name={d.name} imageUrl={d.imageUrl} />
           ))}
         </View>
       </ScrollView>
@@ -90,28 +55,5 @@ const styles = StyleSheet.create({
   },
   applyedList: {
     marginTop: 10,
-  },
-  listItem: {
-    flexDirection: 'row',
-    paddingVertical: 20,
-  },
-  listItemRight: {
-    marginLeft: 8,
-    justifyContent: 'space-between',
-  },
-  listText: {},
-  name: {
-    fontWeight: 'bold',
-  },
-  buttons: {
-    flexDirection: 'row',
-  },
-  button: {
-    width: 80,
-    padding: 6,
-  },
-  buttonTitle: {
-    fontSize: 13,
-    fontWeight: 'bold',
   },
 });
