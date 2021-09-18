@@ -19,7 +19,7 @@ export const Menu = React.memo(() => {
 
   const navigation = useNavigation();
 
-  const modalClose = useCallback(() => {
+  const closeModal = useCallback(() => {
     if (modalizeRef.current) {
       modalizeRef.current.close();
     }
@@ -39,8 +39,17 @@ export const Menu = React.memo(() => {
         icon: 'emoji-people',
         titleStyle: styles.listTitleStyle,
         onPress: () => {
-          modalClose();
+          closeModal();
           navigateToConfig('display');
+        },
+      },
+      {
+        title: 'グループ',
+        icon: 'people',
+        titleStyle: styles.listTitleStyle,
+        onPress: () => {
+          closeModal();
+          navigation.navigate('applyingGroup');
         },
       },
       {
@@ -48,7 +57,7 @@ export const Menu = React.memo(() => {
         icon: 'mail-outline',
         titleStyle: styles.listTitleStyle,
         onPress: () => {
-          modalClose();
+          closeModal();
           navigateToConfig('message');
         },
       },
@@ -57,7 +66,7 @@ export const Menu = React.memo(() => {
         icon: 'location-pin',
         titleStyle: styles.listTitleStyle,
         onPress: () => {
-          modalClose();
+          closeModal();
           navigateToConfig('location');
         },
       },
@@ -66,7 +75,7 @@ export const Menu = React.memo(() => {
         icon: 'account-circle',
         titleStyle: styles.listTitleStyle,
         onPress: () => {
-          modalClose();
+          closeModal();
           navigateToConfig('account');
         },
       },
@@ -75,17 +84,17 @@ export const Menu = React.memo(() => {
         icon: 'subject',
         titleStyle: styles.listTitleStyle,
         onPress: () => {
-          modalClose();
+          closeModal();
           navigateToConfig('others');
         },
       },
     ];
-  }, [modalClose, navigateToConfig]);
+  }, [closeModal, navigateToConfig, navigation]);
 
   return (
     <Modalize
       ref={modalizeRef}
-      modalHeight={height / 2}
+      modalHeight={height / 1.8}
       onClose={() => setDisplayedMenu(false)}
       scrollViewProps={{
         scrollEnabled: false,

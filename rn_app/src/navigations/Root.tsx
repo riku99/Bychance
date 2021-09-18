@@ -9,7 +9,6 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import {Button} from 'react-native-elements';
-import {View} from 'react-native';
 
 import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
@@ -24,6 +23,7 @@ import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
 import {Intoro} from '~/components/screens/Intoro';
 import {useIntro} from '~/hooks/settings';
+import {ApplyingGroup} from '~/components/screens/ApplyingGroup';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -42,6 +42,7 @@ export type RootStackParamList = {
     goTo: 'zone' | 'time';
   };
   Intoro: undefined;
+  applyingGroup: undefined;
 };
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
@@ -156,6 +157,14 @@ export const RootStackScreen = React.memo(() => {
       <RootStack.Screen
         name="PrivateConfig"
         component={PrivateConfig}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
+      <RootStack.Screen
+        name="applyingGroup"
+        component={ApplyingGroup}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal',
