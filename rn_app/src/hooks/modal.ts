@@ -4,12 +4,15 @@ import {Alert} from 'react-native';
 import {useCreateBlock, useDeleteBlock} from './block';
 import {useUserBlock} from './users';
 import {useRemovePostsAndFlashesDispatch} from './stores';
+import {useCreateApplyingGroup} from './applyingGroups';
 
 export const useUserPageModalList = ({userId}: {userId: string}) => {
   const {block} = useCreateBlock();
   const {deleteBlock} = useDeleteBlock();
   const _block = useUserBlock(userId);
   const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId});
+
+  const {applyGroup} = useCreateApplyingGroup();
 
   const list = useMemo(() => {
     const blockText = {
@@ -24,7 +27,7 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
     const groupText = {
       title: 'グループになることを申請する',
       alertTitle: 'グループ申請しますか?',
-      alertSubTitle: 'マイページにこのユーザーのアイコンが表示されます',
+      alertSubTitle: '',
       alertButtonText: '申請する',
     };
 
@@ -49,6 +52,9 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
           Alert.alert(groupText.title, groupText.alertSubTitle, [
             {
               text: groupText.alertButtonText,
+              onPress: async () => {
+                applyGroup({userId});
+              },
             },
             {
               text: 'キャンセル',
@@ -75,7 +81,7 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
         },
       },
     ];
-  }, [block, userId, _block, deleteBlock, removeDispatch]);
+  }, [block, userId, _block, deleteBlock, removeDispatch, applyGroup]);
 
   return {
     list,

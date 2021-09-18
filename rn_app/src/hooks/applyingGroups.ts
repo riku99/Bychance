@@ -1,8 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import io, {Socket} from 'socket.io-client';
+import {default as axios} from 'axios';
 
 import {useMyId} from './users';
-import {origin} from '~/constants/url';
+import {origin, baseUrl} from '~/constants/url';
+import {useApikit} from './apikit';
 
 export const useSetupApplyingGroupSocket = () => {
   const id = useMyId();
@@ -38,4 +40,29 @@ export const useSetupApplyingGroupSocket = () => {
   //     });
   //   }
   // }, [socket]);
+};
+
+export const useCreateApplyingGroup = () => {
+  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const applyGroup = useCallback(
+    async ({userId}: {userId: string}) => {
+      try {
+        const credentials = await checkKeychain();
+        const response = await axios.post(
+          `${baseUrl}/applying_groups?id=${credentials?.id}`,
+          {
+            to: userId,
+          },
+          addBearer(credentials?.token),
+        );
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [addBearer, checkKeychain, handleApiError],
+  );
+
+  return {
+    applyGroup,
+  };
 };
