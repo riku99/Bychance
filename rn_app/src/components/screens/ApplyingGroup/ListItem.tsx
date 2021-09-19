@@ -24,19 +24,21 @@ export const ListItem = React.memo(({id, name, imageUrl, type}: Props) => {
             : 'さんに申請しています。'}
         </Text>
         <View style={styles.buttons}>
+          {type === 'applied' && (
+            <Button
+              title="参加する"
+              titleStyle={styles.buttonTitle}
+              buttonStyle={[
+                styles.button,
+                {
+                  backgroundColor: defaultTheme.pinkGrapefruit,
+                },
+              ]}
+              activeOpacity={1}
+            />
+          )}
           <Button
-            title="参加する"
-            titleStyle={styles.buttonTitle}
-            buttonStyle={[
-              styles.button,
-              {
-                backgroundColor: defaultTheme.pinkGrapefruit,
-              },
-            ]}
-            activeOpacity={1}
-          />
-          <Button
-            title="削除する"
+            title={type === 'applied' ? '削除する' : '取り消す'}
             titleStyle={styles.buttonTitle}
             buttonStyle={[
               styles.button,
@@ -44,7 +46,7 @@ export const ListItem = React.memo(({id, name, imageUrl, type}: Props) => {
                 backgroundColor: defaultTheme.darkGray,
               },
             ]}
-            containerStyle={{marginLeft: 15}}
+            containerStyle={{marginLeft: type === 'applied' ? 15 : 0}}
             activeOpacity={1}
           />
         </View>
