@@ -103,6 +103,7 @@ export const useGetAppliedGroups = () => {
     applyedGroup,
     isLoading,
     getAppliedGroup,
+    setApplyedGroup,
   };
 };
 
@@ -136,6 +137,32 @@ export const useGetApplyingGroups = () => {
 
   return {
     applyingGroups,
+    setApplyingGroups,
     isLoading,
+  };
+};
+
+export const useDeleteApplyingGroup = () => {
+  const {addBearer, checkKeychain, handleApiError} = useApikit();
+
+  const deleteApplyingGroup = useCallback(
+    async ({id}: {id: number}) => {
+      try {
+        const credentials = await checkKeychain();
+        const response = await axios.delete<Number>(
+          `${baseUrl}/applying_groups/${id}?id=${credentials?.id}`,
+          addBearer(credentials?.token),
+        );
+
+        return response.data;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [addBearer, checkKeychain, handleApiError],
+  );
+
+  return {
+    deleteApplyingGroup,
   };
 };
