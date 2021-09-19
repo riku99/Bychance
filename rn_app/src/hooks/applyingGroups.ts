@@ -5,7 +5,10 @@ import {default as axios} from 'axios';
 import {useMyId} from './users';
 import {origin, baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
-import {GetApplyedGroupResponse} from '~/types/response/applyingGroup';
+import {
+  GetApplyingGroupsResponse,
+  GetAppliedGroupsResponse,
+} from '~/types/response/applyingGroup';
 
 export const useSetupApplyingGroupSocket = () => {
   const id = useMyId();
@@ -68,30 +71,71 @@ export const useCreateApplyingGroup = () => {
   };
 };
 
-export const useGetApplyedGroup = () => {
-  const [applyedGroup, setApplyedGroup] = useState<GetApplyedGroupResponse>([]);
+export const useGetAppliedGroups = () => {
+  const [applyedGroup, setApplyedGroup] = useState<GetAppliedGroupsResponse>(
+    [],
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
   const {addBearer, checkKeychain, handleApiError} = useApikit();
-  const getApplyedGroup = useCallback(async () => {
+  const getAppliedGroup = useCallback(async () => {
+    setIsLoading(true);
     try {
       const credentials = await checkKeychain();
-      const response = await axios.get<GetApplyedGroupResponse>(
-        `${baseUrl}/applying_groups/applyed?id=${credentials?.id}`,
+      const response = await axios.get<GetAppliedGroupsResponse>(
+        `${baseUrl}/applying_groups?id=${credentials?.id}&type=applied`,
         addBearer(credentials?.token),
       );
 
       setApplyedGroup(response.data);
     } catch (e) {
       handleApiError(e);
+    } finally {
+      setIsLoading(false);
     }
   }, [addBearer, checkKeychain, handleApiError]);
 
   useEffect(() => {
-    getApplyedGroup();
-  }, [getApplyedGroup]);
+    getAppliedGroup();
+  }, [getAppliedGroup]);
 
   return {
     applyedGroup,
-    getApplyedGroup,
+    isLoading,
+    getAppliedGroup,
+  };
+};
+
+export const useGetApplyingGroups = () => {
+  const [applyingGroups, setApplyingGroups] = useState<
+    GetApplyingGroupsResponse
+  >([]);
+  const [isLoading, setIsloading] = useState(false);
+
+  const {checkKeychain, addBearer} = useApikit();
+
+  const getApplyingGroups = useCallback(async () => {
+    setIsloading(true);
+    try {
+      const credentials = await checkKeychain();
+      const response = await axios.get<GetApplyingGroupsResponse>(
+        `${baseUrl}/applying_groups?id=${credentials?.id}`,
+        addBearer(credentials?.token),
+      );
+
+      setApplyingGroups(response.data);
+    } catch (e) {
+    } finally {
+      setIsloading(false);
+    }
+  }, [addBearer, checkKeychain]);
+
+  useEffect(() => {
+    getApplyingGroups();
+  }, [getApplyingGroups]);
+
+  return {
+    applyingGroups,
+    isLoading,
   };
 };

@@ -1,9 +1,18 @@
 import React, {useLayoutEffect} from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import {ListItem} from './ListItem';
-import {useGetApplyedGroup} from '~/hooks/applyingGroups';
+import {
+  useGetAppliedGroups,
+  useGetApplyingGroups,
+} from '~/hooks/applyingGroups';
 
 const data = [
   {
@@ -28,22 +37,47 @@ export const ApplyingGroup = () => {
     });
   }, [navigation]);
 
-  const {applyedGroup} = useGetApplyedGroup();
+  const {applyedGroup, isLoading} = useGetAppliedGroups();
+  const {applyingGroups, isLoading: _loading} = useGetApplyingGroups();
+  if (applyingGroups.length) {
+    console.log(applyingGroups[0].appliedUser);
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contents}>
         <Text style={styles.title}>申請されているグループ</Text>
         <View style={styles.applyedList}>
-          {applyedGroup.map((d) => (
+          {isLoading ? (
+            <ActivityIndicator style={{marginTop: 20}} />
+          ) : (
+            applyedGroup.map((d) => (
+              <ListItem
+                key={d.id}
+                id={d.id}
+                name={d.applyingUser.name}
+                imageUrl={d.applyingUser.avatar}
+                type="applied"
+              />
+            ))
+          )}
+        </View>
+        <Text style={[styles.title, {marginTop: 25}]}>
+          申請しているグループ
+        </Text>
+        {_loading ? (
+          <ActivityIndicator style={{marginTop: 20}} />
+        ) : (
+          applyingGroups.map((d) => (
             <ListItem
               key={d.id}
               id={d.id}
-              name={d.applyingUser.name}
-              imageUrl={d.applyingUser.avatar}
+              name={d.appliedUser.name}
+              imageUrl={d.appliedUser.avatar}
+              type="applying"
             />
-          ))}
-        </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );

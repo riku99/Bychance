@@ -1,8 +1,15 @@
-export type GetApplyedGroupResponse = {
+type UserData = {
+  id: string;
+  name: string;
+  avatar: string | null;
+};
+
+export type GetApplyingGroupsResponse = {
   id: number;
-  applyingUser: {
-    id: string;
-    name: string;
-    avatar: string | null;
-  };
+  appliedUser: UserData;
+}[];
+
+export type GetAppliedGroupsResponse = {
+  id: number;
+  applyingUser: UserData;
 }[];

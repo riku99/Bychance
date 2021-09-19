@@ -9,16 +9,19 @@ type Props = {
   id: number;
   name: string;
   imageUrl: string | null;
+  type: 'applied' | 'applying';
 };
 
-export const ListItem = React.memo(({id, name, imageUrl}: Props) => {
+export const ListItem = React.memo(({id, name, imageUrl, type}: Props) => {
   return (
     <View style={styles.listItem}>
       <UserAvatar image={imageUrl} size="medium" />
       <View style={styles.listItemRight}>
         <Text style={styles.listText}>
           <Text style={styles.name}>{name}</Text>
-          さんから申請されています。
+          {type === 'applied'
+            ? 'さんから申請されています。'
+            : 'さんに申請しています。'}
         </Text>
         <View style={styles.buttons}>
           <Button
