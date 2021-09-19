@@ -52,13 +52,15 @@ export const useCreateApplyingGroup = () => {
     async ({userId}: {userId: string}) => {
       try {
         const credentials = await checkKeychain();
-        const response = await axios.post(
+        await axios.post(
           `${baseUrl}/applying_groups?id=${credentials?.id}`,
           {
             to: userId,
           },
           addBearer(credentials?.token),
         );
+
+        return true;
       } catch (e) {
         handleApiError(e);
       }

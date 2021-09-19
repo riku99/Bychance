@@ -1,16 +1,25 @@
 import {useMemo} from 'react';
 import {Alert} from 'react-native';
+import {useToast} from 'react-native-fast-toast';
 
 import {useCreateBlock, useDeleteBlock} from './block';
 import {useUserBlock} from './users';
 import {useRemovePostsAndFlashesDispatch} from './stores';
 import {useCreateApplyingGroup} from './applyingGroups';
 
-export const useUserPageModalList = ({userId}: {userId: string}) => {
+export const useUserPageModalList = ({
+  userId,
+  closeModal,
+}: {
+  userId: string;
+  closeModal?: () => void;
+}) => {
   const {block} = useCreateBlock();
   const {deleteBlock} = useDeleteBlock();
   const _block = useUserBlock(userId);
   const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId});
+
+  const toast = useToast();
 
   const {applyGroup} = useCreateApplyingGroup();
 
@@ -53,7 +62,13 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
             {
               text: groupText.alertButtonText,
               onPress: async () => {
-                applyGroup({userId});
+                if (closeModal) {
+                  closeModal();
+                }
+                const result = await applyGroup({userId});
+                if (result) {
+                  toast?.show('申請しました', {type: 'success'});
+                }
               },
             },
             {
@@ -81,7 +96,16 @@ export const useUserPageModalList = ({userId}: {userId: string}) => {
         },
       },
     ];
-  }, [block, userId, _block, deleteBlock, removeDispatch, applyGroup]);
+  }, [
+    block,
+    userId,
+    _block,
+    deleteBlock,
+    removeDispatch,
+    applyGroup,
+    toast,
+    closeModal,
+  ]);
 
   return {
     list,

@@ -13,6 +13,7 @@ export const MoreHorizModal = React.memo(
   ({userId, isVisble, closeModal}: Props) => {
     const {list} = useUserPageModalList({
       userId,
+      closeModal,
     });
 
     return (
