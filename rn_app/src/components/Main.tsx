@@ -11,7 +11,10 @@ import {useHandleErrors} from '~/hooks/errors';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
 import {useGetTalkRoomData} from '~/hooks/talkRooms';
 import {useGetIsDisplayedToOtherUsersOnActive} from '~/hooks/users';
-import {useSetupApplyingGroupSocket} from '~/hooks/applyingGroups';
+import {
+  useSetupApplyingGroupSocket,
+  useAppliedGropusOnActive,
+} from '~/hooks/applyingGroups';
 
 export const Main = React.memo(() => {
   // socket周り
@@ -34,6 +37,9 @@ export const Main = React.memo(() => {
 
   // アクティブになるたびにisDisplayedToOtherUsersを更新
   useGetIsDisplayedToOtherUsersOnActive();
+
+  // アクティブになるたびに申請されているグループの確認
+  useAppliedGropusOnActive();
 
   return (
     <View style={styles.container}>

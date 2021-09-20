@@ -16,6 +16,7 @@ import {
   getRequestToApplyingGroups,
   deleteRequestToApplyingGroups,
 } from '~/apis/applyingGroups';
+import {useGroupBadge} from './appState';
 
 export const useSetupApplyingGroupSocket = () => {
   const id = useMyId();
@@ -162,6 +163,37 @@ export const useGetApplyingGroups = () => {
     setApplyingGroups,
     isLoading,
   };
+};
+
+export const useAppliedGropusOnActive = () => {
+  const {setGroupBadge} = useGroupBadge();
+
+  useEffect(() => {
+    const _fetch = async () => {
+      const response = await getRequestToAppliedGroups();
+      if (response.data.length) {
+        setGroupBadge(true);
+      }
+    };
+    _fetch();
+  }, [setGroupBadge]);
+
+  useEffect(() => {
+    const onActive = async (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        const response = await getRequestToAppliedGroups();
+        if (response.data.length) {
+          setGroupBadge(true);
+        }
+      }
+    };
+
+    AppState.addEventListener('change', onActive);
+
+    return () => {
+      AppState.removeEventListener('change', onActive);
+    };
+  }, [setGroupBadge]);
 };
 
 export const useDeleteApplyingGroup = () => {
