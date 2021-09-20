@@ -61,6 +61,7 @@ export const useUserPageModalList = ({
           Alert.alert(groupText.title, groupText.alertSubTitle, [
             {
               text: groupText.alertButtonText,
+              style: 'destructive',
               onPress: async () => {
                 const result = await applyGroup({userId});
                 if (result) {

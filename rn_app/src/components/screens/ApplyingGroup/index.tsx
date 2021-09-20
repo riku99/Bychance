@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useToast} from 'react-native-fast-toast';
@@ -45,21 +46,39 @@ export const ApplyingGroup = () => {
     id: number;
     type: 'applied' | 'applying';
   }) => {
-    setToastLoading(true);
-    const result = await deleteApplyingGroup({id});
-    if (result) {
-      if (type === 'applied') {
-        setApplyedGroup((current) => current.filter((c) => c.id !== result));
-      }
+    Alert.alert(type === 'applied' ? '削除しますか?' : '取り消しますか?', '', [
+      {
+        text: type === 'applied' ? '削除する' : '取り消す',
+        style: 'destructive',
+        onPress: async () => {
+          setToastLoading(true);
+          const result = await deleteApplyingGroup({id});
+          if (result) {
+            if (type === 'applied') {
+              setApplyedGroup((current) =>
+                current.filter((c) => c.id !== result),
+              );
+            }
 
-      if (type === 'applying') {
-        setApplyingGroups((current) => current.filter((c) => c.id !== result));
-      }
-      toast?.show(type === 'applied' ? '削除しました' : '取り消しました', {
-        type: 'success',
-      });
-    }
-    setToastLoading(false);
+            if (type === 'applying') {
+              setApplyingGroups((current) =>
+                current.filter((c) => c.id !== result),
+              );
+            }
+            toast?.show(
+              type === 'applied' ? '削除しました' : '取り消しました',
+              {
+                type: 'success',
+              },
+            );
+          }
+          setToastLoading(false);
+        },
+      },
+      {
+        text: 'キャンセル',
+      },
+    ]);
   };
 
   useEffect(() => {
