@@ -118,6 +118,24 @@ export const useToastLoading = () => {
   };
 };
 
+export const useGroupBadge = () => {
+  const dispatch = useCustomDispatch();
+  const groupBadge = useSelector(
+    (state: RootState) => state.appReducer.groupBadge,
+  );
+  const setGroupBadge = useCallback(
+    (v: boolean) => {
+      dispatch(setAppState({groupBadge: v}));
+    },
+    [dispatch],
+  );
+
+  return {
+    groupBadge,
+    setGroupBadge,
+  };
+};
+
 export const useSetSafeArea = () => {
   const {top} = useSafeAreaInsets();
   const dispatch = useCustomDispatch();

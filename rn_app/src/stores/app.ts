@@ -7,6 +7,7 @@ type InitialState = {
   displayedMenu: boolean;
   pauseFlashProgress: boolean;
   toastLoading: boolean;
+  groupBadge: boolean;
   safeArea: {
     // useSafeAreaInsetsでtopは取れるが、StatuBarがhiddenになると0になってしまう。StatusBarがhiddenになっても値が欲しい場合あるのでstoreで保存
     top: number;
@@ -20,6 +21,7 @@ const initialState: InitialState = {
   displayedMenu: false,
   pauseFlashProgress: false,
   toastLoading: false,
+  groupBadge: false,
   safeArea: {
     top: 0,
   },
