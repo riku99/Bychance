@@ -18,12 +18,16 @@ import {
 import {useDeleteApplyingGroup} from '~/hooks/applyingGroups';
 import {useToastLoading} from '~/hooks/appState';
 import {useGroupBadge} from '~/hooks/appState';
+import {RightButton} from './RightButton';
 
 export const ApplyingGroup = () => {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'グループ',
+      headerRight: () => {
+        return <RightButton />;
+      },
     });
   }, [navigation]);
 
@@ -147,5 +151,6 @@ const styles = StyleSheet.create({
   },
   applyedList: {
     marginTop: 6,
+    minHeight: 55,
   },
 });

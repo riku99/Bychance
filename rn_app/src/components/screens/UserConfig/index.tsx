@@ -7,10 +7,11 @@ import {MessageConfig} from './MessageConfig';
 import {AccountConfig} from './AccountConfig';
 import {Others} from './Others';
 import {LocationConfig} from './LocationConfig';
+import {GroupConfig} from './GroupConfig';
 
 type Props = {
-  route: RouteProp<RootStackParamList, 'UserConfing'>;
-  navigation: NavigationProp<RootStackParamList, 'UserConfing'>;
+  route: RouteProp<RootStackParamList, 'UserConfig'>;
+  navigation: NavigationProp<RootStackParamList, 'UserConfig'>;
 };
 
 export const UserConfig = React.memo(({route, navigation}: Props) => {
@@ -26,6 +27,8 @@ export const UserConfig = React.memo(({route, navigation}: Props) => {
         return '位置情報に関する設定';
       case 'account':
         return 'アカウントに関する設定';
+      case 'group':
+        return 'グループに関する設定';
       case 'others':
         return 'その他';
     }
@@ -55,6 +58,10 @@ export const UserConfig = React.memo(({route, navigation}: Props) => {
 
   if (goTo === 'others') {
     return <Others />;
+  }
+
+  if (goTo === 'group') {
+    return <GroupConfig />;
   }
 
   return null;

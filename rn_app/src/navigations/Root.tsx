@@ -35,8 +35,8 @@ export type RootStackParamList = {
     source: string;
     sourceType: NonNullable<User['backGroundItemType']>;
   };
-  UserConfing: {
-    goTo: 'display' | 'message' | 'location' | 'account' | 'others';
+  UserConfig: {
+    goTo: 'display' | 'message' | 'location' | 'account' | 'others' | 'group';
   };
   PrivateConfig: {
     goTo: 'zone' | 'time';
@@ -147,7 +147,7 @@ export const RootStackScreen = React.memo(() => {
         }}
       />
       <RootStack.Screen
-        name="UserConfing"
+        name="UserConfig"
         component={UserConfig}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

@@ -27,8 +27,8 @@ export const Menu = React.memo(() => {
   }, []);
 
   const navigateToConfig = useCallback(
-    (goTo: RootStackParamList['UserConfing']['goTo']) => {
-      navigation.navigate('UserConfing', {goTo});
+    (goTo: RootStackParamList['UserConfig']['goTo']) => {
+      navigation.navigate('UserConfig', {goTo});
     },
     [navigation],
   );
