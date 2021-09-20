@@ -21,6 +21,7 @@ import {useGroupBadge} from './appState';
 export const useSetupApplyingGroupSocket = () => {
   const id = useMyId();
   const [socket, setSocket] = useState<Socket>();
+  const {setGroupBadge} = useGroupBadge();
 
   // 初回レンダリングではonChangeが実行されないのでここでサブスクリプション
   useEffect(() => {
@@ -72,9 +73,10 @@ export const useSetupApplyingGroupSocket = () => {
           style: {backgroundColor: '#00163b'},
           titleStyle: {fontWeight: 'bold'},
         });
+        setGroupBadge(true);
       });
     }
-  }, [socket]);
+  }, [socket, setGroupBadge]);
 
   useEffect(() => {
     if (socket) {
@@ -108,14 +110,13 @@ export const useGetAppliedGroups = () => {
   const [applyedGroup, setApplyedGroup] = useState<GetAppliedGroupsResponse>(
     [],
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const {handleApiError} = useApikit();
   const getAppliedGroups = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await getRequestToAppliedGroups();
-
       setApplyedGroup(response.data);
     } catch (e) {
       handleApiError(e);
@@ -140,7 +141,7 @@ export const useGetApplyingGroups = () => {
   const [applyingGroups, setApplyingGroups] = useState<
     GetApplyingGroupsResponse
   >([]);
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
 
   const getApplyingGroups = useCallback(async () => {
     setIsloading(true);

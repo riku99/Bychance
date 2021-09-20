@@ -63,10 +63,10 @@ export const ApplyingGroup = () => {
   };
 
   useEffect(() => {
-    if (!applyedGroup.length) {
+    if (!isLoading && !applyedGroup.length) {
       setGroupBadge(false);
     }
-  }, [applyedGroup.length, setGroupBadge]);
+  }, [applyedGroup, setGroupBadge, isLoading]);
 
   return (
     <View style={styles.container}>
