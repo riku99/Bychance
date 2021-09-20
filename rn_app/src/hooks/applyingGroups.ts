@@ -1,16 +1,21 @@
 import {useCallback, useEffect, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import io, {Socket} from 'socket.io-client';
-import {default as axios} from 'axios';
 import {showMessage} from 'react-native-flash-message';
 
 import {useMyId} from './users';
-import {origin, baseUrl} from '~/constants/url';
+import {origin} from '~/constants/url';
 import {useApikit} from './apikit';
 import {
   GetApplyingGroupsResponse,
   GetAppliedGroupsResponse,
 } from '~/types/response/applyingGroup';
+import {
+  getRequestToAppliedGroups,
+  postRequestApplyingGroups,
+  getRequestToApplyingGroups,
+  deleteRequestToApplyingGroups,
+} from '~/apis/applyingGroups';
 
 export const useSetupApplyingGroupSocket = () => {
   const id = useMyId();
@@ -58,7 +63,7 @@ export const useSetupApplyingGroupSocket = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('applyGroup', (data) => {
+      socket.on('applyGroup', () => {
         showMessage({
           message: 'グループ申請を受け取りました',
           description: '',
@@ -80,25 +85,17 @@ export const useSetupApplyingGroupSocket = () => {
 };
 
 export const useCreateApplyingGroup = () => {
-  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const {handleApiError} = useApikit();
   const applyGroup = useCallback(
     async ({userId}: {userId: string}) => {
       try {
-        const credentials = await checkKeychain();
-        await axios.post(
-          `${baseUrl}/applying_groups?id=${credentials?.id}`,
-          {
-            to: userId,
-          },
-          addBearer(credentials?.token),
-        );
-
+        await postRequestApplyingGroups({userId});
         return true;
       } catch (e) {
         handleApiError(e);
       }
     },
-    [addBearer, checkKeychain, handleApiError],
+    [handleApiError],
   );
 
   return {
@@ -112,15 +109,11 @@ export const useGetAppliedGroups = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  const {addBearer, checkKeychain, handleApiError} = useApikit();
-  const getAppliedGroup = useCallback(async () => {
+  const {handleApiError} = useApikit();
+  const getAppliedGroups = useCallback(async () => {
     setIsLoading(true);
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<GetAppliedGroupsResponse>(
-        `${baseUrl}/applying_groups?id=${credentials?.id}&type=applied`,
-        addBearer(credentials?.token),
-      );
+      const response = await getRequestToAppliedGroups();
 
       setApplyedGroup(response.data);
     } catch (e) {
@@ -128,16 +121,16 @@ export const useGetAppliedGroups = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [addBearer, checkKeychain, handleApiError]);
+  }, [handleApiError]);
 
   useEffect(() => {
-    getAppliedGroup();
-  }, [getAppliedGroup]);
+    getAppliedGroups();
+  }, [getAppliedGroups]);
 
   return {
     applyedGroup,
     isLoading,
-    getAppliedGroup,
+    getAppliedGroups,
     setApplyedGroup,
   };
 };
@@ -148,23 +141,17 @@ export const useGetApplyingGroups = () => {
   >([]);
   const [isLoading, setIsloading] = useState(false);
 
-  const {checkKeychain, addBearer} = useApikit();
-
   const getApplyingGroups = useCallback(async () => {
     setIsloading(true);
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<GetApplyingGroupsResponse>(
-        `${baseUrl}/applying_groups?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      const response = await getRequestToApplyingGroups();
 
       setApplyingGroups(response.data);
     } catch (e) {
     } finally {
       setIsloading(false);
     }
-  }, [addBearer, checkKeychain]);
+  }, []);
 
   useEffect(() => {
     getApplyingGroups();
@@ -178,23 +165,19 @@ export const useGetApplyingGroups = () => {
 };
 
 export const useDeleteApplyingGroup = () => {
-  const {addBearer, checkKeychain, handleApiError} = useApikit();
+  const {handleApiError} = useApikit();
 
   const deleteApplyingGroup = useCallback(
     async ({id}: {id: number}) => {
       try {
-        const credentials = await checkKeychain();
-        const response = await axios.delete<Number>(
-          `${baseUrl}/applying_groups/${id}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        const response = await deleteRequestToApplyingGroups({id});
 
         return response.data;
       } catch (e) {
         handleApiError(e);
       }
     },
-    [addBearer, checkKeychain, handleApiError],
+    [handleApiError],
   );
 
   return {
