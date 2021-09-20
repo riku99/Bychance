@@ -62,11 +62,11 @@ export const useUserPageModalList = ({
             {
               text: groupText.alertButtonText,
               onPress: async () => {
-                if (closeModal) {
-                  closeModal();
-                }
                 const result = await applyGroup({userId});
                 if (result) {
+                  if (closeModal) {
+                    closeModal();
+                  }
                   toast?.show('申請しました', {type: 'success'});
                 }
               },

@@ -18,11 +18,20 @@ export const useHandleErrors = () => {
 
   useEffect(() => {
     if (error) {
+      console.log('fire');
       switch (error.errorType) {
         case 'invalidError':
-          toast?.show(error.message, {
-            type: 'danger',
-          });
+          if (error.alertDialog) {
+            Alert.alert('エラーが発生しました', error.message, [
+              {
+                text: 'OK',
+              },
+            ]);
+          } else {
+            toast?.show(error.message, {
+              type: 'danger',
+            });
+          }
           break;
         case 'loginError':
           Keychain.resetGenericPassword();
