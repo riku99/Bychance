@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -16,6 +16,7 @@ import {
 } from '~/hooks/applyingGroups';
 import {useDeleteApplyingGroup} from '~/hooks/applyingGroups';
 import {useToastLoading} from '~/hooks/appState';
+import {useGroupBadge} from '~/hooks/appState';
 
 export const ApplyingGroup = () => {
   const navigation = useNavigation();
@@ -27,6 +28,7 @@ export const ApplyingGroup = () => {
 
   const {setToastLoading} = useToastLoading();
   const toast = useToast();
+  const {setGroupBadge} = useGroupBadge();
 
   const {applyedGroup, isLoading, setApplyedGroup} = useGetAppliedGroups();
   const {
@@ -59,6 +61,12 @@ export const ApplyingGroup = () => {
     }
     setToastLoading(false);
   };
+
+  useEffect(() => {
+    if (!applyedGroup.length) {
+      setGroupBadge(false);
+    }
+  }, [applyedGroup.length, setGroupBadge]);
 
   return (
     <View style={styles.container}>

@@ -14,7 +14,7 @@ type Props = {
 };
 
 export const ListItem = React.memo(
-  ({id, name, imageUrl, type, onDeletePress}: Props) => {
+  ({name, imageUrl, type, onDeletePress}: Props) => {
     return (
       <View style={styles.listItem}>
         <UserAvatar image={imageUrl} size="medium" />
