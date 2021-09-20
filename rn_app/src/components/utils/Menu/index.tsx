@@ -1,14 +1,15 @@
 import React, {useMemo, useEffect, useRef, useCallback} from 'react';
 import {View, Dimensions, StyleSheet} from 'react-native';
-import {ListItem, Icon} from 'react-native-elements';
+import {ListItem, Icon, Badge} from 'react-native-elements';
 import {Modalize} from 'react-native-modalize';
 import {useNavigation} from '@react-navigation/native';
 
 import {RootStackParamList} from '~/navigations/Root';
-import {useDisplayedMenu} from '~/hooks/appState';
+import {useDisplayedMenu, useGroupBadge} from '~/hooks/appState';
 
 export const Menu = React.memo(() => {
   const {displayedMenu, setDisplayedMenu} = useDisplayedMenu();
+  const {groupBadge} = useGroupBadge();
 
   const modalizeRef = useRef<Modalize>(null);
   useEffect(() => {
@@ -46,6 +47,7 @@ export const Menu = React.memo(() => {
       {
         title: 'グループ',
         icon: 'people',
+        badge: groupBadge,
         titleStyle: styles.listTitleStyle,
         onPress: () => {
           closeModal();
@@ -89,7 +91,7 @@ export const Menu = React.memo(() => {
         },
       },
     ];
-  }, [closeModal, navigateToConfig, navigation]);
+  }, [closeModal, navigateToConfig, navigation, groupBadge]);
 
   return (
     <Modalize
@@ -103,7 +105,15 @@ export const Menu = React.memo(() => {
         {list.map((l, i) => {
           return (
             <ListItem key={i} onPress={l.onPress}>
-              <Icon name={l.icon} color={l.titleStyle.color} />
+              <View>
+                <Icon name={l.icon} color={l.titleStyle.color} />
+                {l.badge && (
+                  <Badge
+                    status="error"
+                    containerStyle={styles.badgeContainer}
+                  />
+                )}
+              </View>
               <ListItem.Content>
                 <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
               </ListItem.Content>
@@ -128,5 +138,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '500',
     color: '#575757',
+  },
+  badgeContainer: {
+    position: 'absolute',
+    right: -4,
   },
 });

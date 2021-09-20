@@ -184,6 +184,8 @@ export const useAppliedGropusOnActive = () => {
         const response = await getRequestToAppliedGroups();
         if (response.data.length) {
           setGroupBadge(true);
+        } else {
+          setGroupBadge(false);
         }
       }
     };

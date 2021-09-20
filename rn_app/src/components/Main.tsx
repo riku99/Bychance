@@ -21,23 +21,17 @@ export const Main = React.memo(() => {
   // useTalkRoomMessagesIo();
   useSetupTalkRoomMessageSocket();
   useSetupApplyingGroupSocket();
-
   // push通知周り
   usePushNotificationReqest();
   useRegisterDeviceToken();
-
   // 位置情報周り
   useBackgroundGeolocation();
-
   // エラーをdispatchしたときの処理
   useHandleErrors();
-
   // アクティブになるたびにトークルーム更新とか
   useGetTalkRoomData();
-
   // アクティブになるたびにisDisplayedToOtherUsersを更新
   useGetIsDisplayedToOtherUsersOnActive();
-
   // アクティブになるたびに申請されているグループの確認
   useAppliedGropusOnActive();
 
