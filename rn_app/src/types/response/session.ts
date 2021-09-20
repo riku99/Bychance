@@ -19,6 +19,7 @@ export type LoginData = {
     lng: number | null;
     intro: boolean;
     tooltipOfUsersDisplayShowed: boolean;
+    groupsApplicationEnabled: boolean;
   };
   posts: {
     id: number;

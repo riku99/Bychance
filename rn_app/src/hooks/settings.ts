@@ -6,6 +6,7 @@ import {baseUrl} from '~/constants/url';
 import {RootState} from '~/stores';
 import {setSetitngs} from '~/stores/settings';
 import {useApikit} from './apikit';
+import {useCustomDispatch} from './stores';
 
 export const useDisplay = () => {
   const {dispatch, addBearer, checkKeychain, handleApiError} = useApikit();
@@ -191,5 +192,15 @@ export const useIntro = () => {
     currentIntro,
     setIntro,
     changeIntro,
+  };
+};
+
+export const useGroupsApplicationEnabled = () => {
+  const groupsApplicationEnabled = useSelector(
+    (state: RootState) => state.settingsReducer.groupsApplicationEnabled,
+  );
+
+  return {
+    groupsApplicationEnabled,
   };
 };

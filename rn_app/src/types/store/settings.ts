@@ -4,4 +4,5 @@ export type Settings = {
   talkRoomMessageReceipt?: boolean;
   showReceiveMessage?: boolean;
   intro?: boolean;
+  groupsApplicationEnabled?: boolean;
 };
