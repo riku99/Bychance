@@ -11,10 +11,11 @@ type Props = {
   imageUrl: string | null;
   type: 'applied' | 'applying';
   onDeletePress: () => void;
+  onJoinPress: () => void;
 };
 
 export const ListItem = React.memo(
-  ({name, imageUrl, type, onDeletePress}: Props) => {
+  ({name, imageUrl, type, onDeletePress, onJoinPress}: Props) => {
     return (
       <View style={styles.listItem}>
         <UserAvatar image={imageUrl} size="medium" />
@@ -28,7 +29,7 @@ export const ListItem = React.memo(
           <View style={styles.buttons}>
             {type === 'applied' && (
               <Button
-                title="参加する"
+                title="グループになる"
                 titleStyle={styles.buttonTitle}
                 buttonStyle={[
                   styles.button,
@@ -37,6 +38,7 @@ export const ListItem = React.memo(
                   },
                 ]}
                 activeOpacity={1}
+                onPress={onJoinPress}
               />
             )}
             <Button
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {
-    width: 80,
     padding: 5,
   },
   buttonTitle: {

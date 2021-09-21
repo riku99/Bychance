@@ -4,13 +4,11 @@ import {default as axios} from 'axios';
 
 import {baseUrl} from '~/constants/url';
 
-export const putRequestToUsersGroupsApplicationEnabled = async (
-  value: boolean,
-) => {
+export const postRequestToGroups = async ({ownerId}: {ownerId: string}) => {
   const credentials = await checkKeychain();
-  return await axios.put<String>(
-    `${baseUrl}/users/groups_application_enabled?id=${credentials?.id}`,
-    {value},
+  return await axios.post(
+    `${baseUrl}/groups?id=${credentials?.id}`,
+    {ownerId},
     addBearer(credentials?.token),
   );
 };

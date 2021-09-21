@@ -19,6 +19,7 @@ import {useDeleteApplyingGroup} from '~/hooks/applyingGroups';
 import {useToastLoading} from '~/hooks/appState';
 import {useGroupBadge} from '~/hooks/appState';
 import {RightButton} from './RightButton';
+import {useJoinGroup} from '~/hooks/groups';
 
 export const ApplyingGroup = () => {
   const navigation = useNavigation();
@@ -91,6 +92,26 @@ export const ApplyingGroup = () => {
     }
   }, [applyedGroup, setGroupBadge, isLoading]);
 
+  const {join} = useJoinGroup();
+  const onJoinPress = ({ownerId}: {ownerId: string}) => {
+    Alert.alert(
+      '参加しますか?',
+      '現在申請されている他の全てのグループと申請中のグループが取り消されます。',
+      [
+        {
+          text: '参加する',
+          style: 'destructive',
+          onPress: () => {
+            join({ownerId});
+          },
+        },
+        {
+          text: 'キャンセル',
+        },
+      ],
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contents}>
@@ -108,6 +129,9 @@ export const ApplyingGroup = () => {
                 type="applied"
                 onDeletePress={() => {
                   onDeletePress({id: d.id, type: 'applied'});
+                }}
+                onJoinPress={() => {
+                  onJoinPress({ownerId: d.applyingUser.id});
                 }}
               />
             ))
