@@ -9,6 +9,10 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useToast} from 'react-native-fast-toast';
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBar,
+} from '@react-navigation/material-top-tabs';
 
 import {ListItem} from './ListItem';
 import {
@@ -20,12 +24,16 @@ import {useToastLoading} from '~/hooks/appState';
 import {useGroupBadge} from '~/hooks/appState';
 import {RightButton} from './RightButton';
 import {useJoinGroup} from '~/hooks/groups';
+import {Tab} from 'react-native-elements/dist/tab/Tab';
+
+const TopTab = createMaterialTopTabNavigator();
 
 export const ApplyingGroup = () => {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'グループ',
+      headerStyle: {shadowColor: 'transparent'},
       headerRight: () => {
         return <RightButton />;
       },
@@ -118,7 +126,15 @@ export const ApplyingGroup = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contents}>
+      <TopTab.Navigator tabBarOptions={{labelStyle: {fontWeight: 'bold'}}}>
+        <TopTab.Screen
+          name={'申請されている\nグループ'}
+          component={() => null}
+        />
+        <TopTab.Screen name={'申請中の\nグループ'} component={() => null} />
+        <TopTab.Screen name="現在のグループ" component={() => null} />
+      </TopTab.Navigator>
+      {/* <ScrollView contentContainerStyle={styles.contents}>
         <Text style={styles.title}>申請されているグループ</Text>
         <View style={styles.applyedList}>
           {isLoading ? (
@@ -160,7 +176,7 @@ export const ApplyingGroup = () => {
             />
           ))
         )}
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 };

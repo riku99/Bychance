@@ -23,7 +23,7 @@ import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
 import {Intoro} from '~/components/screens/Intoro';
 import {useIntro} from '~/hooks/settings';
-import {ApplyingGroup} from '~/components/screens/ApplyingGroup';
+import {ApplyingGroup} from '~/components/screens/Groups';
 
 export type RootStackParamList = {
   Tab: undefined;
