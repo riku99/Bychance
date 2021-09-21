@@ -6,6 +6,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {AppliedGroups} from './AppliedGroups';
 import {ApplyingGroups} from './ApplyingGroups';
 import {RightButton} from './RightButton';
+import {CurrentGroup} from './CurrentGroup';
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -31,7 +32,7 @@ export const ApplyingGroup = () => {
           component={AppliedGroups}
         />
         <TopTab.Screen name={'申請中の\nグループ'} component={ApplyingGroups} />
-        <TopTab.Screen name="現在のグループ" component={AppliedGroups} />
+        <TopTab.Screen name="現在のグループ" component={CurrentGroup} />
       </TopTab.Navigator>
     </View>
   );

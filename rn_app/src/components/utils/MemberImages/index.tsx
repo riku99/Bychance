@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions, StyleProp, ViewStyle} from 'react-native';
 
 import {UserAvatar} from '~/components/utils/Avatar';
 
@@ -12,10 +12,11 @@ type Props = {
     imageLeft: number;
     oneLineItems: number;
   };
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export const MemberImages = React.memo(
-  ({memberImages, onPress, layout}: Props) => {
+  ({memberImages, onPress, layout, containerStyle}: Props) => {
     const imageWidth = layout
       ? (layout.containerWidth - layout.paddingH * 2) / layout.oneLineItems -
         layout.imageLeft
@@ -28,7 +29,8 @@ export const MemberImages = React.memo(
     const imageLeft = layout ? layout.imageLeft : defaultImageLeft;
 
     return (
-      <View style={[styles.wrap, {paddingHorizontal: paddingH}]}>
+      <View
+        style={[styles.wrap, {paddingHorizontal: paddingH}, containerStyle]}>
         {memberImages.map((u, i) => (
           <UserAvatar
             image={u}
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
   wrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingTop: 21,
   },
   avatarContainer: {
     marginTop: 10,

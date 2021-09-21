@@ -17,5 +17,5 @@ const urls = [
 ];
 
 export const UserInformationRouteInTabView = React.memo(({}) => {
-  return <MemberImages memberImages={urls} />;
+  return <MemberImages memberImages={urls} containerStyle={{paddingTop: 10}} />;
 });
