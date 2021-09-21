@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Dimensions} from 'react-native';
 
 import {UserAvatar} from '~/components/utils/Avatar';
 
@@ -23,8 +23,11 @@ export const UserInformationRouteInTabView = React.memo(({}) => {
       {urls.map((u, i) => (
         <UserAvatar
           image={u}
-          size="medium"
-          containerStyle={{marginLeft: 10, marginTop: 10}}
+          size={avatarWidth}
+          containerStyle={{
+            marginLeft: i % 6 !== 0 ? avatarLeft : undefined,
+            marginTop: 10,
+          }}
           key={i}
         />
       ))}
@@ -32,11 +35,17 @@ export const UserInformationRouteInTabView = React.memo(({}) => {
   );
 });
 
+const {width} = Dimensions.get('screen');
+const paddingH = 10;
+const avatarLeft = 10;
+const oneLineItems = 6;
+const avatarWidth = (width - paddingH * 2) / oneLineItems - avatarLeft;
+
 const styles = StyleSheet.create({
   wrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingTop: 21,
-    paddingHorizontal: 10,
+    paddingHorizontal: paddingH,
   },
 });

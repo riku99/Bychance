@@ -104,9 +104,8 @@ export const ApplyingGroup = () => {
           onPress: async () => {
             const result = await join({ownerId});
             if (result) {
-              setApplyedGroup((current) =>
-                current.filter((c) => c.applyingUser.id !== ownerId),
-              );
+              setApplyedGroup([]);
+              setApplyingGroups([]);
             }
           },
         },
