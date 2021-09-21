@@ -14,6 +14,8 @@ import {
   MaterialTopTabBar,
 } from '@react-navigation/material-top-tabs';
 
+import {AppliedGroups} from './AppliedGroups';
+
 import {ListItem} from './ListItem';
 import {
   useGetAppliedGroups,
@@ -44,7 +46,7 @@ export const ApplyingGroup = () => {
   const toast = useToast();
   const {setGroupBadge} = useGroupBadge();
 
-  const {applyedGroup, isLoading, setApplyedGroup} = useGetAppliedGroups();
+  // const {applyedGroup, isLoading, setApplyedGroup} = useGetAppliedGroups();
   const {
     applyingGroups,
     isLoading: _loading,
@@ -94,12 +96,6 @@ export const ApplyingGroup = () => {
     ]);
   };
 
-  useEffect(() => {
-    if (!isLoading && !applyedGroup.length) {
-      setGroupBadge(false);
-    }
-  }, [applyedGroup, setGroupBadge, isLoading]);
-
   const {join} = useJoinGroup();
   const onJoinPress = ({ownerId}: {ownerId: string}) => {
     Alert.alert(
@@ -129,9 +125,9 @@ export const ApplyingGroup = () => {
       <TopTab.Navigator tabBarOptions={{labelStyle: {fontWeight: 'bold'}}}>
         <TopTab.Screen
           name={'申請されている\nグループ'}
-          component={() => null}
+          component={AppliedGroups}
         />
-        <TopTab.Screen name={'申請中の\nグループ'} component={() => null} />
+        <TopTab.Screen name={'申請中の\nグループ'} component={AppliedGroups} />
         <TopTab.Screen name="現在のグループ" component={() => null} />
       </TopTab.Navigator>
       {/* <ScrollView contentContainerStyle={styles.contents}>

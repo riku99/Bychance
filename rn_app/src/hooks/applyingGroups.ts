@@ -17,6 +17,7 @@ import {
   deleteRequestToApplyingGroups,
 } from '~/apis/applyingGroups';
 import {useGroupBadge} from './appState';
+import {useToastLoading} from './appState';
 
 export const useSetupApplyingGroupSocket = () => {
   const id = useMyId();
@@ -107,7 +108,7 @@ export const useCreateApplyingGroup = () => {
 };
 
 export const useGetAppliedGroups = () => {
-  const [applyedGroup, setApplyedGroup] = useState<GetAppliedGroupsResponse>(
+  const [appliedGroups, setAppliedGroups] = useState<GetAppliedGroupsResponse>(
     [],
   );
   const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +118,7 @@ export const useGetAppliedGroups = () => {
     setIsLoading(true);
     try {
       const response = await getRequestToAppliedGroups();
-      setApplyedGroup(response.data);
+      setAppliedGroups(response.data);
     } catch (e) {
       handleApiError(e);
     } finally {
@@ -130,10 +131,10 @@ export const useGetAppliedGroups = () => {
   }, [getAppliedGroups]);
 
   return {
-    applyedGroup,
+    appliedGroups,
     isLoading,
     getAppliedGroups,
-    setApplyedGroup,
+    setAppliedGroups,
   };
 };
 
@@ -200,19 +201,24 @@ export const useAppliedGropusOnActive = () => {
 };
 
 export const useDeleteApplyingGroup = () => {
-  const {handleApiError} = useApikit();
+  const {handleApiError, toast} = useApikit();
+  const {setToastLoading} = useToastLoading();
 
   const deleteApplyingGroup = useCallback(
     async ({id}: {id: number}) => {
+      setToastLoading(true);
       try {
         const response = await deleteRequestToApplyingGroups({id});
 
+        toast?.show('削除しました', {type: 'success'});
         return response.data;
       } catch (e) {
         handleApiError(e);
+      } finally {
+        setToastLoading(false);
       }
     },
-    [handleApiError],
+    [handleApiError, setToastLoading, toast],
   );
 
   return {
