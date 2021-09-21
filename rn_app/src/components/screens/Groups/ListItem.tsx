@@ -11,7 +11,7 @@ type Props = {
   imageUrl: string | null;
   type: 'applied' | 'applying';
   onDeletePress: () => void;
-  onJoinPress: () => void;
+  onJoinPress?: () => void;
 };
 
 export const ListItem = React.memo(

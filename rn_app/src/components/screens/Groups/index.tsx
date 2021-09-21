@@ -15,7 +15,7 @@ import {
 } from '@react-navigation/material-top-tabs';
 
 import {AppliedGroups} from './AppliedGroups';
-
+import {ApplyingGroups} from './ApplyingGroups';
 import {ListItem} from './ListItem';
 import {
   useGetAppliedGroups,
@@ -26,7 +26,6 @@ import {useToastLoading} from '~/hooks/appState';
 import {useGroupBadge} from '~/hooks/appState';
 import {RightButton} from './RightButton';
 import {useJoinGroup} from '~/hooks/groups';
-import {Tab} from 'react-native-elements/dist/tab/Tab';
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -96,39 +95,17 @@ export const ApplyingGroup = () => {
     ]);
   };
 
-  const {join} = useJoinGroup();
-  const onJoinPress = ({ownerId}: {ownerId: string}) => {
-    Alert.alert(
-      '参加しますか?',
-      '現在申請されている他の全てのグループと申請中のグループが取り消されます。',
-      [
-        {
-          text: '参加する',
-          style: 'destructive',
-          onPress: async () => {
-            const result = await join({ownerId});
-            if (result) {
-              setApplyedGroup([]);
-              setApplyingGroups([]);
-            }
-          },
-        },
-        {
-          text: 'キャンセル',
-        },
-      ],
-    );
-  };
-
   return (
     <View style={styles.container}>
-      <TopTab.Navigator tabBarOptions={{labelStyle: {fontWeight: 'bold'}}}>
+      <TopTab.Navigator
+        lazy
+        tabBarOptions={{pressOpacity: 1, labelStyle: {fontWeight: 'bold'}}}>
         <TopTab.Screen
           name={'申請されている\nグループ'}
           component={AppliedGroups}
         />
-        <TopTab.Screen name={'申請中の\nグループ'} component={AppliedGroups} />
-        <TopTab.Screen name="現在のグループ" component={() => null} />
+        <TopTab.Screen name={'申請中の\nグループ'} component={ApplyingGroups} />
+        <TopTab.Screen name="現在のグループ" component={AppliedGroups} />
       </TopTab.Navigator>
       {/* <ScrollView contentContainerStyle={styles.contents}>
         <Text style={styles.title}>申請されているグループ</Text>

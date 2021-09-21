@@ -11,11 +11,13 @@ import {useGetAppliedGroups} from '~/hooks/applyingGroups';
 import {useGroupBadge} from '~/hooks/appState';
 import {ListItem} from './ListItem';
 import {useDeleteApplyingGroup} from '~/hooks/applyingGroups';
+import {useJoinGroup} from '~/hooks/groups';
 
 export const AppliedGroups = React.memo(() => {
   const {appliedGroups, isLoading, setAppliedGroups} = useGetAppliedGroups();
   const {setGroupBadge} = useGroupBadge();
   const {deleteApplyingGroup} = useDeleteApplyingGroup();
+  const {join} = useJoinGroup();
 
   const onDeletePress = ({id}: {id: number}) => {
     Alert.alert('削除しますか?', '', [
@@ -31,6 +33,28 @@ export const AppliedGroups = React.memo(() => {
         text: 'キャンセル',
       },
     ]);
+  };
+
+  const onJoinPress = ({ownerId}: {ownerId: string}) => {
+    Alert.alert(
+      '参加しますか?',
+      '現在申請されている他の全てのグループと申請中のグループが取り消されます。',
+      [
+        {
+          text: '参加する',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await join({ownerId});
+            if (result) {
+              setAppliedGroups([]);
+            }
+          },
+        },
+        {
+          text: 'キャンセル',
+        },
+      ],
+    );
   };
 
   useEffect(() => {
@@ -56,7 +80,7 @@ export const AppliedGroups = React.memo(() => {
                 onDeletePress({id: d.id});
               }}
               onJoinPress={() => {
-                // onJoinPress({ownerId: d.applyingUser.id});
+                onJoinPress({ownerId: d.applyingUser.id});
               }}
             />
           ))}
