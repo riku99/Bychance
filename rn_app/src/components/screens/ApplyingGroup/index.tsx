@@ -101,8 +101,13 @@ export const ApplyingGroup = () => {
         {
           text: '参加する',
           style: 'destructive',
-          onPress: () => {
-            join({ownerId});
+          onPress: async () => {
+            const result = await join({ownerId});
+            if (result) {
+              setApplyedGroup((current) =>
+                current.filter((c) => c.applyingUser.id !== ownerId),
+              );
+            }
           },
         },
         {

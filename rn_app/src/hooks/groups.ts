@@ -11,8 +11,9 @@ export const useJoinGroup = () => {
     async ({ownerId}: {ownerId: string}) => {
       try {
         setToastLoading(true);
-        await postRequestToGroups({ownerId});
+        const response = await postRequestToGroups({ownerId});
         toast?.show('参加しました', {type: 'success'});
+        return response.data;
       } catch (e) {
         handleApiError(e);
       } finally {
