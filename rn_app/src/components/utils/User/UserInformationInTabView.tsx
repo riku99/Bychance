@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
 
-import {UserAvatar} from '~/components/utils/Avatar';
+import {MemberImages} from '~/components/utils/MemberImages';
 
 const urls = [
   'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/85175462_176285990335210_4065743884077831252_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=110&_nc_ohc=_-nO9KpDp2kAX81jfcc&edm=AP_V10EBAAAA&ccb=7-4&oh=925f32b5ab171c424f5b2f3c7a36d062&oe=614C3791&_nc_sid=4f375e',
@@ -18,34 +17,5 @@ const urls = [
 ];
 
 export const UserInformationRouteInTabView = React.memo(({}) => {
-  return (
-    <View style={styles.wrap}>
-      {urls.map((u, i) => (
-        <UserAvatar
-          image={u}
-          size={avatarWidth}
-          containerStyle={{
-            marginLeft: i % 6 !== 0 ? avatarLeft : undefined,
-            marginTop: 10,
-          }}
-          key={i}
-        />
-      ))}
-    </View>
-  );
-});
-
-const {width} = Dimensions.get('screen');
-const paddingH = 10;
-const avatarLeft = 10;
-const oneLineItems = 6;
-const avatarWidth = (width - paddingH * 2) / oneLineItems - avatarLeft;
-
-const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingTop: 21,
-    paddingHorizontal: paddingH,
-  },
+  return <MemberImages memberImages={urls} />;
 });
