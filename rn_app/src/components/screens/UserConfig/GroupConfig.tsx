@@ -6,10 +6,17 @@ import {commonStyles} from './constants';
 import {useGroupsApplicationEnabled} from '~/hooks/settings';
 
 const GroupsApplicationEnabledSwitch = () => {
-  const {groupsApplicationEnabled} = useGroupsApplicationEnabled();
+  const {
+    groupsApplicationEnabled,
+    changeGroupsApplicationEnabled,
+  } = useGroupsApplicationEnabled();
   const [switchValue, setSwitchValue] = useState(groupsApplicationEnabled);
-  const onValueChange = (v: boolean) => {
+  const onValueChange = async (v: boolean) => {
     setSwitchValue(v);
+    const result = await changeGroupsApplicationEnabled(v);
+    if (!result) {
+      setSwitchValue(!v);
+    }
   };
 
   return (

@@ -7,6 +7,7 @@ import {RootState} from '~/stores';
 import {setSetitngs} from '~/stores/settings';
 import {useApikit} from './apikit';
 import {useCustomDispatch} from './stores';
+import {putRequestToUsersGroupsApplicationEnabled} from '~/apis/settings';
 
 export const useDisplay = () => {
   const {dispatch, addBearer, checkKeychain, handleApiError} = useApikit();
@@ -196,11 +197,36 @@ export const useIntro = () => {
 };
 
 export const useGroupsApplicationEnabled = () => {
+  const {handleApiError} = useApikit();
+  const dispatch = useCustomDispatch();
+
   const groupsApplicationEnabled = useSelector(
     (state: RootState) => state.settingsReducer.groupsApplicationEnabled,
   );
 
+  const setGroupsApplicationEnabled = useCallback(
+    (v: boolean) => {
+      dispatch(setSetitngs({groupsApplicationEnabled: v}));
+    },
+    [dispatch],
+  );
+
+  const changeGroupsApplicationEnabled = useCallback(
+    async (value: boolean) => {
+      try {
+        await putRequestToUsersGroupsApplicationEnabled(value);
+        setGroupsApplicationEnabled(value);
+
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [handleApiError, setGroupsApplicationEnabled],
+  );
+
   return {
     groupsApplicationEnabled,
+    changeGroupsApplicationEnabled,
   };
 };
