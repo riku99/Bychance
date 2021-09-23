@@ -1,29 +1,22 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useApikit} from './apikit';
-import {default as axios} from 'axios';
 
-import {baseUrl} from '~/constants/url';
-import {GetNearbyUsersReponse} from '~/types/response/nearbyUsers';
 import {upsertFlashes} from '~/stores/flashes';
 import {useMyId} from './users';
 import {upsertUsers} from '~/stores/_users';
+import {getRequestToNearbyUsers} from '~/apis/nearbyUsers';
+import {ResponseForGetNearbyUsers} from '~/apis/nearbyUsers/types';
 
 export const useNearbyUsers = () => {
-  const [data, setData] = useState<GetNearbyUsersReponse>([]);
+  const [data, setData] = useState<ResponseForGetNearbyUsers>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [range, setRange] = useState(0.1);
-  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
   const myId = useMyId();
 
   const getNearbyUsers = useCallback(async () => {
-    const credentials = await checkKeychain();
-
     try {
-      const response = await axios.get<GetNearbyUsersReponse>(
-        `${baseUrl}/users/nearby?id=${credentials?.id}&range=${range}`,
-        addBearer(credentials?.token),
-      );
-
+      const response = await getRequestToNearbyUsers({range});
       setData(response.data);
 
       let storedFlashesData: any[] = [];
@@ -49,7 +42,7 @@ export const useNearbyUsers = () => {
     } catch (e) {
       handleApiError(e);
     }
-  }, [checkKeychain, addBearer, handleApiError, range, myId, dispatch]);
+  }, [handleApiError, range, myId, dispatch]);
 
   // リフレッシュ以外の取得。初回レンダリング後とレンジが変化した時
   useEffect(() => {
