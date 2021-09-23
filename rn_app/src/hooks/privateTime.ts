@@ -1,10 +1,13 @@
 import {useCallback, useEffect, useState} from 'react';
-import axios from 'axios';
 
-import {baseUrl} from '~/constants/url';
 import {PrivateTime} from '~/types';
 import {useApikit} from './apikit';
 import {useToastLoading} from './appState';
+import {
+  getRequestToPrivateTime,
+  postRequestToPrivateTime,
+  deleteRequestToPrivateTime,
+} from '~/apis/privateTime';
 
 export const usePrivateTime = () => {
   const [fetchLoading, setFetchLoading] = useState(true);
@@ -15,15 +18,10 @@ export const usePrivateTime = () => {
 
   useEffect(() => {
     const _fetch = async () => {
-      const credentials = await checkKeychain();
-
       try {
-        const _result = await axios.get<PrivateTime[]>(
-          `${baseUrl}/privateTime?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        const response = await getRequestToPrivateTime();
         setFetchLoading(false);
-        setFetchResult(_result.data);
+        setFetchResult(response.data);
       } catch (e) {
         handleApiError(e);
       }
@@ -46,13 +44,14 @@ export const usePrivateTime = () => {
       endMinutes: number;
     }) => {
       setToastLoading(true);
-      const credentials = await checkKeychain();
+
       try {
-        const apiResult = await axios.post<PrivateTime>(
-          `${baseUrl}/privateTime?id=${credentials?.id}`,
-          {startHours, startMinutes, endHours, endMinutes},
-          addBearer(credentials?.token),
-        );
+        const apiResult = await postRequestToPrivateTime({
+          startHours,
+          startMinutes,
+          endHours,
+          endMinutes,
+        });
         setToastLoading(false);
         toast?.show('作成しました', {type: 'success'});
         return apiResult.data;
@@ -61,20 +60,15 @@ export const usePrivateTime = () => {
       }
       setToastLoading(false);
     },
-    [checkKeychain, addBearer, handleApiError, toast, setToastLoading],
+    [handleApiError, toast, setToastLoading],
   );
 
   const deletePrivateTime = useCallback(
     async (id: number) => {
       setToastLoading(true);
 
-      const credentials = await checkKeychain();
-
       try {
-        await axios.delete(
-          `${baseUrl}/privateTime/${id}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        await deleteRequestToPrivateTime(id);
         setToastLoading(false);
         toast?.show('削除しました', {type: 'success'});
         return true;
@@ -84,7 +78,7 @@ export const usePrivateTime = () => {
 
       setToastLoading(false);
     },
-    [checkKeychain, addBearer, handleApiError, toast, setToastLoading],
+    [handleApiError, toast, setToastLoading],
   );
 
   return {
