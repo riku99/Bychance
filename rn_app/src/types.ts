@@ -1,5 +1,7 @@
 import {AxiosError} from 'axios';
 
+export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
+
 export type SnsList = 'instagram' | 'twitter' | 'youtube' | 'tiktok';
 
 // サーバーから返ってくるエラーオブジェクト

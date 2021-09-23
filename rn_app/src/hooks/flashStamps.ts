@@ -4,21 +4,18 @@ import {default as axios} from 'axios';
 import useSWR, {mutate as globalMutate} from 'swr';
 
 import {baseUrl} from '~/constants/url';
-import {StampValues} from '~/types/flashStamps';
-import {GetFlashStampsResponse} from '~/types/response/flashStamps';
+import {
+  getRequestToFlashStamps,
+  postRequestToFlashStamps,
+} from '~/apis/flashStamps';
 
 const getFlashStampsKey = (id: number) => `/flashes/${id}/stamps`;
 export const useFlashStamps = ({flashId}: {flashId: number}) => {
-  const {checkKeychain, addBearer, handleApiError} = useApikit();
+  const {handleApiError} = useApikit();
 
   const _get = async () => {
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<GetFlashStampsResponse>(
-        `${baseUrl}${getFlashStampsKey(flashId)}?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
-
+      const response = await getRequestToFlashStamps({flashId});
       return response.data;
     } catch (e) {
       handleApiError(e);
@@ -50,27 +47,13 @@ export const useFlashStamps = ({flashId}: {flashId: number}) => {
         }
       }, false);
 
-      const credentials = await checkKeychain();
-
       try {
-        await axios.post<{
-          ownerId: string;
-          flashId: number;
-          value: StampValues;
-          userId: string;
-        }>(
-          `${baseUrl}/flashStamps?id=${credentials?.id}`,
-          {
-            flashId,
-            value,
-          },
-          addBearer(credentials?.token),
-        );
+        await postRequestToFlashStamps({value, flashId});
       } catch (e) {
         handleApiError(e);
       }
     },
-    [checkKeychain, addBearer, handleApiError, flashId, mutate],
+    [handleApiError, flashId, mutate],
   );
 
   return {

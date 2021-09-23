@@ -1,5 +1,5 @@
-export type GetFlashStampsResponse = {
-  [key: string]: {
-    userIds: string[];
-  };
-};
+// export type GetFlashStampsResponse = {
+//   [key: string]: {
+//     userIds: string[];
+//   };
+// };
