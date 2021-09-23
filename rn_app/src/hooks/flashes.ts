@@ -1,15 +1,12 @@
 import {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
-import {default as axios} from 'axios';
 import {shallowEqual, useSelector} from 'react-redux';
 
 import {getExtention} from '~/utils';
 import {useApikit} from './apikit';
-import {baseUrl} from '~/constants/url';
 import {RootState} from '~/stores';
 import {addFlash, removeFlash} from '~/stores/flashes';
-import {CreateFlashResponse} from '~/types/response/flashes';
 import {useCreatingFlash} from '~/hooks/appState';
 import {useCustomDispatch} from './stores';
 import {
@@ -19,6 +16,11 @@ import {
   updateFlash,
 } from '~/stores/flashes';
 import {Flash} from '~/types/store/flashes';
+import {
+  postRequestToFlashes,
+  postRequestToFlashesViewed,
+  deleteRequestToFlashes,
+} from '~/apis/flashes';
 
 export const useFlashes = ({userId}: {userId: string}) =>
   useSelector(
@@ -28,15 +30,7 @@ export const useFlashes = ({userId}: {userId: string}) =>
 
 export const useCreateFlash = () => {
   const navigation = useNavigation();
-
-  const {
-    dispatch,
-    addBearer,
-    checkKeychain,
-    handleApiError,
-    toast,
-  } = useApikit();
-
+  const {dispatch, handleApiError, toast} = useApikit();
   const {setCreatingFlash} = useCreatingFlash();
 
   return useCallback(
@@ -44,23 +38,16 @@ export const useCreateFlash = () => {
       setCreatingFlash(true);
       navigation.goBack();
       const ext = getExtention(uri);
+
       if (!ext) {
         toast?.show('無効なデータです', {type: 'danger'});
         return;
       }
 
-      const credentials = await checkKeychain();
+      const source = await fs.readFile(uri, 'base64');
 
       try {
-        const response = await axios.post<CreateFlashResponse>(
-          `${baseUrl}/flashes?id=${credentials?.id}`,
-          {
-            source: await fs.readFile(uri, 'base64'),
-            sourceType,
-            ext,
-          },
-          addBearer(credentials?.token),
-        );
+        const response = await postRequestToFlashes({source, sourceType, ext});
 
         dispatch(addFlash({...response.data, viewed: [], viewerViewed: false}));
         toast?.show('追加しました', {type: 'success'});
@@ -70,35 +57,17 @@ export const useCreateFlash = () => {
 
       setCreatingFlash(false);
     },
-    [
-      dispatch,
-      navigation,
-      checkKeychain,
-      addBearer,
-      handleApiError,
-      toast,
-      setCreatingFlash,
-    ],
+    [dispatch, navigation, handleApiError, toast, setCreatingFlash],
   );
 };
 
 export const useDeleteFlash = () => {
-  const {
-    checkKeychain,
-    handleApiError,
-    toast,
-    addBearer,
-    dispatch,
-  } = useApikit();
+  const {handleApiError, toast, dispatch} = useApikit();
 
   const deleteFlash = useCallback(
     async ({flashId}: {flashId: number}) => {
-      const credentials = await checkKeychain();
       try {
-        await axios.delete(
-          `${baseUrl}/flashes/${flashId}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        await deleteRequestToFlashes({flashId});
 
         dispatch(removeFlash(flashId));
         toast?.show('削除しました', {type: 'success'});
@@ -106,7 +75,7 @@ export const useDeleteFlash = () => {
         handleApiError(e);
       }
     },
-    [checkKeychain, handleApiError, toast, addBearer, dispatch],
+    [handleApiError, toast, dispatch],
   );
 
   return {
@@ -115,7 +84,7 @@ export const useDeleteFlash = () => {
 };
 
 export const useViewed = () => {
-  const {addBearer, dispatch, checkKeychain} = useApikit();
+  const {dispatch} = useApikit();
 
   const createViewed = useCallback(
     async ({
@@ -126,12 +95,7 @@ export const useViewed = () => {
       userIds: {userId: string}[];
     }) => {
       try {
-        const credentials = await checkKeychain();
-        await axios.post(
-          `${baseUrl}/flashes/viewed?id=${credentials?.id}`,
-          {flashId},
-          addBearer(credentials?.token),
-        );
+        await postRequestToFlashesViewed({flashId});
 
         dispatch(
           updateFlash({
@@ -144,7 +108,7 @@ export const useViewed = () => {
         );
       } catch (e) {}
     },
-    [addBearer, dispatch, checkKeychain],
+    [dispatch],
   );
 
   return {
