@@ -4,13 +4,13 @@ import {default as axios} from 'axios';
 
 import {baseUrl} from '~/constants/url';
 import {
-  GetApplyingGroupsResponse,
-  GetAppliedGroupsResponse,
-} from '~/types/response/applyingGroup';
+  ResponseForGetApplyingGroups,
+  ResponseForGetAppliedGroups,
+} from './types';
 
 export const getRequestToAppliedGroups = async () => {
   const credentials = await checkKeychain();
-  return await axios.get<GetAppliedGroupsResponse>(
+  return await axios.get<ResponseForGetAppliedGroups>(
     `${baseUrl}/applying_groups?id=${credentials?.id}&type=applied`,
     addBearer(credentials?.token),
   );
@@ -18,7 +18,7 @@ export const getRequestToAppliedGroups = async () => {
 
 export const getRequestToApplyingGroups = async () => {
   const credentials = await checkKeychain();
-  return await axios.get<GetApplyingGroupsResponse>(
+  return await axios.get<ResponseForGetApplyingGroups>(
     `${baseUrl}/applying_groups?id=${credentials?.id}`,
     addBearer(credentials?.token),
   );
