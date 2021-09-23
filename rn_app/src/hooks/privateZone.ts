@@ -1,10 +1,13 @@
 import {useCallback, useEffect, useState} from 'react';
-import axios from 'axios';
 
-import {baseUrl} from '~/constants/url';
 import {PrivateZone} from '~/types';
 import {useApikit} from './apikit';
 import {useToastLoading} from './appState';
+import {
+  getRequestToPrivateZone,
+  postRequestToPrivateZone,
+  deleteRequestToPrivateZone,
+} from '~/apis/privateZone';
 
 export const usePrivateZone = () => {
   const [result, setResult] = useState<PrivateZone[]>();
@@ -21,12 +24,8 @@ export const usePrivateZone = () => {
 
   useEffect(() => {
     const _fetch = async () => {
-      const credentials = await checkKeychain();
       try {
-        const _result = await axios.get<PrivateZone[]>(
-          `${baseUrl}/privateZone?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        const _result = await getRequestToPrivateZone();
         setfetchLoading(false);
         setResult(_result.data);
       } catch (e) {
@@ -49,18 +48,13 @@ export const usePrivateZone = () => {
       lng: number;
     }) => {
       setToastLoading(true);
-      const credentials = await checkKeychain();
 
       try {
-        const _result = await axios.post<PrivateZone>(
-          `${baseUrl}/privateZone?id=${credentials?.id}`,
-          {
-            address,
-            lat,
-            lng,
-          },
-          addBearer(credentials?.token),
-        );
+        const _result = await postRequestToPrivateZone({
+          address,
+          lat,
+          lng,
+        });
 
         setToastLoading(false);
         toast?.show('作成しました', {type: 'success'});
@@ -70,21 +64,15 @@ export const usePrivateZone = () => {
       }
       setToastLoading(false);
     },
-    [addBearer, checkKeychain, handleApiError, toast, setToastLoading],
+    [handleApiError, toast, setToastLoading],
   );
 
   const deletePrivateZone = useCallback(
     async (id: number): Promise<boolean | void> => {
       setToastLoading(true);
 
-      const credentials = await checkKeychain();
-
       try {
-        await axios.delete(
-          `${baseUrl}/privateZone/${id}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
-
+        await deleteRequestToPrivateZone(id);
         toast?.show('削除しました', {type: 'success'});
         setToastLoading(false);
         return true;
@@ -93,7 +81,7 @@ export const usePrivateZone = () => {
       }
       setToastLoading(false);
     },
-    [addBearer, checkKeychain, handleApiError, toast, setToastLoading],
+    [handleApiError, toast, setToastLoading],
   );
 
   return {
