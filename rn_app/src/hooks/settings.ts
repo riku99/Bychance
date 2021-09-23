@@ -1,7 +1,5 @@
 import {useCallback} from 'react';
 import {useSelector} from 'react-redux';
-import {default as axios} from 'axios';
-import {baseUrl} from '~/constants/url';
 
 import {RootState} from '~/stores';
 import {setSetitngs} from '~/stores/settings';
@@ -44,44 +42,6 @@ export const useDisplay = () => {
     currentDisplay,
     setDisplay,
     changeDisplay,
-  };
-};
-
-// experienceに移動させる
-export const useVideoEditDescription = () => {
-  const {addBearer, dispatch, checkKeychain, handleApiError} = useApikit();
-  const currentVideoEditDesctiption = useSelector(
-    (state: RootState) => state.settingsReducer.videoEditDescription,
-  );
-  const setVideoEditDesciption = useCallback(
-    (v: boolean) => {
-      dispatch(setSetitngs({videoEditDescription: v}));
-    },
-    [dispatch],
-  );
-
-  const changeVideoEditDescription = useCallback(
-    async (bool: boolean) => {
-      try {
-        const credentials = await checkKeychain();
-        await axios.put(
-          `${baseUrl}/users/videoEditDescription?id=${credentials?.id}`,
-          {videoEditDescription: bool},
-          addBearer(credentials?.token),
-        );
-
-        setVideoEditDesciption(bool);
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [checkKeychain, addBearer, handleApiError, setVideoEditDesciption],
-  );
-
-  return {
-    currentVideoEditDesctiption,
-    changeVideoEditDescription,
-    setVideoEditDesciption,
   };
 };
 
@@ -145,43 +105,6 @@ export const useShowReceiveMessage = () => {
     changeShowReceiveMessage,
     currentShowReceiveMessage,
     setShowReceiveMessage,
-  };
-};
-
-// experienceに移動
-export const useIntro = () => {
-  const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
-  const currentIntro = useSelector(
-    (state: RootState) => state.settingsReducer.intro,
-  );
-  const setIntro = useCallback(
-    (v: boolean) => {
-      dispatch(setSetitngs({intro: v}));
-    },
-    [dispatch],
-  );
-  const changeIntro = useCallback(
-    async (v: boolean) => {
-      try {
-        const credentials = await checkKeychain();
-        await axios.put(
-          `${baseUrl}/users/intro?id=${credentials?.id}`,
-          {intro: v},
-          addBearer(credentials?.token),
-        );
-
-        setIntro(v);
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [checkKeychain, addBearer, handleApiError, setIntro],
-  );
-
-  return {
-    currentIntro,
-    setIntro,
-    changeIntro,
   };
 };
 

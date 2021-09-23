@@ -6,7 +6,7 @@ import {RNToasty} from 'react-native-toasty';
 
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
-import {useVideoEditDescription} from '~/hooks/settings';
+import {useVideoEditDescription} from '~/hooks/experiences';
 
 const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {

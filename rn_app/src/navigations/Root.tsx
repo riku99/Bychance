@@ -22,7 +22,7 @@ import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
 import {Intoro} from '~/components/screens/Intoro';
-import {useIntro} from '~/hooks/settings';
+import {useIntro} from '~/hooks/experiences';
 import {ApplyingGroup} from '~/components/screens/Groups';
 
 export type RootStackParamList = {

@@ -4,6 +4,8 @@ import {Experiences} from '~/types/store/experiences';
 
 const initialState: Experiences = {
   tooltipAboutDisplay: false,
+  videoEditDescription: false,
+  intro: false,
 };
 
 const experiencesSlice = createSlice({

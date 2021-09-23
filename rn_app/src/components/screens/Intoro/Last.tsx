@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 
-import {useIntro} from '~/hooks/settings';
+import {useIntro} from '~/hooks/experiences';
 
 export const Last = () => {
   const {changeIntro} = useIntro();

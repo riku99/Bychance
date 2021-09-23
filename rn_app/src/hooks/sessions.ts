@@ -46,10 +46,8 @@ export const useSessionloginProccess = () => {
           } = user;
           const settings = {
             display,
-            videoEditDescription,
             talkRoomMessageReceipt,
             showReceiveMessage,
-            intro,
             groupsApplicationEnabled,
           };
 
@@ -60,6 +58,8 @@ export const useSessionloginProccess = () => {
           dispatch(
             setExperiences({
               tooltipAboutDisplay: tooltipOfUsersDisplayShowed,
+              videoEditDescription,
+              intro,
             }),
           );
           dispatch(setLogin(true));
