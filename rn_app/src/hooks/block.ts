@@ -1,27 +1,20 @@
 import {useCallback} from 'react';
-import {default as axios} from 'axios';
 import {RNToasty} from 'react-native-toasty';
 
 import {useApikit} from './apikit';
-import {baseUrl} from '~/constants/url';
 import {updateUser} from '~/stores/_users';
 import {useToastLoading} from './appState';
+import {postRequestToBlocks, deleteRequestToBlocks} from '~/apis/blocks';
 
 export const useCreateBlock = () => {
-  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
   const {setToastLoading} = useToastLoading();
 
   const block = useCallback(
     async ({blockTo}: {blockTo: string}) => {
       setToastLoading(true);
       try {
-        const credentials = await checkKeychain();
-
-        await axios.post(
-          `${baseUrl}/users/block?id=${credentials?.id}`,
-          {blockTo},
-          addBearer(credentials?.token),
-        );
+        await postRequestToBlocks({blockTo});
 
         RNToasty.Show({
           title: 'ブロックしました',
@@ -35,7 +28,7 @@ export const useCreateBlock = () => {
       } finally {
       }
     },
-    [handleApiError, addBearer, checkKeychain, dispatch, setToastLoading],
+    [handleApiError, dispatch, setToastLoading],
   );
 
   return {
@@ -44,19 +37,14 @@ export const useCreateBlock = () => {
 };
 
 export const useDeleteBlock = () => {
-  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
   const {setToastLoading} = useToastLoading();
 
   const deleteBlock = useCallback(
     async ({userId}: {userId: string}) => {
       setToastLoading(true);
       try {
-        const credentials = await checkKeychain();
-        await axios.delete(
-          `${baseUrl}/users/${userId}/block?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
-
+        await deleteRequestToBlocks({userId});
         RNToasty.Show({
           title: '解除しました',
           position: 'center',
@@ -68,7 +56,7 @@ export const useDeleteBlock = () => {
         setToastLoading(false);
       }
     },
-    [addBearer, checkKeychain, handleApiError, dispatch, setToastLoading],
+    [handleApiError, dispatch, setToastLoading],
   );
 
   return {
