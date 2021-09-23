@@ -24,7 +24,7 @@ export const TalkRoomListItem = React.memo(({room, onPress}: Props) => {
     <ListItem key={room.id} onPress={onPress}>
       <UserAvatar image={avatar} size="medium" opacity={1} />
       <ListItem.Content>
-        <ListItem.Title>
+        <ListItem.Title style={styles.name}>
           {name ? name : 'メンバーが存在しません'}
         </ListItem.Title>
         <ListItem.Subtitle style={styles.subtitle}>
@@ -59,5 +59,8 @@ const styles = StyleSheet.create({
     borderRadius: 25 / 2,
     backgroundColor: normalStyles.mainColor,
     fontSize: 15,
+  },
+  name: {
+    fontWeight: 'bold',
   },
 });
