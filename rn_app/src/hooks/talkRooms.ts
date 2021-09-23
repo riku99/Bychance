@@ -1,11 +1,9 @@
 import {useCallback, useEffect} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
-import {default as axios} from 'axios';
 
 import {RootState, store} from '~/stores';
 import {useApikit} from './apikit';
-import {baseUrl} from '~/constants/url';
 import {
   setTalkRooms,
   selectAllTalkRooms,
@@ -13,27 +11,21 @@ import {
   addTalkRoom,
   removeTalkRoom,
 } from '~/stores/_talkRooms';
-import {
-  GetTalkRoomDataResponse,
-  CreateTalkRoomResponse,
-} from '~/types/response/talkRooms';
 import {useMyId} from './users';
 import {upsertUsers} from '~/stores/_users';
+import {
+  postRequestToTalkRooms,
+  deleteRequestToTalkRooms,
+  getRequestToTalkRooms,
+} from '~/apis/talkRooms';
 
 export const useCreateTalkRoom = () => {
-  const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
 
   const createTalkRoom = useCallback(
     async (partner: {id: string}) => {
-      const credentials = await checkKeychain();
-
       try {
-        const response = await axios.post<CreateTalkRoomResponse>(
-          `${baseUrl}/talkRooms?id=${credentials?.id}`,
-          {partnerId: partner.id},
-          addBearer(credentials?.token),
-        );
-
+        const response = await postRequestToTalkRooms({id: partner.id});
         const {presence, roomId, timestamp} = response.data;
         const room = selectRoom(store.getState(), roomId);
         // トークルームがサーバー側でも存在しなかった場合(それが初めて作成された場合)、サーバー側では存在するがクライアント側には存在しない場合(作成した相手がメッセージを送っていない場合)はaddOneで新しく追加
@@ -59,7 +51,7 @@ export const useCreateTalkRoom = () => {
         handleApiError(e);
       }
     },
-    [checkKeychain, handleApiError, dispatch, addBearer],
+    [handleApiError, dispatch],
   );
 
   return {
@@ -68,32 +60,20 @@ export const useCreateTalkRoom = () => {
 };
 
 export const useDeleteTalkRoom = () => {
-  const {
-    addBearer,
-    checkKeychain,
-    handleApiError,
-    toast,
-    dispatch,
-  } = useApikit();
+  const {handleApiError, toast, dispatch} = useApikit();
 
   const deleteTalkRoom = useCallback(
     async ({talkRoomId}: {talkRoomId: number}) => {
-      const credentials = await checkKeychain();
-
       try {
-        await axios.delete(
-          `${baseUrl}/talkRooms/${talkRoomId}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        await deleteRequestToTalkRooms({talkRoomId});
 
         toast?.show('削除しました', {type: 'success'});
-
         dispatch(removeTalkRoom(talkRoomId));
       } catch (e) {
         handleApiError(e);
       }
     },
-    [checkKeychain, addBearer, handleApiError, toast, dispatch],
+    [handleApiError, toast, dispatch],
   );
 
   return {
@@ -102,17 +82,13 @@ export const useDeleteTalkRoom = () => {
 };
 
 export const useGetTalkRoomData = () => {
-  const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
   const id = useMyId();
 
   const getTalkRoomData = useCallback(async () => {
     if (id) {
       try {
-        const credentials = await checkKeychain();
-        const response = await axios.get<GetTalkRoomDataResponse>(
-          `${baseUrl}/users/${id}/talk_rooms?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        const response = await getRequestToTalkRooms({id});
 
         const storedData = response.data.map((d) => {
           const partner = d.sender.id === id ? d.recipient : d.sender;
@@ -143,7 +119,7 @@ export const useGetTalkRoomData = () => {
         handleApiError(e);
       }
     }
-  }, [id, checkKeychain, handleApiError, addBearer, dispatch]);
+  }, [id, handleApiError, dispatch]);
 
   useEffect(() => {
     getTalkRoomData();
