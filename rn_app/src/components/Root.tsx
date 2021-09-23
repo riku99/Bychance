@@ -2,12 +2,12 @@ import React, {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Main} from '~/components/Main';
-import {useLoginSelect} from '~/hooks/sessions';
+import {useLogin} from '~/hooks/sessions';
 import {useSessionloginProccess} from '~/hooks/sessions';
 import {AuthStackScreen} from '~/navigations/Auth';
 
 const Root = React.memo(() => {
-  const login = useLoginSelect();
+  const login = useLogin();
   const {isLoading} = useSessionloginProccess();
 
   useEffect(() => {

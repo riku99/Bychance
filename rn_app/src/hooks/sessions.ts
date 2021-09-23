@@ -93,7 +93,7 @@ export const useLineLogin = () => {
 
       try {
         const response = await axios.post<LoginData & {accessToken: string}>(
-          `${baseUrl}/sessions/lineLogin`,
+          `${baseUrl}/sessions/line_login`,
           {},
           addBearer(idToken as string),
         );
@@ -212,7 +212,7 @@ export const useLogout = () => {
   };
 };
 
-export const useLoginSelect = () => {
+export const useLogin = () => {
   const login = useSelector((state: RootState) => {
     return state.sessionReducer.login;
   });

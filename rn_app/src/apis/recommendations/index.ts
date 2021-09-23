@@ -22,7 +22,7 @@ export const postResuestToUserHideRecommendation = async ({
 }) => {
   const credentials = await checkKeychain();
   return await axios.post(
-    `${baseUrl}/userHideRecommendations?id=${credentials?.id}`,
+    `${baseUrl}/user_hide_recommendations?id=${credentials?.id}`,
     {id},
     addBearer(credentials?.token),
   );
