@@ -7,10 +7,15 @@ import {RootState} from '~/stores';
 import {setSetitngs} from '~/stores/settings';
 import {useApikit} from './apikit';
 import {useCustomDispatch} from './stores';
-import {putRequestToUsersGroupsApplicationEnabled} from '~/apis/settings';
+import {
+  putRequestToUsersGroupsApplicationEnabled,
+  putRequestToDisplay,
+  putRequestToShowReceiveMessage,
+  putRequestToTalkRoomMessagesReceipt,
+} from '~/apis/settings';
 
 export const useDisplay = () => {
-  const {dispatch, addBearer, checkKeychain, handleApiError} = useApikit();
+  const {dispatch, handleApiError} = useApikit();
   const currentDisplay = useSelector(
     (state: RootState) => state.settingsReducer.display,
   );
@@ -24,12 +29,7 @@ export const useDisplay = () => {
   const changeDisplay = useCallback(
     async (display: boolean) => {
       try {
-        const credentials = await checkKeychain();
-        await axios.put(
-          `${baseUrl}/users/display?id=${credentials?.id}`,
-          {display},
-          addBearer(credentials?.token),
-        );
+        await putRequestToDisplay(display);
 
         setDisplay(display);
         return true;
@@ -37,7 +37,7 @@ export const useDisplay = () => {
         handleApiError(e);
       }
     },
-    [handleApiError, addBearer, checkKeychain, setDisplay],
+    [handleApiError, setDisplay],
   );
 
   return {
@@ -47,6 +47,7 @@ export const useDisplay = () => {
   };
 };
 
+// experienceに移動させる
 export const useVideoEditDescription = () => {
   const {addBearer, dispatch, checkKeychain, handleApiError} = useApikit();
   const currentVideoEditDesctiption = useSelector(
@@ -85,7 +86,7 @@ export const useVideoEditDescription = () => {
 };
 
 export const useTalkRoomMessageReceipt = () => {
-  const {addBearer, checkKeychain, dispatch, handleApiError} = useApikit();
+  const {dispatch, handleApiError} = useApikit();
   const currentTalkRoomMessageReceipt = useSelector(
     (state: RootState) => state.settingsReducer.talkRoomMessageReceipt,
   );
@@ -97,22 +98,15 @@ export const useTalkRoomMessageReceipt = () => {
   );
   const changeTalkRoomMessageReceipt = useCallback(
     async ({receipt}: {receipt: boolean}) => {
-      const credentials = await checkKeychain();
-
       try {
-        await axios.put(
-          `${baseUrl}/users/talkRoomMessageReceipt?id=${credentials?.id}`,
-          {receipt},
-          addBearer(credentials?.token),
-        );
-
+        await putRequestToTalkRoomMessagesReceipt(receipt);
         setTalkRoomMessageReceipt(receipt);
         return true;
       } catch (e) {
         handleApiError(e);
       }
     },
-    [checkKeychain, addBearer, handleApiError, setTalkRoomMessageReceipt],
+    [handleApiError, setTalkRoomMessageReceipt],
   );
 
   return {
@@ -123,7 +117,7 @@ export const useTalkRoomMessageReceipt = () => {
 };
 
 export const useShowReceiveMessage = () => {
-  const {checkKeychain, handleApiError, addBearer, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
   const currentShowReceiveMessage = useSelector(
     (state: RootState) => state.settingsReducer.showReceiveMessage,
   );
@@ -137,20 +131,14 @@ export const useShowReceiveMessage = () => {
   const changeShowReceiveMessage = useCallback(
     async ({showReceiveMessage}: {showReceiveMessage: boolean}) => {
       try {
-        const credentials = await checkKeychain();
-        await axios.put(
-          `${baseUrl}/users/showReceiveMessage?id=${credentials?.id}`,
-          {showReceiveMessage},
-          addBearer(credentials?.token),
-        );
-
+        await putRequestToShowReceiveMessage(showReceiveMessage);
         setShowReceiveMessage(showReceiveMessage);
         return true;
       } catch (e) {
         handleApiError(e);
       }
     },
-    [checkKeychain, handleApiError, addBearer, setShowReceiveMessage],
+    [handleApiError, setShowReceiveMessage],
   );
 
   return {
@@ -160,6 +148,7 @@ export const useShowReceiveMessage = () => {
   };
 };
 
+// experienceに移動
 export const useIntro = () => {
   const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
   const currentIntro = useSelector(

@@ -7,9 +7,9 @@ import {useMyId} from './users';
 import {origin} from '~/constants/url';
 import {useApikit} from './apikit';
 import {
-  GetApplyingGroupsResponse,
-  GetAppliedGroupsResponse,
-} from '~/types/response/applyingGroup';
+  ResponseForGetAppliedGroups,
+  ResponseForGetApplyingGroups,
+} from '~/apis/applyingGroups/types';
 import {
   getRequestToAppliedGroups,
   postRequestApplyingGroups,
@@ -108,9 +108,9 @@ export const useCreateApplyingGroup = () => {
 };
 
 export const useGetAppliedGroups = () => {
-  const [appliedGroups, setAppliedGroups] = useState<GetAppliedGroupsResponse>(
-    [],
-  );
+  const [appliedGroups, setAppliedGroups] = useState<
+    ResponseForGetAppliedGroups
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const {handleApiError} = useApikit();
@@ -140,7 +140,7 @@ export const useGetAppliedGroups = () => {
 
 export const useGetApplyingGroups = () => {
   const [applyingGroups, setApplyingGroups] = useState<
-    GetApplyingGroupsResponse
+    ResponseForGetApplyingGroups
   >([]);
   const [isLoading, setIsloading] = useState(true);
 
