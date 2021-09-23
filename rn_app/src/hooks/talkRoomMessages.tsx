@@ -1,25 +1,25 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {AppState, AppStateStatus, View} from 'react-native';
-import {default as axios} from 'axios';
 import {RNToasty} from 'react-native-toasty';
 import io, {Socket} from 'socket.io-client';
 import {showMessage} from 'react-native-flash-message';
 import useSWR from 'swr';
 
 import {useApikit} from './apikit';
-import {baseUrl, origin} from '~/constants/url';
+import {origin} from '~/constants/url';
 import {useMyId} from './users';
 import {useCustomDispatch} from './stores';
 import {UserAvatar} from '~/components/utils/Avatar';
-import {
-  GetTalkRoomMessagesResponse,
-  CreateTalkRoomMessageResponse,
-  RecieveTalkRoomMessageWithSocket,
-} from '~/types/response/talkRoomMessages';
 import {useSelectRoom} from './talkRooms';
 import {updateTalkRoom, upsertTalkRoom, selectRoom} from '~/stores/_talkRooms';
 import {store} from '~/stores';
 import {upsertUsers} from '~/stores/_users';
+import {
+  getRequestToTalkRoomMessages,
+  postRequestToTalkRoomMessages,
+  postRequestToTalkRoomMessagesRead,
+} from '~/apis/talkRoomMessages';
+import {RecieveTalkRoomMessageWithSocket} from '~/types';
 
 export const useCreateReadTalkRoomMessages = ({
   talkRoomId,
@@ -28,20 +28,13 @@ export const useCreateReadTalkRoomMessages = ({
 }) => {
   const room = useSelectRoom(talkRoomId);
   const ids = room?.unreadMessages.map((d) => d.id);
-  const {addBearer, checkKeychain, dispatch} = useApikit();
+  const {dispatch} = useApikit();
 
   const createReadTalkRoomMessages = useCallback(
     async (_ids?: number[]) => {
       try {
         if (_ids && _ids.length) {
-          const credentials = await checkKeychain();
-          await axios.post(
-            `${baseUrl}/talk_rooms/${talkRoomId}/messages/read?id=${credentials?.id}`,
-            {
-              ids: _ids,
-            },
-            addBearer(credentials?.token),
-          );
+          await postRequestToTalkRoomMessagesRead({talkRoomId, ids: _ids});
 
           dispatch(
             updateTalkRoom({
@@ -56,7 +49,7 @@ export const useCreateReadTalkRoomMessages = ({
         // handleApiError(e); メッセージ取得の際のエラーとかぶるのでこっちではトースト出さない
       }
     },
-    [addBearer, checkKeychain, talkRoomId, dispatch],
+    [talkRoomId, dispatch],
   );
 
   useEffect(() => {
@@ -70,7 +63,7 @@ export const useCreateReadTalkRoomMessages = ({
 };
 
 export const useCreateTalkRoomMessage = () => {
-  const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
 
   const createMessage = useCallback(
     async ({
@@ -82,17 +75,12 @@ export const useCreateTalkRoomMessage = () => {
       partnerId: string;
       text: string;
     }) => {
-      const credentials = await checkKeychain();
-
       try {
-        const response = await axios.post<CreateTalkRoomMessageResponse>(
-          `${baseUrl}/talk_rooms/${roomId}/messages?id=${credentials?.id}`,
-          {
-            text,
-            partnerId,
-          },
-          addBearer(credentials?.token),
-        );
+        const response = await postRequestToTalkRoomMessages({
+          roomId,
+          partnerId,
+          text,
+        });
 
         if (response.data.talkRoomPrecence) {
           const {text: _text, userId, id, createdAt} = response.data.message;
@@ -135,7 +123,7 @@ export const useCreateTalkRoomMessage = () => {
         handleApiError(e);
       }
     },
-    [checkKeychain, addBearer, handleApiError, dispatch],
+    [handleApiError, dispatch],
   );
 
   return {
@@ -255,14 +243,10 @@ export const useSetupTalkRoomMessageSocket = () => {
 };
 
 export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
-  const {addBearer, checkKeychain, handleApiError, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
   const fetcher = async () => {
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<GetTalkRoomMessagesResponse>(
-        `${baseUrl}/talk_rooms/${talkRoomId}/messages?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      const response = await getRequestToTalkRoomMessages({talkRoomId});
 
       if (response.data.roomPresence) {
         return response.data.messages;

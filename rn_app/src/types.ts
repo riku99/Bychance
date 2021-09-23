@@ -24,6 +24,22 @@ export type Recommendation = {
   };
 };
 
+export type RecieveTalkRoomMessageWithSocket = {
+  message: {
+    id: number;
+    userId: string;
+    roomId: number;
+    text: string;
+    createdAt: string;
+  };
+  sender: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
+  show: boolean;
+};
+
 // サーバーから返ってくるエラーオブジェクト
 export type BasicAxiosError = AxiosError<
   {errorType: 'invalidError'; message: string} | {errorType: 'loginError'}
