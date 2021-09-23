@@ -1,18 +1,11 @@
 import {useCallback, useEffect, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
-import {default as axios} from 'axios';
 import useSWR from 'swr';
 
 import {RootState} from '~/stores/index';
 import {useApikit} from './apikit';
-import {baseUrl} from '~/constants/url';
 import {setLocation, updateUser} from '~/stores/user';
-import {
-  UserPageInfo,
-  RefreshMyDataResponse,
-  UpdateProfile,
-} from '~/types/response/users';
 import {upsertPosts} from '~/stores/posts';
 import {upsertFlashes, selectFlashesByUserId} from '~/stores/flashes';
 import {
@@ -23,6 +16,14 @@ import {
 } from '~/stores/_users';
 import {useRefreshUserPosts} from './posts';
 import {useRefreshUserFlashes} from './flashes';
+import {
+  patchRequestToUsers,
+  patchRequestToUsersLocaiton,
+  deleteRequestToUsersLocation,
+  getRequestToMyRefreshData,
+  getRequestToUsersInfo,
+  getRequestToUsersIsDisplayedToOtherUsers,
+} from '~/apis/users';
 
 export const useUser = () =>
   useSelector((state: RootState) => state.userReducer, shallowEqual);
@@ -83,13 +84,7 @@ type EditArg = {
 };
 
 export const useEditProfile = () => {
-  const {
-    dispatch,
-    checkKeychain,
-    addBearer,
-    handleApiError,
-    toast,
-  } = useApikit();
+  const {dispatch, handleApiError, toast} = useApikit();
 
   const [isLoading, setIsLoaidng] = useState(false);
 
@@ -112,29 +107,23 @@ export const useEditProfile = () => {
     }: EditArg) => {
       setIsLoaidng(true);
 
-      const credentials = await checkKeychain();
-
       try {
-        const response = await axios.patch<UpdateProfile>(
-          `${baseUrl}/users?id=${credentials?.id}`,
-          {
-            name,
-            introduce,
-            avatar,
-            avatarExt,
-            deleteAvatar,
-            statusMessage: message,
-            backGroundItem,
-            backGroundItemType,
-            deleteBackGroundItem,
-            backGroundItemExt,
-            instagram,
-            twitter,
-            youtube,
-            tiktok,
-          },
-          addBearer(credentials?.token),
-        );
+        const response = await patchRequestToUsers({
+          name,
+          introduce,
+          avatar,
+          avatarExt,
+          deleteAvatar,
+          message,
+          backGroundItem,
+          backGroundItemType,
+          deleteBackGroundItem,
+          backGroundItemExt,
+          instagram,
+          twitter,
+          youtube,
+          tiktok,
+        });
 
         dispatch(updateUser(response.data));
         toast?.show('更新しました', {type: 'success'});
@@ -145,7 +134,7 @@ export const useEditProfile = () => {
         setIsLoaidng(false);
       }
     },
-    [checkKeychain, addBearer, handleApiError, dispatch, toast],
+    [handleApiError, dispatch, toast],
   );
 
   return {
@@ -155,29 +144,18 @@ export const useEditProfile = () => {
 };
 
 export const useDeleteLocation = () => {
-  const {
-    checkKeychain,
-    addBearer,
-    dispatch,
-    toast,
-    handleApiError,
-  } = useApikit();
+  const {dispatch, toast, handleApiError} = useApikit();
 
   const deleteLocaiton = useCallback(async () => {
-    const credentials = await checkKeychain();
-
     try {
-      await axios.delete(
-        `${baseUrl}/users/location?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      await deleteRequestToUsersLocation();
 
       toast?.show('削除しました', {type: 'success'});
       dispatch(setLocation({lat: null, lng: null}));
     } catch (e) {
       handleApiError(e);
     }
-  }, [checkKeychain, addBearer, toast, dispatch, handleApiError]);
+  }, [toast, dispatch, handleApiError]);
 
   return {
     deleteLocaiton,
@@ -185,15 +163,11 @@ export const useDeleteLocation = () => {
 };
 
 export const useRefreshMyData = () => {
-  const {dispatch, addBearer, handleApiError, checkKeychain} = useApikit();
+  const {dispatch, handleApiError} = useApikit();
 
   const refreshData = useCallback(async () => {
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<RefreshMyDataResponse>(
-        `${baseUrl}/my_refresh_data?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      const response = await getRequestToMyRefreshData();
 
       const {posts, flashes, ...userData} = response.data;
       const storedFlashesData = flashes.map((f) => ({
@@ -206,7 +180,7 @@ export const useRefreshMyData = () => {
     } catch (e) {
       handleApiError(e);
     }
-  }, [addBearer, handleApiError, checkKeychain, dispatch]);
+  }, [handleApiError, dispatch]);
 
   return {
     refreshData,
@@ -214,21 +188,15 @@ export const useRefreshMyData = () => {
 };
 
 export const useUpdateLocation = () => {
-  const {dispatch, checkKeychain, addBearer, handleApiError} = useApikit();
+  const {dispatch, handleApiError} = useApikit();
 
   const updateLocation = useCallback(
     async ({lat, lng}: {lat: number; lng: number}) => {
-      const credentials = await checkKeychain();
-
       try {
-        await axios.patch(
-          `${baseUrl}/users/location?id=${credentials?.id}`,
-          {
-            lat,
-            lng,
-          },
-          addBearer(credentials?.token),
-        );
+        await patchRequestToUsersLocaiton({
+          lat,
+          lng,
+        });
 
         // バックグラウンド、キル状態の時はdispatchする必要ない(activeになった時に更新するから)のでアクティブの時のみdispatchしている。(あとアクティブじゃない時にJSのコードちゃんと動くのか微妙だった気がする。)
         if (AppState.currentState === 'active') {
@@ -238,7 +206,7 @@ export const useUpdateLocation = () => {
         handleApiError(e);
       }
     },
-    [checkKeychain, addBearer, handleApiError, dispatch],
+    [handleApiError, dispatch],
   );
 
   return {
@@ -249,16 +217,12 @@ export const useUpdateLocation = () => {
 export const userPageUrlKey = (id: string) => `users/${id}/page_info`;
 export const useUserPageInfo = (userId: string) => {
   const myId = useMyId();
-  const {checkKeychain, addBearer, handleApiError, dispatch} = useApikit();
+  const {handleApiError, dispatch} = useApikit();
   const {refreshPosts} = useRefreshUserPosts(userId);
   const {refreshFlashes} = useRefreshUserFlashes(userId);
   const fetcher = useCallback(async () => {
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<UserPageInfo>(
-        `${baseUrl}/users/${userId}/page_info?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      const response = await getRequestToUsersInfo(userId);
 
       const data = response.data;
       dispatch(
@@ -288,16 +252,7 @@ export const useUserPageInfo = (userId: string) => {
     } catch (e) {
       handleApiError(e);
     }
-  }, [
-    checkKeychain,
-    addBearer,
-    userId,
-    handleApiError,
-    myId,
-    dispatch,
-    refreshPosts,
-    refreshFlashes,
-  ]);
+  }, [userId, handleApiError, myId, dispatch, refreshPosts, refreshFlashes]);
 
   const {data, mutate, error} = useSWR(userPageUrlKey(userId), fetcher);
 
@@ -309,21 +264,17 @@ export const useUserPageInfo = (userId: string) => {
 };
 
 export const useIsDisplayedToOtherUsers = () => {
-  const {checkKeychain, addBearer, dispatch} = useApikit();
+  const {dispatch} = useApikit();
   const isDisplayedToOtherUsers = useSelector(
     (state: RootState) => state.userReducer.isDisplayedToOtherUsers,
   );
   const getIsDisplayedToOtherUsers = useCallback(async () => {
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<boolean>(
-        `${baseUrl}/users/is_displayed?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      const response = await getRequestToUsersIsDisplayedToOtherUsers();
 
       dispatch(updateUser({isDisplayedToOtherUsers: response.data}));
     } catch (e) {}
-  }, [checkKeychain, addBearer, dispatch]);
+  }, [dispatch]);
 
   return {
     isDisplayedToOtherUsers,
