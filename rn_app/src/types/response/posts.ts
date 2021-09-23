@@ -1,5 +1,5 @@
-import {Post} from '../domain/Post';
+// import {Post} from '../domain/Post';
 
-export type GetUserPostsResponse = Post[];
+// export type GetUserPostsResponse = Post[];
 
-export type CreatePostResponse = Post;
+// export type CreatePostResponse = Post;

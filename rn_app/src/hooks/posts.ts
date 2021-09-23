@@ -1,11 +1,8 @@
 import {useCallback} from 'react';
 import {useApikit} from './apikit';
-import {default as axios} from 'axios';
 import useSWR from 'swr';
 import {shallowEqual, useSelector} from 'react-redux';
 
-import {baseUrl} from '~/constants/url';
-import {GetUserPostsResponse, CreatePostResponse} from '~/types/response/posts';
 import {
   removePost,
   selectPostsByUserId,
@@ -15,6 +12,11 @@ import {
 import {useCustomDispatch} from './stores';
 import {Post} from '~/types/store/posts';
 import {RootState} from '~/stores';
+import {
+  postRequestToPosts,
+  getRequestToPosts,
+  deleteRequestToPosts,
+} from '~/apis/posts';
 
 export const usePosts = ({userId}: {userId: string}) =>
   useSelector(
@@ -23,13 +25,7 @@ export const usePosts = ({userId}: {userId: string}) =>
   );
 
 export const useCreatePost = () => {
-  const {
-    checkKeychain,
-    addBearer,
-    handleApiError,
-
-    toast,
-  } = useApikit();
+  const {handleApiError, toast} = useApikit();
 
   const createPost = useCallback(
     async ({
@@ -43,14 +39,13 @@ export const useCreatePost = () => {
       ext: string;
       sourceType: 'image' | 'video';
     }) => {
-      const credentials = await checkKeychain();
-
       try {
-        const response = await axios.post<CreatePostResponse>(
-          `${baseUrl}/posts?id=${credentials?.id}`,
-          {text, source, ext, sourceType},
-          addBearer(credentials?.token),
-        );
+        const response = await postRequestToPosts({
+          text,
+          source,
+          sourceType,
+          ext,
+        });
 
         toast?.show('投稿しました', {type: 'success'});
         return response.data;
@@ -58,7 +53,7 @@ export const useCreatePost = () => {
         handleApiError(e);
       }
     },
-    [checkKeychain, addBearer, handleApiError, toast],
+    [handleApiError, toast],
   );
 
   return {
@@ -67,23 +62,12 @@ export const useCreatePost = () => {
 };
 
 export const useDeletePost = () => {
-  const {
-    checkKeychain,
-    addBearer,
-    handleApiError,
-    toast,
-    dispatch,
-  } = useApikit();
+  const {handleApiError, toast, dispatch} = useApikit();
 
   const deletePost = useCallback(
     async ({postId}: {postId: number}) => {
-      const credentials = await checkKeychain();
-
       try {
-        await axios.delete(
-          `${baseUrl}/posts/${postId}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
-        );
+        await deleteRequestToPosts({postId});
 
         dispatch(removePost(postId));
         toast?.show('削除しました', {type: 'success'});
@@ -92,7 +76,7 @@ export const useDeletePost = () => {
       }
     },
 
-    [checkKeychain, addBearer, handleApiError, toast, dispatch],
+    [handleApiError, toast, dispatch],
   );
 
   return {
@@ -101,15 +85,11 @@ export const useDeletePost = () => {
 };
 
 export const useGetUserPosts = (userId: string) => {
-  const {checkKeychain, addBearer, handleApiError} = useApikit();
+  const {handleApiError} = useApikit();
 
   const fetcher = async () => {
     try {
-      const credentials = await checkKeychain();
-      const response = await axios.get<GetUserPostsResponse>(
-        `${baseUrl}/users/${userId}/posts?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      const response = await getRequestToPosts(userId);
 
       return response.data;
     } catch (e) {
