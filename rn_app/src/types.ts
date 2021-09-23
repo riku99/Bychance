@@ -4,6 +4,26 @@ export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; /
 
 export type SnsList = 'instagram' | 'twitter' | 'youtube' | 'tiktok';
 
+export type Recommendation = {
+  id: number;
+  title: string;
+  coupon: boolean;
+  text: string;
+  images: {
+    url: string;
+  }[];
+  client: {
+    url: string | null;
+    name: string;
+    image: string | null;
+    instagram: string | null;
+    twitter: string | null;
+    address: string | null;
+    lat: number | null;
+    lng: number | null;
+  };
+};
+
 // サーバーから返ってくるエラーオブジェクト
 export type BasicAxiosError = AxiosError<
   {errorType: 'invalidError'; message: string} | {errorType: 'loginError'}

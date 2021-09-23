@@ -1,16 +1,17 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Alert} from 'react-native';
-import {default as axios} from 'axios';
 import {useApikit} from './apikit';
-import {Recommendations} from '~/types/recommendations';
 import {Recommendation} from 'bychance-components';
 
-import {baseUrl} from '~/constants/url';
 import {useToastLoading} from './appState';
 import {useMyLat, useMyLng} from '~/hooks/users';
+import {
+  getRequestToRecommendations,
+  postResuestToUserHideRecommendation,
+} from '~/apis/recommendations';
 
 export const useGetRecommendations = () => {
-  const {checkKeychain, addBearer, handleApiError} = useApikit();
+  const {handleApiError} = useApikit();
 
   const lat = useMyLat();
   const lng = useMyLng();
@@ -20,13 +21,8 @@ export const useGetRecommendations = () => {
 
   const fetchRecommendations = useCallback(async () => {
     if (lat && lng) {
-      const credentials = await checkKeychain();
-
       try {
-        const response = await axios.get<Recommendations[]>(
-          `${baseUrl}/recommendations?id=${credentials?.id}&lat=${lat}&lng=${lng}`,
-          addBearer(credentials?.token),
-        );
+        const response = await getRequestToRecommendations({lat, lng});
 
         const data = response.data.map((d) => {
           const {id, title, text, client, coupon, images} = d;
@@ -68,7 +64,7 @@ export const useGetRecommendations = () => {
         '位置情報を有効にしてください。既に有効にしている場合、マイページのメニューから「位置情報の更新」を行なってみてください。',
       );
     }
-  }, [checkKeychain, addBearer, handleApiError, lat, lng]);
+  }, [handleApiError, lat, lng]);
 
   useEffect(() => {
     const _fetch = async () => {
@@ -87,20 +83,15 @@ export const useGetRecommendations = () => {
 };
 
 export const useHideRecommendation = () => {
-  const {checkKeychain, addBearer, handleApiError, toast} = useApikit();
+  const {handleApiError, toast} = useApikit();
   const {setToastLoading} = useToastLoading();
 
   const hideRecommendation = useCallback(
     async ({id}: {id: number}) => {
       setToastLoading(true);
-      const credentials = await checkKeychain();
 
       try {
-        await axios.post(
-          `${baseUrl}/userHideRecommendations?id=${credentials?.id}`,
-          {id},
-          addBearer(credentials?.token),
-        );
+        await postResuestToUserHideRecommendation({id});
 
         toast?.show('非表示にしました', {type: 'success'});
       } catch (e) {
@@ -109,7 +100,7 @@ export const useHideRecommendation = () => {
         setToastLoading(false);
       }
     },
-    [checkKeychain, addBearer, handleApiError, toast, setToastLoading],
+    [handleApiError, toast, setToastLoading],
   );
 
   return {
