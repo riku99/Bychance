@@ -1,7 +1,8 @@
-import {useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {useApikit} from './apikit';
-import {postRequestToGroups} from '~/apis/groups';
+import {postRequestToGroups, getRequestToGroups} from '~/apis/groups';
+import {ResponseForGetGroups} from '~/apis/groups/types';
 import {useToastLoading} from './appState';
 
 export const useJoinGroup = () => {
@@ -25,5 +26,30 @@ export const useJoinGroup = () => {
 
   return {
     join,
+  };
+};
+
+export const useGropuData = () => {
+  const {handleApiError} = useApikit();
+  const [groupData, setGroupData] = useState<ResponseForGetGroups>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    try {
+      (async function () {
+        const response = await getRequestToGroups();
+        setGroupData(response.data);
+      })();
+    } catch (e) {
+      handleApiError(e);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [handleApiError]);
+
+  return {
+    groupData,
+    setGroupData,
+    isLoading,
   };
 };

@@ -314,6 +314,7 @@ export const useDeleteUsersGroupId = () => {
     try {
       await deleteRequestToUsersGroupId();
       toast?.show('グループから抜けました', {type: 'success'});
+      return true;
     } catch (e) {
       handleApiError(e);
     } finally {

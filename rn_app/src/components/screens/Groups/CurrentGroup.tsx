@@ -1,17 +1,67 @@
-import React from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+  Alert,
+} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {MemberImages} from '~/components/utils/MemberImages';
 import {LeaveButton} from './LeaveButton';
+import {useGropuData} from '~/hooks/groups';
+import {useDeleteUsersGroupId} from '~/hooks/users';
 
 export const CurrentGroup = React.memo(() => {
   const {bottom} = useSafeAreaInsets();
+  const {groupData, isLoading, setGroupData} = useGropuData();
+
+  const membersData = useMemo(() => {
+    if (!groupData?.presence) {
+      return [];
+    } else {
+      return groupData.members.map((g) => ({
+        id: g.id,
+        imageUrl: g.avatar,
+      }));
+    }
+  }, [groupData]);
+
+  const {deleteGroupId} = useDeleteUsersGroupId();
+  const onLeaveButtonPress = useCallback(() => {
+    Alert.alert('グループから抜けますか?', '', [
+      {
+        text: '抜ける',
+        style: 'destructive',
+        onPress: async () => {
+          const result = await deleteGroupId();
+          if (result) {
+            setGroupData({presence: false});
+          }
+        },
+      },
+      {
+        text: 'キャンセル',
+      },
+    ]);
+  }, [deleteGroupId, setGroupData]);
+
+  if (isLoading) {
+    return <ActivityIndicator style={{marginTop: 10}} />;
+  }
+
+  if (!groupData || !groupData.presence) {
+    return <Text style={styles.noGroupText}>グループに入っていません</Text>;
+  }
 
   return (
     <ScrollView contentContainerStyle={{paddingBottom: bottom}}>
-      <LeaveButton containerStyle={styles.buttonContainer} />
-      <MemberImages memberImages={urls} containerStyle={{marginTop: 20}} />
+      <LeaveButton
+        containerStyle={styles.buttonContainer}
+        onPress={onLeaveButtonPress}
+      />
+      <MemberImages data={membersData} containerStyle={{marginTop: 20}} />
     </ScrollView>
   );
 });
@@ -22,25 +72,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     width: 160,
   },
+  noGroupText: {
+    alignSelf: 'center',
+    marginTop: 20,
+    fontSize: 15,
+    color: 'gray',
+    fontWeight: 'bold',
+  },
 });
-
-const urls = [
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/85175462_176285990335210_4065743884077831252_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=110&_nc_ohc=_-nO9KpDp2kAX81jfcc&edm=AP_V10EBAAAA&ccb=7-4&oh=925f32b5ab171c424f5b2f3c7a36d062&oe=614C3791&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/228569103_160333409558923_2070089261260133837_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=107&_nc_ohc=3v_klMRZDZcAX880FRN&edm=AP_V10EBAAAA&ccb=7-4&oh=ffc62f16085e0db0097f8d5351c8ce10&oe=614CD158&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/211801284_232471811871535_5566055724391108557_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=107&_nc_ohc=riHJS_Kx6mUAX-gUU-C&edm=AP_V10EBAAAA&ccb=7-4&oh=de6024cfc98ee8b89f7f779333e1ae6b&oe=614BECA8&_nc_sid=4f375es',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/242053123_1209879256106281_2975233896279402826_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=101&_nc_ohc=BKbi5sQblzEAX9W-Fnq&edm=AP_V10EBAAAA&ccb=7-4&oh=94cdf9d16f38f86fe979a32ae9999b39&oe=614C2C88&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/156665231_185401706380536_3138561747987160329_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=100&_nc_ohc=LHt9FnIEEXsAX_sHzHS&edm=AP_V10EBAAAA&ccb=7-4&oh=6c90ca5f217975f1e3ca5e235bf95259&oe=614B809D&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/85175462_176285990335210_4065743884077831252_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=110&_nc_ohc=_-nO9KpDp2kAX81jfcc&edm=AP_V10EBAAAA&ccb=7-4&oh=925f32b5ab171c424f5b2f3c7a36d062&oe=614C3791&_nc_sid=4f375e',
-  null,
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/228569103_160333409558923_2070089261260133837_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=107&_nc_ohc=3v_klMRZDZcAX880FRN&edm=AP_V10EBAAAA&ccb=7-4&oh=ffc62f16085e0db0097f8d5351c8ce10&oe=614CD158&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/211801284_232471811871535_5566055724391108557_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=107&_nc_ohc=riHJS_Kx6mUAX-gUU-C&edm=AP_V10EBAAAA&ccb=7-4&oh=de6024cfc98ee8b89f7f779333e1ae6b&oe=614BECA8&_nc_sid=4f375es',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/242053123_1209879256106281_2975233896279402826_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=101&_nc_ohc=BKbi5sQblzEAX9W-Fnq&edm=AP_V10EBAAAA&ccb=7-4&oh=94cdf9d16f38f86fe979a32ae9999b39&oe=614C2C88&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/156665231_185401706380536_3138561747987160329_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=100&_nc_ohc=LHt9FnIEEXsAX_sHzHS&edm=AP_V10EBAAAA&ccb=7-4&oh=6c90ca5f217975f1e3ca5e235bf95259&oe=614B809D&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/85175462_176285990335210_4065743884077831252_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=110&_nc_ohc=_-nO9KpDp2kAX81jfcc&edm=AP_V10EBAAAA&ccb=7-4&oh=925f32b5ab171c424f5b2f3c7a36d062&oe=614C3791&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/228569103_160333409558923_2070089261260133837_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=107&_nc_ohc=3v_klMRZDZcAX880FRN&edm=AP_V10EBAAAA&ccb=7-4&oh=ffc62f16085e0db0097f8d5351c8ce10&oe=614CD158&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/211801284_232471811871535_5566055724391108557_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=107&_nc_ohc=riHJS_Kx6mUAX-gUU-C&edm=AP_V10EBAAAA&ccb=7-4&oh=de6024cfc98ee8b89f7f779333e1ae6b&oe=614BECA8&_nc_sid=4f375es',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/242053123_1209879256106281_2975233896279402826_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=101&_nc_ohc=BKbi5sQblzEAX9W-Fnq&edm=AP_V10EBAAAA&ccb=7-4&oh=94cdf9d16f38f86fe979a32ae9999b39&oe=614C2C88&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/156665231_185401706380536_3138561747987160329_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=100&_nc_ohc=LHt9FnIEEXsAX_sHzHS&edm=AP_V10EBAAAA&ccb=7-4&oh=6c90ca5f217975f1e3ca5e235bf95259&oe=614B809D&_nc_sid=4f375e',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/e35/85175462_176285990335210_4065743884077831252_n.jpg?_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=110&_nc_ohc=_-nO9KpDp2kAX81jfcc&edm=AP_V10EBAAAA&ccb=7-4&oh=925f32b5ab171c424f5b2f3c7a36d062&oe=614C3791&_nc_sid=4f375e',
-  null,
-];

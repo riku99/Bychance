@@ -4,7 +4,10 @@ import {View, StyleSheet, Dimensions, StyleProp, ViewStyle} from 'react-native';
 import {UserAvatar} from '~/components/utils/Avatar';
 
 type Props = {
-  memberImages: (string | null)[];
+  data: {
+    id: string;
+    imageUrl: string | null;
+  }[];
   onPress?: () => void;
   layout?: {
     containerWidth: number;
@@ -16,7 +19,7 @@ type Props = {
 };
 
 export const MemberImages = React.memo(
-  ({memberImages, onPress, layout, containerStyle}: Props) => {
+  ({data, onPress, layout, containerStyle}: Props) => {
     const imageWidth = layout
       ? (layout.containerWidth - layout.paddingH * 2) / layout.oneLineItems -
         layout.imageLeft
@@ -31,9 +34,9 @@ export const MemberImages = React.memo(
     return (
       <View
         style={[styles.wrap, {paddingHorizontal: paddingH}, containerStyle]}>
-        {memberImages.map((u, i) => (
+        {data.map((u, i) => (
           <UserAvatar
-            image={u}
+            image={u.imageUrl}
             size={imageWidth}
             containerStyle={[
               styles.avatarContainer,
@@ -41,7 +44,7 @@ export const MemberImages = React.memo(
                 marginLeft: i % oneLineItems !== 0 ? imageLeft : undefined,
               },
             ]}
-            key={i}
+            key={u.id}
             onPress={() => {
               if (onPress) {
                 onPress();
