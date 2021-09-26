@@ -6,20 +6,23 @@ import {defaultTheme} from '~/theme';
 type Props = {
   containerStyle?: ButtonProps['containerStyle'];
   onPress: () => void;
+  title: string;
 };
 
-export const LeaveButton = React.memo(({containerStyle, onPress}: Props) => {
-  return (
-    <Button
-      title="グループから抜ける"
-      containerStyle={containerStyle}
-      titleStyle={styles.buttonTitle}
-      buttonStyle={styles.button}
-      activeOpacity={1}
-      onPress={onPress}
-    />
-  );
-});
+export const LeaveButton = React.memo(
+  ({containerStyle, onPress, title}: Props) => {
+    return (
+      <Button
+        title={title}
+        containerStyle={containerStyle}
+        titleStyle={styles.buttonTitle}
+        buttonStyle={styles.button}
+        activeOpacity={1}
+        onPress={onPress}
+      />
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   button: {

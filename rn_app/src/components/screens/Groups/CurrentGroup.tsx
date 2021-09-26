@@ -5,17 +5,19 @@ import {
   ActivityIndicator,
   Text,
   Alert,
+  View,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {MemberImages} from '~/components/utils/MemberImages';
 import {LeaveButton} from './LeaveButton';
 import {useGropuData} from '~/hooks/groups';
-import {useDeleteUsersGroupId} from '~/hooks/users';
+import {useDeleteUsersGroupId, useMyId} from '~/hooks/users';
 
 export const CurrentGroup = React.memo(() => {
   const {bottom} = useSafeAreaInsets();
   const {groupData, isLoading, setGroupData} = useGropuData();
+  const myId = useMyId();
 
   const membersData = useMemo(() => {
     if (!groupData?.presence) {
@@ -30,22 +32,44 @@ export const CurrentGroup = React.memo(() => {
 
   const {deleteGroupId} = useDeleteUsersGroupId();
   const onLeaveButtonPress = useCallback(() => {
-    Alert.alert('グループから抜けますか?', '', [
-      {
-        text: '抜ける',
-        style: 'destructive',
-        onPress: async () => {
-          const result = await deleteGroupId();
-          if (result) {
-            setGroupData({presence: false});
-          }
+    if (!groupData || !groupData.presence) {
+      return;
+    }
+
+    if (groupData.ownerId === myId) {
+      Alert.alert('グループから抜けますか?', '', [
+        {
+          text: '抜ける',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await deleteGroupId();
+            if (result) {
+              setGroupData({presence: false});
+            }
+          },
         },
-      },
-      {
-        text: 'キャンセル',
-      },
-    ]);
-  }, [deleteGroupId, setGroupData]);
+        {
+          text: 'キャンセル',
+        },
+      ]);
+    } else {
+      Alert.alert('グループを解散しますか?', '', [
+        {
+          text: '解散する',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await deleteGroupId(); // 解散にする
+            if (result) {
+              setGroupData({presence: false});
+            }
+          },
+        },
+        {
+          text: 'キャンセル',
+        },
+      ]);
+    }
+  }, [deleteGroupId, setGroupData, groupData, myId]);
 
   if (isLoading) {
     return <ActivityIndicator style={{marginTop: 10}} />;
@@ -56,20 +80,34 @@ export const CurrentGroup = React.memo(() => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{paddingBottom: bottom}}>
-      <LeaveButton
-        containerStyle={styles.buttonContainer}
-        onPress={onLeaveButtonPress}
+    <ScrollView
+      contentContainerStyle={[styles.contents, {paddingBottom: bottom}]}>
+      <View style={styles.a1}>
+        <LeaveButton
+          containerStyle={styles.buttonContainer}
+          onPress={onLeaveButtonPress}
+          title={
+            groupData.ownerId === myId ? 'グループを解散' : 'グループから抜ける'
+          }
+        />
+        {groupData.ownerId === myId && (
+          <Text style={styles.ownerText}>あなたはグループのオーナーです</Text>
+        )}
+      </View>
+      <Text style={styles.memberText}>メンバー</Text>
+      <MemberImages
+        data={membersData}
+        containerStyle={{marginTop: 8, paddingLeft: 0}}
       />
-      <MemberImages data={membersData} containerStyle={{marginTop: 20}} />
     </ScrollView>
   );
 });
 
 const styles = StyleSheet.create({
+  contents: {
+    paddingLeft: 15,
+  },
   buttonContainer: {
-    marginTop: 15,
-    marginLeft: 10,
     width: 160,
   },
   noGroupText: {
@@ -78,5 +116,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'gray',
     fontWeight: 'bold',
+  },
+  ownerText: {
+    marginTop: 8,
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginLeft: 10,
+    color: 'red',
+  },
+  memberText: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    marginTop: 28,
+  },
+  a1: {
+    flexDirection: 'row',
+    marginTop: 15,
   },
 });
