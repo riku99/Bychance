@@ -1,40 +1,26 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Button} from 'react-native-elements';
 
 import {MemberImages} from '~/components/utils/MemberImages';
-import {defaultTheme} from '~/theme';
+import {LeaveButton} from './LeaveButton';
 
 export const CurrentGroup = React.memo(() => {
   const {bottom} = useSafeAreaInsets();
 
   return (
     <ScrollView contentContainerStyle={{paddingBottom: bottom}}>
-      <Button
-        title="グループから抜ける"
-        containerStyle={styles.buttonContainer}
-        titleStyle={styles.buttonTitle}
-        buttonStyle={styles.button}
-      />
+      <LeaveButton containerStyle={styles.buttonContainer} />
       <MemberImages memberImages={urls} containerStyle={{marginTop: 20}} />
     </ScrollView>
   );
 });
 
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 20,
-    backgroundColor: defaultTheme.darkGray,
-  },
   buttonContainer: {
     marginTop: 15,
     marginLeft: 10,
     width: 160,
-  },
-  buttonTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
   },
 });
 

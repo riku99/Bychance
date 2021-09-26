@@ -110,3 +110,11 @@ export const getRequestToUsersIsDisplayedToOtherUsers = async () => {
     addBearer(credentials?.token),
   );
 };
+
+export const deleteRequestToUsersGroupId = async () => {
+  const credentials = await checkKeychain();
+  return await axios.delete(
+    `${baseUrl}/users/groupId?id=${credentials?.id}`,
+    addBearer(credentials?.token),
+  );
+};

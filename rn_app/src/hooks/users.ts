@@ -23,6 +23,7 @@ import {
   getRequestToMyRefreshData,
   getRequestToUsersInfo,
   getRequestToUsersIsDisplayedToOtherUsers,
+  deleteRequestToUsersGroupId,
 } from '~/apis/users';
 
 export const useUser = () =>
@@ -305,6 +306,27 @@ export const useGetIsDisplayedToOtherUsersOnActive = () => {
   }, [getIsDisplayedToOtherUsers]);
 };
 
+export const useDeleteUsersGroupId = () => {
+  const {handleApiError, toast, setToastLoading} = useApikit();
+
+  const deleteGroupId = useCallback(async () => {
+    setToastLoading(true);
+    try {
+      await deleteRequestToUsersGroupId();
+      toast?.show('グループから抜けました', {type: 'success'});
+    } catch (e) {
+      handleApiError(e);
+    } finally {
+      setToastLoading(false);
+    }
+  }, [handleApiError, toast, setToastLoading]);
+
+  return {
+    deleteGroupId,
+  };
+};
+
+// こっから下ファイル分けたほうがいい
 export const useUserAvatar = ({userId}: {userId: string}) =>
   useSelector((state: RootState) => selectUserAvatar(state, userId));
 

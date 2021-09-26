@@ -4,11 +4,13 @@ import {useCustomDispatch} from './stores';
 import {checkKeychain} from '~/helpers/credentials';
 import {addBearer} from '~/helpers/requestHeaders';
 import {useHandleApiErrors} from './errors';
+import {useToastLoading} from './appState';
 
 export const useApikit = () => {
   const toast = useToast();
   const dispatch = useCustomDispatch();
   const {handleApiError} = useHandleApiErrors();
+  const {setToastLoading} = useToastLoading();
 
   return {
     toast,
@@ -16,5 +18,6 @@ export const useApikit = () => {
     checkKeychain,
     addBearer,
     handleApiError,
+    setToastLoading,
   };
 };
