@@ -42,7 +42,7 @@ export type RootStackParamList = {
     goTo: 'zone' | 'time';
   };
   Intoro: undefined;
-  applyingGroup: undefined;
+  Groups: undefined;
 };
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
@@ -163,7 +163,7 @@ export const RootStackScreen = React.memo(() => {
         }}
       />
       <RootStack.Screen
-        name="applyingGroup"
+        name="Groups"
         component={ApplyingGroup}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

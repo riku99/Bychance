@@ -51,7 +51,7 @@ export const Menu = React.memo(() => {
         titleStyle: styles.listTitleStyle,
         onPress: () => {
           closeModal();
-          navigation.navigate('applyingGroup');
+          navigation.navigate('Groups');
         },
       },
       {
