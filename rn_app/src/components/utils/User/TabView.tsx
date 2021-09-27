@@ -16,9 +16,9 @@ import {
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {normalStyles} from '~/constants/styles';
-// import {GroupsRouteInTabView} from './GroupsInTabView';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
+import {GroupMembers} from './GroupMembers';
 
 type Props = {
   userId: string;
@@ -131,7 +131,7 @@ export const UserTabView = React.memo(
               paddingTopHeight={paddingTopHeight}
               tabViewContainerMinHeight={tabViewContainerMinHeight}
               isDisplayed={tabRoute[tabIndex].key === 'Groups'}>
-              {/* <GroupsRouteInTabView /> */}
+              <GroupMembers />
             </ScrollViewTabScene>
           );
       }
@@ -182,6 +182,7 @@ export const UserTabView = React.memo(
     return (
       <View style={styles.container}>
         <TabView
+          lazy
           renderTabBar={renderTabBar}
           navigationState={{
             index: tabIndex,
