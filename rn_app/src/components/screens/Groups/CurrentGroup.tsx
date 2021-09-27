@@ -11,12 +11,13 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {MemberImages} from '~/components/utils/MemberImages';
 import {LeaveButton} from './LeaveButton';
-import {useGropuData} from '~/hooks/groups';
+import {useGropuData, useDeleteGroup} from '~/hooks/groups';
 import {useDeleteUsersGroupId, useMyId} from '~/hooks/users';
 
 export const CurrentGroup = React.memo(() => {
   const {bottom} = useSafeAreaInsets();
   const {groupData, isLoading, setGroupData} = useGropuData();
+  const {deleteGroup} = useDeleteGroup();
   const myId = useMyId();
 
   const membersData = useMemo(() => {
@@ -37,6 +38,22 @@ export const CurrentGroup = React.memo(() => {
     }
 
     if (groupData.ownerId === myId) {
+      Alert.alert('グループを解散しますか?', '', [
+        {
+          text: '解散する',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await deleteGroup();
+            if (result) {
+              setGroupData({presence: false});
+            }
+          },
+        },
+        {
+          text: 'キャンセル',
+        },
+      ]);
+    } else {
       Alert.alert('グループから抜けますか?', '', [
         {
           text: '抜ける',
@@ -52,30 +69,14 @@ export const CurrentGroup = React.memo(() => {
           text: 'キャンセル',
         },
       ]);
-    } else {
-      Alert.alert('グループを解散しますか?', '', [
-        {
-          text: '解散する',
-          style: 'destructive',
-          onPress: async () => {
-            const result = await deleteGroupId(); // 解散にする
-            if (result) {
-              setGroupData({presence: false});
-            }
-          },
-        },
-        {
-          text: 'キャンセル',
-        },
-      ]);
     }
-  }, [deleteGroupId, setGroupData, groupData, myId]);
+  }, [deleteGroupId, setGroupData, groupData, myId, deleteGroup]);
 
-  if (isLoading) {
+  if (isLoading || !groupData) {
     return <ActivityIndicator style={{marginTop: 10}} />;
   }
 
-  if (!groupData || !groupData.presence) {
+  if (!groupData.presence) {
     return <Text style={styles.noGroupText}>グループに入っていません</Text>;
   }
 

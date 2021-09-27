@@ -1,7 +1,11 @@
 import {useCallback, useEffect, useState} from 'react';
 
 import {useApikit} from './apikit';
-import {postRequestToGroups, getRequestToGroups} from '~/apis/groups';
+import {
+  postRequestToGroups,
+  getRequestToGroups,
+  deleteRequestToGroups,
+} from '~/apis/groups';
 import {ResponseForGetGroups} from '~/apis/groups/types';
 import {useToastLoading} from './appState';
 
@@ -51,5 +55,25 @@ export const useGropuData = () => {
     groupData,
     setGroupData,
     isLoading,
+  };
+};
+
+export const useDeleteGroup = () => {
+  const {handleApiError, setToastLoading} = useApikit();
+
+  const deleteGroup = useCallback(async () => {
+    setToastLoading(true);
+    try {
+      await deleteRequestToGroups();
+      return true;
+    } catch (e) {
+      handleApiError(e);
+    } finally {
+      setToastLoading(false);
+    }
+  }, [handleApiError, setToastLoading]);
+
+  return {
+    deleteGroup,
   };
 };

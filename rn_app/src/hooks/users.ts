@@ -307,20 +307,20 @@ export const useGetIsDisplayedToOtherUsersOnActive = () => {
 };
 
 export const useDeleteUsersGroupId = () => {
-  const {handleApiError, toast, setToastLoading} = useApikit();
+  const {handleApiError, setToastLoading} = useApikit();
 
   const deleteGroupId = useCallback(async () => {
     setToastLoading(true);
     try {
       await deleteRequestToUsersGroupId();
-      toast?.show('グループから抜けました', {type: 'success'});
+      // toast?.show('グループから抜けました', {type: 'success'});
       return true;
     } catch (e) {
       handleApiError(e);
     } finally {
       setToastLoading(false);
     }
-  }, [handleApiError, toast, setToastLoading]);
+  }, [handleApiError, setToastLoading]);
 
   return {
     deleteGroupId,

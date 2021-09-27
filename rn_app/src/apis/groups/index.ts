@@ -5,10 +5,12 @@ import {default as axios} from 'axios';
 import {baseUrl} from '~/constants/url';
 import {ResponseForGetGroups} from './types';
 
+const groupsUrl = `${baseUrl}/groups`;
+
 export const postRequestToGroups = async ({ownerId}: {ownerId: string}) => {
   const credentials = await checkKeychain();
   return await axios.post(
-    `${baseUrl}/groups?id=${credentials?.id}`,
+    `${groupsUrl}?id=${credentials?.id}`,
     {ownerId},
     addBearer(credentials?.token),
   );
@@ -17,7 +19,15 @@ export const postRequestToGroups = async ({ownerId}: {ownerId: string}) => {
 export const getRequestToGroups = async () => {
   const credentials = await checkKeychain();
   return await axios.get<ResponseForGetGroups>(
-    `${baseUrl}/groups?id=${credentials?.id}`,
+    `${groupsUrl}?id=${credentials?.id}`,
+    addBearer(credentials?.token),
+  );
+};
+
+export const deleteRequestToGroups = async () => {
+  const credentials = await checkKeychain();
+  return await axios.delete(
+    `${groupsUrl}?id=${credentials?.id}`,
     addBearer(credentials?.token),
   );
 };
