@@ -16,7 +16,7 @@ import {
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {normalStyles} from '~/constants/styles';
-import {UserInformationRouteInTabView} from './UserInformationInTabView';
+// import {GroupsRouteInTabView} from './GroupsInTabView';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
 
@@ -45,11 +45,11 @@ export const UserTabView = React.memo(
     const [tabIndex, setTabIndex] = useState(0);
     const tabRoute: [
       {key: 'Posts'; title: 'Posts'},
-      {key: 'UserInformation'; title: 'UserInformation'},
+      {key: 'Groups'; title: 'Groups'},
     ] = useMemo(
       () => [
         {key: 'Posts', title: 'Posts'},
-        {key: 'UserInformation', title: 'UserInformation'},
+        {key: 'Groups', title: 'Groups'},
       ],
       [],
     );
@@ -76,7 +76,7 @@ export const UserTabView = React.memo(
             animated: false,
           });
         }
-      } else if (currentRouteTabKey === 'UserInformation') {
+      } else if (currentRouteTabKey === 'Groups') {
         if (postsTabViewRef.current) {
           postsTabViewRef.current.scrollToOffset({
             offset: scrollValue.current,
@@ -117,10 +117,10 @@ export const UserTabView = React.memo(
               tabViewContainerMinHeight={tabViewContainerMinHeight}
               refresh={refresh}
               isLoaidng={isLoading}
-              currentRouteTabKey={tabRoute[tabIndex].key}
+              isDisplayed={tabRoute[tabIndex].key === 'Posts'}
             />
           );
-        case 'UserInformation':
+        case 'Groups':
           return (
             <ScrollViewTabScene
               userId={userId}
@@ -129,9 +129,9 @@ export const UserTabView = React.memo(
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
               paddingTopHeight={paddingTopHeight}
-              currentRouteTabKey={tabRoute[tabIndex].key}
-              tabViewContainerMinHeight={tabViewContainerMinHeight}>
-              <UserInformationRouteInTabView />
+              tabViewContainerMinHeight={tabViewContainerMinHeight}
+              isDisplayed={tabRoute[tabIndex].key === 'Groups'}>
+              {/* <GroupsRouteInTabView /> */}
             </ScrollViewTabScene>
           );
       }

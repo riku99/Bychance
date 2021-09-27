@@ -33,7 +33,7 @@ type FlatListTabSceneProps = {
   tabViewContainerMinHeight: number;
   refresh: () => Promise<void>;
   isLoaidng?: boolean;
-  currentRouteTabKey: 'Posts' | 'UserInformation';
+  isDisplayed: boolean;
 };
 
 export const FlatListTabScene = React.memo(
@@ -48,7 +48,7 @@ export const FlatListTabScene = React.memo(
     tabViewContainerMinHeight,
     refresh,
     isLoaidng,
-    currentRouteTabKey,
+    isDisplayed,
   }: FlatListTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
@@ -88,7 +88,7 @@ export const FlatListTabScene = React.memo(
         }}
         showsVerticalScrollIndicator={false}
         onScroll={
-          currentRouteTabKey === 'Posts'
+          isDisplayed
             ? Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
                 useNativeDriver: true,
               })
@@ -113,7 +113,7 @@ type ScrollViewTabSceneProps = {
   onMomentumScrollEnd: () => void;
   paddingTopHeight: number;
   tabViewContainerMinHeight: number;
-  currentRouteTabKey: 'Posts' | 'UserInformation';
+  isDisplayed: boolean;
 };
 
 export const ScrollViewTabScene = React.memo(
@@ -125,7 +125,7 @@ export const ScrollViewTabScene = React.memo(
     onMomentumScrollEnd,
     paddingTopHeight,
     tabViewContainerMinHeight,
-    currentRouteTabKey,
+    isDisplayed,
   }: ScrollViewTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
@@ -146,7 +146,7 @@ export const ScrollViewTabScene = React.memo(
         showsVerticalScrollIndicator={false}
         onScroll={
           // このビューじゃない方がレンダリングされている時に、スクロール中にボトムタブで切り替えるとこのonScrollが発火しておかしな位置になってしまうのでこのビューがレンダリングされている時のみAnimated.eventを実行する
-          currentRouteTabKey === 'UserInformation'
+          isDisplayed
             ? Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
                 useNativeDriver: true,
               })
