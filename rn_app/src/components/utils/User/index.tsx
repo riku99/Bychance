@@ -75,7 +75,7 @@ export const User = ({
   });
 
   const postsTabViewRef = useRef<FlatList>(null);
-  const userInformationTabViewRef = useRef<ScrollView>(null);
+  const groupsTabViewRef = useRef<ScrollView>(null);
 
   const lineNumber = useMemo(
     () =>
@@ -139,7 +139,7 @@ export const User = ({
         profileContainerHeight={profileContainerHeight}
         scrollY={scrollY}
         postsTabViewRef={postsTabViewRef}
-        userInformationTabViewRef={userInformationTabViewRef}
+        groupsTabViewRef={groupsTabViewRef}
         refresh={refresh}
         isLoading={isLoading}
       />

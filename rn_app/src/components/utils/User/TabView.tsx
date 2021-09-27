@@ -26,7 +26,7 @@ type Props = {
   profileContainerHeight: number;
   scrollY: Animated.Value;
   postsTabViewRef: React.RefObject<FlatList>;
-  userInformationTabViewRef: React.RefObject<ScrollView>;
+  groupsTabViewRef: React.RefObject<ScrollView>;
   refresh: () => Promise<void>;
   isLoading?: boolean;
 };
@@ -38,7 +38,7 @@ export const UserTabView = React.memo(
     profileContainerHeight,
     scrollY,
     postsTabViewRef,
-    userInformationTabViewRef,
+    groupsTabViewRef,
     refresh,
     isLoading,
   }: Props) => {
@@ -70,8 +70,8 @@ export const UserTabView = React.memo(
     const syncScrollOffset = () => {
       const currentRouteTabKey = tabRoute[tabIndex].key;
       if (currentRouteTabKey === 'Posts') {
-        if (userInformationTabViewRef.current) {
-          userInformationTabViewRef.current.scrollTo({
+        if (groupsTabViewRef.current) {
+          groupsTabViewRef.current.scrollTo({
             y: scrollValue.current,
             animated: false,
           });
@@ -124,7 +124,7 @@ export const UserTabView = React.memo(
           return (
             <ScrollViewTabScene
               userId={userId}
-              tabViewRef={userInformationTabViewRef}
+              tabViewRef={groupsTabViewRef}
               scrollY={scrollY}
               onScrollEndDrag={syncScrollOffset}
               onMomentumScrollEnd={syncScrollOffset}
