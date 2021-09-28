@@ -1,4 +1,4 @@
-import React, {ComponentProps, useCallback, useMemo} from 'react';
+import React, {ComponentProps, useMemo} from 'react';
 
 import {ScrollViewTabScene} from './TabScene';
 import {useGropuData} from '~/hooks/groups';
@@ -20,8 +20,7 @@ export const GroupsTabScene = React.memo(({...props}: Props) => {
   }, [groupData]);
 
   const customRefresh = async () => {
-    await props.refresh();
-    await fetch();
+    await Promise.all([props.refresh(), fetch()]);
   };
 
   return (
