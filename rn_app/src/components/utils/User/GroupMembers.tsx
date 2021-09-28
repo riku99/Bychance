@@ -1,24 +1,14 @@
-import React, {useMemo} from 'react';
+// import React, {useMemo, ComponentProps} from 'react';
 
-import {MemberImages} from '~/components/utils/MemberImages';
-import {useGropuData} from '~/hooks/groups';
+// import {MemberImages} from '~/components/utils/MemberImages';
+// import {useGropuData} from '~/hooks/groups';
 
-type Props = {
-  userId: string;
-};
+// type Props = {
+//   userId: string;
+//   membersData: ComponentProps<typeof MemberImages>['data'];
+// };
 
-export const GroupMembers = React.memo(({userId}: Props) => {
-  const {groupData} = useGropuData(userId);
-  const membersData = useMemo(() => {
-    if (!groupData?.presence) {
-      return [];
-    } else {
-      return groupData.members.map((g) => ({
-        id: g.id,
-        imageUrl: g.avatar,
-      }));
-    }
-  }, [groupData]);
-
-  return <MemberImages data={membersData} containerStyle={{paddingTop: 10}} />;
-});
+// // グループデータはPropsでもらうようにする。リフレッシュが楽なので。
+// export const GroupMembers = React.memo(({userId, membersData}: Props) => {
+//   return <MemberImages data={membersData} containerStyle={{paddingTop: 10}} />;
+// });

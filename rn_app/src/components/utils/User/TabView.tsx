@@ -19,6 +19,7 @@ import {normalStyles} from '~/constants/styles';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
 import {GroupMembers} from './GroupMembers';
+import {GroupsTabScene} from './GroupsTabScene';
 
 type Props = {
   userId: string;
@@ -122,7 +123,7 @@ export const UserTabView = React.memo(
           );
         case 'Groups':
           return (
-            <ScrollViewTabScene
+            <GroupsTabScene
               userId={userId}
               tabViewRef={groupsTabViewRef}
               scrollY={scrollY}
@@ -130,9 +131,9 @@ export const UserTabView = React.memo(
               onMomentumScrollEnd={syncScrollOffset}
               paddingTopHeight={paddingTopHeight}
               tabViewContainerMinHeight={tabViewContainerMinHeight}
-              isDisplayed={tabRoute[tabIndex].key === 'Groups'}>
-              <GroupMembers userId={userId} />
-            </ScrollViewTabScene>
+              isDisplayed={tabRoute[tabIndex].key === 'Groups'}
+              refresh={refresh}
+            />
           );
       }
     };

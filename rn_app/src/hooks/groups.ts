@@ -38,23 +38,28 @@ export const useGropuData = (userId: string) => {
   const [groupData, setGroupData] = useState<ResponseForGetGroups>();
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetch = useCallback(async () => {
+    const response = await getRequestToGroups(userId);
+    setGroupData(response.data);
+  }, [userId]);
+
   useEffect(() => {
     try {
       (async function () {
-        const response = await getRequestToGroups(userId);
-        setGroupData(response.data);
+        await fetch();
       })();
     } catch (e) {
       handleApiError(e);
     } finally {
       setIsLoading(false);
     }
-  }, [handleApiError, userId]);
+  }, [handleApiError, fetch]);
 
   return {
     groupData,
     setGroupData,
     isLoading,
+    fetch,
   };
 };
 

@@ -1,0 +1,32 @@
+import React, {ComponentProps, useCallback, useMemo} from 'react';
+
+import {ScrollViewTabScene} from './TabScene';
+import {useGropuData} from '~/hooks/groups';
+import {MemberImages} from '~/components/utils/MemberImages';
+
+type Props = {} & Omit<ComponentProps<typeof ScrollViewTabScene>, 'children'>;
+
+export const GroupsTabScene = React.memo(({...props}: Props) => {
+  const {groupData, fetch} = useGropuData(props.userId);
+  const membersData = useMemo(() => {
+    if (!groupData?.presence) {
+      return [];
+    } else {
+      return groupData.members.map((g) => ({
+        id: g.id,
+        imageUrl: g.avatar,
+      }));
+    }
+  }, [groupData]);
+
+  const customRefresh = async () => {
+    await props.refresh();
+    await fetch();
+  };
+
+  return (
+    <ScrollViewTabScene {...props} refresh={customRefresh}>
+      <MemberImages data={membersData} containerStyle={{paddingTop: 10}} />
+    </ScrollViewTabScene>
+  );
+});

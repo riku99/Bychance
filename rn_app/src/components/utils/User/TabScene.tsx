@@ -114,6 +114,7 @@ type ScrollViewTabSceneProps = {
   paddingTopHeight: number;
   tabViewContainerMinHeight: number;
   isDisplayed: boolean;
+  refresh: () => Promise<void>;
 };
 
 export const ScrollViewTabScene = React.memo(
@@ -126,14 +127,15 @@ export const ScrollViewTabScene = React.memo(
     paddingTopHeight,
     tabViewContainerMinHeight,
     isDisplayed,
+    refresh,
   }: ScrollViewTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
-
+      await refresh();
       setRefreshing(false);
-    }, []);
+    }, [refresh]);
 
     return (
       <Animated.ScrollView
