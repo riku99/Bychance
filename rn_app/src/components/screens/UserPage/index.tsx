@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {RouteProp} from '@react-navigation/native';
 
 import {useUserPageInfo, useUserName, useUserAvatar} from '~/hooks/users';
@@ -9,6 +9,7 @@ import {
 import {User} from '~/components/utils/User';
 import {MoreHoriz} from './MoreHoriz';
 import {MoreHorizModal} from './Modal';
+import {Alert} from 'react-native';
 
 type ProfileStackScreenProp = RouteProp<
   UserPageScreenGroupParamList,
@@ -46,6 +47,15 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
   const refresh = async () => {
     await mutate();
   };
+
+  useEffect(() => {
+    if (data?.groupMembersBlockToTargetUser) {
+      Alert.alert(
+        'メンバーがブロックしています',
+        'このユーザーをあなたの現在のグループのメンバーがブロックしています。やりとりには注意してください',
+      );
+    }
+  }, [data?.groupMembersBlockToTargetUser]);
 
   if (!data) {
     return (

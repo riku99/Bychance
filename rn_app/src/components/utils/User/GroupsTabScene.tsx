@@ -27,7 +27,11 @@ export const GroupsTabScene = React.memo(({...props}: Props) => {
 
   return (
     <ScrollViewTabScene {...props} refresh={customRefresh}>
-      <MemberImages data={membersData} containerStyle={{paddingTop: 10}} />
+      <MemberImages
+        data={membersData}
+        containerStyle={{paddingTop: 10}}
+        skeltonLoading={!groupData}
+      />
     </ScrollViewTabScene>
   );
 });
