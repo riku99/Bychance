@@ -17,8 +17,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {normalStyles} from '~/constants/styles';
 import {TabViewPost} from './Posts';
-import {FlatListTabScene, ScrollViewTabScene} from './TabScene';
-import {GroupMembers} from './GroupMembers';
+import {FlatListTabScene} from './TabScene';
 import {GroupsTabScene} from './GroupsTabScene';
 
 type Props = {

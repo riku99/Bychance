@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Dimensions, StyleProp, ViewStyle} from 'react-native';
 
 import {UserAvatar} from '~/components/utils/Avatar';
+import {SkeltonLoadingView} from '~/components/utils/SkeltonLoadingView';
 
 type Props = {
   data: {
@@ -16,10 +17,11 @@ type Props = {
     oneLineItems: number;
   };
   containerStyle?: StyleProp<ViewStyle>;
+  skeltonLoading?: boolean;
 };
 
 export const MemberImages = React.memo(
-  ({data, onPress, layout, containerStyle}: Props) => {
+  ({data, onPress, layout, containerStyle, skeltonLoading}: Props) => {
     const imageWidth = layout
       ? (layout.containerWidth - layout.paddingH * 2) / layout.oneLineItems -
         layout.imageLeft
@@ -30,6 +32,39 @@ export const MemberImages = React.memo(
     const oneLineItems = layout ? layout.oneLineItems : defaultOneLineItems;
 
     const imageLeft = layout ? layout.imageLeft : defaultImageLeft;
+
+    let skeltonArray: JSX.Element[] = [];
+    for (let i = 0; i < 6; i++) {
+      skeltonArray.push(
+        <View
+          key={i}
+          style={[
+            styles.avatarContainer,
+            {
+              width: imageWidth,
+              height: imageWidth,
+              borderRadius: imageWidth,
+              marginLeft: i % oneLineItems !== 0 ? imageLeft : undefined,
+            },
+          ]}
+        />,
+      );
+    }
+
+    if (skeltonLoading) {
+      return (
+        <SkeltonLoadingView>
+          <View
+            style={[
+              styles.wrap,
+              {paddingHorizontal: paddingH},
+              containerStyle,
+            ]}>
+            {skeltonArray.map((s) => s)}
+          </View>
+        </SkeltonLoadingView>
+      );
+    }
 
     return (
       <View
