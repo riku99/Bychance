@@ -12,12 +12,14 @@ export const GroupsTabScene = React.memo(({...props}: Props) => {
     if (!groupData?.presence) {
       return [];
     } else {
-      return groupData.members.map((g) => ({
-        id: g.id,
-        imageUrl: g.avatar,
-      }));
+      return groupData.members
+        .map((g) => ({
+          id: g.id,
+          imageUrl: g.avatar,
+        }))
+        .filter((r) => r.id !== props.userId);
     }
-  }, [groupData]);
+  }, [groupData, props.userId]);
 
   const customRefresh = async () => {
     await Promise.all([props.refresh(), fetch()]);
