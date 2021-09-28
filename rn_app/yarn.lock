@@ -6999,9 +6999,9 @@ react-native-fast-image@^8.3.4:
   integrity sha512-LpzAdjUphihUpVEBn5fEv5AILe55rHav0YiZroPZ1rumKDhAl4u2cG01ku2Pb7l8sayjTsNu7FuURAlXUUDsow==
 
 react-native-fast-toast@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-fast-toast/-/react-native-fast-toast-2.3.0.tgz#676eeff766777ad61d20ba2316275b2ac21ab145"
-  integrity sha512-RsQd44vLDgXiegKg/8/yISARAcIBm55mrLtMiE/X2LN2lk6UzgsjNZkLNfW3rm/ot/OMnh9y4du5WcpBsnyUSw==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-fast-toast/-/react-native-fast-toast-2.3.1.tgz#c5f7305b24e59138c475a1180a95c880754c2cc0"
+  integrity sha512-QcTzX2a8EjsMKYAjfvks5Do3gLXcMDCo8HuZHXhunmvj0VH6fxAVONLS6/WUsFdExWqvR3k0aaVdvFuH/7Md3Q==
 
 react-native-flash-message@^0.1.17:
   version "0.1.22"
@@ -7228,6 +7228,11 @@ react-native-tab-view@^2.16.0:
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.16.0.tgz#cae72c7084394bd328fac5fefb86cd966df37a86"
   integrity sha512-ac2DmT7+l13wzIFqtbfXn4wwfgtPoKzWjjZyrK1t+T8sdemuUvD4zIt+UImg03fu3s3VD8Wh/fBrIdcqQyZJWg==
+
+react-native-toast-notifications@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-toast-notifications/-/react-native-toast-notifications-3.2.2.tgz#884af05c2a8d32ed6a4e49a6d1a7720053b25ec8"
+  integrity sha512-44x1Nr0QVnpE/2+Xyiv3Cd9S5MlgxS+5YdCioHfass36pJQAF9sSh3bHPakGNoT0e+kCp9A46CJE9E9BbwSDUw==
 
 react-native-toasty@^1.0.2:
   version "1.0.2"

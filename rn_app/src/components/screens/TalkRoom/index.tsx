@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {useToast} from 'react-native-toast-notifications/src';
 
 import {Chat} from './Chat';
 import {TalkRoomStackNavigationProp} from '../../../navigations/types';
@@ -15,6 +16,7 @@ import {useMyId, useUserAvatar, useUserName} from '~/hooks/users';
 import {selectRoom} from '~/stores/_talkRooms';
 import {RootState} from '~/stores';
 import {UserAvatar} from '~/components/utils/Avatar';
+import {Dimensions} from 'react-native';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'TalkRoom'>;
 
@@ -138,6 +140,24 @@ export const TalkRoom = ({route, navigation}: Props) => {
     navigation.navigate('UserPage', {userId: partner.id});
   }, [partner.id, navigation]);
 
+  const toast = useToast();
+  useEffect(() => {
+    toast?.show(
+      'あなたのグループのメンバーがこのユーザーをブロックしています。やりとりには注意してください',
+      {
+        type: 'normal',
+        duration: 8000,
+        style: {
+          marginTop: height * 0.1,
+        },
+      },
+    );
+
+    return () => {
+      toast.hideAll();
+    };
+  }, [toast]);
+
   return (
     <Chat
       messages={messages}
@@ -147,3 +167,5 @@ export const TalkRoom = ({route, navigation}: Props) => {
     />
   );
 };
+
+const {height} = Dimensions.get('screen');

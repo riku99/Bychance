@@ -6,6 +6,7 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {ToastProvider} from 'react-native-fast-toast';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FlashMessage from 'react-native-flash-message';
+import {ToastProvider as NewToastProvider} from 'react-native-toast-notifications';
 
 import Root from './components/Root';
 import {normalStyles} from '~/constants/styles';
@@ -16,16 +17,18 @@ const App: () => React.ReactNode = () => {
   return (
     <NavigationContainer theme={MyTheme}>
       <Provider store={store}>
-        <ToastProvider
-          placement="bottom"
-          offset={toastOffset}
-          successIcon={<MIcon name="done" color="white" size={17} />}
-          dangerIcon={<MIcon name="clear" color="white" size={17} />}
-          style={{width: bottomToastWidth}}>
-          <Root />
-          <FlashMessage position="top" />
-          <ToastLoading />
-        </ToastProvider>
+        <NewToastProvider placement="top" style={{width: toastWidth}}>
+          <ToastProvider
+            placement="bottom"
+            offset={toastOffset}
+            successIcon={<MIcon name="done" color="white" size={17} />}
+            dangerIcon={<MIcon name="clear" color="white" size={17} />}
+            style={{width: toastWidth}}>
+            <Root />
+            <FlashMessage position="top" />
+            <ToastLoading />
+          </ToastProvider>
+        </NewToastProvider>
       </Provider>
     </NavigationContainer>
   );
@@ -44,6 +47,6 @@ export const MyTheme = {
 const {height, width} = Dimensions.get('screen');
 
 const toastOffset = height * 0.1;
-const bottomToastWidth = width * 0.9;
+const toastWidth = width * 0.9;
 
 export default App;
