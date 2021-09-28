@@ -3,8 +3,12 @@ import React, {useMemo} from 'react';
 import {MemberImages} from '~/components/utils/MemberImages';
 import {useGropuData} from '~/hooks/groups';
 
-export const GroupMembers = React.memo(() => {
-  const {groupData} = useGropuData();
+type Props = {
+  userId: string;
+};
+
+export const GroupMembers = React.memo(({userId}: Props) => {
+  const {groupData} = useGropuData(userId);
   const membersData = useMemo(() => {
     if (!groupData?.presence) {
       return [];

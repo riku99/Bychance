@@ -16,9 +16,9 @@ import {useDeleteUsersGroupId, useMyId} from '~/hooks/users';
 
 export const CurrentGroup = React.memo(() => {
   const {bottom} = useSafeAreaInsets();
-  const {groupData, isLoading, setGroupData} = useGropuData();
-  const {deleteGroup} = useDeleteGroup();
   const myId = useMyId();
+  const {groupData, isLoading, setGroupData} = useGropuData(myId);
+  const {deleteGroup} = useDeleteGroup();
 
   const membersData = useMemo(() => {
     if (!groupData?.presence) {

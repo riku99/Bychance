@@ -33,7 +33,7 @@ export const useJoinGroup = () => {
   };
 };
 
-export const useGropuData = () => {
+export const useGropuData = (userId: string) => {
   const {handleApiError} = useApikit();
   const [groupData, setGroupData] = useState<ResponseForGetGroups>();
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +41,7 @@ export const useGropuData = () => {
   useEffect(() => {
     try {
       (async function () {
-        const response = await getRequestToGroups();
+        const response = await getRequestToGroups(userId);
         setGroupData(response.data);
       })();
     } catch (e) {
@@ -49,7 +49,7 @@ export const useGropuData = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [handleApiError]);
+  }, [handleApiError, userId]);
 
   return {
     groupData,

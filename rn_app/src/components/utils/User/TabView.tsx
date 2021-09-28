@@ -131,7 +131,7 @@ export const UserTabView = React.memo(
               paddingTopHeight={paddingTopHeight}
               tabViewContainerMinHeight={tabViewContainerMinHeight}
               isDisplayed={tabRoute[tabIndex].key === 'Groups'}>
-              <GroupMembers />
+              <GroupMembers userId={userId} />
             </ScrollViewTabScene>
           );
       }

@@ -21,7 +21,7 @@ type Props = {
 };
 export const UserPage = React.memo(({route, navigation}: Props) => {
   const {data, mutate, isLoading} = useUserPageInfo(route.params.userId);
-  const name = useUserName(route.params.userId) || data?.name || 'f';
+  const name = useUserName(route.params.userId) || data?.name || '';
   const avatar =
     useUserAvatar({userId: route.params.userId}) || data?.avatar || null;
   const [menuVisible, setMenuVisible] = useState(false);

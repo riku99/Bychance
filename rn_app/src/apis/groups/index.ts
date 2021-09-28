@@ -16,10 +16,10 @@ export const postRequestToGroups = async ({ownerId}: {ownerId: string}) => {
   );
 };
 
-export const getRequestToGroups = async () => {
+export const getRequestToGroups = async (userId: string) => {
   const credentials = await checkKeychain();
   return await axios.get<ResponseForGetGroups>(
-    `${groupsUrl}?id=${credentials?.id}`,
+    `${baseUrl}/users/${userId}/groups?id=${credentials?.id}`,
     addBearer(credentials?.token),
   );
 };
