@@ -87,20 +87,27 @@ export const useDeleteGroup = () => {
 export const useGroupMemberWhoBlcokTargetUserExists = ({
   targetUserId,
 }: {
-  targetUserId: string;
+  targetUserId?: string;
 }) => {
   const [result, setResult] = useState<boolean>();
 
-  useEffect(() => {
-    (async function () {
-      const response = await getRequestToGroupMemberWhoBlockTargetUserExists({
-        targetUserId,
-      });
-      setResult(response.data);
-    })();
+  const fetch = useCallback(async () => {
+    if (targetUserId) {
+      try {
+        const response = await getRequestToGroupMemberWhoBlockTargetUserExists({
+          targetUserId,
+        });
+        setResult(response.data);
+      } catch (e) {}
+    }
   }, [targetUserId]);
+
+  useEffect(() => {
+    fetch();
+  }, [targetUserId, fetch]);
 
   return {
     result,
+    fetch,
   };
 };

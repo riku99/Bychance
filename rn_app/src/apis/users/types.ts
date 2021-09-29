@@ -26,7 +26,6 @@ export type ResponseForGetUserPageInfo = {
     viewed: {userId: string}[];
   }[];
   blockTo: boolean;
-  groupMemberBlockTargetUser: boolean;
 };
 
 export type ResponseForGetRefreshMyData = {

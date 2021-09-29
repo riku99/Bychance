@@ -1,4 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
+import {Alert} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 
 import {useUserPageInfo, useUserName, useUserAvatar} from '~/hooks/users';
@@ -9,7 +10,7 @@ import {
 import {User} from '~/components/utils/User';
 import {MoreHoriz} from './MoreHoriz';
 import {MoreHorizModal} from './Modal';
-import {Alert} from 'react-native';
+import {useGroupMemberWhoBlcokTargetUserExists} from '~/hooks/groups';
 
 type ProfileStackScreenProp = RouteProp<
   UserPageScreenGroupParamList,
@@ -48,14 +49,17 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
     await mutate();
   };
 
+  const {
+    result: groupMemberWhoBlockThisUserExists,
+  } = useGroupMemberWhoBlcokTargetUserExists({targetUserId: data?.id});
   useEffect(() => {
-    if (data?.groupMemberBlockTargetUser) {
+    if (groupMemberWhoBlockThisUserExists) {
       Alert.alert(
         'メンバーがブロックしています',
         'このユーザーをあなたの現在のグループのメンバーがブロックしています。やりとりには注意してください',
       );
     }
-  }, [data?.groupMemberBlockTargetUser]);
+  }, [groupMemberWhoBlockThisUserExists]);
 
   if (!data) {
     return (
