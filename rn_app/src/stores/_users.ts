@@ -4,8 +4,14 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {User} from '~/types/store/_users';
 import {RootState} from '.';
+
+export type User = {
+  id: string;
+  name: string;
+  avatar: string | null;
+  block: boolean;
+};
 
 const usersAdapter = createEntityAdapter<User>({
   selectId: (u) => u.id,

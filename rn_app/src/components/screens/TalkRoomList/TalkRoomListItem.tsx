@@ -4,7 +4,7 @@ import {ListItem, Badge} from 'react-native-elements';
 
 import {UserAvatar} from '../../utils/Avatar';
 import {normalStyles} from '~/constants/styles';
-import {TalkRoom} from '~/types/store/talkRooms';
+import {TalkRoom} from '~/stores/_talkRooms';
 import {useUserName, useUserAvatar} from '~/hooks/users';
 
 type Props = {

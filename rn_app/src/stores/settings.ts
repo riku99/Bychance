@@ -1,6 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {Settings} from '~/types/store/settings';
+type Settings = {
+  display?: boolean;
+  talkRoomMessageReceipt?: boolean;
+  showReceiveMessage?: boolean;
+  groupsApplicationEnabled?: boolean;
+};
 
 const initialState: Settings = {};
 

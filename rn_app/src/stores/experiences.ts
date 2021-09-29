@@ -1,6 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {Experiences} from '~/types/store/experiences';
+type Experiences = {
+  tooltipAboutDisplay: boolean;
+  intro: boolean;
+  videoEditDescription: boolean;
+};
 
 const initialState: Experiences = {
   tooltipAboutDisplay: false,

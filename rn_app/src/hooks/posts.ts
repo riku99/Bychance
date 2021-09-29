@@ -10,7 +10,7 @@ import {
   upsertPosts,
 } from '~/stores/posts';
 import {useCustomDispatch} from './stores';
-import {Post} from '~/types/store/posts';
+import {Post} from '~/stores/posts';
 import {RootState} from '~/stores';
 import {
   postRequestToPosts,

@@ -4,8 +4,24 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import {TalkRoom} from '~/types/store/talkRooms';
 import {RootState} from './index';
+
+export type TalkRoom = {
+  id: number;
+  timestamp: string;
+  unreadMessages: {
+    id: number;
+  }[];
+  lastMessage: {
+    id: number;
+    text: string;
+    userId: string;
+    createdAt: string;
+  } | null;
+  partner: {
+    id: string;
+  };
+};
 
 const talkRoomsAdapter = createEntityAdapter<TalkRoom>({
   selectId: (r) => r.id,

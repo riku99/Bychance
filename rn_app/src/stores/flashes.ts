@@ -5,7 +5,16 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from './index';
-import {Flash} from '~/types/store/flashes';
+
+export type Flash = {
+  id: number;
+  source: string;
+  sourceType: 'image' | 'video';
+  createdAt: string;
+  userId: string;
+  viewed: {userId: string}[];
+  viewerViewed: boolean;
+};
 
 export const flashesAdapter = createEntityAdapter<Flash>({
   selectId: (flash) => flash.id,

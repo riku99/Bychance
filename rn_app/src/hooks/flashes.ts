@@ -15,7 +15,7 @@ import {
   upsertFlashes,
   updateFlash,
 } from '~/stores/flashes';
-import {Flash} from '~/types/store/flashes';
+import {Flash} from '~/stores/flashes';
 import {
   postRequestToFlashes,
   postRequestToFlashesViewed,

@@ -5,7 +5,15 @@ import {
 } from '@reduxjs/toolkit';
 
 import {RootState} from '.';
-import {Post} from '~/types/store/posts';
+
+export type Post = {
+  id: number;
+  text: string | null;
+  url: string;
+  sourceType: 'image' | 'video';
+  createdAt: string;
+  userId: string;
+};
 
 const postsAdaper = createEntityAdapter<Post>({
   selectId: (post) => post.id,
