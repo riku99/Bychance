@@ -17,6 +17,7 @@ import {selectRoom} from '~/stores/_talkRooms';
 import {RootState} from '~/stores';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {Dimensions} from 'react-native';
+import {useGroupMemberWhoBlcokTargetUserExists} from '~/hooks/groups';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'TalkRoom'>;
 
@@ -140,23 +141,27 @@ export const TalkRoom = ({route, navigation}: Props) => {
     navigation.navigate('UserPage', {userId: partner.id});
   }, [partner.id, navigation]);
 
+  const {
+    result: groupMemberWhoBlockThisUserExists,
+  } = useGroupMemberWhoBlcokTargetUserExists({targetUserId: partner.id});
   const toast = useToast();
   useEffect(() => {
-    toast?.show(
-      'あなたのグループのメンバーがこのユーザーをブロックしています。やりとりには注意してください',
-      {
-        type: 'normal',
-        duration: 8000,
-        style: {
-          marginTop: height * 0.1,
+    if (groupMemberWhoBlockThisUserExists) {
+      toast?.show(
+        'あなたのグループのメンバーがこのユーザーをブロックしています。やりとりには注意してください',
+        {
+          type: 'normal',
+          duration: 8000,
+          style: {
+            marginTop: height * 0.1,
+          },
         },
-      },
-    );
-
+      );
+    }
     return () => {
       toast.hideAll();
     };
-  }, [toast]);
+  }, [toast, groupMemberWhoBlockThisUserExists]);
 
   return (
     <Chat

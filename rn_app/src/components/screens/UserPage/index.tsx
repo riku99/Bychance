@@ -49,13 +49,13 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
   };
 
   useEffect(() => {
-    if (data?.groupMembersBlockToTargetUser) {
+    if (data?.groupMemberBlockTargetUser) {
       Alert.alert(
         'メンバーがブロックしています',
         'このユーザーをあなたの現在のグループのメンバーがブロックしています。やりとりには注意してください',
       );
     }
-  }, [data?.groupMembersBlockToTargetUser]);
+  }, [data?.groupMemberBlockTargetUser]);
 
   if (!data) {
     return (

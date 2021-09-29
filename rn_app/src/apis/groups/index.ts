@@ -31,3 +31,15 @@ export const deleteRequestToGroups = async () => {
     addBearer(credentials?.token),
   );
 };
+
+export const getRequestToGroupMemberWhoBlockTargetUserExists = async ({
+  targetUserId,
+}: {
+  targetUserId: string;
+}) => {
+  const credentials = await checkKeychain();
+  return await axios.get<boolean>(
+    `${baseUrl}/groups/members/block/${targetUserId}?id=${credentials?.id}`,
+    addBearer(credentials?.token),
+  );
+};

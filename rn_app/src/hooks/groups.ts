@@ -5,6 +5,7 @@ import {
   postRequestToGroups,
   getRequestToGroups,
   deleteRequestToGroups,
+  getRequestToGroupMemberWhoBlockTargetUserExists,
 } from '~/apis/groups';
 import {ResponseForGetGroups} from '~/apis/groups/types';
 import {useToastLoading} from './appState';
@@ -80,5 +81,26 @@ export const useDeleteGroup = () => {
 
   return {
     deleteGroup,
+  };
+};
+
+export const useGroupMemberWhoBlcokTargetUserExists = ({
+  targetUserId,
+}: {
+  targetUserId: string;
+}) => {
+  const [result, setResult] = useState<boolean>();
+
+  useEffect(() => {
+    (async function () {
+      const response = await getRequestToGroupMemberWhoBlockTargetUserExists({
+        targetUserId,
+      });
+      setResult(response.data);
+    })();
+  }, [targetUserId]);
+
+  return {
+    result,
   };
 };
