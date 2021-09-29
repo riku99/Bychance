@@ -7,7 +7,7 @@ import {AxiosError} from 'axios';
 import {RootState} from '~/stores';
 import {resetError, setError} from '~/stores/errors';
 import {useApikit} from './apikit';
-import {ApiError} from '~/types/errors';
+import {ApiError} from '~/types';
 import {useCustomDispatch} from './stores';
 import {useResetDispatch} from './stores';
 

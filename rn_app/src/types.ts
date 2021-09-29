@@ -1,8 +1,11 @@
-import {AxiosError} from 'axios';
-
 export type StampValues = 'thumbsUp' | 'yusyo' | 'yoi' | 'itibann' | 'seikai'; // 随時変更される可能性あり
 
 export type SnsList = 'instagram' | 'twitter' | 'youtube' | 'tiktok';
+
+export type ApiError =
+  | {errorType: 'invalidError'; message: string; alertDialog: boolean}
+  | {errorType: 'loginError'}
+  | {errorType: 'someError'};
 
 export type Recommendation = {
   id: number;
@@ -39,17 +42,6 @@ export type RecieveTalkRoomMessageWithSocket = {
   };
   show: boolean;
 };
-
-// サーバーから返ってくるエラーオブジェクト
-export type BasicAxiosError = AxiosError<
-  {errorType: 'invalidError'; message: string} | {errorType: 'loginError'}
->;
-
-// API通信でエラー返ってきた際にエラーハンドリングして最終的にそのAPI用関数がリターンするデータ
-export type ReturnApiError =
-  | {errorType: 'loginError'}
-  | {errorType: 'invalidError'}
-  | {errorType: 'someError'};
 
 export type PrivateZone = {
   id: number;

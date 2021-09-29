@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {ApiError} from '~/types/errors';
+import {ApiError} from '~/types';
 
 type ErrorState = {
   apiError?: ApiError;
