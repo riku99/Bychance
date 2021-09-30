@@ -9,7 +9,7 @@ type Props = {
     id: string;
     imageUrl: string | null;
   }[];
-  onPress?: () => void;
+  onPress?: (userId: string) => void;
   layout?: {
     containerWidth: number;
     paddingH: number;
@@ -82,7 +82,7 @@ export const MemberImages = React.memo(
             key={u.id}
             onPress={() => {
               if (onPress) {
-                onPress();
+                onPress(u.id);
               }
             }}
           />

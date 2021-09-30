@@ -1,4 +1,5 @@
-import React, {ComponentProps, useMemo} from 'react';
+import React, {ComponentProps, useCallback, useMemo} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import {ScrollViewTabScene} from './TabScene';
 import {useGropuData} from '~/hooks/groups';
@@ -25,12 +26,23 @@ export const GroupsTabScene = React.memo(({...props}: Props) => {
     await Promise.all([props.refresh(), fetch()]);
   };
 
+  const navigation = useNavigation();
+  const onImagePress = useCallback(
+    (userId: string) => {
+      navigation.push('UserPage', {
+        userId,
+      });
+    },
+    [navigation],
+  );
+
   return (
     <ScrollViewTabScene {...props} refresh={customRefresh}>
       <MemberImages
         data={membersData}
         containerStyle={{paddingTop: 10}}
         skeltonLoading={!groupData}
+        onPress={onImagePress}
       />
     </ScrollViewTabScene>
   );
