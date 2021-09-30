@@ -2,7 +2,6 @@ import React, {ComponentProps, useCallback} from 'react';
 import {
   createStackNavigator,
   StackNavigationProp,
-  StackNavigationOptions,
 } from '@react-navigation/stack';
 
 import {Container as Post} from '../components/screens/Post';

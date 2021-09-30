@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ScrollViewTabScene} from './TabScene';
 import {useGropuData} from '~/hooks/groups';
 import {MemberImages} from '~/components/utils/MemberImages';
+import {UserPageNavigationProp} from '~/navigations/UserPage';
 
 type Props = {} & Omit<ComponentProps<typeof ScrollViewTabScene>, 'children'>;
 
@@ -26,7 +27,7 @@ export const GroupsTabScene = React.memo(({...props}: Props) => {
     await Promise.all([props.refresh(), fetch()]);
   };
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<UserPageNavigationProp<any>>();
   const onImagePress = useCallback(
     (userId: string) => {
       navigation.push('UserPage', {
