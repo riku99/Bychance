@@ -31,19 +31,6 @@ export const NearbyUsersStackScreen = () => {
         component={NearbyUsersScreen}
         options={{
           headerShown: false,
-          // headerTitle: () => (
-          //   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          //     <Text
-          //       style={{
-          //         fontWeight: 'bold',
-          //         fontSize: 16,
-          //         color: normalStyles.headerTitleColor,
-          //       }}>
-          //       ユーザーを見つける
-          //     </Text>
-          //     <Emoji name="eyes" />
-          //   </View>
-          // ),
         }}
       />
       {Object.entries(userPageScreensGroup).map(([name, component]) => (

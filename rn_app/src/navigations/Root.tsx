@@ -24,6 +24,7 @@ import {PrivateConfig} from '~/components/screens/PrivateConfig';
 import {Intoro} from '~/components/screens/Intoro';
 import {useIntro} from '~/hooks/experiences';
 import {ApplyingGroup} from '~/components/screens/Groups';
+import {defaultTheme} from '~/theme';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -87,7 +88,7 @@ export const RootStackScreen = React.memo(() => {
                     <Button
                       title="キャンセル"
                       style={{marginBottom: 3}}
-                      titleStyle={{color: normalStyles.headerTitleColor}}
+                      titleStyle={{color: defaultTheme.darkGray}}
                       buttonStyle={{backgroundColor: 'transparent'}}
                       onPress={() => navigation.navigate('UserEdit')}
                     />

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Button, Icon} from 'react-native-elements';
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   onPress: () => void;
@@ -10,7 +10,7 @@ type Props = {
 export const MoreHoriz = React.memo(({onPress}: Props) => {
   return (
     <Button
-      icon={<Icon name="more-horiz" color={normalStyles.headerTitleColor} />}
+      icon={<Icon name="more-horiz" color={defaultTheme.darkGray} />}
       activeOpacity={1}
       buttonStyle={styles.buttonStyles}
       onPress={onPress}

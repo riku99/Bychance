@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Badge} from 'react-native-elements';
 
-import {normalStyles} from '~/constants/styles';
 import {useDisplayedMenu} from '~/hooks/appState';
 import {useGroupBadge} from '~/hooks/appState';
+import {defaultTheme} from '~/theme';
 
 export const MenuBar = React.memo(() => {
   const {setDisplayedMenu} = useDisplayedMenu();
@@ -13,7 +13,7 @@ export const MenuBar = React.memo(() => {
   return (
     <View>
       <Button
-        icon={{name: 'menu', size: 25, color: normalStyles.headerTitleColor}}
+        icon={{name: 'menu', size: 25, color: defaultTheme.darkGray}}
         buttonStyle={styles.button}
         onPress={() => {
           setDisplayedMenu(true);

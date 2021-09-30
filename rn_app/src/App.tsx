@@ -39,8 +39,8 @@ export const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    text: normalStyles.headerTitleColor,
-    primary: normalStyles.headerTitleColor,
+    text: defaultTheme.darkGray,
+    primary: defaultTheme.darkGray,
     background: 'white',
   },
 };
