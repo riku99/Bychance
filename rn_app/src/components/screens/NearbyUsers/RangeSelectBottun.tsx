@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {MenuView, MenuAction} from '@react-native-menu/menu';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {mainButtonGradientConfig} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 const menuActions: MenuAction[] = [
   {
@@ -39,9 +39,9 @@ export const RangeSelectButton = React.memo(({setRange}: Props) => {
       onPressAction={(e) => onMenuAction(e.nativeEvent.event)}>
       <TouchableOpacity style={styles.buttonContainer} activeOpacity={1}>
         <LinearGradient
-          colors={mainButtonGradientConfig.colors}
-          start={mainButtonGradientConfig.start}
-          end={mainButtonGradientConfig.end}
+          colors={defaultTheme.mainButtonGradient.colors}
+          start={defaultTheme.mainButtonGradient.start}
+          end={defaultTheme.mainButtonGradient.end}
           style={styles.buttonContainer}>
           <Text style={styles.titleStyle}>検索範囲を変更</Text>
         </LinearGradient>

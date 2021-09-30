@@ -8,7 +8,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {TabViewContext} from './index';
 import {Avatar} from './Avatar';
-import {mainButtonGradientConfig} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 export const Map = React.memo(() => {
   const {lat, lng, users, refreshUsers} = useContext(TabViewContext);
@@ -51,9 +51,9 @@ export const Map = React.memo(() => {
         activeOpacity={1}
         onPress={onRefreshButtonPress}>
         <LinearGradient
-          colors={mainButtonGradientConfig.colors}
-          start={mainButtonGradientConfig.start}
-          end={mainButtonGradientConfig.end}
+          colors={defaultTheme.mainButtonGradient.colors}
+          start={defaultTheme.mainButtonGradient.start}
+          end={defaultTheme.mainButtonGradient.end}
           style={styles.refreshButtonContainer}>
           {!refreshing ? (
             <MIcon name="refresh" size={30} color="white" />

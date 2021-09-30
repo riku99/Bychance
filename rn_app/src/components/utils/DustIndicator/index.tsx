@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {StyleSheet, View, Animated} from 'react-native';
 import Emoji from 'react-native-emoji';
 
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   onAnimationEnd?: () => void;
@@ -30,7 +30,7 @@ export const DustIndicator = React.memo(({onAnimationEnd}: Props) => {
           <Animated.View
             style={[
               styles.bar,
-              {backgroundColor: normalStyles.mainColor},
+              {backgroundColor: defaultTheme.pinkGrapefruit},
               {transform: [{translateX}]},
             ]}
           />

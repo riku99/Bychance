@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   setRange: (n: number) => void;
@@ -35,7 +35,7 @@ export const RangeSelector = React.memo(({setRange}: Props) => {
 
 const styles = StyleSheet.create({
   pickerContainer: {
-    backgroundColor: normalStyles.mainColor,
+    backgroundColor: defaultTheme.pinkGrapefruit,
     width: '100%',
     height: '100%',
     alignItems: 'center',

@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {normalStyles} from '../../../constants/styles';
+import {defaultTheme} from '~/theme';
 import {
   UserPageNavigationProp,
   MyPageNavigationProp,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     height: width / 3.02,
   },
   postWrapper: {
-    backgroundColor: normalStyles.imageBackGroundColor,
+    backgroundColor: defaultTheme.imageBackGroundColor,
     marginBottom: 2,
   },
   playIcon: {

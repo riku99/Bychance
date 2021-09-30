@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 
 import {User} from '~/stores/user';
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   source: User['backGroundItem'];
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   noneSoruce: {
     width: '100%',
     height: '100%',
-    backgroundColor: normalStyles.imageBackGroundColor,
+    backgroundColor: defaultTheme.imageBackGroundColor,
   },
   deleteButtonContainer: {
     position: 'absolute',

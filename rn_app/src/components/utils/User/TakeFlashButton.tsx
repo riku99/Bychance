@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {RootNavigationProp} from '~/navigations/Root';
-import {mainButtonGradientConfig} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 export const TakeFlashButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
@@ -17,9 +17,9 @@ export const TakeFlashButton = React.memo(() => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={1}>
       <LinearGradient
-        colors={mainButtonGradientConfig.colors}
-        start={mainButtonGradientConfig.start}
-        end={mainButtonGradientConfig.end}
+        colors={defaultTheme.mainButtonGradient.colors}
+        start={defaultTheme.mainButtonGradient.start}
+        end={defaultTheme.mainButtonGradient.end}
         style={styles._button}>
         <MIcon name="flare" size={27} style={styles.buttonIcon} />
       </LinearGradient>

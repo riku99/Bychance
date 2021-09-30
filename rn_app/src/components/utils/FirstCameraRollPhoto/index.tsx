@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, ImageBackground} from 'react-native';
 import CameraRoll from '@react-native-community/cameraroll';
 
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   onPress: () => void;
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderRadius: 10,
-    backgroundColor: normalStyles.imageBackGroundColor,
+    backgroundColor: defaultTheme.imageBackGroundColor,
   },
   imageContainer: {
     width: '100%',

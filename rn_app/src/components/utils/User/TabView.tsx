@@ -15,7 +15,7 @@ import {
 } from 'react-native-tab-view';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 import {TabViewPost} from './Posts';
 import {FlatListTabScene} from './TabScene';
 import {GroupsTabScene} from './GroupsTabScene';
@@ -164,13 +164,13 @@ export const UserTabView = React.memo(
                 <MIcon
                   name="apps"
                   size={25}
-                  color={focused ? normalStyles.mainColor : 'lightgray'}
+                  color={focused ? defaultTheme.pinkGrapefruit : 'lightgray'}
                 />
               ) : (
                 <MIcon
                   name="group"
                   size={25}
-                  color={focused ? normalStyles.mainColor : 'lightgray'}
+                  color={focused ? defaultTheme.pinkGrapefruit : 'lightgray'}
                 />
               );
             }}

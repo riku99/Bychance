@@ -32,7 +32,6 @@ import {
   useMySNSData,
 } from '~/hooks/users';
 import {defaultTheme} from '~/theme';
-import {normalStyles} from '~/constants/styles';
 
 const EditItem = ({
   label,
@@ -436,7 +435,7 @@ const styles = StyleSheet.create({
   backGraondItemContainer: {
     width: '100%',
     height: '20%',
-    backgroundColor: normalStyles.imageBackGroundColor,
+    backgroundColor: defaultTheme.imageBackGroundColor,
   },
   avatarContainer: {
     width: 80,

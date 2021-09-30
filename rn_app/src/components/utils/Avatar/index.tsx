@@ -1,7 +1,8 @@
 import React from 'react';
 import {Avatar, AvatarProps} from 'react-native-elements';
 
-import {normalStyles} from '../../../constants/styles';
+import {defaultTheme} from '~/theme';
+
 import {UserProfileOuter} from '../AvatarOuter';
 
 type Props = {
@@ -25,7 +26,7 @@ export const UserAvatar = React.memo(
             : containerStyle
         }
         placeholderStyle={{
-          backgroundColor: normalStyles.imageBackGroundColor,
+          backgroundColor: defaultTheme.imageBackGroundColor,
         }}
         size={size}
         activeOpacity={opacity ? opacity : undefined}

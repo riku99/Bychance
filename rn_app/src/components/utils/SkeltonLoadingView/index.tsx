@@ -1,7 +1,7 @@
 import React from 'react';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -10,7 +10,7 @@ type Props = {
 export const SkeltonLoadingView = React.memo(({children}: Props) => {
   return (
     <SkeletonPlaceholder
-      backgroundColor={normalStyles.imageBackGroundColor}
+      backgroundColor={defaultTheme.imageBackGroundColor}
       speed={1000}
       highlightColor={'#fcfcfc'}>
       {children}

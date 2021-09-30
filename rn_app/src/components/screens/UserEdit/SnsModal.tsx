@@ -4,7 +4,6 @@ import {Modalize} from 'react-native-modalize';
 import {Button} from 'react-native-elements';
 
 import {SnsList} from '~/types';
-import {normalStyles} from '~/constants/styles';
 import {X_HEIGHT} from '~/constants/device';
 import {defaultTheme} from '~/theme';
 

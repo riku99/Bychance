@@ -5,10 +5,10 @@ import {Icon} from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import {format} from 'date-fns';
 
-import {normalStyles} from '../../../constants/styles';
 import {ScrollView} from 'react-native-gesture-handler';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {PostScreenType} from '~/navigations/UserPage';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   post: PostScreenType;
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   sourceContainer: {
     width: width,
     height: postHeight,
-    backgroundColor: normalStyles.imageBackGroundColor,
+    backgroundColor: defaultTheme.imageBackGroundColor,
   },
   image: {
     width: '100%',

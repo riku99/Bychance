@@ -10,7 +10,6 @@
 
 // import {RootState} from '../../../stores/index';
 // import {User} from '../../../stores/user';
-// import {normalStyles} from '../../../constants/styles/normal';
 
 // type Props = {
 //   user: Pick<User, 'name' | 'introduce' | 'avatar'>;

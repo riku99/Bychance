@@ -15,13 +15,13 @@ import Geocoder from 'react-native-geocoding';
 import {Modalize} from 'react-native-modalize';
 
 import {credentials} from '~/credentials';
-import {normalStyles} from '~/constants/styles';
 import {formatAddress} from '~/utils';
 import {AboutPrivateZoneModal} from './AboutPrivateZoneModal';
 import {usePrivateZone} from '~/hooks/privateZone';
 import {PrivateZone} from '~/types';
 import {commonStyles} from './common';
 import {useMyLng, useMyLat, useIsDisplayedToOtherUsers} from '~/hooks/users';
+import {defaultTheme} from '~/theme';
 
 Geocoder.init(credentials.GCP_API_KEY, {language: 'ja'});
 
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   addAddressButton: {
     width: 55,
     height: 30,
-    backgroundColor: normalStyles.mainColor,
+    backgroundColor: defaultTheme.pinkGrapefruit,
   },
   deleteAddressButton: {
     width: 55,

@@ -16,10 +16,10 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {commonStyles} from './common';
 import {AboutPrivateTimeModal} from './AboutPrivateTimeModal';
 import {Modalize} from 'react-native-modalize';
-import {normalStyles} from '~/constants/styles';
 import {usePrivateTime} from '~/hooks/privateTime';
 import {formatMinutes} from '~/utils';
 import {useIsDisplayedToOtherUsers} from '~/hooks/users';
+import {defaultTheme} from '~/theme';
 
 export const Time = React.memo(() => {
   const {
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   selectButton: {
-    backgroundColor: normalStyles.mainColor,
+    backgroundColor: defaultTheme.pinkGrapefruit,
     height: 30,
   },
   selectButotnTitle: {
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   addButton: {
     width: 80,
     marginTop: 15,
-    backgroundColor: normalStyles.mainColor,
+    backgroundColor: defaultTheme.pinkGrapefruit,
   },
   addButotnTitleStyle: {
     fontSize: 14,

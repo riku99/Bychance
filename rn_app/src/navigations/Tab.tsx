@@ -10,7 +10,7 @@ import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './UserPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
 import {RecommendationStackScreen} from './Recommendation';
 import {useGetUnreadNumber} from '~/hooks/talkRooms';
@@ -69,8 +69,7 @@ export const Tabs = React.memo(() => {
     <RootTab.Navigator
       initialRouteName="Profile"
       tabBarOptions={{
-        // showLabel: false,
-        activeTintColor: normalStyles.mainColor,
+        activeTintColor: defaultTheme.pinkGrapefruit,
         inactiveTintColor: '#b8b8b8',
       }}>
       <RootTab.Screen

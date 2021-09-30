@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {ListItem, Badge} from 'react-native-elements';
 
 import {UserAvatar} from '../../utils/Avatar';
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 import {TalkRoom} from '~/stores/_talkRooms';
 import {useUserName, useUserAvatar} from '~/hooks/users';
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 25 / 2,
-    backgroundColor: normalStyles.mainColor,
+    backgroundColor: defaultTheme.pinkGrapefruit,
     fontSize: 15,
   },
   name: {

@@ -19,7 +19,7 @@ import {IntroduceModal} from './IntoduceModal';
 import {BackGroundItem} from './BackGroundItem';
 import {SnsIcons} from './SnsIcons';
 import {Menu} from '~/components/utils/Menu';
-import {normalStyles} from '~/constants/styles';
+import {defaultTheme} from '~/theme';
 import {useMyId} from '~/hooks/users';
 import {CreatingPost, CreatingFlash} from './Creating';
 import {
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: backgroundItemHeight,
-    backgroundColor: normalStyles.imageBackGroundColor,
+    backgroundColor: defaultTheme.imageBackGroundColor,
   },
   introduceContainer: {
     position: 'absolute',

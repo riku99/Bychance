@@ -24,7 +24,6 @@ import {RootState} from '~/stores';
 import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/navigations/Root';
 import {NearbyUsersStackNavigationProp} from '~/navigations/NearbyUsers';
-import {normalStyles} from '~/constants/styles';
 import {
   notAuthLocationProviderAlert,
   notLocationInfoAlert,
@@ -35,6 +34,7 @@ import {usePrefetchStamps} from '~/hooks/flashStamps';
 import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
 import {useSafeArea} from '~/hooks/appState';
 import {useMyLat, useMyLng} from '~/hooks/users';
+import {defaultTheme} from '~/theme';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -292,14 +292,14 @@ export const NearbyUsersScreen = React.memo(() => {
             tabBar={renderTabBar}
             tabBarPosition="top"
             tabBarOptions={{
-              activeTintColor: normalStyles.mainColor,
+              activeTintColor: defaultTheme.pinkGrapefruit,
               pressOpacity: 1,
               labelStyle: {
                 fontSize: 14,
                 fontWeight: '500',
               },
               indicatorStyle: {
-                backgroundColor: normalStyles.mainColor,
+                backgroundColor: defaultTheme.pinkGrapefruit,
               },
               tabStyle: {
                 height: 45,
