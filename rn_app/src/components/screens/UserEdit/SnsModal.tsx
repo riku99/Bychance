@@ -6,6 +6,7 @@ import {Button} from 'react-native-elements';
 import {SnsList} from '~/types';
 import {normalStyles} from '~/constants/styles';
 import {X_HEIGHT} from '~/constants/device';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   show: SnsList;
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
   },
   endButtonTitle: {
     fontWeight: 'bold',
-    color: normalStyles.blueText,
+    color: defaultTheme.blueText,
   },
   title: {
     fontWeight: 'bold',

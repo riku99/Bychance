@@ -15,7 +15,6 @@ import {RNToasty} from 'react-native-toasty';
 
 import {RootNavigationProp} from '~/navigations/Root';
 import {UserEditNavigationProp} from '../../../navigations/types';
-import {normalStyles} from '~/constants/styles';
 import {SnsList} from '~/types';
 import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';
@@ -32,6 +31,8 @@ import {
   useMyBackGroundItemType,
   useMySNSData,
 } from '~/hooks/users';
+import {defaultTheme} from '~/theme';
+import {normalStyles} from '~/constants/styles';
 
 const EditItem = ({
   label,
@@ -478,7 +479,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   completeButtonTitle: {
-    color: normalStyles.blueText,
+    color: defaultTheme.blueText,
     fontWeight: 'bold',
   },
   snsIconContainer: {

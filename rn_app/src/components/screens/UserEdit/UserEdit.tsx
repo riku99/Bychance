@@ -11,8 +11,8 @@ import {Button} from 'react-native-elements';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 
 import {UserAvatar} from '../../utils/Avatar';
-import {normalStyles} from '../../../constants/styles';
 import {UserEditNavigationProp} from '../../../navigations/types';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   user: {
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   completeButtonTitle: {
-    color: normalStyles.blueText,
+    color: defaultTheme.blueText,
     fontWeight: 'bold',
   },
 });
