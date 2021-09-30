@@ -24,6 +24,7 @@ import {Intoro} from '~/components/screens/Intoro';
 import {useIntro} from '~/hooks/experiences';
 import {ApplyingGroup} from '~/components/screens/Groups';
 import {defaultTheme} from '~/theme';
+import {useUserPageStackList, UserPageScreenGroupParamList} from './UserPage';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -43,7 +44,7 @@ export type RootStackParamList = {
   };
   Intoro: undefined;
   Groups: undefined;
-};
+} & UserPageScreenGroupParamList;
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
 export type RootNavigationProp<
@@ -54,6 +55,7 @@ const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = React.memo(() => {
   const {currentIntro} = useIntro();
+  const {renderUserPageStackList} = useUserPageStackList();
 
   return (
     <RootStack.Navigator
@@ -170,6 +172,12 @@ export const RootStackScreen = React.memo(() => {
           gestureDirection: 'horizontal',
         }}
       />
+      {renderUserPageStackList({
+        options: {
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        },
+      })}
     </RootStack.Navigator>
   );
 });

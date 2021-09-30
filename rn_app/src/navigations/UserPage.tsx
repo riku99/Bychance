@@ -1,7 +1,8 @@
-import React, {useCallback} from 'react';
+import React, {ComponentProps, useCallback} from 'react';
 import {
   createStackNavigator,
   StackNavigationProp,
+  StackNavigationOptions,
 } from '@react-navigation/stack';
 
 import {Container as Post} from '../components/screens/Post';
@@ -28,7 +29,7 @@ export type UserPageScreenGroupParamList = {
 };
 
 // stackで使われるscreenのグループ。Tabに渡されるMyPageStackScreenとは分けて使う
-export const userPageScreensGroup = {
+const userPageScreensGroup = {
   UserPage: UserPage,
   Post: Post,
 };
@@ -36,18 +37,22 @@ export const userPageScreensGroup = {
 const Stack = createStackNavigator<UserPageScreenGroupParamList>();
 
 export const useUserPageStackList = () => {
-  const renderUserPageStackList = useCallback(() => {
-    return Object.entries(userPageScreensGroup).map(([name, component]) => (
-      <Stack.Screen
-        key={name}
-        name={name as keyof UserPageScreenGroupParamList}
-        component={component}
-        options={({route}) => ({
-          headerTitle: route.name === 'Post' ? '投稿' : undefined,
-        })}
-      />
-    ));
-  }, []);
+  const renderUserPageStackList = useCallback(
+    (props?: {options: ComponentProps<typeof Stack.Screen>['options']}) => {
+      return Object.entries(userPageScreensGroup).map(([name, component]) => (
+        <Stack.Screen
+          key={name}
+          name={name as keyof UserPageScreenGroupParamList}
+          component={component}
+          options={({route}) => ({
+            headerTitle: route.name === 'Post' ? '投稿' : undefined,
+            ...props?.options,
+          })}
+        />
+      ));
+    },
+    [],
+  );
 
   return {
     renderUserPageStackList,
