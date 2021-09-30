@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
+import {UserPageScreenGroupParamList, useUserPageStackList} from './UserPage';
 import {FlashesPage} from '../components/screens/Flashes';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 
@@ -17,6 +17,8 @@ export type FlashesStackParamList = {
 const Stack = createStackNavigator<FlashesStackParamList>();
 
 export const FlashesStackScreen = React.memo(() => {
+  const {renderUserPageStackList} = useUserPageStackList();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -30,17 +32,7 @@ export const FlashesStackScreen = React.memo(() => {
           headerShown: false,
         })}
       />
-      {Object.entries(userPageScreensGroup).map(([name, component]) => (
-        <Stack.Screen
-          key={name}
-          name={name as keyof UserPageScreenGroupParamList}
-          component={component}
-          options={({route}) => ({
-            headerTitle: route.name === 'Post' ? '投稿' : undefined,
-            headerStyle: {shadowColor: 'transparent'},
-          })}
-        />
-      ))}
+      {renderUserPageStackList()}
     </Stack.Navigator>
   );
 });

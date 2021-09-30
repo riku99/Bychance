@@ -6,7 +6,7 @@ import {
 
 import {NearbyUsersScreen} from '../components/screens/NearbyUsers';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
+import {UserPageScreenGroupParamList, useUserPageStackList} from './UserPage';
 
 export type NearbyUsersStackParamList = {
   NearbyUsers: undefined;
@@ -19,6 +19,7 @@ export type NearbyUsersStackNavigationProp<
 const Stack = createStackNavigator<NearbyUsersStackParamList>();
 
 export const NearbyUsersStackScreen = () => {
+  const {renderUserPageStackList} = useUserPageStackList();
   return (
     <Stack.Navigator
       screenOptions={{
@@ -33,16 +34,7 @@ export const NearbyUsersStackScreen = () => {
           headerShown: false,
         }}
       />
-      {Object.entries(userPageScreensGroup).map(([name, component]) => (
-        <Stack.Screen
-          key={name}
-          name={name as keyof UserPageScreenGroupParamList}
-          component={component}
-          options={({route}) => ({
-            headerTitle: route.name === 'Post' ? '投稿' : undefined,
-          })}
-        />
-      ))}
+      {renderUserPageStackList()}
     </Stack.Navigator>
   );
 };

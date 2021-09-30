@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {TalkRoom} from '../components/screens/TalkRoom';
-import {UserPageScreenGroupParamList, userPageScreensGroup} from './UserPage';
+import {UserPageScreenGroupParamList, useUserPageStackList} from './UserPage';
 
 export type TalkRoomStackParamList = {
   TalkRoom: {
@@ -16,20 +16,12 @@ export type TalkRoomStackParamList = {
 const Stack = createStackNavigator<TalkRoomStackParamList>();
 
 export const TalkRoomStackScreen = React.memo(() => {
+  const {renderUserPageStackList} = useUserPageStackList();
+
   return (
     <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
       <Stack.Screen name="TalkRoom" component={TalkRoom} />
-      {Object.entries(userPageScreensGroup).map(([name, component]) => (
-        <Stack.Screen
-          key={name}
-          name={name as keyof UserPageScreenGroupParamList}
-          component={component}
-          options={({route}) => ({
-            headerTitle: route.name === 'Post' ? '投稿' : undefined,
-            headerStyle: {shadowColor: 'transparent'},
-          })}
-        />
-      ))}
+      {renderUserPageStackList()}
     </Stack.Navigator>
   );
 });

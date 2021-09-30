@@ -7,7 +7,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Icon} from 'react-native-elements';
 
 import {CreatePostStackScreen} from './CreatePost';
-import {MyPageStackScreen} from './UserPage';
+import {MyPageStackScreen} from './MyPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {defaultTheme} from '~/theme';
