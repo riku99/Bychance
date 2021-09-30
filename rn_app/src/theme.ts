@@ -1,4 +1,4 @@
 export const defaultTheme = {
-  pinkGrapefruit: '#ff6e7f',
-  darkGray: '#545454',
+  pinkGrapefruit: '#ff6e7f', // primary
+  darkGray: '#545454', // secondary
 };

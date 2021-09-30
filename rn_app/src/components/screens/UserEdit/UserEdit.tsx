@@ -250,7 +250,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 100,
     fontSize: 16,
-    color: normalStyles.mainTextColor,
   },
   image: {
     display: 'flex',

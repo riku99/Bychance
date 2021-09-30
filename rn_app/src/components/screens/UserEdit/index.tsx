@@ -473,7 +473,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 100,
     fontSize: 16,
-    color: normalStyles.mainTextColor,
   },
   completeButton: {
     backgroundColor: 'transparent',
