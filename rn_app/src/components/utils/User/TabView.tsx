@@ -55,7 +55,6 @@ export const UserTabView = React.memo(
     );
 
     const scrollValue = useRef(0);
-
     // TabViewをどれだけスクロールしたかを記述
     useEffect(() => {
       scrollY.addListener(({value}) => {
@@ -132,6 +131,7 @@ export const UserTabView = React.memo(
               tabViewContainerMinHeight={tabViewContainerMinHeight}
               isDisplayed={tabRoute[tabIndex].key === 'Groups'}
               refresh={refresh}
+              scrollValue={scrollValue.current}
             />
           );
       }
