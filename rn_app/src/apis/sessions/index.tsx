@@ -5,6 +5,7 @@ import {LoginData} from './types';
 export const postRequestToLineLogin = async ({idToken}: {idToken: string}) => {
   return await axios.post<LoginData & {accessToken: string}>(
     `${baseUrl}/sessions/line_login`,
+    {},
     addBearer(idToken),
   );
 };
