@@ -125,6 +125,7 @@ export const useLineLogin = () => {
         dispatch(setSetitngs(settings));
         dispatch(setLogin(true));
       } catch (e) {
+        console.log(e);
         Alert.alert(
           'エラーが発生しました。',
           '申し訳ありませんがやり直してください',

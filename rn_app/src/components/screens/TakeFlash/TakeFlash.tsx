@@ -73,7 +73,7 @@ export const TakeFlash = React.memo(
       <View style={styles.container}>
         {!targetPhoto && !targetVideo ? (
           <>
-            <WideRangeSourceContainer>
+            <WideRangeSourceContainer containerStyle={{marginTop: top}}>
               <RNCamera
                 ref={cameraRef}
                 style={styles.camera}
@@ -119,72 +119,7 @@ export const TakeFlash = React.memo(
             </View>
           </>
         ) : (
-          <>
-            {targetPhoto && !targetVideo && !recordingVideo ? (
-              <></>
-            ) : (
-              <></>
-              // !targetPhoto &&
-              // !recordingVideo &&
-              // targetVideo && (
-              //   <>
-              //     <Video
-              //       source={{
-              //         uri: targetVideo.uri,
-              //       }}
-              //       style={styles.backGroundVideo}
-              //       repeat={true}
-              //     />
-              //   </>
-              // )
-            )}
-            {/* <View style={styles.saveDataContainer}>
-              <Button
-                icon={
-                  <MIcon name="save-alt" style={{color: 'white'}} size={40} />
-                }
-                buttonStyle={styles.saveDataButton}
-                onPress={async () => {
-                  setSavingData(true);
-                  if (targetPhoto) {
-                    await saveDataToCameraRoll(targetPhoto.uri);
-                  } else if (targetVideo) {
-                    await saveDataToCameraRoll(targetVideo.uri);
-                  }
-                  setSavingData(false);
-                  displayShortMessage('保存しました', 'success');
-                }}
-                disabled={savingData}
-                disabledStyle={{backgroundColor: 'transparent'}}
-              />
-              <Text style={styles.saveDataText}>フォルダに保存</Text>
-            </View>
-            <View style={styles.addFlashContaienr}>
-              <Button
-                icon={
-                  <MIcon
-                    name="add-circle-outline"
-                    style={{color: 'white'}}
-                    size={40}
-                  />
-                }
-                buttonStyle={styles.addFlashButton}
-              />
-              <Text style={styles.addFlashText}>フラッシュに追加</Text>
-            </View> */}
-            {/* <Button
-              icon={
-                <MIcon
-                  name={'chevron-right'}
-                  style={{color: 'white'}}
-                  size={35}
-                />
-              }
-              containerStyle={styles.backButtonContainer}
-              buttonStyle={styles.backButton}
-              onPress={goBack}
-            /> */}
-          </>
+          <>{targetPhoto && !targetVideo && !recordingVideo ? <></> : <></>}</>
         )}
         {loading && (
           <View style={styles.load}>
