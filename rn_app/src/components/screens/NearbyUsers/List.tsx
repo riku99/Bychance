@@ -6,6 +6,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   Animated,
+  FlatList,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
@@ -16,7 +17,6 @@ import {Name} from './Name';
 import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
 import {useSafeArea} from '~/hooks/appState';
 
-// アニメーションに関する部分は後々使うかもしれないのでコメントアウトで残す
 export const List = React.memo(() => {
   const {
     users,
@@ -27,6 +27,32 @@ export const List = React.memo(() => {
   } = useContext(TabViewContext);
   const {top} = useSafeArea();
   const [refreshing, setRefreshing] = useState(false);
+
+  const renderItem = useCallback(
+    ({item}: {item: typeof users[number]}) => {
+      return (
+        <ListItem
+          containerStyle={{height: 72}}
+          key={item.id}
+          onPress={() => {
+            if (navigateToUserPage) {
+              navigateToUserPage(item.id);
+            }
+          }}>
+          <Avatar user={item} />
+          <ListItem.Content>
+            <ListItem.Title>
+              <Name id={item.id} name={item.name} />
+            </ListItem.Title>
+            <ListItem.Subtitle style={styles.subtitle}>
+              {item.statusMessage}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+      );
+    },
+    [navigateToUserPage],
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -47,7 +73,9 @@ export const List = React.memo(() => {
   return (
     <View style={[styles.container, {marginTop: 10}]}>
       {users.length ? (
-        <ScrollView
+        <FlatList
+          data={users}
+          renderItem={renderItem}
           scrollEventThrottle={16}
           contentContainerStyle={{marginTop: top, paddingBottom: top}}
           contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
@@ -55,41 +83,19 @@ export const List = React.memo(() => {
             y: -SEARCH_TAB_HEIGHT - stickyTabHeight,
             x: 0,
           }}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {
+              useNativeDriver: false,
+            },
+          )}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={() => onRefresh()}
             />
           }
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: scrollY}}}],
-            {
-              useNativeDriver: false,
-            },
-          )}>
-          <View>
-            {users.map((u) => (
-              <ListItem
-                containerStyle={{height: 72}}
-                key={u.id}
-                onPress={() => {
-                  if (navigateToUserPage) {
-                    navigateToUserPage(u.id);
-                  }
-                }}>
-                <Avatar user={u} />
-                <ListItem.Content>
-                  <ListItem.Title>
-                    <Name id={u.id} name={u.name} />
-                  </ListItem.Title>
-                  <ListItem.Subtitle style={styles.subtitle}>
-                    {u.statusMessage}
-                  </ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            ))}
-          </View>
-        </ScrollView>
+        />
       ) : (
         <View style={styles.noUser}>
           <ScrollView
