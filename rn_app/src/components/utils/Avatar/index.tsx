@@ -1,7 +1,7 @@
 import React from 'react';
-import {Pressable} from 'react-native';
-import {Avatar, AvatarProps} from 'react-native-elements';
-import FastImage from 'react-native-fast-image';
+import {Pressable, StyleProp} from 'react-native';
+import {Avatar} from 'react-native-elements';
+import FastImage, {ImageStyle} from 'react-native-fast-image';
 
 import {defaultTheme} from '~/theme';
 
@@ -19,7 +19,7 @@ type Props = {
   size: 'small' | 'medium' | 'large' | number;
   opacity?: number;
   onPress?: () => any;
-  containerStyle?: AvatarProps['containerStyle'];
+  containerStyle?: StyleProp<ImageStyle>;
 };
 
 export const UserAvatar = React.memo(
@@ -45,16 +45,20 @@ export const UserAvatar = React.memo(
         />
       );
     }
+
     return (
       <Pressable style={{borderRadius: sizeNumber}} onPress={onPress}>
         <FastImage
           source={{uri: image}}
-          style={{
-            width: sizeNumber,
-            height: sizeNumber,
-            borderRadius: sizeNumber,
-            backgroundColor: defaultTheme.imageBackGroundColor,
-          }}
+          style={[
+            {
+              width: sizeNumber,
+              height: sizeNumber,
+              borderRadius: sizeNumber,
+              backgroundColor: defaultTheme.imageBackGroundColor,
+            },
+            containerStyle,
+          ]}
         />
       </Pressable>
     );
