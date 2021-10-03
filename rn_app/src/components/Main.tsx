@@ -17,23 +17,23 @@ import {
 } from '~/hooks/applyingGroups';
 
 export const Main = React.memo(() => {
-  // socket周り
-  // useTalkRoomMessagesIo();
-  useSetupTalkRoomMessageSocket();
-  useSetupApplyingGroupSocket();
-  // push通知周り
-  usePushNotificationReqest();
-  useRegisterDeviceToken();
-  // 位置情報周り
-  useBackgroundGeolocation();
-  // エラーをdispatchしたときの処理
-  useHandleErrors();
-  // アクティブになるたびにトークルーム更新とか
-  useGetTalkRoomData();
-  // アクティブになるたびにisDisplayedToOtherUsersを更新
-  useGetIsDisplayedToOtherUsersOnActive();
-  // アクティブになるたびに申請されているグループの確認
-  useAppliedGropusOnActive();
+  // // socket周り
+  // // useTalkRoomMessagesIo();
+  // useSetupTalkRoomMessageSocket();
+  // useSetupApplyingGroupSocket();
+  // // push通知周り
+  // usePushNotificationReqest();
+  // useRegisterDeviceToken();
+  // // 位置情報周り
+  // useBackgroundGeolocation();
+  // // エラーをdispatchしたときの処理
+  // useHandleErrors();
+  // // アクティブになるたびにトークルーム更新とか
+  // useGetTalkRoomData();
+  // // アクティブになるたびにisDisplayedToOtherUsersを更新
+  // useGetIsDisplayedToOtherUsersOnActive();
+  // // アクティブになるたびに申請されているグループの確認
+  // useAppliedGropusOnActive();
 
   return (
     <View style={styles.container}>

@@ -28,12 +28,17 @@ export const List = React.memo(() => {
   const {top} = useSafeArea();
   const [refreshing, setRefreshing] = useState(false);
 
+  const _users = [];
+  for (let i = 0; i < 100; i++) {
+    _users.push(...users);
+  }
+
   const renderItem = useCallback(
     ({item}: {item: typeof users[number]}) => {
       return (
         <ListItem
           containerStyle={{height: 72}}
-          key={item.id}
+          // key={item.id}
           onPress={() => {
             if (navigateToUserPage) {
               navigateToUserPage(item.id);
@@ -71,13 +76,13 @@ export const List = React.memo(() => {
   }
 
   return (
-    <View style={[styles.container, {marginTop: 10}]}>
+    <View style={[styles.container, {paddingTop: top + 10}]}>
       {users.length ? (
         <FlatList
-          data={users}
+          data={_users}
           renderItem={renderItem}
+          keyExtractor={(item, idx) => idx.toString()}
           scrollEventThrottle={16}
-          contentContainerStyle={{marginTop: top, paddingBottom: top}}
           contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
           contentOffset={{
             y: -SEARCH_TAB_HEIGHT - stickyTabHeight,

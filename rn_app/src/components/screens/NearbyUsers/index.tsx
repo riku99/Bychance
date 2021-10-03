@@ -263,6 +263,7 @@ export const NearbyUsersScreen = React.memo(() => {
             styles.tabAndSearchBarContainer,
             {
               transform: [{translateY: y}],
+              // height: 0,
             },
           ]}>
           <Animated.View style={{opacity}}>
