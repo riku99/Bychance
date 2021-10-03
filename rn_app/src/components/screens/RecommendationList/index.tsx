@@ -77,7 +77,32 @@ export const RecommendationList = React.memo(() => {
         />
         {isLoading ? (
           <SkeltonList style={styles.skeltonContainer} loop={2} />
-        ) : filteredListData && filteredListData.length ? (
+        ) : !filteredListData.length && !tag ? (
+          <ScrollView
+            contentContainerStyle={[
+              styles.noItemContainer,
+              {
+                height:
+                  height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
+              },
+            ]}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
+            <Text style={styles.noText}>この範囲にはありません🐱</Text>
+          </ScrollView>
+        ) : tag.slice(0, 1) !== '#' ? (
+          <View
+            style={{
+              height:
+                height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
+            }}>
+            <Text
+              style={[styles.noText, {alignSelf: 'center', marginTop: '50%'}]}>
+              # から始めて検索してみてください!!
+            </Text>
+          </View>
+        ) : (
           <View
             style={{
               height:
@@ -92,31 +117,6 @@ export const RecommendationList = React.memo(() => {
               flatListProps={{}}
             />
           </View>
-        ) : tag.slice(0, 1) !== '#' ? (
-          <View
-            style={{
-              height:
-                height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
-            }}>
-            <Text
-              style={[styles.noText, {alignSelf: 'center', marginTop: '50%'}]}>
-              # から始めて検索してみてください!!
-            </Text>
-          </View>
-        ) : (
-          <ScrollView
-            contentContainerStyle={[
-              styles.noItemContainer,
-              {
-                height:
-                  height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
-              },
-            ]}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
-            <Text style={styles.noText}>この範囲にはありません🐱</Text>
-          </ScrollView>
         )}
       </SafeAreaView>
     </View>
