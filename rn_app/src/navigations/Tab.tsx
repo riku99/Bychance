@@ -75,7 +75,7 @@ export const Tabs = React.memo(() => {
       <RootTab.Screen
         name="Search"
         component={NearbyUsersStackScreen}
-        options={{
+        options={({navigation}) => ({
           tabBarIcon: ({color}) => (
             <View>
               <MIcon name="near-me" size={24} color={color} />
@@ -105,14 +105,21 @@ export const Tabs = React.memo(() => {
                         </Text>
                       </View>
                     }>
-                    <UserAvatar size={22} image={avatarUrl} />
+                    <UserAvatar
+                      size={22}
+                      image={avatarUrl}
+                      onPress={() => {
+                        // ユーザーアイコンがタブアイテムの上に被ってしまい、そこをタップするとタブ移動しないので明示的にナビゲート
+                        navigation.navigate('Search');
+                      }}
+                    />
                   </Tooltip>
                 </View>
               )}
             </View>
           ),
           tabBarLabel: '近くのユーザー',
-        }}
+        })}
       />
       <RootTab.Screen
         name="ChatList"
