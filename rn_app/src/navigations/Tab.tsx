@@ -11,7 +11,7 @@ import {MyPageStackScreen} from './MyPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {defaultTheme} from '~/theme';
-import {useTalkRoomMessagesPushNotification} from '~/hooks/pushNotification';
+import {useTalkRoomMessagesPushNotification} from '~/hooks/talkRoomMessages';
 import {RecommendationStackScreen} from './Recommendation';
 import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
