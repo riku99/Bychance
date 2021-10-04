@@ -59,12 +59,6 @@ const userSlice = createSlice({
       lat: actoin.payload.lat,
       lng: actoin.payload.lng,
     }),
-    // updateProfile: (state, action: PayloadAction<User>) => {
-    //   return {
-    //     ...state,
-    //     ...action.payload,
-    //   };
-    // },
   },
 });
 

@@ -72,7 +72,7 @@ export const deleteRequestToUsersLocation = async () => {
 export const getRequestToMyRefreshData = async () => {
   const credentials = await checkKeychain();
   return await axios.get<ResponseForGetRefreshMyData>(
-    `${baseUrl}/my_refresh_data?id=${credentials?.id}`,
+    `${baseUrl}/users/my_refresh_data?id=${credentials?.id}`,
     addBearer(credentials?.token),
   );
 };
@@ -114,7 +114,7 @@ export const getRequestToUsersIsDisplayedToOtherUsers = async () => {
 export const deleteRequestToUsersGroupId = async () => {
   const credentials = await checkKeychain();
   return await axios.delete(
-    `${baseUrl}/users/groupId?id=${credentials?.id}`,
+    `${baseUrl}/users/group_id?id=${credentials?.id}`,
     addBearer(credentials?.token),
   );
 };

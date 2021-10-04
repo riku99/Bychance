@@ -35,9 +35,10 @@ const appSlice = createSlice({
       ...state,
       ...action.payload,
     }),
+    resetAppState: () => initialState,
   },
 });
 
 export const appReducer = appSlice.reducer;
 
-export const {setAppState} = appSlice.actions;
+export const {setAppState, resetAppState} = appSlice.actions;

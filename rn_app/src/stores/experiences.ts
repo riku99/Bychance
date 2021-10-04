@@ -20,9 +20,10 @@ const experiencesSlice = createSlice({
       ...state,
       ...action.payload,
     }),
+    resetExperiences: () => initialState,
   },
 });
 
 export const experiencesReducer = experiencesSlice.reducer;
 
-export const {setExperiences} = experiencesSlice.actions;
+export const {setExperiences, resetExperiences} = experiencesSlice.actions;

@@ -17,9 +17,10 @@ const settingsSlice = createSlice({
       ...state,
       ...action.payload,
     }),
+    resetSettings: () => initialState,
   },
 });
 
 export const settingsReducer = settingsSlice.reducer;
 
-export const {setSetitngs} = settingsSlice.actions;
+export const {setSetitngs, resetSettings} = settingsSlice.actions;

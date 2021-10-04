@@ -17,6 +17,9 @@ const usersAdapter = createEntityAdapter<User>({
   selectId: (u) => u.id,
 });
 
+// アプリ内で使われる一部のユーザー情報はここに入り、ここから参照される。例えば近くのユーザーとかトーク相手とか。
+// これは変更を検知したら同期させたいからである。
+//　例えば近くのユーザーからユーザーAのページに飛ぶ。そこでリフレッシュが起こり名前がAからBに更新される。近くのユーザーページに戻るとそこでも更新している状態にしたい。また、既にトークしている場合はそのトーク画面に表示されている情報も更新したい。このような変更の同期のためにこのスライスにデータの一部を入れ参照するようにしている。
 const UsersSlice = createSlice({
   name: '_users',
   initialState: usersAdapter.getInitialState(),
@@ -33,12 +36,13 @@ const UsersSlice = createSlice({
         changes: action.payload.changes,
       });
     },
+    resetUsers: () => usersAdapter.getInitialState(),
   },
 });
 
 export const _usersReducer = UsersSlice.reducer;
 
-export const {upsertUsers, updateUser} = UsersSlice.actions;
+export const {upsertUsers, updateUser, resetUsers} = UsersSlice.actions;
 
 const selectors = usersAdapter.getSelectors();
 

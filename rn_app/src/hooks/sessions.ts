@@ -86,11 +86,6 @@ export const useLineLogin = () => {
       await axios.post(`${baseUrl}/nonce`, {nonce});
 
       try {
-        // const response = await axios.post<LoginData & {accessToken: string}>(
-        //   `${baseUrl}/sessions/line_login`,
-        //   {},
-        //   addBearer(idToken as string),
-        // );
         const response = await postRequestToLineLogin({
           idToken: idToken as string,
         });
