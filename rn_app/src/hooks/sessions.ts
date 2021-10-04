@@ -8,7 +8,7 @@ import * as Keychain from 'react-native-keychain';
 import {RootState} from '~/stores/index';
 import {baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
-import {useResetDispatch} from './stores';
+import {useCustomDispatch, useResetDispatch} from './stores';
 import {setUser} from '~/stores/user';
 import {setLogin} from '~/stores/sessions';
 import {setPosts} from '~/stores/posts';
@@ -16,47 +16,61 @@ import {setFlashes} from '~/stores/flashes';
 import {setSetitngs} from '~/stores/settings';
 import {setExperiences} from '~/stores/experiences';
 import {postRequestToLineLogin, getRequestToLoginData} from '~/apis/sessions';
+import {LoginData} from '~/apis/sessions/types';
+
+const useLoginDispatch = () => {
+  const dispatch = useCustomDispatch();
+  const loginDispatch = useCallback(
+    (data: LoginData) => {
+      const {user, posts, flashes} = data;
+      const {
+        display,
+        videoEditDescription,
+        showReceiveMessage,
+        talkRoomMessageReceipt,
+        intro,
+        tooltipOfUsersDisplayShowed,
+        groupsApplicationEnabled,
+        ...storedUser
+      } = user;
+      const settings = {
+        display,
+        talkRoomMessageReceipt,
+        showReceiveMessage,
+        groupsApplicationEnabled,
+      };
+
+      dispatch(setUser(storedUser));
+      dispatch(setPosts(posts));
+      dispatch(setFlashes(flashes));
+      dispatch(setSetitngs(settings));
+      dispatch(
+        setExperiences({
+          tooltipAboutDisplay: tooltipOfUsersDisplayShowed,
+          videoEditDescription,
+          intro,
+        }),
+      );
+      dispatch(setLogin(true));
+    },
+    [dispatch],
+  );
+
+  return {
+    loginDispatch,
+  };
+};
 
 export const useSessionloginProccess = () => {
-  const {dispatch, handleApiError} = useApikit();
-
+  const {handleApiError} = useApikit();
   const [isLoading, setIsLoading] = useState(true);
+  const {loginDispatch} = useLoginDispatch();
 
   useEffect(() => {
     const loginProccess = async () => {
       try {
         const response = await getRequestToLoginData();
-
-        const {user, posts, flashes} = response.data;
-        const {
-          display,
-          videoEditDescription,
-          showReceiveMessage,
-          talkRoomMessageReceipt,
-          intro,
-          tooltipOfUsersDisplayShowed,
-          groupsApplicationEnabled,
-          ...storedUser
-        } = user;
-        const settings = {
-          display,
-          talkRoomMessageReceipt,
-          showReceiveMessage,
-          groupsApplicationEnabled,
-        };
-
-        dispatch(setUser(storedUser));
-        dispatch(setPosts(posts));
-        dispatch(setFlashes(flashes));
-        dispatch(setSetitngs(settings));
-        dispatch(
-          setExperiences({
-            tooltipAboutDisplay: tooltipOfUsersDisplayShowed,
-            videoEditDescription,
-            intro,
-          }),
-        );
-        dispatch(setLogin(true));
+        loginDispatch(response.data);
       } catch (e) {
         handleApiError(e);
       } finally {
@@ -64,7 +78,7 @@ export const useSessionloginProccess = () => {
       }
     };
     loginProccess();
-  }, [dispatch, handleApiError]);
+  }, [loginDispatch, handleApiError]);
 
   return {
     isLoading,
@@ -72,7 +86,7 @@ export const useSessionloginProccess = () => {
 };
 
 export const useLineLogin = () => {
-  const {dispatch} = useApikit();
+  const {loginDispatch} = useLoginDispatch();
 
   const lineLogin = useCallback(async () => {
     try {
@@ -97,28 +111,7 @@ export const useLineLogin = () => {
           response.data.accessToken,
         );
 
-        const {user, posts, flashes} = response.data;
-        const {
-          display,
-          videoEditDescription,
-          showReceiveMessage,
-          talkRoomMessageReceipt,
-          intro,
-          ...storedUser
-        } = user;
-        const settings = {
-          display,
-          videoEditDescription,
-          talkRoomMessageReceipt,
-          showReceiveMessage,
-          intro,
-        };
-
-        dispatch(setUser(storedUser));
-        dispatch(setPosts(posts));
-        dispatch(setFlashes(flashes));
-        dispatch(setSetitngs(settings));
-        dispatch(setLogin(true));
+        loginDispatch(response.data);
       } catch (e) {
         console.log(e);
         Alert.alert(
@@ -131,7 +124,7 @@ export const useLineLogin = () => {
       // if (e.message === 'User cancelled or interrupted the login process.') {
       // }
     }
-  }, [dispatch]);
+  }, [loginDispatch]);
 
   return {
     lineLogin,
@@ -139,7 +132,7 @@ export const useLineLogin = () => {
 };
 
 export const useSampleLogin = () => {
-  const {dispatch} = useApikit();
+  const {loginDispatch} = useLoginDispatch();
   const sampleLogin = useCallback(async () => {
     const response = await axios.get(`${baseUrl}/sampleLogin`);
     await Keychain.resetGenericPassword();
@@ -148,29 +141,8 @@ export const useSampleLogin = () => {
       response.data.accessToken,
     );
 
-    const {user, posts, flashes} = response.data;
-    const {
-      display,
-      videoEditDescription,
-      showReceiveMessage,
-      talkRoomMessageReceipt,
-      intro,
-      ...storedUser
-    } = user;
-    const settings = {
-      display,
-      videoEditDescription,
-      talkRoomMessageReceipt,
-      showReceiveMessage,
-      intro,
-    };
-
-    dispatch(setUser(storedUser));
-    dispatch(setPosts(posts));
-    dispatch(setFlashes(flashes));
-    dispatch(setSetitngs(settings));
-    dispatch(setLogin(true));
-  }, [dispatch]);
+    loginDispatch(response.data);
+  }, [loginDispatch]);
 
   return {
     sampleLogin,
