@@ -17,6 +17,7 @@ import {setSetitngs} from '~/stores/settings';
 import {setExperiences} from '~/stores/experiences';
 import {postRequestToLineLogin, getRequestToLoginData} from '~/apis/sessions';
 import {LoginData} from '~/apis/sessions/types';
+import {checkKeychain} from '~/apis/export';
 
 const useLoginDispatch = () => {
   const dispatch = useCustomDispatch();
@@ -68,9 +69,13 @@ export const useSessionloginProccess = () => {
 
   useEffect(() => {
     const loginProccess = async () => {
+      const cred = await checkKeychain();
       try {
-        const response = await getRequestToLoginData();
-        loginDispatch(response.data);
+        // 実際のリクエストの際もcredは取得するが、ここに関してはcredが存在しない場合はリクエスト自体起こしたくない。なので「credが存在する場合のみ」実行する
+        if (cred) {
+          const response = await getRequestToLoginData();
+          loginDispatch(response.data);
+        }
       } catch (e) {
         handleApiError(e);
       } finally {

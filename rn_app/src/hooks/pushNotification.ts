@@ -25,7 +25,6 @@ export const useRegisterDeviceToken = () => {
   useEffect(() => {
     (async function () {
       const deviceToken = await messaging().getToken();
-      console.log(deviceToken);
       postDeviceToken(deviceToken);
     })();
   }, [postDeviceToken]);
