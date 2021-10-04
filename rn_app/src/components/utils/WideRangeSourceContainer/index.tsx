@@ -5,7 +5,7 @@ import {judgeMoreDeviceX} from '~/helpers/device';
 
 type Props = {
   children: Element;
-  containerStyle: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 // 16:9のソース(画像とか動画)に対応するコンテナ

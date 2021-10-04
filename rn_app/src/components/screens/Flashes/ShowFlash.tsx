@@ -35,7 +35,7 @@ type Props = {
     sourceType: 'image' | 'video';
     createdAt: string;
     viewed: {userId: string}[];
-    viewerViewed: boolean;
+    viewerViewed?: boolean;
   }[];
   user: {
     id: string;

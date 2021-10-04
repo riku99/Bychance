@@ -13,7 +13,7 @@ export type Flash = {
   createdAt: string;
   userId: string;
   viewed: {userId: string}[];
-  viewerViewed: boolean;
+  viewerViewed?: boolean;
 };
 
 export const flashesAdapter = createEntityAdapter<Flash>({
