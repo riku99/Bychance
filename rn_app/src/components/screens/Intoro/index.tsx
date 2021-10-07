@@ -3,7 +3,7 @@ import Swiper from 'react-native-swiper';
 
 import {Welcom} from './Welcom';
 import {AboutLocation} from './AboutLocation';
-import {AboutDisplay} from './AboutDisplay';
+import {AboutDisplay} from './AboutDisplay/index.';
 import {Last} from './Last';
 import {AboutNotification} from './AboutNotification';
 

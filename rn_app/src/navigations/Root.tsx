@@ -64,7 +64,7 @@ export const RootStackScreen = React.memo(() => {
         headerBackTitleVisible: false,
         headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
-      {!currentIntro && (
+      {currentIntro && (
         <RootStack.Screen
           name="Intoro"
           component={Intoro}

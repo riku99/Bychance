@@ -3,6 +3,9 @@ import {View, StyleSheet, SafeAreaView, Text, ScrollView} from 'react-native';
 import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {Desc} from '../Desc';
+import {Title} from '../Title';
+import {NextButton} from '../NextButton';
 
 type Props = {
   swipeRef: React.RefObject<Swiper>;
@@ -31,8 +34,8 @@ export const AboutDisplay = ({swipeRef, index}: Props) => {
     <View style={styles.container}>
       <SafeAreaView>
         <ScrollView contentContainerStyle={styles.scrollContents}>
-          <Text style={styles.title}>自分の表示について</Text>
-          <Text style={styles.desc}>
+          <Title>自分の表示について</Title>
+          <Desc>
             <Text style={{color: '#ff5454'}}>
               少し長いですが必ず全てお読みください
             </Text>
@@ -57,13 +60,10 @@ export const AboutDisplay = ({swipeRef, index}: Props) => {
             {'\n'}
             {'\n'}
             なお、プライベートゾーンにいる場合でも自分を他のユーザーに表示させたくない場合は設定で「自分を表示する」をオフにすることをオススメします🤝
-          </Text>
-          <Button
+          </Desc>
+          <NextButton
             title="プライベートゾーンを設定"
-            buttonStyle={styles.button}
             containerStyle={{marginTop: 20}}
-            titleStyle={{fontWeight: 'bold'}}
-            activeOpacity={1}
             onPress={onButtonPress}
           />
         </ScrollView>
@@ -78,17 +78,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   scrollContents: {},
-  title: {
-    fontWeight: 'bold',
-    fontSize: 25,
-    marginTop: 20,
-  },
-  desc: {
-    marginTop: 20,
-    fontSize: 17,
-    color: '#7a7a7a',
-    fontWeight: 'bold',
-  },
   button: {
     borderRadius: 20,
     width: '90%',
