@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 type Props = {
   swipeRef: React.RefObject<Swiper>;
@@ -9,8 +10,9 @@ type Props = {
 };
 
 export const AboutLocation = ({swipeRef, index}: Props) => {
-  const onButtonPress = () => {
-    // ToDo: ライブラリで位置情報の許可した後スワイプするようにする
+  const onButtonPress = async () => {
+    await BackgroundGeolocation.requestPermission();
+    await BackgroundGeolocation.start();
     swipeRef.current?.scrollTo(index + 1);
   };
 
@@ -23,6 +25,9 @@ export const AboutLocation = ({swipeRef, index}: Props) => {
           {'\n'}
           {'\n'}
           そのため位置情報を有効にすることをオススメします✨
+          {'\n'}
+          {'\n'}
+          また、バックグラウンド状態で使うためには「常に許可」を選択してください!
           {'\n'}
           {'\n'}
           なおこの設定はお使いの端末から再度設定することができます👍
