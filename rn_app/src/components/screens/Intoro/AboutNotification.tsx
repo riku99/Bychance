@@ -3,14 +3,17 @@ import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
 
+import {usePushNotificationReqest} from '~/hooks/pushNotification';
+
 type Props = {
   swipeRef: React.RefObject<Swiper>;
   index: number;
 };
 
 export const AboutNotification = ({swipeRef, index}: Props) => {
-  const onButtonPress = () => {
-    // TODO: プッシュ通知の設定
+  const {request} = usePushNotificationReqest();
+  const onButtonPress = async () => {
+    await request();
     swipeRef.current?.scrollTo(index + 1);
   };
 

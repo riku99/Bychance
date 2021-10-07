@@ -13,7 +13,7 @@ export const postRequestToLineLogin = async ({idToken}: {idToken: string}) => {
 export const getRequestToLoginData = async () => {
   const credentials = await checkKeychain();
   return await axios.get<LoginData>(
-    `${baseUrl}/login_data?id=${credentials?.id}`,
+    `${baseUrl}/sessions/login_data?id=${credentials?.id}`,
     addBearer(credentials?.token),
   );
 };

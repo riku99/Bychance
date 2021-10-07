@@ -1,22 +1,23 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
 
 import {useHandleDeviceToken} from './deviceToken';
 
 // push通知の許可リクエスト
 export const usePushNotificationReqest = () => {
-  useEffect(() => {
-    async function requestUserPermission() {
-      const authStatus = await messaging().hasPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-      if (!enabled) {
-        await messaging().requestPermission();
-      }
+  const request = useCallback(async () => {
+    const authStatus = await messaging().hasPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    if (!enabled) {
+      console.log('hey');
+      await messaging().requestPermission();
     }
-    requestUserPermission();
   }, []);
+  return {
+    request,
+  };
 };
 
 // push通知のためのデバイストークンをサーバーに登録する処理
