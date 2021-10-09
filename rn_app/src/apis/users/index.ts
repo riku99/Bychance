@@ -64,7 +64,7 @@ export const patchRequestToUsers = async ({
 export const deleteRequestToUsersLocation = async () => {
   const credentials = await checkKeychain();
   return await axios.delete(
-    `${baseUrl}/users/location?id=${credentials?.id}`,
+    `${baseUrl}/users/locations?id=${credentials?.id}`,
     addBearer(credentials?.token),
   );
 };
@@ -86,7 +86,7 @@ export const patchRequestToUsersLocaiton = async ({
 }) => {
   const credentials = await checkKeychain();
   return await axios.patch(
-    `${baseUrl}/users/location?id=${credentials?.id}`,
+    `${baseUrl}/users/locations?id=${credentials?.id}`,
     {
       lat,
       lng,

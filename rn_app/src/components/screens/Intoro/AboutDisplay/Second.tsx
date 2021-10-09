@@ -11,19 +11,24 @@ type Props = {
   index: number;
 };
 
-export const First = ({swipeRef, index}: Props) => {
+export const Second = ({swipeRef, index}: Props) => {
   const onButtonPress = async () => {
     swipeRef.current?.scrollTo(index + 1);
   };
+
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <Title>自分の表示について①</Title>
+        <Title>自分の表示について②</Title>
         <Desc>
-          アプリの中で自分の周辺のユーザーをマップやリストに表示させて、プロフィールを見たり、メッセージを送ったりすることができます😍
+          自宅や職場など
+          {'\n'}
+          「ここでは他のユーザーに自分を表示させたくない!!」
+          {'\n'}
+          という場所があると思います🤔
           {'\n'}
           {'\n'}
-          逆に自分のことも他のユーザーに表示させることができます(初期設定では非表示になっています)☀️
+          そのような場所を「プライベートゾーン」として設定してください。
         </Desc>
         <NextButton
           title="読んだ👀"
