@@ -5,7 +5,6 @@ import {
   Text,
   RefreshControl,
   ScrollView,
-  SafeAreaView,
   Dimensions,
 } from 'react-native';
 import {
@@ -14,7 +13,7 @@ import {
 } from 'bychance-components';
 import {useNavigation} from '@react-navigation/native';
 import {SearchBar} from 'react-native-elements';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets, SafeAreaView} from 'react-native-safe-area-context';
 
 import {useGetRecommendations} from '~/hooks/recommendations';
 import {RecommendationsNavigationProp} from '~/navigations/Recommendation';
