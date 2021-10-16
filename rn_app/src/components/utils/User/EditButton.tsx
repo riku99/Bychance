@@ -24,12 +24,12 @@ export const EditButton = React.memo(() => {
 const styles = StyleSheet.create({
   editButton: {
     backgroundColor: 'white',
-    width: '100%',
-    height: 32,
-    borderRadius: 30,
-    alignSelf: 'center',
-    borderColor: 'black',
     borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 30,
+    width: '100%',
+    paddingVertical: 5,
+    alignSelf: 'center',
   },
   editButtonTitle: {
     color: 'black',
