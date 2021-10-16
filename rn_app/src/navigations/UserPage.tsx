@@ -14,6 +14,8 @@ export type PostScreenType = {
   userId: string;
   createdAt: string;
   sourceType: 'image' | 'video';
+  width?: number;
+  height?: number;
 };
 
 export type UserPageNavigationProp<

@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React from 'react';
 
 import {Post} from './Post';
 import {
@@ -18,10 +18,6 @@ export const Container = React.memo(({route}: Props) => {
 
   const {deletePost} = useDeletePost();
   const navigation = useNavigation();
-
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({headerShown: false});
-  // }, [navigation]);
 
   const _deletePost = async (postId: number) => {
     await deletePost({postId});

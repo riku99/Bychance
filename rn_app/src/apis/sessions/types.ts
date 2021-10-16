@@ -28,6 +28,8 @@ export type LoginData = {
     createdAt: string;
     userId: string;
     sourceType: 'image' | 'video';
+    width?: number;
+    height?: number;
   }[];
   flashes: {
     id: number;

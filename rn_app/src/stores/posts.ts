@@ -13,6 +13,8 @@ export type Post = {
   sourceType: 'image' | 'video';
   createdAt: string;
   userId: string;
+  width?: number;
+  height?: number;
 };
 
 const postsAdaper = createEntityAdapter<Post>({

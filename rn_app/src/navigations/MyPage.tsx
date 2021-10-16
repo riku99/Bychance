@@ -52,7 +52,7 @@ export const MyPageStackScreen = () => {
       <Stack.Screen
         component={Post}
         name="Post"
-        options={{headerShown: false}}
+        options={{headerTitle: '投稿'}}
       />
     </Stack.Navigator>
   );
