@@ -456,13 +456,13 @@ const styles = StyleSheet.create({
   profileContainer: {
     width: '100%',
     height: 200,
+    marginTop: 20,
   },
   editElenentContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    marginTop: 30,
   },
   elementLabel: {
     fontSize: 16,
