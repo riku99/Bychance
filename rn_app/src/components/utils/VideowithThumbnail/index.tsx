@@ -16,12 +16,14 @@ export const VideoWithThumbnail = React.memo(({video, thumbnail}: Props) => {
   const thumbnailUrl = useMemo(() => getThumbnailUrl(video.source.uri), [
     video.source.uri,
   ]);
+
   return (
-    <View>
+    <View style={styles.container}>
       <Video style={[styles.source, styles.video]} {...video} />
       <FastImage
         source={{uri: thumbnailUrl}}
         style={styles.source}
+        resizeMode="contain"
         {...thumbnail}
       />
     </View>
@@ -29,6 +31,12 @@ export const VideoWithThumbnail = React.memo(({video, thumbnail}: Props) => {
 });
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   source: {
     width: '100%',
     height: '100%',
