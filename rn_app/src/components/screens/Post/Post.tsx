@@ -18,58 +18,77 @@ type Props = {
 
 export const Post = ({post, user, deletePost}: Props) => {
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <View style={styles.sourceContainer}>
-          {post.sourceType === 'image' ? (
-            <FastImage
-              source={{uri: post.url}}
-              style={styles.image}
-              resizeMode="contain"
-            />
-          ) : (
-            <VideoWithThumbnail
-              video={{
-                source: {
-                  uri: post.url,
-                },
-                resizeMode: 'cover',
-                repeat: true,
-              }}
-            />
-          )}
-        </View>
-        <View style={styles.upperBox}>
-          <Text style={styles.date}>
-            {format(new Date(post.createdAt), 'yyyy/MM/dd')}
-          </Text>
-          {user === post.userId && (
-            <Button
-              activeOpacity={1}
-              icon={<Icon name="delete-outline" color="#999999" />}
-              buttonStyle={{backgroundColor: 'transparent'}}
-              onPress={() => {
-                Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
-                  {
-                    text: 'はい',
-                    style: 'destructive',
-                    onPress: async () => {
-                      deletePost(post.id);
-                    },
-                  },
-                  {text: 'いいえ'},
-                ]);
-              }}
-            />
-          )}
-        </View>
-        <Text style={styles.text}>{post.text}</Text>
-      </ScrollView>
-    </View>
+    <>
+      {post.sourceType === 'image' ? (
+        <FastImage
+          source={{uri: post.url}}
+          style={styles.image}
+          // resizeMode="contain"
+        />
+      ) : (
+        <VideoWithThumbnail
+          video={{
+            source: {
+              uri: post.url,
+            },
+            // resizeMode: 'contain',
+            repeat: true,
+          }}
+        />
+      )}
+    </>
+    // <View style={styles.container}>
+    //   {/* <ScrollView
+    //     contentContainerStyle={styles.scrollViewContainer}></ScrollView> */}
+    //   <View style={styles.sourceContainer}>
+    //     {post.sourceType === 'image' ? (
+    //       <FastImage
+    //         source={{uri: post.url}}
+    //         style={styles.image}
+    //         resizeMode="contain"
+    //       />
+    //     ) : (
+    //       <VideoWithThumbnail
+    //         video={{
+    //           source: {
+    //             uri: post.url,
+    //           },
+    //           // resizeMode: 'contain',
+    //           repeat: true,
+    //         }}
+    //       />
+    //     )}
+    //   </View>
+    //   <View style={styles.upperBox}>
+    //     <Text style={styles.date}>
+    //       {format(new Date(post.createdAt), 'yyyy/MM/dd')}
+    //     </Text>
+    //     {user === post.userId && (
+    //       <Button
+    //         activeOpacity={1}
+    //         icon={<Icon name="delete-outline" color="#999999" />}
+    //         buttonStyle={{backgroundColor: 'transparent'}}
+    //         onPress={() => {
+    //           Alert.alert('投稿を削除', '本当に削除してよろしいですか?', [
+    //             {
+    //               text: 'はい',
+    //               style: 'destructive',
+    //               onPress: async () => {
+    //                 deletePost(post.id);
+    //               },
+    //             },
+    //             {text: 'いいえ'},
+    //           ]);
+    //         }}
+    //       />
+    //     )}
+    //   </View>
+    //   <Text style={styles.text}>{post.text}</Text>
+    // </View>
   );
 };
 
-const {width} = Dimensions.get('screen');
+const {width, height} = Dimensions.get('screen');
 const quarterSize = width / 3;
 const postHeight = quarterSize * 4; // Postはとりあえず 3:4 の比率にするのでheightを計算して取得
 
@@ -78,14 +97,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  scrollViewContainer: {
-    alignItems: 'center',
-    width: width,
-  },
+  // scrollViewContainer: {
+  //   alignItems: 'center',
+  //   width: width,
+  // },
   sourceContainer: {
     width: width,
-    height: postHeight,
-    backgroundColor: defaultTheme.imageBackGroundColor,
+    // height,
+    // backgroundColor: defaultTheme.imageBackGroundColor,
   },
   image: {
     width: '100%',
@@ -93,9 +112,9 @@ const styles = StyleSheet.create({
   },
   upperBox: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '95%',
+    // justifyContent: 'space-between',
+    // alignItems: 'center',
+    // width: '95%',
     height: 40,
   },
   date: {

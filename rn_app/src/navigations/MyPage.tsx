@@ -49,7 +49,11 @@ export const MyPageStackScreen = () => {
           headerRight: () => <MenuBar />,
         }}
       />
-      <Stack.Screen component={Post} name="Post" options={{title: '投稿'}} />
+      <Stack.Screen
+        component={Post}
+        name="Post"
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

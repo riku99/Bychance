@@ -23,7 +23,6 @@ export const VideoWithThumbnail = React.memo(({video, thumbnail}: Props) => {
       <FastImage
         source={{uri: thumbnailUrl}}
         style={styles.source}
-        resizeMode="contain"
         {...thumbnail}
       />
     </View>

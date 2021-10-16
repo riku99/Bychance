@@ -477,6 +477,10 @@ export const ShowFlash = React.memo(
                         },
                         onSeek: onVideoSeek,
                         ignoreSilentSwitch: 'ignore',
+                        resizeMode: 'contain',
+                      }}
+                      thumbnail={{
+                        resizeMode: 'contain',
                       }}
                     />
                   )}
