@@ -1,10 +1,11 @@
+import {UserBackGroundItem} from '~/types';
+
 export type ResponseForGetUserPageInfo = {
   id: string;
   name: string;
   avatar: string | null;
   introduce: string | null;
-  backGroundItem: string | null;
-  backGroundItemType: 'image' | 'video' | null;
+  backGroundItem: UserBackGroundItem | null;
   instagram: string | null;
   twitter: string | null;
   youtube: string | null;
@@ -33,8 +34,7 @@ export type ResponseForGetRefreshMyData = {
   name: string;
   avatar: string | null;
   introduce: string | null;
-  backGroundItem: string | null;
-  backGroundItemType: 'image' | 'video' | null;
+  backGroundItem: UserBackGroundItem | null;
   instagram: string | null;
   twitter: string | null;
   youtube: string | null;
@@ -70,8 +70,7 @@ export type ResponseForPatchUsers = {
   avatar: string | null;
   introduce: string | null;
   statusMessage: string | null;
-  backGroundItem: string | null;
-  backGroundItemType: 'image' | 'video' | null | null;
+  backGroundItem: UserBackGroundItem | null;
   instagram: string | null;
   twitter: string | null;
   youtube: string | null;

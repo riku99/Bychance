@@ -12,6 +12,7 @@ type Props = {
   thumbnail?: Omit<FastImageProps, 'source'>;
 };
 
+// Videoのサムネイルはposterプロップスでも作れるが、FastImageでpreloadしたいのでFasImageを使って実現
 export const VideoWithThumbnail = React.memo(({video, thumbnail}: Props) => {
   const thumbnailUrl = useMemo(() => getThumbnailUrl(video.source.uri), [
     video.source.uri,

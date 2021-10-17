@@ -81,7 +81,6 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
         avatar={avatar}
         introduce={data.introduce}
         backGroundItem={data.backGroundItem}
-        backGroundItemType={data.backGroundItemType}
         snsData={
           data && {
             instagram: data.instagram,

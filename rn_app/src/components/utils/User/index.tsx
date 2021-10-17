@@ -56,7 +56,6 @@ export const User = ({
   avatar,
   introduce,
   backGroundItem,
-  // backGroundItemType,
   snsData,
   refresh,
   isLoading,

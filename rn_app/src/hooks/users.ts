@@ -172,6 +172,7 @@ export const useRefreshMyData = () => {
         ...f,
         viewerViewed: false,
       }));
+
       dispatch(updateUser(userData));
       dispatch(upsertPosts(posts));
       dispatch(upsertFlashes(storedFlashesData));
