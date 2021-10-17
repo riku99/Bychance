@@ -74,9 +74,9 @@ export const TakeFlashScreen = React.memo(() => {
 
       if (_type) {
         const size = asset.fileSize;
-        if (!size || size > 10000000) {
+        if (!size || size > 1000000) {
           RNToasty.Show({
-            title: '10MB以下の画像にしてください',
+            title: '1MB以下の画像にしてください',
             position: 'center',
           });
           setLoading(false);

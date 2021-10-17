@@ -8,7 +8,6 @@ import {format} from 'date-fns';
 import {ScrollView} from 'react-native-gesture-handler';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {PostScreenType} from '~/navigations/UserPage';
-import {defaultTheme} from '~/theme';
 
 type Props = {
   post: PostScreenType;
@@ -95,7 +94,6 @@ const styles = StyleSheet.create({
   sourceContainer: {
     width: width,
     height: postHeight,
-    // backgroundColor: defaultTheme.imageBackGroundColor,
   },
   image: {
     width: '100%',
