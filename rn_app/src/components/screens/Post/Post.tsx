@@ -109,5 +109,6 @@ const styles = StyleSheet.create({
     width: '95%',
     marginTop: 10,
     fontSize: 14,
+    minHeight: 40,
   },
 });

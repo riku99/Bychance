@@ -55,3 +55,11 @@ export type PrivateTime = {
   endHours: number;
   endMinutes: number;
 };
+
+export type UserBackGroundItem = {
+  id: number;
+  url: string;
+  type: 'image' | 'video';
+  width: number | null;
+  height: number | null;
+};
