@@ -32,14 +32,14 @@ import {
   profileContainerHeight,
   backgroundItemHeight,
 } from './styles';
+import {UserBackGroundItem} from '~/types';
 
-type _Props = {
+type Props = {
   id: string;
   name: string;
   avatar: string | null;
   introduce?: string | null;
-  backGroundItem?: string | null;
-  backGroundItemType?: 'image' | 'video' | null;
+  backGroundItem?: UserBackGroundItem | null;
   snsData?: {
     instagram: string | null;
     twitter: string | null;
@@ -56,11 +56,11 @@ export const User = ({
   avatar,
   introduce,
   backGroundItem,
-  backGroundItemType,
+  // backGroundItemType,
   snsData,
   refresh,
   isLoading,
-}: _Props) => {
+}: Props) => {
   const snsLinkData = snsData;
   const myId = useMyId();
   const isMe = id === myId;
@@ -149,10 +149,7 @@ export const User = ({
           styles.backGroundImageContainer,
           {transform: [{translateY: y}]},
         ]}>
-        <BackGroundItem
-          source={backGroundItem}
-          sourceType={backGroundItemType}
-        />
+        <BackGroundItem data={backGroundItem} />
       </Animated.View>
 
       <Animated.View

@@ -44,9 +44,6 @@ export const useMyIntroduce = () =>
 export const useMyBackGroundItem = () =>
   useSelector((state: RootState) => state.userReducer.backGroundItem);
 
-export const useMyBackGroundItemType = () =>
-  useSelector((state: RootState) => state.userReducer.backGroundItemType);
-
 export const useMySNSData = () =>
   useSelector((state: RootState) => {
     const {instagram, twitter, youtube, tiktok} = state.userReducer;

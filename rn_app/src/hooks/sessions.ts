@@ -23,7 +23,7 @@ const useLoginDispatch = () => {
   const dispatch = useCustomDispatch();
   const loginDispatch = useCallback(
     (data: LoginData) => {
-      const {user, posts, flashes} = data;
+      const {user, backGroundItem, posts, flashes} = data;
       const {
         display,
         videoEditDescription,
@@ -41,7 +41,7 @@ const useLoginDispatch = () => {
         groupsApplicationEnabled,
       };
 
-      dispatch(setUser(storedUser));
+      dispatch(setUser({...storedUser, backGroundItem}));
       dispatch(setPosts(posts));
       dispatch(setFlashes(flashes));
       dispatch(setSetitngs(settings));
@@ -155,7 +155,7 @@ export const useSampleLogin = () => {
 };
 
 export const useLogout = () => {
-  const {checkKeychain, handleApiError, addBearer} = useApikit();
+  const {handleApiError, addBearer} = useApikit();
 
   const {resetDispatch} = useResetDispatch();
 
@@ -173,7 +173,7 @@ export const useLogout = () => {
     } catch (e) {
       handleApiError(e);
     }
-  }, [checkKeychain, handleApiError, addBearer, resetDispatch]);
+  }, [handleApiError, addBearer, resetDispatch]);
 
   return {
     logout,

@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+import {UserBackGroundItem} from '~/types';
+
 export type User = {
   id: string;
   name: string;
@@ -8,8 +10,7 @@ export type User = {
   statusMessage: string | null;
   lat: number | null;
   lng: number | null;
-  backGroundItem: string | null;
-  backGroundItemType: 'image' | 'video' | null;
+  backGroundItem: UserBackGroundItem | null;
   instagram: string | null;
   twitter: string | null;
   youtube: string | null;
@@ -26,7 +27,6 @@ const initialState: User = {
   lat: null,
   lng: null,
   backGroundItem: null,
-  backGroundItemType: null,
   instagram: null,
   twitter: null,
   youtube: null,

@@ -28,7 +28,6 @@ import {
   useMyIntroduce,
   useMyStatusMessage,
   useMyBackGroundItem,
-  useMyBackGroundItemType,
   useMySNSData,
 } from '~/hooks/users';
 import {defaultTheme} from '~/theme';
@@ -157,7 +156,6 @@ export const UserEditPage = () => {
   };
 
   const backGroundItem = useMyBackGroundItem();
-  const backGroundItemType = useMyBackGroundItemType();
   const [selectedBackGroundItem, setSelectedBackGroundItem] = useState<
     | {
         sourceType: 'image' | 'video';
@@ -167,23 +165,30 @@ export const UserEditPage = () => {
   >();
   const [deleteBackGroundItem, setDeleteBackGroundItem] = useState(false);
   const displayedBackGroundItem = useMemo(() => {
-    return deleteBackGroundItem
-      ? null
-      : selectedBackGroundItem
-      ? {
-          uri: selectedBackGroundItem.uri,
-          sourceType: selectedBackGroundItem.sourceType,
-        }
-      : {
-          uri: backGroundItem,
-          sourceType: backGroundItemType,
-        };
-  }, [
-    deleteBackGroundItem,
-    selectedBackGroundItem,
-    backGroundItem,
-    backGroundItemType,
-  ]);
+    if (deleteBackGroundItem) {
+      return null;
+    }
+
+    if (selectedBackGroundItem) {
+      return selectedBackGroundItem;
+    } else {
+      return {
+        uri: backGroundItem?.url ? backGroundItem?.url : null,
+        sourceType: backGroundItem?.type ? backGroundItem?.type : null,
+      };
+    }
+    // return deleteBackGroundItem
+    //   ? null
+    //   : selectedBackGroundItem
+    //   ? {
+    //       uri: selectedBackGroundItem.uri,
+    //       sourceType: selectedBackGroundItem.sourceType,
+    //     }
+    //   : {
+    //       uri: backGroundItem,
+    //       sourceType: backGroundItemType,
+    //     };
+  }, [deleteBackGroundItem, selectedBackGroundItem, backGroundItem]);
 
   const pickBackGraoundItem = useCallback(() => {
     launchImageLibrary({mediaType: 'mixed', quality: 0.8}, (response) => {
@@ -335,9 +340,7 @@ export const UserEditPage = () => {
             }
           }}>
           <BackGroundItem
-            source={
-              displayedBackGroundItem ? displayedBackGroundItem.uri : null
-            }
+            url={displayedBackGroundItem ? displayedBackGroundItem.uri : null}
             type={
               displayedBackGroundItem
                 ? displayedBackGroundItem.sourceType

@@ -4,8 +4,6 @@ export type LoginData = {
     name: string;
     avatar: string | null;
     introduce: string | null;
-    backGroundItem: string | null;
-    backGroundItemType: 'image' | 'video' | null;
     instagram: string | null;
     twitter: string | null;
     youtube: string | null;
@@ -39,4 +37,11 @@ export type LoginData = {
     userId: string;
     viewed: {userId: string}[];
   }[];
+  backGroundItem: {
+    id: number;
+    url: string;
+    type: 'image' | 'video';
+    width: number | null;
+    height: number | null;
+  };
 };

@@ -13,20 +13,25 @@ type Props = {
 
 // Videoのサムネイルはposterプロップスでも作れるが、FastImageでpreloadしたいのでFasImageを使って実現
 export const UserBackGroundView = React.memo(({route}: Props) => {
-  const {source, sourceType} = useMemo(() => route.params, [route.params]);
+  const {url, type, width, height} = useMemo(() => route.params, [
+    route.params,
+  ]);
 
   return (
     <View style={[styles.container]}>
       <View style={styles.sourceContainer}>
-        {sourceType === 'image' ? (
-          <FastImage source={{uri: source}} style={styles.source} />
+        {type === 'image' ? (
+          <FastImage source={{uri: url}} style={styles.source} />
         ) : (
           <VideoWithThumbnail
             video={{
-              source: {uri: source},
+              source: {uri: url},
               repeat: true,
               ignoreSilentSwitch: 'ignore',
               resizeMode: 'cover',
+            }}
+            thumbnail={{
+              resizeMode: 'contain',
             }}
           />
         )}

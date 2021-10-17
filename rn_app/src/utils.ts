@@ -40,3 +40,17 @@ export const getTimeDiff = (timestamp: string) => {
   const diff = now.getTime() - createdAt.getTime();
   return Math.floor(diff / (1000 * 60 * 60));
 };
+
+export const getResizeMode = ({
+  width,
+  height,
+}: {
+  width?: number | null;
+  height?: number | null;
+}) => {
+  if (width && height && width > height) {
+    return 'contain';
+  } else {
+    return 'cover';
+  }
+};

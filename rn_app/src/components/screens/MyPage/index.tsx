@@ -7,7 +7,6 @@ import {
   useRefreshMyData,
   useMyIntroduce,
   useMyBackGroundItem,
-  useMyBackGroundItemType,
   useMySNSData,
   useMyAvatar,
 } from '~/hooks/users';
@@ -18,7 +17,6 @@ export const MyPage = React.memo(() => {
   const avatar = useMyAvatar();
   const introduce = useMyIntroduce();
   const backGroundItem = useMyBackGroundItem();
-  const backGroundItemType = useMyBackGroundItemType();
   const snsData = useMySNSData();
   const {refreshData} = useRefreshMyData();
 
@@ -33,7 +31,6 @@ export const MyPage = React.memo(() => {
       avatar={avatar}
       introduce={introduce}
       backGroundItem={backGroundItem}
-      backGroundItemType={backGroundItemType}
       snsData={snsData}
       refresh={refresh}
     />

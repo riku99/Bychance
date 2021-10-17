@@ -16,7 +16,6 @@ import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
 import {TalkRoomStackParamList, TalkRoomStackScreen} from './TalkRoom';
 import {TakeFlashScreen} from '~/components/screens/TakeFlash';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
-import {User} from '~/stores/user';
 import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
@@ -25,6 +24,7 @@ import {useIntro} from '~/hooks/experiences';
 import {ApplyingGroup} from '~/components/screens/Groups';
 import {defaultTheme} from '~/theme';
 import {useUserPageStackList, UserPageScreenGroupParamList} from './UserPage';
+import {UserBackGroundItem} from '~/types';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -32,10 +32,7 @@ export type RootStackParamList = {
   TalkRoomStack: NavigatorScreenParams<TalkRoomStackParamList>;
   TakeFlash: undefined;
   Flashes: NavigatorScreenParams<FlashesStackParamList>;
-  UserBackGroundView: {
-    source: string;
-    sourceType: NonNullable<User['backGroundItemType']>;
-  };
+  UserBackGroundView: Omit<UserBackGroundItem, 'id'>;
   UserConfig: {
     goTo: 'display' | 'message' | 'location' | 'account' | 'others' | 'group';
   };

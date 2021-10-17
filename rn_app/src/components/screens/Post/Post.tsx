@@ -8,6 +8,7 @@ import {format} from 'date-fns';
 import {ScrollView} from 'react-native-gesture-handler';
 import {VideoWithThumbnail} from '~/components/utils/VideowithThumbnail';
 import {PostScreenType} from '~/navigations/UserPage';
+import {getResizeMode} from '~/utils';
 
 type Props = {
   post: PostScreenType;
@@ -16,12 +17,7 @@ type Props = {
 };
 
 export const Post = ({post, user, deletePost}: Props) => {
-  let resizeMode: 'contain' | 'cover' = 'cover';
-  if (post.width && post.height) {
-    post.width > post.height
-      ? (resizeMode = 'contain')
-      : (resizeMode! = 'cover');
-  }
+  const resizeMode = getResizeMode({width: post.width, height: post.height});
 
   return (
     <View style={styles.container}>

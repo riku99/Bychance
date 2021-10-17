@@ -8,22 +8,23 @@ import {SkeltonLoadingView} from '~/components/utils/SkeltonLoadingView';
 import {useBackGroundItemVideoPaused} from '~/hooks/appState';
 import {RootNavigationProp} from '~/navigations/Root';
 import {backgroundItemHeight} from './styles';
+import {UserBackGroundItem} from '~/types';
 
 type Props = {
-  source?: string | null;
-  sourceType?: 'image' | 'video' | null;
-  isLoading?: boolean;
+  data?: UserBackGroundItem | null;
 };
 
-export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
+export const BackGroundItem = React.memo(({data}: Props) => {
   const {videoPaused, setVideoPaused} = useBackGroundItemVideoPaused();
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
   const onPress = () => {
-    if (source && sourceType) {
+    if (data?.url && data?.type) {
       setVideoPaused(true);
       navigation.navigate('UserBackGroundView', {
-        source,
-        sourceType,
+        url: data.url,
+        type: data.type,
+        width: data.width,
+        height: data.height,
       });
     }
   };
@@ -38,7 +39,7 @@ export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
     return unsbscribe;
   }, [navigation, videoPaused, setVideoPaused]);
 
-  if (source === undefined) {
+  if (data === undefined) {
     return (
       <SkeltonLoadingView>
         <View style={{height: backgroundItemHeight}} />
@@ -46,7 +47,7 @@ export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
     );
   }
 
-  if (!source) {
+  if (data === null) {
     return null;
   }
 
@@ -56,15 +57,22 @@ export const BackGroundItem = React.memo(({source, sourceType}: Props) => {
         style={styles.sourceContainer}
         onPress={onPress}
         activeOpacity={1}>
-        {sourceType === 'image' ? (
-          <FastImage source={{uri: source}} style={styles.sourceStyle} />
+        {data.type === 'image' ? (
+          <FastImage
+            source={{uri: data.url}}
+            style={styles.sourceStyle}
+            resizeMode="cover"
+          />
         ) : (
           <VideoWithThumbnail
             video={{
-              source: {uri: source},
+              source: {uri: data.url},
               resizeMode: 'cover',
               ignoreSilentSwitch: 'obey',
               paused: videoPaused,
+            }}
+            thumbnail={{
+              resizeMode: 'cover',
             }}
           />
         )}

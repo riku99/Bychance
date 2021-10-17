@@ -3,28 +3,27 @@ import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 
-import {User} from '~/stores/user';
 import {defaultTheme} from '~/theme';
 
 type Props = {
-  source: User['backGroundItem'];
-  type: User['backGroundItemType'];
+  url: string | null;
+  type: 'image' | 'video' | null;
 };
 
-export const BackGroundItem = React.memo(({source, type}: Props) => {
-  if (!source) {
+export const BackGroundItem = React.memo(({url, type}: Props) => {
+  if (!url) {
     return <View style={styles.noneSoruce} />;
   }
   if (type === 'image') {
     return (
       <>
-        <FastImage source={{uri: source}} style={styles.source} />
+        <FastImage source={{uri: url}} style={styles.source} />
       </>
     );
   } else {
     return (
       <Video
-        source={{uri: source}}
+        source={{uri: url}}
         style={styles.source}
         repeat={true}
         resizeMode="cover"
