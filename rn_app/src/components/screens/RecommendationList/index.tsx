@@ -36,8 +36,10 @@ export const RecommendationList = React.memo(() => {
       return [];
     }
 
-    return listData.filter((l) => l.text.includes(tag));
+    return listData.filter((l) => l.text.match(tag));
   }, [listData, tag]);
+
+  console.log(filteredListData);
 
   useEffect(() => {
     if (result) {
@@ -76,7 +78,18 @@ export const RecommendationList = React.memo(() => {
         />
         {isLoading ? (
           <SkeltonList style={styles.skeltonContainer} loop={2} />
-        ) : !filteredListData.length && !tag ? (
+        ) : !!tag && tag.slice(0, 1) !== '#' ? (
+          <View
+            style={{
+              height:
+                height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
+            }}>
+            <Text
+              style={[styles.noText, {alignSelf: 'center', marginTop: '50%'}]}>
+              # から始めて検索してみてください!!
+            </Text>
+          </View>
+        ) : !filteredListData.length ? (
           <ScrollView
             contentContainerStyle={[
               styles.noItemContainer,
@@ -90,17 +103,6 @@ export const RecommendationList = React.memo(() => {
             }>
             <Text style={styles.noText}>この範囲にはありません🐱</Text>
           </ScrollView>
-        ) : tag.slice(0, 1) !== '#' ? (
-          <View
-            style={{
-              height:
-                height - SEARCH_TAB_HEIGHT - BOTTOM_TAB_HEIGHT - top - bottom,
-            }}>
-            <Text
-              style={[styles.noText, {alignSelf: 'center', marginTop: '50%'}]}>
-              # から始めて検索してみてください!!
-            </Text>
-          </View>
         ) : (
           <View
             style={{
