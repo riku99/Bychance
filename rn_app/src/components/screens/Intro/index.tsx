@@ -9,7 +9,7 @@ import {Last} from './Last';
 import {AboutNotification} from './AboutNotification';
 import {AboutPrivateZone} from './AboutPrivateZone';
 
-export const Intoro = React.memo(() => {
+export const Intro = React.memo(() => {
   const swipeRef = useRef<Swiper>(null);
 
   return (

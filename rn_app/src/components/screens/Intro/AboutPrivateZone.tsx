@@ -2,10 +2,12 @@ import React, {useCallback, useRef} from 'react';
 import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import {Desc} from './Desc';
 import {Title} from './Title';
 import {NextButton} from './NextButton';
+import {IntroStackParamList} from '~/navigations/Intro';
 
 type Props = {
   swipeRef: React.RefObject<Swiper>;
@@ -14,7 +16,9 @@ type Props = {
 
 export const AboutPrivateZone = ({swipeRef, index}: Props) => {
   const setPrivateZone = useRef(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<
+    StackNavigationProp<IntroStackParamList, 'Intro'>
+  >();
 
   const swipe = useCallback(() => {
     if (setPrivateZone.current) {

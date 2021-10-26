@@ -19,8 +19,6 @@ import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
-import {Intoro} from '~/components/screens/Intoro';
-import {useIntro} from '~/hooks/experiences';
 import {ApplyingGroup} from '~/components/screens/Groups';
 import {defaultTheme} from '~/theme';
 import {useUserPageStackList, UserPageScreenGroupParamList} from './UserPage';
@@ -36,10 +34,7 @@ export type RootStackParamList = {
   UserConfig: {
     goTo: 'display' | 'message' | 'location' | 'account' | 'others' | 'group';
   };
-  PrivateConfig: {
-    goTo: 'zone' | 'time';
-  };
-  Intoro: undefined;
+  Intro: undefined;
   Groups: undefined;
 } & UserPageScreenGroupParamList;
 
@@ -51,7 +46,6 @@ export type RootNavigationProp<
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = React.memo(() => {
-  const {endOfIntro} = useIntro();
   const {renderUserPageStackList} = useUserPageStackList();
 
   return (
@@ -61,13 +55,6 @@ export const RootStackScreen = React.memo(() => {
         headerBackTitleVisible: false,
         headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
-      {!endOfIntro && (
-        <RootStack.Screen
-          name="Intoro"
-          component={Intoro}
-          options={{headerShown: false}}
-        />
-      )}
       <RootStack.Screen
         name="Tab"
         component={Tabs}
