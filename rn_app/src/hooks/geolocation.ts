@@ -50,7 +50,12 @@ export const useBackgroundGeolocation = () => {
         },
         // logLevel: BackgroundGeolocation.LOG_LEVEL_OFF, 本番ではコメントはずす
       },
-      () => {},
+      (state) => {
+        if (!state.enabled) {
+          console.log(state);
+          BackgroundGeolocation.start();
+        }
+      },
       (error) => {
         console.log(error);
       },

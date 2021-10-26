@@ -69,7 +69,7 @@ export const useVideoEditDescription = () => {
 
 export const useIntro = () => {
   const {dispatch, handleApiError} = useApikit();
-  const currentIntro = useSelector(
+  const endOfIntro = useSelector(
     (state: RootState) => state.experiencesReducer.intro,
   );
   const setIntro = useCallback(
@@ -91,7 +91,7 @@ export const useIntro = () => {
   );
 
   return {
-    currentIntro,
+    endOfIntro,
     setIntro,
     changeIntro,
   };

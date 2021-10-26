@@ -105,6 +105,8 @@ export const getRequestToUsersInfo = async (userId: string) => {
 
 export const getRequestToUsersIsDisplayedToOtherUsers = async () => {
   const credentials = await checkKeychain();
+  console.log('cred');
+  console.log(credentials);
   return await axios.get<boolean>(
     `${baseUrl}/users/is_displayed?id=${credentials?.id}`,
     addBearer(credentials?.token),

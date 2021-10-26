@@ -39,8 +39,6 @@ export const RecommendationList = React.memo(() => {
     return listData.filter((l) => l.text.match(tag));
   }, [listData, tag]);
 
-  console.log(filteredListData);
-
   useEffect(() => {
     if (result) {
       setListData(result);

@@ -7,7 +7,9 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "clear-w": "watchman watch-del-all",
+    "reset-start": "yarn start -- --reset-cache"
   },
   "dependencies": {
     "@benjeau/react-native-draw": "git+https://github.com/riku99/react-native-draw.git",

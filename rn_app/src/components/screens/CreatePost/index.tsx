@@ -105,9 +105,9 @@ export const CreatePost = ({navigation}: Props) => {
         }
 
         if (_type) {
-          if (!asset.fileSize || asset.fileSize > 1000000) {
+          if (!asset.fileSize || asset.fileSize > 5000000) {
             RNToasty.Show({
-              title: '1MB以下の画像にしてください',
+              title: '5MB以下の画像にしてください',
               position: 'center',
             });
             navigation.goBack();

@@ -51,7 +51,7 @@ export type RootNavigationProp<
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = React.memo(() => {
-  const {currentIntro} = useIntro();
+  const {endOfIntro} = useIntro();
   const {renderUserPageStackList} = useUserPageStackList();
 
   return (
@@ -61,7 +61,7 @@ export const RootStackScreen = React.memo(() => {
         headerBackTitleVisible: false,
         headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
-      {!currentIntro && (
+      {!endOfIntro && (
         <RootStack.Screen
           name="Intoro"
           component={Intoro}

@@ -17,6 +17,8 @@ export type ResponseForGetUserPageInfo = {
     createdAt: string;
     userId: string;
     sourceType: 'image' | 'video';
+    width: number | null;
+    hright: number | null;
   }[];
   flashes: {
     id: number;

@@ -5,10 +5,12 @@ import {Main} from '~/components/Main';
 import {useLogin} from '~/hooks/sessions';
 import {useSessionloginProccess} from '~/hooks/sessions';
 import {AuthStackScreen} from '~/navigations/Auth';
+import {useIntro} from '~/hooks/experiences';
 
 const Root = React.memo(() => {
   const login = useLogin();
   const {isLoading} = useSessionloginProccess();
+  const {endOfIntro} = useIntro();
 
   useEffect(() => {
     if (!isLoading) {
@@ -21,6 +23,10 @@ const Root = React.memo(() => {
 
   if (isLoading) {
     return null;
+  }
+
+  if (!login) {
+    return <AuthStackScreen />;
   }
 
   return <>{login ? <Main /> : <AuthStackScreen />}</>;

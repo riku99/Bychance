@@ -67,12 +67,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 40,
-    width: '90%',
+    width: '60%',
     alignSelf: 'center',
-    borderRadius: 50,
   },
   button: {
     backgroundColor: 'gray',
-    height: 41,
+    paddingVertical: 6,
   },
 });

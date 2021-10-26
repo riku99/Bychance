@@ -135,9 +135,9 @@ export const UserEditPage = () => {
       const asset = response.assets[0];
       const size = asset.fileSize;
 
-      if (!size || size > 1000000) {
+      if (!size || size > 5000000) {
         RNToasty.Show({
-          title: '1MB以下の画像にしてください',
+          title: '5MB以下の画像にしてください',
           position: 'center',
         });
         return;
@@ -208,9 +208,9 @@ export const UserEditPage = () => {
       // 選択したのが画像の場合typeは存在し、動画の場合は存在しない。
       if (_type) {
         const size = asset.fileSize;
-        if (!size || size > 1000000) {
+        if (!size || size > 5000000) {
           RNToasty.Show({
-            title: '1MB以下の画像にしてください',
+            title: '5MB以下の画像にしてください',
             position: 'center',
           });
           return;
