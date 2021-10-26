@@ -34,7 +34,9 @@ export type RootStackParamList = {
   UserConfig: {
     goTo: 'display' | 'message' | 'location' | 'account' | 'others' | 'group';
   };
-  Intro: undefined;
+  PrivateConfig: {
+    goTo: 'zone' | 'time';
+  };
   Groups: undefined;
 } & UserPageScreenGroupParamList;
 
