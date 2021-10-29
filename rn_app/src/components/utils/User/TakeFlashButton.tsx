@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: {
-      width: 1.8,
+      width: 2,
       height: 3,
     },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 0,
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 1,
   },
   _button: {
     width: width / 7,

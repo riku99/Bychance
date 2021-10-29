@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Pressable, StyleProp} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
+import {CircularProgressGradient} from '~/components/utils/CircularProgressGradient';
 
 import {defaultTheme} from '~/theme';
 
@@ -70,20 +71,49 @@ type _Props = Props & {
   outerDuration?: number;
 };
 
+const OUTER_BLANK = 4;
+
 export const UserAvatarWithOuter = React.memo(
   ({image, size, onPress, outerType, outerDuration, opacity = 1}: _Props) => {
+    const outerSize = useMemo(() => {
+      if (typeof size === 'number') {
+        return size;
+      } else {
+        switch (size) {
+          case 'large':
+            return 75;
+          case 'medium':
+            return 50;
+          case 'small':
+            return 34;
+        }
+      }
+    }, [size]);
+
     return (
-      <UserProfileOuter
-        avatarSize={size}
-        outerType={outerType}
-        outerDuration={outerDuration}>
+      <CircularProgressGradient
+        size={outerSize / 2 + OUTER_BLANK}
+        strokeWidth={3}
+        blank={OUTER_BLANK}
+        fill="white">
         <UserAvatar
           image={image}
           size={size}
           opacity={opacity}
           onPress={onPress}
         />
-      </UserProfileOuter>
+      </CircularProgressGradient>
+      // <UserProfileOuter
+      //   avatarSize={size}
+      //   outerType={outerType}
+      //   outerDuration={outerDuration}>
+      //   <UserAvatar
+      //     image={image}
+      //     size={size}
+      //     opacity={opacity}
+      //     onPress={onPress}
+      //   />
+      // </UserProfileOuter>
     );
   },
 );

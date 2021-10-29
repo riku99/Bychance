@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress-gradient';
+import {CircularProgressGradient} from '~/components/utils/CircularProgressGradient';
 
 const gradientConfig: {
   colors: string[];
@@ -49,96 +50,36 @@ export const UserProfileOuter = React.memo(
       }
     }, [outerType]);
     return (
-      <AnimatedCircularProgress
-        size={outerSize}
-        width={3}
-        fill={100}
-        duration={outerDuration}
-        rotation={0}
-        tintColor={tintColor}
-        tintColorSecondary={outerType === 'gradation' ? '#fa8e9b' : undefined}>
-        {() => (
-          <View
-            style={[
-              gradientConfig.baseStyle,
-              styles.whiteOuter,
-              {
-                height: outerSize - 2,
-                width: outerSize - 2,
-                borderRadius: outerSize - 2,
-              },
-            ]}>
-            {children}
-          </View>
-        )}
-      </AnimatedCircularProgress>
-      // <>
-      //   {outerType === 'gradation' ? (
-      //     // <LinearGradient
-      //     //   colors={gradientConfig.colors}
-      //     //   start={gradientConfig.start}
-      //     //   end={gradientConfig.end}
-      //     //   style={[
-      //     //     gradientConfig.baseStyle,
-      //     //     {
-      //     //       height: outerSize,
-      //     //       width: outerSize,
-      //     //       borderRadius: outerSize,
-      //     //     },
-      //     //   ]}>
-      //     <AnimatedCircularProgress
-      //       size={outerSize}
-      //       width={3}
-      //       fill={100}
-      //       duration={outerDuration}
-      //       rotation={0}
-      //       tintColor={tintColor}
-      //       tintColorSecondary={
-      //         outerType === 'gradation' ? '#fa8e9b' : undefined
-      //       }>
-      //       {() => (
-      //         <View
-      //           style={[
-      //             gradientConfig.baseStyle,
-      //             styles.whiteOuter,
-      //             {
-      //               height: outerSize - 5,
-      //               width: outerSize - 5,
-      //               borderRadius: outerSize - 5,
-      //             },
-      //           ]}>
-      //           {children}
-      //         </View>
-      //       )}
-      //     </AnimatedCircularProgress>
-      //   ) : (
-      //     // </LinearGradient>
+      <CircularProgressGradient
+        size={outerSize / 2}
+        strokeWidth={3}
+        blank={4}
+        fill="white">
+        {children}
+      </CircularProgressGradient>
+      // <AnimatedCircularProgress
+      //   size={outerSize}
+      //   width={3}
+      //   fill={100}
+      //   duration={outerDuration}
+      //   rotation={0}
+      //   tintColor={tintColor}
+      //   tintColorSecondary={outerType === 'gradation' ? '#fa8e9b' : undefined}>
+      //   {() => (
       //     <View
       //       style={[
       //         gradientConfig.baseStyle,
+      //         styles.whiteOuter,
       //         {
-      //           backgroundColor:
-      //             outerType === 'silver' ? '#b8b6b6' : 'transparent',
-      //           width: outerSize,
-      //           height: outerSize,
-      //           borderRadius: outerSize,
+      //           height: outerSize - 2,
+      //           width: outerSize - 2,
+      //           borderRadius: outerSize - 2,
       //         },
       //       ]}>
-      //       <View
-      //         style={[
-      //           gradientConfig.baseStyle,
-      //           styles.whiteOuter,
-      //           {
-      //             height: outerSize - 5,
-      //             width: outerSize - 5,
-      //             borderRadius: outerSize - 5,
-      //           },
-      //         ]}>
-      //         {children}
-      //       </View>
+      //       {children}
       //     </View>
       //   )}
-      // </>
+      // </AnimatedCircularProgress>
     );
   },
 );
