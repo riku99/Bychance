@@ -53,6 +53,7 @@ export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
         size={size}
         outerType={outerType}
         animation={false}
+        fill={outerType === 'none' ? 'transparent' : 'white'}
       />
     );
   };

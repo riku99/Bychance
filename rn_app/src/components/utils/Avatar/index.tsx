@@ -6,8 +6,6 @@ import {CircularProgressGradient} from '~/components/utils/CircularProgressGradi
 
 import {defaultTheme} from '~/theme';
 
-import {UserProfileOuter} from '../AvatarOuter';
-
 const avatarSizes = {
   small: 34,
   medium: 50,
@@ -70,6 +68,7 @@ type _Props = Props & {
   outerType: 'gradation' | 'silver' | 'none';
   outerDuration?: number;
   animation?: boolean;
+  fill?: string;
 };
 
 const OUTER_BLANK = 4;
@@ -83,6 +82,7 @@ export const UserAvatarWithOuter = React.memo(
     outerDuration,
     opacity = 1,
     animation = true,
+    fill = 'white',
   }: _Props) => {
     const outerSize = useMemo(() => {
       if (typeof size === 'number') {
@@ -115,7 +115,7 @@ export const UserAvatarWithOuter = React.memo(
         size={outerSize / 2 + OUTER_BLANK}
         strokeWidth={3}
         blank={OUTER_BLANK}
-        fill="white"
+        fill={fill}
         animation={animation}
         tintColor={tintColor}
         tintColorSecondary={outerType === 'gradation' ? '#ff9791' : undefined}>
@@ -126,17 +126,6 @@ export const UserAvatarWithOuter = React.memo(
           onPress={onPress}
         />
       </CircularProgressGradient>
-      // <UserProfileOuter
-      //   avatarSize={size}
-      //   outerType={outerType}
-      //   outerDuration={outerDuration}>
-      //   <UserAvatar
-      //     image={image}
-      //     size={size}
-      //     opacity={opacity}
-      //     onPress={onPress}
-      //   />
-      // </UserProfileOuter>
     );
   },
 );
