@@ -18,6 +18,7 @@ type Props = {
   tintColor: string;
   tintColorSecondary?: string;
   animation?: boolean;
+  duration?: number;
 };
 
 export const CircularProgressGradient = React.memo(
@@ -30,6 +31,7 @@ export const CircularProgressGradient = React.memo(
     tintColorSecondary,
     animation = true,
     blank = 0,
+    duration = 950,
   }: Props) => {
     const HALF_WIDTH = size + strokeWidth;
     const CIRCUMFERENCE = 2 * size * Math.PI;
@@ -44,10 +46,10 @@ export const CircularProgressGradient = React.memo(
     useEffect(() => {
       if (animation) {
         progressValue.value = withTiming(0, {
-          duration: 950,
+          duration,
         });
       }
-    }, [progressValue, animation]);
+    }, [progressValue, animation, duration]);
 
     return (
       <View>

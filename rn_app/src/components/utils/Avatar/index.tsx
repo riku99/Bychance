@@ -79,7 +79,6 @@ export const UserAvatarWithOuter = React.memo(
     size,
     onPress,
     outerType,
-    outerDuration,
     opacity = 1,
     animation = true,
     fill = 'white',
