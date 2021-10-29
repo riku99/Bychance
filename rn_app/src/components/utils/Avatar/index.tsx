@@ -69,12 +69,21 @@ export const UserAvatar = React.memo(
 type _Props = Props & {
   outerType: 'gradation' | 'silver' | 'none';
   outerDuration?: number;
+  animation?: boolean;
 };
 
 const OUTER_BLANK = 4;
 
 export const UserAvatarWithOuter = React.memo(
-  ({image, size, onPress, outerType, outerDuration, opacity = 1}: _Props) => {
+  ({
+    image,
+    size,
+    onPress,
+    outerType,
+    outerDuration,
+    opacity = 1,
+    animation = true,
+  }: _Props) => {
     const outerSize = useMemo(() => {
       if (typeof size === 'number') {
         return size;
@@ -107,6 +116,7 @@ export const UserAvatarWithOuter = React.memo(
         strokeWidth={3}
         blank={OUTER_BLANK}
         fill="white"
+        animation={animation}
         tintColor={tintColor}
         tintColorSecondary={outerType === 'gradation' ? '#ff9791' : undefined}>
         <UserAvatar

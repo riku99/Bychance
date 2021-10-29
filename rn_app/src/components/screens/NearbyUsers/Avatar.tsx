@@ -52,6 +52,7 @@ export const Avatar = React.memo(({user, marker, size = 'medium'}: Props) => {
         onPress={onPress}
         size={size}
         outerType={outerType}
+        animation={false}
       />
     );
   };
