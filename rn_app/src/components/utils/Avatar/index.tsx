@@ -90,12 +90,25 @@ export const UserAvatarWithOuter = React.memo(
       }
     }, [size]);
 
+    const tintColor = useMemo(() => {
+      switch (outerType) {
+        case 'gradation':
+          return '#fab237';
+        case 'silver':
+          return '#b8b6b6';
+        default:
+          return 'transparent';
+      }
+    }, [outerType]);
+
     return (
       <CircularProgressGradient
         size={outerSize / 2 + OUTER_BLANK}
         strokeWidth={3}
         blank={OUTER_BLANK}
-        fill="white">
+        fill="white"
+        tintColor={tintColor}
+        tintColorSecondary={outerType === 'gradation' ? '#ff9791' : undefined}>
         <UserAvatar
           image={image}
           size={size}

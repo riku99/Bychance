@@ -10,19 +10,28 @@ import Svg, {Circle, LinearGradient, Defs, Stop, G} from 'react-native-svg';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 type Props = {
+  children: Element;
   size: number;
   strokeWidth: number;
   blank?: number;
   fill?: string;
-  children: Element;
+  tintColor: string;
+  tintColorSecondary?: string;
 };
 
 export const CircularProgressGradient = React.memo(
-  ({size, strokeWidth, fill, children, blank = 0}: Props) => {
+  ({
+    size,
+    strokeWidth,
+    fill,
+    children,
+    tintColor,
+    tintColorSecondary,
+    blank = 0,
+  }: Props) => {
     const HALF_WIDTH = size + strokeWidth;
     const CIRCUMFERENCE = 2 * size * Math.PI;
     const progressValue = useSharedValue(CIRCUMFERENCE);
-    // const dimensions = (size - blank) * 2;
 
     const animatedProgress = useAnimatedProps(() => {
       return {
@@ -46,8 +55,12 @@ export const CircularProgressGradient = React.memo(
           }`}>
           <Defs>
             <LinearGradient id="gradient">
-              <Stop stopColor="#ff9791" stopOpacity="1" offset="0%" />
-              <Stop stopColor="#f7b57c" stopOpacity="1" offset="100%" />
+              <Stop stopColor={tintColor} stopOpacity="1" offset="0%" />
+              <Stop
+                stopColor={tintColorSecondary ? tintColorSecondary : tintColor}
+                stopOpacity="1"
+                offset="100%"
+              />
             </LinearGradient>
           </Defs>
           <G rotation="-90">
@@ -55,7 +68,9 @@ export const CircularProgressGradient = React.memo(
               cx={0}
               cy={0}
               r={size}
-              stroke={'url(#gradient)'}
+              stroke={
+                tintColor === 'transparent' ? undefined : 'url(#gradient)'
+              }
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeDasharray={CIRCUMFERENCE}
