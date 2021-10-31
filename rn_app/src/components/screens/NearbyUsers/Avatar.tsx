@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {Marker} from 'react-native-maps';
 
-import {UserAvatarWithOuter} from '~/components/utils/Avatar/index';
+import {UserAvatarWithOuter} from '~/components/utils/AvatarWithOuter';
 import {UserData, TabViewContext} from '.';
 import {useUserAvatar, useAvatarOuterType} from '~/hooks/users';
 

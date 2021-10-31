@@ -64,67 +64,67 @@ export const UserAvatar = React.memo(
   },
 );
 
-type _Props = Props & {
-  outerType: 'gradation' | 'silver' | 'none';
-  outerDuration?: number;
-  animation?: boolean;
-  fill?: string;
-};
+// type _Props = Props & {
+//   outerType: 'gradation' | 'silver' | 'none';
+//   outerDuration?: number;
+//   animation?: boolean;
+//   fill?: string;
+// };
 
-const OUTER_BLANK = 4;
+// const OUTER_BLANK = 4;
 
-export const UserAvatarWithOuter = React.memo(
-  ({
-    image,
-    size,
-    onPress,
-    outerType,
-    opacity = 1,
-    animation = true,
-    fill = 'white',
-  }: _Props) => {
-    const outerSize = useMemo(() => {
-      if (typeof size === 'number') {
-        return size;
-      } else {
-        switch (size) {
-          case 'large':
-            return 75;
-          case 'medium':
-            return 50;
-          case 'small':
-            return 34;
-        }
-      }
-    }, [size]);
+// export const UserAvatarWithOuter = React.memo(
+//   ({
+//     image,
+//     size,
+//     onPress,
+//     outerType,
+//     opacity = 1,
+//     animation = true,
+//     fill = 'white',
+//   }: _Props) => {
+//     const outerSize = useMemo(() => {
+//       if (typeof size === 'number') {
+//         return size;
+//       } else {
+//         switch (size) {
+//           case 'large':
+//             return 75;
+//           case 'medium':
+//             return 50;
+//           case 'small':
+//             return 34;
+//         }
+//       }
+//     }, [size]);
 
-    const tintColor = useMemo(() => {
-      switch (outerType) {
-        case 'gradation':
-          return '#fab237';
-        case 'silver':
-          return '#b8b6b6';
-        default:
-          return 'transparent';
-      }
-    }, [outerType]);
+//     const tintColor = useMemo(() => {
+//       switch (outerType) {
+//         case 'gradation':
+//           return '#fab237';
+//         case 'silver':
+//           return '#b8b6b6';
+//         default:
+//           return 'transparent';
+//       }
+//     }, [outerType]);
 
-    return (
-      <CircularProgressGradient
-        size={outerSize / 2 + OUTER_BLANK}
-        strokeWidth={3}
-        blank={OUTER_BLANK}
-        fill={fill}
-        animation={animation}
-        tintColor={tintColor}
-        tintColorSecondary={outerType === 'gradation' ? '#ff9791' : undefined}>
-        <UserAvatar
-          image={image}
-          size={size}
-          opacity={opacity}
-          onPress={onPress}
-        />
-      </CircularProgressGradient>
-    );
-  },
-);
+//     return (
+//       <CircularProgressGradient
+//         size={outerSize / 2 + OUTER_BLANK}
+//         strokeWidth={3}
+//         blank={OUTER_BLANK}
+//         fill={fill}
+//         animation={animation}
+//         tintColor={tintColor}
+//         tintColorSecondary={outerType === 'gradation' ? '#ff9791' : undefined}>
+//         <UserAvatar
+//           image={image}
+//           size={size}
+//           opacity={opacity}
+//           onPress={onPress}
+//         />
+//       </CircularProgressGradient>
+//     );
+//   },
+// );

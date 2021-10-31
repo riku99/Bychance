@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-import {UserAvatarWithOuter} from '../Avatar';
+import {UserAvatarWithOuter} from '~/components/utils/AvatarWithOuter';
 import {useAvatarOuterType} from '~/hooks/users';
 import {RootNavigationProp} from '~/navigations/Root';
 import {useBackGroundItemVideoPaused} from '~/hooks/appState';
