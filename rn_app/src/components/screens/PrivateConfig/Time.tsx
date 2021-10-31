@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   },
   selectButton: {
     backgroundColor: defaultTheme.pinkGrapefruit,
-    height: 30,
+    paddingVertical: 5,
   },
   selectButotnTitle: {
     fontSize: 14,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: 'gray',
     width: 55,
-    height: 30,
+    paddingVertical: 5,
   },
   deleteButtonTitle: {
     fontWeight: '500',

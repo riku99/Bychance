@@ -82,7 +82,7 @@ export const useDeleteTalkRoom = () => {
 };
 
 export const useGetTalkRoomData = () => {
-  const {handleApiError, dispatch} = useApikit();
+  const {dispatch} = useApikit();
   const id = useMyId();
 
   const getTalkRoomData = useCallback(async () => {
@@ -116,10 +116,11 @@ export const useGetTalkRoomData = () => {
         dispatch(setTalkRooms(storedData));
         dispatch(upsertUsers(_userData));
       } catch (e) {
-        handleApiError(e);
+        // ログイン後に1回エラー出る場合がある(根本的な原因は不明)。これに対応するためにこの処理ではエラーハンドルしない
+        // handleApiError(e);
       }
     }
-  }, [id, handleApiError, dispatch]);
+  }, [id, dispatch]);
 
   useEffect(() => {
     getTalkRoomData();

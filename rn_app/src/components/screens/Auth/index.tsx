@@ -24,8 +24,8 @@ export const Auth = () => {
   const {lineLogin} = useLineLogin();
   const {sampleLogin} = useSampleLogin();
 
-  const onLoginPress = () => {
-    lineLogin();
+  const onLoginPress = async () => {
+    await lineLogin();
   };
 
   const onSampleLoginPress = () => {

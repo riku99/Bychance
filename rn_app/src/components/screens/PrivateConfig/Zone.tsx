@@ -231,12 +231,12 @@ const styles = StyleSheet.create({
   },
   addAddressButton: {
     width: 55,
-    height: 30,
+    paddingVertical: 5,
     backgroundColor: defaultTheme.pinkGrapefruit,
   },
   deleteAddressButton: {
     width: 55,
-    height: 30,
+    paddingVertical: 5,
     backgroundColor: 'gray',
   },
   addressButtonTitle: {
