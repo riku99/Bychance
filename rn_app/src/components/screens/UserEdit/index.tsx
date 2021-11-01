@@ -177,17 +177,6 @@ export const UserEditPage = () => {
         sourceType: backGroundItem?.type ? backGroundItem?.type : null,
       };
     }
-    // return deleteBackGroundItem
-    //   ? null
-    //   : selectedBackGroundItem
-    //   ? {
-    //       uri: selectedBackGroundItem.uri,
-    //       sourceType: selectedBackGroundItem.sourceType,
-    //     }
-    //   : {
-    //       uri: backGroundItem,
-    //       sourceType: backGroundItemType,
-    //     };
   }, [deleteBackGroundItem, selectedBackGroundItem, backGroundItem]);
 
   const pickBackGraoundItem = useCallback(() => {

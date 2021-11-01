@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 
-import {UserAvatarWithOuter} from '~/components/utils/Avatar';
+import {UserAvatarWithOuter} from '~/components/utils/AvatarWithOuter';
 
 type Props = {
   avatar: string | null;
