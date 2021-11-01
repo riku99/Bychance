@@ -30,6 +30,7 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: {shadowColor: 'transparent'},
       headerRight: () => (
         <MoreHoriz
           onPress={() => {
