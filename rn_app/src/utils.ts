@@ -48,7 +48,7 @@ export const getResizeMode = ({
   width?: number | null;
   height?: number | null;
 }) => {
-  if (width && height && width > height) {
+  if (width && height && width >= height) {
     return 'contain';
   } else {
     return 'cover';
