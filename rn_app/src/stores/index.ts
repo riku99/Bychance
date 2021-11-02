@@ -3,11 +3,7 @@ import {
   combineReducers,
   getDefaultMiddleware,
 } from '@reduxjs/toolkit';
-import {
-  persistReducer,
-  persistStore,
-  persistCombineReducers,
-} from 'redux-persist';
+import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {sessionReducer} from './sessions';

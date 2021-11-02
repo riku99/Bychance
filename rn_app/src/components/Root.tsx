@@ -17,7 +17,8 @@ const Root = React.memo(() => {
 
   useEffect(() => {
     console.log('⭐️ login is ' + login);
-  }, [login]);
+    console.log('my id is ' + id);
+  }, [login, id]);
 
   useEffect(() => {
     if ((login && id) || !isLoading) {

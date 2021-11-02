@@ -5,7 +5,7 @@ import {default as axios} from 'axios';
 import LineLogin from '@xmartlabs/react-native-line';
 import * as Keychain from 'react-native-keychain';
 
-import {RootState} from '~/stores/index';
+import {RootState, persistor} from '~/stores/index';
 import {baseUrl} from '~/constants/url';
 import {useApikit} from './apikit';
 import {useCustomDispatch, useResetDispatch} from './stores';
@@ -169,6 +169,7 @@ export const useLogout = () => {
       );
 
       await Keychain.resetGenericPassword(); // ログアウトするからキーチェーンの中身リセット
+      await persistor.purge(); // ストレージのリセット
       resetDispatch();
     } catch (e) {
       handleApiError(e);

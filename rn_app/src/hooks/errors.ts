@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import * as Keychain from 'react-native-keychain';
 import {AxiosError} from 'axios';
 
-import {RootState} from '~/stores';
+import {RootState, persistor} from '~/stores';
 import {resetError, setError} from '~/stores/errors';
 import {useApikit} from './apikit';
 import {ApiError} from '~/types';
@@ -34,6 +34,7 @@ export const useHandleErrors = () => {
           break;
         case 'loginError':
           Keychain.resetGenericPassword();
+          persistor.purge();
           Alert.alert('ログインが無効です', 'ログインし直してください', [
             {
               text: 'OK',
