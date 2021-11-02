@@ -7,7 +7,6 @@ export const getCurrentPosition = (): Promise<Geolocation.GeoPosition | null> =>
     if (currentPermission === ('granted' || 'restricted')) {
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
           resolve(position);
         },
         (e) => {

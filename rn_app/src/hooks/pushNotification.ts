@@ -11,7 +11,6 @@ export const usePushNotificationReqest = () => {
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     if (!enabled) {
-      console.log('hey');
       await messaging().requestPermission();
     }
   }, []);

@@ -82,7 +82,7 @@ export const useSetupApplyingGroupSocket = () => {
   useEffect(() => {
     if (socket) {
       socket?.on('connect', () => {
-        console.log('connectt');
+        console.log('🌙 connect with socket');
       });
     }
   }, [socket]);

@@ -17,7 +17,7 @@ export const useBackgroundGeolocation = () => {
         // sampleは正確な位置情報を待っている状態。デバイスのマップ上で徐々に動かしたりするときはsample状態でも反映させるべきだが手動でサーバに保存する時は基本的にいらない。現在前者である必要はないのでsampleは無視する
         // https://transistorsoft.github.io/react-native-background-geolocation/classes/backgroundgeolocation.html#onlocation
         if (!location.sample) {
-          console.log('位置情報が更新されました');
+          console.log('🗾 位置情報が更新されました');
           const {latitude, longitude} = location.coords;
           await updateLocation({lat: latitude, lng: longitude});
           getIsDisplayedToOtherUsers();
@@ -52,7 +52,6 @@ export const useBackgroundGeolocation = () => {
       },
       (state) => {
         if (!state.enabled) {
-          console.log(state);
           BackgroundGeolocation.start();
         }
       },

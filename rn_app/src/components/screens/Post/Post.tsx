@@ -19,9 +19,6 @@ type Props = {
 export const Post = ({post, user, deletePost}: Props) => {
   const resizeMode = getResizeMode({width: post.width, height: post.height});
 
-  console.log(resizeMode);
-  console.log(post);
-
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>

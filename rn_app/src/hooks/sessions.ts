@@ -125,7 +125,7 @@ export const useLineLogin = () => {
         );
       }
     } catch (e) {
-      console.log('lineError');
+      console.log('💦 lineError');
       // if (e.message === 'User cancelled or interrupted the login process.') {
       // }
     }

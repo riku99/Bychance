@@ -18,7 +18,6 @@ export const useHandleErrors = () => {
 
   useEffect(() => {
     if (error) {
-      console.log('fire');
       switch (error.errorType) {
         case 'invalidError':
           if (error.alertDialog) {
