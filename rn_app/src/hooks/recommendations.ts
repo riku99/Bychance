@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
-import {Alert} from 'react-native';
 import {useApikit} from './apikit';
 import {Recommendation} from 'bychance-components';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {useToastLoading} from './appState';
 import {useMyLat, useMyLng} from '~/hooks/users';
@@ -9,6 +9,7 @@ import {
   getRequestToRecommendations,
   postResuestToUserHideRecommendation,
 } from '~/apis/recommendations';
+import {notLocationInfoAlert} from '~/helpers/alert';
 
 export const useGetRecommendations = () => {
   const {handleApiError} = useApikit();
@@ -58,13 +59,16 @@ export const useGetRecommendations = () => {
       } catch (e) {
         handleApiError(e);
       }
-    } else {
-      Alert.alert(
-        '位置情報がありません',
-        '位置情報を有効にしてください。既に有効にしている場合、マイページのメニューから「位置情報の更新」を行なってみてください。',
-      );
     }
   }, [handleApiError, lat, lng]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!lat || !lng) {
+        notLocationInfoAlert();
+      }
+    }, [lat, lng]),
+  );
 
   useEffect(() => {
     const _fetch = async () => {
