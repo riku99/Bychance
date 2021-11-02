@@ -359,6 +359,8 @@ PODS:
   - RNBackgroundGeolocation (4.1.0):
     - CocoaLumberjack (~> 3.7.2)
     - React-Core
+  - RNCAsyncStorage (1.15.9):
+    - React-Core
   - RNCMaskedView (0.1.11):
     - React
   - RNCPicker (1.8.1):
@@ -484,6 +486,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - RNBackgroundGeolocation (from `../node_modules/react-native-background-geolocation`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-community/picker`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
@@ -606,6 +609,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-background-fetch"
   RNBackgroundGeolocation:
     :path: "../node_modules/react-native-background-geolocation"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
@@ -702,6 +707,7 @@ SPEC CHECKSUMS:
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
   RNBackgroundFetch: 635d82e1e185b235c1fe787f29517507f87450e0
   RNBackgroundGeolocation: 5926b63637395e16a394b4feafc015f74d9c4ec7
+  RNCAsyncStorage: 26f25150da507524a7815f2ada06ca0967f65633
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 914b557e20b3b8317b084aca9ff4b4edb95f61e4
   RNCPushNotificationIOS: 61a7c72bd1ebad3568025957d001e0f0e7b32191
@@ -728,4 +734,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 1a6f9e5d16220ef1e207c7ad43a41add0c2f331f
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

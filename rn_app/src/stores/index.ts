@@ -1,4 +1,15 @@
-import {configureStore, combineReducers} from '@reduxjs/toolkit';
+import {
+  configureStore,
+  combineReducers,
+  getDefaultMiddleware,
+} from '@reduxjs/toolkit';
+import {
+  persistReducer,
+  persistStore,
+  persistCombineReducers,
+} from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {sessionReducer} from './sessions';
 import {userReducer} from './user';
 import {flashesReducer} from './flashes';
@@ -24,8 +35,23 @@ const rootReducer = combineReducers({
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
-export const store = configureStore({
-  reducer: rootReducer,
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['sessionReducer', 'userReducer', 'experiencesReducer'],
+  debug: true,
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export let store = configureStore({
+  reducer: persistedReducer,
+  // https://github.com/rt2zz/redux-persist/issues/988
+  middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
+
+export let persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;
