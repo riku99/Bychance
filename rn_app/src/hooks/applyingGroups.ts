@@ -48,7 +48,7 @@ export const useSetupApplyingGroupSocket = () => {
           setSocket(io(`${origin}/applying_group`, {query: {id}}));
         }
       } else {
-        if (socket) {
+        if (socket && nextAppEvent !== 'unknown') {
           // @ts-ignore
           socket.removeAllListeners();
           socket.disconnect();
@@ -81,8 +81,12 @@ export const useSetupApplyingGroupSocket = () => {
 
   useEffect(() => {
     if (socket) {
-      socket?.on('connect', () => {
-        console.log('🌙 connect with socket');
+      socket.on('connect', () => {
+        console.log('🌙 connect with applying group socket');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('✋ disconnect with applying group socket');
       });
     }
   }, [socket]);
