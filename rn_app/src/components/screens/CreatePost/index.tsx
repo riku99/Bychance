@@ -20,6 +20,7 @@ import {useCustomDispatch} from '~/hooks/stores';
 import {useCreatePost} from '~/hooks/posts';
 import {addPost} from '~/stores/posts';
 import {useCreateingPost} from '~/hooks/appState';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   navigation: CreatePostStackNavigationProp<'CreatePostTable'>;
@@ -73,17 +74,33 @@ export const CreatePost = ({navigation}: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
+      title: '写真の投稿',
+      headerLeft: () => (
+        <Button
+          title="キャンセル"
+          style={{marginBottom: 3}}
+          titleStyle={{color: defaultTheme.pinkGrapefruit}}
+          buttonStyle={{backgroundColor: 'transparent'}}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      ),
       headerRight: data?.uri
         ? () => (
             <Button
               title="投稿"
               buttonStyle={{backgroundColor: 'transparent'}}
-              titleStyle={{color: '#5c94c8', fontWeight: 'bold'}}
+              titleStyle={{
+                color: defaultTheme.pinkGrapefruit,
+                fontWeight: 'bold',
+              }}
               onPress={onPress}
               activeOpacity={1}
             />
           )
         : undefined,
+      // headerStatusBarHeight: getHeaderStatusBarHeight(),
     });
   }, [navigation, data, text, dispatch, createPost, onPress]);
 
