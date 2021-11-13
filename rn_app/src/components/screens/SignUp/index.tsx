@@ -6,6 +6,7 @@ import {Button} from 'react-native-elements';
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {defaultTheme} from '~/theme';
 import {EmailForm, PasswordForm, NameForm} from '~/components/utils/Forms';
+import {useSignUp} from '~/hooks/auth';
 
 export const SignUp = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignUp'>>();
@@ -18,6 +19,8 @@ export const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+
+  const {createUser} = useSignUp();
 
   return (
     <Pressable
@@ -43,6 +46,9 @@ export const SignUp = () => {
           containerStyle={styles.buttonContainer}
           activeOpacity={1}
           disabled={!email || password.length < 8 || !name}
+          onPress={() => {
+            createUser({email, password, name});
+          }}
         />
       </View>
     </Pressable>
