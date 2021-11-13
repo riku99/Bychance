@@ -47,3 +47,27 @@ export const useSignUp = () => {
     createUser,
   };
 };
+
+export const useConfirmationOfImail = () => {
+  const toast = useToast();
+
+  const confirmEmail = useCallback(
+    async (email: string) => {
+      try {
+        const providers = await auth().fetchSignInMethodsForEmail(email);
+        return !providers.length;
+      } catch (e) {
+        if (e.code === 'auth/invalid-email') {
+          toast.show('無効なアドレスです', {type: 'danger'});
+        }
+
+        return false;
+      }
+    },
+    [toast],
+  );
+
+  return {
+    confirmEmail,
+  };
+};
