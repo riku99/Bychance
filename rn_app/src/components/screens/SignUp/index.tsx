@@ -6,7 +6,11 @@ import {Button} from 'react-native-elements';
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {defaultTheme} from '~/theme';
 import {EmailForm, PasswordForm, NameForm} from '~/components/utils/Forms';
-import {useConfirmationOfImail} from '~/hooks/auth';
+import {
+  useConfirmationOfImail,
+  useCreateAuthCodeAndSendEmail,
+} from '~/hooks/auth';
+import {useToastLoading} from '~/hooks/appState';
 
 export const SignUp = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignUp'>>();
@@ -20,7 +24,9 @@ export const SignUp = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
+  const {setToastLoading} = useToastLoading();
   const {confirmEmail} = useConfirmationOfImail();
+  const {createAuthCodeAndSendEmail} = useCreateAuthCodeAndSendEmail();
 
   const onButtonPress = () => {
     Alert.alert(
@@ -30,14 +36,19 @@ export const SignUp = () => {
         {
           text: '送信',
           onPress: async () => {
+            setToastLoading(true);
             const validEmail = await confirmEmail(email);
             if (validEmail) {
-              navigation.navigate('AuthCode', {
-                email,
-                password,
-                name,
-              });
+              const result = await createAuthCodeAndSendEmail(email);
+              if (result) {
+                navigation.navigate('AuthCode', {
+                  email,
+                  password,
+                  name,
+                });
+              }
             }
+            setToastLoading(false);
           },
         },
         {

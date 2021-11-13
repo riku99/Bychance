@@ -2,7 +2,8 @@ import {useCallback} from 'react';
 import auth from '@react-native-firebase/auth';
 import {useToast} from 'react-native-fast-toast';
 
-import {useToastLoading} from '~/hooks/appState';
+import {postRequestToUserAuthCode} from '~/apis/authCode';
+import {useApikit} from './apikit';
 
 export const useSignUp = () => {
   const toast = useToast();
@@ -52,11 +53,9 @@ export const useSignUp = () => {
 
 export const useConfirmationOfImail = () => {
   const toast = useToast();
-  const {setToastLoading} = useToastLoading();
 
   const confirmEmail = useCallback(
     async (email: string) => {
-      setToastLoading(true);
       try {
         const providers = await auth().fetchSignInMethodsForEmail(email);
         return !providers.length;
@@ -67,13 +66,32 @@ export const useConfirmationOfImail = () => {
 
         return false;
       } finally {
-        setToastLoading(false);
       }
     },
-    [toast, setToastLoading],
+    [toast],
   );
 
   return {
     confirmEmail,
+  };
+};
+
+export const useCreateAuthCodeAndSendEmail = () => {
+  const {handleApiError} = useApikit();
+
+  const createAuthCodeAndSendEmail = useCallback(
+    async (email: string) => {
+      try {
+        await postRequestToUserAuthCode(email);
+        return true;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [handleApiError],
+  );
+
+  return {
+    createAuthCodeAndSendEmail,
   };
 };
