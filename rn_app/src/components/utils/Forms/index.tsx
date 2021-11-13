@@ -22,7 +22,7 @@ export const PasswordForm = ({inputContainer, onChangeText}: Props) => {
   return (
     <View style={[styles.inputContainer, inputContainer]}>
       <TextInput
-        placeholder="パスワード"
+        placeholder="パスワード(8文字以上)"
         style={styles.input}
         textContentType="password"
         secureTextEntry

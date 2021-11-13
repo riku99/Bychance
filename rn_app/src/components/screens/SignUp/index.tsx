@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {StyleSheet, View, Pressable, Keyboard} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
@@ -15,6 +15,10 @@ export const SignUp = () => {
     });
   }, [navigation]);
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+
   return (
     <Pressable
       style={styles.container}
@@ -22,9 +26,15 @@ export const SignUp = () => {
         Keyboard.dismiss();
       }}>
       <View style={styles.contents}>
-        <EmailForm />
-        <PasswordForm inputContainer={styles.inputContainer} />
-        <NameForm inputContainer={styles.inputContainer} />
+        <EmailForm onChangeText={setEmail} />
+        <PasswordForm
+          inputContainer={styles.inputContainer}
+          onChangeText={setPassword}
+        />
+        <NameForm
+          inputContainer={styles.inputContainer}
+          onChangeText={setName}
+        />
 
         <Button
           title="次へ"
@@ -32,6 +42,7 @@ export const SignUp = () => {
           buttonStyle={styles.button}
           containerStyle={styles.buttonContainer}
           activeOpacity={1}
+          disabled={!email || password.length < 8 || !name}
         />
       </View>
     </Pressable>
