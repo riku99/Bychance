@@ -6,7 +6,6 @@ import {Button} from 'react-native-elements';
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {defaultTheme} from '~/theme';
 import {EmailForm, PasswordForm, NameForm} from '~/components/utils/Forms';
-import {useSignUp} from '~/hooks/auth';
 
 export const SignUp = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignUp'>>();
@@ -19,8 +18,6 @@ export const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-
-  const {createUser} = useSignUp();
 
   return (
     <Pressable
@@ -40,14 +37,14 @@ export const SignUp = () => {
         />
 
         <Button
-          title="次へ"
+          title="認証コード送信"
           titleStyle={styles.buttonTitle}
           buttonStyle={styles.button}
           containerStyle={styles.buttonContainer}
           activeOpacity={1}
-          disabled={!email || password.length < 8 || !name}
+          // disabled={!email || password.length < 8 || !name}
           onPress={() => {
-            createUser({email, password, name});
+            navigation.navigate('AuthCode');
           }}
         />
       </View>
@@ -69,6 +66,7 @@ const styles = StyleSheet.create({
   },
   buttonTitle: {
     fontWeight: 'bold',
+    fontSize: 16,
   },
   button: {
     backgroundColor: defaultTheme.pinkGrapefruit,

@@ -44,6 +44,18 @@ export const NameForm = ({inputContainer, onChangeText}: Props) => {
   );
 };
 
+export const AuthCodeForm = ({inputContainer, onChangeText}: Props) => {
+  return (
+    <View style={[styles.inputContainer, inputContainer]}>
+      <TextInput
+        placeholder="認証コード"
+        style={styles.input}
+        onChangeText={onChangeText}
+      />
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: 'white',
