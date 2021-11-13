@@ -2,6 +2,8 @@ import {useCallback} from 'react';
 import auth from '@react-native-firebase/auth';
 import {useToast} from 'react-native-fast-toast';
 
+import {useToastLoading} from '~/hooks/appState';
+
 export const useSignUp = () => {
   const toast = useToast();
 
@@ -50,9 +52,11 @@ export const useSignUp = () => {
 
 export const useConfirmationOfImail = () => {
   const toast = useToast();
+  const {setToastLoading} = useToastLoading();
 
   const confirmEmail = useCallback(
     async (email: string) => {
+      setToastLoading(true);
       try {
         const providers = await auth().fetchSignInMethodsForEmail(email);
         return !providers.length;
@@ -62,9 +66,11 @@ export const useConfirmationOfImail = () => {
         }
 
         return false;
+      } finally {
+        setToastLoading(false);
       }
     },
-    [toast],
+    [toast, setToastLoading],
   );
 
   return {

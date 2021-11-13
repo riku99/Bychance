@@ -1,5 +1,5 @@
 import React, {useLayoutEffect, useState} from 'react';
-import {StyleSheet, View, Pressable, Keyboard} from 'react-native';
+import {StyleSheet, View, Pressable, Keyboard, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
@@ -21,6 +21,31 @@ export const SignUp = () => {
   const [name, setName] = useState('');
 
   const {confirmEmail} = useConfirmationOfImail();
+
+  const onButtonPress = () => {
+    Alert.alert(
+      '認証コードの送信',
+      '指定したアドレスに認証コードが送信されます。',
+      [
+        {
+          text: '送信',
+          onPress: async () => {
+            const validEmail = await confirmEmail(email);
+            if (validEmail) {
+              navigation.navigate('AuthCode', {
+                email,
+                password,
+                name,
+              });
+            }
+          },
+        },
+        {
+          text: 'キャンセル',
+        },
+      ],
+    );
+  };
 
   return (
     <Pressable
@@ -46,12 +71,7 @@ export const SignUp = () => {
           containerStyle={styles.buttonContainer}
           activeOpacity={1}
           // disabled={!email || password.length < 8 || !name}
-          onPress={async () => {
-            const validEmail = await confirmEmail(email);
-            if (validEmail) {
-              navigation.navigate('AuthCode');
-            }
-          }}
+          onPress={onButtonPress}
         />
       </View>
     </Pressable>

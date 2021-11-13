@@ -1,17 +1,18 @@
 import React, {useLayoutEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-import {AuthNavigationProp} from '~/navigations/Auth';
+import {AuthNavigationProp, AuthRouteProp} from '~/navigations/Auth';
 import {AuthCodeForm} from '~/components/utils/Forms';
 import {Button} from 'react-native-elements';
 import {defaultTheme} from '~/theme';
 
 export const AuthCode = () => {
   const navigation = useNavigation<AuthNavigationProp<'AuthCode'>>();
+  const {params} = useRoute<AuthRouteProp<'AuthCode'>>();
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: '認証コード',
+      title: '認証コードの確認',
     });
   }, [navigation]);
 

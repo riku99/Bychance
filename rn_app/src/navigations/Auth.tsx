@@ -4,6 +4,7 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
 import {Auth} from '~/components/screens/Auth';
 import {TermsOfUse} from '~/components/utils/TermsOfUse';
@@ -16,12 +17,21 @@ export type AuthStackParamList = {
   TermsOfUse: undefined;
   PrivacyPolicy: undefined;
   SignUp: undefined;
-  AuthCode: undefined;
+  AuthCode: {
+    name: string;
+    email: string;
+    password: string;
+  };
 };
 
 export type AuthNavigationProp<
   T extends keyof AuthStackParamList
 > = StackNavigationProp<AuthStackParamList, T>;
+
+export type AuthRouteProp<T extends keyof AuthStackParamList> = RouteProp<
+  AuthStackParamList,
+  T
+>;
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
