@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {AuthNavigationProp, AuthRouteProp} from '~/navigations/Auth';
@@ -16,6 +16,22 @@ export const AuthCode = () => {
     });
   }, [navigation]);
 
+  const onButtonPress = () => {
+    Alert.alert(
+      'コードの認証',
+      '認証が成功した場合アカウントが作成されます。',
+      [
+        {
+          text: '認証',
+          onPress: async () => {},
+        },
+        {
+          text: 'キャンセル',
+        },
+      ],
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={{width: '70%'}}>
@@ -26,6 +42,7 @@ export const AuthCode = () => {
           containerStyle={styles.buttonContainer}
           buttonStyle={styles.button}
           activeOpacity={1}
+          onPress={onButtonPress}
         />
       </View>
     </View>
