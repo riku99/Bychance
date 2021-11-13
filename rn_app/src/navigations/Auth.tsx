@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  CardStyleInterpolators,
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
@@ -7,11 +8,13 @@ import {
 import {Auth} from '~/components/screens/Auth';
 import {TermsOfUse} from '~/components/utils/TermsOfUse';
 import {PrivacyPolicy} from '~/components/utils/PrivacyPolicy';
+import {SignUp} from '~/components/screens/SignUp';
 
 export type AuthStackParamList = {
   Auth: undefined;
   TermsOfUse: undefined;
   PrivacyPolicy: undefined;
+  SignUp: undefined;
 };
 
 export type AuthNavigationProp<
@@ -44,6 +47,14 @@ export const AuthStackScreen = React.memo(() => {
         component={PrivacyPolicy}
         options={{
           headerTitle: 'プライバシーポリシー',
+        }}
+      />
+      <AuthStack.Screen
+        name="SignUp"
+        component={SignUp}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
         }}
       />
     </AuthStack.Navigator>

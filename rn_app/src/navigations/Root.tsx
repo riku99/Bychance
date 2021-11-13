@@ -23,6 +23,7 @@ import {ApplyingGroup} from '~/components/screens/Groups';
 import {defaultTheme} from '~/theme';
 import {useUserPageStackList, UserPageScreenGroupParamList} from './UserPage';
 import {UserBackGroundItem} from '~/types';
+import {InputEmailAndPassword} from '~/components/screens/InputEmailAndPassword';
 
 export type RootStackParamList = {
   Tab: undefined;

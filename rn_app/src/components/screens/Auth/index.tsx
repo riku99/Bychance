@@ -53,6 +53,10 @@ export const Auth = () => {
           buttonStyle={{backgroundColor: defaultTheme.pinkGrapefruit}}
           icon={{name: 'email', size: 16, color: 'white'}}
           iconContainerStyle={{position: 'absolute', left: 10}}
+          onPress={() => {
+            navigation.navigate('SignUp');
+          }}
+          activeOpacity={1}
         />
 
         <View
@@ -69,6 +73,7 @@ export const Auth = () => {
           buttonStyle={{backgroundColor: defaultTheme.darkGray}}
           icon={{name: 'login', size: 16, color: 'white'}}
           iconContainerStyle={{position: 'absolute', left: 10}}
+          activeOpacity={1}
         />
         {/* <Text style={styles.loginDescriptionText}>
           現在Lineログインのみ利用できます
