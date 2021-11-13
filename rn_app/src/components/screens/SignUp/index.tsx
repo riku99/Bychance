@@ -1,10 +1,11 @@
 import React, {useLayoutEffect} from 'react';
-import {StyleSheet, View, TextInput, Pressable, Keyboard} from 'react-native';
+import {StyleSheet, View, Pressable, Keyboard} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {defaultTheme} from '~/theme';
+import {EmailForm, PasswordForm, NameForm} from '~/components/utils/Forms';
 
 export const SignUp = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignUp'>>();
@@ -21,25 +22,9 @@ export const SignUp = () => {
         Keyboard.dismiss();
       }}>
       <View style={styles.contents}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="メールアドレス"
-            style={{width: '100%', fontSize: 16}}
-          />
-        </View>
-
-        <View style={[styles.inputContainer, {marginTop: 20}]}>
-          <TextInput
-            placeholder="パスワード"
-            style={{width: '100%', fontSize: 16}}
-            textContentType="password"
-            secureTextEntry
-          />
-        </View>
-
-        <View style={[styles.inputContainer, {marginTop: 20}]}>
-          <TextInput placeholder="名前" style={{width: '100%', fontSize: 16}} />
-        </View>
+        <EmailForm />
+        <PasswordForm inputContainer={styles.inputContainer} />
+        <NameForm inputContainer={styles.inputContainer} />
 
         <Button
           title="次へ"
@@ -63,11 +48,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   inputContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    height: 50,
-    alignItems: 'center',
-    paddingHorizontal: 10,
+    marginTop: 20,
   },
   buttonTitle: {
     fontWeight: 'bold',
