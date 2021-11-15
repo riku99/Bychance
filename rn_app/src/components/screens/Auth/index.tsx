@@ -49,47 +49,22 @@ export const Auth = () => {
           iconContainerStyle={styles.buttonIcon}
           activeOpacity={1}
         />
-        {/* <Text style={styles.loginDescriptionText}>
-          現在Lineログインのみ利用できます
-        </Text>
-        <TouchableOpacity
-          activeOpacity={1}
-          style={[
-            styles.loginButtonContainer,
-            {backgroundColor: !pressLoginButton ? '#00C300' : '#00B300'},
-          ]}
-          onPress={onLoginPress}
-          onPressIn={onLoginPressIn}
-          onPressOut={onLoginPressout}>
-          <Image
-            source={!pressLoginButton ? lineBase : linePress}
-            height={30}
-            width={30}
-            style={styles.iconContainer}
-            resizeMode="contain"
-          />
-          <View style={styles.loginTextContainer}>
-            <Text style={styles.loginText}>Lineログイン</Text>
-          </View>
-        </TouchableOpacity> */}
-        {/* <Text style={styles.termsUseDescription}>
+        <Text style={styles.termsUseDescription}>
           ログインすることで、
-          <TouchableOpacity
-            activeOpacity={1}
+          <Text
+            style={styles.termsUserLink}
             onPress={() => navigation.navigate('TermsOfUse')}>
-            <Text style={styles.termsUserLink}>利用規約</Text>
-          </TouchableOpacity>
+            利用規約
+          </Text>
           と
-          <TouchableOpacity
-            activeOpacity={1}
+          <Text
+            style={styles.termsUserLink}
             onPress={() => navigation.navigate('PrivacyPolicy')}>
-            <Text style={styles.termsUserLink}>プライバシーポリシー</Text>
-          </TouchableOpacity>
+            プライバシーポリシー
+          </Text>
           に同意したものとみなされます。
-        </Text> */}
+        </Text>
       </View>
-
-      {/* <Button title="Sample Login" onPress={onSampleLoginPress} /> */}
     </View>
   );
 };
@@ -133,38 +108,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 10,
   },
-  // loginButtonContainer: {
-  //   width: '100%',
-  //   height: 45,
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   marginTop: 30,
-  //   borderRadius: 3,
-  // },
-  // iconContainer: {
-  //   height: 35,
-  //   width: 35,
-  //   marginLeft: 8,
-  // },
-  // loginTextContainer: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   width: '100%',
-  // },
-  // loginText: {
-  //   color: '#FFFFFF',
-  //   fontWeight: 'bold',
-  //   fontSize: 16,
-  // },
-  // loginDescriptionText: {
-  //   color: 'gray',
-  // },
-  // termsUseDescription: {
-  //   marginTop: 70,
-  //   color: 'gray',
-  // },
-  // termsUserLink: {
-  //   textDecorationLine: 'underline',
-  //   color: '#30beff',
-  // },
+  termsUseDescription: {
+    marginTop: 70,
+    color: 'gray',
+    lineHeight: 18,
+  },
+  termsUserLink: {
+    textDecorationLine: 'underline',
+    color: '#30beff',
+  },
 });
