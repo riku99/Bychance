@@ -7,7 +7,6 @@ import {
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
-import {useHandleErrors} from '~/hooks/errors';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
 import {useGetTalkRoomData} from '~/hooks/talkRooms';
 import {useGetIsDisplayedToOtherUsersOnActive} from '~/hooks/users';

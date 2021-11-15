@@ -5,6 +5,16 @@ import {
   ResponseForPatchUsers,
 } from './types';
 
+export const postRequestToUsers = async ({
+  name,
+  token,
+}: {
+  name: string;
+  token: string;
+}) => {
+  return await axios.post(`${baseUrl}/users`, {name}, addBearer(token));
+};
+
 type EditArg = {
   name: string;
   introduce: string;

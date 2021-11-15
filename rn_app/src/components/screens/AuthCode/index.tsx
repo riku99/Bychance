@@ -7,17 +7,21 @@ import {AuthCodeForm} from '~/components/utils/Forms';
 import {Button} from 'react-native-elements';
 import {defaultTheme} from '~/theme';
 import {useVerifyAuthCode} from '~/hooks/authCode';
+import {useToastLoading} from '~/hooks/appState';
+import {useSignUp} from '~/hooks/auth';
 
 export const AuthCode = () => {
   const navigation = useNavigation<AuthNavigationProp<'AuthCode'>>();
-  const {params} = useRoute<AuthRouteProp<'AuthCode'>>();
+  const {email, password, name} = useRoute<AuthRouteProp<'AuthCode'>>().params;
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '認証コードの確認',
     });
   }, [navigation]);
 
+  const {createUser} = useSignUp();
   const {verifyAuthCode} = useVerifyAuthCode();
+  const {setToastLoading} = useToastLoading();
   const [code, setCode] = useState('');
 
   const onButtonPress = () => {
@@ -28,7 +32,12 @@ export const AuthCode = () => {
         {
           text: '認証',
           onPress: async () => {
+            setToastLoading(true);
             const codeResult = await verifyAuthCode(code);
+            if (codeResult) {
+              await createUser({email, password, name});
+            }
+            setToastLoading(false);
           },
         },
         {

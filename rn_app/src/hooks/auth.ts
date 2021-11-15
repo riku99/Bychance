@@ -2,8 +2,12 @@ import {useCallback} from 'react';
 import auth from '@react-native-firebase/auth';
 import {useToast} from 'react-native-fast-toast';
 
+import {postRequestToUsers} from '~/apis/users';
+import {useApikit} from '~/hooks/apikit';
+
 export const useSignUp = () => {
   const toast = useToast();
+  const {handleApiError} = useApikit();
 
   const createUser = useCallback(
     async ({
@@ -19,6 +23,13 @@ export const useSignUp = () => {
         const {
           user: firebaseUser,
         } = await auth().createUserWithEmailAndPassword(email, password);
+        const token = await firebaseUser.getIdToken();
+        try {
+          const response = await postRequestToUsers({name, token});
+          console.log(response);
+        } catch (e) {
+          handleApiError(e);
+        }
       } catch (error) {
         if (error.code === 'auth/email-already-in-use') {
           toast.show('メールアドレスは既に使用されています', {
