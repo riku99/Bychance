@@ -51,7 +51,7 @@ export const useSignUp = () => {
         toast.show('何らかのエラーが発生しました', {type: 'danger'});
       }
     },
-    [toast],
+    [toast, handleApiError],
   );
 
   return {
@@ -66,6 +66,9 @@ export const useConfirmationOfImail = () => {
     async (email: string) => {
       try {
         const providers = await auth().fetchSignInMethodsForEmail(email);
+        if (providers.length) {
+          toast.show('既に使用済みのアドレスです', {type: 'danger'});
+        }
         return !providers.length;
       } catch (e) {
         if (e.code === 'auth/invalid-email') {
