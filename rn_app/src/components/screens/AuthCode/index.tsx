@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
@@ -6,6 +6,7 @@ import {AuthNavigationProp, AuthRouteProp} from '~/navigations/Auth';
 import {AuthCodeForm} from '~/components/utils/Forms';
 import {Button} from 'react-native-elements';
 import {defaultTheme} from '~/theme';
+import {useVerifyAuthCode} from '~/hooks/authCode';
 
 export const AuthCode = () => {
   const navigation = useNavigation<AuthNavigationProp<'AuthCode'>>();
@@ -16,6 +17,9 @@ export const AuthCode = () => {
     });
   }, [navigation]);
 
+  const {verifyAuthCode} = useVerifyAuthCode();
+  const [code, setCode] = useState('');
+
   const onButtonPress = () => {
     Alert.alert(
       'コードの認証',
@@ -23,7 +27,9 @@ export const AuthCode = () => {
       [
         {
           text: '認証',
-          onPress: async () => {},
+          onPress: async () => {
+            const codeResult = await verifyAuthCode(code);
+          },
         },
         {
           text: 'キャンセル',
@@ -35,7 +41,10 @@ export const AuthCode = () => {
   return (
     <View style={styles.container}>
       <View style={{width: '70%'}}>
-        <AuthCodeForm inputContainer={styles.inputContainer} />
+        <AuthCodeForm
+          inputContainer={styles.inputContainer}
+          onChangeText={setCode}
+        />
         <Button
           title="認証する"
           titleStyle={styles.buttonTitle}

@@ -5,3 +5,7 @@ export const postRequestToUserAuthCode = async (email: string) => {
     email,
   });
 };
+
+export const getRequestToUserAuthCode = async (code: string) => {
+  return await axios.get(`${baseUrl}/user_auth_code/verify?code=${code}`);
+};

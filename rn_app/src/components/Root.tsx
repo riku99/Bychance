@@ -8,12 +8,15 @@ import {useSessionloginProccess} from '~/hooks/sessions';
 import {AuthStackScreen} from '~/navigations/Auth';
 import {useIntro} from '~/hooks/experiences';
 import {IntroStackScreen} from '~/navigations/Intro';
+import {useHandleErrors} from '~/hooks/errors';
 
 const Root = React.memo(() => {
   const login = useLogin();
   const id = useMyId();
   const {isLoading} = useSessionloginProccess();
   const {endOfIntro} = useIntro();
+  // エラーをdispatchしたときの処理
+  useHandleErrors();
 
   useEffect(() => {
     console.log('⭐️ login is ' + login);

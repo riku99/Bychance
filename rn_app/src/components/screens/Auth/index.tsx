@@ -48,7 +48,7 @@ export const Auth = () => {
 
         <Button
           title="メールアドレスで登録"
-          titleStyle={{fontWeight: 'bold', fontSize: 14}}
+          titleStyle={{fontWeight: 'bold', fontSize: 16}}
           containerStyle={{marginTop: 20, position: 'relative'}}
           buttonStyle={{backgroundColor: defaultTheme.pinkGrapefruit}}
           icon={{name: 'email', size: 16, color: 'white'}}
@@ -68,7 +68,7 @@ export const Auth = () => {
 
         <Button
           title="ログイン"
-          titleStyle={{fontWeight: 'bold', fontSize: 14}}
+          titleStyle={{fontWeight: 'bold', fontSize: 16}}
           containerStyle={{marginTop: 20, position: 'relative'}}
           buttonStyle={{backgroundColor: defaultTheme.darkGray}}
           icon={{name: 'login', size: 16, color: 'white'}}
