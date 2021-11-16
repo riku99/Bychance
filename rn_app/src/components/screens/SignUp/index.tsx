@@ -79,7 +79,7 @@ export const SignUp = () => {
           buttonStyle={styles.button}
           containerStyle={styles.buttonContainer}
           activeOpacity={1}
-          // disabled={!email || password.length < 8 || !name}
+          disabled={!email || password.length < 8 || !name}
           onPress={onButtonPress}
         />
       </View>

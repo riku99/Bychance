@@ -4,6 +4,7 @@ import {
   ResponseForGetUserPageInfo,
   ResponseForPatchUsers,
 } from './types';
+import {LoginData} from '~/apis/sessions/types';
 
 export const postRequestToUsers = async ({
   name,
@@ -12,7 +13,11 @@ export const postRequestToUsers = async ({
   name: string;
   token: string;
 }) => {
-  return await axios.post(`${baseUrl}/users`, {name}, addBearer(token));
+  return await axios.post<LoginData>(
+    `${baseUrl}/users`,
+    {name},
+    addBearer(token),
+  );
 };
 
 type EditArg = {

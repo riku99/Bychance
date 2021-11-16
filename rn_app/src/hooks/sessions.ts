@@ -19,7 +19,7 @@ import {postRequestToLineLogin, getRequestToLoginData} from '~/apis/sessions';
 import {LoginData} from '~/apis/sessions/types';
 import {checkKeychain} from '~/apis/export';
 
-const useLoginDispatch = () => {
+export const useLoginDispatch = () => {
   const dispatch = useCustomDispatch();
   const loginDispatch = useCallback(
     (data: LoginData) => {

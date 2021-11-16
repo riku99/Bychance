@@ -4,10 +4,12 @@ import {useToast} from 'react-native-fast-toast';
 
 import {postRequestToUsers} from '~/apis/users';
 import {useApikit} from '~/hooks/apikit';
+import {useLoginDispatch} from '~/hooks/sessions';
 
 export const useSignUp = () => {
   const toast = useToast();
   const {handleApiError} = useApikit();
+  const {loginDispatch} = useLoginDispatch();
 
   const createUser = useCallback(
     async ({
@@ -26,7 +28,7 @@ export const useSignUp = () => {
         const token = await firebaseUser.getIdToken();
         try {
           const response = await postRequestToUsers({name, token});
-          console.log(response);
+          loginDispatch(response.data);
         } catch (e) {
           handleApiError(e);
         }
@@ -51,7 +53,7 @@ export const useSignUp = () => {
         toast.show('何らかのエラーが発生しました', {type: 'danger'});
       }
     },
-    [toast, handleApiError],
+    [toast, handleApiError, loginDispatch],
   );
 
   return {
