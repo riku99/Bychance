@@ -48,6 +48,9 @@ export const Auth = () => {
           icon={{name: 'login', size: 16, color: 'white'}}
           iconContainerStyle={styles.buttonIcon}
           activeOpacity={1}
+          onPress={() => {
+            navigation.navigate('SignIn');
+          }}
         />
         <Text style={styles.termsUseDescription}>
           ログインすることで、

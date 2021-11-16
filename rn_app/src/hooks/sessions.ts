@@ -1,14 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
-import {Alert} from 'react-native';
 import {useSelector} from 'react-redux';
-import {default as axios} from 'axios';
-import LineLogin from '@xmartlabs/react-native-line';
-import * as Keychain from 'react-native-keychain';
 import auth from '@react-native-firebase/auth';
 
 import {RootState, persistor} from '~/stores/index';
-import {baseUrl} from '~/constants/url';
-import {useApikit} from './apikit';
 import {useCustomDispatch, useResetDispatch} from './stores';
 import {setUser} from '~/stores/user';
 import {setLogin} from '~/stores/sessions';
@@ -16,13 +10,8 @@ import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
 import {setSetitngs} from '~/stores/settings';
 import {setExperiences} from '~/stores/experiences';
-import {
-  postRequestToLineLogin,
-  getRequestToLoginData,
-  deleteRequestToSessions,
-} from '~/apis/sessions';
+import {getRequestToLoginData, deleteRequestToSessions} from '~/apis/sessions';
 import {LoginData} from '~/apis/sessions/types';
-import {getIdToken} from '~/helpers/auth';
 
 export const useLoginDispatch = () => {
   const dispatch = useCustomDispatch();
@@ -67,6 +56,8 @@ export const useLoginDispatch = () => {
   };
 };
 
+export const useLogin = () => {};
+
 export const useLoginData = () => {
   const [isLoading, setIsLoading] = useState(true);
   const {loginDispatch} = useLoginDispatch();
@@ -104,7 +95,7 @@ export const useLogout = () => {
   };
 };
 
-export const useLogin = () => {
+export const useLoginState = () => {
   const login = useSelector((state: RootState) => {
     return state.sessionReducer.login;
   });

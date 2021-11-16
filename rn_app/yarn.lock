@@ -1973,11 +1973,6 @@
   version "0.8.3"
   resolved "git+https://github.com/riku99/react-native-sketch-image.git#919643a43de3f614ed8002e5732427541eeaa72f"
 
-"@xmartlabs/react-native-line@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@xmartlabs/react-native-line/-/react-native-line-2.1.0.tgz#0e35524c6519845b66806cfd9d7133f99da44986"
-  integrity sha512-M1nBP0+2qY2lcJVL+/R9rCnczJPBQ9bpfb9IlJfwDfMhphwxVd7P26qPlUJdOtSoi4k40+JqQWMdppyqfoSWHg==
-
 abab@^2.0.3:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.5.tgz#c0b678fb32d60fc1219c784d6a826fe385aeb79a"

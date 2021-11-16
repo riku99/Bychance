@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Main} from '~/components/Main';
-import {useLogin} from '~/hooks/sessions';
+import {useLoginState} from '~/hooks/sessions';
 import {useMyId} from '~/hooks/users';
 import {useLoginData} from '~/hooks/sessions';
 import {AuthStackScreen} from '~/navigations/Auth';
@@ -11,7 +11,7 @@ import {IntroStackScreen} from '~/navigations/Intro';
 import {useHandleErrors} from '~/hooks/errors';
 
 const Root = React.memo(() => {
-  const login = useLogin();
+  const login = useLoginState();
   const id = useMyId();
   const {isLoading} = useLoginData();
   const {endOfIntro} = useIntro();

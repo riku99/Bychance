@@ -10,6 +10,7 @@ import {Auth} from '~/components/screens/Auth';
 import {TermsOfUse} from '~/components/utils/TermsOfUse';
 import {PrivacyPolicy} from '~/components/utils/PrivacyPolicy';
 import {SignUp} from '~/components/screens/SignUp';
+import {SignIn} from '~/components/screens/SignIn';
 import {AuthCode} from '~/components/screens/AuthCode';
 
 export type AuthStackParamList = {
@@ -17,6 +18,7 @@ export type AuthStackParamList = {
   TermsOfUse: undefined;
   PrivacyPolicy: undefined;
   SignUp: undefined;
+  SignIn: undefined;
   AuthCode: {
     name: string;
     email: string;
@@ -64,6 +66,14 @@ export const AuthStackScreen = React.memo(() => {
       <AuthStack.Screen
         name="SignUp"
         component={SignUp}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
+      <AuthStack.Screen
+        name="SignIn"
+        component={SignIn}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal',
