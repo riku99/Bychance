@@ -14,8 +14,10 @@ import {
   useSetupApplyingGroupSocket,
   useAppliedGropusOnActive,
 } from '~/hooks/applyingGroups';
+import {useLoginData} from '~/hooks/sessions';
 
 export const Main = React.memo(() => {
+  useLoginData();
   // socket周り
   useSetupTalkRoomMessageSocket();
   useSetupApplyingGroupSocket();
