@@ -1,9 +1,12 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {StyleSheet, View, Pressable, Keyboard} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {Button} from 'react-native-elements';
 
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {EmailForm, PasswordForm} from '~/components/utils/Forms';
+import {defaultTheme} from '~/theme';
+import {useLogin} from '~/hooks/sessions';
 
 export const SignIn = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignIn'>>();
@@ -15,6 +18,10 @@ export const SignIn = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const {login} = useLogin();
+  const onButtonPress = async () => {
+    await login({email, password});
+  };
 
   return (
     <Pressable
@@ -27,6 +34,15 @@ export const SignIn = () => {
         <PasswordForm
           inputContainer={styles.inputContainer}
           onChangeText={setPassword}
+        />
+        <Button
+          title="ログイン"
+          titleStyle={styles.buttonTitle}
+          containerStyle={styles.buttonContainer}
+          buttonStyle={styles.button}
+          activeOpacity={1}
+          disabled={!email || password.length < 8}
+          onPress={onButtonPress}
         />
       </View>
     </Pressable>
@@ -44,5 +60,15 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 20,
+  },
+  buttonTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: defaultTheme.pinkGrapefruit,
+  },
+  buttonContainer: {
+    marginTop: 40,
   },
 });

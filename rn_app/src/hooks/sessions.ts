@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import auth from '@react-native-firebase/auth';
+import {Alert} from 'react-native';
 
 import {RootState, persistor} from '~/stores/index';
 import {useCustomDispatch, useResetDispatch} from './stores';
@@ -56,7 +57,30 @@ export const useLoginDispatch = () => {
   };
 };
 
-export const useLogin = () => {};
+export const useLogin = () => {
+  const {loginDispatch} = useLoginDispatch();
+  const login = useCallback(
+    async ({email, password}: {email: string; password: string}) => {
+      try {
+        await auth().signInWithEmailAndPassword(email, password);
+        try {
+          const response = await getRequestToLoginData();
+          loginDispatch(response.data);
+          console.log('💓 Update Login Data');
+        } catch (e) {
+          Alert.alert('エラー', '何かしらのエラーが発生しました');
+        }
+      } catch (e) {
+        Alert.alert('エラー', 'メールアドレスまたはパスワードが間違っています');
+      }
+    },
+    [loginDispatch],
+  );
+
+  return {
+    login,
+  };
+};
 
 export const useLoginData = () => {
   const [isLoading, setIsLoading] = useState(true);
