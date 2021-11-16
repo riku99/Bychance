@@ -69,7 +69,7 @@ export const Tabs = React.memo(() => {
     <RootTab.Navigator
       initialRouteName="Profile"
       tabBarOptions={{
-        activeTintColor: defaultTheme.pinkGrapefruit,
+        activeTintColor: defaultTheme.darkGray,
         inactiveTintColor: '#b8b8b8',
       }}>
       <RootTab.Screen
