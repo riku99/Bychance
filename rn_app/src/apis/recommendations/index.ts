@@ -10,7 +10,7 @@ export const getRequestToRecommendations = async ({
 }) => {
   const idToken = await getIdToken();
   return await axios.get<ResponseForGetRecommendations>(
-    `${baseUrl}/recommendations&lat=${lat}&lng=${lng}`,
+    `${baseUrl}/recommendations?lat=${lat}&lng=${lng}`,
     addBearer(idToken),
   );
 };

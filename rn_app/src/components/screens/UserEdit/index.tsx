@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   completeButtonTitle: {
-    color: defaultTheme.blueText,
+    color: defaultTheme.pinkGrapefruit,
     fontWeight: 'bold',
   },
   snsIconContainer: {
