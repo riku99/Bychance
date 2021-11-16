@@ -16,7 +16,7 @@
 //   boolean,
 //   {rejectValue: RejectPayload}
 // >('users/editUserDisplay', async (display, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 //   if (credentials) {
 //     try {
 //       await axios.patch(

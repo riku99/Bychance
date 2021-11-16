@@ -1,11 +1,11 @@
-import {addBearer, axios, baseUrl, checkKeychain} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 import {ResponseForGetStamps, ResponseForPostFlashStamps} from './types';
 
 export const getRequestToFlashStamps = async ({flashId}: {flashId: number}) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetStamps>(
-    `${baseUrl}/flashes/${flashId}/stamps?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/flashes/${flashId}/stamps`,
+    addBearer(idToken),
   );
 };
 
@@ -16,13 +16,13 @@ export const postRequestToFlashStamps = async ({
   value: string;
   flashId: number;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.post<ResponseForPostFlashStamps>(
-    `${baseUrl}/flashStamps?id=${credentials?.id}`,
+    `${baseUrl}/flashStamps`,
     {
       flashId,
       value,
     },
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };

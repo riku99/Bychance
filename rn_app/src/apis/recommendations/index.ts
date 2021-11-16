@@ -1,4 +1,4 @@
-import {axios, addBearer, baseUrl, checkKeychain} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 import {ResponseForGetRecommendations} from './types';
 
 export const getRequestToRecommendations = async ({
@@ -8,10 +8,10 @@ export const getRequestToRecommendations = async ({
   lat: number;
   lng: number;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetRecommendations>(
-    `${baseUrl}/recommendations?id=${credentials?.id}&lat=${lat}&lng=${lng}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/recommendations&lat=${lat}&lng=${lng}`,
+    addBearer(idToken),
   );
 };
 
@@ -20,10 +20,10 @@ export const postResuestToUserHideRecommendation = async ({
 }: {
   id: number;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.post(
-    `${baseUrl}/user_hide_recommendations?id=${credentials?.id}`,
+    `${baseUrl}/user_hide_recommendations`,
     {id},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };

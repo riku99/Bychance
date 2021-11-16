@@ -1,30 +1,30 @@
-import {axios, addBearer, checkKeychain, baseUrl} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
 export const putRequestToTooltipAboutDisplayExperience = async (
   value: boolean,
 ) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.put(
-    `${baseUrl}/users/tooltip_of_user_display_showed?id=${credentials?.id}`,
+    `${baseUrl}/users/tooltip_of_user_display_showed`,
     {value},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const putRequestToVideoEditDescription = async (value: boolean) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.put(
-    `${baseUrl}/users/videoEditDescription?id=${credentials?.id}`,
+    `${baseUrl}/users/videoEditDescription`,
     {videoEditDescription: value},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const putRequestToIntro = async (value: boolean) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.put(
-    `${baseUrl}/users/intro?id=${credentials?.id}`,
+    `${baseUrl}/users/intro`,
     {intro: value},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };

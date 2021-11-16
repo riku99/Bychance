@@ -29,7 +29,7 @@
 //   {userId: string},
 //   {rejectValue: RejectPayload}
 // >('users/refreshUser', async ({userId}, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 
 //   if (credentials) {
 //     try {

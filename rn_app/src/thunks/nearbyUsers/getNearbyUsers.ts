@@ -26,7 +26,7 @@
 // >(
 //   'others/getNearbyUsersThunk',
 //   async ({lat, lng, range}, {dispatch, rejectWithValue}) => {
-//     const credentials = await checkKeychain();
+//     const idToken = await getIdToken();
 //     if (credentials) {
 //       try {
 //         const response = await axios.get<GetNearbyUsersPayload>(

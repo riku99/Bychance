@@ -17,7 +17,7 @@
 //   undefined,
 //   {rejectValue: RejectPayload}
 // >('users/deteleLocationInfo', async (_, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 
 //   if (credentials) {
 //     try {

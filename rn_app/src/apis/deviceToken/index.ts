@@ -1,10 +1,10 @@
-import {addBearer, checkKeychain, axios, baseUrl} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
 export const postRequestToDeviceToken = async (deviceToken: string) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.post(
-    `${baseUrl}/device_token?id=${credentials?.id}`,
+    `${baseUrl}/device_token`,
     {token: deviceToken},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };

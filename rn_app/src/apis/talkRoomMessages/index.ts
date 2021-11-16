@@ -1,4 +1,4 @@
-import {addBearer, axios, baseUrl, checkKeychain} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 import {
   ResponseForPostTalkRoomMessage,
   ResponseForGetTalkRoomMessages,
@@ -13,14 +13,14 @@ export const postRequestToTalkRoomMessages = async ({
   partnerId: string;
   text: string;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.post<ResponseForPostTalkRoomMessage>(
-    `${baseUrl}/talk_rooms/${roomId}/messages?id=${credentials?.id}`,
+    `${baseUrl}/talk_rooms/${roomId}/messages`,
     {
       text,
       partnerId,
     },
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
@@ -31,13 +31,13 @@ export const postRequestToTalkRoomMessagesRead = async ({
   talkRoomId: number;
   ids: number[];
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.post(
-    `${baseUrl}/talk_rooms/${talkRoomId}/messages/read?id=${credentials?.id}`,
+    `${baseUrl}/talk_rooms/${talkRoomId}/messages/read`,
     {
       ids,
     },
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
@@ -46,9 +46,9 @@ export const getRequestToTalkRoomMessages = async ({
 }: {
   talkRoomId: number;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetTalkRoomMessages>(
-    `${baseUrl}/talk_rooms/${talkRoomId}/messages?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/talk_rooms/${talkRoomId}/messages`,
+    addBearer(idToken),
   );
 };

@@ -160,13 +160,10 @@ export const useLogout = () => {
   const {resetDispatch} = useResetDispatch();
 
   const logout = useCallback(async () => {
-    const credentials = await checkKeychain();
+    const idToken = await getIdToken();
 
     try {
-      await axios.get(
-        `${baseUrl}/sessions/logout?id=${credentials?.id}`,
-        addBearer(credentials?.token),
-      );
+      await axios.get(`${baseUrl}/sessions/logout`, addBearer(idToken));
 
       await Keychain.resetGenericPassword(); // ログアウトするからキーチェーンの中身リセット
       await persistor.purge(); // ストレージのリセット

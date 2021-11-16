@@ -15,7 +15,7 @@
 //   undefined,
 //   {rejectValue: RejectPayload}
 // >('sessions/logout', async (_, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 //   if (credentials) {
 //     try {
 //       await axios.get(

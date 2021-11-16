@@ -22,7 +22,7 @@
 //   {partner: AnotherUser},
 //   {rejectValue: RejectPayload}
 // >('chats/createRoom', async ({partner}, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 
 //   if (credentials) {
 //     try {

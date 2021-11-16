@@ -32,7 +32,7 @@
 // >(
 //   'messages/createMessage',
 //   async ({roomId, partnerId, text}, {dispatch, rejectWithValue}) => {
-//     const credentials = await checkKeychain();
+//     const idToken = await getIdToken();
 
 //     if (credentials) {
 //       try {

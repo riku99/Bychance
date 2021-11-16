@@ -1,19 +1,12 @@
-import {baseUrl, addBearer, checkKeychain, axios} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
 export const postRequestToBlocks = async ({blockTo}: {blockTo: string}) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
 
-  await axios.post(
-    `${baseUrl}/users/block?id=${credentials?.id}`,
-    {blockTo},
-    addBearer(credentials?.token),
-  );
+  await axios.post(`${baseUrl}/users/block`, {blockTo}, addBearer(idToken));
 };
 
 export const deleteRequestToBlocks = async ({userId}: {userId: string}) => {
-  const credentials = await checkKeychain();
-  await axios.delete(
-    `${baseUrl}/users/${userId}/block?id=${credentials?.id}`,
-    addBearer(credentials?.token),
-  );
+  const idToken = await getIdToken();
+  await axios.delete(`${baseUrl}/users/${userId}/block`, addBearer(idToken));
 };

@@ -67,10 +67,10 @@ export const usePrefetchStamps = () => {
   const fetch = useCallback(
     async (id: number) => {
       try {
-        const credentials = await checkKeychain();
+        const idToken = await getIdToken();
         const response = await axios.get(
-          `${baseUrl}${getFlashStampsKey(id)}?id=${credentials?.id}`,
-          addBearer(credentials?.token),
+          `${baseUrl}${getFlashStampsKey(id)}`,
+          addBearer(idToken),
         );
         return response.data;
       } catch (e) {}

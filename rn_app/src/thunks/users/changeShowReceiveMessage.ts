@@ -20,7 +20,7 @@
 // >(
 //   'users/changeShowReceiveMessage',
 //   async ({showReceiveMessage}, {rejectWithValue, dispatch}) => {
-//     const credentials = await checkKeychain();
+//     const idToken = await getIdToken();
 
 //     if (credentials) {
 //       try {

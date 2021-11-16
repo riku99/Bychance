@@ -20,7 +20,7 @@
 // >(
 //   'posts/createPost',
 //   async ({text, source, ext, sourceType}, {rejectWithValue, dispatch}) => {
-//     const credentials = await checkKeychain();
+//     const idToken = await getIdToken();
 //     if (credentials) {
 //       try {
 //         const response = await axios.post<Post>(

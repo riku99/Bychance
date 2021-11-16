@@ -18,7 +18,7 @@
 //   {postId: number},
 //   {rejectValue: RejectPayload}
 // >('post/deletePost', async ({postId}, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 //   if (credentials) {
 //     try {
 //       await axios.request({
