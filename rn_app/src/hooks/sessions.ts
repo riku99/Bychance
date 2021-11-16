@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 import {default as axios} from 'axios';
 import LineLogin from '@xmartlabs/react-native-line';
 import * as Keychain from 'react-native-keychain';
+import auth from '@react-native-firebase/auth';
 
 import {RootState, persistor} from '~/stores/index';
 import {baseUrl} from '~/constants/url';
@@ -15,7 +16,11 @@ import {setPosts} from '~/stores/posts';
 import {setFlashes} from '~/stores/flashes';
 import {setSetitngs} from '~/stores/settings';
 import {setExperiences} from '~/stores/experiences';
-import {postRequestToLineLogin, getRequestToLoginData} from '~/apis/sessions';
+import {
+  postRequestToLineLogin,
+  getRequestToLoginData,
+  deleteRequestToSessions,
+} from '~/apis/sessions';
 import {LoginData} from '~/apis/sessions/types';
 import {getIdToken} from '~/helpers/auth';
 
@@ -83,88 +88,16 @@ export const useLoginData = () => {
   };
 };
 
-export const useLineLogin = () => {
-  const {loginDispatch} = useLoginDispatch();
-
-  const lineLogin = useCallback(async () => {
-    try {
-      const loginResult = await LineLogin.login({
-        // @ts-ignore
-        scopes: ['openid', 'profile'],
-      });
-      const idToken = loginResult.accessToken.id_token;
-      const nonce = loginResult.IDTokenNonce;
-
-      await axios.post(`${baseUrl}/nonce`, {nonce});
-
-      try {
-        const response = await postRequestToLineLogin({
-          idToken: idToken as string,
-        });
-
-        // 成功したらキーチェーンにcredentialsを保存
-        await Keychain.resetGenericPassword();
-        await Keychain.setGenericPassword(
-          String(response.data.user.id),
-          response.data.accessToken,
-        );
-
-        loginDispatch(response.data);
-      } catch (e) {
-        console.log(e);
-        Alert.alert(
-          'エラーが発生しました。',
-          '申し訳ありませんがやり直してください',
-        );
-      }
-    } catch (e) {
-      console.log('💦 lineError');
-      // if (e.message === 'User cancelled or interrupted the login process.') {
-      // }
-    }
-  }, [loginDispatch]);
-
-  return {
-    lineLogin,
-  };
-};
-
-export const useSampleLogin = () => {
-  const {loginDispatch} = useLoginDispatch();
-  const sampleLogin = useCallback(async () => {
-    const response = await axios.get(`${baseUrl}/sampleLogin`);
-    await Keychain.resetGenericPassword();
-    await Keychain.setGenericPassword(
-      String(response.data.user.id),
-      response.data.accessToken,
-    );
-
-    loginDispatch(response.data);
-  }, [loginDispatch]);
-
-  return {
-    sampleLogin,
-  };
-};
-
 export const useLogout = () => {
-  const {handleApiError, addBearer} = useApikit();
-
   const {resetDispatch} = useResetDispatch();
-
   const logout = useCallback(async () => {
-    const idToken = await getIdToken();
-
     try {
-      await axios.get(`${baseUrl}/sessions/logout`, addBearer(idToken));
-
-      await Keychain.resetGenericPassword(); // ログアウトするからキーチェーンの中身リセット
+      await deleteRequestToSessions();
       await persistor.purge(); // ストレージのリセット
+      await auth().signOut();
       resetDispatch();
-    } catch (e) {
-      handleApiError(e);
-    }
-  }, [handleApiError, addBearer, resetDispatch]);
+    } catch (e) {}
+  }, [resetDispatch]);
 
   return {
     logout,

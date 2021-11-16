@@ -17,3 +17,8 @@ export const getRequestToLoginData = async () => {
     addBearer(idToken),
   );
 };
+
+export const deleteRequestToSessions = async () => {
+  const idToken = await getIdToken();
+  return await axios.delete(`${baseUrl}/sessions`, addBearer(idToken));
+};
