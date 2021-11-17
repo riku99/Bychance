@@ -95,9 +95,6 @@ PODS:
   - libwebp/mux (1.2.0):
     - libwebp/demux
   - libwebp/webp (1.2.0)
-  - LineSDKSwift (5.7.0):
-    - LineSDKSwift/Core (= 5.7.0)
-  - LineSDKSwift/Core (5.7.0)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -403,9 +400,6 @@ PODS:
     - React
   - RNKeychain (6.2.0):
     - React
-  - RNLine (2.1.0):
-    - LineSDKSwift (~> 5.0)
-    - React
   - RNReactNativeHapticFeedback (1.11.0):
     - React-Core
   - RNReanimated (2.2.0):
@@ -513,7 +507,6 @@ DEPENDENCIES:
   - RNImageColors (from `../node_modules/react-native-image-colors`)
   - "RNImageEditor (from `../node_modules/@wwimmo/react-native-sketch-canvas`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
-  - "RNLine (from `../node_modules/@xmartlabs/react-native-line`)"
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -537,7 +530,6 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - libwebp
-    - LineSDKSwift
     - nanopb
     - PromisesObjC
     - SDWebImage
@@ -653,8 +645,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@wwimmo/react-native-sketch-canvas"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
-  RNLine:
-    :path: "../node_modules/@xmartlabs/react-native-line"
   RNReactNativeHapticFeedback:
     :path: "../node_modules/react-native-haptic-feedback"
   RNReanimated:
@@ -690,7 +680,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: f8a43108b38a68eebe8b3540e1f4f2d28843ce20
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
-  LineSDKSwift: f9c232f89185b887b5725aa278325f3a23e33bbc
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
@@ -741,7 +730,6 @@ SPEC CHECKSUMS:
   RNImageColors: f55f90cc27ef799c80e6b9a5798c9405919d328e
   RNImageEditor: 43f5f80bbfcb66dd9fff2399a22f3500514617e2
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
-  RNLine: b9b67a03a9228832b3ba6c40f5015169fdb264a5
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: d9da990fc90123f4ffbfdda93d00fc15174863a8
   RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce

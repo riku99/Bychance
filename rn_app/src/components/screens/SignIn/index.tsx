@@ -7,6 +7,7 @@ import {AuthNavigationProp} from '~/navigations/Auth';
 import {EmailForm, PasswordForm} from '~/components/utils/Forms';
 import {defaultTheme} from '~/theme';
 import {useLogin} from '~/hooks/sessions';
+import {useToastLoading} from '~/hooks/appState';
 
 export const SignIn = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignIn'>>();
@@ -19,8 +20,11 @@ export const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {login} = useLogin();
+  const {setToastLoading} = useToastLoading();
   const onButtonPress = async () => {
+    setToastLoading(true);
     await login({email, password});
+    setToastLoading(false);
   };
 
   return (

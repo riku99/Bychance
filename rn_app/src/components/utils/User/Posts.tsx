@@ -5,10 +5,8 @@ import FastImage from 'react-native-fast-image';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import {defaultTheme} from '~/theme';
-import {
-  UserPageNavigationProp,
-  MyPageNavigationProp,
-} from '~/navigations/UserPage';
+import {UserPageNavigationProp} from '~/navigations/UserPage';
+import {MyPageNavigationProp} from '~/navigations/MyPage';
 import {getThumbnailUrl} from '~/helpers/video';
 
 type Props = {
