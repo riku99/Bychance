@@ -50,7 +50,7 @@
 // >(
 //   'users/location',
 //   async ({lat, lng}, {dispatch, rejectWithValue, getState}) => {
-//     const credentials = await checkKeychain();
+//     const idToken = await getIdToken();
 
 //     if (credentials) {
 //       try {

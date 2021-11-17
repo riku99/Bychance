@@ -1,88 +1,78 @@
-import React, {useState} from 'react';
-import {Image, View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 
 import Logo from '~/assets/logo.svg';
 import {AuthNavigationProp} from '~/navigations/Auth';
-import {useLineLogin, useSampleLogin} from '~/hooks/sessions';
-
-const lineBase = require('../../../assets/btn_base.png');
-const linePress = require('../../../assets/btn_press.png');
+import {defaultTheme} from '~/theme';
 
 export const Auth = () => {
-  const [pressLoginButton, setPressLoginButton] = useState(false);
-
-  const onLoginPressIn = () => {
-    setPressLoginButton(true);
-  };
-
-  const onLoginPressout = () => {
-    setPressLoginButton(false);
-  };
-
-  const {lineLogin} = useLineLogin();
-  const {sampleLogin} = useSampleLogin();
-
-  const onLoginPress = async () => {
-    await lineLogin();
-  };
-
-  const onSampleLoginPress = () => {
-    sampleLogin();
-  };
-
   const navigation = useNavigation<AuthNavigationProp<'Auth'>>();
 
   return (
     <View style={styles.container}>
-      <Logo height={100} width="75%" style={styles.logoContainer} />
+      <Logo height={100} width={CONTENT_WIDTH} style={styles.logoContainer} />
 
       <View style={styles.loginContainer}>
-        <Text style={styles.loginDescriptionText}>
-          現在Lineログインのみ利用できます
-        </Text>
-        <TouchableOpacity
+        <View style={styles.descContainer}>
+          <View style={styles.descLine} />
+          <Text style={styles.desc}>初めての方</Text>
+          <View style={styles.descLine} />
+        </View>
+
+        <Button
+          title="メールアドレスで登録"
+          titleStyle={styles.buttonTitle}
+          containerStyle={styles.buttonContainer}
+          buttonStyle={{backgroundColor: defaultTheme.pinkGrapefruit}}
+          icon={{name: 'email', size: 16, color: 'white'}}
+          iconContainerStyle={styles.buttonIcon}
+          onPress={() => {
+            navigation.navigate('SignUp');
+          }}
           activeOpacity={1}
-          style={[
-            styles.loginButtonContainer,
-            {backgroundColor: !pressLoginButton ? '#00C300' : '#00B300'},
-          ]}
-          onPress={onLoginPress}
-          onPressIn={onLoginPressIn}
-          onPressOut={onLoginPressout}>
-          <Image
-            source={!pressLoginButton ? lineBase : linePress}
-            height={30}
-            width={30}
-            style={styles.iconContainer}
-            resizeMode="contain"
-          />
-          <View style={styles.loginTextContainer}>
-            <Text style={styles.loginText}>Lineログイン</Text>
-          </View>
-        </TouchableOpacity>
+        />
+
+        <View style={[styles.descContainer, {marginTop: 90}]}>
+          <View style={styles.descLine} />
+          <Text style={styles.desc}>アカウントをお持ちの方</Text>
+          <View style={styles.descLine} />
+        </View>
+
+        <Button
+          title="ログイン"
+          titleStyle={styles.buttonTitle}
+          containerStyle={styles.buttonContainer}
+          buttonStyle={{backgroundColor: defaultTheme.darkGray}}
+          icon={{name: 'login', size: 16, color: 'white'}}
+          iconContainerStyle={styles.buttonIcon}
+          activeOpacity={1}
+          onPress={() => {
+            navigation.navigate('SignIn');
+          }}
+        />
         <Text style={styles.termsUseDescription}>
           ログインすることで、
-          <TouchableOpacity
-            activeOpacity={1}
+          <Text
+            style={styles.termsUserLink}
             onPress={() => navigation.navigate('TermsOfUse')}>
-            <Text style={styles.termsUserLink}>利用規約</Text>
-          </TouchableOpacity>
+            利用規約
+          </Text>
           と
-          <TouchableOpacity
-            activeOpacity={1}
+          <Text
+            style={styles.termsUserLink}
             onPress={() => navigation.navigate('PrivacyPolicy')}>
-            <Text style={styles.termsUserLink}>プライバシーポリシー</Text>
-          </TouchableOpacity>
+            プライバシーポリシー
+          </Text>
           に同意したものとみなされます。
         </Text>
       </View>
-
-      <Button title="Sample Login" onPress={onSampleLoginPress} />
     </View>
   );
 };
+
+const CONTENT_WIDTH = '75%';
 
 const styles = StyleSheet.create({
   container: {
@@ -90,42 +80,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginContainer: {
-    marginTop: '35%',
-    width: '95%',
+    marginTop: '25%',
+    width: CONTENT_WIDTH,
   },
   logoContainer: {
     marginTop: '45%',
     alignSelf: 'center',
   },
-  loginButtonContainer: {
-    width: '100%',
-    height: 45,
+  descContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 30,
-    borderRadius: 3,
   },
-  iconContainer: {
-    height: 35,
-    width: 35,
-    marginLeft: 8,
+  descLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'gray',
   },
-  loginTextContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+  desc: {
+    marginHorizontal: 4,
   },
-  loginText: {
-    color: '#FFFFFF',
+  buttonTitle: {
     fontWeight: 'bold',
     fontSize: 16,
   },
-  loginDescriptionText: {
-    color: 'gray',
+  buttonContainer: {
+    marginTop: 20,
+    position: 'relative',
+  },
+  buttonIcon: {
+    position: 'absolute',
+    left: 10,
   },
   termsUseDescription: {
     marginTop: 70,
     color: 'gray',
+    lineHeight: 18,
   },
   termsUserLink: {
     textDecorationLine: 'underline',

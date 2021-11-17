@@ -1,11 +1,11 @@
-import {addBearer, axios, baseUrl, checkKeychain} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 import {ResponseForGetPrivateZone, ResponseForPostPrivateZone} from './types';
 
 export const getRequestToPrivateZone = async () => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetPrivateZone>(
-    `${baseUrl}/privateZone?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/privateZone`,
+    addBearer(idToken),
   );
 };
 
@@ -18,22 +18,19 @@ export const postRequestToPrivateZone = async ({
   lat: number;
   lng: number;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.post<ResponseForPostPrivateZone>(
-    `${baseUrl}/privateZone?id=${credentials?.id}`,
+    `${baseUrl}/privateZone`,
     {
       address,
       lat,
       lng,
     },
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const deleteRequestToPrivateZone = async (id: number) => {
-  const credentials = await checkKeychain();
-  return await axios.delete(
-    `${baseUrl}/privateZone/${id}?id=${credentials?.id}`,
-    addBearer(credentials?.token),
-  );
+  const idToken = await getIdToken();
+  return await axios.delete(`${baseUrl}/privateZone/${id}`, addBearer(idToken));
 };

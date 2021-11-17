@@ -1,44 +1,41 @@
-import {addBearer} from '~/helpers/requestHeaders';
-import {checkKeychain} from '~/helpers/credentials';
-import {default as axios} from 'axios';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
-import {baseUrl} from '~/constants/url';
 import {
   ResponseForGetApplyingGroups,
   ResponseForGetAppliedGroups,
 } from './types';
 
 export const getRequestToAppliedGroups = async () => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetAppliedGroups>(
-    `${baseUrl}/applying_groups?id=${credentials?.id}&type=applied`,
-    addBearer(credentials?.token),
+    `${baseUrl}/applying_groups?type=applied`,
+    addBearer(idToken),
   );
 };
 
 export const getRequestToApplyingGroups = async () => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetApplyingGroups>(
-    `${baseUrl}/applying_groups?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/applying_groups`,
+    addBearer(idToken),
   );
 };
 
 export const postRequestApplyingGroups = async ({userId}: {userId: string}) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.post(
-    `${baseUrl}/applying_groups?id=${credentials?.id}`,
+    `${baseUrl}/applying_groups`,
     {
       to: userId,
     },
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const deleteRequestToApplyingGroups = async ({id}: {id: number}) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.delete<Number>(
-    `${baseUrl}/applying_groups/${id}?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/applying_groups/${id}`,
+    addBearer(idToken),
   );
 };

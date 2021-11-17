@@ -1,9 +1,24 @@
-import {addBearer, axios, baseUrl, checkKeychain} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 import {
   ResponseForGetRefreshMyData,
   ResponseForGetUserPageInfo,
   ResponseForPatchUsers,
 } from './types';
+import {LoginData} from '~/apis/sessions/types';
+
+export const postRequestToUsers = async ({
+  name,
+  token,
+}: {
+  name: string;
+  token: string;
+}) => {
+  return await axios.post<LoginData>(
+    `${baseUrl}/users`,
+    {name},
+    addBearer(token),
+  );
+};
 
 type EditArg = {
   name: string;
@@ -38,9 +53,9 @@ export const patchRequestToUsers = async ({
   youtube,
   tiktok,
 }: EditArg) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.patch<ResponseForPatchUsers>(
-    `${baseUrl}/users?id=${credentials?.id}`,
+    `${baseUrl}/users`,
     {
       name,
       introduce,
@@ -57,23 +72,20 @@ export const patchRequestToUsers = async ({
       youtube,
       tiktok,
     },
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const deleteRequestToUsersLocation = async () => {
-  const credentials = await checkKeychain();
-  return await axios.delete(
-    `${baseUrl}/users/locations?id=${credentials?.id}`,
-    addBearer(credentials?.token),
-  );
+  const idToken = await getIdToken();
+  return await axios.delete(`${baseUrl}/users/locations`, addBearer(idToken));
 };
 
 export const getRequestToMyRefreshData = async () => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetRefreshMyData>(
-    `${baseUrl}/users/my_refresh_data?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/users/my_refresh_data`,
+    addBearer(idToken),
   );
 };
 
@@ -84,37 +96,34 @@ export const patchRequestToUsersLocaiton = async ({
   lat: number;
   lng: number;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.patch(
-    `${baseUrl}/users/locations?id=${credentials?.id}`,
+    `${baseUrl}/users/locations`,
     {
       lat,
       lng,
     },
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const getRequestToUsersInfo = async (userId: string) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetUserPageInfo>(
-    `${baseUrl}/users/${userId}/page_info?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/users/${userId}/page_info`,
+    addBearer(idToken),
   );
 };
 
 export const getRequestToUsersIsDisplayedToOtherUsers = async () => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<boolean>(
-    `${baseUrl}/users/is_displayed?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/users/is_displayed`,
+    addBearer(idToken),
   );
 };
 
 export const deleteRequestToUsersGroupId = async () => {
-  const credentials = await checkKeychain();
-  return await axios.delete(
-    `${baseUrl}/users/group_id?id=${credentials?.id}`,
-    addBearer(credentials?.token),
-  );
+  const idToken = await getIdToken();
+  return await axios.delete(`${baseUrl}/users/group_id`, addBearer(idToken));
 };

@@ -1,43 +1,39 @@
-import {addBearer} from '~/helpers/requestHeaders';
-import {checkKeychain} from '~/helpers/credentials';
-import {default as axios} from 'axios';
-
-import {baseUrl} from '~/constants/url';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
 export const putRequestToUsersGroupsApplicationEnabled = async (
   value: boolean,
 ) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.put<String>(
-    `${baseUrl}/users/groups_application_enabled?id=${credentials?.id}`,
+    `${baseUrl}/users/groups_application_enabled`,
     {value},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const putRequestToDisplay = async (value: boolean) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.put(
-    `${baseUrl}/users/display?id=${credentials?.id}`,
+    `${baseUrl}/users/display`,
     {display: value},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const putRequestToTalkRoomMessagesReceipt = async (value: boolean) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.put(
-    `${baseUrl}/users/talk_room_messages_receipt?id=${credentials?.id}`,
+    `${baseUrl}/users/talk_room_messages_receipt`,
     {receipt: value},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };
 
 export const putRequestToShowReceiveMessage = async (value: boolean) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.put(
-    `${baseUrl}/users/show_receive_message?id=${credentials?.id}`,
+    `${baseUrl}/users/show_receive_message`,
     {showReceiveMessage: value},
-    addBearer(credentials?.token),
+    addBearer(idToken),
   );
 };

@@ -1,19 +1,16 @@
-import {addBearer, axios, baseUrl, checkKeychain} from '../export';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
 import {LoginData} from './types';
 
-export const postRequestToLineLogin = async ({idToken}: {idToken: string}) => {
-  return await axios.post<LoginData & {accessToken: string}>(
-    `${baseUrl}/sessions/line_login`,
-    {},
+export const getRequestToLoginData = async () => {
+  const idToken = await getIdToken();
+  return await axios.get<LoginData>(
+    `${baseUrl}/sessions/login_data`,
     addBearer(idToken),
   );
 };
 
-export const getRequestToLoginData = async () => {
-  const credentials = await checkKeychain();
-  return await axios.get<LoginData>(
-    `${baseUrl}/sessions/login_data?id=${credentials?.id}`,
-    addBearer(credentials?.token),
-  );
+export const deleteRequestToSessions = async () => {
+  const idToken = await getIdToken();
+  return await axios.delete(`${baseUrl}/sessions`, addBearer(idToken));
 };

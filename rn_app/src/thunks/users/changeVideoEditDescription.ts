@@ -19,7 +19,7 @@
 //     rejectValue: RejectPayload;
 //   }
 // >('users/changeEditDescription', async (bool, {rejectWithValue, dispatch}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 
 //   if (credentials) {
 //     try {

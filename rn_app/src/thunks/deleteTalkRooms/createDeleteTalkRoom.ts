@@ -19,7 +19,7 @@
 //   {talkRoomId: number},
 //   {rejectValue: RejectPayload}
 // >('talkRooms/delete', async ({talkRoomId}, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 
 //   if (credentials) {
 //     try {

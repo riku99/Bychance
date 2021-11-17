@@ -7,7 +7,6 @@ import {
   useRegisterDeviceToken,
 } from '~/hooks/pushNotification';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
-import {useHandleErrors} from '~/hooks/errors';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
 import {useGetTalkRoomData} from '~/hooks/talkRooms';
 import {useGetIsDisplayedToOtherUsersOnActive} from '~/hooks/users';
@@ -15,8 +14,10 @@ import {
   useSetupApplyingGroupSocket,
   useAppliedGropusOnActive,
 } from '~/hooks/applyingGroups';
+import {useLoginData} from '~/hooks/sessions';
 
 export const Main = React.memo(() => {
+  useLoginData();
   // socket周り
   useSetupTalkRoomMessageSocket();
   useSetupApplyingGroupSocket();
@@ -25,8 +26,6 @@ export const Main = React.memo(() => {
   useRegisterDeviceToken();
   // 位置情報周り
   useBackgroundGeolocation();
-  // // エラーをdispatchしたときの処理
-  useHandleErrors();
   // // アクティブになるたびにトークルーム更新とか
   useGetTalkRoomData();
   // アクティブになるたびにisDisplayedToOtherUsersを更新

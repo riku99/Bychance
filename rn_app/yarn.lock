@@ -1443,6 +1443,11 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/auth@^13.0.1":
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-13.0.1.tgz#cc93c7705aac28af4bf9fe676e900e11cf7b12ac"
+  integrity sha512-oZ0KqAjjbqT6It7/zAVIbQu+M4t1noKkAgZ76G12GHHo1mtVCjBTGDpej+J2oqbaEDDDuBAxq8lAhRxf8T+R4g==
+
 "@react-native-firebase/messaging@^11.4.1":
   version "11.4.1"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-11.4.1.tgz#c145b237e4b4e5cffa4a5ab7f8b6a765ad2ca867"
@@ -1967,11 +1972,6 @@
 "@wwimmo/react-native-sketch-canvas@git+https://github.com/riku99/react-native-sketch-image.git":
   version "0.8.3"
   resolved "git+https://github.com/riku99/react-native-sketch-image.git#919643a43de3f614ed8002e5732427541eeaa72f"
-
-"@xmartlabs/react-native-line@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@xmartlabs/react-native-line/-/react-native-line-2.1.0.tgz#0e35524c6519845b66806cfd9d7133f99da44986"
-  integrity sha512-M1nBP0+2qY2lcJVL+/R9rCnczJPBQ9bpfb9IlJfwDfMhphwxVd7P26qPlUJdOtSoi4k40+JqQWMdppyqfoSWHg==
 
 abab@^2.0.3:
   version "2.0.5"

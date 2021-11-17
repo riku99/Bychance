@@ -20,7 +20,7 @@
 // >(
 //   'users/changeTalkRoomMessageReceipt',
 //   async ({receipt}, {rejectWithValue, dispatch}) => {
-//     const credentials = await checkKeychain();
+//     const idToken = await getIdToken();
 
 //     if (credentials) {
 //       try {

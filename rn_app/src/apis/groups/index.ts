@@ -1,35 +1,25 @@
-import {addBearer} from '~/helpers/requestHeaders';
-import {checkKeychain} from '~/helpers/credentials';
-import {default as axios} from 'axios';
+import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
-import {baseUrl} from '~/constants/url';
 import {ResponseForGetGroups} from './types';
 
 const groupsUrl = `${baseUrl}/groups`;
 
 export const postRequestToGroups = async ({ownerId}: {ownerId: string}) => {
-  const credentials = await checkKeychain();
-  return await axios.post(
-    `${groupsUrl}?id=${credentials?.id}`,
-    {ownerId},
-    addBearer(credentials?.token),
-  );
+  const idToken = await getIdToken();
+  return await axios.post(`${groupsUrl}`, {ownerId}, addBearer(idToken));
 };
 
 export const getRequestToGroups = async (userId: string) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<ResponseForGetGroups>(
-    `${baseUrl}/users/${userId}/groups?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/users/${userId}/groups`,
+    addBearer(idToken),
   );
 };
 
 export const deleteRequestToGroups = async () => {
-  const credentials = await checkKeychain();
-  return await axios.delete(
-    `${groupsUrl}?id=${credentials?.id}`,
-    addBearer(credentials?.token),
-  );
+  const idToken = await getIdToken();
+  return await axios.delete(`${groupsUrl}`, addBearer(idToken));
 };
 
 export const getRequestToGroupMemberWhoBlockTargetUserExists = async ({
@@ -37,9 +27,9 @@ export const getRequestToGroupMemberWhoBlockTargetUserExists = async ({
 }: {
   targetUserId: string;
 }) => {
-  const credentials = await checkKeychain();
+  const idToken = await getIdToken();
   return await axios.get<boolean>(
-    `${baseUrl}/groups/members/block/${targetUserId}?id=${credentials?.id}`,
-    addBearer(credentials?.token),
+    `${baseUrl}/groups/members/block/${targetUserId}`,
+    addBearer(idToken),
   );
 };

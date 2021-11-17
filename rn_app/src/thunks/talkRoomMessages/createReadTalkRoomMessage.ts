@@ -18,7 +18,7 @@
 // >(
 //   'messages/createReadMessages',
 //   async ({roomId, unreadNumber, partnerId}, {dispatch, rejectWithValue}) => {
-//     const credentials = await checkKeychain();
+//     const idToken = await getIdToken();
 
 //     if (credentials) {
 //       try {

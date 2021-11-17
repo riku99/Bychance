@@ -19,7 +19,7 @@
 //     rejectValue: RejectPayload;
 //   }
 // >('flashes/delete', async ({flashId}, {dispatch, rejectWithValue}) => {
-//   const credentials = await checkKeychain();
+//   const idToken = await getIdToken();
 
 //   if (credentials) {
 //     try {
