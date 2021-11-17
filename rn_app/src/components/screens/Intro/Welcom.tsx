@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text, SafeAreaView} from 'react-native';
 import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
+import {defaultTheme} from '~/theme';
 
 import {Check} from './Check';
 
@@ -95,6 +96,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ff6e7f',
+    backgroundColor: defaultTheme.pinkGrapefruit,
   },
 });

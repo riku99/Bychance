@@ -4,6 +4,7 @@ import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
 
 import {usePushNotificationReqest} from '~/hooks/pushNotification';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   swipeRef: React.RefObject<Swiper>;
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ff6e7f',
+    backgroundColor: defaultTheme.pinkGrapefruit,
   },
   desc: {
     marginTop: 20,

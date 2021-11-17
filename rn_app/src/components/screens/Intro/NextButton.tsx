@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Button, ButtonProps} from 'react-native-elements';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   onPress: () => void;
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ff6e7f',
+    backgroundColor: defaultTheme.pinkGrapefruit,
   },
   title: {
     fontWeight: 'bold',

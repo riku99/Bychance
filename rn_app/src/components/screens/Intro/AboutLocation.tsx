@@ -3,6 +3,7 @@ import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+import {defaultTheme} from '~/theme';
 
 type Props = {
   swipeRef: React.RefObject<Swiper>;
@@ -65,6 +66,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ff6e7f',
+    backgroundColor: defaultTheme.pinkGrapefruit,
   },
 });

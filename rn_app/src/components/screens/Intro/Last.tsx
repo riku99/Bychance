@@ -3,6 +3,7 @@ import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 
 import {useIntro} from '~/hooks/experiences';
+import {defaultTheme} from '~/theme';
 
 export const Last = () => {
   const {changeIntro} = useIntro();
@@ -53,6 +54,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ff6e7f',
+    backgroundColor: defaultTheme.pinkGrapefruit,
   },
 });

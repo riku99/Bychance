@@ -156,7 +156,7 @@ export const UserTabView = React.memo(
           <TabBar
             {...props}
             pressOpacity={1}
-            indicatorStyle={{backgroundColor: '#ff6e7f'}}
+            indicatorStyle={{backgroundColor: defaultTheme.pinkGrapefruit}}
             style={{backgroundColor: 'white'}}
             renderLabel={() => null}
             renderIcon={({route, focused}) => {
