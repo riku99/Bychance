@@ -5,7 +5,7 @@ import {LoginData} from './types';
 export const getRequestToLoginData = async () => {
   const idToken = await getIdToken();
   return await axios.get<LoginData>(
-    `${baseUrl}/sessions/login_data`,
+    `${baseUrl}/login_data`,
     addBearer(idToken),
   );
 };
