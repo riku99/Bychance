@@ -156,6 +156,7 @@ export const UserTabView = React.memo(
           <TabBar
             {...props}
             pressOpacity={1}
+            indicatorContainerStyle={styles.indicatoreContainer}
             indicatorStyle={{backgroundColor: defaultTheme.pinkGrapefruit}}
             style={{backgroundColor: 'white'}}
             renderLabel={() => null}
@@ -164,13 +165,13 @@ export const UserTabView = React.memo(
                 <MIcon
                   name="apps"
                   size={25}
-                  color={focused ? defaultTheme.pinkGrapefruit : 'lightgray'}
+                  color={focused ? defaultTheme.darkGray : 'lightgray'}
                 />
               ) : (
                 <MIcon
                   name="group"
                   size={25}
-                  color={focused ? defaultTheme.pinkGrapefruit : 'lightgray'}
+                  color={focused ? defaultTheme.darkGray : 'lightgray'}
                 />
               );
             }}
@@ -210,5 +211,9 @@ const styles = StyleSheet.create({
     top: 0,
     width: '100%',
     zIndex: 1,
+  },
+  indicatoreContainer: {
+    marginHorizontal: 40,
+    paddingHorizontal: 80,
   },
 });
