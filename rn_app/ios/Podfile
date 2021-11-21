@@ -5,24 +5,13 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '11.0'
 use_frameworks!
 
-target 'rn_app' do
-  
-  # 依存関係のエラーが出るのでuse_native_modules!の前に置く
-  # https://github.com/tanersener/react-native-ffmpeg
-  # Note that if you have use_native_modules! in your Podfile, specifying a subspec may cause the following error. You can fix it by defining react-native-ffmpeg dependency before use_native_modules! in your Podfile.
-  #pod 'react-native-ffmpeg/min-gpl', :podspec => '../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec'
+def shared_pods
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'RNToasty', :path => '../node_modules/react-native-toasty/ios'
-  
-
-  target 'rn_appTests' do
-    inherit! :complete
-    # Pods for testing
-  end
 
   # Enables Flipper.
   #
@@ -32,6 +21,21 @@ target 'rn_app' do
   #post_install do |installer|
     #flipper_post_install(installer)
   #end
+end
+
+target 'rn_app' do
+  target 'rn_appTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+end
+
+target 'rn_app-stg' do
+  shared_pods
+end
+
+target 'rn_app-dev' do
+  shared_pods
 end
 
 target 'rn_app-tvOS' do

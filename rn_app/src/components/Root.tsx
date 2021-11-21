@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
+import Config from 'react-native-config';
 
 import {Main} from '~/components/Main';
 import {useLoginState} from '~/hooks/sessions';
@@ -17,6 +18,7 @@ const Root = React.memo(() => {
   useHandleErrors();
 
   useEffect(() => {
+    console.log('🌍 Env is ' + Config.ENV);
     console.log('⭐️ login is ' + login);
     console.log('my id is ' + id);
   }, [login, id]);

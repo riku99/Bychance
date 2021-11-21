@@ -8,7 +8,6 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FlashMessage from 'react-native-flash-message';
 import {ToastProvider as NewToastProvider} from 'react-native-toast-notifications';
 import {PersistGate} from 'redux-persist/es/integration/react';
-import {SWRConfig} from 'swr';
 
 import Root from './components/Root';
 import {Dimensions} from 'react-native';

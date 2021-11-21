@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios:prod": "react-native run-ios",
+    "ios:stg": "react-native run-ios --scheme rn_app-stg",
+    "ios:dev": "react-native run-ios --scheme rn_app-dev",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
