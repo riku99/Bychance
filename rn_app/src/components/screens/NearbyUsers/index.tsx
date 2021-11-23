@@ -249,6 +249,18 @@ export const NearbyUsersScreen = React.memo(() => {
     ],
   );
 
+  const renderLeftTabBarIcon = useCallback(({focused}: {focused: boolean}) => {
+    return (
+      <Icon name="list" color={focused ? defaultTheme.darkGray : 'lightgray'} />
+    );
+  }, []);
+
+  const renderRightTabBarIcon = useCallback(({focused}: {focused: boolean}) => {
+    return (
+      <Icon name="map" color={focused ? defaultTheme.darkGray : 'lightgray'} />
+    );
+  }, []);
+
   const renderTabBar = useCallback(
     (props: any) => {
       const y = scrollY.interpolate({
@@ -263,7 +275,6 @@ export const NearbyUsersScreen = React.memo(() => {
             styles.tabAndSearchBarContainer,
             {
               transform: [{translateY: y}],
-              // height: 0,
             },
           ]}>
           <Animated.View style={{opacity}}>
@@ -278,7 +289,10 @@ export const NearbyUsersScreen = React.memo(() => {
               }}
             />
           </Animated.View>
-          <MaterialTopTabBar {...props} />
+          <MaterialTopTabBar
+            {...props}
+            indicatorContainerStyle={styles.indicatorContainer}
+          />
         </Animated.View>
       );
     },
@@ -313,14 +327,14 @@ export const NearbyUsersScreen = React.memo(() => {
               name="リスト"
               component={List}
               options={{
-                tabBarIcon: ({color}) => <Icon name="list" color={color} />,
+                tabBarIcon: renderLeftTabBarIcon,
               }}
             />
             <Tab.Screen
               name="マップ"
               component={Map}
               options={{
-                tabBarIcon: ({color}) => <Icon name="map" color={color} />,
+                tabBarIcon: renderRightTabBarIcon,
               }}
             />
           </Tab.Navigator>
@@ -371,5 +385,9 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 1,
     backgroundColor: 'white',
+  },
+  indicatorContainer: {
+    marginHorizontal: 40,
+    paddingHorizontal: 80,
   },
 });
