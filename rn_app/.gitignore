@@ -60,7 +60,7 @@ buck-out/
 
 # credentials
 /src/credentials.ts
-.env
-.env.dev
-.env.prod
-.env.stg
+/.env
+/.env.dev
+/.env.prod
+/.env.stg
