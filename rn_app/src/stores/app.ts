@@ -12,6 +12,7 @@ type InitialState = {
     // useSafeAreaInsetsでtopは取れるが、StatuBarがhiddenになると0になってしまう。StatusBarがhiddenになっても値が欲しい場合あるのでstoreで保存
     top: number;
   };
+  loginDataLoading: boolean;
 };
 
 const initialState: InitialState = {
@@ -25,6 +26,7 @@ const initialState: InitialState = {
   safeArea: {
     top: 0,
   },
+  loginDataLoading: false,
 };
 
 const appSlice = createSlice({

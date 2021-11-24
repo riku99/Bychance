@@ -12,6 +12,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {selectPostsByUserId} from '~/stores/posts';
 import {RootState} from '~/stores';
 import {TabPostsLoading} from './TabPostsLoading';
+import {useLoginDataLoading} from '~/hooks/appState';
 
 type PostData = {
   id: number;
@@ -51,6 +52,7 @@ export const FlatListTabScene = React.memo(
     isDisplayed,
   }: FlatListTabSceneProps) => {
     const [refreshing, setRefreshing] = useState(false);
+    const {loginDataLoading} = useLoginDataLoading();
 
     const posts = useSelector(
       (state: RootState) => selectPostsByUserId(state, userId),
@@ -63,7 +65,7 @@ export const FlatListTabScene = React.memo(
       setRefreshing(false);
     }, [refresh]);
 
-    if (!posts.length && isLoaidng) {
+    if ((!posts.length && isLoaidng) || loginDataLoading) {
       return (
         <View style={{paddingTop: paddingTopHeight}}>
           <TabPostsLoading />

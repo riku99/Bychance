@@ -13,6 +13,7 @@ import {setSetitngs} from '~/stores/settings';
 import {setExperiences} from '~/stores/experiences';
 import {getRequestToLoginData, deleteRequestToSessions} from '~/apis/sessions';
 import {LoginData} from '~/apis/sessions/types';
+import {useLoginDataLoading} from '~/hooks/appState';
 
 export const useLoginDispatch = () => {
   const dispatch = useCustomDispatch();
@@ -83,24 +84,22 @@ export const useLogin = () => {
 };
 
 export const useLoginData = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const {loginDispatch} = useLoginDispatch();
+  const {setLoginDataLoading} = useLoginDataLoading();
+
   useEffect(() => {
     (async function () {
+      setLoginDataLoading(true);
       try {
         const response = await getRequestToLoginData();
         loginDispatch(response.data);
         console.log('💓 Update Login Data');
       } catch (e) {
       } finally {
-        setIsLoading(false);
+        setLoginDataLoading(false);
       }
     })();
-  }, [loginDispatch]);
-
-  return {
-    isLoading,
-  };
+  }, [loginDispatch, setLoginDataLoading]);
 };
 
 export const useLogout = () => {

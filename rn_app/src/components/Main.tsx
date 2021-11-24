@@ -17,6 +17,7 @@ import {
 import {useLoginData} from '~/hooks/sessions';
 
 export const Main = React.memo(() => {
+  // ログインデータの取得
   useLoginData();
   // socket周り
   useSetupTalkRoomMessageSocket();

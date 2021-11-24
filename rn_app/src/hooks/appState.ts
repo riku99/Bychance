@@ -160,3 +160,21 @@ export const useSafeArea = () => {
     setSafeArea,
   };
 };
+
+export const useLoginDataLoading = () => {
+  const dispatch = useCustomDispatch();
+  const loginDataLoading = useSelector(
+    (state: RootState) => state.appReducer.loginDataLoading,
+  );
+  const setLoginDataLoading = useCallback(
+    (value: boolean) => {
+      dispatch(setAppState({loginDataLoading: value}));
+    },
+    [dispatch],
+  );
+
+  return {
+    loginDataLoading,
+    setLoginDataLoading,
+  };
+};

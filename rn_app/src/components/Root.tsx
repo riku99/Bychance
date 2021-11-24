@@ -20,7 +20,6 @@ const Root = React.memo(() => {
   useEffect(() => {
     console.log('🌍 Env is ' + Config.ENV);
     console.log('⭐️ login is ' + login);
-    console.log('my id is ' + id);
   }, [login, id]);
 
   useEffect(() => {
