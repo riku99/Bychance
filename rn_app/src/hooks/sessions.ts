@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import {Alert} from 'react-native';

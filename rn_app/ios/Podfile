@@ -6,6 +6,8 @@ platform :ios, '11.0'
 use_frameworks!
 
 def shared_pods
+  pod 'react-native-video/VideoCaching', :path => '../node_modules/react-native-video/react-native-video.podspec'
+  
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
