@@ -26,6 +26,7 @@ def shared_pods
 end
 
 target 'rn_app' do
+  shared_pods
   target 'rn_appTests' do
     inherit! :complete
     # Pods for testing

@@ -8,6 +8,7 @@ import {
   getRequestToFlashStamps,
   postRequestToFlashStamps,
 } from '~/apis/flashStamps';
+import {getIdToken} from '~/helpers/auth';
 
 const getFlashStampsKey = (id: number) => `/flashes/${id}/stamps`;
 export const useFlashStamps = ({flashId}: {flashId: number}) => {
@@ -63,7 +64,7 @@ export const useFlashStamps = ({flashId}: {flashId: number}) => {
 };
 
 export const usePrefetchStamps = () => {
-  const {addBearer, checkKeychain} = useApikit();
+  const {addBearer} = useApikit();
   const fetch = useCallback(
     async (id: number) => {
       try {
@@ -75,7 +76,7 @@ export const usePrefetchStamps = () => {
         return response.data;
       } catch (e) {}
     },
-    [addBearer, checkKeychain],
+    [addBearer],
   );
 
   const prefetch = useCallback(

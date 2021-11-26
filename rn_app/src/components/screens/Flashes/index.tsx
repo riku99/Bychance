@@ -110,9 +110,7 @@ export const FlashesPage = ({route, navigation}: Props) => {
   }, [data, navigation]);
 
   if (!data[0].length) {
-    return (
-      <View style={{backgroundColor: 'black', width: '100%', height: '100%'}} />
-    );
+    return <View style={styles.container} />;
   }
 
   return (

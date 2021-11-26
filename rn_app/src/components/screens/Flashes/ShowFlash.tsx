@@ -237,10 +237,12 @@ export const ShowFlash = React.memo(
 
     const {prefetch} = usePrefetchStamps();
     useEffect(() => {
-      const ids = flashes.map((f) => f.id);
-      ids.forEach((i) => {
-        prefetch(i);
-      });
+      flashes
+        .map((f) => f.id)
+        .forEach((i) => {
+          console.log('prefetch' + i);
+          prefetch(i);
+        });
     }, [prefetch, flashes]);
 
     const scrollRef = useRef(false);
@@ -411,6 +413,8 @@ export const ShowFlash = React.memo(
     };
 
     const onVideoLoad = (e: OnLoadData) => {
+      console.log('complete load');
+      console.log(currentFlash.id);
       if (!isDisplayed) {
         setIsPaused(true);
         setShowLoading(false);
