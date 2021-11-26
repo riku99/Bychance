@@ -6,9 +6,9 @@ import {showMessage} from 'react-native-flash-message';
 import useSWR from 'swr';
 import messaging from '@react-native-firebase/messaging';
 import {useNavigation} from '@react-navigation/native';
+import Config from 'react-native-config';
 
 import {useApikit} from './apikit';
-import {origin} from '~/constants/url';
 import {useMyId} from './users';
 import {useCustomDispatch} from './stores';
 import {UserAvatar} from '~/components/utils/Avatar';
@@ -143,7 +143,7 @@ export const useSetupTalkRoomMessageSocket = () => {
   // 初回レンダリングではonChangeが実行されないのでここでサブスクリプション
   useEffect(() => {
     if (id) {
-      setSocket(io(`${origin}/talkRoomMessages`, {query: {id}}));
+      setSocket(io(`${Config.ORIGIN}/talkRoomMessages`, {query: {id}}));
     }
   }, [id]);
 
@@ -161,7 +161,7 @@ export const useSetupTalkRoomMessageSocket = () => {
     const onChange = (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active') {
         if (id && !socket) {
-          setSocket(io(`${origin}/talkRoomMessages`, {query: {id}}));
+          setSocket(io(`${Config.ORIGIN}/talkRoomMessages`, {query: {id}}));
         }
       } else {
         if (socket) {
