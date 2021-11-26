@@ -1,29 +1,12 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Emoji from 'react-native-emoji';
 
 import {RootNavigationProp} from '~/navigations/Root';
 import {useCreateTalkRoom} from '~/hooks/talkRooms';
-
-const gradientConfig: {
-  colors: string[];
-  start: {x: number; y: number};
-  end: {x: number; y: number};
-  baseStyle: ViewStyle;
-} = {
-  colors: ['#ff9791', '#f7b57c'],
-  start: {x: 0.0, y: 1.0},
-  end: {x: 1.0, y: 1.0},
-  baseStyle: {alignItems: 'center', justifyContent: 'center'},
-};
+import {defaultTheme} from '~/theme';
 
 type Props = {
   id: string;
@@ -52,9 +35,9 @@ export const SendMessageButton = React.memo(({id}: Props) => {
     <View>
       <TouchableOpacity onPress={onPress} activeOpacity={1}>
         <LinearGradient
-          colors={gradientConfig.colors}
-          start={gradientConfig.start}
-          end={gradientConfig.end}
+          colors={defaultTheme.mainButtonGradient.colors}
+          start={defaultTheme.mainButtonGradient.start}
+          end={defaultTheme.mainButtonGradient.end}
           style={styles.gradationContainer}>
           <Text style={styles.title}>メッセージを送る</Text>
           <Emoji name="hatched_chick" style={{marginLeft: 2}} />

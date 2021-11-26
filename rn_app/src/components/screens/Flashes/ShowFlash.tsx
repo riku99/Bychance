@@ -235,16 +235,6 @@ export const ShowFlash = React.memo(
       progressAnimation,
     ]);
 
-    const {prefetch} = usePrefetchStamps();
-    useEffect(() => {
-      flashes
-        .map((f) => f.id)
-        .forEach((i) => {
-          console.log('prefetch' + i);
-          prefetch(i);
-        });
-    }, [prefetch, flashes]);
-
     const scrollRef = useRef(false);
 
     //スクロールした時の処理;
@@ -362,14 +352,24 @@ export const ShowFlash = React.memo(
       }
     };
 
+    useEffect(() => {
+      // console.log(flashes.length);
+    }, [flashes]);
+
+    const {prefetch} = usePrefetchStamps();
     // ソースが切り替わった場合
     useEffect(() => {
+      if (flashes[currentProgressBar.current + 1]) {
+        // console.log('prefetch' + flashes[currentProgressBar.current + 1].id);
+        fetch(flashes[currentProgressBar.current + 1].source);
+        prefetch(flashes[currentProgressBar.current + 1].id);
+      }
       if (loadingTimeout.current) {
         clearTimeout(loadingTimeout.current);
       }
       setLoading(true);
       _loading.current = true;
-    }, [currentFlash.id]);
+    }, [currentFlash.id, flashes, prefetch]);
 
     const onImageLoadStart = () => {
       if (loadingTimeout.current) {
@@ -413,8 +413,6 @@ export const ShowFlash = React.memo(
     };
 
     const onVideoLoad = (e: OnLoadData) => {
-      console.log('complete load');
-      console.log(currentFlash.id);
       if (!isDisplayed) {
         setIsPaused(true);
         setShowLoading(false);
