@@ -352,16 +352,10 @@ export const ShowFlash = React.memo(
       }
     };
 
-    useEffect(() => {
-      // console.log(flashes.length);
-    }, [flashes]);
-
     const {prefetch} = usePrefetchStamps();
     // ソースが切り替わった場合
     useEffect(() => {
       if (flashes[currentProgressBar.current + 1]) {
-        // console.log('prefetch' + flashes[currentProgressBar.current + 1].id);
-        fetch(flashes[currentProgressBar.current + 1].source);
         prefetch(flashes[currentProgressBar.current + 1].id);
       }
       if (loadingTimeout.current) {
@@ -369,7 +363,7 @@ export const ShowFlash = React.memo(
       }
       setLoading(true);
       _loading.current = true;
-    }, [currentFlash.id, flashes, prefetch]);
+    }, [currentFlash.id, prefetch]); // eslint-disable-line
 
     const onImageLoadStart = () => {
       if (loadingTimeout.current) {

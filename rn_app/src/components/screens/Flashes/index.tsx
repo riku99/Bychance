@@ -29,11 +29,6 @@ export const FlashesPage = ({route, navigation}: Props) => {
     shallowEqual,
   );
 
-  useEffect(() => {
-    console.log('cahneg data');
-    console.log(data.length);
-  }, [data]);
-
   const flatListRef = useRef<FlatList>(null);
 
   // FlatListに渡される複数のアイテムのうち、どのアイテムが実際に画面に表示されているのかを管理るためのオブジェクト
