@@ -12,7 +12,7 @@ export const Auth = () => {
 
   return (
     <View style={styles.container}>
-      <Logo height={100} width={CONTENT_WIDTH} style={styles.logoContainer} />
+      <Logo height={'10%'} width={CONTENT_WIDTH} style={styles.logoContainer} />
 
       <View style={styles.loginContainer}>
         <View style={styles.descContainer}>
@@ -34,7 +34,7 @@ export const Auth = () => {
           activeOpacity={1}
         />
 
-        <View style={[styles.descContainer, {marginTop: 90}]}>
+        <View style={[styles.descContainer, {marginTop: '24%'}]}>
           <View style={styles.descLine} />
           <Text style={styles.desc}>アカウントをお持ちの方</Text>
           <View style={styles.descLine} />
@@ -80,11 +80,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginContainer: {
-    marginTop: '25%',
+    marginTop: '20%',
     width: CONTENT_WIDTH,
   },
   logoContainer: {
-    marginTop: '45%',
+    marginTop: '33%',
     alignSelf: 'center',
   },
   descContainer: {
