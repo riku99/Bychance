@@ -122,9 +122,9 @@ export const useGetTalkRoomData = () => {
     }
   }, [id, dispatch]);
 
-  useEffect(() => {
-    getTalkRoomData();
-  }, [getTalkRoomData]);
+  // useEffect(() => {
+  //   getTalkRoomData();
+  // }, [getTalkRoomData]);
 
   useEffect(() => {
     const onActive = (nextAppState: AppStateStatus) => {

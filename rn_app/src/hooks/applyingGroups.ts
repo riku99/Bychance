@@ -168,16 +168,6 @@ export const useAppliedGropusOnActive = () => {
   const {setGroupBadge} = useGroupBadge();
 
   useEffect(() => {
-    const _fetch = async () => {
-      const response = await getRequestToAppliedGroups();
-      if (response.data.length) {
-        setGroupBadge(true);
-      }
-    };
-    _fetch();
-  }, [setGroupBadge]);
-
-  useEffect(() => {
     const onActive = async (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active') {
         const response = await getRequestToAppliedGroups();
