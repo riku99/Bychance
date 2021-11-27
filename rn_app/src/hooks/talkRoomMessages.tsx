@@ -140,13 +140,6 @@ export const useSetupTalkRoomMessageSocket = () => {
   const [socket, setSocket] = useState<Socket>();
   const dispatch = useCustomDispatch();
 
-  // 初回レンダリングではonChangeが実行されないのでここでサブスクリプション
-  useEffect(() => {
-    if (id) {
-      setSocket(io(`${Config.ORIGIN}/talkRoomMessages`, {query: {id}}));
-    }
-  }, [id]);
-
   useEffect(() => {
     if (!id && socket) {
       // @ts-ignore

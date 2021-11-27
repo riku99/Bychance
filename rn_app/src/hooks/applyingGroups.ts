@@ -2,9 +2,9 @@ import {useCallback, useEffect, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import io, {Socket} from 'socket.io-client';
 import {showMessage} from 'react-native-flash-message';
+import Config from 'react-native-config';
 
 import {useMyId} from './users';
-import {origin} from '~/constants/url';
 import {useApikit} from './apikit';
 import {
   ResponseForGetAppliedGroups,
@@ -24,13 +24,6 @@ export const useSetupApplyingGroupSocket = () => {
   const [socket, setSocket] = useState<Socket>();
   const {setGroupBadge} = useGroupBadge();
 
-  // 初回レンダリングではonChangeが実行されないのでここでサブスクリプション
-  useEffect(() => {
-    if (id) {
-      setSocket(io(`${origin}/applying_group`, {query: {id}}));
-    }
-  }, [id]);
-
   useEffect(() => {
     if (!id && socket) {
       // @ts-ignore
@@ -45,10 +38,10 @@ export const useSetupApplyingGroupSocket = () => {
     const onChange = (nextAppEvent: AppStateStatus) => {
       if (nextAppEvent === 'active') {
         if (id && !socket) {
-          setSocket(io(`${origin}/applying_group`, {query: {id}}));
+          setSocket(io(`${Config.ORIGIN}/applying_group`, {query: {id}}));
         }
       } else {
-        if (socket && nextAppEvent !== 'unknown') {
+        if (socket) {
           // @ts-ignore
           socket.removeAllListeners();
           socket.disconnect();
