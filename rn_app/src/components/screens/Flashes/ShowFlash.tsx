@@ -91,6 +91,8 @@ export const ShowFlash = React.memo(
         : 0,
     );
 
+    const nextItem = useRef(flashes[currentProgressBar.current + 1]);
+
     const longPress = useRef(false);
     const videoDuration = useRef<number | undefined>(undefined);
     const videoRef = useRef<Video>(null);
@@ -355,8 +357,9 @@ export const ShowFlash = React.memo(
     const {prefetch} = usePrefetchStamps();
     // ソースが切り替わった場合
     useEffect(() => {
-      if (flashes[currentProgressBar.current + 1]) {
-        prefetch(flashes[currentProgressBar.current + 1].id);
+      nextItem.current = flashes[currentProgressBar.current + 1];
+      if (nextItem.current) {
+        prefetch(nextItem.current.id);
       }
       if (loadingTimeout.current) {
         clearTimeout(loadingTimeout.current);
@@ -459,26 +462,36 @@ export const ShowFlash = React.memo(
                       onLoad={onImageLoad}
                     />
                   ) : (
-                    <VideoWithThumbnail
-                      video={{
-                        ref: videoRef,
-                        source: {
-                          uri: currentFlash.source,
-                        },
-                        paused: isPaused,
-                        onLoadStart: onVideoLoadStart,
-                        onLoad: (e) => onVideoLoad(e),
-                        onProgress: ({currentTime}) => {
-                          onVideoProgress({currentTime});
-                        },
-                        onSeek: onVideoSeek,
-                        ignoreSilentSwitch: 'ignore',
-                        resizeMode: 'contain',
-                      }}
-                      thumbnail={{
-                        resizeMode: 'contain',
-                      }}
-                    />
+                    <>
+                      <VideoWithThumbnail
+                        video={{
+                          ref: videoRef,
+                          source: {
+                            uri: currentFlash.source,
+                          },
+                          paused: isPaused,
+                          onLoadStart: onVideoLoadStart,
+                          onLoad: (e) => onVideoLoad(e),
+                          onProgress: ({currentTime}) => {
+                            onVideoProgress({currentTime});
+                          },
+                          onSeek: onVideoSeek,
+                          ignoreSilentSwitch: 'ignore',
+                          resizeMode: 'contain',
+                        }}
+                        thumbnail={{
+                          resizeMode: 'contain',
+                        }}
+                      />
+                      {/* キャッシュ作るためにpreloadしたかったが今のところそのためのメソッドはなさそうなのでコンポーネント内で読み込む */}
+                      {nextItem.current &&
+                        nextItem.current.sourceType === 'video' && (
+                          <Video
+                            source={{uri: nextItem.current.source}}
+                            style={{width: 0, height: 0}}
+                          />
+                        )}
+                    </>
                   )}
                 </TouchableOpacity>
               </WideRangeSourceContainer>
