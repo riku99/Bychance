@@ -161,8 +161,7 @@ export const NearbyUsersScreen = React.memo(() => {
   useEffect(() => {
     const preData = JSON.parse(preloadUriGroup) as string[][];
     preData.forEach((_data) => {
-      const formated = _data.map((d) => ({uri: d}));
-      FastImage.preload(formated);
+      FastImage.preload([{uri: _data[0]}]);
     });
   }, [preloadUriGroup]);
 

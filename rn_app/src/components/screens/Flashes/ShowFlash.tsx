@@ -27,6 +27,7 @@ import {Stamps} from './Stamps';
 import {useViewed} from '~/hooks/flashes';
 import {usePauseFlashPregress} from '~/hooks/appState';
 import {usePrefetchStamps} from '~/hooks/flashStamps';
+import {getThumbnailUrl} from '~/helpers/video';
 
 type Props = {
   flashes: {
@@ -354,19 +355,24 @@ export const ShowFlash = React.memo(
       }
     };
 
-    const {prefetch} = usePrefetchStamps();
+    const {prefetch: prefetchStamps} = usePrefetchStamps();
     // ソースが切り替わった場合
     useEffect(() => {
       nextItem.current = flashes[currentProgressBar.current + 1];
       if (nextItem.current) {
-        prefetch(nextItem.current.id);
+        prefetchStamps(nextItem.current.id);
+        const uri =
+          nextItem.current.sourceType === 'image'
+            ? nextItem.current.source
+            : getThumbnailUrl(nextItem.current.source);
+        FastImage.preload([{uri}]);
       }
       if (loadingTimeout.current) {
         clearTimeout(loadingTimeout.current);
       }
       setLoading(true);
       _loading.current = true;
-    }, [currentFlash.id, prefetch]); // eslint-disable-line
+    }, [currentFlash.id, prefetchStamps]); // eslint-disable-line
 
     const onImageLoadStart = () => {
       if (loadingTimeout.current) {
