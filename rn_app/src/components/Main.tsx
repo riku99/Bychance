@@ -8,7 +8,7 @@ import {
 } from '~/hooks/pushNotification';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
-import {useGetTalkRoomData} from '~/hooks/talkRooms';
+import {useGetTalkRoomDataOnActive} from '~/hooks/talkRooms';
 import {useGetIsDisplayedToOtherUsersOnActive} from '~/hooks/users';
 import {
   useSetupApplyingGroupSocket,
@@ -28,7 +28,7 @@ export const Main = React.memo(() => {
   // 位置情報周り
   useBackgroundGeolocation();
   // // アクティブになるたびにトークルーム更新とか
-  useGetTalkRoomData();
+  useGetTalkRoomDataOnActive();
   // アクティブになるたびにisDisplayedToOtherUsersを更新
   useGetIsDisplayedToOtherUsersOnActive();
   // アクティブになるたびに申請されているグループの確認

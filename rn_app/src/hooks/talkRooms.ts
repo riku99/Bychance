@@ -83,12 +83,11 @@ export const useDeleteTalkRoom = () => {
 
 export const useGetTalkRoomData = () => {
   const {dispatch} = useApikit();
-  const id = useMyId();
 
-  const getTalkRoomData = useCallback(async () => {
-    if (id) {
+  const getTalkRoomData = useCallback(
+    async ({id}: {id: string}) => {
       try {
-        const response = await getRequestToTalkRooms({id});
+        const response = await getRequestToTalkRooms();
 
         const storedData = response.data.map((d) => {
           const partner = d.sender.id === id ? d.recipient : d.sender;
@@ -115,21 +114,24 @@ export const useGetTalkRoomData = () => {
 
         dispatch(setTalkRooms(storedData));
         dispatch(upsertUsers(_userData));
-      } catch (e) {
-        // ログイン後に1回エラー出る場合がある(根本的な原因は不明)。これに対応するためにこの処理ではエラーハンドルしない
-        // handleApiError(e);
-      }
-    }
-  }, [id, dispatch]);
+      } catch (e) {}
+    },
+    [dispatch],
+  );
 
-  // useEffect(() => {
-  //   getTalkRoomData();
-  // }, [getTalkRoomData]);
+  return {
+    getTalkRoomData,
+  };
+};
+
+export const useGetTalkRoomDataOnActive = () => {
+  const id = useMyId();
+  const {getTalkRoomData} = useGetTalkRoomData();
 
   useEffect(() => {
     const onActive = (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active') {
-        getTalkRoomData();
+        getTalkRoomData({id});
       }
     };
     AppState.addEventListener('change', onActive);
@@ -137,7 +139,7 @@ export const useGetTalkRoomData = () => {
     return () => {
       AppState.removeEventListener('change', onActive);
     };
-  }, [getTalkRoomData]);
+  }, [getTalkRoomData, id]);
 };
 
 export const useSelectAllRooms = () => {

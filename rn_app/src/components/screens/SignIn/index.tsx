@@ -8,6 +8,8 @@ import {EmailForm, PasswordForm} from '~/components/utils/Forms';
 import {defaultTheme} from '~/theme';
 import {useLogin} from '~/hooks/sessions';
 import {useToastLoading} from '~/hooks/appState';
+import {useGetTalkRoomData} from '~/hooks/talkRooms';
+import {useIsDisplayedToOtherUsers} from '~/hooks/users';
 
 export const SignIn = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignIn'>>();
@@ -20,10 +22,16 @@ export const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {login} = useLogin();
+  const {getTalkRoomData} = useGetTalkRoomData();
+  const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
   const {setToastLoading} = useToastLoading();
   const onButtonPress = async () => {
     setToastLoading(true);
-    await login({email, password});
+    const result = await login({email, password});
+    if (result) {
+      getTalkRoomData({id: result.data.user.id});
+      getIsDisplayedToOtherUsers();
+    }
     setToastLoading(false);
   };
 

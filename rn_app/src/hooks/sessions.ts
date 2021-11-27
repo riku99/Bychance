@@ -68,6 +68,7 @@ export const useLogin = () => {
           const response = await getRequestToLoginData();
           loginDispatch(response.data);
           console.log('💓 Update Login Data');
+          return response;
         } catch (e) {
           Alert.alert('エラー', '何かしらのエラーが発生しました');
         }

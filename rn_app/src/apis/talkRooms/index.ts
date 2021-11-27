@@ -22,10 +22,10 @@ export const deleteRequestToTalkRooms = async ({
   );
 };
 
-export const getRequestToTalkRooms = async ({id}: {id: string}) => {
+export const getRequestToTalkRooms = async () => {
   const idToken = await getIdToken();
   return await axios.get<ResponseForGetTalkRoomData>(
-    `${baseUrl}/users/${id}/talk_rooms`,
+    `${baseUrl}/talk_rooms`,
     addBearer(idToken),
   );
 };
