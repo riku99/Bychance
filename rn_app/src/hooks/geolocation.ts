@@ -37,7 +37,7 @@ export const useBackgroundGeolocation = () => {
       BackgroundGeolocation.ready(
         {
           desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-          distanceFilter: 10, // イベントが発生するのに必要な最低距離 本番でもっと距離大きくする
+          distanceFilter: 30, // イベントが発生するのに必要な最低距離 本番でもっと距離大きくする
           stopTimeout: 1, // デバイスの動きが実際に止まってから Stationary になるまでの分数。この分数より前にデバイスの動きが検知されたら Moving のまま。
           debug: false,
           stopOnTerminate: false,
@@ -51,7 +51,7 @@ export const useBackgroundGeolocation = () => {
             cancelButton: 'キャンセル',
             settingsButton: '設定画面へ',
           },
-          // logLevel: BackgroundGeolocation.LOG_LEVEL_OFF, 本番ではコメントはずす
+          logLevel: BackgroundGeolocation.LOG_LEVEL_OFF, // 本番ではコメントはずす
         },
         (state) => {
           if (!state.enabled) {
