@@ -32,7 +32,7 @@ export const UserBackGroundView = React.memo(({route}: Props) => {
             video={{
               source: {uri: url},
               repeat: true,
-              ignoreSilentSwitch: 'ignore',
+              ignoreSilentSwitch: 'obey',
               resizeMode,
             }}
             thumbnail={{

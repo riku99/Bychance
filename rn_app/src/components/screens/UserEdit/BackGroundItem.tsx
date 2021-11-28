@@ -25,9 +25,9 @@ export const BackGroundItem = React.memo(({url, type}: Props) => {
       <Video
         source={{uri: url}}
         style={styles.source}
-        repeat={true}
         resizeMode="cover"
         ignoreSilentSwitch="obey"
+        muted
       />
     );
   }

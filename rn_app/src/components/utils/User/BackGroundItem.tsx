@@ -68,8 +68,8 @@ export const BackGroundItem = React.memo(({data}: Props) => {
             video={{
               source: {uri: data.url},
               resizeMode: 'cover',
-              ignoreSilentSwitch: 'obey',
               paused: videoPaused,
+              muted: true,
             }}
             thumbnail={{
               resizeMode: 'cover',
