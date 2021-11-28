@@ -3,12 +3,12 @@ import {Alert} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 import {RNToasty} from 'react-native-toasty';
+import FS from 'react-native-fs';
 
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
 import {useVideoEditDescription} from '~/hooks/experiences';
 
-const takePhotoOptions = {quality: 0.5, base64: true};
 const takeVideoOptions = {
   quality: RNCamera.Constants.VideoQuality['720p'],
   maxDuration: 15,
@@ -57,7 +57,7 @@ export const TakeFlashScreen = React.memo(() => {
 
   const pickImageOrVideo = useCallback(() => {
     setLoading(true);
-    launchImageLibrary({mediaType: 'mixed', quality: 1}, (response) => {
+    launchImageLibrary({mediaType: 'mixed', quality: 0.7}, async (response) => {
       if (response.didCancel) {
         setLoading(false);
         return;
@@ -73,10 +73,13 @@ export const TakeFlashScreen = React.memo(() => {
       }
 
       if (_type) {
-        const size = asset.fileSize;
-        if (!size || size > 5000000) {
+        // const size = asset.fileSize;
+        const {size} = await FS.stat(uri);
+        console.log(uri);
+        console.log(size);
+        if (!size) {
           RNToasty.Show({
-            title: '5MB以下の画像にしてください',
+            title: '8MB以下の画像にしてください',
             position: 'center',
           });
           setLoading(false);

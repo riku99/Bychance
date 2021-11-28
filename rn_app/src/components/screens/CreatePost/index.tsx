@@ -106,7 +106,7 @@ export const CreatePost = ({navigation}: Props) => {
 
   useEffect(() => {
     if (isFocused) {
-      launchImageLibrary({quality: 1, mediaType: 'mixed'}, (response) => {
+      launchImageLibrary({quality: 0.7, mediaType: 'mixed'}, (response) => {
         if (response.didCancel) {
           navigation.goBack();
           return;
@@ -122,9 +122,9 @@ export const CreatePost = ({navigation}: Props) => {
         }
 
         if (_type) {
-          if (!asset.fileSize || asset.fileSize > 5000000) {
+          if (!asset.fileSize || asset.fileSize > 8000000) {
             RNToasty.Show({
-              title: '5MB以下の画像にしてください',
+              title: '8MB以下の画像にしてください',
               position: 'center',
             });
             navigation.goBack();
