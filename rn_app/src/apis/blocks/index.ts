@@ -2,7 +2,6 @@ import {axios, addBearer, baseUrl, getIdToken} from '../export';
 
 export const postRequestToBlocks = async ({blockTo}: {blockTo: string}) => {
   const idToken = await getIdToken();
-
   await axios.post(`${baseUrl}/users/block`, {blockTo}, addBearer(idToken));
 };
 

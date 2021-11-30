@@ -6,6 +6,7 @@ import {useCreateBlock, useDeleteBlock} from './block';
 import {useUserBlock} from './users';
 import {useRemovePostsAndFlashesDispatch} from './stores';
 import {useCreateApplyingGroup} from './applyingGroups';
+import {useVideoCallingToken} from './videoCalling';
 
 export const useUserPageModalList = ({
   userId,
@@ -18,10 +19,9 @@ export const useUserPageModalList = ({
   const {deleteBlock} = useDeleteBlock();
   const _block = useUserBlock(userId);
   const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId});
-
   const toast = useToast();
-
   const {applyGroup} = useCreateApplyingGroup();
+  const {createToken} = useVideoCallingToken();
 
   const list = useMemo(() => {
     const blockText = {
@@ -34,10 +34,17 @@ export const useUserPageModalList = ({
     };
 
     const groupText = {
-      title: 'グループになることを申請する',
+      title: 'グループ申請してよろしいですか?',
       alertTitle: 'グループ申請しますか?',
       alertSubTitle: '',
       alertButtonText: '申請する',
+    };
+
+    const videoCallingText = {
+      title: 'ビデオ通話をかけてよろしいですか?',
+      alertTitle: 'ビデオ通話をかけてよろしいですか?',
+      alertSubTitle: '',
+      alertButtonText: 'かける',
     };
 
     const onBlockPress = async () => {
@@ -60,6 +67,9 @@ export const useUserPageModalList = ({
         onPress: () => {
           Alert.alert(groupText.title, groupText.alertSubTitle, [
             {
+              text: 'キャンセル',
+            },
+            {
               text: groupText.alertButtonText,
               style: 'destructive',
               onPress: async () => {
@@ -72,10 +82,31 @@ export const useUserPageModalList = ({
                 }
               },
             },
-            {
-              text: 'キャンセル',
-            },
           ]);
+        },
+      },
+      {
+        title: 'ビデオ通話',
+        onPress: async () => {
+          Alert.alert(
+            videoCallingText.alertTitle,
+            videoCallingText.alertSubTitle,
+            [
+              {
+                text: 'キャンセル',
+              },
+              {
+                text: videoCallingText.alertButtonText,
+                style: 'destructive',
+                onPress: async () => {
+                  await createToken({
+                    channelName: 'sample',
+                    otherUserId: userId,
+                  });
+                },
+              },
+            ],
+          );
         },
       },
       {
@@ -85,12 +116,12 @@ export const useUserPageModalList = ({
           if (userId) {
             Alert.alert(blockText.alertTitle, blockText.alertSubTitle, [
               {
+                text: 'キャンセル',
+              },
+              {
                 text: blockText.alertButtonText,
                 style: 'destructive',
                 onPress: onBlockPress,
-              },
-              {
-                text: 'キャンセル',
               },
             ]);
           }
@@ -106,6 +137,7 @@ export const useUserPageModalList = ({
     applyGroup,
     toast,
     closeModal,
+    createToken,
   ]);
 
   return {
