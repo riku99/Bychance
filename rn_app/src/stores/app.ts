@@ -13,6 +13,8 @@ type InitialState = {
     top: number;
   };
   loginDataLoading: boolean;
+  videoCalling: boolean;
+  gettingCall: boolean;
 };
 
 const initialState: InitialState = {
@@ -27,6 +29,8 @@ const initialState: InitialState = {
     top: 0,
   },
   loginDataLoading: false,
+  videoCalling: false,
+  gettingCall: false,
 };
 
 const appSlice = createSlice({

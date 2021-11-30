@@ -4,10 +4,20 @@ import {useSafeArea} from '~/hooks/appState';
 import {useMyAvatar} from '~/hooks/users';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {Button} from 'react-native-elements';
+import {useVideoCalling} from '~/hooks/appState';
 
 export const GetCall = () => {
   const {top} = useSafeArea();
   const image = useMyAvatar();
+  const {setVideoCalling} = useVideoCalling();
+
+  const onCallPress = () => {
+    setVideoCalling(true);
+  };
+
+  const onCallEndPress = () => {
+    setVideoCalling(false);
+  };
 
   return (
     <View style={[styles.container, {top}]}>
@@ -16,10 +26,14 @@ export const GetCall = () => {
         <Button
           icon={{name: 'call', color: 'white', size: 28}}
           buttonStyle={[styles.button, {backgroundColor: '#05f55d'}]}
+          activeOpacity={1}
+          onPress={onCallPress}
         />
         <Button
           icon={{name: 'call-end', color: 'white', size: 28}}
           buttonStyle={[styles.button, {backgroundColor: '#f51505'}]}
+          activeOpacity={1}
+          onPress={onCallEndPress}
         />
       </View>
       <UserAvatar

@@ -9,7 +9,6 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import {Button} from 'react-native-elements';
-
 import {Tabs} from './Tab';
 import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackParamList, FlashesStackScreen} from './Flashes';

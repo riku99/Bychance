@@ -16,6 +16,7 @@ import {
 import {useLoginData} from '~/hooks/sessions';
 import {useSetupVideoCallingSocket} from '~/hooks/videoCalling';
 import {GetCall} from '~/components/utils/GetCall';
+import {useVideoCalling, useGettingCall} from '~/hooks/appState';
 
 export const Main = React.memo(() => {
   // ログインデータの取得
@@ -36,10 +37,23 @@ export const Main = React.memo(() => {
   // アクティブになるたびに申請されているグループの確認
   useAppliedGropusOnActive();
 
+  const {gettingCall} = useGettingCall();
+  const {videoCalling} = useVideoCalling();
+
   return (
     <View style={styles.container}>
       <RootStackScreen />
-      <GetCall />
+      {videoCalling && (
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'gray',
+            position: 'absolute',
+          }}
+        />
+      )}
+      {gettingCall && <GetCall />}
     </View>
   );
 });

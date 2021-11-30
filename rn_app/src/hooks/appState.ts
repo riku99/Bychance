@@ -178,3 +178,39 @@ export const useLoginDataLoading = () => {
     setLoginDataLoading,
   };
 };
+
+export const useVideoCalling = () => {
+  const dispatch = useCustomDispatch();
+  const videoCalling = useSelector(
+    (state: RootState) => state.appReducer.videoCalling,
+  );
+  const setVideoCalling = useCallback(
+    (value: boolean) => {
+      dispatch(setAppState({videoCalling: value}));
+    },
+    [dispatch],
+  );
+
+  return {
+    videoCalling,
+    setVideoCalling,
+  };
+};
+
+export const useGettingCall = () => {
+  const dispatch = useCustomDispatch();
+  const gettingCall = useSelector(
+    (state: RootState) => state.appReducer.gettingCall,
+  );
+  const setGettingCall = useCallback(
+    (value: boolean) => {
+      dispatch(setAppState({gettingCall: value}));
+    },
+    [dispatch],
+  );
+
+  return {
+    gettingCall,
+    setGettingCall,
+  };
+};
