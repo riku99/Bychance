@@ -15,6 +15,7 @@ import {
   useAppliedGropusOnActive,
 } from '~/hooks/applyingGroups';
 import {useLoginData} from '~/hooks/sessions';
+import {useSetupVideoCallingSocket} from '~/hooks/videoCalling';
 
 export const Main = React.memo(() => {
   // ログインデータの取得
@@ -22,6 +23,7 @@ export const Main = React.memo(() => {
   // socket周り
   useSetupTalkRoomMessageSocket();
   useSetupApplyingGroupSocket();
+  useSetupVideoCallingSocket();
   // push通知周り
   usePushNotificationReqest();
   useRegisterDeviceToken();
