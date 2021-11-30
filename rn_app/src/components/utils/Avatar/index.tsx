@@ -1,8 +1,7 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {Pressable, StyleProp} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
-import {CircularProgressGradient} from '~/components/utils/CircularProgressGradient';
 
 import {defaultTheme} from '~/theme';
 
@@ -46,7 +45,9 @@ export const UserAvatar = React.memo(
     }
 
     return (
-      <Pressable style={{borderRadius: sizeNumber}} onPress={onPress}>
+      <Pressable
+        style={[{borderRadius: sizeNumber}, containerStyle]}
+        onPress={onPress}>
         <FastImage
           source={{uri: image}}
           style={[
@@ -56,7 +57,6 @@ export const UserAvatar = React.memo(
               borderRadius: sizeNumber,
               backgroundColor: defaultTheme.imageBackGroundColor,
             },
-            containerStyle,
           ]}
         />
       </Pressable>

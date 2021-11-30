@@ -1,6 +1,5 @@
 export const defaultTheme = {
-  // pinkGrapefruit: '#ff6e7f', // primary
-  pinkGrapefruit: '#FBAB7E',
+  pinkGrapefruit: '#FBAB7E', // primary
   darkGray: '#545454', // secondary
   blueText: '#4fa9ff',
   imageBackGroundColor: '#e8e8e8',

@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-
 import {RootStackScreen} from '~/navigations/Root';
 import {
   usePushNotificationReqest,
@@ -16,6 +15,7 @@ import {
 } from '~/hooks/applyingGroups';
 import {useLoginData} from '~/hooks/sessions';
 import {useSetupVideoCallingSocket} from '~/hooks/videoCalling';
+import {GetCall} from '~/components/utils/GetCall';
 
 export const Main = React.memo(() => {
   // ログインデータの取得
@@ -39,6 +39,7 @@ export const Main = React.memo(() => {
   return (
     <View style={styles.container}>
       <RootStackScreen />
+      <GetCall />
     </View>
   );
 });
