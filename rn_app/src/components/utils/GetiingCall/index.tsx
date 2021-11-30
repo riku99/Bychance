@@ -1,26 +1,50 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {useSafeArea} from '~/hooks/appState';
 import {useMyAvatar} from '~/hooks/users';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {Button} from 'react-native-elements';
-import {useVideoCalling} from '~/hooks/appState';
+import {useVideoCalling, useGettingCall} from '~/hooks/appState';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated';
 
-export const GetCall = () => {
+export const GetiingCall = () => {
   const {top} = useSafeArea();
   const image = useMyAvatar();
   const {setVideoCalling} = useVideoCalling();
+  const {setGettingCall} = useGettingCall();
+  const initialX = useSharedValue(-400);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateY: initialX.value}],
+    };
+  });
+
+  useEffect(() => {
+    initialX.value = withTiming(0, {duration: 500});
+  }, [initialX]);
 
   const onCallPress = () => {
     setVideoCalling(true);
   };
 
-  const onCallEndPress = () => {
+  const end = () => {
     setVideoCalling(false);
+    setGettingCall(false);
+  };
+
+  const onCallEndPress = () => {
+    initialX.value = withTiming(-400, {duration: 500}, () => {
+      runOnJS(end)();
+    });
   };
 
   return (
-    <View style={[styles.container, {top}]}>
+    <Animated.View style={[animatedStyle, styles.container, {top}]}>
       <Text style={styles.name}>Riku</Text>
       <View style={styles.buttonGroup}>
         <Button
@@ -41,7 +65,7 @@ export const GetCall = () => {
         size={54}
         containerStyle={styles.imageContainer}
       />
-    </View>
+    </Animated.View>
   );
 };
 

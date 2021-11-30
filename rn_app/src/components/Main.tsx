@@ -15,7 +15,7 @@ import {
 } from '~/hooks/applyingGroups';
 import {useLoginData} from '~/hooks/sessions';
 import {useSetupVideoCallingSocket} from '~/hooks/videoCalling';
-import {GetCall} from '~/components/utils/GetCall';
+import {GetiingCall} from '~/components/utils/GetiingCall';
 import {useVideoCalling, useGettingCall} from '~/hooks/appState';
 
 export const Main = React.memo(() => {
@@ -53,7 +53,7 @@ export const Main = React.memo(() => {
           }}
         />
       )}
-      {gettingCall && <GetCall />}
+      {gettingCall && <GetiingCall />}
     </View>
   );
 });

@@ -6,6 +6,7 @@ import {useMyId} from './users';
 import io, {Socket} from 'socket.io-client';
 import {AppState, AppStateStatus} from 'react-native';
 import Config from 'react-native-config';
+import {useGettingCall} from '~/hooks/appState';
 
 export const useVideoCallingToken = () => {
   const {handleApiError} = useApikit();
@@ -30,6 +31,7 @@ export const useVideoCallingToken = () => {
 export const useSetupVideoCallingSocket = () => {
   const id = useMyId();
   const [socket, setSocket] = useState<Socket>();
+  const {setGettingCall} = useGettingCall();
 
   useEffect(() => {
     if (!id && socket) {
@@ -67,9 +69,10 @@ export const useSetupVideoCallingSocket = () => {
     if (socket) {
       socket.on('startCall', () => {
         console.log('📞 get call!');
+        setGettingCall(true);
       });
     }
-  }, [socket]);
+  }, [socket, setGettingCall]);
 
   useEffect(() => {
     if (socket) {
