@@ -35,10 +35,30 @@ export const useVideoCallingToken = () => {
   };
 };
 
+export const useVideoCallingState = () => {
+  const dispatch = useCustomDispatch();
+  const videoCallingState = useSelector(
+    (state: RootState) => state.videoCallingReducer,
+    shallowEqual,
+  );
+  const setVideoCallingState = useCallback(
+    (data: VideoCallingState) => {
+      dispatch(_setVideoCallingState(data));
+    },
+    [dispatch],
+  );
+
+  return {
+    videoCallingState,
+    setVideoCallingState,
+  };
+};
+
 export const useSetupVideoCallingSocket = () => {
   const id = useMyId();
   const [socket, setSocket] = useState<Socket>();
   const {setGettingCall} = useGettingCall();
+  const {setVideoCallingState} = useVideoCallingState();
 
   useEffect(() => {
     if (!id && socket) {
@@ -74,13 +94,31 @@ export const useSetupVideoCallingSocket = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('startCall', (data) => {
-        console.log('📞 get call!');
-        console.log(data);
-        setGettingCall(true);
-      });
+      socket.on(
+        'startCall',
+        (data: {
+          channelName: string;
+          token: string;
+          to: string;
+          intUid: number;
+          publisher: {
+            id: string;
+            name: string;
+            image: string | null;
+          };
+        }) => {
+          console.log('📞 get call!');
+          console.log(data);
+          setGettingCall(true);
+          setVideoCallingState({
+            channelName: data.channelName,
+            token: data.token,
+            uid: data.intUid,
+          });
+        },
+      );
     }
-  }, [socket, setGettingCall]);
+  }, [socket, setGettingCall, setVideoCallingState]);
 
   useEffect(() => {
     if (socket) {
@@ -93,23 +131,4 @@ export const useSetupVideoCallingSocket = () => {
       });
     }
   }, [socket]);
-};
-
-export const useVideoCallingState = () => {
-  const dispatch = useCustomDispatch();
-  const videoCallingState = useSelector(
-    (state: RootState) => state.videoCallingReducer,
-    shallowEqual,
-  );
-  const setVideoCallingState = useCallback(
-    (data: VideoCallingState) => {
-      dispatch(_setVideoCallingState(data));
-    },
-    [dispatch],
-  );
-
-  return {
-    videoCallingState,
-    setVideoCallingState,
-  };
 };

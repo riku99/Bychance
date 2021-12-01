@@ -1,10 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import RtcEngine, {
   RtcLocalView,
   RtcRemoteView,
   VideoRenderMode,
 } from 'react-native-agora';
+import Config from 'react-native-config';
 
 type Props = {
   channelName: string;
@@ -19,7 +26,7 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
 
   useEffect(() => {
     (async function () {
-      const engineResult = await RtcEngine.create('appId');
+      const engineResult = await RtcEngine.create(Config.AGORA_APP_ID);
       setEngine(engineResult);
     })();
   }, []);
@@ -29,8 +36,8 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
       await engine?.enableVideo();
     })();
 
-    const success = (channel: string, _uid: number, elapsed: number) => {
-      console.log('JoinChannelSuccess', channel, _uid, elapsed);
+    const success = () => {
+      console.log('✋ JoinChannelSuccess');
       setJoinSuccees(true);
     };
     const successSub = engine?.addListener('JoinChannelSuccess', success);
@@ -62,15 +69,11 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
     };
   }, [peerIds, engine]);
 
-  useEffect(() => {
-    engine?.joinChannel(token, channelName, null, uid);
-  }, [engine, token, channelName, uid]);
-
   return (
     <View style={styles.container}>
       {joinSucceed && (
         <View style={styles.videoView}>
-          <RtcLocalView.SurfaceView
+          {/* <RtcLocalView.SurfaceView
             style={styles.max}
             channelId={channelName}
             renderMode={VideoRenderMode.Hidden}>
@@ -87,23 +90,41 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
                 );
               })}
             </>
-          </RtcLocalView.SurfaceView>
+          </RtcLocalView.SurfaceView> */}
         </View>
       )}
+      <TouchableOpacity
+        style={{alignSelf: 'center', position: 'absolute', top: 300}}
+        onPress={async () => {
+          if (joinSucceed) {
+            console.log('👀 leave');
+            await engine?.leaveChannel();
+            setJoinSuccees(false);
+            return;
+          }
+          console.log('👀 press');
+          await engine?.joinChannel(token, channelName, null, uid);
+        }}>
+        <Text>Strat</Text>
+      </TouchableOpacity>
     </View>
   );
 });
 
+const {width, height} = Dimensions.get('screen');
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width,
+    height,
   },
   max: {
     flex: 1,
   },
   videoView: {
-    width: '100%',
-    height: '100%',
+    width,
+    height,
+    backgroundColor: 'gray',
   },
   remote: {
     width: 150,
