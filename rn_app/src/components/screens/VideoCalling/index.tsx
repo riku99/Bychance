@@ -11,20 +11,17 @@ import {CallEndButton} from '~/components/utils/CallEndButon';
 import {useVideoCalling} from '~/hooks/appState';
 import {useSafeArea} from '~/hooks/appState';
 import {WaveIndicator} from 'react-native-indicators';
+import {useVideoCallingState} from '~/hooks/videoCalling';
 
-type Props = {
-  channelName: string;
-  token: string;
-  uid: number;
-};
-
-export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
+export const VideoCalling = React.memo(() => {
   const [engine, setEngine] = useState<RtcEngine>();
   const [peerId, setpeerId] = useState<number>();
   const [joinSucceed, setJoinSuccees] = useState(false);
   const {setVideoCalling} = useVideoCalling();
   const [enableVideo, setEnableVideo] = useState(true);
   const {top} = useSafeArea();
+  const {videoCallingState} = useVideoCallingState();
+  const {uid, token, channelName} = videoCallingState;
 
   const onCallEndButtonPress = async () => {
     await engine?.leaveChannel();
@@ -40,6 +37,10 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
       engine?.enableVideo();
       setEnableVideo(true);
     }
+  };
+
+  const onSwitchCameraButtonPress = async () => {
+    await engine?.switchCamera();
   };
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
 
   useEffect(() => {
     (async function () {
-      if (engine) {
+      if (engine && channelName && token && uid) {
         await engine.joinChannel(token, channelName, null, uid);
       }
     })();
@@ -102,11 +103,13 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
   const renderOnlyLocalView = useCallback(() => {
     return (
       <View style={styles.videoView}>
-        <RtcLocalView.SurfaceView
-          style={styles.max}
-          channelId={channelName}
-          renderMode={VideoRenderMode.Hidden}
-        />
+        {channelName && (
+          <RtcLocalView.SurfaceView
+            style={styles.max}
+            channelId={channelName}
+            renderMode={VideoRenderMode.Hidden}
+          />
+        )}
       </View>
     );
   }, [channelName]);
@@ -114,7 +117,7 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
   const renderExistPeerView = useCallback(() => {
     return (
       <View style={styles.videoView}>
-        {peerId && (
+        {peerId && channelName && (
           <RtcRemoteView.SurfaceView
             style={styles.max}
             zOrderMediaOverlay
@@ -141,12 +144,22 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
           <>
             {peerId ? renderExistPeerView() : renderOnlyLocalView()}
             <View style={styles.buttonContainer}>
+              <Button
+                icon={{
+                  name: 'flip-camera-ios',
+                  color: 'white',
+                  size: BUTTON_ICON_SIZE,
+                }}
+                buttonStyle={styles.videoCam}
+                onPress={onSwitchCameraButtonPress}
+                activeOpacity={1}
+              />
               <CallEndButton onPress={onCallEndButtonPress} buttonSize={64} />
               <Button
                 icon={{
-                  name: enableVideo ? 'videocam-off' : 'videocam',
+                  name: enableVideo ? 'videocam' : 'videocam-off',
                   color: 'white',
-                  size: 28,
+                  size: BUTTON_ICON_SIZE,
                 }}
                 buttonStyle={styles.videoCam}
                 onPress={onVideocamBurttonPress}
@@ -166,6 +179,7 @@ export const VideoCalling = React.memo(({channelName, token, uid}: Props) => {
 
 const {width, height} = Dimensions.get('screen');
 const BUTTON_SIZE = 64;
+const BUTTON_ICON_SIZE = 28;
 
 const styles = StyleSheet.create({
   container: {
@@ -185,6 +199,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     bottom: '12%',
     flexDirection: 'row',
+    width: 300,
+    justifyContent: 'space-between',
   },
   videoCam: {
     width: BUTTON_SIZE,
@@ -193,7 +209,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: 'white',
-    marginLeft: 80,
   },
   localContainer: {
     position: 'absolute',
