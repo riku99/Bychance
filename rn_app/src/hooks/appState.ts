@@ -1,7 +1,6 @@
 import {useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
 import {RootState} from '~/stores';
 import {useCustomDispatch} from './stores';
 import {setAppState} from '~/stores/app';

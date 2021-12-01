@@ -7,6 +7,13 @@ import io, {Socket} from 'socket.io-client';
 import {AppState, AppStateStatus} from 'react-native';
 import Config from 'react-native-config';
 import {useGettingCall} from '~/hooks/appState';
+import {
+  setVideoCallingState as _setVideoCallingState,
+  VideoCallingState,
+} from '~/stores/videoCalling';
+import {useCustomDispatch} from './stores';
+import {shallowEqual, useSelector} from 'react-redux';
+import {RootState} from '~/stores';
 
 export const useVideoCallingToken = () => {
   const {handleApiError} = useApikit();
@@ -14,7 +21,7 @@ export const useVideoCallingToken = () => {
     async (paylaod: PostRequestToRTCToken['payload']) => {
       try {
         const response = await postRequesutToRTCToken(paylaod);
-        console.log(response.data.token);
+        console.log(response.data);
         return response.data.token;
       } catch (e) {
         handleApiError(e);
@@ -67,8 +74,9 @@ export const useSetupVideoCallingSocket = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('startCall', () => {
+      socket.on('startCall', (data) => {
         console.log('📞 get call!');
+        console.log(data);
         setGettingCall(true);
       });
     }
@@ -85,4 +93,23 @@ export const useSetupVideoCallingSocket = () => {
       });
     }
   }, [socket]);
+};
+
+export const useVideoCallingState = () => {
+  const dispatch = useCustomDispatch();
+  const videoCallingState = useSelector(
+    (state: RootState) => state.videoCallingReducer,
+    shallowEqual,
+  );
+  const setVideoCallingState = useCallback(
+    (data: VideoCallingState) => {
+      dispatch(_setVideoCallingState(data));
+    },
+    [dispatch],
+  );
+
+  return {
+    videoCallingState,
+    setVideoCallingState,
+  };
 };

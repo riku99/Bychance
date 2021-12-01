@@ -17,6 +17,8 @@ import {useLoginData} from '~/hooks/sessions';
 import {useSetupVideoCallingSocket} from '~/hooks/videoCalling';
 import {GetiingCall} from '~/components/utils/GetiingCall';
 import {useVideoCalling, useGettingCall} from '~/hooks/appState';
+import {VideoCalling} from '~/components/screens/VideoCalling';
+import {useVideoCallingState} from '~/hooks/videoCalling';
 
 export const Main = React.memo(() => {
   // ログインデータの取得
@@ -39,20 +41,21 @@ export const Main = React.memo(() => {
 
   const {gettingCall} = useGettingCall();
   const {videoCalling} = useVideoCalling();
+  const {videoCallingState} = useVideoCallingState();
 
   return (
     <View style={styles.container}>
       <RootStackScreen />
-      {videoCalling && (
-        <View
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'gray',
-            position: 'absolute',
-          }}
-        />
-      )}
+      {videoCalling &&
+        videoCallingState.channelName &&
+        videoCallingState.token &&
+        videoCallingState.uid && (
+          <VideoCalling
+            channelName={videoCallingState.channelName}
+            uid={videoCallingState.uid}
+            token={videoCallingState.token}
+          />
+        )}
       {gettingCall && <GetiingCall />}
     </View>
   );

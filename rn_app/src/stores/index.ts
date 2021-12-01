@@ -5,7 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {sessionReducer} from './sessions';
 import {userReducer} from './user';
 import {flashesReducer} from './flashes';
@@ -16,6 +15,7 @@ import {_usersReducer} from './_users';
 import {appReducer} from './app';
 import {settingsReducer} from './settings';
 import {experiencesReducer} from './experiences';
+import {videoCallingReducer} from './videoCalling';
 
 const rootReducer = combineReducers({
   sessionReducer,
@@ -28,6 +28,7 @@ const rootReducer = combineReducers({
   appReducer,
   settingsReducer,
   experiencesReducer,
+  videoCallingReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
