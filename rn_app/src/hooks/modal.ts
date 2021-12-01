@@ -6,7 +6,7 @@ import {useCreateBlock, useDeleteBlock} from './block';
 import {useUserBlock} from './users';
 import {useRemovePostsAndFlashesDispatch} from './stores';
 import {useCreateApplyingGroup} from './applyingGroups';
-import {useVideoCallingToken} from './videoCalling';
+import {useVideoCalling} from './videoCalling';
 
 export const useUserPageModalList = ({
   userId,
@@ -21,7 +21,7 @@ export const useUserPageModalList = ({
   const {removeDispatch} = useRemovePostsAndFlashesDispatch({userId});
   const toast = useToast();
   const {applyGroup} = useCreateApplyingGroup();
-  const {createToken} = useVideoCallingToken();
+  const {makeCall} = useVideoCalling();
 
   const list = useMemo(() => {
     const blockText = {
@@ -99,8 +99,10 @@ export const useUserPageModalList = ({
                 text: videoCallingText.alertButtonText,
                 style: 'destructive',
                 onPress: async () => {
-                  await createToken({
-                    channelName: 'sample',
+                  if (closeModal) {
+                    closeModal();
+                  }
+                  await makeCall({
                     otherUserId: userId,
                   });
                 },
@@ -137,7 +139,7 @@ export const useUserPageModalList = ({
     applyGroup,
     toast,
     closeModal,
-    createToken,
+    makeCall,
   ]);
 
   return {

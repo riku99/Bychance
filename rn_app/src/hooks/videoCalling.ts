@@ -14,26 +14,7 @@ import {
 import {useCustomDispatch} from './stores';
 import {shallowEqual, useSelector} from 'react-redux';
 import {RootState} from '~/stores';
-
-export const useVideoCallingToken = () => {
-  const {handleApiError} = useApikit();
-  const createToken = useCallback(
-    async (paylaod: PostRequestToRTCToken['payload']) => {
-      try {
-        const response = await postRequesutToRTCToken(paylaod);
-        console.log(response.data);
-        return response.data.token;
-      } catch (e) {
-        handleApiError(e);
-      }
-    },
-    [handleApiError],
-  );
-
-  return {
-    createToken,
-  };
-};
+import {useVideoCalling as useVideoCallingView} from '~/hooks/appState';
 
 export const useVideoCallingState = () => {
   const dispatch = useCustomDispatch();
@@ -51,6 +32,37 @@ export const useVideoCallingState = () => {
   return {
     videoCallingState,
     setVideoCallingState,
+  };
+};
+
+export const useVideoCalling = () => {
+  const {handleApiError} = useApikit();
+  const {setVideoCalling} = useVideoCallingView();
+  const {setVideoCallingState} = useVideoCallingState();
+  const makeCall = useCallback(
+    async (paylaod: {otherUserId: string}) => {
+      const channelName = 'name';
+      try {
+        setVideoCalling(true);
+        const response = await postRequesutToRTCToken({
+          otherUserId: paylaod.otherUserId,
+          channelName,
+        });
+        setVideoCallingState({
+          token: response.data.token,
+          uid: response.data.intUid,
+          channelName,
+        });
+        return response.data;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [handleApiError, setVideoCalling, setVideoCallingState],
+  );
+
+  return {
+    makeCall,
   };
 };
 

@@ -20,7 +20,7 @@ export const VideoCalling = React.memo(() => {
   const {setVideoCalling} = useVideoCalling();
   const [enableVideo, setEnableVideo] = useState(true);
   const {top} = useSafeArea();
-  const {videoCallingState} = useVideoCallingState();
+  const {videoCallingState, setVideoCallingState} = useVideoCallingState();
   const {uid, token, channelName} = videoCallingState;
 
   const onCallEndButtonPress = async () => {
@@ -68,7 +68,7 @@ export const VideoCalling = React.memo(() => {
 
   useEffect(() => {
     const joined = (_uid: number, elapsed: number) => {
-      console.log('User joined', _uid, elapsed);
+      console.log('😆 User joined', _uid, elapsed);
       setpeerId(_uid);
     };
 
@@ -99,6 +99,12 @@ export const VideoCalling = React.memo(() => {
       })();
     };
   }, [engine, token, channelName, uid]);
+
+  useEffect(() => {
+    return () => {
+      setVideoCallingState({uid: null, channelName: null, token: null});
+    };
+  }, [setVideoCallingState]);
 
   const renderOnlyLocalView = useCallback(() => {
     return (

@@ -4,6 +4,7 @@ type PostRequestToRTCTokenPaylaod = {
 };
 type PostRequestToRTCTokenResponse = {
   token: string;
+  intUid: number;
 };
 export type PostRequestToRTCToken = {
   response: PostRequestToRTCTokenResponse;
