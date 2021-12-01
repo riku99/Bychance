@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import {CallEndButton} from '~/components/utils/CallEndButon';
 
 export const GetiingCall = () => {
   const {top} = useSafeArea();
@@ -53,12 +54,7 @@ export const GetiingCall = () => {
           activeOpacity={1}
           onPress={onCallPress}
         />
-        <Button
-          icon={{name: 'call-end', color: 'white', size: 28}}
-          buttonStyle={[styles.button, {backgroundColor: '#f51505'}]}
-          activeOpacity={1}
-          onPress={onCallEndPress}
-        />
+        <CallEndButton onPress={onCallEndPress} />
       </View>
       <UserAvatar
         image={image}
