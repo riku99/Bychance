@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useApikit} from '~/hooks/apikit';
 import {postRequesutToRTCToken} from '~/apis/videoCalling';
-import {PostRequestToRTCToken} from '~/apis/videoCalling/types';
 import {useMyId} from './users';
 import io, {Socket} from 'socket.io-client';
 import {AppState, AppStateStatus} from 'react-native';
@@ -23,7 +22,7 @@ export const useVideoCallingState = () => {
     shallowEqual,
   );
   const setVideoCallingState = useCallback(
-    (data: VideoCallingState) => {
+    (data: Partial<VideoCallingState>) => {
       dispatch(_setVideoCallingState(data));
     },
     [dispatch],
@@ -52,6 +51,7 @@ export const useVideoCalling = () => {
           token: response.data.token,
           uid: response.data.intUid,
           channelName,
+          publisher: null,
         });
         return response.data;
       } catch (e) {
@@ -126,6 +126,7 @@ export const useSetupVideoCallingSocket = () => {
             channelName: data.channelName,
             token: data.token,
             uid: data.intUid,
+            publisher: data.publisher,
           });
         },
       );

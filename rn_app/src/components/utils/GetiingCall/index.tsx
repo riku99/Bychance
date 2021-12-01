@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {useSafeArea} from '~/hooks/appState';
-import {useMyAvatar} from '~/hooks/users';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {Button} from 'react-native-elements';
 import {useVideoCalling, useGettingCall} from '~/hooks/appState';
@@ -12,10 +11,10 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import {CallEndButton} from '~/components/utils/CallEndButon';
+import {useVideoCallingState} from '~/hooks/videoCalling';
 
 export const GetiingCall = () => {
   const {top} = useSafeArea();
-  const image = useMyAvatar();
   const {setVideoCalling} = useVideoCalling();
   const {setGettingCall} = useGettingCall();
   const initialX = useSharedValue(-400);
@@ -24,6 +23,7 @@ export const GetiingCall = () => {
       transform: [{translateY: initialX.value}],
     };
   });
+  const {videoCallingState} = useVideoCallingState();
 
   useEffect(() => {
     initialX.value = withTiming(0, {duration: 500});
@@ -53,7 +53,7 @@ export const GetiingCall = () => {
 
   return (
     <Animated.View style={[animatedStyle, styles.container, {top}]}>
-      <Text style={styles.name}>Riku</Text>
+      <Text style={styles.name}>{videoCallingState.publisher?.name}</Text>
       <View style={styles.buttonGroup}>
         <Button
           icon={{name: 'call', color: 'white', size: 28}}
@@ -64,7 +64,7 @@ export const GetiingCall = () => {
         <CallEndButton onPress={onCallEndPress} />
       </View>
       <UserAvatar
-        image={image}
+        image={videoCallingState.publisher?.image}
         size={54}
         containerStyle={styles.imageContainer}
       />
