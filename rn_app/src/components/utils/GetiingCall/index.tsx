@@ -29,13 +29,20 @@ export const GetiingCall = () => {
     initialX.value = withTiming(0, {duration: 500});
   }, [initialX]);
 
+  const start = () => {
+    setGettingCall(false);
+  };
+
   const onCallPress = () => {
     setVideoCalling(true);
+    initialX.value = withTiming(-400, {duration: 500}, () => {
+      runOnJS(start)();
+    });
   };
 
   const end = () => {
-    setVideoCalling(false);
     setGettingCall(false);
+    setVideoCalling(false);
   };
 
   const onCallEndPress = () => {
