@@ -342,11 +342,7 @@ export const NearbyUsersScreen = React.memo(() => {
       </View>
       {!data && (
         <ActivityIndicator
-          style={{
-            position: 'absolute',
-            top: TOP_HEIGHT + top + 10,
-            alignSelf: 'center',
-          }}
+          style={[styles.activityINdicator, {top: TOP_HEIGHT + top + 10}]}
         />
       )}
     </View>
@@ -395,5 +391,9 @@ const styles = StyleSheet.create({
   indicatorContainer: {
     marginHorizontal: 40,
     paddingHorizontal: 80,
+  },
+  activityINdicator: {
+    position: 'absolute',
+    alignSelf: 'center',
   },
 });
