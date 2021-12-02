@@ -2,8 +2,7 @@ import React from 'react';
 import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import Swiper from 'react-native-swiper';
-
-import {usePushNotificationReqest} from '~/hooks/pushNotification';
+import {requestPushNotification} from '~/helpers/pushNotification';
 import {defaultTheme} from '~/theme';
 
 type Props = {
@@ -12,9 +11,8 @@ type Props = {
 };
 
 export const AboutNotification = ({swipeRef, index}: Props) => {
-  const {request} = usePushNotificationReqest();
   const onButtonPress = async () => {
-    await request();
+    await requestPushNotification();
     swipeRef.current?.scrollTo(index + 1);
   };
 
