@@ -10,6 +10,7 @@ import {
   putRequestToDisplay,
   putRequestToShowReceiveMessage,
   putRequestToTalkRoomMessagesReceipt,
+  putRequestToVideoCallingEnabled,
 } from '~/apis/settings';
 
 export const useDisplay = () => {
@@ -140,5 +141,40 @@ export const useGroupsApplicationEnabled = () => {
   return {
     groupsApplicationEnabled,
     changeGroupsApplicationEnabled,
+  };
+};
+
+export const useVideoCallingEnabled = () => {
+  const {handleApiError} = useApikit();
+  const dispatch = useCustomDispatch();
+
+  const videoCallingEnabled = useSelector(
+    (state: RootState) => state.settingsReducer.videoCallingEnabled,
+  );
+
+  const setVideoCallingEnabled = useCallback(
+    (value: boolean) => {
+      dispatch(setSetitngs({videoCallingEnabled: value}));
+    },
+    [dispatch],
+  );
+
+  const changeVideoCallingEnabled = useCallback(
+    async (value: boolean) => {
+      try {
+        const response = await putRequestToVideoCallingEnabled(value);
+        setVideoCallingEnabled(value);
+        return response;
+      } catch (e) {
+        handleApiError(e);
+      }
+    },
+    [handleApiError, setVideoCallingEnabled],
+  );
+
+  return {
+    videoCallingEnabled,
+    setVideoCallingEnabled,
+    changeVideoCallingEnabled,
   };
 };

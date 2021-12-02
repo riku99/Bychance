@@ -37,3 +37,12 @@ export const putRequestToShowReceiveMessage = async (value: boolean) => {
     addBearer(idToken),
   );
 };
+
+export const putRequestToVideoCallingEnabled = async (value: boolean) => {
+  const idToken = await getIdToken();
+  return await axios.put(
+    `${baseUrl}/users/video_calling_enabled`,
+    {value},
+    addBearer(idToken),
+  );
+};

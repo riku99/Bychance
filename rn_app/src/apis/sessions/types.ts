@@ -18,6 +18,7 @@ export type LoginData = {
     intro: boolean;
     tooltipOfUsersDisplayShowed: boolean;
     groupsApplicationEnabled: boolean;
+    videoCallingEnabled?: boolean;
   };
   posts: {
     id: number;

@@ -31,7 +31,14 @@ export type RootStackParamList = {
   Flashes: NavigatorScreenParams<FlashesStackParamList>;
   UserBackGroundView: Omit<UserBackGroundItem, 'id'>;
   UserConfig: {
-    goTo: 'display' | 'message' | 'location' | 'account' | 'others' | 'group';
+    goTo:
+      | 'display'
+      | 'message'
+      | 'location'
+      | 'account'
+      | 'others'
+      | 'group'
+      | 'videoCalling';
   };
   PrivateConfig: {
     goTo: 'zone' | 'time';

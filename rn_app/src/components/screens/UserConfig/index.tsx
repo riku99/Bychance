@@ -8,6 +8,7 @@ import {AccountConfig} from './AccountConfig';
 import {Others} from './Others';
 import {LocationConfig} from './LocationConfig';
 import {GroupConfig} from './GroupConfig';
+import {VideoCallingConfig} from './VideoCallingConfig';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'UserConfig'>;
@@ -29,6 +30,8 @@ export const UserConfig = React.memo(({route, navigation}: Props) => {
         return 'アカウントに関する設定';
       case 'group':
         return 'グループに関する設定';
+      case 'videoCalling':
+        return 'ビデオ通話に関する設定';
       case 'others':
         return 'その他';
     }
@@ -62,6 +65,10 @@ export const UserConfig = React.memo(({route, navigation}: Props) => {
 
   if (goTo === 'group') {
     return <GroupConfig />;
+  }
+
+  if (goTo === 'videoCalling') {
+    return <VideoCallingConfig />;
   }
 
   return null;

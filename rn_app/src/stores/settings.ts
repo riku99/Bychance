@@ -5,6 +5,7 @@ type Settings = {
   talkRoomMessageReceipt?: boolean;
   showReceiveMessage?: boolean;
   groupsApplicationEnabled?: boolean;
+  videoCallingEnabled?: boolean;
 };
 
 const initialState: Settings = {};

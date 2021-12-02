@@ -73,6 +73,15 @@ export const Menu = React.memo(() => {
         },
       },
       {
+        title: 'ビデオ通話',
+        icon: 'video-call',
+        titleStyle: styles.listTitleStyle,
+        onPress: () => {
+          closeModal();
+          navigateToConfig('videoCalling');
+        },
+      },
+      {
         title: 'アカウント',
         icon: 'account-circle',
         titleStyle: styles.listTitleStyle,
@@ -96,7 +105,7 @@ export const Menu = React.memo(() => {
   return (
     <Modalize
       ref={modalizeRef}
-      modalHeight={height / 1.8}
+      modalHeight={400}
       onClose={() => setDisplayedMenu(false)}
       scrollViewProps={{
         scrollEnabled: false,

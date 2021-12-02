@@ -28,6 +28,7 @@ export const useLoginDispatch = () => {
         intro,
         tooltipOfUsersDisplayShowed,
         groupsApplicationEnabled,
+        videoCallingEnabled,
         ...storedUser
       } = user;
       const settings = {
@@ -35,6 +36,7 @@ export const useLoginDispatch = () => {
         talkRoomMessageReceipt,
         showReceiveMessage,
         groupsApplicationEnabled,
+        videoCallingEnabled,
       };
 
       dispatch(setUser({...storedUser, backGroundItem}));
