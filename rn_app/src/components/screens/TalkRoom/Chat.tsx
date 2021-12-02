@@ -7,6 +7,7 @@ import {
   Bubble,
   MessageText,
 } from 'react-native-gifted-chat';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type Props = {
   messages: IMessage[];
@@ -17,13 +18,14 @@ type Props = {
 
 export const Chat = React.memo(
   ({messages, userId, onSend, onAvatarPress}: Props) => {
+    const {bottom} = useSafeAreaInsets();
     const [text, setText] = useState('');
     return (
       <GiftedChat
         messages={messages}
         user={{_id: userId}}
         placeholder="メッセージを入力"
-        // alignTop={true}
+        bottomOffset={bottom}
         renderSend={(props) => {
           return (
             <Send {...props} containerStyle={styles.sendContainer}>
