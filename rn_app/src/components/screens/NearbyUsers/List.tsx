@@ -14,7 +14,7 @@ import {ListItem} from 'react-native-elements';
 import {Avatar} from './Avatar';
 import {TabViewContext} from './index';
 import {Name} from './Name';
-import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
+import {TOP_HEIGHT} from './styles';
 import {useSafeArea} from '~/hooks/appState';
 
 export const List = React.memo(() => {
@@ -64,7 +64,7 @@ export const List = React.memo(() => {
 
   if (firstLoading) {
     return (
-      <View style={{marginTop: SEARCH_TAB_HEIGHT + stickyTabHeight + top + 10}}>
+      <View style={{marginTop: TOP_HEIGHT + top + 10}}>
         <ActivityIndicator />
       </View>
     );
@@ -77,9 +77,9 @@ export const List = React.memo(() => {
           data={users}
           renderItem={renderItem}
           scrollEventThrottle={16}
-          contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
+          contentInset={{top: TOP_HEIGHT}}
           contentOffset={{
-            y: -SEARCH_TAB_HEIGHT - stickyTabHeight,
+            y: -TOP_HEIGHT,
             x: 0,
           }}
           onScroll={Animated.event(
@@ -105,10 +105,10 @@ export const List = React.memo(() => {
               />
             }
             contentOffset={{
-              y: -SEARCH_TAB_HEIGHT - stickyTabHeight,
+              y: -TOP_HEIGHT,
               x: 0,
             }}
-            contentInset={{top: SEARCH_TAB_HEIGHT + stickyTabHeight}}
+            contentInset={{top: TOP_HEIGHT}}
             contentContainerStyle={[styles.noUserScroll, {marginTop: top}]}>
             <Text style={styles.noUserText}>この範囲にユーザーはいません</Text>
           </ScrollView>

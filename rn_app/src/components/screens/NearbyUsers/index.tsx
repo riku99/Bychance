@@ -6,7 +6,7 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-import {StyleSheet, Animated, View} from 'react-native';
+import {StyleSheet, Animated, View, ActivityIndicator} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {
   createMaterialTopTabNavigator,
@@ -31,7 +31,7 @@ import {
 import {useNearbyUsers} from '~/hooks/nearbyUsers';
 import {selectNotAllViewedUserIds} from '~/stores/flashes';
 import {usePrefetchStamps} from '~/hooks/flashStamps';
-import {SEARCH_TAB_HEIGHT, stickyTabHeight} from './styles';
+import {SEARCH_TAB_HEIGHT, STICKY_TAB_HEIGHT, TOP_HEIGHT} from './styles';
 import {useSafeArea} from '~/hooks/appState';
 import {useMyLat, useMyLng} from '~/hooks/users';
 import {defaultTheme} from '~/theme';
@@ -90,11 +90,9 @@ export const NearbyUsersScreen = React.memo(() => {
 
   const {top} = useSafeArea();
 
-  const scrollY = useRef(
-    new Animated.Value(-SEARCH_TAB_HEIGHT - stickyTabHeight),
-  ).current;
+  const scrollY = useRef(new Animated.Value(-TOP_HEIGHT)).current;
   const opacity = scrollY.interpolate({
-    inputRange: [-SEARCH_TAB_HEIGHT - stickyTabHeight, -stickyTabHeight],
+    inputRange: [-TOP_HEIGHT, -STICKY_TAB_HEIGHT],
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
@@ -263,7 +261,7 @@ export const NearbyUsersScreen = React.memo(() => {
   const renderTabBar = useCallback(
     (props: any) => {
       const y = scrollY.interpolate({
-        inputRange: [-SEARCH_TAB_HEIGHT - stickyTabHeight, -stickyTabHeight],
+        inputRange: [-TOP_HEIGHT, -STICKY_TAB_HEIGHT],
         outputRange: [top, -SEARCH_TAB_HEIGHT + top],
         extrapolate: 'clamp',
       });
@@ -342,6 +340,15 @@ export const NearbyUsersScreen = React.memo(() => {
       <View style={styles.pickButtonContainer}>
         <RangeSelectButton setRange={setRange} />
       </View>
+      {!data && (
+        <ActivityIndicator
+          style={{
+            position: 'absolute',
+            top: TOP_HEIGHT + top + 10,
+            alignSelf: 'center',
+          }}
+        />
+      )}
     </View>
   );
 });
