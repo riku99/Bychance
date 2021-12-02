@@ -106,7 +106,7 @@ export const useSetupVideoCallingSocket = () => {
   }, [id, socket]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && id) {
       socket.on(
         'startCall',
         (data: {
@@ -120,8 +120,9 @@ export const useSetupVideoCallingSocket = () => {
             image: string | null;
           };
         }) => {
-          console.log('📞 get call!');
-          console.log(data);
+          if (data.to !== id) {
+            return;
+          }
           setGettingCall(true);
           setVideoCallingState({
             channelName: data.channelName,
@@ -132,7 +133,7 @@ export const useSetupVideoCallingSocket = () => {
         },
       );
     }
-  }, [socket, setGettingCall, setVideoCallingState]);
+  }, [socket, setGettingCall, setVideoCallingState, id]);
 
   useEffect(() => {
     if (socket) {
