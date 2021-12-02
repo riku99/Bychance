@@ -1,7 +1,6 @@
 import {useEffect, useCallback} from 'react';
 import {Alert} from 'react-native';
 import {useSelector} from 'react-redux';
-import * as Keychain from 'react-native-keychain';
 import {AxiosError} from 'axios';
 
 import {RootState, persistor} from '~/stores';
@@ -33,7 +32,6 @@ export const useHandleErrors = () => {
           }
           break;
         case 'loginError':
-          Keychain.resetGenericPassword();
           persistor.purge();
           Alert.alert('ログインが無効です', 'ログインし直してください', [
             {

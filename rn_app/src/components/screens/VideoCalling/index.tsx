@@ -31,10 +31,10 @@ export const VideoCalling = React.memo(() => {
 
   const onVideocamBurttonPress = () => {
     if (enableVideo) {
-      engine?.disableVideo();
+      engine?.enableLocalVideo(false);
       setEnableVideo(false);
     } else {
-      engine?.enableVideo();
+      engine?.enableLocalVideo(true);
       setEnableVideo(true);
     }
   };
@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 130,
     right: 10,
+    backgroundColor: 'black',
   },
   local: {
     width: '100%',

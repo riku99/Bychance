@@ -55,6 +55,7 @@ export const useVideoCalling = () => {
         });
         return response.data;
       } catch (e) {
+        setVideoCalling(false);
         handleApiError(e);
       }
     },

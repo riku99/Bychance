@@ -102,9 +102,12 @@ export const useUserPageModalList = ({
                   if (closeModal) {
                     closeModal();
                   }
-                  await makeCall({
-                    otherUserId: userId,
-                  });
+                  // makeCallでエラー起きた場合Alertを出すことがあるが、Alertが出た後にcloseModalが実行されるとレンダリングの関係(?)でAlertがすぐ消えてしまうので若干遅く呼び出している。(よくないが)
+                  setTimeout(async () => {
+                    await makeCall({
+                      otherUserId: userId,
+                    });
+                  }, 350);
                 },
               },
             ],
