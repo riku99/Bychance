@@ -31,7 +31,7 @@ export const Main = React.memo(() => {
   useRegisterDeviceToken();
   // 位置情報周り
   useBackgroundGeolocation();
-  // // アクティブになるたびにトークルーム更新とか
+  // アクティブになるたびにトークルーム更新とか
   useGetTalkRoomDataOnActive();
   // アクティブになるたびにisDisplayedToOtherUsersを更新
   useGetIsDisplayedToOtherUsersOnActive();

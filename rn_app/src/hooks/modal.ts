@@ -88,6 +88,12 @@ export const useUserPageModalList = ({
       {
         title: 'ビデオ通話',
         onPress: async () => {
+          if (_block) {
+            Alert.alert(
+              'ユーザーをブロックしています',
+              'ブロックしているユーザーにビデオ通話をかけることはできません',
+            );
+          }
           Alert.alert(
             videoCallingText.alertTitle,
             videoCallingText.alertSubTitle,
