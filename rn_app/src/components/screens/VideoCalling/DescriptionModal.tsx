@@ -11,7 +11,7 @@ type Props = {
   isVisible: boolean;
 };
 
-export const VideoCallingAlertModal = () => {
+export const DescriptionModal = () => {
   const [v, setV] = useState(true);
   return (
     <Modal isVisible={v} style={styles.modalContainer}>
@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
   },
   contents: {
     width: '90%',
-    height: 320,
     backgroundColor: 'white',
+    paddingBottom: 20,
   },
   closeButton: {
     position: 'absolute',

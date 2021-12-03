@@ -12,7 +12,7 @@ import {useVideoCalling} from '~/hooks/appState';
 import {useSafeArea} from '~/hooks/appState';
 import {WaveIndicator} from 'react-native-indicators';
 import {useVideoCallingState} from '~/hooks/videoCalling';
-import {VideoCallingAlertModal} from './VideoCallingAlertModal';
+import {DescriptionModal} from './DescriptionModal';
 
 export const VideoCalling = React.memo(() => {
   // const [engine, setEngine] = useState<RtcEngine>();
@@ -180,7 +180,7 @@ export const VideoCalling = React.memo(() => {
           <WaveIndicator color="white" size={50} />
         </View>
       )} */}
-      <VideoCallingAlertModal />
+      <DescriptionModal />
     </View>
   );
 });
