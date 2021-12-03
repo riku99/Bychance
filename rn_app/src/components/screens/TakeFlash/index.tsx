@@ -9,6 +9,7 @@ import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
 import {useVideoEditDescription} from '~/hooks/experiences';
 
+const takePhotoOptions = {quality: 0.7, base64: true};
 const takeVideoOptions = {
   quality: RNCamera.Constants.VideoQuality['720p'],
   maxDuration: 15,
