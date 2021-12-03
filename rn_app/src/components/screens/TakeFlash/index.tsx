@@ -3,7 +3,6 @@ import {Alert} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 import {RNToasty} from 'react-native-toasty';
-import FS from 'react-native-fs';
 
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
@@ -74,10 +73,7 @@ export const TakeFlashScreen = React.memo(() => {
       }
 
       if (_type) {
-        // const size = asset.fileSize;
-        const {size} = await FS.stat(uri);
-        console.log(uri);
-        console.log(size);
+        const size = asset.fileSize;
         if (!size) {
           RNToasty.Show({
             title: '8MB以下の画像にしてください',

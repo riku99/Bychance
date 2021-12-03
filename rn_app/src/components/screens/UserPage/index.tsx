@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {Alert} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-
+import FastImage from 'react-native-fast-image';
 import {useUserPageInfo, useUserName, useUserAvatar} from '~/hooks/users';
 import {
   UserPageScreenGroupParamList,
@@ -11,6 +11,7 @@ import {User} from '~/components/utils/User';
 import {MoreHoriz} from './MoreHoriz';
 import {MoreHorizModal} from './Modal';
 import {useGroupMemberWhoBlcokTargetUserExists} from '~/hooks/groups';
+import {getThumbnailUrl} from '~/helpers/video';
 
 type ProfileStackScreenProp = RouteProp<
   UserPageScreenGroupParamList,
@@ -61,6 +62,21 @@ export const UserPage = React.memo(({route, navigation}: Props) => {
       );
     }
   }, [groupMemberWhoBlockThisUserExists]);
+
+  useEffect(() => {
+    if (data?.flashes.length) {
+      const item = data.flashes[0];
+      const uri =
+        item.sourceType === 'image'
+          ? item.source
+          : getThumbnailUrl(item.source);
+      FastImage.preload([
+        {
+          uri,
+        },
+      ]);
+    }
+  }, [data]);
 
   if (!data) {
     return (

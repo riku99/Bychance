@@ -23,15 +23,16 @@ export const Modal = React.memo(
           onPress: () => {
             Alert.alert('本当に削除してもよろしいですか?', '', [
               {
+                text: 'キャンセル',
+                style: 'cancel',
+              },
+              {
                 text: '削除',
                 style: 'destructive',
                 onPress: () => {
                   setIsVisible(false);
                   deleteFlash({flashId});
                 },
-              },
-              {
-                text: 'キャンセル',
               },
             ]);
           },

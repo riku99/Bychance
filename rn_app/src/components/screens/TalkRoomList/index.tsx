@@ -29,15 +29,15 @@ export const TalkRoomListPage = () => {
     ({talkRoomId}: {talkRoomId: number}) => {
       Alert.alert('トークルームを削除', '本当に削除してもよろしいですか?', [
         {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
           text: '削除',
           style: 'destructive',
           onPress: async () => {
             deleteTalkRoom({talkRoomId});
-            // await dispatch(createDeleteRoomThunk({talkRoomId}));
           },
-        },
-        {
-          text: 'いいえ',
         },
       ]);
     },

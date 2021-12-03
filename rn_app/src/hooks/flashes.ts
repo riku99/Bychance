@@ -2,7 +2,7 @@ import {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import fs from 'react-native-fs';
 import {shallowEqual, useSelector} from 'react-redux';
-
+import FastImage from 'react-native-fast-image';
 import {getExtention} from '~/utils';
 import {useApikit} from './apikit';
 import {RootState} from '~/stores';
@@ -21,6 +21,7 @@ import {
   postRequestToFlashesViewed,
   deleteRequestToFlashes,
 } from '~/apis/flashes';
+import {getThumbnailUrl} from '~/helpers/video';
 
 export const useFlashes = ({userId}: {userId: string}) =>
   useSelector(
@@ -48,7 +49,11 @@ export const useCreateFlash = () => {
 
       try {
         const response = await postRequestToFlashes({source, sourceType, ext});
-
+        const responseUri =
+          sourceType === 'image'
+            ? response.data.source
+            : getThumbnailUrl(response.data.source);
+        FastImage.preload([{uri: responseUri}]);
         dispatch(addFlash({...response.data, viewed: [], viewerViewed: false}));
         toast?.show('追加しました', {type: 'success'});
       } catch (e) {
