@@ -213,3 +213,21 @@ export const useGettingCall = () => {
     setGettingCall,
   };
 };
+
+export const useVideoCallingAlertModalVisible = () => {
+  const dispatch = useCustomDispatch();
+  const videoCallingAlertModalVisible = useSelector(
+    (state: RootState) => state.appReducer.videoCallingAlertModalVisible,
+  );
+  const setVideoCallingAlertModalVisible = useCallback(
+    (v: boolean) => {
+      dispatch(setAppState({videoCallingAlertModalVisible: v}));
+    },
+    [dispatch],
+  );
+
+  return {
+    videoCallingAlertModalVisible,
+    setVideoCallingAlertModalVisible,
+  };
+};

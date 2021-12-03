@@ -12,140 +12,141 @@ import {useVideoCalling} from '~/hooks/appState';
 import {useSafeArea} from '~/hooks/appState';
 import {WaveIndicator} from 'react-native-indicators';
 import {useVideoCallingState} from '~/hooks/videoCalling';
+import {VideoCallingAlertModal} from './VideoCallingAlertModal';
 
 export const VideoCalling = React.memo(() => {
-  const [engine, setEngine] = useState<RtcEngine>();
-  const [peerId, setpeerId] = useState<number>();
-  const [joinSucceed, setJoinSuccees] = useState(false);
-  const {setVideoCalling} = useVideoCalling();
-  const [enableVideo, setEnableVideo] = useState(true);
-  const {top} = useSafeArea();
-  const {videoCallingState, setVideoCallingState} = useVideoCallingState();
-  const {uid, token, channelName} = videoCallingState;
+  // const [engine, setEngine] = useState<RtcEngine>();
+  // const [peerId, setpeerId] = useState<number>();
+  // const [joinSucceed, setJoinSuccees] = useState(false);
+  // const {setVideoCalling} = useVideoCalling();
+  // const [enableVideo, setEnableVideo] = useState(true);
+  // const {top} = useSafeArea();
+  // const {videoCallingState, setVideoCallingState} = useVideoCallingState();
+  // const {uid, token, channelName} = videoCallingState;
 
-  const onCallEndButtonPress = async () => {
-    await engine?.leaveChannel();
-    setJoinSuccees(false);
-    setVideoCalling(false);
-  };
+  // const onCallEndButtonPress = async () => {
+  //   await engine?.leaveChannel();
+  //   setJoinSuccees(false);
+  //   setVideoCalling(false);
+  // };
 
-  const onVideocamBurttonPress = () => {
-    if (enableVideo) {
-      engine?.enableLocalVideo(false);
-      setEnableVideo(false);
-    } else {
-      engine?.enableLocalVideo(true);
-      setEnableVideo(true);
-    }
-  };
+  // const onVideocamBurttonPress = () => {
+  //   if (enableVideo) {
+  //     engine?.enableLocalVideo(false);
+  //     setEnableVideo(false);
+  //   } else {
+  //     engine?.enableLocalVideo(true);
+  //     setEnableVideo(true);
+  //   }
+  // };
 
-  const onSwitchCameraButtonPress = async () => {
-    await engine?.switchCamera();
-  };
+  // const onSwitchCameraButtonPress = async () => {
+  //   await engine?.switchCamera();
+  // };
 
-  useEffect(() => {
-    (async function () {
-      const engineResult = await RtcEngine.create(Config.AGORA_APP_ID);
-      setEngine(engineResult);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async function () {
+  //     const engineResult = await RtcEngine.create(Config.AGORA_APP_ID);
+  //     setEngine(engineResult);
+  //   })();
+  // }, []);
 
-  useEffect(() => {
-    (async function () {
-      await engine?.enableVideo();
-    })();
+  // useEffect(() => {
+  //   (async function () {
+  //     await engine?.enableVideo();
+  //   })();
 
-    const success = () => {
-      console.log('✋ JoinChannelSuccess');
-      setJoinSuccees(true);
-    };
-    const successSub = engine?.addListener('JoinChannelSuccess', success);
+  //   const success = () => {
+  //     console.log('✋ JoinChannelSuccess');
+  //     setJoinSuccees(true);
+  //   };
+  //   const successSub = engine?.addListener('JoinChannelSuccess', success);
 
-    return () => {
-      successSub?.remove();
-    };
-  }, [engine]);
+  //   return () => {
+  //     successSub?.remove();
+  //   };
+  // }, [engine]);
 
-  useEffect(() => {
-    const joined = (_uid: number, elapsed: number) => {
-      console.log('😆 User joined', _uid, elapsed);
-      setpeerId(_uid);
-    };
+  // useEffect(() => {
+  //   const joined = (_uid: number, elapsed: number) => {
+  //     console.log('😆 User joined', _uid, elapsed);
+  //     setpeerId(_uid);
+  //   };
 
-    const offline = (_uid: number, reason: number) => {
-      console.log('UserOffline', _uid, reason);
-      setpeerId(undefined);
-    };
+  //   const offline = (_uid: number, reason: number) => {
+  //     console.log('UserOffline', _uid, reason);
+  //     setpeerId(undefined);
+  //   };
 
-    const joinedSub = engine?.addListener('UserJoined', joined);
-    const offlineSub = engine?.addListener('UserOffline', offline);
+  //   const joinedSub = engine?.addListener('UserJoined', joined);
+  //   const offlineSub = engine?.addListener('UserOffline', offline);
 
-    return () => {
-      joinedSub?.remove();
-      offlineSub?.remove();
-    };
-  }, [peerId, engine]);
+  //   return () => {
+  //     joinedSub?.remove();
+  //     offlineSub?.remove();
+  //   };
+  // }, [peerId, engine]);
 
-  useEffect(() => {
-    (async function () {
-      if (engine && channelName && token && uid) {
-        await engine.joinChannel(token, channelName, null, uid);
-      }
-    })();
+  // useEffect(() => {
+  //   (async function () {
+  //     if (engine && channelName && token && uid) {
+  //       await engine.joinChannel(token, channelName, null, uid);
+  //     }
+  //   })();
 
-    return () => {
-      (async function () {
-        await engine?.leaveChannel();
-      })();
-    };
-  }, [engine, token, channelName, uid]);
+  //   return () => {
+  //     (async function () {
+  //       await engine?.leaveChannel();
+  //     })();
+  //   };
+  // }, [engine, token, channelName, uid]);
 
-  useEffect(() => {
-    return () => {
-      setVideoCallingState({uid: null, channelName: null, token: null});
-    };
-  }, [setVideoCallingState]);
+  // useEffect(() => {
+  //   return () => {
+  //     setVideoCallingState({uid: null, channelName: null, token: null});
+  //   };
+  // }, [setVideoCallingState]);
 
-  const renderOnlyLocalView = useCallback(() => {
-    return (
-      <View style={styles.videoView}>
-        {channelName && (
-          <RtcLocalView.SurfaceView
-            style={styles.max}
-            channelId={channelName}
-            renderMode={VideoRenderMode.Hidden}
-          />
-        )}
-      </View>
-    );
-  }, [channelName]);
+  // const renderOnlyLocalView = useCallback(() => {
+  //   return (
+  //     <View style={styles.videoView}>
+  //       {channelName && (
+  //         <RtcLocalView.SurfaceView
+  //           style={styles.max}
+  //           channelId={channelName}
+  //           renderMode={VideoRenderMode.Hidden}
+  //         />
+  //       )}
+  //     </View>
+  //   );
+  // }, [channelName]);
 
-  const renderExistPeerView = useCallback(() => {
-    return (
-      <View style={styles.videoView}>
-        {peerId && channelName && (
-          <RtcRemoteView.SurfaceView
-            style={styles.max}
-            zOrderMediaOverlay
-            channelId={channelName}
-            uid={peerId}
-            renderMode={VideoRenderMode.Hidden}>
-            <View style={[styles.localContainer, {top: top + 5}]}>
-              <RtcLocalView.SurfaceView
-                style={styles.local}
-                channelId={channelName}
-                renderMode={VideoRenderMode.Hidden}
-              />
-            </View>
-          </RtcRemoteView.SurfaceView>
-        )}
-      </View>
-    );
-  }, [channelName, peerId, top]);
+  // const renderExistPeerView = useCallback(() => {
+  //   return (
+  //     <View style={styles.videoView}>
+  //       {peerId && channelName && (
+  //         <RtcRemoteView.SurfaceView
+  //           style={styles.max}
+  //           zOrderMediaOverlay
+  //           channelId={channelName}
+  //           uid={peerId}
+  //           renderMode={VideoRenderMode.Hidden}>
+  //           <View style={[styles.localContainer, {top: top + 5}]}>
+  //             <RtcLocalView.SurfaceView
+  //               style={styles.local}
+  //               channelId={channelName}
+  //               renderMode={VideoRenderMode.Hidden}
+  //             />
+  //           </View>
+  //         </RtcRemoteView.SurfaceView>
+  //       )}
+  //     </View>
+  //   );
+  // }, [channelName, peerId, top]);
 
   return (
     <View style={styles.container}>
-      {joinSucceed ? (
+      {/* {joinSucceed ? (
         <View>
           <>
             {peerId ? renderExistPeerView() : renderOnlyLocalView()}
@@ -178,7 +179,8 @@ export const VideoCalling = React.memo(() => {
         <View style={[styles.loadingView]}>
           <WaveIndicator color="white" size={50} />
         </View>
-      )}
+      )} */}
+      <VideoCallingAlertModal />
     </View>
   );
 });
@@ -191,6 +193,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height,
+    backgroundColor: 'black',
   },
   max: {
     flex: 1,
