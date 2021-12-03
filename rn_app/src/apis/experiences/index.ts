@@ -28,3 +28,14 @@ export const putRequestToIntro = async (value: boolean) => {
     addBearer(idToken),
   );
 };
+
+export const putRequestToDescriptionOfVideoCallingSettingsShowed = async (
+  value: boolean,
+) => {
+  const idToken = await getIdToken();
+  return await axios.put(
+    `${baseUrl}/users/description_of_video_calling_settins_showed`,
+    {value},
+    addBearer(idToken),
+  );
+};

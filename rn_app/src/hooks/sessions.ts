@@ -29,6 +29,7 @@ export const useLoginDispatch = () => {
         tooltipOfUsersDisplayShowed,
         groupsApplicationEnabled,
         videoCallingEnabled,
+        descriptionOfVideoCallingSettingsShowed,
         ...storedUser
       } = user;
       const settings = {
@@ -48,6 +49,7 @@ export const useLoginDispatch = () => {
           tooltipAboutDisplay: tooltipOfUsersDisplayShowed,
           videoEditDescription,
           intro,
+          descriptionOfVideoCallingSettings: descriptionOfVideoCallingSettingsShowed,
         }),
       );
       dispatch(setLogin(true));

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import Modal from 'react-native-modal';
-import {useVideoCallingAlertModalVisible} from '~/hooks/appState';
 import {ModalCloseButton} from '~/components/utils/ModalCloseButton';
 import LottieView from 'lottie-react-native';
+import {useDescriptionOfVideoCallingSettings} from '~/hooks/experiences';
 
 const Alert = require('~/assets/lottie/alert.json');
 
@@ -12,14 +12,22 @@ type Props = {
 };
 
 export const DescriptionModal = () => {
-  const [v, setV] = useState(true);
+  const {
+    descriptionOfVideoCallingSettings,
+    setDescriptionOfVideoCallingSettings,
+    changeDescriptionOfVideoCallingSettings,
+  } = useDescriptionOfVideoCallingSettings();
+
   return (
-    <Modal isVisible={v} style={styles.modalContainer}>
+    <Modal
+      isVisible={!descriptionOfVideoCallingSettings}
+      style={styles.modalContainer}>
       <View style={styles.contents}>
         <ModalCloseButton
           containerStyle={styles.closeButton}
           onPress={() => {
-            setV(false);
+            setDescriptionOfVideoCallingSettings(true);
+            changeDescriptionOfVideoCallingSettings(true);
           }}
         />
         <LottieView source={Alert} autoPlay style={styles.alert} loop={false} />

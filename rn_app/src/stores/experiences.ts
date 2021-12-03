@@ -4,12 +4,14 @@ type Experiences = {
   tooltipAboutDisplay: boolean;
   intro: boolean;
   videoEditDescription: boolean;
+  descriptionOfVideoCallingSettings: boolean;
 };
 
 const initialState: Experiences = {
   tooltipAboutDisplay: false,
   videoEditDescription: false,
   intro: false,
+  descriptionOfVideoCallingSettings: false, // 「ビデオ通話は相手が受け取らない設定にしてるかも」の説明を表示したかどうか
 };
 
 const experiencesSlice = createSlice({

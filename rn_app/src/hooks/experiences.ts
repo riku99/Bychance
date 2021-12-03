@@ -8,6 +8,7 @@ import {
   putRequestToIntro,
   putRequestToTooltipAboutDisplayExperience,
   putRequestToVideoEditDescription,
+  putRequestToDescriptionOfVideoCallingSettingsShowed,
 } from '~/apis/experiences';
 
 export const useTooltipAboutDisplayExperience = () => {
@@ -94,5 +95,33 @@ export const useIntro = () => {
     endOfIntro,
     setIntro,
     changeIntro,
+  };
+};
+
+export const useDescriptionOfVideoCallingSettings = () => {
+  const {dispatch} = useApikit();
+  const descriptionOfVideoCallingSettings = useSelector(
+    (state: RootState) =>
+      state.experiencesReducer.descriptionOfVideoCallingSettings,
+  );
+  const setDescriptionOfVideoCallingSettings = useCallback(
+    (v: boolean) => {
+      dispatch(setExperiences({descriptionOfVideoCallingSettings: v}));
+    },
+    [dispatch],
+  );
+  const changeDescriptionOfVideoCallingSettings = useCallback(
+    async (v: boolean) => {
+      try {
+        await putRequestToDescriptionOfVideoCallingSettingsShowed(v);
+      } catch (e) {}
+    },
+    [],
+  );
+
+  return {
+    descriptionOfVideoCallingSettings,
+    setDescriptionOfVideoCallingSettings,
+    changeDescriptionOfVideoCallingSettings,
   };
 };

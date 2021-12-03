@@ -15,7 +15,6 @@ type InitialState = {
   loginDataLoading: boolean;
   videoCalling: boolean;
   gettingCall: boolean;
-  videoCallingAlertModalVisible: boolean;
 };
 
 const initialState: InitialState = {
@@ -32,7 +31,6 @@ const initialState: InitialState = {
   loginDataLoading: false,
   videoCalling: false,
   gettingCall: false,
-  videoCallingAlertModalVisible: false,
 };
 
 const appSlice = createSlice({
