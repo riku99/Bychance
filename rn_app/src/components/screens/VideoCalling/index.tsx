@@ -22,7 +22,7 @@ export const VideoCalling = React.memo(() => {
   const [enableVideo, setEnableVideo] = useState(true);
   const {top} = useSafeArea();
   const {videoCallingState, setVideoCallingState} = useVideoCallingState();
-  const {uid, token, channelName} = videoCallingState;
+  const {uid, token, channelName, role} = videoCallingState;
 
   const onCallEndButtonPress = async () => {
     await engine?.leaveChannel();
@@ -103,7 +103,12 @@ export const VideoCalling = React.memo(() => {
 
   useEffect(() => {
     return () => {
-      setVideoCallingState({uid: null, channelName: null, token: null});
+      setVideoCallingState({
+        uid: null,
+        channelName: null,
+        token: null,
+        role: null,
+      });
     };
   }, [setVideoCallingState]);
 
@@ -180,7 +185,7 @@ export const VideoCalling = React.memo(() => {
           <WaveIndicator color="white" size={50} />
         </View>
       )}
-      <DescriptionModal />
+      {role && role === 'pub' && <DescriptionModal />}
     </View>
   );
 });

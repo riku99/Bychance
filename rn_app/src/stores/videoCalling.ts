@@ -4,6 +4,7 @@ export type VideoCallingState = {
   channelName: string | null;
   token: string | null;
   uid: number | null; // ビデオ通話用uidはnumberでなければいけないのでUserのIDとは別にする
+  role: 'pub' | 'sub' | null; // pubはかけた側、subは受け取る側
   publisher: {
     id: string;
     name: string;
@@ -17,6 +18,7 @@ const initialState: InitialState = {
   channelName: null,
   token: null,
   uid: null,
+  role: null,
   publisher: null,
 };
 

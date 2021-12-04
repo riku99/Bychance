@@ -51,6 +51,7 @@ export const useVideoCalling = () => {
           token: response.data.token,
           uid: response.data.intUid,
           channelName,
+          role: 'pub',
           publisher: null,
         });
         return response.data;
@@ -128,6 +129,7 @@ export const useSetupVideoCallingSocket = () => {
             channelName: data.channelName,
             token: data.token,
             uid: data.intUid,
+            role: 'sub',
             publisher: data.publisher,
           });
         },
