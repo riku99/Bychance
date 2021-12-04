@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
-
 import {defaultTheme} from '~/theme';
 
 type Props = {
@@ -14,12 +13,9 @@ export const BackGroundItem = React.memo(({url, type}: Props) => {
   if (!url) {
     return <View style={styles.noneSoruce} />;
   }
+
   if (type === 'image') {
-    return (
-      <>
-        <FastImage source={{uri: url}} style={styles.source} />
-      </>
-    );
+    return <FastImage source={{uri: url}} style={styles.source} />;
   } else {
     return (
       <Video
