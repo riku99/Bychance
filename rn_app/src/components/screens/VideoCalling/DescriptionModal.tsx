@@ -1,15 +1,7 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import Modal from 'react-native-modal';
-import {ModalCloseButton} from '~/components/utils/ModalCloseButton';
-import LottieView from 'lottie-react-native';
+import React from 'react';
+import {StyleSheet, Text} from 'react-native';
 import {useDescriptionOfVideoCallingSettings} from '~/hooks/experiences';
-
-const Alert = require('~/assets/lottie/alert.json');
-
-type Props = {
-  isVisible: boolean;
-};
+import {AlertMarkModal} from '~/components/utils/AlertMarkModal';
 
 export const DescriptionModal = () => {
   const {
@@ -19,38 +11,27 @@ export const DescriptionModal = () => {
   } = useDescriptionOfVideoCallingSettings();
 
   return (
-    <Modal
+    <AlertMarkModal
       isVisible={!descriptionOfVideoCallingSettings}
-      style={styles.modalContainer}>
-      <View style={styles.contents}>
-        <ModalCloseButton
-          containerStyle={styles.closeButton}
-          onPress={() => {
-            setDescriptionOfVideoCallingSettings(true);
-            changeDescriptionOfVideoCallingSettings(true);
-          }}
-        />
-        <LottieView source={Alert} autoPlay style={styles.alert} loop={false} />
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>
-            相手ユーザーが設定で
-            <Text style={styles.textBold}>「ビデオ通話を受け取る」</Text>
-            をOFFにしている場合、
-            <Text style={styles.textUnderColor}>
-              このビデオ通話は相手に知らされず繋がりません。
-            </Text>
-            {'\n'}
-            {'\n'}
-            相手の設定がONになっているかOFFになっているかを知ることはできません。
-            {'\n'}
-            {'\n'}
-            <Text style={styles.textSub}>
-              ※ 今後このお知らせは表示されません
-            </Text>
-          </Text>
-        </View>
-      </View>
-    </Modal>
+      closeButtonPress={() => {
+        setDescriptionOfVideoCallingSettings(true);
+        changeDescriptionOfVideoCallingSettings(true);
+      }}>
+      <Text style={styles.text}>
+        相手ユーザーが設定で
+        <Text style={styles.textBold}>「ビデオ通話を受け取る」</Text>
+        をOFFにしている場合、
+        <Text style={styles.textUnderColor}>
+          このビデオ通話は相手に知らされず繋がりません。
+        </Text>
+        {'\n'}
+        {'\n'}
+        相手の設定がONになっているかOFFになっているかを知ることはできません。
+        {'\n'}
+        {'\n'}
+        <Text style={styles.textSub}>※ 今後このお知らせは表示されません</Text>
+      </Text>
+    </AlertMarkModal>
   );
 };
 
@@ -70,8 +51,8 @@ const styles = StyleSheet.create({
     transform: [{translateX: -11}, {translateY: -11}],
   },
   alert: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     alignSelf: 'center',
   },
   textContainer: {
