@@ -64,7 +64,7 @@ export type UserBackGroundItem = {
   height: number | null;
 };
 
-export type VideoCallingData = {
+export type VideoCallingSocketData = {
   channelName: string;
   token: string;
   to: string;
@@ -76,6 +76,14 @@ export type VideoCallingData = {
   };
 };
 
+export type VideoCallingPushNotificationData = {
+  channelName: string;
+  token: string;
+  to: string;
+  intUid: string;
+  publisher: string;
+};
+
 export type TalkRoomMessagesNotificationData = {
   type: 'talkRoomMessages';
   talkRoomId: string;
@@ -84,7 +92,7 @@ export type TalkRoomMessagesNotificationData = {
 
 export type VideoCallingNotificationData = {
   type: 'videoCalling';
-} & VideoCallingData;
+} & VideoCallingPushNotificationData;
 
 export type PushNotificationData =
   | TalkRoomMessagesNotificationData

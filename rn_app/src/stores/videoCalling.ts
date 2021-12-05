@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type VideoCallingState = {
-  channelName: string | null;
-  token: string | null;
-  uid: number | null; // ビデオ通話用uidはnumberでなければいけないのでUserのIDとは別にする
-  role: 'pub' | 'sub' | null; // pubはかけた側、subは受け取る側
+  channelName: string;
+  token: string;
+  uid: number; // ビデオ通話用uidはnumberでなければいけないのでUserのIDとは別にする
+  role: 'pub' | 'sub'; // pubはかけた側、subは受け取る側
   publisher: {
     id: string;
     name: string;
@@ -12,27 +12,16 @@ export type VideoCallingState = {
   } | null;
 };
 
-type InitialState = VideoCallingState;
+type InitialState = VideoCallingState | null;
 
-const initialState: InitialState = {
-  channelName: null,
-  token: null,
-  uid: null,
-  role: null,
-  publisher: null,
-};
-
+const initialState: InitialState = null;
 const videoCallingSlice = createSlice({
   name: 'videoCalling',
-  initialState,
+  initialState: initialState as InitialState,
   reducers: {
-    setVideoCallingState: (
-      state,
-      action: PayloadAction<Partial<InitialState>>,
-    ) => ({
-      ...state,
-      ...action.payload,
-    }),
+    setVideoCallingState: (state, action: PayloadAction<InitialState>) => {
+      return action.payload;
+    },
   },
 });
 

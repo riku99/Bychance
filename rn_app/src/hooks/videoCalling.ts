@@ -14,7 +14,7 @@ import {useCustomDispatch} from './stores';
 import {shallowEqual, useSelector} from 'react-redux';
 import {RootState} from '~/stores';
 import {useVideoCalling as useVideoCallingView} from '~/hooks/appState';
-import {VideoCallingData} from '~/types';
+import {VideoCallingSocketData} from '~/types';
 
 export const useVideoCallingState = () => {
   const dispatch = useCustomDispatch();
@@ -23,7 +23,7 @@ export const useVideoCallingState = () => {
     shallowEqual,
   );
   const setVideoCallingState = useCallback(
-    (data: Partial<VideoCallingState>) => {
+    (data: VideoCallingState | null) => {
       dispatch(_setVideoCallingState(data));
     },
     [dispatch],
@@ -109,7 +109,7 @@ export const useSetupVideoCallingSocket = () => {
 
   useEffect(() => {
     if (socket && id) {
-      socket.on('startCall', (data: VideoCallingData) => {
+      socket.on('startCall', (data: VideoCallingSocketData) => {
         if (data.to !== id) {
           return;
         }

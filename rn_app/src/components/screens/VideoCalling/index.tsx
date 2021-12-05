@@ -22,7 +22,10 @@ export const VideoCalling = React.memo(() => {
   const [enableVideo, setEnableVideo] = useState(true);
   const {top} = useSafeArea();
   const {videoCallingState, setVideoCallingState} = useVideoCallingState();
-  const {uid, token, channelName, role} = videoCallingState;
+  const uid = videoCallingState?.uid;
+  const token = videoCallingState?.token;
+  const channelName = videoCallingState?.channelName;
+  const role = videoCallingState?.role;
 
   const onCallEndButtonPress = async () => {
     await engine?.leaveChannel();
@@ -105,12 +108,7 @@ export const VideoCalling = React.memo(() => {
 
   useEffect(() => {
     return () => {
-      setVideoCallingState({
-        uid: null,
-        channelName: null,
-        token: null,
-        role: null,
-      });
+      setVideoCallingState(null);
     };
   }, [setVideoCallingState]);
 

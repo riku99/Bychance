@@ -53,7 +53,9 @@ export const GetiingCall = () => {
 
   return (
     <Animated.View style={[animatedStyle, styles.container, {top}]}>
-      <Text style={styles.name}>{videoCallingState.publisher?.name}</Text>
+      <Text style={styles.name}>
+        {videoCallingState ? videoCallingState.publisher?.name : ''}
+      </Text>
       <View style={styles.buttonGroup}>
         <Button
           icon={{name: 'call', color: 'white', size: 28}}
@@ -64,7 +66,7 @@ export const GetiingCall = () => {
         <CallEndButton onPress={onCallEndPress} />
       </View>
       <UserAvatar
-        image={videoCallingState.publisher?.image}
+        image={videoCallingState ? videoCallingState.publisher?.image : null}
         size={54}
         containerStyle={styles.imageContainer}
       />

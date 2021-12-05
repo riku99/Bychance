@@ -72,9 +72,9 @@ export const usePushNotificationHandler = () => {
         setVideoCallingState({
           channelName: data.channelName,
           token: data.token,
-          uid: data.intUid,
+          uid: Number(data.intUid),
           role: 'sub',
-          publisher: data.publisher,
+          publisher: JSON.parse(data.publisher),
         });
       }
     },
