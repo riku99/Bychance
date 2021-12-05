@@ -4,10 +4,7 @@ import {RNToasty} from 'react-native-toasty';
 import io, {Socket} from 'socket.io-client';
 import {showMessage} from 'react-native-flash-message';
 import useSWR from 'swr';
-import messaging from '@react-native-firebase/messaging';
-import {useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
-
 import {useApikit} from './apikit';
 import {useMyId} from './users';
 import {useCustomDispatch} from './stores';
@@ -22,7 +19,6 @@ import {
   postRequestToTalkRoomMessagesRead,
 } from '~/apis/talkRoomMessages';
 import {RecieveTalkRoomMessageWithSocket} from '~/types';
-import {RootNavigationProp} from '~/navigations/Root';
 
 export const useCreateReadTalkRoomMessages = ({
   talkRoomId,
@@ -273,71 +269,4 @@ export const useGetMessages = ({talkRoomId}: {talkRoomId: number}) => {
   return {
     result: data,
   };
-};
-
-type TalkRoomMessagesNotificationData = {
-  type: 'talkRoomMessages';
-  talkRoomId: string;
-  partnerId: string;
-};
-
-export const useTalkRoomMessagesPushNotification = () => {
-  const dispatch = useCustomDispatch();
-  const navigation = useNavigation<
-    RootNavigationProp<'Flashes' | 'TakeFlash' | 'Tab' | 'UserEditStack'>
-  >();
-
-  // FIX: ログアウト時にはクリーンアップする
-  useEffect(() => {
-    //backgroundで通知を受け取ってその通知をタップした時の処理;
-    messaging().onNotificationOpenedApp(async (remoteMessage) => {
-      console.log('バックグラウンドで受け取りました');
-      const {
-        talkRoomId,
-        partnerId,
-      } = remoteMessage.data as TalkRoomMessagesNotificationData;
-
-      // .push ではなく .navigate にすることで既にrouteに存在するすスタックを探す。そのため、既にトークルームが開かれている場合2重になることがない。pushだと新しいスタックが追加されるので2重になってしまう
-      navigation.navigate('TalkRoomStack', {
-        screen: 'TalkRoom',
-        params: {
-          talkRoomId: Number(talkRoomId),
-          partner: {
-            id: partnerId,
-          },
-        },
-      });
-    });
-
-    // quit状態(アプリがbackgroundで動いてない場合やデバイスが起動してない場合)できた通知をタップした時の処理
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        if (remoteMessage) {
-          const {
-            talkRoomId,
-            partnerId,
-          } = remoteMessage.data as TalkRoomMessagesNotificationData;
-
-          navigation.navigate('TalkRoomStack', {
-            screen: 'TalkRoom',
-            params: {
-              talkRoomId: Number(talkRoomId),
-              partner: {
-                id: partnerId,
-              },
-            },
-          });
-        }
-      });
-
-    // バックグラウンド時にプッシュ通知を受け取った時に発火
-    // messaging().setBackgroundMessageHandler(async () => {
-    //   console.log('background handler');
-    //   // ここでSWRでrefetch、またはprefetchしたい。
-    // });
-
-    // フォアグラウンドの時にプッシュ通知を受け取ったら発火。フォアグラウンドの際はソケットで処理するのでここは一旦何もしなくていい。
-    // messaging().onMessage(() => {});
-  }, [dispatch, navigation]);
 };

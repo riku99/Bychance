@@ -11,7 +11,7 @@ import {MyPageStackScreen} from './MyPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {defaultTheme} from '~/theme';
-import {useTalkRoomMessagesPushNotification} from '~/hooks/talkRoomMessages';
+import {usePushNotificationHandler} from '~/hooks/pushNotification';
 import {RecommendationStackScreen} from './Recommendation';
 import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
@@ -34,7 +34,7 @@ export const Tabs = React.memo(() => {
 
   // このフックはuseNavigationを使うのでstackに渡されているコンポーネントの中じゃないと使えない
   // stackの中で最初にレンダリングされるのがこのコンポーネントなのでとりあえずここに置く
-  useTalkRoomMessagesPushNotification();
+  usePushNotificationHandler();
 
   // SafeAreaInsetesContext下にあるコンポーネントでしかこのフックは使えないが、ReactNavigationによりレンダリングされているのでここだと使用可能
   useSetSafeArea();

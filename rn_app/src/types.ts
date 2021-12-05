@@ -63,3 +63,18 @@ export type UserBackGroundItem = {
   width: number | null;
   height: number | null;
 };
+
+export type TalkRoomMessagesNotificationData = {
+  type: 'talkRoomMessages';
+  talkRoomId: string;
+  partnerId: string;
+};
+
+export type VideoCallingNotificationData = {
+  type: 'videoCalling';
+  name: string;
+};
+
+export type PushNotificationData =
+  | TalkRoomMessagesNotificationData
+  | VideoCallingNotificationData;
