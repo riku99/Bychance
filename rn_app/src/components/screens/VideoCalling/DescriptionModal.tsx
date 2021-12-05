@@ -36,29 +36,6 @@ export const DescriptionModal = () => {
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  contents: {
-    width: '90%',
-    backgroundColor: 'white',
-    paddingBottom: 20,
-  },
-  closeButton: {
-    position: 'absolute',
-    transform: [{translateX: -11}, {translateY: -11}],
-  },
-  alert: {
-    width: 110,
-    height: 110,
-    alignSelf: 'center',
-  },
-  textContainer: {
-    marginTop: 10,
-    paddingHorizontal: 12,
-  },
   text: {
     fontSize: 16,
     lineHeight: 21,

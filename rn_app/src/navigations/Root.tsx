@@ -22,7 +22,6 @@ import {ApplyingGroup} from '~/components/screens/Groups';
 import {defaultTheme} from '~/theme';
 import {useUserPageStackList, UserPageScreenGroupParamList} from './UserPage';
 import {UserBackGroundItem} from '~/types';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -52,8 +51,7 @@ export type RootNavigationProp<
   T extends keyof RootStackParamList
 > = StackNavigationProp<RootStackParamList, T>;
 
-// const RootStack = createStackNavigator<RootStackParamList>();
-const RootStack = createSharedElementStackNavigator<RootStackParamList>();
+const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = React.memo(() => {
   const {renderUserPageStackList} = useUserPageStackList();
@@ -124,25 +122,38 @@ export const RootStackScreen = React.memo(() => {
         options={() => {
           return {
             headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureDirection: 'horizontal',
-            cardStyleInterpolator: ({current}) => {
-              return {
-                cardStyle: {
-                  opacity: current.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1],
-                  }),
-                  transform: [
-                    {
-                      scale: current.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0.5, 1],
-                      }),
-                    },
-                  ],
-                },
-              };
-            },
+            // cardStyleInterpolator: ({current}) => {
+            //   return {
+            //     cardStyle: {
+            //       opacity: current.progress.interpolate({
+            //         inputRange: [0, 1],
+            //         outputRange: [0, 1],
+            //       }),
+            //       transform: [
+            //         {
+            //           scale: current.progress.interpolate({
+            //             inputRange: [0, 1],
+            //             outputRange: [0.6, 1],
+            //           }),
+            //         },
+            //         {
+            //           translateY: current.progress.interpolate({
+            //             inputRange: [0, 1],
+            //             outputRange: [-height, 0],
+            //           }),
+            //         },
+            //         {
+            //           translateX: current.progress.interpolate({
+            //             inputRange: [0, 1],
+            //             outputRange: [-width, 0],
+            //           }),
+            //         },
+            //       ],
+            //     },
+            //   };
+            // },
           };
         }}
       />
