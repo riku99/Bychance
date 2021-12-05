@@ -96,7 +96,9 @@ export const VideoCalling = React.memo(() => {
 
     return () => {
       (async function () {
-        await engine?.leaveChannel();
+        if (engine) {
+          await engine.leaveChannel();
+        }
       })();
     };
   }, [engine, token, channelName, uid]);

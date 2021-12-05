@@ -9,6 +9,7 @@ import {
   putRequestToTooltipAboutDisplayExperience,
   putRequestToVideoEditDescription,
   putRequestToDescriptionOfVideoCallingSettingsShowed,
+  putRequestToDescriptionOfNotGettingTalkRoomMessageShowed,
 } from '~/apis/experiences';
 
 export const useTooltipAboutDisplayExperience = () => {
@@ -52,7 +53,6 @@ export const useVideoEditDescription = () => {
     async (bool: boolean) => {
       try {
         await putRequestToVideoEditDescription(bool);
-
         setVideoEditDesciption(bool);
       } catch (e) {
         handleApiError(e);
@@ -123,5 +123,36 @@ export const useDescriptionOfVideoCallingSettings = () => {
     descriptionOfVideoCallingSettings,
     setDescriptionOfVideoCallingSettings,
     changeDescriptionOfVideoCallingSettings,
+  };
+};
+
+export const useDescriptionOfNotGettingTalkRoomMessageShowed = () => {
+  const {dispatch} = useApikit();
+  const descriptionOfNotGettingTalkRoomMessageShowed = useSelector(
+    (state: RootState) =>
+      state.experiencesReducer.descriptionOfNotGettingTalkRoomMessageShowed,
+  );
+  const setDescriptionOfNotGettingTalkRoomMessageShowed = useCallback(
+    (value: boolean) => {
+      dispatch(
+        setExperiences({descriptionOfNotGettingTalkRoomMessageShowed: value}),
+      );
+    },
+    [dispatch],
+  );
+  const changeDescriptionOfNotGettingTalkRoomMessageShowed = useCallback(
+    async (value: boolean) => {
+      try {
+        await putRequestToDescriptionOfNotGettingTalkRoomMessageShowed(value);
+        setDescriptionOfNotGettingTalkRoomMessageShowed(value);
+      } catch (e) {}
+    },
+    [setDescriptionOfNotGettingTalkRoomMessageShowed],
+  );
+
+  return {
+    descriptionOfNotGettingTalkRoomMessageShowed,
+    setDescriptionOfNotGettingTalkRoomMessageShowed,
+    changeDescriptionOfNotGettingTalkRoomMessageShowed,
   };
 };

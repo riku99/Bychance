@@ -18,6 +18,7 @@ import {RootState} from '~/stores';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {Dimensions} from 'react-native';
 import {useGroupMemberWhoBlcokTargetUserExists} from '~/hooks/groups';
+import {DescriptionModal} from './DescriptionModal';
 
 type RootRouteProp = RouteProp<TalkRoomStackParamList, 'TalkRoom'>;
 
@@ -43,6 +44,7 @@ export const TalkRoom = ({route, navigation}: Props) => {
   useCreateReadTalkRoomMessages({
     talkRoomId,
   });
+  const [sendMessage, setSendMessage] = useState(false);
 
   useEffect(() => {
     if (result?.length) {
@@ -92,6 +94,7 @@ export const TalkRoom = ({route, navigation}: Props) => {
   });
 
   const onSend = async (text: string) => {
+    setSendMessage(true);
     const temporaryId = Math.random().toString(32).substring(2); //一時的なIDのためのランダムな文字列
     const newMessage = {
       _id: temporaryId,
@@ -164,12 +167,15 @@ export const TalkRoom = ({route, navigation}: Props) => {
   }, [toast, groupMemberWhoBlockThisUserExists]);
 
   return (
-    <Chat
-      messages={messages}
-      userId={myId}
-      onSend={onSend}
-      onAvatarPress={onAvatarPress}
-    />
+    <>
+      <Chat
+        messages={messages}
+        userId={myId}
+        onSend={onSend}
+        onAvatarPress={onAvatarPress}
+      />
+      {sendMessage && <DescriptionModal />}
+    </>
   );
 };
 

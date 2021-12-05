@@ -5,6 +5,7 @@ type Experiences = {
   intro: boolean;
   videoEditDescription: boolean;
   descriptionOfVideoCallingSettings: boolean;
+  descriptionOfNotGettingTalkRoomMessageShowed: boolean;
 };
 
 const initialState: Experiences = {
@@ -12,6 +13,7 @@ const initialState: Experiences = {
   videoEditDescription: false,
   intro: false,
   descriptionOfVideoCallingSettings: false, // 「ビデオ通話は相手が受け取らない設定にしてるかも」の説明を表示したかどうか
+  descriptionOfNotGettingTalkRoomMessageShowed: false,
 };
 
 const experiencesSlice = createSlice({

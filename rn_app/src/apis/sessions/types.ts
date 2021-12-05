@@ -20,6 +20,7 @@ export type LoginData = {
     groupsApplicationEnabled: boolean;
     videoCallingEnabled?: boolean;
     descriptionOfVideoCallingSettingsShowed: boolean;
+    descriptionOfNotGettingTalkRoomMessageShowed: boolean;
   };
   posts: {
     id: number;

@@ -39,3 +39,14 @@ export const putRequestToDescriptionOfVideoCallingSettingsShowed = async (
     addBearer(idToken),
   );
 };
+
+export const putRequestToDescriptionOfNotGettingTalkRoomMessageShowed = async (
+  value: boolean,
+) => {
+  const idToken = await getIdToken();
+  return await axios.put(
+    `${baseUrl}/users/description_of_not_getting_talk_room_message_showed`,
+    {value},
+    addBearer(idToken),
+  );
+};

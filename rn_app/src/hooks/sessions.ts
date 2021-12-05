@@ -30,6 +30,7 @@ export const useLoginDispatch = () => {
         groupsApplicationEnabled,
         videoCallingEnabled,
         descriptionOfVideoCallingSettingsShowed,
+        descriptionOfNotGettingTalkRoomMessageShowed,
         ...storedUser
       } = user;
       const settings = {
@@ -50,6 +51,7 @@ export const useLoginDispatch = () => {
           videoEditDescription,
           intro,
           descriptionOfVideoCallingSettings: descriptionOfVideoCallingSettingsShowed,
+          descriptionOfNotGettingTalkRoomMessageShowed,
         }),
       );
       dispatch(setLogin(true));
