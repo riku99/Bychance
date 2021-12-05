@@ -14,6 +14,7 @@ import {useCustomDispatch} from './stores';
 import {shallowEqual, useSelector} from 'react-redux';
 import {RootState} from '~/stores';
 import {useVideoCalling as useVideoCallingView} from '~/hooks/appState';
+import {VideoCallingData} from '~/types';
 
 export const useVideoCallingState = () => {
   const dispatch = useCustomDispatch();
@@ -108,32 +109,19 @@ export const useSetupVideoCallingSocket = () => {
 
   useEffect(() => {
     if (socket && id) {
-      socket.on(
-        'startCall',
-        (data: {
-          channelName: string;
-          token: string;
-          to: string;
-          intUid: number;
-          publisher: {
-            id: string;
-            name: string;
-            image: string | null;
-          };
-        }) => {
-          if (data.to !== id) {
-            return;
-          }
-          setGettingCall(true);
-          setVideoCallingState({
-            channelName: data.channelName,
-            token: data.token,
-            uid: data.intUid,
-            role: 'sub',
-            publisher: data.publisher,
-          });
-        },
-      );
+      socket.on('startCall', (data: VideoCallingData) => {
+        if (data.to !== id) {
+          return;
+        }
+        setGettingCall(true);
+        setVideoCallingState({
+          channelName: data.channelName,
+          token: data.token,
+          uid: data.intUid,
+          role: 'sub',
+          publisher: data.publisher,
+        });
+      });
     }
   }, [socket, setGettingCall, setVideoCallingState, id]);
 
