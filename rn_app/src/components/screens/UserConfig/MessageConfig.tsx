@@ -1,13 +1,16 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {View, Switch, Text} from 'react-native';
-
+import {PeepsModal} from '~/components/utils/PeepsModal';
 import {ConfigList} from './List';
 import {commonStyles} from './constants';
-import {CustomPopupModal} from '~/components/utils/PopupModal';
 import {
   useTalkRoomMessageReceipt,
   useShowReceiveMessage,
 } from '~/hooks/settings';
+
+const W = require('~/assets/img/glassWomen.png');
+const E = require('~/assets/img/eye-ojisan.png');
+const K = require('~/assets/img/kuma-ojisan.png');
 
 export const MessageConfig = React.memo(() => {
   const {
@@ -97,28 +100,32 @@ export const MessageConfig = React.memo(() => {
       <View style={commonStyles.sectionContainer}>
         <ConfigList list={list} />
       </View>
-      <CustomPopupModal
+
+      <PeepsModal
         isVisible={showMessageReceiptModal}
-        closeModal={() => setShowMessageReceiptModal(false)}>
-        <View style={commonStyles.descriptionModal}>
-          <Text style={commonStyles.descriptionText}>
-            ONの場合、他のユーザーからメッセージを受け取ります。
-            {'\n'}OFFの場合、他のユーザーからメッセージを受け取りません。
-            {'\n'}
-            なお、他のユーザーが「あなたがメッセージを受け取るかどうか」を知ることはありません。
-          </Text>
-        </View>
-      </CustomPopupModal>
-      <CustomPopupModal
+        closeButtonPress={() => setShowMessageReceiptModal(false)}
+        sources={[E, W]}>
+        <Text style={{fontSize: 16}}>
+          ONの場合、他のユーザーからメッセージを受け取ります。
+          {'\n'}
+          {'\n'}
+          OFFの場合、他のユーザーからメッセージを受け取りません。
+          {'\n'}
+          {'\n'}
+          他のユーザーが「あなたがメッセージを受け取るかどうか」を知ることはありません。
+        </Text>
+      </PeepsModal>
+
+      <PeepsModal
         isVisible={showReceiveMessageDescription}
-        closeModal={() => setShowReceiveMessageDescription(false)}>
-        <View style={commonStyles.descriptionModal}>
-          <Text style={commonStyles.descriptionText}>
-            ONの場合、アプリ起動中（バックグラウンドは除く）にメッセージが他のユーザーから送られた場合に画面上部に表示されます。
-            {'\n'}※ プッシュ通知とは別のものです
-          </Text>
-        </View>
-      </CustomPopupModal>
+        closeButtonPress={() => setShowReceiveMessageDescription(false)}
+        sources={[K]}>
+        <Text style={{fontSize: 16}}>
+          ONの場合、アプリ起動中（バックグラウンドは除く）にメッセージが他のユーザーから送られた場合に画面上部に表示されます。
+          {'\n'}
+          {'\n'}※ プッシュ通知とは別のものです
+        </Text>
+      </PeepsModal>
     </View>
   );
 });
