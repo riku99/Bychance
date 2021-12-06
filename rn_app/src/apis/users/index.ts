@@ -127,3 +127,12 @@ export const deleteRequestToUsersGroupId = async () => {
   const idToken = await getIdToken();
   return await axios.delete(`${baseUrl}/users/group_id`, addBearer(idToken));
 };
+
+export const putRequestToUsersOnCall = async (value: boolean) => {
+  const idToken = await getIdToken();
+  return await axios.put(
+    `${baseUrl}/users/on_call`,
+    {value},
+    addBearer(idToken),
+  );
+};

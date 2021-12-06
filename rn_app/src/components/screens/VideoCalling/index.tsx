@@ -13,6 +13,7 @@ import {useSafeArea} from '~/hooks/appState';
 import {WaveIndicator} from 'react-native-indicators';
 import {useVideoCallingState} from '~/hooks/videoCalling';
 import {DescriptionModal} from './DescriptionModal';
+import {useUsersOnCall} from '~/hooks/users';
 
 export const VideoCalling = React.memo(() => {
   const [engine, setEngine] = useState<RtcEngine>();
@@ -26,6 +27,7 @@ export const VideoCalling = React.memo(() => {
   const token = videoCallingState?.token;
   const channelName = videoCallingState?.channelName;
   const role = videoCallingState?.role;
+  const {changeOnCall} = useUsersOnCall();
 
   const onCallEndButtonPress = async () => {
     await engine?.leaveChannel();
@@ -111,6 +113,18 @@ export const VideoCalling = React.memo(() => {
       setVideoCallingState(null);
     };
   }, [setVideoCallingState]);
+
+  useEffect(() => {
+    (async function () {
+      await changeOnCall(true);
+    })();
+
+    return () => {
+      (async function () {
+        await changeOnCall(false);
+      })();
+    };
+  }, [changeOnCall, engine, setVideoCalling]);
 
   const renderOnlyLocalView = useCallback(() => {
     return (

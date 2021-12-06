@@ -24,6 +24,7 @@ import {
   getRequestToUsersInfo,
   getRequestToUsersIsDisplayedToOtherUsers,
   deleteRequestToUsersGroupId,
+  putRequestToUsersOnCall,
 } from '~/apis/users';
 
 export const useUser = () =>
@@ -318,6 +319,15 @@ export const useDeleteUsersGroupId = () => {
   return {
     deleteGroupId,
   };
+};
+
+export const useUsersOnCall = () => {
+  const changeOnCall = useCallback(async (v: boolean) => {
+    try {
+      await putRequestToUsersOnCall(v);
+    } catch (e) {}
+  }, []);
+  return {changeOnCall};
 };
 
 // こっから下ファイル分けたほうがいい

@@ -100,6 +100,7 @@ export const useUserPageModalList = ({
             [
               {
                 text: 'キャンセル',
+                style: 'cancel',
               },
               {
                 text: videoCallingText.alertButtonText,

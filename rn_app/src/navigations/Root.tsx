@@ -122,38 +122,26 @@ export const RootStackScreen = React.memo(() => {
         options={() => {
           return {
             headerShown: false,
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureDirection: 'horizontal',
-            // cardStyleInterpolator: ({current}) => {
-            //   return {
-            //     cardStyle: {
-            //       opacity: current.progress.interpolate({
-            //         inputRange: [0, 1],
-            //         outputRange: [0, 1],
-            //       }),
-            //       transform: [
-            //         {
-            //           scale: current.progress.interpolate({
-            //             inputRange: [0, 1],
-            //             outputRange: [0.6, 1],
-            //           }),
-            //         },
-            //         {
-            //           translateY: current.progress.interpolate({
-            //             inputRange: [0, 1],
-            //             outputRange: [-height, 0],
-            //           }),
-            //         },
-            //         {
-            //           translateX: current.progress.interpolate({
-            //             inputRange: [0, 1],
-            //             outputRange: [-width, 0],
-            //           }),
-            //         },
-            //       ],
-            //     },
-            //   };
-            // },
+            cardStyleInterpolator: ({current}) => {
+              return {
+                cardStyle: {
+                  opacity: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 1],
+                  }),
+                  transform: [
+                    {
+                      scale: current.progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0.6, 1],
+                      }),
+                    },
+                  ],
+                },
+              };
+            },
           };
         }}
       />

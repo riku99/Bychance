@@ -1,29 +1,32 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import LottieView from 'lottie-react-native';
-const Alert = require('~/assets/lottie/alert.json');
-import {ModalWithTopAsset} from '~/components/utils/ModalWithTopAsset';
+import {StyleSheet, View} from 'react-native';
+import Modal from 'react-native-modal';
+import {ModalCloseButton} from '~/components/utils/ModalCloseButton';
 
 type Props = {
   isVisible: boolean;
   closeButtonPress: () => void;
   children: JSX.Element;
+  topView: JSX.Element;
 };
 
-export const AlertMarkModal = ({
+export const ModalWithTopAsset = ({
   isVisible,
   closeButtonPress,
   children,
+  topView,
 }: Props) => {
   return (
-    <ModalWithTopAsset
-      isVisible={isVisible}
-      closeButtonPress={closeButtonPress}
-      topView={
-        <LottieView source={Alert} autoPlay style={styles.alert} loop={false} />
-      }>
-      {children}
-    </ModalWithTopAsset>
+    <Modal isVisible={isVisible} style={styles.container}>
+      <View style={styles.contents}>
+        <ModalCloseButton
+          containerStyle={styles.closeButton}
+          onPress={closeButtonPress}
+        />
+        {topView}
+        <View style={styles.mainContainer}>{children}</View>
+      </View>
+    </Modal>
   );
 };
 

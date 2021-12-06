@@ -152,9 +152,6 @@ export const User = ({
       </Animated.View>
 
       <Animated.View
-        onLayout={(e) => {
-          console.log(e.nativeEvent);
-        }}
         style={[
           styles.avatarContainer,
           {
