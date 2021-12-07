@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {User} from '~/components/utils/User';
 import {
   useMyId,
@@ -10,6 +9,7 @@ import {
   useMySNSData,
   useMyAvatar,
 } from '~/hooks/users';
+import {DescriptionModal} from './DescriptionModal';
 
 export const MyPage = React.memo(() => {
   const id = useMyId();
@@ -25,14 +25,17 @@ export const MyPage = React.memo(() => {
   };
 
   return (
-    <User
-      id={id}
-      name={name}
-      avatar={avatar}
-      introduce={introduce}
-      backGroundItem={backGroundItem}
-      snsData={snsData}
-      refresh={refresh}
-    />
+    <>
+      <User
+        id={id}
+        name={name}
+        avatar={avatar}
+        introduce={introduce}
+        backGroundItem={backGroundItem}
+        snsData={snsData}
+        refresh={refresh}
+      />
+      <DescriptionModal />
+    </>
   );
 });

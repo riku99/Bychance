@@ -166,8 +166,11 @@ export const NearbyUsersScreen = React.memo(() => {
   const {prefetch} = usePrefetchStamps();
   useEffect(() => {
     const firstFlashIds = users.map((u) => u.flashIds[0]); // ここではそれぞれのユーザーの最初のものだけprefetchする(stratingIndexがどこからか不確定なため)。2つめ以降は表示するスクリーンで行う
+    console.log(firstFlashIds);
     firstFlashIds.forEach((id) => {
-      prefetch(id);
+      if (id) {
+        prefetch(id);
+      }
     });
   }, [prefetch, users]);
 
