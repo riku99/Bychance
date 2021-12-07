@@ -12,9 +12,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import fs from 'react-native-fs';
 import {MenuView} from '@react-native-menu/menu';
 import {RNToasty} from 'react-native-toasty';
-
 import {RootNavigationProp} from '~/navigations/Root';
-import {UserEditNavigationProp} from '../../../navigations/types';
 import {SnsList} from '~/types';
 import {Avatar} from './Avatar';
 import {BackGroundItem} from './BackGroundItem';
@@ -75,12 +73,7 @@ export const UserEditPage = () => {
     youtube: _youtube,
   } = useMySNSData();
 
-  const navigation = useNavigation<
-    RootNavigationProp<'UserEditStack'> & UserEditNavigationProp<'UserEdit'>
-  >();
-  const userEditNavigation = useNavigation<
-    UserEditNavigationProp<'UserEdit'>
-  >();
+  const navigation = useNavigation<RootNavigationProp<'UserEdit'>>();
 
   const [instagram, setInstagram] = useState<string | null>(_instagram);
   const [twitter, setTwitter] = useState<string | null>(_twitter);
@@ -280,7 +273,7 @@ export const UserEditPage = () => {
 
   useLayoutEffect(() => {
     if (isFocused) {
-      navigation.dangerouslyGetParent()?.setOptions({
+      navigation.setOptions({
         title: 'プロフィールを編集',
         headerRight: () =>
           !isLoading ? (
@@ -371,7 +364,7 @@ export const UserEditPage = () => {
             label="名前"
             value={name}
             onPress={() => {
-              userEditNavigation.navigate('FormPage', {
+              navigation.navigate('UserEditForm', {
                 type: '名前',
                 value: name,
                 setValue: setName,
@@ -382,7 +375,7 @@ export const UserEditPage = () => {
             label="自己紹介"
             value={displayedIntroduce}
             onPress={() => {
-              userEditNavigation.navigate('FormPage', {
+              navigation.navigate('UserEditForm', {
                 type: '自己紹介',
                 value: introduce,
                 setValue: setIntroduce,
@@ -393,7 +386,7 @@ export const UserEditPage = () => {
             label="ステータスメッセージ"
             value={message}
             onPress={() => {
-              userEditNavigation.navigate('FormPage', {
+              navigation.navigate('UserEditForm', {
                 type: 'ステータスメッセージ',
                 value: message,
                 setValue: setMessage,

@@ -8,7 +8,7 @@ import {RootNavigationProp} from '~/navigations/Root';
 export const EditButton = React.memo(() => {
   const navigation = useNavigation<RootNavigationProp<'Tab'>>();
   const onEditButtonPress = () => {
-    navigation.navigate('UserEditStack');
+    navigation.navigate('UserEdit');
   };
   return (
     <Button

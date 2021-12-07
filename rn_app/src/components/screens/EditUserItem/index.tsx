@@ -2,17 +2,27 @@ import React, {useLayoutEffect, useEffect, useState} from 'react';
 import {View, StyleSheet, TextInput, Text} from 'react-native';
 import {useRoute, useNavigation, RouteProp} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
+import {RootStackParamList, RootNavigationProp} from '~/navigations/Root';
+import {defaultTheme} from '~/theme';
 
-import {UserEditStackParamList} from '~/navigations/UserEdit';
-
-export const EditFormPage = React.memo(() => {
-  const {params} = useRoute<RouteProp<UserEditStackParamList, 'FormPage'>>();
-  const navigation = useNavigation();
+export const UserEditForm = React.memo(() => {
+  const {params} = useRoute<RouteProp<RootStackParamList, 'UserEditForm'>>();
+  const navigation = useNavigation<RootNavigationProp<'UserEditForm'>>();
 
   useLayoutEffect(() => {
-    navigation.dangerouslyGetParent()?.setOptions({
+    navigation.setOptions({
       title: params.type,
       headerRight: undefined,
+      headerLeft: () => (
+        <Button
+          title="キャンセル"
+          style={{marginBottom: 3}}
+          titleStyle={{color: defaultTheme.darkGray}}
+          buttonStyle={{backgroundColor: 'transparent'}}
+          onPress={() => navigation.navigate('UserEdit')}
+          activeOpacity={1}
+        />
+      ),
     });
   }, [params.type, navigation]);
 

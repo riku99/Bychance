@@ -5,7 +5,6 @@ import messaging, {
 import {requestPushNotification} from '~/helpers/pushNotification';
 import {useNavigation} from '@react-navigation/native';
 import {PushNotificationData} from '~/types';
-import {RootNavigationProp} from '~/navigations/Root';
 import {postRequestToDeviceToken} from '~/apis/deviceToken';
 import {useGettingCall} from '~/hooks/appState';
 import {useVideoCallingState} from '~/hooks/videoCalling';
@@ -42,9 +41,7 @@ export const useRegisterDeviceToken = () => {
 };
 
 export const usePushNotificationHandler = () => {
-  const navigation = useNavigation<
-    RootNavigationProp<'Flashes' | 'TakeFlash' | 'Tab' | 'UserEditStack'>
-  >();
+  const navigation = useNavigation();
   const {setGettingCall} = useGettingCall();
   const {setVideoCallingState} = useVideoCallingState();
 

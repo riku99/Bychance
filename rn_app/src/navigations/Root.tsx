@@ -1,16 +1,11 @@
 import React from 'react';
-import {
-  getFocusedRouteNameFromRoute,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
+import {NavigatorScreenParams} from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import {Button} from 'react-native-elements';
 import {Tabs} from './Tab';
-import {UserEditStackScreen} from './UserEdit';
 import {FlashesStackParamList, FlashesStackScreen} from './Flashes';
 import {TalkRoomStackParamList, TalkRoomStackScreen} from './TalkRoom';
 import {TakeFlashScreen} from '~/components/screens/TakeFlash';
@@ -19,13 +14,13 @@ import {UserBackGroundView} from '~/components/screens/UserBackGroundView';
 import {UserConfig} from '~/components/screens/UserConfig';
 import {PrivateConfig} from '~/components/screens/PrivateConfig';
 import {ApplyingGroup} from '~/components/screens/Groups';
-import {defaultTheme} from '~/theme';
 import {useUserPageStackList, UserPageScreenGroupParamList} from './UserPage';
 import {UserBackGroundItem} from '~/types';
+import {UserEditPage} from '~/components/screens/UserEdit';
+import {UserEditForm} from '~/components/screens/EditUserItem';
 
 export type RootStackParamList = {
   Tab: undefined;
-  UserEditStack: undefined;
   TalkRoomStack: NavigatorScreenParams<TalkRoomStackParamList>;
   TakeFlash: undefined;
   Flashes: NavigatorScreenParams<FlashesStackParamList>;
@@ -44,6 +39,12 @@ export type RootStackParamList = {
     goTo: 'zone' | 'time';
   };
   Groups: undefined;
+  UserEdit: undefined;
+  UserEditForm: {
+    type: string;
+    value: string | null;
+    setValue: (s: string) => void;
+  };
 } & UserPageScreenGroupParamList;
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
@@ -51,52 +52,31 @@ export type RootNavigationProp<
   T extends keyof RootStackParamList
 > = StackNavigationProp<RootStackParamList, T>;
 
-const RootStack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootStackScreen = React.memo(() => {
   const {renderUserPageStackList} = useUserPageStackList();
 
   return (
-    <RootStack.Navigator
+    <Stack.Navigator
       mode="modal"
       screenOptions={{
         headerBackTitleVisible: false,
         headerStatusBarHeight: getHeaderStatusBarHeight(),
       }}>
-      <RootStack.Screen
+      <Stack.Screen
         name="Tab"
         component={Tabs}
         options={{headerShown: false}}
       />
-      <RootStack.Screen
-        name="UserEditStack"
-        component={UserEditStackScreen}
-        options={({route, navigation}) => {
-          return {
-            headerLeft:
-              getFocusedRouteNameFromRoute(route) === undefined ||
-              getFocusedRouteNameFromRoute(route) === 'UserEdit'
-                ? undefined
-                : () => (
-                    <Button
-                      title="キャンセル"
-                      style={{marginBottom: 3}}
-                      titleStyle={{color: defaultTheme.darkGray}}
-                      buttonStyle={{backgroundColor: 'transparent'}}
-                      onPress={() => navigation.navigate('UserEdit')}
-                    />
-                  ),
-          };
-        }}
-      />
-      <RootStack.Screen
+      <Stack.Screen
         name="UserBackGroundView"
         component={UserBackGroundView}
         options={{
           headerShown: false,
         }}
       />
-      <RootStack.Screen
+      <Stack.Screen
         name="TalkRoomStack"
         component={TalkRoomStackScreen}
         options={() => {
@@ -107,7 +87,7 @@ export const RootStackScreen = React.memo(() => {
           };
         }}
       />
-      <RootStack.Screen
+      <Stack.Screen
         name="TakeFlash"
         component={TakeFlashScreen}
         options={{
@@ -116,13 +96,12 @@ export const RootStackScreen = React.memo(() => {
           gestureDirection: 'horizontal-inverted',
         }}
       />
-      <RootStack.Screen
+      <Stack.Screen
         name="Flashes"
         component={FlashesStackScreen}
         options={() => {
           return {
             headerShown: false,
-            // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureDirection: 'horizontal',
             cardStyleInterpolator: ({current}) => {
               return {
@@ -145,7 +124,7 @@ export const RootStackScreen = React.memo(() => {
           };
         }}
       />
-      <RootStack.Screen
+      <Stack.Screen
         name="UserConfig"
         component={UserConfig}
         options={{
@@ -153,7 +132,7 @@ export const RootStackScreen = React.memo(() => {
           gestureDirection: 'horizontal',
         }}
       />
-      <RootStack.Screen
+      <Stack.Screen
         name="PrivateConfig"
         component={PrivateConfig}
         options={{
@@ -161,9 +140,18 @@ export const RootStackScreen = React.memo(() => {
           gestureDirection: 'horizontal',
         }}
       />
-      <RootStack.Screen
+      <Stack.Screen
         name="Groups"
         component={ApplyingGroup}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
+      <Stack.Screen name="UserEdit" component={UserEditPage} />
+      <Stack.Screen
+        name="UserEditForm"
+        component={UserEditForm}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal',
@@ -175,6 +163,6 @@ export const RootStackScreen = React.memo(() => {
           gestureDirection: 'horizontal',
         },
       })}
-    </RootStack.Navigator>
+    </Stack.Navigator>
   );
 });
