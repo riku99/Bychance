@@ -10,6 +10,7 @@ import {
   putRequestToVideoEditDescription,
   putRequestToDescriptionOfVideoCallingSettingsShowed,
   putRequestToDescriptionOfNotGettingTalkRoomMessageShowed,
+  putRequestToDescriptionOfMyDisplayShowed,
 } from '~/apis/experiences';
 
 export const useTooltipAboutDisplayExperience = () => {
@@ -154,5 +155,31 @@ export const useDescriptionOfNotGettingTalkRoomMessageShowed = () => {
     descriptionOfNotGettingTalkRoomMessageShowed,
     setDescriptionOfNotGettingTalkRoomMessageShowed,
     changeDescriptionOfNotGettingTalkRoomMessageShowed,
+  };
+};
+
+export const useDescriptionOfMyDisplayShowed = () => {
+  const {dispatch} = useApikit();
+  const descriptionOfMyDisplayShowed = useSelector(
+    (state: RootState) => state.experiencesReducer.descriptionOfMyDisplayShowed,
+  );
+  const setDescriptionOfMyDisplayShowed = useCallback(
+    (v: boolean) => {
+      dispatch(setExperiences({descriptionOfMyDisplayShowed: v}));
+    },
+    [dispatch],
+  );
+  const changeDescriptionOfMyDisplayShowed = useCallback(
+    async (v: boolean) => {
+      await putRequestToDescriptionOfMyDisplayShowed(v);
+      setDescriptionOfMyDisplayShowed(v);
+    },
+    [setDescriptionOfMyDisplayShowed],
+  );
+
+  return {
+    descriptionOfMyDisplayShowed,
+    setDescriptionOfMyDisplayShowed,
+    changeDescriptionOfMyDisplayShowed,
   };
 };

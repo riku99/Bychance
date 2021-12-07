@@ -50,3 +50,14 @@ export const putRequestToDescriptionOfNotGettingTalkRoomMessageShowed = async (
     addBearer(idToken),
   );
 };
+
+export const putRequestToDescriptionOfMyDisplayShowed = async (
+  value: boolean,
+) => {
+  const idToken = await getIdToken();
+  return await axios.put(
+    `${baseUrl}/users/description_of_my_display_showed`,
+    {value},
+    addBearer(idToken),
+  );
+};

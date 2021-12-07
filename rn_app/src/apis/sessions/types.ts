@@ -21,6 +21,7 @@ export type LoginData = {
     videoCallingEnabled?: boolean;
     descriptionOfVideoCallingSettingsShowed: boolean;
     descriptionOfNotGettingTalkRoomMessageShowed: boolean;
+    descriptionOfMyDisplayShowed: boolean;
   };
   posts: {
     id: number;

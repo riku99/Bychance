@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Badge} from 'react-native-elements';
-
 import {useDisplayedMenu} from '~/hooks/appState';
 import {useGroupBadge} from '~/hooks/appState';
 import {defaultTheme} from '~/theme';
@@ -20,9 +19,7 @@ export const MenuBar = React.memo(() => {
         }}
         activeOpacity={1}
       />
-      {groupBadge && (
-        <Badge status="error" containerStyle={styles.badgeContainer} />
-      )}
+      {groupBadge && <Badge containerStyle={styles.badgeContainer} />}
     </View>
   );
 });

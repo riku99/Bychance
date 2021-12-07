@@ -116,12 +116,7 @@ export const Menu = React.memo(() => {
             <ListItem key={i} onPress={l.onPress}>
               <View>
                 <Icon name={l.icon} color={l.titleStyle.color} />
-                {l.badge && (
-                  <Badge
-                    status="error"
-                    containerStyle={styles.badgeContainer}
-                  />
-                )}
+                {l.badge && <Badge containerStyle={styles.badgeContainer} />}
               </View>
               <ListItem.Content>
                 <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>

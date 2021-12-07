@@ -132,7 +132,7 @@ export const Tabs = React.memo(() => {
           tabBarBadge: unreadMessageNumber ? unreadMessageNumber : undefined,
         }}
       />
-      <RootTab.Screen
+      {/* <RootTab.Screen
         name="Recommendation"
         component={RecommendationStackScreen}
         options={{
@@ -141,7 +141,7 @@ export const Tabs = React.memo(() => {
           ),
           tabBarLabel: '近くのおすすめ',
         }}
-      />
+      /> */}
       <RootTab.Screen
         name="CreatePost"
         component={CreatePostStackScreen}

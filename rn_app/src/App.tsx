@@ -8,7 +8,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FlashMessage from 'react-native-flash-message';
 import {ToastProvider as NewToastProvider} from 'react-native-toast-notifications';
 import {PersistGate} from 'redux-persist/es/integration/react';
-
+import {RNEThemeProvider} from '~/providers/RNEThemeProvider';
 import Root from './components/Root';
 import {Dimensions} from 'react-native';
 import {ToastLoading} from '~/components/utils/ToastLoading';
@@ -26,7 +26,9 @@ const App: () => React.ReactNode = () => {
               successIcon={<MIcon name="done" color="white" size={17} />}
               dangerIcon={<MIcon name="clear" color="white" size={17} />}
               style={{width: toastWidth}}>
-              <Root />
+              <RNEThemeProvider>
+                <Root />
+              </RNEThemeProvider>
               <FlashMessage position="top" />
               <ToastLoading />
             </ToastProvider>
