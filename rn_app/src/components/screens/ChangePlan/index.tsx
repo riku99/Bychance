@@ -22,11 +22,13 @@ export const ChangePlan = React.memo(() => {
       <Text style={styles.title}>
         プランを変更してさらにアプローチしましょう
       </Text>
+      <Text style={styles.price}>￥650/月</Text>
       <Button
         title="ショップアカウントに変更"
         titleStyle={styles.shopButtonTitle}
         containerStyle={styles.shopButtonContainer}
         buttonStyle={styles.shopButton}
+        activeOpacity={1}
       />
     </ScrollView>
   );
@@ -53,9 +55,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   shopButtonContainer: {
-    marginTop: 30,
+    marginTop: 32,
   },
   shopButton: {
     backgroundColor: defaultTheme.primary,
+    width: '100%',
+  },
+  price: {
+    marginTop: 22,
+    fontWeight: 'bold',
+    fontSize: 20,
   },
 });
