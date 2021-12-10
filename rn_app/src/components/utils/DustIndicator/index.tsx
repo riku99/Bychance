@@ -30,7 +30,7 @@ export const DustIndicator = React.memo(({onAnimationEnd}: Props) => {
           <Animated.View
             style={[
               styles.bar,
-              {backgroundColor: defaultTheme.pinkGrapefruit},
+              {backgroundColor: defaultTheme.primary},
               {transform: [{translateX}]},
             ]}
           />

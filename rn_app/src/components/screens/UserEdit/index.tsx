@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   completeButtonTitle: {
-    color: defaultTheme.pinkGrapefruit,
+    color: defaultTheme.primary,
     fontWeight: 'bold',
   },
   snsIconContainer: {

@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: defaultTheme.pinkGrapefruit,
+    backgroundColor: defaultTheme.primary,
   },
   buttonContainer: {
     marginTop: 40,

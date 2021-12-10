@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 25 / 2,
-    backgroundColor: defaultTheme.pinkGrapefruit,
+    backgroundColor: defaultTheme.primary,
     fontSize: 15,
   },
   name: {

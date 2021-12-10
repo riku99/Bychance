@@ -306,14 +306,14 @@ export const NearbyUsersScreen = React.memo(() => {
             tabBar={renderTabBar}
             tabBarPosition="top"
             tabBarOptions={{
-              activeTintColor: defaultTheme.pinkGrapefruit,
+              activeTintColor: defaultTheme.primary,
               pressOpacity: 1,
               labelStyle: {
                 fontSize: 14,
                 fontWeight: '500',
               },
               indicatorStyle: {
-                backgroundColor: defaultTheme.pinkGrapefruit,
+                backgroundColor: defaultTheme.primary,
               },
               tabStyle: {
                 height: 45,

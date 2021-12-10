@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   addAddressButton: {
     width: 55,
     paddingVertical: 5,
-    backgroundColor: defaultTheme.pinkGrapefruit,
+    backgroundColor: defaultTheme.primary,
   },
   deleteAddressButton: {
     width: 55,

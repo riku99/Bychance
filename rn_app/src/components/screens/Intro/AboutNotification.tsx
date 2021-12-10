@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: defaultTheme.pinkGrapefruit,
+    backgroundColor: defaultTheme.primary,
   },
   desc: {
     marginTop: 20,

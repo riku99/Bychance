@@ -47,7 +47,7 @@ export const UserAvatarWithOuter = React.memo(
     const tintColor = useMemo(() => {
       switch (outerType) {
         case 'gradation':
-          return '#fab237';
+          return '#faa5e5';
         case 'silver':
           return '#b8b6b6';
         default:
@@ -63,7 +63,7 @@ export const UserAvatarWithOuter = React.memo(
         fill={fill}
         animation={animation}
         tintColor={tintColor}
-        tintColorSecondary={outerType === 'gradation' ? '#ff9791' : undefined}>
+        tintColorSecondary={outerType === 'gradation' ? '#efa5fa' : undefined}>
         <UserAvatar
           image={image}
           size={size}

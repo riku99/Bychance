@@ -9,8 +9,15 @@ type Props = {
 const theme = {
   Badge: {
     badgeStyle: {
-      backgroundColor: defaultTheme.pinkGrapefruit,
+      backgroundColor: defaultTheme.primary,
     },
+  },
+  Text: {
+    style: [
+      {
+        color: '#333333',
+      },
+    ],
   },
 };
 
