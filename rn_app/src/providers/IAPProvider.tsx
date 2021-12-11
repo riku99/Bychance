@@ -10,13 +10,13 @@ const IAP_SKUS = Platform.select({
   ios: ['sku'],
 });
 
-export const IAPContext: React.Context<any> = createContext({
-  processing: false,
-  setProcessing: () => undefined,
-  getPorducts: () => undefined,
-});
+export const IAPContext: React.Context<Partial<{
+  processing: boolean;
+  setProcessing: (v: boolean) => void;
+  getProducts: () => Promise<InAppPurchases.IAPItemDetails[] | undefined>;
+}>> = createContext({});
 
-export const IAPProvider = ({children}: Props) => {
+export const IAPProvider = React.memo(({children}: Props) => {
   const [processing, setProcessing] = useState(false);
   const processNewPurchase = useCallback(
     async (purchace: InAppPurchases.InAppPurchase) => {
@@ -113,4 +113,4 @@ export const IAPProvider = ({children}: Props) => {
       {children}
     </IAPContext.Provider>
   );
-};
+});
