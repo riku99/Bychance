@@ -13,6 +13,7 @@ import Root from './components/Root';
 import {Dimensions} from 'react-native';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 import {defaultTheme} from '~/theme';
+import {IAPProvider} from '~/providers/IAPProvider';
 
 const App: () => React.ReactNode = () => {
   return (
@@ -27,7 +28,9 @@ const App: () => React.ReactNode = () => {
               dangerIcon={<MIcon name="clear" color="white" size={17} />}
               style={{width: toastWidth}}>
               <RNEThemeProvider>
-                <Root />
+                <IAPProvider>
+                  <Root />
+                </IAPProvider>
               </RNEThemeProvider>
               <FlashMessage position="top" />
               <ToastLoading />

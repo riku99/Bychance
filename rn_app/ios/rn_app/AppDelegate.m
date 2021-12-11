@@ -69,7 +69,7 @@ self.moduleRegistryAdapter = [[UMModuleRegistryAdapter alloc] initWithModuleRegi
   center.delegate = self;
 
   // [REQUIRED] Register BackgroundFetch
-  [[TSBackgroundFetch sharedInstance] didFinishLaunching];A
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   [RNSplashScreen show];
 
