@@ -1,10 +1,11 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useEffect} from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import {RootNavigationProp} from '~/navigations/Root';
 import {useNavigation} from '@react-navigation/native';
 import {Text, Button} from 'react-native-elements';
 import LottieView from 'lottie-react-native';
 import {defaultTheme} from '~/theme';
+import {useIap} from '~/hooks/iap';
 
 const Rocket = require('~/assets/lottie/rocket.json');
 
@@ -15,6 +16,17 @@ export const ChangePlan = React.memo(() => {
       title: 'プランの変更',
     });
   }, [navigation]);
+
+  const {getProducts} = useIap();
+  useEffect(() => {
+    (async function () {
+      if (getProducts) {
+        const result = await getProducts();
+        console.log('👀 result is ');
+        console.log(result);
+      }
+    })();
+  }, [getProducts]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

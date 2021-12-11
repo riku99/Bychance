@@ -7,7 +7,7 @@ type Props = {
 };
 
 const IAP_SKUS = Platform.select({
-  ios: ['sku'],
+  ios: ['com.riku.Bychance.autoSubscription.shopPlan'],
 });
 
 export const IAPContext: React.Context<Partial<{
