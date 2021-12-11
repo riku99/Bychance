@@ -1,13 +1,14 @@
 import React, {useCallback, useEffect, createContext, useState} from 'react';
 import {Platform} from 'react-native';
 import * as InAppPurchases from 'expo-in-app-purchases';
+import Config from 'react-native-config';
 
 type Props = {
   children: JSX.Element;
 };
 
 const IAP_SKUS = Platform.select({
-  ios: ['com.riku.Bychance.autoSubscription.shopPlan'],
+  ios: [Config.IAP_SHOP],
 });
 
 export const IAPContext: React.Context<Partial<{
