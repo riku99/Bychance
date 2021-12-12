@@ -6,6 +6,8 @@ import {Text, Button} from 'react-native-elements';
 import LottieView from 'lottie-react-native';
 import {defaultTheme} from '~/theme';
 import {useIap} from '~/hooks/iap';
+import * as InAppPurchases from 'expo-in-app-purchases';
+import Config from 'react-native-config';
 
 const Rocket = require('~/assets/lottie/rocket.json');
 
@@ -28,6 +30,14 @@ export const ChangePlan = React.memo(() => {
     })();
   }, [getProducts]);
 
+  const onPurchaceButtonPress = async () => {
+    try {
+      await InAppPurchases.purchaseItemAsync(Config.IAP_SHOP);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <LottieView source={Rocket} autoPlay style={styles.rocket} />
@@ -41,6 +51,7 @@ export const ChangePlan = React.memo(() => {
         containerStyle={styles.shopButtonContainer}
         buttonStyle={styles.shopButton}
         activeOpacity={1}
+        onPress={onPurchaceButtonPress}
       />
     </ScrollView>
   );

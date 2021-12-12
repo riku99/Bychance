@@ -4250,11 +4250,6 @@ domutils@^1.7.0:
     dom-serializer "0"
     domelementtype "1"
 
-dooboolab-welcome@1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.3.2.tgz#4928595312f0429b4ea1b485ba8767bae6acdab7"
-  integrity sha512-2NbMaIIURElxEf/UAoVUFlXrO+7n/FRhLCiQlk4fkbGRh9cJ3/f8VEMPveR9m4Ug2l2Zey+UCXjd6EcBqHJ5bw==
-
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"
@@ -8245,13 +8240,6 @@ react-native-haptic-feedback@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.11.0.tgz#adfd841f3b67046532f912c6ec827aea0037d8ad"
   integrity sha512-KTIy7lExwMtB6pOpCARyUzFj5EzYTh+A1GN/FB5Eb0LrW5C6hbb1kdj9K2/RHyZC+wyAJD1M823ZaDCU6n6cLA==
-
-react-native-iap@^7.5.1:
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-7.5.1.tgz#ae41084fcf95d775ad84107e654a61d110e1bcb0"
-  integrity sha512-yZroot5Sz6kTCteaHy50+34i1sipWFYp9leP1QojxaTNxmBcMWagQ8ifFHhRhwb6SKaGFBTKoy+A1doalw+FnQ==
-  dependencies:
-    dooboolab-welcome "1.3.2"
 
 react-native-image-colors@^1.2.5:
   version "1.2.5"

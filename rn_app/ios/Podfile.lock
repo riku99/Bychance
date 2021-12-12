@@ -430,8 +430,6 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNIap (7.5.1):
-    - React-Core
   - RNImageColors (1.2.5):
     - React
   - RNImageEditor (0.8.3):
@@ -562,7 +560,6 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNIap (from `../node_modules/react-native-iap`)
   - RNImageColors (from `../node_modules/react-native-image-colors`)
   - "RNImageEditor (from `../node_modules/@wwimmo/react-native-sketch-canvas`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -724,8 +721,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNIap:
-    :path: "../node_modules/react-native-iap"
   RNImageColors:
     :path: "../node_modules/react-native-image-colors"
   RNImageEditor:
@@ -835,7 +830,6 @@ SPEC CHECKSUMS:
   RNFBMessaging: 8d84ceadc705ca6b6047c37376d2e2aaabcb8e3d
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNIap: 5a03bf7852ba58a939051077c0e138caf301d22f
   RNImageColors: f55f90cc27ef799c80e6b9a5798c9405919d328e
   RNImageEditor: 43f5f80bbfcb66dd9fff2399a22f3500514617e2
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5

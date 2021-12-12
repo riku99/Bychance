@@ -63,6 +63,7 @@ export const IAPProvider = React.memo(({children}: Props) => {
     if (responseCode === InAppPurchases.IAPResponseCode.OK) {
       return results;
     } else {
+      console.log('💦 error');
       return [];
     }
   }, []);
@@ -74,7 +75,6 @@ export const IAPProvider = React.memo(({children}: Props) => {
       } catch (e) {
         // 既に接続されている場合
         console.log('既に接続されています');
-        console.log(e);
       }
 
       InAppPurchases.setPurchaseListener(
