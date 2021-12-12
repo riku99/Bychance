@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, createContext, useState} from 'react';
 import {Platform} from 'react-native';
 import * as InAppPurchases from 'expo-in-app-purchases';
 import Config from 'react-native-config';
+import {useReceiptVerify} from '~/hooks/iap';
 
 type Props = {
   children: JSX.Element;
@@ -18,6 +19,7 @@ export const IAPContext: React.Context<Partial<{
 }>> = createContext({});
 
 export const IAPProvider = React.memo(({children}: Props) => {
+  const {verifyReciept} = useReceiptVerify();
   const [processing, setProcessing] = useState(false);
   const processNewPurchase = useCallback(
     async (purchace: InAppPurchases.InAppPurchase) => {
@@ -33,8 +35,10 @@ export const IAPProvider = React.memo(({children}: Props) => {
       };
 
       if (Platform.OS === 'ios') {
-        // 検証用レシートの取得
+        // レシート(base64)の取得
         body.receipt = purchace.transactionReceipt;
+
+        // ストレージに保存する
       }
 
       if (Platform.OS === 'android') {
@@ -42,11 +46,14 @@ export const IAPProvider = React.memo(({children}: Props) => {
 
       try {
         // サーバー側に検証リクエスト
+        await verifyReciept(body);
+        console.log('ok');
+        // 成功した場合ストレージに保存したレシートを削除
       } catch (e) {
         console.log(e);
       }
     },
-    [],
+    [verifyReciept],
   );
 
   const getProducts = useCallback(async () => {
