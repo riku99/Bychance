@@ -46,11 +46,12 @@ export const IAPProvider = React.memo(({children}: Props) => {
 
       try {
         // サーバー側に検証リクエスト
+        console.log('検証開始');
         await verifyReciept(body);
-        console.log('ok');
         // 成功した場合ストレージに保存したレシートを削除
       } catch (e) {
         console.log(e);
+        setProcessing(false);
       }
     },
     [verifyReciept],
@@ -81,13 +82,15 @@ export const IAPProvider = React.memo(({children}: Props) => {
         async ({responseCode, results, errorCode}) => {
           if (responseCode === InAppPurchases.IAPResponseCode.OK) {
             if (!results) {
+              console.log('no results');
               return;
             }
 
             // 購入成功処理
             results.forEach(async (purchace) => {
+              console.log('success!!');
               await processNewPurchase(purchace);
-              InAppPurchases.finishTransactionAsync(purchace, true);
+              await InAppPurchases.finishTransactionAsync(purchace, false);
             });
           } else if (
             responseCode === InAppPurchases.IAPResponseCode.USER_CANCELED

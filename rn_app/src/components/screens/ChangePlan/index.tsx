@@ -8,6 +8,7 @@ import {defaultTheme} from '~/theme';
 import {useIap} from '~/hooks/iap';
 import * as InAppPurchases from 'expo-in-app-purchases';
 import Config from 'react-native-config';
+import {useToastLoading} from '~/hooks/appState';
 
 const Rocket = require('~/assets/lottie/rocket.json');
 
@@ -30,11 +31,15 @@ export const ChangePlan = React.memo(() => {
     })();
   }, [getProducts]);
 
+  const {setToastLoading} = useToastLoading();
   const onPurchaceButtonPress = async () => {
     try {
+      setToastLoading(true);
       await InAppPurchases.purchaseItemAsync(Config.IAP_SHOP);
     } catch (e) {
       console.log(e);
+    } finally {
+      setToastLoading(false);
     }
   };
 
