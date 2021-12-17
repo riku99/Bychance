@@ -15,7 +15,7 @@ import {useMyId, useUserAvatar, useUserName} from '~/hooks/users';
 import {selectRoom} from '~/stores/_talkRooms';
 import {RootState} from '~/stores';
 import {UserAvatar} from '~/components/utils/Avatar';
-import {Dimensions} from 'react-native';
+import {ActivityIndicator, Dimensions} from 'react-native';
 import {useGroupMemberWhoBlcokTargetUserExists} from '~/hooks/groups';
 import {DescriptionModal} from './DescriptionModal';
 
@@ -164,6 +164,10 @@ export const TalkRoom = ({route, navigation}: Props) => {
       toast.hideAll();
     };
   }, [toast, groupMemberWhoBlockThisUserExists]);
+
+  if (!result) {
+    return <ActivityIndicator style={{marginTop: '55%'}} />;
+  }
 
   return (
     <>
