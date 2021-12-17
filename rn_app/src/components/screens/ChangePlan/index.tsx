@@ -36,6 +36,7 @@ export const ChangePlan = React.memo(() => {
     try {
       setToastLoading(true);
       await InAppPurchases.purchaseItemAsync(Config.IAP_SHOP);
+      console.log('done');
     } catch (e) {
       console.log(e);
     } finally {

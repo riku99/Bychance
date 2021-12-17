@@ -80,6 +80,7 @@ export const IAPProvider = React.memo(({children}: Props) => {
 
       InAppPurchases.setPurchaseListener(
         async ({responseCode, results, errorCode}) => {
+          console.log('run listner');
           if (responseCode === InAppPurchases.IAPResponseCode.OK) {
             if (!results) {
               console.log('no results');

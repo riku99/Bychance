@@ -1,3 +1,5 @@
+import {AccountType} from '~/types';
+
 export type LoginData = {
   user: {
     id: string;
@@ -22,6 +24,7 @@ export type LoginData = {
     descriptionOfVideoCallingSettingsShowed: boolean;
     descriptionOfNotGettingTalkRoomMessageShowed: boolean;
     descriptionOfMyDisplayShowed: boolean;
+    accountType: AccountType;
   };
   posts: {
     id: number;

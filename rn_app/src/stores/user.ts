@@ -1,6 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
-import {UserBackGroundItem} from '~/types';
+import {UserBackGroundItem, AccountType} from '~/types';
 
 export type User = {
   id: string;
@@ -16,6 +15,7 @@ export type User = {
   youtube: string | null;
   tiktok: string | null;
   isDisplayedToOtherUsers: boolean; // 現在他のユーザーに表示されているかどうか
+  accountType: AccountType;
 };
 
 const initialState: User = {
@@ -32,6 +32,7 @@ const initialState: User = {
   youtube: null,
   tiktok: null,
   isDisplayedToOtherUsers: false,
+  accountType: 'NormalUser',
 };
 
 const userSlice = createSlice({

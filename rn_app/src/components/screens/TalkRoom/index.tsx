@@ -2,8 +2,7 @@ import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {IMessage} from 'react-native-gifted-chat';
 import {RouteProp} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {useToast} from 'react-native-toast-notifications/src';
-
+import {useToast} from 'react-native-toast-notifications';
 import {Chat} from './Chat';
 import {TalkRoomStackNavigationProp} from '../../../navigations/types';
 import {TalkRoomStackParamList} from '../../../navigations/TalkRoom';

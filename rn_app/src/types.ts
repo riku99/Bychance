@@ -97,3 +97,5 @@ export type VideoCallingNotificationData = {
 export type PushNotificationData =
   | TalkRoomMessagesNotificationData
   | VideoCallingNotificationData;
+
+export type AccountType = 'Shop' | 'NormalUser';

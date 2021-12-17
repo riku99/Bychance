@@ -65,6 +65,9 @@ export const useMyLat = () =>
 export const useMyLng = () =>
   useSelector((state: RootState) => state.userReducer.lng);
 
+export const useMyAccountType = () =>
+  useSelector((state: RootState) => state.userReducer.accountType);
+
 type EditArg = {
   name: string;
   introduce: string;
