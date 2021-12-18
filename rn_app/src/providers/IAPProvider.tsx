@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, createContext, useState} from 'react';
-import {Platform} from 'react-native';
+import {Platform, Alert} from 'react-native';
 import * as InAppPurchases from 'expo-in-app-purchases';
 import Config from 'react-native-config';
 import {useReceiptVerify} from '~/hooks/iap';
@@ -89,20 +89,16 @@ export const IAPProvider = React.memo(({children}: Props) => {
 
             // 購入成功処理
             results.forEach(async (purchace) => {
-              console.log('success!!');
               await processNewPurchase(purchace);
               await InAppPurchases.finishTransactionAsync(purchace, false);
             });
           } else if (
             responseCode === InAppPurchases.IAPResponseCode.USER_CANCELED
           ) {
-            console.log('ユーザーがキャンセルしました');
           } else if (responseCode === InAppPurchases.IAPResponseCode.DEFERRED) {
-            console.log('保護者の認証が必要です');
+            Alert.alert('保護者の認証が必要です');
           } else {
-            console.log(
-              `何かしらのエラーが発生しました。エラーコード${errorCode}`,
-            );
+            Alert.alert('何かしらのエラーが発生しました');
           }
         },
       );

@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import Config from 'react-native-config';
-
 import {Main} from '~/components/Main';
 import {useLoginState} from '~/hooks/sessions';
 import {useMyId} from '~/hooks/users';
