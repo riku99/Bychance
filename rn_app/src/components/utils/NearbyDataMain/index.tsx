@@ -19,7 +19,7 @@ import FastImage from 'react-native-fast-image';
 
 import {List} from './List';
 import {Map} from './Map';
-import {RangeSelectButton} from './RangeSelectBottun';
+import {MenuButton} from './MenuButton';
 import {RootState} from '~/stores';
 import {getThumbnailUrl} from '~/helpers/video';
 import {RootNavigationProp} from '~/navigations/Root';
@@ -34,6 +34,7 @@ import {SEARCH_TAB_HEIGHT, STICKY_TAB_HEIGHT, TOP_HEIGHT} from './styles';
 import {useSafeArea} from '~/hooks/appState';
 import {useMyLat, useMyLng} from '~/hooks/users';
 import {defaultTheme} from '~/theme';
+import {MenuAction} from '@react-native-menu/menu';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -41,6 +42,10 @@ type Props = {
   data: any;
   isLoading: boolean;
   refresh: () => void;
+  menuActions: MenuAction[];
+  onMenuAction: (v: string) => void;
+  menuButtonTitle: string;
+  menuTitle: string;
 };
 
 export type UserData = {
@@ -81,7 +86,15 @@ export const TabViewContext = createContext<TabViewContextType>({
 });
 
 export const NearbyDataMain = React.memo(
-  ({data, isLoading, refresh}: Props) => {
+  ({
+    data,
+    isLoading,
+    refresh,
+    menuButtonTitle,
+    menuActions,
+    menuTitle,
+    onMenuAction,
+  }: Props) => {
     const users = useMemo(() => {
       return data.map((d) => {
         const {flashes, ...restData} = d;
@@ -352,9 +365,14 @@ export const NearbyDataMain = React.memo(
             </Tab.Navigator>
           </Animated.View>
         </TabViewContext.Provider>
-        {/* <View style={styles.pickButtonContainer}>
-          <RangeSelectButton setRange={setRange} />
-        </View> */}
+        <View style={styles.pickButtonContainer}>
+          <MenuButton
+            title={menuButtonTitle}
+            menuTitle={menuTitle}
+            onMenuAction={onMenuAction}
+            menuActions={menuActions}
+          />
+        </View>
         {!data && (
           <ActivityIndicator
             style={[styles.activityINdicator, {top: TOP_HEIGHT + top + 10}]}
