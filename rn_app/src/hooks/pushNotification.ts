@@ -8,6 +8,7 @@ import {PushNotificationData} from '~/types';
 import {postRequestToDeviceToken} from '~/apis/deviceToken';
 import {useGettingCall} from '~/hooks/appState';
 import {useVideoCallingState} from '~/hooks/videoCalling';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const usePushNotificationReqest = () => {
   useEffect(() => {
@@ -17,13 +18,21 @@ export const usePushNotificationReqest = () => {
   }, []);
 };
 
+const deviceTokenKey = 'deviceToken';
 // push通知のためのデバイストークンをサーバーに登録する処理
 export const useRegisterDeviceToken = () => {
   useEffect(() => {
     (async function () {
       try {
         const deviceToken = await messaging().getToken();
-        await postRequestToDeviceToken(deviceToken);
+        const storageDeviceToken = await AsyncStorage.getItem(deviceTokenKey);
+        if (!storageDeviceToken || deviceToken !== storageDeviceToken) {
+          await postRequestToDeviceToken({
+            newToken: deviceToken,
+            oldToken: storageDeviceToken ? storageDeviceToken : undefined,
+          });
+          await AsyncStorage.setItem(deviceTokenKey, deviceToken);
+        }
       } catch (e) {}
     })();
   }, []);
@@ -31,8 +40,12 @@ export const useRegisterDeviceToken = () => {
   useEffect(() => {
     // onTokenRefreshはactiveの時にしか呼ばれない。なのでactive時の処理の部分でもトークン更新を行っている
     const undebscribe = messaging().onTokenRefresh(async (token) => {
+      const storageDeviceToken = await AsyncStorage.getItem(deviceTokenKey);
       try {
-        await postRequestToDeviceToken(token);
+        await postRequestToDeviceToken({
+          newToken: token,
+          oldToken: storageDeviceToken ? storageDeviceToken : undefined,
+        });
       } catch (e) {}
     });
 
