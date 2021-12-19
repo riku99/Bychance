@@ -16,7 +16,7 @@ import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useMyAvatar, useIsDisplayedToOtherUsers} from '~/hooks/users';
 import {useTooltipAboutDisplayExperience} from '~/hooks/experiences';
-import {ShopStackScreen} from './Shop';
+// import {ShopStackScreen} from './Shop';
 
 type TabList = {
   Profile: undefined;
@@ -122,26 +122,6 @@ export const Tabs = React.memo(() => {
         })}
       />
       <RootTab.Screen
-        name="Shops"
-        component={ShopStackScreen}
-        options={{
-          tabBarIcon: ({color}) => (
-            <MIcon name="store" size={24} color={color} />
-          ),
-          tabBarLabel: '近くのお店',
-        }}
-      />
-      <RootTab.Screen
-        name="CreatePost"
-        component={CreatePostStackScreen}
-        options={{
-          tabBarIcon: ({color}) => (
-            <MIcon name="add-circle-outline" size={24} color={color} />
-          ),
-          tabBarLabel: '投稿',
-        }}
-      />
-      <RootTab.Screen
         name="ChatList"
         component={ChatListStackScreen}
         options={{
@@ -150,6 +130,26 @@ export const Tabs = React.memo(() => {
           ),
           tabBarLabel: 'メッセージ',
           tabBarBadge: unreadMessageNumber ? unreadMessageNumber : undefined,
+        }}
+      />
+      {/* <RootTab.Screen
+        name="Shops"
+        component={ShopStackScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <MIcon name="store" size={24} color={color} />
+          ),
+          tabBarLabel: '近くのお店',
+        }}
+      /> */}
+      <RootTab.Screen
+        name="CreatePost"
+        component={CreatePostStackScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <MIcon name="add-circle-outline" size={24} color={color} />
+          ),
+          tabBarLabel: '投稿',
         }}
       />
       <RootTab.Screen

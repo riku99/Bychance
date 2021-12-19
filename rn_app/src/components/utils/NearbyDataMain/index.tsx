@@ -16,7 +16,6 @@ import {SearchBar, Icon} from 'react-native-elements';
 import {shallowEqual, useSelector} from 'react-redux';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import FastImage from 'react-native-fast-image';
-
 import {List} from './List';
 import {Map} from './Map';
 import {MenuButton} from './MenuButton';
@@ -35,13 +34,14 @@ import {useSafeArea} from '~/hooks/appState';
 import {useMyLat, useMyLng} from '~/hooks/users';
 import {defaultTheme} from '~/theme';
 import {MenuAction} from '@react-native-menu/menu';
+import {ResponseForGetNearbyUsers} from '~/apis/nearbyUsers/types';
 
 const Tab = createMaterialTopTabNavigator();
 
 type Props = {
-  data: any;
+  data: ResponseForGetNearbyUsers;
   isLoading: boolean;
-  refresh: () => void;
+  refresh: () => Promise<void>;
   menuActions: MenuAction[];
   onMenuAction: (v: string) => void;
   menuButtonTitle: string;

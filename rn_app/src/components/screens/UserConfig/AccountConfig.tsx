@@ -13,12 +13,12 @@ export const AccountConfig = React.memo(() => {
 
   const list = useMemo(() => {
     return [
-      {
-        title: '🚀 プラン変更',
-        onItemPress: () => {
-          navigation.navigate('ChangePlan');
-        },
-      },
+      // {
+      //   title: '🚀 プラン変更',
+      //   onItemPress: () => {
+      //     navigation.navigate('ChangePlan');
+      //   },
+      // },
       {
         title: 'ログアウト',
         onItemPress: () => {
