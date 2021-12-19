@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {RootStackScreen} from '~/navigations/Root';
 import {
@@ -8,7 +8,10 @@ import {
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
 import {useGetTalkRoomDataOnActive} from '~/hooks/talkRooms';
-import {useGetIsDisplayedToOtherUsersOnActive} from '~/hooks/users';
+import {
+  useGetIsDisplayedToOtherUsersOnActive,
+  useMyAccountType,
+} from '~/hooks/users';
 import {
   useSetupApplyingGroupSocket,
   useAppliedGropusOnActive,
@@ -40,6 +43,11 @@ export const Main = React.memo(() => {
 
   const {gettingCall} = useGettingCall();
   const {videoCalling} = useVideoCalling();
+
+  const accountType = useMyAccountType();
+  useEffect(() => {
+    console.log('☀️ account is ' + accountType);
+  }, [accountType]);
 
   return (
     <View style={styles.container}>

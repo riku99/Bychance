@@ -2,7 +2,6 @@ import {useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import {Alert} from 'react-native';
-
 import {RootState, persistor} from '~/stores/index';
 import {useCustomDispatch, useResetDispatch} from './stores';
 import {setUser} from '~/stores/user';

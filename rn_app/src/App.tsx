@@ -13,6 +13,7 @@ import Root from './components/Root';
 import {Dimensions} from 'react-native';
 import {ToastLoading} from '~/components/utils/ToastLoading';
 import {defaultTheme} from '~/theme';
+// import {IAPProvider} from '~/providers/IAPProvider';
 
 const App: () => React.ReactNode = () => {
   return (

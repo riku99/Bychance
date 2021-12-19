@@ -18,6 +18,7 @@ import {useUserPageStackList, UserPageScreenGroupParamList} from './UserPage';
 import {UserBackGroundItem} from '~/types';
 import {UserEditPage} from '~/components/screens/UserEdit';
 import {UserEditForm} from '~/components/screens/EditUserItem';
+import {ChangePlan} from '~/components/screens/ChangePlan';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -45,6 +46,7 @@ export type RootStackParamList = {
     value: string | null;
     setValue: (s: string) => void;
   };
+  ChangePlan: undefined;
 } & UserPageScreenGroupParamList;
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
@@ -157,6 +159,7 @@ export const RootStackScreen = React.memo(() => {
           gestureDirection: 'horizontal',
         }}
       />
+      <Stack.Screen name="ChangePlan" component={ChangePlan} />
       {renderUserPageStackList({
         options: {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

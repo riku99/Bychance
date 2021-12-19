@@ -3,8 +3,7 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
-
-import {NearbyUsersScreen} from '../components/screens/NearbyUsers';
+import {NearbyUsersScreen} from '~/components/screens/NearbyUsers';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import {UserPageScreenGroupParamList, useUserPageStackList} from './UserPage';
 

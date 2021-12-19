@@ -35,7 +35,7 @@ export const RangeSelector = React.memo(({setRange}: Props) => {
 
 const styles = StyleSheet.create({
   pickerContainer: {
-    backgroundColor: defaultTheme.pinkGrapefruit,
+    backgroundColor: defaultTheme.primary,
     width: '100%',
     height: '100%',
     alignItems: 'center',

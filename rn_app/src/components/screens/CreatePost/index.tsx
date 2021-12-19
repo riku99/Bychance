@@ -79,7 +79,7 @@ export const CreatePost = ({navigation}: Props) => {
         <Button
           title="キャンセル"
           style={{marginBottom: 3}}
-          titleStyle={{color: defaultTheme.pinkGrapefruit}}
+          titleStyle={{color: defaultTheme.primary}}
           buttonStyle={{backgroundColor: 'transparent'}}
           onPress={() => {
             navigation.goBack();
@@ -92,7 +92,7 @@ export const CreatePost = ({navigation}: Props) => {
               title="投稿"
               buttonStyle={{backgroundColor: 'transparent'}}
               titleStyle={{
-                color: defaultTheme.pinkGrapefruit,
+                color: defaultTheme.primary,
                 fontWeight: 'bold',
               }}
               onPress={onPress}

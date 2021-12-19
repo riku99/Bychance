@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   selectButton: {
-    backgroundColor: defaultTheme.pinkGrapefruit,
+    backgroundColor: defaultTheme.primary,
     paddingVertical: 5,
   },
   selectButotnTitle: {
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   addButton: {
     width: 80,
     marginTop: 15,
-    backgroundColor: defaultTheme.pinkGrapefruit,
+    backgroundColor: defaultTheme.primary,
   },
   addButotnTitleStyle: {
     fontSize: 14,

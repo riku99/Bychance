@@ -5,19 +5,18 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Tooltip} from 'react-native-elements/dist/tooltip/Tooltip';
 import {useFocusEffect} from '@react-navigation/native';
 import {Icon} from 'react-native-elements';
-
 import {CreatePostStackScreen} from './CreatePost';
 import {MyPageStackScreen} from './MyPage';
 import {NearbyUsersStackScreen} from './NearbyUsers';
 import {ChatListStackScreen} from './ChatList';
 import {defaultTheme} from '~/theme';
 import {usePushNotificationHandler} from '~/hooks/pushNotification';
-import {RecommendationStackScreen} from './Recommendation';
 import {useGetUnreadNumber} from '~/hooks/talkRooms';
 import {useSetSafeArea} from '~/hooks/appState';
 import {UserAvatar} from '~/components/utils/Avatar';
 import {useMyAvatar, useIsDisplayedToOtherUsers} from '~/hooks/users';
 import {useTooltipAboutDisplayExperience} from '~/hooks/experiences';
+// import {ShopStackScreen} from './Shop';
 
 type TabList = {
   Profile: undefined;
@@ -25,6 +24,7 @@ type TabList = {
   ChatList: undefined;
   Search: undefined;
   Recommendation: undefined;
+  Shops: undefined;
 };
 
 const RootTab = createBottomTabNavigator<TabList>();
@@ -133,13 +133,13 @@ export const Tabs = React.memo(() => {
         }}
       />
       {/* <RootTab.Screen
-        name="Recommendation"
-        component={RecommendationStackScreen}
+        name="Shops"
+        component={ShopStackScreen}
         options={{
           tabBarIcon: ({color}) => (
             <MIcon name="store" size={24} color={color} />
           ),
-          tabBarLabel: '近くのおすすめ',
+          tabBarLabel: '近くのお店',
         }}
       /> */}
       <RootTab.Screen

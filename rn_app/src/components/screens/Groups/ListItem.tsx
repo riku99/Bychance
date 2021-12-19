@@ -34,7 +34,7 @@ export const ListItem = React.memo(
                 buttonStyle={[
                   styles.button,
                   {
-                    backgroundColor: defaultTheme.pinkGrapefruit,
+                    backgroundColor: defaultTheme.primary,
                   },
                 ]}
                 activeOpacity={1}

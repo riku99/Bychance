@@ -25,7 +25,7 @@ export const Auth = () => {
           title="メールアドレスで登録"
           titleStyle={styles.buttonTitle}
           containerStyle={styles.buttonContainer}
-          buttonStyle={{backgroundColor: defaultTheme.pinkGrapefruit}}
+          buttonStyle={{backgroundColor: defaultTheme.primary}}
           icon={{name: 'email', size: 16, color: 'white'}}
           iconContainerStyle={styles.buttonIcon}
           onPress={() => {
