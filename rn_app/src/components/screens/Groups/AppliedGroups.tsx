@@ -22,6 +22,10 @@ export const AppliedGroups = React.memo(() => {
   const onDeletePress = ({id}: {id: number}) => {
     Alert.alert('削除しますか?', '', [
       {
+        text: 'キャンセル',
+        style: 'cancel',
+      },
+      {
         text: '削除する',
         style: 'destructive',
         onPress: async () => {
@@ -29,29 +33,26 @@ export const AppliedGroups = React.memo(() => {
           setAppliedGroups((current) => current.filter((c) => c.id !== result));
         },
       },
-      {
-        text: 'キャンセル',
-      },
     ]);
   };
 
   const onJoinPress = ({ownerId}: {ownerId: string}) => {
     Alert.alert(
-      '参加しますか?',
+      'グループになりますか?',
       '現在申請されている他の全てのグループと申請中のグループが取り消されます。',
       [
         {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
           text: '参加する',
-          style: 'destructive',
           onPress: async () => {
             const result = await join({ownerId});
             if (result) {
               setAppliedGroups([]);
             }
           },
-        },
-        {
-          text: 'キャンセル',
         },
       ],
     );

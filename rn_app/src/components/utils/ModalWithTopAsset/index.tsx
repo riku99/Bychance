@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    transform: [{translateX: -11}, {translateY: -11}],
+    transform: [{translateX: -18}, {translateY: -18}],
   },
   alert: {
     width: 110,

@@ -67,7 +67,7 @@ export const Tabs = React.memo(() => {
 
   return (
     <RootTab.Navigator
-      initialRouteName="Profile"
+      initialRouteName="Search"
       tabBarOptions={{
         activeTintColor: defaultTheme.darkGray,
         inactiveTintColor: '#b8b8b8',
@@ -78,7 +78,7 @@ export const Tabs = React.memo(() => {
         options={({navigation}) => ({
           tabBarIcon: ({color}) => (
             <View>
-              <MIcon name="near-me" size={24} color={color} />
+              <MIcon name="home" size={24} color={color} />
               {isDisplayedToOtherUsers && (
                 <View style={styles.avatarBadgeContainer}>
                   <Tooltip
@@ -118,7 +118,7 @@ export const Tabs = React.memo(() => {
               )}
             </View>
           ),
-          tabBarLabel: '近くのユーザー',
+          tabBarLabel: 'ホーム',
         })}
       />
       <RootTab.Screen
@@ -171,7 +171,7 @@ const {width} = Dimensions.get('screen');
 const styles = StyleSheet.create({
   avatarBadgeContainer: {
     position: 'absolute',
-    left: 16,
+    left: 21,
     top: -5,
   },
   tooltipCloseButton: {
