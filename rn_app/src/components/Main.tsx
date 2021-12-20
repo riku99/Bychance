@@ -7,17 +7,13 @@ import {
 } from '~/hooks/pushNotification';
 import {useBackgroundGeolocation} from '~/hooks/geolocation';
 import {useSetupTalkRoomMessageSocket} from '~/hooks/talkRoomMessages';
-import {useGetTalkRoomDataOnActive} from '~/hooks/talkRooms';
-import {useGetIsDisplayedToOtherUsersOnActive} from '~/hooks/users';
-import {
-  useSetupApplyingGroupSocket,
-  useAppliedGropusOnActive,
-} from '~/hooks/applyingGroups';
+import {useSetupApplyingGroupSocket} from '~/hooks/applyingGroups';
 import {useLoginData} from '~/hooks/sessions';
 import {useSetupVideoCallingSocket} from '~/hooks/videoCalling';
 import {GetiingCall} from '~/components/utils/GetiingCall';
 import {useVideoCalling, useGettingCall} from '~/hooks/appState';
 import {VideoCalling} from '~/components/screens/VideoCalling';
+import {useActiveData} from '~/hooks/active';
 
 export const Main = React.memo(() => {
   // ログインデータの取得
@@ -31,12 +27,8 @@ export const Main = React.memo(() => {
   useRegisterDeviceToken();
   // 位置情報周り
   useBackgroundGeolocation();
-  // アクティブになるたびにトークルーム更新とか
-  useGetTalkRoomDataOnActive();
-  // アクティブになるたびにisDisplayedToOtherUsersを更新
-  useGetIsDisplayedToOtherUsersOnActive();
-  // アクティブになるたびに申請されているグループの確認
-  useAppliedGropusOnActive();
+  // active時の処理
+  useActiveData();
 
   const {gettingCall} = useGettingCall();
   const {videoCalling} = useVideoCalling();

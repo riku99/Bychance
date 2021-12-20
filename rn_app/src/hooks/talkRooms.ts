@@ -1,7 +1,6 @@
 import {useCallback, useEffect} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import {shallowEqual, useSelector} from 'react-redux';
-
 import {RootState, store} from '~/stores';
 import {useApikit} from './apikit';
 import {

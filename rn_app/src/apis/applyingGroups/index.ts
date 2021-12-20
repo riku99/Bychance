@@ -8,7 +8,7 @@ import {
 export const getRequestToAppliedGroups = async () => {
   const idToken = await getIdToken();
   return await axios.get<ResponseForGetAppliedGroups>(
-    `${baseUrl}/applying_groups?type=applied`,
+    `${baseUrl}/applying_groups?group_type=applied`,
     addBearer(idToken),
   );
 };
