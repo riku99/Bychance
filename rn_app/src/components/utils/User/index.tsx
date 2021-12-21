@@ -8,11 +8,9 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-
 import {UserTabView, stickyTabHeight} from './TabView';
 import {Avatar} from './Avatar';
 import {EditButton} from './EditButton';
-import {TakeFlashButton} from './TakeFlashButton';
 import {SendMessageButton} from './SendMessageButton';
 import {MoreReadBottun} from './MoreReadButton';
 import {IntroduceModal} from './IntoduceModal';
@@ -204,11 +202,11 @@ export const User = ({
         <SnsIcons snsLinkData={snsLinkData} />
       </Animated.View>
 
-      {isMe && (
+      {/* {isMe && (
         <View style={styles.takeWideRangeSourceContainer}>
           <TakeFlashButton />
         </View>
-      )}
+      )} */}
 
       {isMe && <Menu />}
     </View>

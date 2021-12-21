@@ -3,12 +3,12 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
-
 import {Container as Post} from '../components/screens/Post';
 import {MenuBar} from '../components/utils/MenuBar';
 import {getHeaderStatusBarHeight} from '~/helpers/header';
 import Logo from '~/assets/logo.svg';
 import {MyPage} from '~/components/screens/MyPage';
+import {HeaderRightItems} from '~/components/screens/MyPage/HeaderRightItems';
 
 export type PostScreenType = {
   id: number;
@@ -46,7 +46,7 @@ export const MyPageStackScreen = () => {
         options={{
           headerTitle: () => null,
           headerLeft: () => <Logo height="70%" width={140} />,
-          headerRight: () => <MenuBar />,
+          headerRight: () => <HeaderRightItems />,
         }}
       />
       <Stack.Screen
