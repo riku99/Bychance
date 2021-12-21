@@ -3,7 +3,6 @@ import {Alert} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 import {RNToasty} from 'react-native-toasty';
-
 import {TakeFlash} from './TakeFlash';
 import {EditSource} from './EditSource';
 import {useVideoEditDescription} from '~/hooks/experiences';

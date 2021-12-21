@@ -88,7 +88,7 @@ export const TakeFlash = React.memo(
             </WideRangeSourceContainer>
             <View style={[styles.topButtonGroupContainer, {top: top + 15}]}>
               <BackButton
-                icon={{name: 'chevron-right', size: 35, color: 'white'}}
+                icon={{name: 'close', size: 35, color: 'white'}}
                 buttonStyle={{backgroundColor: 'transoarent'}}
                 containerStyle={{alignSelf: 'flex-end'}}
                 onPress={changePhotoMode}
