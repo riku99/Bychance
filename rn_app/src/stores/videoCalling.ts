@@ -5,6 +5,7 @@ export type VideoCallingState = {
   token: string;
   uid: number; // ビデオ通話用uidはnumberでなければいけないのでUserのIDとは別にする
   role: 'pub' | 'sub'; // pubはかけた側、subは受け取る側
+  callHistoryId?: number;
   publisher: {
     id: string;
     name: string;

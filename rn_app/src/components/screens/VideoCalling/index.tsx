@@ -14,6 +14,7 @@ import {WaveIndicator} from 'react-native-indicators';
 import {useVideoCallingState} from '~/hooks/videoCalling';
 import {DescriptionModal} from './DescriptionModal';
 import {useUsersOnCall} from '~/hooks/users';
+import {putRequestToCallHistoryConnected} from '~/apis/videoCalling';
 
 export const VideoCalling = React.memo(() => {
   const [engine, setEngine] = useState<RtcEngine>();
@@ -27,6 +28,7 @@ export const VideoCalling = React.memo(() => {
   const token = videoCallingState?.token;
   const channelName = videoCallingState?.channelName;
   const role = videoCallingState?.role;
+  const callHistoryId = videoCallingState?.callHistoryId;
   const {changeOnCall} = useUsersOnCall();
 
   const onCallEndButtonPress = async () => {
@@ -125,6 +127,19 @@ export const VideoCalling = React.memo(() => {
       })();
     };
   }, [changeOnCall, engine, setVideoCalling]);
+
+  useEffect(() => {
+    (async function () {
+      if (callHistoryId && role === 'sub') {
+        console.log('id is ' + callHistoryId);
+        try {
+          await putRequestToCallHistoryConnected({
+            params: {callHistoryId: callHistoryId},
+          });
+        } catch (e) {}
+      }
+    })();
+  }, [role, callHistoryId]);
 
   const renderOnlyLocalView = useCallback(() => {
     return (

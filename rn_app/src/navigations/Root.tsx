@@ -20,6 +20,7 @@ import {UserEditPage} from '~/components/screens/UserEdit';
 import {UserEditForm} from '~/components/screens/EditUserItem';
 import {ChangePlan} from '~/components/screens/ChangePlan';
 import {CreatePost} from '~/components/screens/CreatePost';
+import {CallHistories} from '~/components/screens/CallHistories';
 
 export type RootStackParamList = {
   Tab: undefined;
@@ -49,6 +50,7 @@ export type RootStackParamList = {
   };
   ChangePlan: undefined;
   CreatePost: undefined;
+  CallHistories: undefined;
 } & UserPageScreenGroupParamList;
 
 // Rootスタック領域でのナビゲーションを行いたい場合の型。Tには「Rootスタックレベルの」現在いるスクリーン名を渡す
@@ -163,6 +165,14 @@ export const RootStackScreen = React.memo(() => {
       />
       <Stack.Screen name="ChangePlan" component={ChangePlan} />
       <Stack.Screen name="CreatePost" component={CreatePost} />
+      <Stack.Screen
+        name="CallHistories"
+        component={CallHistories}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
       {renderUserPageStackList({
         options: {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

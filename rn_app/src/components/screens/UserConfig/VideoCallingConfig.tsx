@@ -3,6 +3,8 @@ import {View, Switch} from 'react-native';
 import {commonStyles} from './constants';
 import {ConfigList} from './List';
 import {useVideoCallingEnabled} from '~/hooks/settings';
+import {useNavigation} from '@react-navigation/native';
+import {RootNavigationProp} from '~/navigations/Root';
 
 const VideoCallingEnabledSwitch = () => {
   const {
@@ -22,14 +24,23 @@ const VideoCallingEnabledSwitch = () => {
 };
 
 export const VideoCallingConfig = () => {
+  const navigation = useNavigation<RootNavigationProp<'UserConfig'>>();
+
   const list = useMemo(() => {
     return [
       {
         title: 'ビデオ通話を受け取る',
         switch: <VideoCallingEnabledSwitch />,
       },
+      {
+        title: '着信履歴',
+        onItemPress: () => {
+          navigation.navigate('CallHistories');
+        },
+      },
     ];
-  }, []);
+  }, [navigation]);
+
   return (
     <View style={commonStyles.container}>
       <View style={commonStyles.sectionContainer}>

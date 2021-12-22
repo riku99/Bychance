@@ -134,7 +134,7 @@ export const Tabs = React.memo(() => {
         name="Flash"
         component={TakeFlashScreen}
         options={{
-          tabBarLabel: 'Flash✨',
+          tabBarLabel: 'Flash⚡️',
           tabBarIcon: ({color}) => (
             <MIcon name="flare" size={24} color={color} />
           ),

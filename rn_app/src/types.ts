@@ -69,6 +69,7 @@ export type VideoCallingSocketData = {
   token: string;
   to: string;
   intUid: number;
+  callHistoryId: number;
   publisher: {
     id: string;
     name: string;
@@ -81,6 +82,7 @@ export type VideoCallingPushNotificationData = {
   token: string;
   to: string;
   intUid: string;
+  callHistoryId: string;
   publisher: string;
 };
 

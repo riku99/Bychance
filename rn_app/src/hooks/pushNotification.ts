@@ -83,6 +83,7 @@ export const usePushNotificationHandler = () => {
           channelName: data.channelName,
           token: data.token,
           uid: Number(data.intUid),
+          callHistoryId: Number(data.callHistoryId),
           role: 'sub',
           publisher: JSON.parse(data.publisher),
         });

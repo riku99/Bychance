@@ -1,6 +1,9 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useApikit} from '~/hooks/apikit';
-import {postRequesutToRTCToken} from '~/apis/videoCalling';
+import {
+  postRequesutToRTCToken,
+  getRequestToCallHistories,
+} from '~/apis/videoCalling';
 import {useMyId} from './users';
 import io, {Socket} from 'socket.io-client';
 import {AppState, AppStateStatus} from 'react-native';
@@ -15,6 +18,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {RootState} from '~/stores';
 import {useVideoCalling as useVideoCallingView} from '~/hooks/appState';
 import {VideoCallingSocketData} from '~/types';
+import {GetRequestToCallHistories} from '~/apis/videoCalling/types';
 
 export const useVideoCallingState = () => {
   const dispatch = useCustomDispatch();
@@ -118,6 +122,7 @@ export const useSetupVideoCallingSocket = () => {
           channelName: data.channelName,
           token: data.token,
           uid: data.intUid,
+          callHistoryId: data.callHistoryId,
           role: 'sub',
           publisher: data.publisher,
         });
@@ -136,4 +141,29 @@ export const useSetupVideoCallingSocket = () => {
       });
     }
   }, [socket]);
+};
+
+export const useCallHistories = () => {
+  const [data, setData] = useState<GetRequestToCallHistories['response']>();
+  const [isLoading, setIsLoading] = useState(true);
+  const {handleApiError} = useApikit();
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await getRequestToCallHistories({
+          query: {type: 'subscribe'},
+        });
+        setData(response.data);
+      } catch (e) {
+        handleApiError(e);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [handleApiError]);
+
+  return {
+    data,
+    isLoading,
+  };
 };
