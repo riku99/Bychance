@@ -131,7 +131,6 @@ export const VideoCalling = React.memo(() => {
   useEffect(() => {
     (async function () {
       if (callHistoryId && role === 'sub') {
-        console.log('id is ' + callHistoryId);
         try {
           await putRequestToCallHistoryConnected({
             params: {callHistoryId: callHistoryId},
