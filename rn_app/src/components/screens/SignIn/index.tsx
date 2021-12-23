@@ -1,8 +1,7 @@
 import React, {useLayoutEffect, useState} from 'react';
-import {StyleSheet, View, Pressable, Keyboard} from 'react-native';
+import {StyleSheet, View, Pressable, Keyboard, Text, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
-
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {EmailForm, PasswordForm} from '~/components/utils/Forms';
 import {defaultTheme} from '~/theme';
@@ -10,6 +9,7 @@ import {useLogin} from '~/hooks/sessions';
 import {useToastLoading} from '~/hooks/appState';
 import {useGetTalkRoomData} from '~/hooks/talkRooms';
 import {useIsDisplayedToOtherUsers} from '~/hooks/users';
+import auth from '@react-native-firebase/auth';
 
 export const SignIn = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignIn'>>();
@@ -35,6 +35,32 @@ export const SignIn = () => {
     setToastLoading(false);
   };
 
+  const onResetPasswordButtonPress = async () => {
+    Alert.prompt(
+      '登録したメールアドレスを入力してください',
+      'パスワードリセット用のメールが送信されます',
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '送信',
+          onPress: async (_email) => {
+            if (_email) {
+              try {
+                await auth().sendPasswordResetEmail(_email);
+                navigation.goBack();
+              } catch (e) {
+                Alert.alert('何らかのエラーが発生しました');
+              }
+            }
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <Pressable
       style={styles.container}
@@ -56,6 +82,9 @@ export const SignIn = () => {
           disabled={!email || password.length < 8}
           onPress={onButtonPress}
         />
+        <Pressable onPress={onResetPasswordButtonPress}>
+          <Text style={styles.passwordRestLink}>パスワードをお忘れの方</Text>
+        </Pressable>
       </View>
     </Pressable>
   );
@@ -79,8 +108,14 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: defaultTheme.primary,
+    height: 40,
   },
   buttonContainer: {
+    marginTop: 40,
+  },
+  passwordRestLink: {
+    textDecorationLine: 'underline',
+    color: '#30beff',
     marginTop: 40,
   },
 });

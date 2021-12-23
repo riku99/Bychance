@@ -49,17 +49,18 @@ export const AccountConfig = React.memo(() => {
         onItemPress: () => {
           Alert.alert('ログアウトしますか?', '', [
             {
+              text: 'キャンセル',
+              style: 'cancel',
+              onPress: () => {
+                return;
+              },
+            },
+            {
               text: 'はい',
               style: 'destructive',
               onPress: async () => {
                 navigation.goBack();
                 await logout();
-                return;
-              },
-            },
-            {
-              text: 'いいえ',
-              onPress: () => {
                 return;
               },
             },

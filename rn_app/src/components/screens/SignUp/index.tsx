@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: defaultTheme.primary,
+    height: 40,
   },
   buttonContainer: {
     marginTop: 40,

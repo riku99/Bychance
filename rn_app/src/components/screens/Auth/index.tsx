@@ -25,7 +25,7 @@ export const Auth = () => {
           title="メールアドレスで登録"
           titleStyle={styles.buttonTitle}
           containerStyle={styles.buttonContainer}
-          buttonStyle={{backgroundColor: defaultTheme.primary}}
+          buttonStyle={[styles.button, {backgroundColor: defaultTheme.primary}]}
           icon={{name: 'email', size: 16, color: 'white'}}
           iconContainerStyle={styles.buttonIcon}
           onPress={() => {
@@ -44,7 +44,10 @@ export const Auth = () => {
           title="ログイン"
           titleStyle={styles.buttonTitle}
           containerStyle={styles.buttonContainer}
-          buttonStyle={{backgroundColor: defaultTheme.darkGray}}
+          buttonStyle={[
+            styles.button,
+            {backgroundColor: defaultTheme.darkGray},
+          ]}
           icon={{name: 'login', size: 16, color: 'white'}}
           iconContainerStyle={styles.buttonIcon}
           activeOpacity={1}
@@ -119,5 +122,8 @@ const styles = StyleSheet.create({
   termsUserLink: {
     textDecorationLine: 'underline',
     color: '#30beff',
+  },
+  button: {
+    height: 40,
   },
 });
