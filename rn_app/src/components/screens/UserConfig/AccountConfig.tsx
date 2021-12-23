@@ -67,7 +67,7 @@ export const AccountConfig = React.memo(() => {
         },
       },
     ];
-  }, [navigation, logout]);
+  }, [navigation, logout, sendEmail, toast]);
 
   return (
     <View style={commonStyles.container}>
