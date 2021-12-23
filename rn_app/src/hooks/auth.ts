@@ -1,10 +1,10 @@
 import {useCallback} from 'react';
 import auth from '@react-native-firebase/auth';
 import {useToast} from 'react-native-fast-toast';
-
 import {postRequestToUsers} from '~/apis/users';
 import {useApikit} from '~/hooks/apikit';
-import {useLoginDispatch} from '~/hooks/sessions';
+import {useLoginDispatch, useLogout} from '~/hooks/sessions';
+import {Alert} from 'react-native';
 
 export const useSignUp = () => {
   const toast = useToast();
@@ -61,7 +61,7 @@ export const useSignUp = () => {
   };
 };
 
-export const useConfirmationOfImail = () => {
+export const useConfirmationOfEmail = () => {
   const toast = useToast();
 
   const confirmEmail = useCallback(
@@ -86,5 +86,27 @@ export const useConfirmationOfImail = () => {
 
   return {
     confirmEmail,
+  };
+};
+
+export const useResetPasswordEmail = () => {
+  const {logout} = useLogout();
+  const sendEmail = useCallback(async () => {
+    const user = auth().currentUser;
+    if (!user || !user.email) {
+      Alert.alert('エラーが発生しました');
+      return;
+    }
+
+    try {
+      await auth().sendPasswordResetEmail(user.email);
+      await logout();
+    } catch (e) {
+      Alert.alert('送信に失敗しました');
+    }
+  }, [logout]);
+
+  return {
+    sendEmail,
   };
 };

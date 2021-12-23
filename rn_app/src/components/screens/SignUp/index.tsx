@@ -6,7 +6,7 @@ import {Button} from 'react-native-elements';
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {defaultTheme} from '~/theme';
 import {EmailForm, PasswordForm, NameForm} from '~/components/utils/Forms';
-import {useConfirmationOfImail} from '~/hooks/auth';
+import {useConfirmationOfEmail} from '~/hooks/auth';
 import {useCreateAuthCodeAndSendEmail} from '~/hooks/authCode';
 import {useToastLoading} from '~/hooks/appState';
 
@@ -23,7 +23,7 @@ export const SignUp = () => {
   const [name, setName] = useState('');
 
   const {setToastLoading} = useToastLoading();
-  const {confirmEmail} = useConfirmationOfImail();
+  const {confirmEmail} = useConfirmationOfEmail();
   const {createAuthCodeAndSendEmail} = useCreateAuthCodeAndSendEmail();
 
   const onButtonPress = () => {
