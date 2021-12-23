@@ -2,7 +2,6 @@ import React, {useLayoutEffect, useState} from 'react';
 import {StyleSheet, View, Pressable, Keyboard, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
-
 import {AuthNavigationProp} from '~/navigations/Auth';
 import {defaultTheme} from '~/theme';
 import {EmailForm, PasswordForm, NameForm} from '~/components/utils/Forms';

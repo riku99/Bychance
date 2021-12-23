@@ -10,6 +10,7 @@ import {useToastLoading} from '~/hooks/appState';
 import {useGetTalkRoomData} from '~/hooks/talkRooms';
 import {useIsDisplayedToOtherUsers} from '~/hooks/users';
 import auth from '@react-native-firebase/auth';
+import {useToast} from 'react-native-fast-toast';
 
 export const SignIn = () => {
   const navigation = useNavigation<AuthNavigationProp<'SignIn'>>();
@@ -25,6 +26,7 @@ export const SignIn = () => {
   const {getTalkRoomData} = useGetTalkRoomData();
   const {getIsDisplayedToOtherUsers} = useIsDisplayedToOtherUsers();
   const {setToastLoading} = useToastLoading();
+  const toast = useToast();
   const onButtonPress = async () => {
     setToastLoading(true);
     const result = await login({email, password});
@@ -47,12 +49,15 @@ export const SignIn = () => {
         {
           text: '送信',
           onPress: async (_email) => {
+            setToastLoading(true);
             if (_email) {
               try {
                 await auth().sendPasswordResetEmail(_email);
-                navigation.goBack();
+                toast.show('送信しました', {type: 'success'});
               } catch (e) {
                 Alert.alert('何らかのエラーが発生しました');
+              } finally {
+                setToastLoading(false);
               }
             }
           },
